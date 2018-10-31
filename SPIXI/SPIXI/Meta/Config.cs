@@ -14,8 +14,9 @@ namespace DLT
             // Can be read from a file later, or read from the command line
             public static int serverPort = 10111;
             public static int apiPort = 8001;
+            public static string publicServerIP = "127.0.0.1";
 
-            public static string walletFile = "wallet.dat";
+            public static string walletFile = "ixian.wal";
 
             // Store the device id in a cache for reuse in later instances
             public static string device_id = Guid.NewGuid().ToString();
@@ -23,14 +24,19 @@ namespace DLT
             // Read-only values
             public static readonly string aboutUrl = "https://ixian.io";
 
-            public static readonly int nodeVersion = 4;
             public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
+
+            public static readonly string version = "spixi-0.1.0"; // Spixi version
+            public static bool isTestNet = false; // Testnet designator
 
             // Default SPIXI settings
 
             // App-specific settings
             public static bool storeHistory = true;
 
+
+            // internal
+            public static bool changePass = false;
 
             private static Config singletonInstance;
             private Config()

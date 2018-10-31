@@ -3,6 +3,7 @@ using DLT.Meta;
 using Plugin.LocalNotifications;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SPIXI
@@ -127,11 +128,11 @@ namespace SPIXI
                 }
 
 
-                string wallet = presence.wallet;
-                string pubkey = presence.pubkey;
+                byte[] wallet = presence.wallet;
+                byte[] pubkey = presence.pubkey;
                 string name = "Unknown";
 
-                if (wallet.Equals(Node.walletStorage.address, StringComparison.Ordinal))
+                if (wallet.SequenceEqual(Node.walletStorage.address))
                 {
                     name = Node.localStorage.nickname;
                 }
@@ -163,7 +164,7 @@ namespace SPIXI
         }
 
         // Finds a presence entry's pubkey
-        public static string findContactPubkey(string wallet_address)
+        public static byte[] findContactPubkey(byte[] wallet_address)
         {
             lock (PresenceList.presences)
             {
@@ -186,20 +187,20 @@ namespace SPIXI
                     }
 
 
-                    string wallet = presence.wallet;
+                    byte[] wallet = presence.wallet;
 
-                    if (wallet.Equals(wallet_address, StringComparison.Ordinal))
+                    if (wallet.SequenceEqual(wallet_address))
                     {
                         return presence.pubkey;
                     }
 
                 }
             }
-            return "";
+            return null;
         }
 
         // Retrieve a presence entry connected S2 node. Returns null if not found
-        public static string getRelayHostname(string wallet_address)
+        public static string getRelayHostname(byte[] wallet_address)
         {
             string ip = null;
             lock (PresenceList.presences)
@@ -209,7 +210,7 @@ namespace SPIXI
                 foreach (Presence presence in PresenceList.presences)
                 {
                     // Check if it matches the entry's wallet address
-                    if (presence.wallet.Equals(wallet_address, StringComparison.Ordinal))
+                    if (presence.wallet.SequenceEqual(wallet_address))
                     {
                         // Go through each presence address searching for C nodes
                         foreach (PresenceAddress addr in presence.addresses)

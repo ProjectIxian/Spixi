@@ -2,6 +2,7 @@
 using DLT.Meta;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SPIXI
@@ -45,13 +46,13 @@ namespace SPIXI
 
     public class Friend
     {
-        public string wallet_address
+        public byte[] wallet_address
         {
             get;
             set;
         }
 
-        public string pubkey
+        public byte[] pubkey
         {
             get;
             set;
@@ -71,7 +72,7 @@ namespace SPIXI
 
         public bool approved = true;
 
-        public Friend(string wallet, string public_key, string nick, bool approve = true)
+        public Friend(byte[] wallet, byte[] public_key, string nick, bool approve = true)
         {
             wallet_address = wallet;
             pubkey = public_key;
@@ -154,7 +155,7 @@ namespace SPIXI
                 foreach(Presence presence in PresenceList.presences)
                 {
                     // Check if it matches the friend's wallet address
-                    if(presence.wallet.Equals(wallet_address, StringComparison.Ordinal))
+                    if(presence.wallet.SequenceEqual(wallet_address))
                     {
                         // Go through each presence address searching for C nodes
                         foreach (PresenceAddress addr in presence.addresses)

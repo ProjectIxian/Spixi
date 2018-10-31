@@ -1,4 +1,5 @@
-﻿using SPIXI;
+﻿using DLT.Network;
+using SPIXI;
 using SPIXI.Network;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace DLT.Meta
 {
     class Node
     {
+        public static WalletState walletState;
+
         // Use the SPIXI-specific wallet storage code
         public static SPIXI.Wallet.WalletStorage walletStorage;
 
@@ -33,6 +36,9 @@ namespace DLT.Meta
             // Initialize the crypto manager
             CryptoManager.initLib();
 
+            // Initialize the wallet state
+            walletState = new WalletState();
+
             // Prepare the wallet
             walletStorage = new SPIXI.Wallet.WalletStorage(Config.walletFile);
 
@@ -42,6 +48,8 @@ namespace DLT.Meta
             // Read the account file
             localStorage.readAccountFile();
 
+            // Start the network queue
+            NetworkQueue.start();
 
             // Prepare the stream processor
             StreamProcessor.initialize();
@@ -84,6 +92,9 @@ namespace DLT.Meta
         {
             // Stop the loop timer
             mainLoopTimer.Stop();
+
+            // Stop the network queue
+            NetworkQueue.stop();
 
             NetworkClientManager.stopClients();
 
