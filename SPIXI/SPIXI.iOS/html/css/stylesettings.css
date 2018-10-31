@@ -1,0 +1,122 @@
+.settings_hr {
+    color: #D4D4D4;
+    background: #D4D4D4;
+    border-color: #D4D4D4;
+    width: 100%;
+    margin-top: 29px;
+}
+
+.settings_subtitle {
+    margin-top: 12px;
+    margin-left: 25px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.settings_desc {
+    margin-top: 6px;
+    margin-left: 25px;
+    font-style: italic;
+    font-weight: 200;
+}
+
+.settings_desc2 {
+    margin-top: 6px;
+    margin-left: 25px;
+    font-weight: 200;
+}
+
+.settings_nick {
+    margin: auto;
+    margin-top: 15px;
+    width: 90%;
+}
+
+.settings_remove {
+    margin-left: 25px;
+    color: #CD003F;
+}
+
+.settings_avatar {
+    position: absolute;
+    right: 20px;
+    top: 180px;
+    width: 65px;
+    height: 65px;
+
+    border-radius: 65px;
+    
+    background-image: url('../img/Avatar_settings.png');
+    background-size: 65px 65px;
+    background-repeat: no-repeat;
+}
+
+#nicknameInput {
+    margin: auto;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #00aaf1;
+    color: #000;
+    width: 100%;
+    font-size: 110%;
+    
+    background-image: url('../img/Edit_icon_Idle.png');
+    background-size: 21px 20px;
+    background-repeat: no-repeat;
+    background-position: right top;
+    padding-right: 30px;
+}
+
+
+.button {
+    width: 80%;
+    height: 51px;
+    color: #CD003F;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 125%;
+    padding: 12px;
+    border: 1px solid #CD003F;
+    border-radius: 25px;
+    margin: auto;
+    
+}
+
+.button:hover,
+.button:active {
+    background-color: #CD003F;
+    color: #FFF;
+}
+
+.delbutton {
+    color: #C90000;
+    font-weight: 800;
+    font-style: italic;
+    font-size: 18px;
+    margin-left: 25px;
+    padding-left: 40px;
+    margin-top: 14px;
+    
+    background-image: url('../img/error.png');
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+    background-position: 0px 4px;
+}
+
+.delmsgbutton {
+    color: #C90000;
+    font-weight: 800;
+    font-style: italic;
+    font-size: 18px;
+    margin-left: 25px;
+    padding-left: 40px;
+    margin-top: 14px;
+    margin-bottom: 50px;
+    
+    background-image: url('../img/historyDelete_icon.png');
+    background-size: 24px 20px;
+    background-repeat: no-repeat;
+    background-position: 0px 4px;
+}

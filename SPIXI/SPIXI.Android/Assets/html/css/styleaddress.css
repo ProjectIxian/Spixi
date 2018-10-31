@@ -1,0 +1,76 @@
+.address_qr_holder {
+    color: #000;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #F9F9F9;
+}
+
+.address_qr {
+    margin: auto;
+    margin-top:10px;
+    margin-bottom:10px;
+
+    padding: 10px;
+    width: 320px;
+    height: 320px;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.address_text {
+    color: #6D6D6D;
+    font-style: italic;
+}
+
+.address_info {
+    color: #6D6D6D;
+    width: 200px;
+    margin: auto;
+    margin-top: -10px;
+    height: 26px;
+    text-align: left;
+    padding-left: 35px;
+    
+    background-image: url('../img/info_grey.png');
+    background-repeat: no-repeat;
+    background-size: 22px 22px;
+    
+    margin-bottom: 10px;
+}
+
+.address_hr {
+    color: #D4D4D4;
+    background: #D4D4D4;
+    border-color: #D4D4D4;
+    width: 200px;
+    margin-top: 14px;
+    height: 2px;
+}
+
+.address_desc {
+    position: absolute;
+    left: 90px;
+    right: 10px;
+    top: 80px;    
+    text-align: left;
+}
+
+.wallet_icon {
+    width: 26px;
+    height: 26px;
+    margin-top: 50px;
+    margin-left: 20px;
+    
+    background-image: url('../img/Wallet_icon.png');
+    background-size: 26px 26px;
+    background-repeat: no-repeat;
+}
+
+.wallet_top {
+    width: 100%;
+    height: 65px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #DDD;   
+}

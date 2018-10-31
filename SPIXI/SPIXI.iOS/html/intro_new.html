@@ -1,0 +1,95 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Intro</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/styleintronew.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+<div id="wrap" class="container-fluid noselect">
+    
+    <div id="toolbar" class="toolbar">
+        <div id="backbtn" class="toolbar_back"></div>
+        <div class="toolbar_text" id="title">New User</div>
+    </div>
+    <div class="toolbarholder">
+    </div>
+    
+    
+    <div class="intro_description">
+        Set your displayed image<br/>and desired nickname<br/>to get started with Spixi
+    </div>
+    
+    <div class="intro_top"></div>
+    <div id="avatar" class="intro_avatar">
+        <img id="avatar_image" src="avatar.png" class="intro_user_avatar"/>
+    </div>
+
+    <div class="intro_avatar_text">Tap Avatar to upload image</div>
+    
+    <div class="intro_nick">
+        <input type="text" id="nicknameInput" onkeyup="" placeholder="Nickname">
+    </div>
+    
+    <div class="intro_bottom">
+        Please note that generating an<br/>encrypted key might take a while<br/>on slower devices.
+    </div>
+    
+    <div id="create" class="button">Finish</div>
+    
+    <div id="overlay" class="overlay" style="display: none;">
+        <div class="overheader">Creating your Spixi account...</div>
+        <img class="overimage" src="img/Spixi_logo_loadin.png" alt="" width="64" height="79">
+        <div class="overbottom">Please note that generating an<br/>encrypted key might take a while<br/>on slower devices.</div>
+    </div>
+    
+    
+</div>
+
+<script type="text/javascript">
+    document.getElementById("create").onclick = function () {
+        var nick = document.getElementById("nicknameInput").value;
+        if (isBlank(nick))
+        {
+            location.href = "ixian:error";
+            return;
+        }
+        
+        document.getElementById("overlay").style.display = "block";    
+        
+
+        setTimeout(function () { createAccount(); }, 2000);
+    }
+
+    function createAccount() {
+        var nick = document.getElementById("nicknameInput").value;
+
+        location.href = "ixian:create:" + nick;
+    }
+
+    document.getElementById("avatar").onclick = function () {
+        location.href = "ixian:avatar";
+    }    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    function loadAvatar(avatar_path) {
+        document.getElementById("avatar_image").src = avatar_path + "?t=" + new Date().getTime();
+    }
+</script>
+    
+</body>    
+</html>

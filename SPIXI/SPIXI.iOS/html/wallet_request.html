@@ -1,0 +1,109 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Wallet</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylewallet.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+</head>
+    
+<body>
+<div id="wrap" class="container-fluid noselect">
+    
+    <div id="toolbar" class="toolbar">
+        <div id="backbtn" class="toolbar_back"></div>
+        <div class="toolbar_text" id="title">Request IXI</div>
+    </div>
+    <div class="toolbarholder">
+    </div>
+    
+    <div id="req_from" style="display:none;">
+        <div class="wallet_subtitle">Payment will be requested from</div>
+        <div class="wallet_from_holder">
+            <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
+            <div id="contact_wallet_address" class="col-xs-10 wallet_from_text"></div>
+        </div>
+        <hr class="wallet_hr" />
+    </div>
+
+    <div class="wallet_amount">
+        <input type="number" id="wallet_amount_input" onkeyup="generateQR()" placeholder="Enter amount" pattern="[0-9]*">
+    </div>
+    
+    <div class="wallet_qr_holder">
+        <div class="wallet_qr" id="qrcode"></div>
+    </div>
+    
+    <div class="wallet_current_address_label">Current address</div>
+    <div id="wal_addr" class="wallet_current_address">23423423</div>
+    
+    <div id="sendr" class="button" style="margin-top: 20px; margin-bottom:40px; display:none;">Send payment request</div>
+
+</div>
+
+<script type="text/javascript">
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    document.getElementById("sendr").onclick = function() {
+        var amount = document.getElementById("wallet_amount_input").value;
+        if (isBlank(amount)) {
+            location.href = "ixian:error";
+            return;
+        }
+        location.href = "ixian:request:" +  amount;
+    }
+
+    var wal_id = "";
+
+    var qrcode = new QRCode("qrcode", {
+        text: "SPIXI",
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    function setAddress(addr) {
+        wal_id = addr;
+        generateQR();
+        document.getElementById("wal_addr").innerHTML = wal_id;
+    }
+
+    function generateQR() {
+        var amount = document.getElementById("wallet_amount_input").value;
+        qrcode.clear(); // clear the code.
+        qrcode.makeCode(wal_id + ":send:" + amount);
+
+    }
+
+    // Hide the request from part and the send request button
+    function showRequest() {
+        document.getElementById("req_from").style.display = "block";
+        document.getElementById("sendr").style.display = "block";
+
+    }
+
+    function setContactAddress(address, nick) {
+        showRequest();
+        document.getElementById("contact_wallet_address").innerHTML = "<b>"+nick+"</b><br />"+address;
+    }
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+</script>
+    
+</body>    
+</html>

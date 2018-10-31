@@ -1,0 +1,209 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Settings</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylesettings.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+    <div id="wrap" class="container-fluid noselect">
+        <div id="toolbar" class="toolbar">
+            <div id="backbtn" class="toolbar_back"></div>
+            <div class="toolbar_text" id="title">My Settings</div>
+            <div id="savebtn" class="toolbar_right_text">Save</div>
+        </div>
+        <div class="toolbarholder">
+        </div>
+
+        <div class="settings_subtitle">Edit Nickname</div>
+        <div class="settings_nick">
+            <input type="text" id="nicknameInput" onkeyup="" placeholder="Nickname">
+        </div>
+        <hr class="settings_hr" />
+        <div class="settings_subtitle" style="margin-top: -5px;">Avatar Options</div>
+        <div class="settings_desc2" style="margin-bottom: 20px;">Tap Avatar to select image</div>
+        <img id="avatar" src="avatar.png" class="settings_avatar" />
+        <a id="remove_avatar" class="settings_remove" href="ixian:remove" style="display:none;">Remove current image</a>
+
+
+        <hr class="settings_hr" />
+        <div class="settings_subtitle" style="margin-top: -5px;">Backup your Spixi</div>
+        <div class="settings_desc2">Instructions on how to backup</div>
+        <div id="backup" class="button" style="margin-top: 44px;">Backup my Spixi account</div>
+
+        
+        <hr class="settings_hr" />
+        <div class="settings_subtitle" style="margin-top: -5px;">Delete Wallet</div>
+        <div class="settings_desc2">Instructions on how to delete wallet</div>
+        
+        <div id="deletewallet" class="delbutton">Delete my WALLET</div>
+      
+        <div id="deleteWalletModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    Delete my WALLET
+                </div>
+
+                <div class="hmodal-text">
+                Are you sure you want to delete your WALLET?
+                </div>
+                <div class="hmodal-footer">
+                    <div class="hmodalclosehalf">CANCEL</div>
+                    
+                    <a href="ixian:delete">
+                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        
+        
+        <hr class="settings_hr" />
+        <div class="settings_subtitle" style="margin-top: -5px;">Delete Account</div>
+        <div class="settings_desc2">Instructions on how to delete account</div>        
+        
+        <div id="deleteaccount" class="delbutton">Delete my ACCOUNT</div>
+
+        <div id="deleteAccountModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    Delete my ACCOUNT
+                </div>
+
+                <div class="hmodal-text">
+                Are you sure you want to delete your ACCOUNT?
+                </div>
+                <div class="hmodal-footer">
+                    <div class="hmodalclosehalf">CANCEL</div>
+                    
+                    <a href="ixian:deletea">
+                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        <hr class="settings_hr" />
+        <div class="settings_subtitle" style="margin-top: -5px;">Messages history</div>
+        <div class="settings_desc2">Instructions on how to delete messages history</div>
+        
+        <div id="deletehistory" class="delmsgbutton">Delete ENTIRE messages history</div>
+
+        <div id="deleteHistoryModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    Delete messages history
+                </div>
+
+                <div class="hmodal-text">
+                Are you sure you want to delete your ENTIRE messages history?
+                </div>
+                <div class="hmodal-footer">
+                    <div class="hmodalclosehalf">CANCEL</div>
+                    
+                    <a href="ixian:deleteh">
+                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>        
+
+    </div>
+<script type="text/javascript">
+        
+    var deleteWalletModal = document.getElementById('deleteWalletModal');
+    var deleteAccountModal = document.getElementById('deleteAccountModal');
+    var deleteHistoryModal = document.getElementById('deleteHistoryModal'); 
+    
+    document.getElementById("savebtn").onclick = function() {
+        var nick = document.getElementById("nicknameInput").value;
+        if (isBlank(nick)) {
+            location.href = "ixian:error";
+            return;
+        }
+        location.href = "ixian:save:" + nick;
+    } 
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    document.getElementById("avatar").onclick = function() {
+        location.href = "ixian:avatar";
+    } 
+    document.getElementById("backup").onclick = function () {
+        location.href = "ixian:backup";
+    } 
+    document.getElementById("deletewallet").onclick = function() {
+        deleteWalletModal.style.display = "block";
+    }
+    document.getElementById("deleteaccount").onclick = function () {
+        deleteAccountModal.style.display = "block";
+    }   
+    document.getElementById("deletehistory").onclick = function () {
+        deleteHistoryModal.style.display = "block";
+    }  
+    
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+    function setNickname(nick) {
+        document.getElementById("nicknameInput").value = nick;
+    }
+    
+   
+    // Handle modals outside tap
+    window.onclick = function(event) {
+        if(event.target == deleteWalletModal) {
+            deleteWalletModal.style.display = "none";
+        }
+        else if(event.target == deleteAccountModal) {
+            deleteAccountModal.style.display = "none";
+        }
+        else if(event.target == deleteHistoryModal) {
+            deleteHistoryModal.style.display = "none";
+        }
+    }
+            
+    document.getElementsByClassName("hmodal-footer")[0].onclick = function() {
+        deleteWalletModal.style.display = "none";
+    }
+    document.getElementsByClassName("hmodal-footer")[1].onclick = function() {
+        deleteAccountModal.style.display = "none";
+    }    
+    document.getElementsByClassName("hmodal-footer")[2].onclick = function() {
+        deleteHistoryModal.style.display = "none";
+    }    
+
+    function loadAvatar(avatar_path) {
+        var av_path = avatar_path + "?t=" + new Date().getTime();
+        document.getElementById("avatar").src = av_path;
+    }
+
+    function showRemoveAvatar(show) {
+        if (show == true) {
+            document.getElementById("remove_avatar").style = "display:block";
+        }
+        else {
+            document.getElementById("remove_avatar").style = "display:none";
+        }
+    }
+    
+</script>
+    
+</body>
+</html>

@@ -1,0 +1,627 @@
+body {
+    font-family:'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    background-color: #F1F1F1;
+}
+
+.clear { clear: both }
+         
+
+/* Toolbar */
+.toolbar {
+    width: 100%;
+    height: 62px;
+    background: #D90063;
+    color: #fff;
+    display: block;
+    position: fixed;
+    z-index: 99;
+    border-bottom: solid 1px #6D3A47;
+}
+
+.toolbar_text {
+    
+    padding-top: 9px;
+    font-size: 20px;
+    text-align: left;
+}
+
+.toolbar_subtext {
+    padding-top: 0px;
+    font-size: 14px;
+    text-align: left;
+    font-style: italic;
+    font-weight: 200;
+}
+
+
+.toolbar_back {
+    position: absolute;
+    width: 60px; 
+    height: 62px;
+    margin-left: 0px;
+    margin-top: 0px;
+    background-image: url('../img/Back_icon.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.toolbar_back_chats {
+    position: absolute;
+    width: 60px;
+    height: 56px;
+    margin-left: 0px;
+    margin-top: 0px;
+    background: url('../img/Chats_icon_active.png') no-repeat;
+    background-size: 36px 27px;
+    background-position: center;
+}
+
+.back_indicator {
+    width: 56px;
+    height: 56px;
+    margin: auto;
+    text-decoration: none;
+    font-size: 12px;
+    padding-left: 34px;
+    padding-top: 29px;
+    background: url('../img/bottomIndicator.png') no-repeat;
+    background-size: 20px 20px;
+    background-position: 27px 27px;
+}
+
+.toolbar_mid {
+    position: absolute;
+    left:60px;
+    right:60px;
+    height: 62px;
+}
+
+.toolbar_right {
+    position: absolute;
+    width: 60px; 
+    height: 62px;
+    right: 0;
+    top: 0;
+    padding-top: 10px;
+}
+
+.toolbarholder {
+    width: 100%;
+    height: 72px;
+}
+
+.toolbar_avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+
+.toolbar_avatar_indicator {
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left:20px;
+    bottom: 5px;
+}
+
+/* Chat bar */
+
+.chatholder {
+    -moz-transition: all 0.6s ease-in-out;
+    -ms-transition: all 0.6s ease-in-out;
+    -o-transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    transition: all 0.6s;    
+    
+    width: 100%;
+    height: 57px;
+   /* background-color: aqua;*/
+}
+
+#chatbar {
+    -moz-transition: all 0.6s ease-in-out;
+    -ms-transition: all 0.6s ease-in-out;
+    -o-transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    transition: all 0.6s;
+    
+    position: fixed;
+    z-index: 99;
+    display: table;
+    width: 100%;
+    bottom: 0;   
+    height: 55px;
+    background-color: #F3F3F3;
+    border-top: 1px solid #CBCBCB;
+}
+
+#chatattachbar {
+    -moz-transition: all 0.6s ease-in-out;
+    -ms-transition: all 0.6s ease-in-out;
+    -o-transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    transition: all 0.6s;
+    
+    position: fixed;
+    z-index: 99;    
+    width: 100%;
+    bottom: -55px;
+    height: 55px;
+    background-color: #F3F3F3;
+    border-top: 1px solid #CBCBCB;
+}
+
+#chat_attach {
+    display: table-cell;
+    background-image: url('../img/AttachFile_icon.png');
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    background-position: center;
+    width: 50px;
+    height: 50px;
+}
+
+#chat_send {
+    display: table-cell;
+    background-image: url('../img/SendMessage_icon.png');
+    background-repeat: no-repeat;
+    background-size: 28px 24px;
+    background-position: center;
+    width: 50px;
+    height: 50px;
+}
+
+
+#chat_input {
+    display: table-cell;
+    width: 100%;
+    padding: 14px 0px;
+    border: none;
+    background-color: #F3F3F3;
+    font-size: 16px;
+    outline: none;
+}
+
+#ca_request {
+    position: absolute;
+    left: 120px;
+    width: 120px;
+    height: 55px;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 35px;
+    background-image: url('../img/Request_icon_idle.png');
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-position: center 5px;
+}
+
+#ca_send {
+    position: absolute;
+    width: 120px;
+    height: 55px;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 35px;
+    background-image: url('../img/Send_icon_idle.png');
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-position: center 5px;
+}
+
+/* Messages */
+@keyframes chat_animation {
+    from {transform: scaleY(0);}
+    to {transform: scaleY(1);}
+}
+
+#messages {
+    width: 100%;
+    margin-bottom: 0px;
+    /*background-color: aqua;*/
+    overflow: scroll;
+}
+
+.request
+{
+    position:relative;
+    color: black;
+    float: left;
+    width: 200px;
+    left: 50px;
+    height: 200px;
+    
+    animation-name: chat_animation;
+    animation-duration: 0.3s;  
+}
+
+.sent {
+    position:relative;
+    color: black;
+    float:right;
+    width: 200px;   
+    right: 50px;
+    height: 200px;
+    
+    animation-name: chat_animation;
+    animation-duration: 0.3s;  
+}
+
+
+
+.request_amount {
+    font-size: 26px;
+    font-weight: 400;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.request_header {
+    background-color: #E5337B;
+    width: 200px;
+    float: left;
+    text-align: center;
+    color: #FFF;
+    font-style: italic;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.sent_header {
+    position: absolute;
+    background-color: #398FD8;
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    color: #FFF;
+    font-style: italic;
+    padding-top: 10px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.sent_text {
+    position: absolute;
+    top: 40px;
+    width: 200px;
+    height: 100px;   
+    
+    background:#f7f7f7;
+    border: 1px solid #E5337B;
+    border-top: 0px solid #fff;
+    border-bottom: 1px solid #D7D7D7;
+
+    /*border-radius:10px;*/
+    color: black;
+    padding: 15px;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.request_footer {
+    position: absolute;
+    top: 140px;
+    background-color: #E5337B;
+
+    width: 200px;
+    height: 40px;
+
+    float: left;
+    color: #FFF;
+    font-style: italic;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    border-radius: 0px 0px 10px 10px;
+    border-top: 0px solid #fff;
+    text-align: center;
+
+}
+
+.sent_footer {
+    position: absolute;
+    top: 140px;
+    background-color: #398FD8;
+    text-align: center;
+    width: 200px;
+    height: 40px;
+    color: #FFF;
+    font-style: italic;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    border-radius: 0px 0px 10px 10px;
+    border: 1px solid #DAEBDD;  
+    border-top: 0px solid #fff;
+
+}
+
+.from-them,
+.from-me
+{
+    position:relative;
+    background:#f7f7f7;
+    border: 1px solid #e9c7cd;
+    border-radius:10px;
+    color: black;
+    float: left;
+    margin-left: 56px;
+    margin-right: 85px;
+    margin-bottom: 20px;
+    padding: 15px;
+    padding-top: 5px;
+    box-shadow: 1px 1px 1px 1px #D3D3D3;
+    min-width: 60px;
+    
+    animation-name: chat_animation;
+    animation-duration: 0.3s;     
+}
+
+
+
+
+.from-me
+{
+    float: right;
+    margin-left: 125px;
+    margin-right: 56px;
+    box-shadow: -1px 1px 1px 1px #D3D3D3;
+    border: 1px solid #cccccc;
+    background: #edf2f9;
+}
+
+.from-them .time,
+.from-me .time
+{
+    font-size: 10px;
+    color: #424242;
+    z-index: 4;
+    position: absolute;
+}
+
+.from-me .time
+{
+    float: right;
+}
+            
+.from-me .avatar,
+.from-them .avatar
+{
+    position: absolute;
+    left: -45px;
+    z-index: 6;
+    bottom: -14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+}
+            
+.from-me .avatar
+{
+    left: auto;
+    right: -46px;
+}
+
+.from-them:before,
+.from-me:before
+{
+    content:"";
+    position:absolute;
+    background:#f7f7f7;
+    z-index:2;
+    bottom:-3px;
+    left:-8px;
+    width: 27px;
+    height:20px;
+    border-bottom:1px solid #e9c7cd;
+    -webkit-transform:translate(0, -2px);
+    -moz-transform:translate(0, -2px);
+}
+
+.from-them:after,
+.from-me:after
+{
+    content:"";
+    position:absolute;
+    z-index:3;
+    bottom:-3px;
+    left:5px;
+    width:26px;
+    height:21px;
+    background:#F1F1F1;
+    border-right: 1px solid #e9c7cd;
+    border-bottom-right-radius: 10px;
+    -webkit-transform:translate(-31px, -2px);
+    -moz-transform:translate(-31px, -2px);
+}
+            
+.from-me:before {
+    right:-7px;
+    left: auto;
+    border-bottom:1px solid #cccccc;
+    background: #edf2f9;
+}
+
+.from-me:after {
+    right:-57px;
+    left: auto;
+    border-left: 1px solid #cccccc;
+    border-right: none;
+    border-bottom-left-radius: 10px;
+}
+            
+@media(max-width: 800px)
+{
+/*    body
+    {
+        font-size: 14px;
+    }
+                
+    .from-me,
+    .from-them
+    {
+        border-radius:10px;
+    }*/
+}
+
+
+/* Warning bar */
+
+.warning_bar {
+    
+    width: 100%;
+    height: 54px;
+    top: 62px;
+    background: #959595;
+    opacity: 0.9;
+    color: #fff;
+    display: block;
+    position: fixed;
+    z-index: 99;
+}
+
+.warning_bar_text {
+    width:100%; 
+    height:52px;
+    background: url("../img/info_icon.png") no-repeat;;
+    background-size: 23px 23px;
+    background-position: 18px 14px;
+    text-align: center;
+    padding-top: 16px;
+    font-size: 15px;
+}
+
+
+/* Contact request bar */
+.request_bar {
+    width: 100%;
+    height: 104px;
+    top: 62px;
+    background: #2C4758;
+    color: #FFF;
+    display: block;
+    position: fixed;
+    z-index: 99;
+    border-bottom: 1px solid #AFAFAF;
+    
+    background-image: url('../img/Contacts_icon_active.png');
+    background-repeat: no-repeat;
+    background-size: 39px 26px;
+    background-position: 10px 12px;
+}
+
+.request_bar_text {
+    color: #FFF;
+    font-style: italic;
+    padding-left: 80px;
+    margin-top: 16px;
+    margin-bottom: 10px;
+}
+
+.request_bar_ignore {
+    width: 130px;
+    position: absolute;
+    left: 80px;
+    padding-top: 8px;
+    text-align: center;
+    font-size: 15px;
+    height: 37px;
+    background-color: #F4F4F4;
+    border-radius: 30px;
+    color: #000;
+}
+
+.request_bar_accept {
+    width: 130px;
+    position: absolute;
+    left: 220px;
+    padding-top: 8px;
+    text-align: center;
+    font-size: 15px;
+    height: 37px;
+    background-color: #F4F4F4;
+    border-radius: 30px;
+    color: #000;
+}
+
+.request_bar_icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+/*
+ * MODALS 
+ */
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2001; /* Sit on top */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content/Box */
+.modal-content {
+    position: relative;
+
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+    padding: 0;
+    border: 1px solid #888;
+    width: 70%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {bottom:-300px; opacity:0} 
+    to {bottom:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {bottom:-300px; opacity:0}
+    to {bottom:0; opacity:1}
+}
+
+.cmodalclose {
+    padding-top: 14px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.cmodal-header {
+    padding: 24px 24px;
+    background-color: #FAFAFA;
+    border-bottom: solid 1px #E7E7E7;
+    color: BLACK;
+    height: 110px;
+    font-size: 16px;
+    text-align: center;
+}
+
+#cmodal-icon {
+    margin-top: 10px;
+    width: 38px;
+    height: 38px;
+}
+
+.cmodal-footer {
+    padding: 2px 16px;
+    background-color: #F4F4F4;
+    color: #4D4D4D;
+    height: 55px;
+}

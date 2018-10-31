@@ -1,0 +1,300 @@
+.wallet_hr {
+    color: #D4D4D4;
+    background: #D4D4D4;
+    border-color: #D4D4D4;
+    width: 100%;
+    margin-top: 29px;
+}
+
+.wallet_subtitle {
+    margin-top: 12px;
+    margin-left: 25px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.wallet_from_holder {
+    padding-top: 14px;
+    height: 48px;
+}
+
+.wallet_from_avatar {
+    padding-top: 0px;
+    padding-left: 25px;   
+}
+
+.wallet_from_text {
+    color: #505050;
+    padding-top: 6px;
+    font-size: 12px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#wallet_amount_input {
+    margin: auto;
+    margin-left: 70px;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #00aaf1;
+    color: #000;
+    font-size: 110%;
+    width: 80%;
+    
+}
+
+.wallet_amount {
+    margin-top: 10px;
+    background-image: url('../img/Request_icon_active.png');
+    background-size: 32px 25px;
+    background-repeat: no-repeat;
+    background-position: 25px 0px;
+}
+
+.wallet_qr_holder {
+    margin-top: 8px;
+    height: 220px;
+    background-color: #989898;
+    width: 100%;
+}
+
+.wallet_qr {
+    display: table;
+    width: 200px;
+    height: 200px;
+    margin: auto;
+
+}
+
+.wallet_current_address_label {
+    text-align: center;
+    font-weight: 800;
+    margin-top: 14px;
+}
+
+.wallet_current_address {
+    text-align: center;
+    font-style: italic;
+    margin-top: 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+
+.status_ixi {
+    width: 100%;
+    height: 40px;
+
+    background: url("../img/Ixi_icon.png") no-repeat;;
+    background-size: 20px 25px;
+    background-position: center;
+}
+
+
+#wallet_status_balance {
+    padding-top: 7px;
+    width: 100%;
+    height: 79px;
+    background: #050505;
+    color: #FFF;
+}
+
+
+.wallet_status_dbalance {
+    font-size: 210%;
+}
+
+.wallet_status_bottom {
+    font-size: 85%;
+    font-style: italic;
+}
+
+.wallet_quickscanbutton {
+    float: right;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    margin-top: 8px;
+    padding-right: 10px;
+}
+
+#send_to {
+    background-color: #FFF;
+    border-bottom: 1px solid #D4D4D4;
+    border-top: 1px solid #D4D4D4;  
+    height: 120px;
+}
+
+#send_2_to {
+    background-color: #FFF;
+    border-bottom: 1px solid #D4D4D4;
+    border-top: 1px solid #D4D4D4;  
+    height: 120px;
+    margin-top: 20px;
+}
+
+.wallet_sendto_text {
+    color: #CE0041;
+    font-style: italic;
+    padding-right: 25px;
+}
+
+.wallet_send_address {
+    height: 70px;
+}
+
+#wallet_send_address_input {
+    margin: auto;
+    margin-left: 10px;
+    margin-top: 30px;
+
+    width: 80%;
+    
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #CCC;
+    color: #000;
+    font-size: 110%;    
+}
+
+.wallet_sendto_pick {
+    float: right;
+    width: 37px;
+    height: 37px;
+    margin-top: 20px;
+    margin-right: 20px;
+    
+    background-image: url('../img/ChooseContact_icon.png');
+    background-size: 37px 16px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    
+}
+
+.wallet_sendto_amount {
+    margin-top: 30px;
+    background-image: url('../img/SendIXI_icon_blue.png');
+    background-size: 31px 25px;
+    background-repeat: no-repeat;
+    background-position: 25px 0px;
+}
+
+#wallet_sendto_amount_input {
+    margin-left: 70px;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #CCC;
+    color: #000;
+    font-size: 110%;
+    width: 200px;
+    
+}
+
+.send_2_bottom {
+    position: fixed;
+    bottom: 0px;
+    height: 50px;
+    width: 100%;
+    background-color: #CBD4D8;
+    color: #676767;
+    font-size: 16px;
+    font-style: italic;
+    padding-left: 20px;
+    padding-top: 14px;
+}
+
+.send_2_accept {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    width: 50px;
+    height: 50px;
+    background-color: #3BA7EF;
+    
+    background-image: url('../img/Done_icon.png');
+    background-size: 18px 15px;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.sent_amount {
+    color: #505050;
+    padding-top: 0px;
+    font-size: 22px;
+    text-align: left;
+}
+
+
+.sent_status {
+    margin-top: 6px;
+    margin-left: 25px;
+    font-weight: 200;
+    color: #70C52D;
+    font-weight: 600;
+}
+
+.unconfirmed_status {
+    margin-top: 6px;
+    margin-left: 25px;
+    font-weight: 200;
+    color: #777;
+    font-weight: 600;
+}
+
+
+.send_request_bottom {
+    position: fixed;
+    bottom: 0px;
+    height: 60px;
+    width: 100%;
+    background-color: #CD003F;
+    color: #FFF;
+    font-size: 16px;
+    padding-left: 80px;
+    padding-top: 18px;
+    
+    background-image: url('../img/Send_white.png');
+    background-repeat: no-repeat;
+    background-size: 31px 25px;
+    background-position: 10px 16px;
+}
+
+.send_request_accept {
+    position: absolute;
+    top:0px;
+    right: 0px;
+    width: 60px;
+    height: 60px;    
+    background-image: url('../img/Forward_icon.png');
+    background-size: 20px 20px;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+
+
+.button {
+    width: 80%;
+    height: 51px;
+    color: #CD003F;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 125%;
+    padding: 12px;
+    border: 1px solid #CD003F;
+    border-radius: 25px;
+    margin: auto;
+    
+}
+
+.button:hover,
+.button:active {
+    background-color: #CD003F;
+    color: #FFF;
+}

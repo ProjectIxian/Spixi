@@ -1,0 +1,100 @@
+body {
+    font-family:'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    background-color: #CC0046;
+    color: #FFFFFF;
+}
+
+#logo {
+    margin: auto;
+    margin-top: 84px;
+    width: 87px;
+    height: 108px;
+    background-image: url('../img/SpixiLogo_Splash.png');
+    background-size: 87px 108px;
+}
+
+#title {
+    width: 100%;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-weight: 100;
+}
+
+.subtitle {
+    width: 100%;
+    text-align: center;
+    font-size: 80%;
+    font-weight: 100;
+}
+
+hr {
+    color: #DB8499;
+    background: #DB8499;
+    border-color: #DB8499;
+    width: 50%;
+    margin-top: 29px;
+}
+
+.description {
+    width: 100%;
+    text-align: center;
+    font-size: 70%;
+    font-weight: 100;
+}
+
+.button {
+    width: 80%;
+    height: 51px;
+    color: #fff;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 75%;
+    padding: 14px;
+    border: 1px solid #fff;
+    border-radius: 25px;
+    margin: auto;
+    
+}
+
+.extra_margin {
+    margin-top: 37px;  
+}
+
+.small_margin {
+    margin-top: 20px;  
+}
+
+
+.icon_create {
+    background-image: url('../img/Create_icon_Idle.png');
+    background-size: 21px 19px;
+    background-repeat: no-repeat;
+    background-position: 30px 13px;
+}
+.icon_create:hover,
+.icon_create:active {
+    background-image: url('../img/Create_icon_Active.png');
+}
+
+.icon_restore {
+    background-image: url('../img/Restore_icon_Idle.png');
+    background-size: 21px 19px;
+    background-repeat: no-repeat;
+    background-position: 30px 13px;
+}
+.icon_restore:hover,
+.icon_restore:active {
+    background-image: url('../img/Restore_icon_Active.png');
+}
+
+
+
+.button:hover,
+.button:active {
+    background-color: #fff;
+    color: #E01A52;
+}

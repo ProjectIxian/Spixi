@@ -1,0 +1,98 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Spixi Address</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylesettings.css">
+    <link rel="stylesheet" type="text/css" href="css/styleaddress.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+
+</head>
+    
+<body>
+    <div id="wrap" class="container-fluid noselect">
+        <div id="toolbar" class="toolbar">
+            <div id="backbtn" class="toolbar_back"></div>
+            <div class="toolbar_text" id="title">My Spixi Address</div>
+        </div>
+        <div class="toolbarholder">
+        </div>
+        
+        <div class="wallet_top">
+        <div class="wallet_icon"></div>
+
+        <div class="address_desc">Your Spixi address is tied to your Spixi<br/>Account. It is your primary ID, with<br/>which other users can send you contact<br/> requests and send or receive IXI.</div>
+        </div>
+        
+        <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+            <div class="address_qr" id="qrcode"></div>
+
+
+            <div id="wal1" class="address_text">Generating</div>
+            <div id="wal2" class="address_text">your SPIXI</div>
+            <div id="wal3" class="address_text">address...</div>
+            <hr class="address_hr" />
+            <div class="address_info"> Tap to copy to clipboard</div>
+
+        </div>
+        
+
+
+
+    </div>    
+
+    <script type="text/javascript">
+            var wal_id = "";
+
+            var clipboard = new ClipboardJS('.address_qr_holder', {
+                text: function() {
+                    return wal_id;
+                }});
+
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+            });
+
+            clipboard.on('error', function(e) {
+
+            });
+        
+        
+            var qrcode = new QRCode("qrcode", {
+                text: "",
+                width: 300,
+                height: 300,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            function setAddress(addr) {
+                wal_id = addr;
+                generateQR();
+                var parts = addr.match(/.{1,16}/g) || [];
+                document.getElementById("wal1").innerHTML = parts[0];
+                document.getElementById("wal2").innerHTML = parts[1];
+                document.getElementById("wal3").innerHTML = parts[2];
+            }
+        
+            function generateQR() {
+                qrcode.clear(); // clear the code.
+                qrcode.makeCode(wal_id + ":ixi");
+            }
+
+            document.getElementById("backbtn").onclick = function () {
+                location.href = "ixian:back";
+            } 
+            
+    </script>
+    
+</body>

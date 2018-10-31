@@ -1,0 +1,212 @@
+.toolbar_transparent {
+    opacity: 0.7;
+}
+
+.contact_user_avatar {
+    max-width:100%;
+    max-height:200px;
+    width: auto;
+    height: auto;
+
+}
+
+.contact_description {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 250px;
+    
+    background-color: #F6F6F6;
+    color: #FFF;
+    font-size: 100%;
+    font-weight: 100;
+    text-align: center;
+    
+}
+
+.avatar_placeholder {
+    height: 250px;
+    width: 100%;
+}
+
+
+.contact_actions {
+    height: 65px;
+    width: 300px;
+    margin: auto;
+    padding-top: 5px;
+    position:relative;
+}
+
+.action_chat {
+    width: 77px;
+    height: 87px; 
+    background-image: url('../img/StartChat_Idle.png');
+    background-size: 67px 67px;
+    background-repeat: no-repeat;
+    background-position: center top;
+    
+    position: absolute;
+    left:10px;
+    top:-40px;
+    padding-top: 70px;
+    
+    text-align: center;
+}
+.action_chat:hover,
+.action_chat:active {
+    background-image: url('../img/StartChat_Active.png');    
+}
+
+.request_chat {
+    width: 77px;
+    height: 87px;  
+    background-image: url('../img/Request_Idle.png');
+    background-size: 67px 67px;
+    background-repeat: no-repeat;
+    background-position: center top;
+    
+    position: absolute;
+    left:120px;
+    top:-40px;
+    padding-top: 70px;
+    
+    text-align: center;    
+}
+.request_chat:hover,
+.request_chat:active {
+    background-image: url('../img/Request_Active.png');    
+}
+
+.send_chat {
+    width: 77px;
+    height: 87px; 
+    background-image: url('../img/Send_Idle.png');
+    background-size: 67px 67px;
+    background-repeat: no-repeat;
+    background-position: center top;
+
+    position: absolute;
+    left:240px;
+    top:-40px;
+    padding-top: 70px;
+    
+    text-align: center;  
+}
+.send_chat:hover,
+.send_chat:active {
+    background-image: url('../img/Send_Active.png');    
+}
+
+.contact_remove {
+    background-color: #E7ECEE;
+    height: 54px;
+    border-top: 1px solid #D5D8DB;
+    border-bottom: 1px solid #D5D8DB;
+
+}
+
+.contact_remove_btn {
+    height: 54px;
+    color: #000;
+    padding-top: 14px;
+    padding-left: 90px;
+    font-size: 14px;
+    font-weight: 600;
+    
+    background-image: url('../img/remove_contact.png');
+    background-repeat: no-repeat;
+    background-size: 22px 22px;
+    background-position: 30px 14px;
+}
+
+.contact_removehistory_btn {
+    height: 54px;
+    color: #000;
+    padding-top: 14px;
+    padding-left: 90px;
+    font-size: 14px;
+    font-weight: 600;
+    background-image: url('../img/historyDelete_icon_Black.png');
+    background-repeat: no-repeat;
+    background-size: 23px 20px;
+    background-position: 28px 14px;
+}
+
+
+.contact_wallet {
+    background-color: #CD003F;
+    height: 58px;
+    border-bottom: 1px solid #C4C4C4;
+    text-align: center;
+    padding-top: 7px;
+    color: #FFF;
+}
+
+.contact_wallet_address {
+    font-style: italic;
+    color: #EEE;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+
+.contact_new_desc {
+    padding-left: 25px;
+    padding-top: 25px;
+    font-size: 16px;
+    color: #4D4D4D;
+}
+
+.button {
+    width: 80%;
+    height: 51px;
+    
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 125%;
+    padding: 12px;
+    border: 1px solid #CD003F;
+    border-radius: 25px;
+    margin: auto;
+    
+    background-color: #CD003F;
+    color: #FFF;
+}
+
+.button:hover,
+.button:active {
+    background-color: #F6F6F6;
+    color: #CD003F;
+}
+
+.contact_address {
+    margin: auto;
+    margin-top: 58px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.contact_quickscanbutton {
+    float: right;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    margin-top: -45px;
+    padding-right: 18px;
+}
+
+#addressInput {
+    margin: auto;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #00aaf1;
+    color: #000;
+    width: 100%;
+    font-size: 110%;
+    
+    padding-right: 60px;
+}

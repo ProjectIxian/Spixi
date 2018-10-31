@@ -1,0 +1,85 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Intro</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/stylelock.css">
+        
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body onload="onLoad()">
+<div id="wrap" class="container-fluid noselect">
+    <div class="subtitle">enter your lock phrase</div>
+    <div id="lock"  class="lockicon"></div>
+    
+    <div class="passwordHolder">
+        <input type="password" id="password" class="passwordInput" placeholder="">
+    </div>
+    
+    
+    <div id="logo"></div>
+    <div id="title">SPIXI</div>
+
+    
+    <div id="errorModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="cmodal-header">
+                    <div id="cmodal_message">The password you entered is not valid.</div>
+                    <img id="cmodal-icon" src="img/error.png"/>
+                </div>
+                
+                <div class="cmodal-footer">
+                    <div class="cmodalclose">DISMISS</div>
+                </div>
+
+            </div>
+    </div>
+    
+</div>
+    
+<script type="text/javascript">
+
+           
+    $("#password").keyup(function (event) {
+        if (event.keyCode === 13) {
+            var pass_text = document.getElementById("password").value;
+            location.href = "ixian:unlock:"+pass_text;
+        }
+    });
+    
+    
+    var errorModal = document.getElementById('errorModal');
+
+    var attachMode = false;
+            
+    // Handle modals outside tap
+    window.onclick = function(event) {
+        if(event.target == errorModal) {
+            errorModal.style.display = "none";
+        }
+    }
+            
+    document.getElementsByClassName("cmodal-footer")[0].onclick = function() {
+        errorModal.style.display = "none";
+    }
+    
+    function showError()
+    {
+        errorModal.style.display = "block";
+    }
+
+    function onLoad()
+    {
+        document.getElementById("password").focus();
+    }
+    
+</script>
+    
+</body>    
+</html>

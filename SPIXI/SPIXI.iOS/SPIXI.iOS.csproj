@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E113D2C0-6445-4CE6-A535-55513BCAC96F}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SPIXI.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>SPIXI.iOS</AssemblyName>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>ARM64</MtouchArch>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <BuildIpa>True</BuildIpa>
+    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\PictureiOS.cs" />
+    <Compile Include="Classes\PicturePickerImplementation.cs" />
+    <Compile Include="Classes\SpixiContentPageRenderer.cs" />
+    <Compile Include="Classes\SpixiWebViewRenderer .cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="Services\BackgroundTaskService.cs" />
+    <None Include="Entitlements.plist" />
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Resources\Default-Portrait.png" />
+    <BundleResource Include="Resources\Default-Portrait%402x.png" />
+    <BundleResource Include="Resources\Default.png" />
+    <BundleResource Include="Resources\Default%402x.png" />
+    <BundleResource Include="Resources\Icon-60%402x.png" />
+    <BundleResource Include="Resources\Icon-60%403x.png" />
+    <BundleResource Include="Resources\Icon-76.png" />
+    <BundleResource Include="Resources\Icon-76%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40.png" />
+    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40%403x.png" />
+    <BundleResource Include="Resources\Icon-Small.png" />
+    <BundleResource Include="Resources\Icon-Small%402x.png" />
+    <BundleResource Include="Resources\Icon-Small%403x.png" />
+    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xam.Plugins.Notifier">
+      <Version>3.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="3.1.0.583944" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\SPIXI\SPIXI.csproj">
+      <Project>{BB0B0DC8-91EA-425A-8597-A81725EC8BA3}</Project>
+      <Name>SPIXI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="html\address.html" />
+    <BundleResource Include="html\avatar.png" />
+    <BundleResource Include="html\avatar1.png" />
+    <Content Include="html\chat.html" />
+    <Content Include="html\contact_details.html" />
+    <Content Include="html\contact_new.html" />
+    <BundleResource Include="html\css\bootstrap37.css" />
+    <BundleResource Include="html\css\normalize.css" />
+    <BundleResource Include="html\css\style.css" />
+    <BundleResource Include="html\css\styleaddress.css" />
+    <BundleResource Include="html\css\stylechat.css" />
+    <BundleResource Include="html\css\stylecontact.css" />
+    <BundleResource Include="html\css\styleintro.css" />
+    <BundleResource Include="html\css\styleintronew.css" />
+    <BundleResource Include="html\css\stylelock.css" />
+    <BundleResource Include="html\css\stylesecurity.css" />
+    <BundleResource Include="html\css\stylesettings.css" />
+    <BundleResource Include="html\css\stylewallet.css" />
+    <BundleResource Include="html\img\accept_icon.png" />
+    <BundleResource Include="html\img\activity.png" />
+    <BundleResource Include="html\img\address.png" />
+    <BundleResource Include="html\img\Address_icon.png" />
+    <BundleResource Include="html\img\AttachFile_icon.png" />
+    <BundleResource Include="html\img\Avatar_bck.png" />
+    <BundleResource Include="html\img\Avatar_settings.png" />
+    <BundleResource Include="html\img\Back_icon.png" />
+    <BundleResource Include="html\img\backup.png" />
+    <BundleResource Include="html\img\bottomIndicator.png" />
+    <BundleResource Include="html\img\camera.png" />
+    <BundleResource Include="html\img\Chats_icon_active.png" />
+    <BundleResource Include="html\img\Chats_icon_idle.png" />
+    <BundleResource Include="html\img\ChooseContact_icon.png" />
+    <BundleResource Include="html\img\Contacts_icon_active.png" />
+    <BundleResource Include="html\img\Contacts_icon_idle.png" />
+    <BundleResource Include="html\img\Create_icon_Active.png" />
+    <BundleResource Include="html\img\Create_icon_Idle.png" />
+    <BundleResource Include="html\img\dismissNotification.png" />
+    <BundleResource Include="html\img\Done_icon.png" />
+    <BundleResource Include="html\img\Edit_icon_Active.png" />
+    <BundleResource Include="html\img\Edit_icon_Idle.png" />
+    <BundleResource Include="html\img\error.png" />
+    <BundleResource Include="html\img\FAB_Active.png" />
+    <BundleResource Include="html\img\FAB_Idle.png" />
+    <BundleResource Include="html\img\Fail_icon.png" />
+    <BundleResource Include="html\img\floatbutton.png" />
+    <BundleResource Include="html\img\Forward_icon.png" />
+    <BundleResource Include="html\img\historyDelete_icon.png" />
+    <BundleResource Include="html\img\historyDelete_icon_Black.png" />
+    <BundleResource Include="html\img\Home_icon_active.png" />
+    <BundleResource Include="html\img\Home_icon_idle.png" />
+    <BundleResource Include="html\img\ignore_icon.png" />
+    <BundleResource Include="html\img\info_about.png" />
+    <BundleResource Include="html\img\info_grey.png" />
+    <BundleResource Include="html\img\info_icon.png" />
+    <BundleResource Include="html\img\ixi.png" />
+    <BundleResource Include="html\img\Ixi_icon.png" />
+    <BundleResource Include="html\img\Lock_icon.png" />
+    <BundleResource Include="html\img\lock_red.png" />
+    <BundleResource Include="html\img\Locked_icon.png" />
+    <BundleResource Include="html\img\LockScreen_background.jpg" />
+    <BundleResource Include="html\img\lockScreen_icon.png" />
+    <BundleResource Include="html\img\logofull.png" />
+    <BundleResource Include="html\img\More_icon.png" />
+    <BundleResource Include="html\img\nav.png" />
+    <BundleResource Include="html\img\Notifications_icon.png" />
+    <BundleResource Include="html\img\onlineIndicator.png" />
+    <BundleResource Include="html\img\Open_icon.png" />
+    <BundleResource Include="html\img\payr.png" />
+    <BundleResource Include="html\img\quickscan.png" />
+    <BundleResource Include="html\img\receive.png" />
+    <BundleResource Include="html\img\Received_icon.png" />
+    <BundleResource Include="html\img\remove_contact.png" />
+    <BundleResource Include="html\img\Request_Active.png" />
+    <BundleResource Include="html\img\Request_icon_active.png" />
+    <BundleResource Include="html\img\Request_icon_idle.png" />
+    <BundleResource Include="html\img\Request_Idle.png" />
+    <BundleResource Include="html\img\Request_white.png" />
+    <BundleResource Include="html\img\Restore.png" />
+    <BundleResource Include="html\img\Restore_icon_Active.png" />
+    <BundleResource Include="html\img\Restore_icon_Idle.png" />
+    <BundleResource Include="html\img\restore_steps.png" />
+    <BundleResource Include="html\img\ScanButton_Active.png" />
+    <BundleResource Include="html\img\ScanButton_Idle.png" />
+    <BundleResource Include="html\img\ScanButtonL_Active.png" />
+    <BundleResource Include="html\img\ScanButtonL_Idle.png" />
+    <BundleResource Include="html\img\security.png" />
+    <BundleResource Include="html\img\send.png" />
+    <BundleResource Include="html\img\Send_Active.png" />
+    <BundleResource Include="html\img\Send_icon_active.png" />
+    <BundleResource Include="html\img\Send_icon_idle.png" />
+    <BundleResource Include="html\img\Send_Idle.png" />
+    <BundleResource Include="html\img\Send_white.png" />
+    <BundleResource Include="html\img\SendIXI_icon_blue.png" />
+    <BundleResource Include="html\img\SendMessage_icon.png" />
+    <BundleResource Include="html\img\sendr.png" />
+    <BundleResource Include="html\img\Sent_icon.png" />
+    <BundleResource Include="html\img\settings.png" />
+    <BundleResource Include="html\img\Settings_icon.png" />
+    <BundleResource Include="html\img\Spixi_logo_loadin.png" />
+    <BundleResource Include="html\img\SpixiLogo_Splash.png" />
+    <BundleResource Include="html\img\StartChat_Active.png" />
+    <BundleResource Include="html\img\StartChat_Idle.png" />
+    <BundleResource Include="html\img\Success_icon.png" />
+    <BundleResource Include="html\img\tabchat.png" />
+    <BundleResource Include="html\img\tabcontacts.png" />
+    <BundleResource Include="html\img\tabhome.png" />
+    <BundleResource Include="html\img\tabwallet.png" />
+    <BundleResource Include="html\img\Wallet_icon_active.png" />
+    <BundleResource Include="html\img\Wallet_icon_idle.png" />
+    <Content Include="html\index.html" />
+    <BundleResource Include="html\intro.html" />
+    <Content Include="html\intro_new.html" />
+    <Content Include="html\intro_restore.html" />
+    <Content Include="html\js\bootstrap.min.js" />
+    <Content Include="html\js\clipboard.min.js" />
+    <Content Include="html\js\jquery.min.js" />
+    <Content Include="html\js\qrcode.min.js" />
+    <Content Include="html\lock.html" />
+    <Content Include="html\settings.html" />
+    <Content Include="html\settings_backup.html" />
+    <Content Include="html\settings_lock.html" />
+    <Content Include="html\wallet_contact_request.html" />
+    <Content Include="html\wallet_recipient.html" />
+    <Content Include="html\wallet_request.html" />
+    <Content Include="html\wallet_send.html" />
+    <Content Include="html\wallet_send_2.html" />
+    <Content Include="html\wallet_sent.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Media.xcassets\AppIcons.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Media.xcassets\LaunchImages.launchimage\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+</Project>

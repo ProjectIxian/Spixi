@@ -1,0 +1,55 @@
+.address_qr_holder {
+    color: #000;
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: #F1F1F1;
+}
+
+.address_qr {
+    margin: auto;
+    margin-top:18px;
+    margin-bottom:10px;
+
+    padding: 20px;
+    width: 350px;
+    height: 350px;
+    background-color: white;
+    border-radius: 15px;
+}
+
+.address_text {
+    color: #6D6D6D;
+    font-style: italic;
+}
+
+.address_info {
+    color: #6D6D6D;
+    width: 200px;
+    margin: auto;
+    margin-top: -10px;
+    height: 26px;
+    text-align: left;
+    padding-left: 35px;
+    
+    background-image: url('../img/info_grey.png');
+    background-repeat: no-repeat;
+    background-size: 22px 22px;
+    
+    margin-bottom: 10px;
+}
+
+.address_hr {
+    color: #D4D4D4;
+    background: #D4D4D4;
+    border-color: #D4D4D4;
+    width: 200px;
+    margin-top: 14px;
+}
+
+.address_desc {
+    margin-top: 20px;
+    text-align: center;
+    padding-bottom: 20px;
+}

@@ -1,0 +1,83 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Contact</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylecontact.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+<div id="wrap" class="container-fluid noselect">
+    
+    <div id="toolbar" class="toolbar">
+        <div id="backbtn" class="toolbar_back"></div>
+        <div class="toolbar_text" id="title">New Contact</div>
+    </div>
+    <div class="toolbarholder">
+    </div>
+    
+    <div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-10">
+            <div class="contact_new_desc">
+        Add a new Spixi contact by pasting their
+        address or scanning the QR code. The
+        user will receive a request shortly.
+            </div>
+        </div>
+    </div>
+    <hr style="margin-top: 130px;"/>
+    
+    <div class="contact_address_info">Enter the Spixi Address</div>
+    
+    <div class="contact_address">
+        <input type="text" id="addressInput" onkeyup="" placeholder="Address">
+        
+        <div id="quickscanbutton" class="contact_quickscanbutton">
+            <a href="ixian:quickscan"><img src="img/QuickScan.png" style="width:72px;height:72px;" /></a>
+        </div>
+    </div>
+   
+
+    
+    <div id="sendrequest" class="button" style="margin-top: 36px;">Send contact request</div>
+
+
+
+    
+</div>
+
+<script type="text/javascript">
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    document.getElementById("sendrequest").onclick = function() {
+        var wal = document.getElementById("addressInput").value;
+        if (isBlank(wal)) {
+            location.href = "ixian:error";
+            return;
+        }
+        location.href = "ixian:request:" + wal;
+    } 
+
+    function setAddress(addr) {
+        document.getElementById("addressInput").value = addr;
+    }
+
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+</script>
+    
+</body>    
+</html>

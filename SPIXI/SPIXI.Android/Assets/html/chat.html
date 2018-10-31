@@ -1,0 +1,391 @@
+﻿<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>SPIXI Chat</title>
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+        <link rel="stylesheet" type="text/css" href="css/stylechat.css">
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </head>
+    
+    <body onload="">
+        <div id="toolbar" class="toolbar">
+            <div id="backbtn" class="toolbar_back">
+                <div id="chat_indicator" class="back_indicator" style="display: none;">#</div>
+            </div>
+            
+            <div id="toolbar_mid" class="toolbar_mid">
+                <div class="toolbar_text" id="title">Chat</div>
+                <div class="toolbar_subtext" id="subtitle">last online days ago</div>
+            </div>
+            
+            <div id="toolbar_right" class="toolbar_right">
+                <img id="avatar" src="avatar.png" class="toolbar_avatar"/> 
+                <img id="indicator" src="img/onlineIndicator.png" class="toolbar_avatar_indicator" style="display:none;"/>
+            </div>
+        </div>
+        <div class="toolbarholder"></div>
+        
+        <div id="warning_bar" class="warning_bar" style="display:none;">
+            <div class="warning_bar_text">Not connected to S2 network</div>
+        </div>
+        
+        <div id="request_bar" class="request_bar" style="display:none;">
+            <div class="request_bar_text">Contact would like to add you as a contact</div>
+            <div id="request_bar_ignore" class="request_bar_ignore"><img src="img/ignore_icon.png" class="request_bar_icon"/> IGNORE</div>
+            <div id="request_bar_accept" class="request_bar_accept"><img src="img/accept_icon.png" class="request_bar_icon"/> ACCEPT</div>
+        </div>
+        
+        <div id="messages"></div>
+        
+        <div id="chatholder" class="chatholder"></div>
+        <div id="chatbar">
+            <div id="chat_attach"></div>
+            <input type="text" id="chat_input" onkeyup="" placeholder="Type your message...">
+            <div id="chat_send"></div>
+        </div>
+        <div id="chatattachbar">
+            <div id="ca_send">Send IXI</div>
+            <div id="ca_request">Request IXI</div>
+        </div>
+
+        
+        
+        <div id="sentModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="cmodal-header">
+                    <div id="cmodal_message">Payment successfully sent!</div>
+                    <img id="cmodal-icon" src="img/Success_icon.png"/>
+                </div>
+                
+
+
+                <div class="cmodal-footer">
+                    <div class="cmodalclose">DISMISS</div>
+                </div>
+
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        <script type="text/javascript">
+            var sentModal = document.getElementById('sentModal');
+
+            var attachMode = false;
+            
+            // Handle modals outside tap
+            window.onclick = function(event) {
+                if(event.target == sentModal) {
+                    sentModal.style.display = "none";
+                }
+                else if(event.target == sentModal) {
+                    sentModal.style.display = "none";
+                }
+            }
+            
+            document.getElementsByClassName("cmodal-footer")[0].onclick = function() {
+                sentModal.style.display = "none";
+            }
+            
+            document.getElementById("backbtn").onclick = function() {
+                location.href = "ixian:back";
+            } 
+
+            document.getElementById("toolbar_mid").onclick = function () {
+                location.href = "ixian:details";
+            } 
+
+            document.getElementById("toolbar_right").onclick = function () {
+                location.href = "ixian:details";
+            }
+
+            
+            document.getElementById("ca_request").onclick = function () {
+                location.href = "ixian:request";
+            } 
+            document.getElementById("ca_send").onclick = function () {
+                location.href = "ixian:send";
+            } 
+            
+            document.getElementById("request_bar_ignore").onclick = function () {
+                //showContactRequest(false);
+                //location.href = "ixian:ignore";
+                location.href = "ixian:back";
+            } 
+            document.getElementById("request_bar_accept").onclick = function () {
+                showContactRequest(false);
+                location.href = "ixian:accept";
+            }
+            
+            function showContactRequest(show)
+            {
+                if(show == true)
+                {
+                    document.getElementById("request_bar").style.display = "block";
+                    document.getElementById("chat_input").disabled = true;
+
+                }
+                else
+                {
+                    document.getElementById("request_bar").style.display = "none";
+                    document.getElementById("chat_input").disabled = false;
+                }
+            }
+            
+            
+            document.getElementById("chat_send").onclick = function () {
+                document.getElementById("chat_input").click();
+                document.getElementById("chat_input").focus();
+                var chat_text = document.getElementById("chat_input").value;
+                location.href = "ixian:chat:"+chat_text;
+            }
+
+            $("#chat_input").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#chat_send").click();
+
+                }
+            });
+
+            function clearInput() {
+                document.getElementById("chat_input").value = "";
+            }
+
+            function isBlank(str) {
+                return (!str || /^\s*$/.test(str));
+            }
+            
+            // Handle 'attach' bar, allowing to send and request IXI
+            document.getElementById("chat_attach").onclick = function () {
+                document.getElementById("chat_input").click();
+                document.getElementById("chat_input").focus();
+                if(attachMode == true)
+                {
+                    attachMode = false;
+                    hideAttach();
+                }
+                else 
+                {
+                    attachMode = true;
+                    showAttach();
+                }    
+            }
+            
+            function hideAttach()
+            {
+                document.getElementById("chatbar").style.bottom = "0px";
+                document.getElementById("chatholder").style.height = "57px";
+                document.getElementById("chatattachbar").style.bottom = "-55px";
+               
+            }
+            
+            function showAttach()
+            {
+                document.getElementById("chatbar").style.bottom = "55px";
+                document.getElementById("chatholder").style.height = "102px";
+                document.getElementById("chatattachbar").style.bottom = "0px";
+                
+            }
+            
+            
+            
+            
+            function test() {
+                
+                addMe("avatar1.png", "Hi!", "11:23 AM");
+                setTimeout(function () { addMe("avatar.png", "How are you today?", "11:23 AM"); }, 1000);
+                setTimeout(function () { addThem("avatar1.png", "Hey!", "11:24 AM"); }, 1300);
+                setTimeout(function () { addThem("avatar.png", "Great, thanks for asking.", "11:24 AM"); }, 1600);
+                setTimeout(function () { addThem("avatar1.png", "And how are you?", "11:24 AM"); }, 1900);
+           /*     setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
+                setTimeout(function () { addThem("avatar1.png", "Ohh??? What were you doing there?", "11:25 AM"); }, 2500);
+                setTimeout(function () { addMe("avatar1.png", "Was building my own Luna Park...", "11:25 AM"); }, 3000);
+                setTimeout(function () { addMe("avatar1.png", "html<div>injection</div>test", "11:25 AM"); }, 4000);*/
+                setTimeout(function () { addPaymentRequest("1.200,5000");},1100);
+                setTimeout(function () { addPaymentSent("1.200,5000");},1500);
+
+                //setTimeout(function() {sentModal.display.style = "block";}, 4500);
+                //sentModal.style.display = "block";
+                showContactRequest(true);
+            }
+
+            function htmlEscape(str) {
+                return str
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\//g, '&#x2F;');
+            }
+
+            function htmlUnescape(str) {
+                return str
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&#x2F;/g, '/')
+                    .replace(/&amp;/g, '&');
+            }
+
+            function addText(avatar, text, time, className) {
+
+                var textEl = document.createElement('div');
+                textEl.className = "text";
+                textEl.innerHTML = htmlEscape(text);
+
+                var timeEl = document.createElement('div');
+                timeEl.className = "time";
+                timeEl.innerHTML = htmlEscape(time);
+
+                var avatarEl = document.createElement('img');
+                avatarEl.className = "avatar";
+                avatarEl.src = avatar;
+
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = className + " clear";
+                bubbleEl.appendChild(textEl);
+                bubbleEl.appendChild(timeEl);
+                bubbleEl.appendChild(avatarEl);
+
+                document.getElementById("messages").appendChild(bubbleEl);
+                //window.scrollTo(0, document.body.scrollHeight);             
+                bubbleEl.scrollIntoView(true);
+            }
+            
+            // Add payment request
+            function addPaymentRequest(amount) {
+                var reqBubble = document.createElement('a');
+                reqBubble.href = "ixian:confirmrequest:"+amount;
+                               
+                var textEl = document.createElement('div');
+                textEl.className = "sent_text";
+                textEl.innerHTML = "Amount requested<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
+                
+                var titleEl = document.createElement('div');
+                titleEl.className = "request_header";
+                titleEl.innerHTML = "Payment request received";
+
+                var footerEl = document.createElement('div');
+                footerEl.className = "request_footer";
+                footerEl.innerHTML = "View request details";
+                               
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = "request clear";
+                
+                bubbleEl.appendChild(titleEl);
+                bubbleEl.appendChild(textEl);
+                bubbleEl.appendChild(footerEl);
+                
+                var placeholderEl = document.createElement('div');
+                placeholderEl.className = "clear";
+                reqBubble.appendChild(placeholderEl);
+                reqBubble.appendChild(bubbleEl);
+
+                document.getElementById("messages").appendChild(reqBubble);             
+                //window.scrollTo(0, document.body.scrollHeight);             
+                placeholderEl.scrollIntoView(true);                
+            }
+            
+             // Add payment sent
+            function addPaymentSent(amount, txid) {
+                var reqBubble = document.createElement('a');
+                reqBubble.href = "ixian:txdetails:"+txid;
+                               
+                var textEl = document.createElement('div');
+                textEl.className = "sent_text";
+                textEl.innerHTML = "Amount sent<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
+                
+                var titleEl = document.createElement('div');
+                titleEl.className = "sent_header";
+                titleEl.innerHTML = "Payment sent";
+
+                var footerEl = document.createElement('div');
+                footerEl.className = "sent_footer";
+                footerEl.innerHTML = "View transaction details";
+                               
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = "sent";
+                
+                bubbleEl.appendChild(titleEl);
+                bubbleEl.appendChild(textEl);
+
+                bubbleEl.appendChild(footerEl);
+                
+                var placeholderEl = document.createElement('div');
+                placeholderEl.className = "clear";
+                reqBubble.appendChild(placeholderEl);
+                reqBubble.appendChild(bubbleEl);
+
+                document.getElementById("messages").appendChild(reqBubble);             
+                //window.scrollTo(0, document.body.scrollHeight);             
+                reqBubble.scrollIntoView(true);                
+            }
+                       
+
+            function addMe(avatar, text, time) {
+                addText(avatar, text, time, "from-me");
+            }
+
+            function addThem(avatar, text, time) {
+                addText(avatar, text, time, "from-them");
+            }
+
+            function setNickname(nick) {
+                document.getElementById("title").innerHTML = nick;
+            }
+
+            function showWarning(warning) {
+                if (isBlank(warning)) {
+
+                    document.getElementById("warning_bar").style.display = "none";
+                }
+                else {
+                    document.getElementById("warning_bar").style.display = "block";
+                }
+            }
+
+            function showIndicator(val) {
+                if (val == true) {
+                    document.getElementById("indicator").style.display = "block";
+                    setSubtitle("online");
+                }
+                else {
+                    document.getElementById("indicator").style.display = "none";
+                    setSubtitle("offline");
+                }
+            }
+
+            function setSubtitle(stat) {
+                document.getElementById("subtitle").innerHTML = stat;
+            }
+            
+            function showUnread(val) {
+                if (val == 0) {
+                    document.getElementById("chat_indicator").style.display = 'none';
+                    document.getElementById("backbtn").className = "toolbar_back";
+                    return;
+                }
+
+                // Update the chat indicator
+                document.getElementById("chat_indicator").style.display = 'block';
+                var trueVal = val;
+                if (trueVal > 9)
+                    trueVal = '#';
+                document.getElementById("chat_indicator").innerHTML = trueVal;
+                document.getElementById("backbtn").className = "toolbar_back_chats";
+            }
+
+
+        </script>
+    </body>
+</html>

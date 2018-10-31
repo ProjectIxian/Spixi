@@ -1,0 +1,61 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Intro</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/styleintronew.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+<div id="wrap" class="container-fluid noselect">
+    
+    <div id="toolbar" class="toolbar">
+        <div id="backbtn" class="toolbar_back"></div>
+        <div class="toolbar_text" id="title">Restore Account</div>
+    </div>
+    <div class="toolbarholder">
+    </div>
+    
+    <div class="restore_top">
+    <div class="restore_icon"></div>
+    <div class="restore_description">Restore your Spixi Account. Select a backup file and enter the encryption password.</div>
+    </div>
+
+    
+    <div class="restore_text_step1" style="margin-top: 10px;">Please enter your backup encryption password</div>
+    
+    <div class="passwordHolder">
+        <input type="password" id="password" class="passwordInput" onkeyup="" placeholder="">
+    </div>
+    
+    <div class="restore_steps"></div>
+
+    <div id="select" class="hbutton">Select backup file</div>
+    <div id="selected" style="display:none;" class="selectedhbutton"><img src="img/dismissNotification.png" style="width:22px; height:22px;"/> Photo backup</div>
+
+    <div class="restore_steps"></div>
+    
+    <div id="restore" class="button" style="margin-top: 0px;">RESTORE</div>
+    
+</div>
+
+<script type="text/javascript">
+    document.getElementById("restore").onclick = function() {
+        location.href = "ixian:restore";
+    }
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+            
+</script>
+    
+</body>    
+</html>

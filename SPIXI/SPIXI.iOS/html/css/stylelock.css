@@ -1,0 +1,166 @@
+body {
+    font-family:'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: normal;
+    background-color: #CC0046;
+    background-image: url('../img/LockScreen_background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #FFFFFF;
+}
+
+.subtitle {
+    width: 100%;
+    text-align: center;
+    font-size: 80%;
+    font-weight: 100;
+    font-size: 18px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.lockicon {
+    margin: auto;
+    
+    width: 30px;
+    height: 30px;
+    
+    padding-top: 35px;
+    text-align: center;
+    
+    background-image: url('../img/lockScreen_icon.png');
+    background-size: 30px 30px;
+    background-repeat: no-repeat;
+    background-position: center 5px;    
+}
+
+.passwordHolder {
+    margin: auto;
+    margin-top: 60px;
+    width: 50%;
+}
+.passwordInput {
+    width: 100%;
+
+    margin: auto;
+
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 2px solid #D7C9CB;
+    color: #FFF;
+    font-size: 110%;
+    text-align: center;
+
+    
+}
+
+
+
+#logo {
+    margin: auto;
+    margin-top: 84px;
+    width: 87px;
+    height: 108px;
+    background-image: url('../img/SpixiLogo_Splash.png');
+    background-size: 87px 108px;
+}
+
+#title {
+    width: 100%;
+    margin-top: 28px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-weight: 100;
+    font-size: 36px;
+    font-style: italic;
+}
+
+
+
+hr {
+    color: #DB8499;
+    background: #DB8499;
+    border-color: #DB8499;
+    width: 50%;
+    margin-top: 29px;
+}
+
+
+
+
+/*
+ * MODALS 
+ */
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2001; /* Sit on top */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content/Box */
+.modal-content {
+    position: relative;
+
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+    padding: 0;
+    border: 1px solid #888;
+    width: 70%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {bottom:-300px; opacity:0} 
+    to {bottom:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {bottom:-300px; opacity:0}
+    to {bottom:0; opacity:1}
+}
+
+.cmodalclose {
+    padding-top: 14px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.cmodal-header {
+    padding: 24px 24px;
+    background-color: #FAFAFA;
+    border-bottom: solid 1px #E7E7E7;
+    color: BLACK;
+    height: 110px;
+    font-size: 16px;
+    text-align: left;
+    padding-left: 60px;
+}
+
+#cmodal-icon {
+    position: absolute;
+    left: 20px;
+    top: 30px;
+    margin-top: 10px;
+    width: 18px;
+    height: 18px;
+}
+
+.cmodal-footer {
+    padding: 2px 16px;
+    background-color: #F4F4F4;
+    color: #4D4D4D;
+    height: 55px;
+}

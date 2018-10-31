@@ -1,0 +1,658 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>IXIAN</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+
+</head>
+	
+    <body>
+        <div id="wrap" class="container-fluid noselect">
+            <div id="toolbar" class="toolbar">
+                <img class="toolbar_avatar" id="toolbar_avatar" src="avatar.png" />
+                <div class="toolbar_text" id="title">My Spixi</div>
+            </div>
+            <div class="toolbarholder">
+            </div>
+            
+            <div id="warning_bar" class="warning_bar">
+                <div class="warning_bar_text">Not connected to IXIAN DLT</div>
+            </div>
+
+
+            <div class="tab-content">
+                
+                
+                <!-- HOME -->
+                <div id="home" class="tab-pane fade in active">
+                    
+                    
+                    <div id="status_balance">
+                        <div class="status_mybalance">My balance</div>
+                        <div class="status_mybalance_line"></div>
+                        <div class="">
+                            <div class="col-xs-12 status_dbalance" id="activity_balance_number"></div> <div class="status_ixi" ></div>
+                        </div>
+                        <div class="">
+                            <div class="col-xs-12 status_bottom" id="activity_balance_info">* Tap and hold to hide</div>
+                        </div>                        
+                    </div>
+                    
+                    <!-- home action buttons -->
+                    <div id="quickscanbutton" class="quickscanbutton">
+                        <a href="ixian:quickscan"><img src="img/ScanButton_Idle.png" style="width:64px;height:64px;" /></a>
+                    </div>
+
+                    <div id="floatbutton" class="floatbutton">
+                        <a href="javascript:onHomeMenuAction();"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
+</div>
+
+
+                    <div class="recent_activity_bar">
+                        <div class="col-xs-12">My notifications</div>
+                    </div>
+
+                    <div id="home_payments_no_activity" class="container-fluid">
+                        <div class="payment">
+                            <div class="row">
+                                <div class="col-xs-12 pnoactivity">No new notifications</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div id="home_payments" class="" style="display: none;">
+                    </div>
+
+
+                    <div class="recent_activity_bar">
+                        <div class="col-xs-12 unread_activity_bar">Unread chat messages</div>
+                    </div>
+                    
+                    <div id="home_unread_no_activity" class="container-fluid">
+                        <div class="payment">
+                            <div class="row">
+                                <div class="col-xs-12 pnoactivity">No chat messages</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="home_unread" class="container-fluid" style="display: none;">
+
+                    </div>
+
+                    <div class="bottomPlaceholder"></div>
+                </div>
+
+                
+                
+                <!-- CHATS -->
+                <div id="chats" class="tab-pane fade in">
+
+                    <div id="floatbutton" class="floatbutton">
+                        <img src="img/FAB_Idle.png" style="width:72px;height:73px;" />
+                    </div>
+
+                    
+                    <div id="chat_unread_no_activity" class="container-fluid">
+                        <div class="payment" style="height: 80px;">
+                            <div class="row">
+                                <div class="col-xs-2 psign"></div>
+                                <div class="col-xs-10 pnoactivity">You have no existing<br/>conversations</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="chat_unread" class="container-fluid" style="display: none;">
+
+                    </div>
+                    
+                    <div class="bottomPlaceholder"></div>
+                </div>
+                
+
+
+
+                <!-- Wallet -->
+                <div id="wallet" class="tab-pane fade in">
+
+                    <div id="wallet_balance">
+                        <div class="status_mybalance">My balance</div>
+                        <div class="status_mybalance_line"></div>
+                        <div class="">
+                            <div class="col-xs-12 status_dbalance" id="wallet_balance_number"></div> <div class="status_ixi" ></div>
+                        </div>
+                        <div class="">
+                            <div class="col-xs-12 wallet_status_bottom" id="wallet_balance_info">* Tap and hold to hide</div>
+                        </div>                        
+                    </div>
+                    
+
+
+                    <div id="wallet_quickbuttons" >
+                        <div class="">
+                            <a href="ixian:sendixi" class="col-xs-3"><div class="wallet_send">SEND</div></a>                      
+                            <a href="ixian:receiveixi" class="col-xs-3"><div class="wallet_request">RECEIVE</div></a> 
+                            <a href="ixian:quickscan" class="col-xs-3"><div class="walletscanbutton"></div></a>  
+                            <a href="ixian:activity" class="col-xs-3"><div class="wallet_activity">ACTIVITY</div></a>                      
+
+                        </div>
+                    </div>
+                    
+                    <div class="recent_activity_bar">
+                        <div class="col-xs-12">Recent</div>
+                    </div>
+                    
+                    
+                    <div id="wallet_payments_no_activity" class="container-fluid">
+                        <div class="payment">
+                            <div class="row">
+                                <div class="col-xs-2 psign"></div>
+                                <div class="col-xs-10 pnoactivity">No activity to show</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="wallet_payments" class="" style="display: none;">
+                    </div>
+
+                    <div class="bottomPlaceholder"></div>
+                </div>               
+                
+                
+                
+                
+                <!-- Contacts -->
+                <div id="contacts" class="tab-pane fade in">
+
+                    <div id="floatbutton" class="floatbutton">
+                        <a href="ixian:newcontact"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
+                    </div>
+                    
+                    <input type="text" id="contactInput" onkeyup="contactSearch()" placeholder="Search for contacts...">
+                    
+                    <div id="contactslist" class="container-fluid">                       
+                    </div>
+
+                    <div class="bottomPlaceholder"></div>
+                </div>               
+                               
+            
+
+            </div>
+
+        </div>
+
+        
+
+        
+
+        <div id="footer">
+            <div class="col-xs-12 navbar navbar-fixed-bottom">
+                <div class="row" id="bottomTab">
+                    <div id="tab1" class="col-xs-3 tab1 tab1_active"><a data-toggle="tab" href="#home" ><div class="tablabel">home</div><div class="tab_placeholder"></div></a></div>
+                    <div id="tab2" class="col-xs-3 tab2">
+                        <a data-toggle="tab" href="#chats"><div class="tablabel">chats</div>
+                        <div class="tab_placeholder">              
+                            <div id="chat_indicator" class="tab2_indicator" style="display: none;">#</div>
+                        </div>
+                        </a>
+                    </div>
+                    <div id="tab3" class="col-xs-3 tab3"><a data-toggle="tab" href="#wallet"><div class="tablabel">wallet</div><div class="tab_placeholder"></div></a></div>
+                    <div id="tab4" class="col-xs-3 tab4"><a data-toggle="tab" href="#contacts"><div class="tablabel">contacts</div><div class="tab_placeholder"></div></a></div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div id="homeMenuModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    NEW
+                </div>
+
+                <a href="ixian:newcontact"><div class="hmodallink">Contact</div></a>
+                <div id="homemenuchat" class="hmodallink">Chat</div>
+                <a href="ixian:sendixi"><div class="hmodallink">Send Ixi</div></a>
+                <a href="ixian:receiveixi"><div class="hmodallink">Request Ixi</div></a>
+                
+                <div class="hmodal-footer">
+                    <div class="hmodalclose">CANCEL</div>
+                </div>
+
+            </div>
+        </div>
+        
+        
+        
+        <div id="leftMenuModal" class="menumodal">
+            <!-- Modal content -->
+            <div class="menumodal-content">
+                <div class="menumodal-header">
+                    <span class="menuclose"></span>
+
+                    <div id="avatar" class="menu_avatar">
+                        <img id="avatar_image" src="avatar.png" class="menu_user_avatar" />
+                    </div>
+                    <p id="menu_nickname" class="menu_user_label">Spixi User</p>
+                </div>
+                <a href="ixian:address"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Wallet_icon.png" /><span>My Spixi Address</span></div></a>
+                <a href="ixian:settings"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Settings_icon.png" /><span>Settings</span></div></a>                
+                <a href="ixian:lock"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Security_icon.png" /><span>Security</span></div></a>
+                <a href="ixian:backup"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/MyAddressi_icon.png" /><span>Backup my Spixi</span></div></a>
+                <a href="ixian:about"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/About_icon.png" /><span>About</span></div></a>
+                
+                <div class="menumodal-bottom">
+                Spixi Prototype v0.1
+                </div>
+            </div>
+        </div>
+               
+
+        <script type="text/javascript">
+            var homeModal = document.getElementById('homeMenuModal');
+
+            var searchingContacts = false;
+            var timeoutId = 0;
+            var balance = "0";
+
+            $('#status_balance').on('mousedown touchstart', function() {
+                timeoutId = setTimeout(toggleBalance, 1000);
+            }).on('mouseup mouseleave touchend', function() {
+                clearTimeout(timeoutId);
+            });
+            
+            $('#wallet_balance').on('mousedown touchstart', function() {
+                timeoutId = setTimeout(toggleBalance, 1000);
+            }).on('mouseup mouseleave touchend', function() {
+                clearTimeout(timeoutId);
+            });       
+            
+            
+            // Handle avatar tap+hold
+            //$('#avatar').on('mousedown touchstart', function() {
+            //    timeoutId = setTimeout(editAvatar, 1000);
+            //}).on('mouseup mouseleave touchend', function() {
+            //    clearTimeout(timeoutId);
+            //});
+            
+            function editAvatar()
+            {
+                location.href = "ixian:avatar";
+            }
+            
+            // Handle modals outside tap
+            window.onclick = function(event) {
+                if(event.target == homeModal) {
+                    homeModal.style.display = "none";
+                }
+                else if(event.target == leftMenuModal) {
+                    leftMenuModal.style.display = "none";
+                }
+            }
+            
+            document.getElementsByClassName("hmodal-footer")[0].onclick = function() {
+                homeModal.style.display = "none";
+            }
+            
+            
+            document.getElementById("homemenuchat").onclick = function() {
+                homeModal.style.display = "none";
+                // Do some tests here
+                test();             
+            }           
+            
+            // Left menu
+            document.getElementsByClassName("menuclose")[0].onclick = function() {
+                leftMenuModal.style.display = "none";               
+            }
+            
+            // Toolbar
+            document.getElementById("toolbar").onclick = function() {
+                onMainMenuAction();            
+            }   
+            
+            // Prevent context menu
+            window.oncontextmenu = function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                return false;
+            };
+            
+            function isBlank(str) {
+                return (!str || /^\s*$/.test(str));
+            }
+
+            function toggleBalance()
+            {   
+                var balDiv = document.getElementById('activity_balance_number');
+                if(balDiv.innerHTML == "&nbsp;")
+                {
+                    balDiv.innerHTML = balance;
+                    document.getElementById('wallet_balance_number').innerHTML = balance;
+                    document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to hide";
+                    document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to hide";
+
+                }
+                else 
+                {
+                    balDiv.innerHTML = "&nbsp;";  
+                    document.getElementById('wallet_balance_number').innerHTML = "&nbsp;";
+                    document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to show";
+                    document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to show";
+
+                }
+            }
+            
+            // Function to toggle tab's active color    
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                // Not very elegant, but it works
+                document.getElementById("tab1").className = "col-xs-3 tab1";
+                document.getElementById("tab2").className = "col-xs-3 tab2";
+                document.getElementById("tab3").className = "col-xs-3 tab3";
+                document.getElementById("tab4").className = "col-xs-3 tab4";
+
+                var tabid = e.target.parentNode.id;
+                var cl = tabid + "_active";                
+                e.target.parentElement.className = "col-xs-3 tab " + cl; 
+                
+                var title = document.getElementById("title");
+                if(tabid == "tab1"){title.innerHTML = "My Spixi";}
+                else if(tabid == "tab2"){title.innerHTML = "Chats";}
+                else if(tabid == "tab3"){title.innerHTML = "My Wallet";}
+                else if(tabid == "tab4"){title.innerHTML = "My Contacts";}             
+            })
+            
+            
+            function setBalance(theText, theNick) {
+                var balDiv = document.getElementById('activity_balance_number');
+                var balDiv2 = document.getElementById('wallet_balance_number');
+
+                balance = theText;
+                
+                if(balDiv.innerHTML != "&nbsp;")
+                    balDiv.innerHTML = balance;
+                
+                if(balDiv2.innerHTML != "&nbsp;")
+                    balDiv2.innerHTML = balance;    
+
+                document.getElementById('menu_nickname').innerHTML = theNick;
+            }
+            
+            
+            function showWarning(value)
+            {
+                if (value == 0) {
+                    document.getElementById("warning_bar").style.display = 'none';
+                }
+                else {
+                    document.getElementById("warning_bar").style.display = 'block';
+                }
+            }
+            
+            // Filter in the CONTACTS tab
+            function contactSearch()
+            {
+                var a,i,row;
+                var input = document.getElementById('contactInput');
+                var filter = input.value.toUpperCase();
+                var c_contactlist = document.getElementById("contactslist");
+                var c_items = c_contactlist.getElementsByClassName('uchat');
+
+                if (isBlank(filter) == true) {
+                    searchingContacts = false;
+                }
+                else {
+                    searchingContacts = true;
+                }
+
+                // Go through each element and filter out non-matching elements
+                for (i = 0; i < c_items.length; i++) {
+                    row = c_items[i].getElementsByTagName("div")[0];
+                    a = row.getElementsByTagName("div")[1];
+
+                    if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        c_items[i].style.display = "";
+                    } else {
+                        c_items[i].style.display = "none";
+                    }
+                }
+            }
+            
+            // Clears all contacts from contacts page
+            function clearContacts()
+            {
+                if (searchingContacts == true) {
+                    return;
+                }
+
+                var contactsNode = document.getElementById("contactslist");
+                while (contactsNode.firstChild) {
+                    contactsNode.removeChild(contactsNode.firstChild);
+                }
+            }
+            
+            // Adds a contact to the contacts page
+            function addContact(wal, name, avatar, online)
+            {
+                if (searchingContacts == true) {
+                    return;
+                }
+                var indicator = "none";
+                if (online == true) {
+                    indicator = "block";
+                }
+
+                var contactsNode = document.getElementById("contactslist");
+                
+                var contactEntry = document.createElement("div");
+                contactEntry.className = "uchat";
+                contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-xs-2 cdesc"></div><div class="col-xs-6 contacts_name">' + name + '</div><div class="col-xs-4 contacts_avatar"><img class="contacts_avatar_img" src="' + avatar + '"/><img id="indicator" src="img/onlineIndicator.png" class="contacts_indicator" style="display:' + indicator +';"/></div></div></a>';
+                
+                contactsNode.appendChild(contactEntry);                             
+            }
+            
+            // Clears recent activity from home and wallet pages
+            function clearRecentActivity()
+            {
+                var paymentsNode = document.getElementById("wallet_payments");
+                while (paymentsNode.firstChild) {
+                    paymentsNode.removeChild(paymentsNode.firstChild);
+                }
+                
+                var recentsNodes = document.getElementById("home_payments");
+                while (recentsNodes.firstChild) {
+                    recentsNodes.removeChild(recentsNodes.firstChild);
+                }     
+                
+                document.getElementById("home_payments").style.display = 'none';
+                document.getElementById("home_payments_no_activity").style.display = 'block';
+                document.getElementById("wallet_payments").style.display = 'none';
+                document.getElementById("wallet_payments_no_activity").style.display = 'block';
+            }
+            
+            // Adds a payment
+            function addPaymentActivity(txid, text, timestamp, amount)
+            {
+                var paymentsNode = document.getElementById("wallet_payments");
+                var recentsNodes = document.getElementById("home_payments");
+
+                var payment = document.createElement("div");
+                payment.className = "payment";
+                var icon_name = "Received_icon.png";
+                if(text == "SENT")
+                {
+                    icon_name = "Sent_icon.png";
+                }
+                
+                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></div></a>';
+                
+                paymentsNode.appendChild(payment);
+                
+                var recentpayment = payment.cloneNode(true);
+                recentsNodes.appendChild(recentpayment);
+
+                document.getElementById("home_payments").style.display = 'block';
+                document.getElementById("home_payments_no_activity").style.display = 'none';
+                document.getElementById("wallet_payments").style.display = 'block';
+                document.getElementById("wallet_payments_no_activity").style.display = 'none';
+            }
+            
+            // Clears unread activity from home and chat pages
+            function clearUnreadActivity()
+            {
+                var chatsNode = document.getElementById("chat_unread");
+                while (chatsNode.firstChild) {
+                    chatsNode.removeChild(chatsNode.firstChild);
+                }
+                
+                var homeNode = document.getElementById("home_unread");
+                while (homeNode.firstChild) {
+                    homeNode.removeChild(homeNode.firstChild);
+                }     
+                
+                document.getElementById("home_unread").style.display = 'none';
+                document.getElementById("home_unread_no_activity").style.display = 'block';
+                document.getElementById("chat_unread").style.display = 'none';
+                document.getElementById("chat_unread_no_activity").style.display = 'block';  
+
+                // Update the chat indicator
+                document.getElementById("chat_indicator").style.display = 'none';
+                document.getElementById("chat_indicator").innerHTML = 0;
+            }
+            
+            // Adds an unreadmessage
+            function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg)
+            {
+                //var chatsNode = document.getElementById("chat_unread");
+                var homeNode = document.getElementById("home_unread");
+                var excerpt = htmlEscape(excerpt_msg);
+
+                var unreadmsg = document.createElement("a");
+                unreadmsg.href = "ixian:chat:" + wallet;
+                unreadmsg.className = "uchat";
+                var indicator = "none";
+                if (online == true) {
+                    indicator = "block";
+                }
+                unreadmsg.innerHTML = '<div class="row"><div class="col-xs-2 cavatar"><img class="cavatar_img" src="' + avatar + '"/><img id="indicator" src="img/onlineIndicator.png" class="cavatar_indicator" style="display:' + indicator + ';"/></div><div class="col-xs-8 cdesc"><b>' + from + '</b><br /><span class="cmsg">' + excerpt + '</span></div><div class="col-xs-2 cdate">'+timestamp+'</div></div>';
+                
+                homeNode.appendChild(unreadmsg);
+
+                document.getElementById("home_unread").style.display = 'block';
+                document.getElementById("home_unread_no_activity").style.display = 'none';
+
+                // Update the chat indicator
+                document.getElementById("chat_indicator").style.display = 'block';
+                document.getElementById("chat_indicator").innerHTML = (+document.getElementById("chat_indicator").innerHTML) + 1;
+            }
+            
+            // Adds a chat
+            function addChat(wallet, from, timestamp, avatar, online, excerpt_msg)
+            {
+                var chatsNode = document.getElementById("chat_unread");
+                var readmsg = document.createElement("a");
+                var excerpt = htmlEscape(excerpt_msg);
+
+                readmsg.href = "ixian:chat:" + wallet;
+                readmsg.className = "uchat";
+                var indicator = "none";
+                if (online == true) {
+                    indicator = "block";
+                }
+                readmsg.innerHTML = '<div class="row"><div class="col-xs-2 cavatar"><img class="cavatar_img" src="' + avatar + '"/><img id="indicator" src="img/onlineIndicator.png" class="cavatar_indicator" style="display:'+ indicator +';"/></div><div class="col-xs-8 cdesc"><b>' + from + '</b><br /><span class="cmsg">'+ excerpt +'</span></div><div class="col-xs-2 cdate">' + timestamp + '</div></div>';
+                chatsNode.appendChild(readmsg);
+                document.getElementById("chat_unread").style.display = 'block';
+                document.getElementById("chat_unread_no_activity").style.display = 'none';
+            }
+                
+            
+            function onMainMenuAction() 
+            {
+                leftMenuModal.style.display = "block";
+            }
+            
+            function onHomeMenuAction()
+            {
+                homeModal.style.display = "block";
+            }
+
+            function loadAvatar(avatar_path) {
+                var av_path = avatar_path + "?t=" + new Date().getTime();
+                document.getElementById("toolbar_avatar").src = av_path;
+                document.getElementById("avatar_image").src = av_path;
+            }
+
+            function htmlEscape(str) {
+                return str
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/\//g, '&#x2F;');
+            }
+
+            // Test function
+            function test()
+            {
+                showWarning(0);
+                setBalance("12.910,4511", "Spixi");
+
+                document.getElementById("home_unread").style.display = 'block';
+                document.getElementById("home_unread_no_activity").style.display = 'none';
+
+                
+                
+
+                clearRecentActivity();
+                addPaymentActivity('111','RECEIVED', 'NOW', '1234.4444');
+                addPaymentActivity('112','RECEIVED', '1h ago', '23');
+                addPaymentActivity('113','SENT', '1h ago', '43');
+                addPaymentActivity('114','RECEIVED', '2h ago', '65');
+
+                
+                clearUnreadActivity();
+                addUnreadActivity('000','Maria','1h ago','avatar.png', true, 'Hi');
+                addUnreadActivity('000','Ma1ria','1h ago','avatar.png', false, 'Test');
+                addUnreadActivity('000','3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria','1h ago','avatar.png', false, 'Large nickname');
+                addUnreadActivity('000','Ma3ria','1h ago','avatar.png', true, 'Double');
+                addUnreadActivity('000','Ma4ria','1h ago','avatar.png', true, 'Triple');
+
+                addChat('000','Maria','1h ago','avatar.png', true, 'Hi');
+                addChat('000','Ma1ria','1h ago','avatar.png', false, 'Test');
+
+                
+                
+                clearContacts();
+                addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","avatar.png", false);
+                addContact("000","Abc","avatar.png", true);
+                addContact("000","ZAbc","avatar.png", true);
+                addContact("000","XAbc","avatar.png", false);
+                addContact("000","CAbc","avatar.png", true);
+                addContact("000","VAbc","avatar.png", false);
+                addContact("000","BAbc","avatar.png", false);
+                addContact("000","NAbc","avatar.png", false);
+                addContact("000","MAbc","avatar.png", false);
+
+                alert("Test Done");
+                
+            }
+
+        </script>
+    </body>
+    
+</html>

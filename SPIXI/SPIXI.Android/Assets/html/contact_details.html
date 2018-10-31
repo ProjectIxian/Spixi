@@ -1,0 +1,210 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPIXI Contact</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylecontact.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+    <div id="wrap" class="container-fluid noselect">
+
+        <div id="toolbar" class="toolbar toolbar_transparent">
+            <div id="backbtn" class="toolbar_back"></div>
+            <div class="toolbar_text_center" id="title">Contact</div>
+        </div>
+
+
+        <div class="contact_description">
+            <img src="avatar.png" class="contact_user_avatar" />
+        </div>
+        <div class="avatar_placeholder"></div>
+
+
+        <div class="contact_actions">
+            <div id="achat" class="action_chat">message</div>
+            <div id="arequest" class="request_chat">request IXI</div>
+            <div id="asend" class="send_chat">send IXI</div>
+        </div>
+
+        <div class="contact_remove">
+            <a href="javascript:onRemoveAction();">
+                <div class="contact_remove_btn">remove contact</div>
+            </a>
+        </div>
+
+        <div class="contact_remove">
+            <a href="javascript:onRemoveHistoryAction();">
+                <div class="contact_removehistory_btn">delete message history</div>
+            </a>
+        </div>
+
+        <div class="recent_activity_bar">
+            <div class="col-xs-2"> </div>
+            <div class="col-xs-10">History</div>
+        </div>
+
+        <div id="payments_no_activity">
+            <div class="payment">
+                <div class="">
+                    <div class="col-xs-2 psign"></div>
+                    <div class="col-xs-10 pnoactivity">No history to show</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="payments" style="display: none;">
+        </div>
+
+
+
+        <div id="removeModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    Remove Contact
+                </div>
+                <div class="hmodal-text">
+                    Remove this contact from your<br />contacts list and delete history?
+                </div>
+                <div class="hmodal-footer">
+                    <div class="hmodalclosehalf">CANCEL</div>
+
+                    <a href="ixian:remove">
+                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="removeHistoryModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="hmodal-header">
+                    Delete History
+                </div>
+                <div class="hmodal-text">
+                    Delete message history<br/>for this contact?
+                </div>
+                <div class="hmodal-footer">
+                    <div class="hmodalclosehalf">CANCEL</div>
+
+                    <a href="ixian:removehistory">
+                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    var removeModal = document.getElementById('removeModal');
+    var removeHistoryModal = document.getElementById('removeHistoryModal');
+
+    // Handle modals outside tap
+    window.onclick = function(event) {
+        if(event.target == removeModal) {
+            removeModal.style.display = "none";
+        }
+        else if (event.target == removeHistoryModal) {
+            removeHistoryModal.style.display = "none";
+        }
+    }
+            
+    document.getElementsByClassName("hmodal-footer")[0].onclick = function() {
+        removeModal.style.display = "none";
+    }
+    document.getElementsByClassName("hmodal-footer")[1].onclick = function () {
+        removeHistoryModal.style.display = "none";
+    }            
+    
+    function onRemoveAction()
+    {
+        removeModal.style.display = "block";
+    }
+
+    function onRemoveHistoryAction()
+    {
+        removeHistoryModal.style.display = "block";
+    }
+    
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    document.getElementById("achat").onclick = function() {
+        location.href = "ixian:chat";
+    } 
+    document.getElementById("arequest").onclick = function() {
+        location.href = "ixian:request";
+    } 
+    document.getElementById("asend").onclick = function() {
+        location.href = "ixian:send";
+    }     
+
+
+    function removeContact() {
+        location.href = "ixian:remove";
+    }
+    
+    // Clears recent activity from home and wallet pages
+    function clearRecentActivity()
+    {
+        var paymentsNode = document.getElementById("payments");
+        while (paymentsNode.firstChild) {
+            paymentsNode.removeChild(paymentsNode.firstChild);
+        }
+                
+        document.getElementById("payments").style.display = 'none';
+        document.getElementById("payments_no_activity").style.display = 'block';
+    }
+    
+    // Adds a payment
+    function addPaymentActivity(txid, text, timestamp, amount)
+    {
+        var paymentsNode = document.getElementById("payments");
+
+
+        var payment = document.createElement("div");
+        payment.className = "payment";
+        
+        var icon_name = "Received_icon.png";
+        if(text == "SENT")
+        {
+            icon_name = "Sent_icon.png";
+        }
+        
+        payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:24px;height:20px;" /></div><div class="col-xs-6 pdesc">'+text+'<br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></a>';
+                
+        paymentsNode.appendChild(payment);
+                
+        document.getElementById("payments").style.display = 'block';
+        document.getElementById("payments_no_activity").style.display = 'none';
+    }
+    
+    function setAddress(address)
+    {
+        //document.getElementById("contact_wallet_address").innerHTML = address;
+    }
+
+    function setNickname(nick) {
+        document.getElementById("title").innerHTML = nick;
+    }
+
+    //    clearRecentActivity();
+    //    addPaymentActivity('RECEIVED', 'NOW', '1234.4444', '000');  
+    //    addPaymentActivity('SENT', 'NOW', '1234.4444', '000');  
+    
+</script>
+    
+</body>    
+</html>

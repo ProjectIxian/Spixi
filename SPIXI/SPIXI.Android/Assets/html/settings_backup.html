@@ -1,0 +1,78 @@
+﻿<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backup Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/stylesettings.css">
+    <link rel="stylesheet" type="text/css" href="css/stylesecurity.css">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</head>
+    
+<body>
+    <div id="wrap" class="container-fluid noselect">
+        <div id="toolbar" class="toolbar">
+            <div id="backbtn" class="toolbar_back"></div>
+            <div class="toolbar_text" id="title">Backup Account</div>
+        </div>
+        <div class="toolbarholder">
+        </div>
+        
+        <div class="restore_icon"></div>
+        
+        <div id="textlocked" class="locktext" style="padding-top: 15px;">Backup your Spixi Account in 2 simple steps. Create your encryption password and save your backup file.</div>
+
+
+        <div class="restore_subtitle">Create your encryption password</div>
+        
+        <div id="lockContent" >
+        <div class="passwordHolder">
+            <input type="password" id="password" class="passwordInput" onkeyup="checkPasswordMatch()" placeholder="enter new password">
+        </div>
+        <div class="passwordHolder" style="margin-top: 35px;">
+            <input type="password" id="passwordConfirm" class="passwordInput" onkeyup="checkPasswordMatch()" placeholder="re-type password">
+        </div>  
+            
+            <div id="passwordInfoText" class="passwordInfo" style="display: none;">The passwords you entered do not match</div>
+        
+            <hr style="settings_hr"/>
+            <div class="lock_info"> This password will be required to decrypt your backup file.</div>
+
+            <div id="backup_button" class="button" style="margin-top: 4px;">Save backup file</div>
+            <div class="lock_info"> You must create a password to save your backup file.</div>
+            
+        </div>
+        
+        
+
+    </div>
+<script type="text/javascript">
+    
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    $(document).ready(function () {
+  //      $("#password, #passwordConfirm").keyup(checkPasswordMatch);
+    });
+    
+    document.getElementById("backup_button").onclick = function () {
+        location.href = "ixian:backup";
+    }   
+    
+    
+    function isBlank(str) {
+        return (!str || /^\s*$/.test(str));
+    }
+
+
+</script>
+    
+</body>
+</html>

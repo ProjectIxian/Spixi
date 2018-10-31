@@ -1,0 +1,1133 @@
+/*
+ * IXIAN Wallet Page
+ */
+
+@font-face {
+/*    font-family:"PlanerRegular";
+    src: url("../font/planer_reg.ttf")*/
+}
+
+html {
+    overflow: hidden;
+    height: 100%;
+    max-width: 100%;
+}
+body {
+    height: 100%;
+    background-color: black;
+    overflow: auto;
+
+    font-family:'Roboto', sans-serif;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+/*
+img {
+    display: inline;
+    height: auto;
+    max-width: 100%;
+}*/
+
+.form-control {
+    border-radius: 20px;
+    background-color: #f8f8f8;
+    border-color: #A2A2A4;
+    height: 42px;
+}
+
+.address_input {
+    width:264px; 
+    padding-right: 20px; 
+    float:left;
+}
+
+.camerabtn {
+    width: 54px;
+    display: inline-block;
+    margin-left: -18pt;
+}
+
+
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -0px;
+  /* Pad bottom by footer height */
+  padding: 0 0 0px;
+    background: #F9F9F9;
+    
+    /* Prevent overscroll bounce  */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+
+/* Toolbar */
+.toolbar {
+    width: 100%;
+    height: 62px;
+    background: #D90063;
+    color: #fff;
+    display: block;
+    position: fixed;
+    z-index: 99;
+    border-bottom: solid 1px #8F0046;
+}
+
+.toolbar_text {
+    padding-left: 84px;
+    padding-top: 18px;
+    font-size: 20px;
+}
+
+.toolbar_text_center {
+    padding-top: 18px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.toolbar_back {
+    position: absolute;
+    width: 60px; 
+    height: 62px;
+    margin-left: 0px;
+    margin-top: 0px;
+    background-image: url('../img/Back_icon.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.toolbar_right_text {
+    position: absolute;
+    width: 60px; 
+    height: 62px;
+    right: 0;
+    top: 0;
+    padding-top: 20px;
+}
+
+
+.toolbar_avatar {
+    position: absolute;
+    width: 40px; 
+    height: 40px;
+    margin-left: 18px;
+    margin-top: 10px;
+    border-radius: 40px;
+}
+
+.toolbarholder {
+    width: 100%;
+    height: 62px;
+}
+
+/* Warning bar */
+
+.warning_bar {
+    width: 100%;
+    height: 54px;
+    background: #688490;
+    color: #fff;
+    display: block;
+}
+
+.warning_bar_text {
+    width:100%; 
+    height:52px;
+    background: url("../img/info_icon.png") no-repeat;;
+    background-size: 23px 23px;
+    background-position: 18px 14px;
+    text-align: center;
+    padding-top: 16px;
+    font-size: 15px;
+}
+
+
+
+/* HOME */
+
+#status_balance {
+    padding-top: 7px;
+    width: 100%;
+    height: 119px;
+    background: #1A1E2E;
+    color: #FFF;
+}
+
+.status_mybalance {
+    font-style: italic;
+    font-size: 16px;
+    padding-left: 20px;
+/*    text-decoration: underline;
+    text-decoration-color: #47BD1E;*/
+    
+}
+
+.status_mybalance_line {
+    width: 85px;
+    height: 2px;
+    background-color: #26B615;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+
+.status_ixi {
+    width: 100%;
+    height: 40px;
+
+    background: url("../img/Ixi_green.png") no-repeat;;
+    background-size: 20px 25px;
+    background-position: center;
+}
+
+.status_dbalance {
+    font-size: 210%;
+    color: #F3F3F3;
+}
+
+.status_bottom {
+    padding-top: 10px;
+    font-size: 85%;
+    font-style: italic;
+    color: #B8BABE;
+}
+.wallet_status_bottom {
+    font-size: 85%;
+    font-style: italic;
+    color: #B8BABE;
+}
+
+.quickscanbutton {
+    float: right;
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    margin-top: -92px;
+    padding-right: 18px;
+}
+
+#home {
+	background: #F6F6F6;
+    height:400px;
+}
+
+
+
+
+.recent_activity {
+    width: 100%;
+    height: 18px;
+    background: #0F1214;
+    color: #FFF;
+    font-size: 120%;
+    padding-top: 4pt;
+    padding-left: 20pt;
+}
+
+.recent_activity_bar {
+    width: 100%;
+    height: 28px;
+    background: #2C4758;
+    color: #FFF;  
+    font-style: italic;
+    font-weight: 400;
+    
+    padding-top: 5px;
+    font-size: 110%;
+    border-bottom: 1pt solid #B8B8B8;
+}
+
+.recent_activity_bar_line 
+{
+    border-bottom: 1pt solid #4D4D4D;
+}
+
+.recent_activity_bar > p {
+    padding-left: 20pt;
+    padding-top: 8pt;
+    font-size: 13pt;
+}
+
+.unread_activity_bar {
+    color: #FFF;
+}
+
+
+/* WALLET */
+#wallet_quickbuttons {
+    width: 100%;
+    height: 80px;
+    background: #1A1D2E;
+    color: #FFF;   
+}
+
+
+#wallet_balance {
+    padding-top: 3px;
+    width: 100%;
+    height: 93px;
+    background: #050505;
+    color: #FFF;
+    border-bottom: 2px solid #AC0855;
+}
+
+
+.wallet_request {
+    background-image: url("../img/wallet_Receive_idle.png");
+    background-repeat: no-repeat;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
+    width: 80px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
+}
+
+.wallet_send {
+    background-image: url("../img/wallet_Send_button.png");
+    background-repeat: no-repeat;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
+    width: 80px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
+}
+
+.walletscanbutton {
+    background-image: url("../img/wallet_ScanButton_Active.png");
+    background-repeat: no-repeat;
+    background-size: 58px 58px;
+    background-position: center;  
+    height: 80px;
+    width: 80px;
+}
+
+.wallet_activity {
+    background-image: url("../img/wallet_Activity_idle.png");
+    background-repeat: no-repeat;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
+    width: 80px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
+}
+
+
+.floatbutton {
+    z-index: 10;  
+    position: fixed;  
+    right: 0;  
+    bottom: 0;
+    padding-bottom: 70px;
+    padding-right: 15px;
+}
+
+/* Payment in recent activity */
+.payment {
+    width: 100%;
+    height: 50px;
+    background: #F6F6F6;
+    color: #4D4D4D;
+}
+
+#home_payments {
+    overflow-y: scroll; 
+    height:150px;
+}
+
+#home_payments_no_activity {
+    overflow-y: scroll; 
+    height:150px;   
+}
+
+.pnoactivity {
+    font-style: italic;
+    font-size: 15px;
+    color: #8E8E8E;
+    padding-top: 16px;
+
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+.psent {
+    color: #AB003E;
+}
+
+.preceived {
+    color: #66CD63;
+}
+
+.psign {
+    padding-top: 8px;
+    padding-left: 25px;
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+.pdesc {
+    padding-top: 6px;
+    font-size: 12px;
+    text-align: left;
+    
+    color: #8C8C8C;
+    
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+.pamount {
+    padding-top: 13px;
+    text-align: right;
+    font-size: 14px;
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+/* Unread chat messages */
+.uchat {
+    width: 100%;
+    height: 62px;
+    background: #F6F6F6;
+    color: #4D4D4D;  
+}
+
+.cavatar {
+    padding-top: 8px;
+    padding-left: 15px;
+}
+
+.cavatar_img{
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
+}
+
+.cavatar_indicator {
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    left:40px;
+    bottom: 0px;   
+}
+
+.cdesc {
+    padding-top: 10px;
+    font-size: 14px;
+    text-align: left;
+    color: #4D4D4D;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+.cmsg {
+    color: #B9B9B9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cdate {
+    color: #B9B9B9;
+    text-align: right;
+    font-size: 12px;
+    padding-top: 20px;
+    
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+
+/* RECEIVE SCREEN */
+
+.screen_headerbar {
+    padding-top: 73px;
+
+    width: 100%;
+    height: 113px;
+    background: #FFF;
+    color: #000;
+    
+    font-size: 140%;
+    font-weight: bold;
+}
+
+#qr_container {
+    width: 100%;
+    height: 300px;
+    background: #EAEBED;
+    color: #000;
+}
+
+#qr_container > .top {
+    padding-top: 60px;
+}
+
+#qr_container > .middle {
+    margin-left: auto;
+    margin-right: auto;
+	width:300px; 
+	height:300px;
+	margin-top:15px;
+}
+
+#qr_container > .bottom {
+    margin-top: 30px;
+    font-weight: bold;
+
+}
+
+#receive {
+	background: #EAEBED;
+    height:800px;
+}
+
+.receive_address {
+
+    width: 100%;
+    height: 60px;
+    background: #FFF;
+    font-style: italic;
+    text-align: center;
+    color: #000;
+    
+	margin-top: 155px;
+	padding-top: 15px;
+    font-size: 130%;
+    font-weight: normal;
+}
+
+.generate_address {
+    width: 100%;
+    height: 100px;
+    background: #EAEBED;
+    color: #AB003E;
+    text-align: center;
+    padding-top: 40px;
+    font-size: 140%;
+}
+
+
+/* SEND SCREEN */
+#send > .send_address {
+    width: 100%;
+    height: 40px;
+    background: #EAEBED;
+    padding-top: 50px;
+    text-align: center;
+    font-size: 120%;
+    
+}
+
+.send_amount {
+    width: 100%;
+    height: 40px;
+    background: #EAEBED;
+    padding-top: 30px;
+    text-align: center;
+    font-size: 120%;
+}
+
+.address_edit {
+    margin-left: auto;
+    margin-right: auto;
+	width:300px;
+    height:60px;
+    margin-top:40px;
+}
+
+
+.amount_edit {
+    margin-left: auto;
+    margin-right: auto;
+	width:300px;
+    height:60px;
+    margin-top:30px;   
+}
+
+#send_balance {
+    padding-top: 5px;
+    width: 100%;
+    height: 135px;
+    background: #FFF;
+    color: #000;
+}
+
+#send_balance > .top {
+    padding-top: 10px;
+}
+
+.send_button_wrap {
+    margin-left: auto;
+    margin-right: auto;
+    
+    width: 300px;
+    height:50px;
+}
+
+.sendbtn {   
+
+    font-size: 140%;
+    background-color: #AB003E;
+    width: 300px;
+    height: 50px;
+    border-radius: 40px;
+    color: white;
+    margin-top: 2em;
+}
+
+#send {
+	background: #EAEBED;    
+    height:800px;
+}
+
+#footer {
+  height: 100px;
+  background-color: #f5f5f5;
+}
+
+#wrap > .container {
+  padding: 10pt 15px 0;
+}
+
+#footer > .container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+
+/*
+ * CONTACTS
+ */
+.contacts_name {
+    padding-top: 18px;
+    font-size: 14px;
+    text-align: left;
+    color: #4D4D4D;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
+.contacts_avatar {
+    padding-top: 10px;
+    font-size: 10px;
+    text-align: right;
+    color: #4D4D4D;
+    
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+.contacts_avatar_img {
+    width:45px;
+    height:45px;
+    border-radius: 45px;
+}
+
+.contacts_indicator {
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    right:10px;
+    bottom: 0px;   
+}
+
+
+#contactInput {
+    width: 100%;
+    padding: 12px 20px;
+    height: 60px;
+    font-size: 18px;
+    box-sizing: border-box;
+    border: none;
+    background-color: #F6F6F6;
+}
+
+
+
+/*
+ * Bottom tab bar
+ * Handle active and idle states
+ */
+
+.bottomPlaceholder {
+    width: 100%;
+    height: 64px;
+}
+
+#bottomTab {
+    background: #B4005B;
+    height: 64px;
+    border-top: 1px solid #939292;
+    text-decoration: none;
+}
+
+#bottomTab a {
+ /*   color:#440024;*/
+    text-decoration: none;
+
+}
+#bottomTab a:hover {
+    color:#fff;
+}
+
+.tablabel {
+    padding-top: 40px;
+    text-align: center;
+}
+
+.tab1 {
+    height: 63px;  
+    background: url('../img/Home_icon_idle.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
+}
+
+.tab1 a {
+    color: #440024;
+}
+
+.tab1_active {
+    height: 63px;
+    background: url('../img/Home_icon_active.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab1_active a {
+    color: #fff;
+}
+
+.tab2 {
+    height: 63px;  
+    background: url('../img/Chats_icon_idle.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
+}
+
+.tab2 a {
+    color: #440024;
+}
+
+.tab2_active {
+    height: 63px;
+    background: url('../img/Chats_icon_active.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab2_active a {
+    color: #fff;
+}
+
+.tab2_indicator {
+    width: 56px;
+    height: 56px;
+    margin:auto;
+    text-decoration: none;
+
+    font-size: 12px;
+    padding-left: 34px;
+    padding-top: 29px;
+  
+    background: url('../img/bottomIndicator.png') no-repeat;
+    background-size: 20px 20px;
+    background-position: 27px 27px;
+}
+
+.tab3 {
+    height: 63px;  
+    background: url('../img/Wallet_icon_idle.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
+}
+
+.tab3 a {
+    color: #440024;
+}
+
+.tab3_active {
+    height: 63px;
+    background: url('../img/Wallet_icon_active.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab3_active a {
+    color: #fff;
+}
+
+.tab4 {
+    height: 63px;  
+    background: url('../img/Contacts_icon_idle.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
+}
+
+.tab4 a {
+    color: #440024;
+}
+
+.tab4_active {
+    height: 63px;
+    background: url('../img/Contacts_icon_active.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab4_active a {
+    color: #fff;
+}
+
+.tab_placeholder {
+    margin-top: -65px;
+    width:100%; 
+    height:100%;
+}
+
+.menu_avatar {
+    margin-top: 60px;
+    width: 86px;
+    height: 86px;
+    
+    background-image: url('../img/Avatar_bck.png');
+    background-size: 86px 86px;
+}
+
+.menu_user_avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 105px;
+    margin-top: 5px;
+    margin-left: 0px;
+}
+
+.menu_user_label {
+    margin-top: 20px;
+    text-align: left;
+}
+
+
+/*
+ * NOTIFICATIONS
+ * 
+ */
+
+.spixi_notification {
+    position: absolute;
+    top: 70px;
+    left: 40px;
+    right: 40px;
+
+    height: 60px;
+    background-color: #F1F1F1;
+    border-radius: 4px;
+    
+    opacity: 0.9;
+    box-shadow: 0px 6px 5px #9F9F9F;
+
+}
+
+.spixi_notification_avatar {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.spixi_notification_avatar > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+
+.spixi_notification_title {
+    position: absolute;
+    left: 70px;
+    top: 10px;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 800;
+    font-style: italic;
+}
+
+.spixi_notification_line {
+    position: absolute;
+    left: 70px;
+    top: 30px;
+    width: 70px;
+    height: 2px;
+    background-color: #AEC9D1;
+}
+
+.spixi_notification_subtitle {
+    position: absolute;
+    left: 70px;
+    top: 33px;
+    color: #709EB8;
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.spixi_notification_close {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 60px;
+    height: 60px;
+    
+    background-image: url('../img/dismissNotification.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 22px 22px;
+}
+
+/*
+ * MODALS 
+ */
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2001; /* Sit on top */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content/Box */
+.modal-content {
+    position: relative;
+
+    background-color: #fefefe;
+    margin: auto; /* 15% from the top and centered */
+    padding: 0;
+    border: 1px solid #888;
+    width: 70%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {bottom:-300px; opacity:0} 
+    to {bottom:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {bottom:-300px; opacity:0}
+    to {bottom:0; opacity:1}
+}
+
+.hmodal-header {
+    padding: 24px 24px;
+    background-color: #FAFAFA;
+    border-bottom: solid 1px #E7E7E7;
+    color: BLACK;
+    height: 55px;
+    font-size: 16px;
+}
+
+
+
+.hmodal-text {
+    padding-left: 28px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 16px;    
+    color: #7C7C7C;
+}
+
+
+.hmodal-footer {
+    padding: 2px 16px;
+    background-color: #F4F4F4;
+    color: #4D4D4D;
+    height: 55px;
+    position: relative;
+}
+
+.hmodalclose {
+    padding-top: 14px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.hmodalclosehalf {
+    width: 50%;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 15px;
+    position: absolute;
+    left: 0px;
+    height: 55px;
+}
+
+.hmodalconfirmhalf {
+    width: 50%;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 15px;
+    position: absolute;
+    right: 0px;
+    height: 55px;
+}
+
+.hmodallink {
+    padding-left: 28px;
+    padding-top: 14px;
+    height: 50px;
+    font-size: 16px;    
+    color: #4D4D4D;
+}
+
+
+.menumodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 5000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content/Box */
+.menumodal-content {
+    position: relative;
+    background-color: #F9F9F9;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);    
+    height: 100%;
+    width: 85%;
+    -webkit-animation-name: animateleft;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animateleft;
+    animation-duration: 0.4s
+}
+/* Add Animation */
+@-webkit-keyframes animateleft {
+    from {left:-300px; opacity:1} 
+    to {left:0; opacity:1}
+}
+
+@keyframes animateleft {
+    from {left:-300px; opacity:1}
+    to {left:0; opacity:1}
+}
+
+
+.menumodal-header {
+    padding: 38px 24px;
+    background-color: #A70047;
+    color: white;
+    height: 240px;
+    font-size: 16px;
+    text-align: center;
+}
+.menuclose {
+    color: white;
+    float: left;
+    font-size: 28px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/Back_icon.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+.menumodallink {
+    padding-left: 28px;
+    padding-top: 14px;
+    height: 60px;
+    font-size: 18px;    
+    color: #1A1D2E;
+    text-decoration: none;
+    border-bottom: 1px solid #E1E1E1;
+}
+
+
+.menumodallink > span {
+    padding-left: 30px;
+}
+
+.menumodal-bottom {
+    background-color: #43051E;
+    color: white;
+    height: 40px;    
+    position: fixed;
+    width: 85%;
+    bottom: 0;
+    padding-top: 9px;
+    padding-left: 14px;
+}
+
+
+/* Disable selection of page elements*/
+.noselect {
+    /* pointer-events: none; // for Android */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
