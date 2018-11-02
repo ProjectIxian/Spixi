@@ -134,7 +134,9 @@ namespace SPIXI.Storage
                 // TODO: encrypt written data
                 System.Int32 version = 1; // Set the account file version
                 writer.Write(version);
+
                 // Write the address used for verification
+                writer.Write(Node.walletStorage.address.Length);
                 writer.Write(Node.walletStorage.address);
 
                 // Write account information
