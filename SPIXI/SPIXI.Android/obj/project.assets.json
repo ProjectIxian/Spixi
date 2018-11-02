@@ -20,7 +20,7 @@
           "lib/netstandard2.0/Open.Nat.dll": {}
         }
       },
-      "Portable.BouncyCastle/1.8.2": {
+      "Portable.BouncyCastle/1.8.3.37": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
@@ -29,7 +29,7 @@
           "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
         }
       },
-      "Xam.Plugins.Notifier/3.0.0": {
+      "Xam.Plugins.Notifier/3.0.1": {
         "type": "package",
         "dependencies": {
           "Xamarin.Android.Support.v4": "23.0.1.3"
@@ -354,14 +354,14 @@
           "build/MonoAndroid81/Xamarin.Android.Support.Vector.Drawable.targets": {}
         }
       },
-      "Xamarin.Forms/3.1.0.583944": {
+      "Xamarin.Forms/3.3.0.967583": {
         "type": "package",
         "dependencies": {
-          "Xamarin.Android.Support.Design": "25.4.0.2",
-          "Xamarin.Android.Support.v4": "25.4.0.2",
-          "Xamarin.Android.Support.v7.AppCompat": "25.4.0.2",
-          "Xamarin.Android.Support.v7.CardView": "25.4.0.2",
-          "Xamarin.Android.Support.v7.MediaRouter": "25.4.0.2"
+          "Xamarin.Android.Support.Design": "27.0.2",
+          "Xamarin.Android.Support.v4": "27.0.2",
+          "Xamarin.Android.Support.v7.AppCompat": "27.0.2",
+          "Xamarin.Android.Support.v7.CardView": "27.0.2",
+          "Xamarin.Android.Support.v7.MediaRouter": "27.0.2"
         },
         "compile": {
           "lib/MonoAndroid10/FormsViewGroup.dll": {},
@@ -378,8 +378,8 @@
           "lib/MonoAndroid10/Xamarin.Forms.Xaml.dll": {}
         },
         "build": {
-          "build/netstandard2.0/Xamarin.Forms.props": {},
-          "build/netstandard2.0/Xamarin.Forms.targets": {}
+          "build/Xamarin.Forms.props": {},
+          "build/Xamarin.Forms.targets": {}
         }
       },
       "ZXing.Net.Mobile/2.4.1": {
@@ -419,9 +419,9 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Open.NAT.Core": "2.1.0",
-          "Portable.BouncyCastle": "1.8.2",
-          "Xam.Plugins.Notifier": "3.0.0",
-          "Xamarin.Forms": "3.1.0.583944",
+          "Portable.BouncyCastle": "1.8.3.37",
+          "Xam.Plugins.Notifier": "3.0.1",
+          "Xamarin.Forms": "3.3.0.967583",
           "ZXing.Net.Mobile.Forms": "2.4.1"
         },
         "compile": {
@@ -459,11 +459,12 @@
         "open.nat.core.nuspec"
       ]
     },
-    "Portable.BouncyCastle/1.8.2": {
-      "sha512": "XpJVIhjPiO0o+DU36eeIzqnRilDmE8Z7Kfhm9V9o1yNqM3ikgleD94Z5W/LeEu3t63LaZl2CNJexaix+I6AUMg==",
+    "Portable.BouncyCastle/1.8.3.37": {
+      "sha512": "E+5W9qNzi2roQXUh9kQgoRrWT92ucbu0FQ1M/P+/Vn4nKJO92b/WJifphMYxaQrauV4pAGyFptj9X/Q/7EH8IA==",
       "type": "package",
-      "path": "portable.bouncycastle/1.8.2",
+      "path": "portable.bouncycastle/1.8.3.37",
       "files": [
+        ".signature.p7s",
         "lib/net40/BouncyCastle.Crypto.dll",
         "lib/net40/BouncyCastle.Crypto.xml",
         "lib/netstandard1.0/BouncyCastle.Crypto.dll",
@@ -472,16 +473,14 @@
         "lib/netstandard1.3/BouncyCastle.Crypto.xml",
         "lib/netstandard2.0/BouncyCastle.Crypto.dll",
         "lib/netstandard2.0/BouncyCastle.Crypto.xml",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/BouncyCastle.Crypto.dll",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/BouncyCastle.Crypto.xml",
-        "portable.bouncycastle.1.8.2.nupkg.sha512",
+        "portable.bouncycastle.1.8.3.37.nupkg.sha512",
         "portable.bouncycastle.nuspec"
       ]
     },
-    "Xam.Plugins.Notifier/3.0.0": {
-      "sha512": "PznoXrrfuUf+4SVaum+fl/ABggAi+zGTnPlTqpCvypJ70OL/O3cW9G73CT7RjcknbX5oLK29hKCtoy+2yQxIsQ==",
+    "Xam.Plugins.Notifier/3.0.1": {
+      "sha512": "QH/+zX9w/hMg1AOAj+a62cIJIqd4tSOSBnGGprHIhfJWHG+v+P6VvIqZSTr9z1dZDd2JfhA7Iz2KGBr4MJ2lOQ==",
       "type": "package",
-      "path": "xam.plugins.notifier/3.0.0",
+      "path": "xam.plugins.notifier/3.0.1",
       "files": [
         "lib/MonoAndroid10/Plugin.LocalNotifications.Abstractions.dll",
         "lib/MonoAndroid10/Plugin.LocalNotifications.Abstractions.xml",
@@ -507,7 +506,7 @@
         "lib/netstandard1.0/Plugin.LocalNotifications.deps.json",
         "lib/netstandard1.0/Plugin.LocalNotifications.dll",
         "lib/netstandard1.0/Plugin.LocalNotifications.xml",
-        "xam.plugins.notifier.3.0.0.nupkg.sha512",
+        "xam.plugins.notifier.3.0.1.nupkg.sha512",
         "xam.plugins.notifier.nuspec"
       ]
     },
@@ -766,24 +765,24 @@
         "xamarin.android.support.vector.drawable.nuspec"
       ]
     },
-    "Xamarin.Forms/3.1.0.583944": {
-      "sha512": "q4AGFr8k9z6v5u++COV6M5TEZ8Oh8iiU3inVysapL5j75bhKfbcU2RizgZxTQ7+2CdlzVK+Dz+nyFx4JFh0Cwg==",
+    "Xamarin.Forms/3.3.0.967583": {
+      "sha512": "aebAEUHkER6WRo4WpsDd8jq4EudSl3WS4n7Pxcq8ea+x9fHi9PstCU0dU2D5PGvSeKa3yEFSpRljOEjI7qtsNA==",
       "type": "package",
-      "path": "xamarin.forms/3.1.0.583944",
+      "path": "xamarin.forms/3.3.0.967583",
       "files": [
         ".signature.p7s",
-        "build/netstandard1.0/Mono.Cecil.Mdb.dll",
-        "build/netstandard1.0/Mono.Cecil.Pdb.dll",
-        "build/netstandard1.0/Mono.Cecil.Rocks.dll",
-        "build/netstandard1.0/Mono.Cecil.dll",
-        "build/netstandard1.0/System.CodeDom.dll",
-        "build/netstandard1.0/Xamarin.Forms.Build.Tasks.dll",
-        "build/netstandard1.0/Xamarin.Forms.Core.dll",
-        "build/netstandard1.0/Xamarin.Forms.DefaultItems.props",
-        "build/netstandard1.0/Xamarin.Forms.DefaultItems.targets",
-        "build/netstandard1.0/Xamarin.Forms.Xaml.dll",
-        "build/netstandard1.0/Xamarin.Forms.props",
-        "build/netstandard1.0/Xamarin.Forms.targets",
+        "build/Xamarin.Forms.DefaultItems.props",
+        "build/Xamarin.Forms.DefaultItems.targets",
+        "build/Xamarin.Forms.props",
+        "build/Xamarin.Forms.targets",
+        "build/net461/Mono.Cecil.Mdb.dll",
+        "build/net461/Mono.Cecil.Pdb.dll",
+        "build/net461/Mono.Cecil.Rocks.dll",
+        "build/net461/Mono.Cecil.dll",
+        "build/net461/System.CodeDom.dll",
+        "build/net461/Xamarin.Forms.Build.Tasks.dll",
+        "build/net461/Xamarin.Forms.Core.dll",
+        "build/net461/Xamarin.Forms.Xaml.dll",
         "build/netstandard2.0/Mono.Cecil.Mdb.dll",
         "build/netstandard2.0/Mono.Cecil.Pdb.dll",
         "build/netstandard2.0/Mono.Cecil.Rocks.dll",
@@ -791,11 +790,7 @@
         "build/netstandard2.0/System.CodeDom.dll",
         "build/netstandard2.0/Xamarin.Forms.Build.Tasks.dll",
         "build/netstandard2.0/Xamarin.Forms.Core.dll",
-        "build/netstandard2.0/Xamarin.Forms.DefaultItems.props",
-        "build/netstandard2.0/Xamarin.Forms.DefaultItems.targets",
         "build/netstandard2.0/Xamarin.Forms.Xaml.dll",
-        "build/netstandard2.0/Xamarin.Forms.props",
-        "build/netstandard2.0/Xamarin.Forms.targets",
         "lib/MonoAndroid10/Design/Xamarin.Forms.Core.Design.dll",
         "lib/MonoAndroid10/Design/Xamarin.Forms.Xaml.Design.dll",
         "lib/MonoAndroid10/FormsViewGroup.dll",
@@ -911,7 +906,7 @@
         "lib/uap10.0/Xamarin.Forms.Platform.dll",
         "lib/uap10.0/Xamarin.Forms.Xaml.dll",
         "lib/uap10.0/Xamarin.Forms.Xaml.xml",
-        "xamarin.forms.3.1.0.583944.nupkg.sha512",
+        "xamarin.forms.3.3.0.967583.nupkg.sha512",
         "xamarin.forms.nuspec"
       ]
     },
@@ -964,13 +959,12 @@
   "projectFileDependencyGroups": {
     "MonoAndroid,Version=v8.1": [
       "SPIXI >= 1.0.0",
-      "Xam.Plugins.Notifier >= 3.0.0",
       "Xamarin.Android.Support.Design >= 27.0.2.1",
       "Xamarin.Android.Support.v4 >= 27.0.2.1",
       "Xamarin.Android.Support.v7.AppCompat >= 27.0.2.1",
       "Xamarin.Android.Support.v7.CardView >= 27.0.2.1",
       "Xamarin.Android.Support.v7.MediaRouter >= 27.0.2.1",
-      "Xamarin.Forms >= 3.1.0.583944",
+      "Xamarin.Forms >= 3.3.0.967583",
       "ZXing.Net.Mobile >= 2.4.1",
       "ZXing.Net.Mobile.Forms >= 2.4.1"
     ]
@@ -981,11 +975,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\SPIXI.Droid.csproj",
+      "projectUniqueName": "D:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\SPIXI.Droid.csproj",
       "projectName": "SPIXI.Droid",
-      "projectPath": "d:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\SPIXI.Droid.csproj",
+      "projectPath": "D:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\SPIXI.Droid.csproj",
       "packagesPath": "C:\\Users\\fire\\.nuget\\packages\\",
-      "outputPath": "d:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\obj\\",
+      "outputPath": "D:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI.Android\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "configFilePaths": [
@@ -1002,8 +996,8 @@
       "frameworks": {
         "monoandroid81": {
           "projectReferences": {
-            "d:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI\\SPIXI.csproj": {
-              "projectPath": "d:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI\\SPIXI.csproj"
+            "D:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI\\SPIXI.csproj": {
+              "projectPath": "D:\\Project-Ixian\\Ixian-source\\SPIXI\\SPIXI\\SPIXI\\SPIXI.csproj"
             }
           }
         }
@@ -1012,10 +1006,6 @@
     "frameworks": {
       "monoandroid81": {
         "dependencies": {
-          "Xam.Plugins.Notifier": {
-            "target": "Package",
-            "version": "[3.0.0, )"
-          },
           "Xamarin.Android.Support.Design": {
             "target": "Package",
             "version": "[27.0.2.1, )"
@@ -1038,7 +1028,7 @@
           },
           "Xamarin.Forms": {
             "target": "Package",
-            "version": "[3.1.0.583944, )"
+            "version": "[3.3.0.967583, )"
           },
           "ZXing.Net.Mobile": {
             "target": "Package",

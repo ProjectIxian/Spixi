@@ -11,7 +11,7 @@ using System.IO;
 using Android.Content;
 using Xamarin.Forms;
 using SPIXI.Droid.Services;
-using SPIXI.Notifications;
+//using SPIXI.Notifications;
 
 namespace SPIXI.Droid
 {
@@ -38,7 +38,7 @@ namespace SPIXI.Droid
 
         void prepareBackgroundService()
         {
-            MessagingCenter.Subscribe<StartMessage>(this, "StartMessage", message => {
+ /*           MessagingCenter.Subscribe<StartMessage>(this, "StartMessage", message => {
                 var intent = new Intent(this, typeof(BackgroundTaskService));
                 StartService(intent);
             });
@@ -46,7 +46,7 @@ namespace SPIXI.Droid
             MessagingCenter.Subscribe<StopMessage>(this, "StopMessage", message => {
                 var intent = new Intent(this, typeof(BackgroundTaskService));
                 StopService(intent);
-            });
+            });*/
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)

@@ -1,5 +1,6 @@
 ﻿using DLT;
 using DLT.Meta;
+using IXICore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,32 +57,33 @@ namespace SPIXI.Wallet
 
             try
             {
+                // Read the wallet version
                 System.Int32 version = reader.ReadInt32();
-                privateKey = reader.ReadString();
-                publicKey = reader.ReadString();
 
-                Logging.log(LogSeverity.info, String.Format("Wallet File Version: {0}", version));
-                Logging.log(LogSeverity.info, String.Format("Private Key: {0}", privateKey));
-                Logging.log(LogSeverity.info, String.Format("Public Key: {0}", publicKey));
-                Logging.log(LogSeverity.info, String.Format("Public Node Address: {0}", address));
-
-                // Read the enc keypair as well
-                if (version > 1)
+                if (version != 1)
                 {
-                    encPrivateKey = reader.ReadString();
-                    encPublicKey = reader.ReadString();
-
-                    Logging.log(LogSeverity.info, String.Format("ENC Private Key: {0}", encPrivateKey));
-                    Logging.log(LogSeverity.info, String.Format("ENC Public Key: {0}", encPublicKey));
-                }
-                else
-                {
-                    // Force generation of wallet
+                    Logging.error(string.Format("Wallet version mismatch, expecting {0}, got {1}", 1, version));
                     return false;
                 }
 
+                // Read the encrypted keys
+                int b_privateKeyLength = reader.ReadInt32();
+                byte[] b_privateKey = reader.ReadBytes(b_privateKeyLength);
+
+                int b_publicKeyLength = reader.ReadInt32();
+                byte[] b_publicKey = reader.ReadBytes(b_publicKeyLength);
+
+                // TODOSPIXI
+                string password = "SPIXI";
+
+                // Decrypt
+                privateKey = CryptoManager.lib.decryptWithPassword(b_privateKey, password);
+                publicKey = CryptoManager.lib.decryptWithPassword(b_publicKey, password);
+
+
+
                 Address addr = new Address(publicKey);
-                address = addr.ToString();
+                address = addr.address;
 
                 Console.WriteLine();
                 Console.Write("Your IXIAN address is ");
@@ -105,6 +107,13 @@ namespace SPIXI.Wallet
         // Write the wallet to the file
         private bool writeWallet()
         {
+            // TODOSPIXI
+            string password = "SPIXI";
+
+            // Encrypt data first
+            byte[] b_privateKey = CryptoManager.lib.encryptWithPassword(privateKey, password);
+            byte[] b_publicKey = CryptoManager.lib.encryptWithPassword(publicKey, password);
+
             BinaryWriter writer;
 
             try
@@ -119,14 +128,15 @@ namespace SPIXI.Wallet
 
             try
             {
-                System.Int32 version = 2; // Set the wallet version
+                System.Int32 version = 1; // Set the wallet version
                 writer.Write(version);
+
                 // Write the address keypair
-                writer.Write(privateKey);
-                writer.Write(publicKey);
-                // Write the encryption keypair
-                writer.Write(encPrivateKey);
-                writer.Write(encPublicKey);
+                writer.Write(b_privateKey.Length);
+                writer.Write(b_privateKey);
+
+                writer.Write(b_publicKey.Length);
+                writer.Write(b_publicKey);
             }
 
             catch (IOException e)
@@ -160,7 +170,7 @@ namespace SPIXI.Wallet
             // Generate the private and public key pair
             try
             {
-                CryptoManager.lib.generateKeys();
+                CryptoManager.lib.generateKeys(CoreConfig.defaultRsaKeySize);
             }
             catch (Exception e)
             {
@@ -171,19 +181,11 @@ namespace SPIXI.Wallet
             privateKey = CryptoManager.lib.getPrivateKey();
             publicKey = CryptoManager.lib.getPublicKey();
 
-            encPrivateKey = CryptoManager.lib.getEncPrivateKey();
-            encPublicKey = CryptoManager.lib.getEncPublicKey();
-
             Address addr = new Address(publicKey);
-            address = addr.ToString();
+            address = addr.address;
 
-            Logging.log(LogSeverity.info, String.Format("Private Key: {0}", privateKey));
-            Logging.log(LogSeverity.info, String.Format("Public Key: {0}", publicKey));
-
-            Logging.log(LogSeverity.info, String.Format("ENC Private Key: {0}", encPrivateKey));
-            Logging.log(LogSeverity.info, String.Format("ENC Public Key: {0}", encPublicKey));
-
-            Logging.log(LogSeverity.info, String.Format("Your Address: {0}", address));
+            Logging.info(String.Format("Public Key: {0}", Crypto.hashToString(publicKey)));
+            Logging.info(String.Format("Public Node Address: {0}", Base58Check.Base58CheckEncoding.EncodePlain(address)));
 
             // Write the new wallet data to the file
             return writeWallet();

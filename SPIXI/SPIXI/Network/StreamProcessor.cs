@@ -1,7 +1,6 @@
 ﻿using DLT;
 using DLT.Meta;
 using DLT.Network;
-using SPIXI.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +24,7 @@ namespace SPIXI
 
     class Message
     {
-        public string recipientAddress;
+        public byte[] recipientAddress;
         public string transactionID;
         public byte[] data;
         private string id;
@@ -42,7 +41,7 @@ namespace SPIXI
                 using (BinaryReader reader = new BinaryReader(m))
                 {
                     id = reader.ReadString();
-                    recipientAddress = reader.ReadString();
+                    recipientAddress = reader.ReadBytes(0);
                     int data_length = reader.ReadInt32();
                     data = reader.ReadBytes(data_length);
                 }
@@ -112,8 +111,8 @@ namespace SPIXI
                     foreach (Message message in offlineMessages)
                     {
                         // Extract the public key from the Presence List
-                        string pub_k = FriendList.findContactPubkey(message.recipientAddress);
-                        if (pub_k.Length < 1)
+                        byte[] pub_k = FriendList.findContactPubkey(message.recipientAddress);
+                        if (pub_k.Length == null)
                         {
                             // No public key found means the contact is still offline
                             continue;
@@ -161,7 +160,7 @@ namespace SPIXI
         // Send an encrypted message using the S2 network
         public static void sendMessage(Message msg, string hostname = null)
         {
-            string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
+   /*         string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
             if (pub_k.Length < 1)
             {
                 Console.WriteLine("Contact {0} not found, adding to offline queue!", msg.recipientAddress);
@@ -186,7 +185,7 @@ namespace SPIXI
             else
             {
                 NetworkClientManager.sendData(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()), hostname);
-            }
+            }*/
         }
 
         // Called when receiving an encryption key from the S2 node
@@ -222,7 +221,7 @@ namespace SPIXI
         // Called when an encryption key is received from the S2 server, as per step 4 of the WhitePaper
         private static void sendEncryptedMessage(Message msg, string key, Socket socket)
         {
-            Console.WriteLine("Sending encrypted message with key {0}", key);
+ /*           Console.WriteLine("Sending encrypted message with key {0}", key);
 
             using (MemoryStream m = new MemoryStream())
             {
@@ -249,34 +248,35 @@ namespace SPIXI
                     //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.updateTransaction, transaction.getBytes());
 
                 }
-            }
+            }*/
         }
 
         // Prepare a Spixi S2 message. Encrypts the provided text combined with a SpixiMessageCode using the provided publicKey
         public static byte[] prepareSpixiMessage(SpixiMessageCode code, string text, string publicKey)
         {
             Logging.info(string.Format("PREP: {0} : {1}", (int)code, text));
-            using (MemoryStream m = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(m))
-                {
-                    // NOTE: storing a 0 value integer as the initial part of the message will result in decryption errors
-                    // on the other client. As such, we add a dummy offset of 23
-                    int safe_code = (int)code + 23;
-                    writer.Write(safe_code);
-                    writer.Write(text);
+            /*          using (MemoryStream m = new MemoryStream())
+                      {
+                          using (BinaryWriter writer = new BinaryWriter(m))
+                          {
+                              // NOTE: storing a 0 value integer as the initial part of the message will result in decryption errors
+                              // on the other client. As such, we add a dummy offset of 23
+                              int safe_code = (int)code + 23;
+                              writer.Write(safe_code);
+                              writer.Write(text);
 
-                    byte[] encrypted_message = CryptoManager.lib.encryptData(m.ToArray(), publicKey);
+                              byte[] encrypted_message = CryptoManager.lib.encryptData(m.ToArray(), publicKey);
 
-                    return encrypted_message;
-                }
-            }
+                              return encrypted_message;
+                          }
+                      }*/
+            return null;
         }
 
         public static void receiveData(byte[] bytes, Socket socket)
         {
             Console.WriteLine("NET: Receiving S2 data!");
-
+/*
             //string message = Encoding.UTF8.GetString(data);
             //Console.WriteLine("Encrypted message: {0}", message);
 
@@ -298,13 +298,13 @@ namespace SPIXI
                     readSpixiMessage(encrypted_message, sender);
                 }
             }
-
+            */
         }
 
         // Extracts a Spixi message from an encrypted byte array
         public static void readSpixiMessage(byte[] bytes, string sender)
         {
-            // Decrypt the client message
+/*            // Decrypt the client message
             byte[] decrypted_message =  CryptoManager.lib.decryptData(bytes, Node.walletStorage.encPrivateKey);
 
             SpixiMessageCode code = SpixiMessageCode.chat;
@@ -320,13 +320,13 @@ namespace SPIXI
                     // Parse the message
                     parseSpixiMessage(code, text_message, sender);
                 }
-            }
+            }*/
         }
 
         // Parse a provided Spixi message
         public static void parseSpixiMessage(SpixiMessageCode code, string text, string sender)
         {
-            try
+ /*           try
             {
                 switch (code)
                 {
@@ -380,13 +380,13 @@ namespace SPIXI
             catch (Exception e)
             {
                 Logging.error(string.Format("Error parsing spixi message. Details: {0}", e.ToString()));
-            }
+            }*/
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
         private static void handleGetNick(string sender, string text)
         {
-            // Retrieve the corresponding contact
+/*            // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender);
             if (friend == null)
             {
@@ -423,13 +423,13 @@ namespace SPIXI
             reply_message.recipientAddress = recipient_address;
             reply_message.data = encrypted_message;
             sendMessage(reply_message);
-
+            */
             return;
         }
 
         private static void handleRequestAdd(string sender)
         {
-            string pub_k = FriendList.findContactPubkey(sender);
+   /*         string pub_k = FriendList.findContactPubkey(sender);
             if (pub_k.Length < 1)
             {
                 Console.WriteLine("Contact {0} not found in presence list!", sender);
@@ -442,12 +442,12 @@ namespace SPIXI
             }
 
             FriendList.addFriend(sender, pub_k, "New Contact", false);
-            FriendList.addMessageWithType(FriendMessageType.requestAdd, sender, "");
+            FriendList.addMessageWithType(FriendMessageType.requestAdd, sender, "");*/
         }
 
         private static void handleAcceptAdd(string sender)
         {
-            // Retrieve the corresponding contact
+    /*        // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender);
             if (friend == null)
             {
@@ -483,20 +483,20 @@ namespace SPIXI
             Message reply_message = new Message();
             reply_message.recipientAddress = recipient_address;
             reply_message.data = encrypted_message;
-            sendMessage(reply_message);
+            sendMessage(reply_message);*/
         }
 
 
         private static void handleRequestFunds(string sender, string amount)
         {
-            // Retrieve the corresponding contact
+     /*       // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender);
             if (friend == null)
             {
                 return;
             }
 
-            FriendList.addMessageWithType(FriendMessageType.requestFunds, sender, amount);
+            FriendList.addMessageWithType(FriendMessageType.requestFunds, sender, amount);*/
         }
 
 

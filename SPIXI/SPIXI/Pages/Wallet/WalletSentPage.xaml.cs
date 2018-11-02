@@ -2,7 +2,6 @@
 using DLT.Meta;
 using DLT.Network;
 using SPIXI.Interfaces;
-using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
@@ -49,9 +48,9 @@ namespace SPIXI
             {
                 string nickname = "Unknown";
                 Friend friend = null;
-                string addr = transaction.to;
+                byte[] addr = transaction.to;
                 // Check if this is a received payment
-                if (transaction.to.Equals(Node.walletStorage.address))
+                if (transaction.to.SequenceEqual(Node.walletStorage.address))
                 {
                     webView.Eval("setReceivedMode()");
                     friend = FriendList.getFriend(transaction.from);
@@ -107,7 +106,8 @@ namespace SPIXI
                 {
                     writer.Write(transaction.id);
 
-                    NetworkClientManager.sendDLTData(ProtocolMessageCode.getTransaction, m.ToArray());
+                    // TODOSPIXI
+                    //NetworkClientManager.sendDLTData(ProtocolMessageCode.getTransaction, m.ToArray());
                 }
             }
 
@@ -125,9 +125,9 @@ namespace SPIXI
 
             string nickname = "Unknown";
             Friend friend = null;
-            string addr = ctransaction.to;
+            byte[] addr = ctransaction.to;
             // Check if this is a received payment
-            if (ctransaction.to.Equals(Node.walletStorage.address))
+            if (ctransaction.to.SequenceEqual(Node.walletStorage.address))
             {
                 webView.Eval("setReceivedMode()");
                 friend = FriendList.getFriend(transaction.from);

@@ -10,7 +10,6 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
 using DLT;
-using SPIXI.Network;
 
 namespace SPIXI
 {
@@ -29,8 +28,8 @@ namespace SPIXI
             source.Url = string.Format("{0}html/contact_new.html", DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
 
-
-            NetworkClientManager.requestPresenceList();
+            // TODOSPIXI
+//            NetworkClientManager.requestPresenceList();
         }
 
         public ContactNewPage(string wal_id)
@@ -66,7 +65,7 @@ namespace SPIXI
             else if (current_url.Contains("ixian:request:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:request:" }, StringSplitOptions.None);
-                string wal = split[1];
+                byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
                 onRequest(wal);
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
@@ -124,7 +123,7 @@ namespace SPIXI
 
         }
 
-        public void onRequest(string wal)
+        public void onRequest(byte[] wal)
         {
             if(Address.validateChecksum(wal) == false)
             {
@@ -133,8 +132,8 @@ namespace SPIXI
             }
 
 
-            string pubkey = FriendList.findContactPubkey(wal);
-            if(pubkey.Length < 1)
+            byte[] pubkey = FriendList.findContactPubkey(wal);
+            if(pubkey == null)
             {
                 DisplayAlert("Contact does not exist", "No such SPIXI user.", "OK");
                 return;
@@ -142,10 +141,11 @@ namespace SPIXI
 
             string relayip = FriendList.getRelayHostname(wal);
 
+            // TODOSPIXI
             //FriendList.addFriend(wal, pubkey, "Unknown");
-
+            /*
             // Send the message to the S2 nodes
-            string recipient_address = wal;
+            byte[] recipient_address = wal;
             byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.requestAdd, "", pubkey);
 
 
@@ -164,7 +164,7 @@ namespace SPIXI
 
             StreamProcessor.sendMessage(message, relayip);
 
-            Navigation.PopAsync();
+            Navigation.PopAsync();*/
         }
     }
 }

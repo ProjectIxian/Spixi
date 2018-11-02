@@ -204,6 +204,11 @@ namespace DLT.Network
         // Unified protocol message parsing
         public static void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
+            if (endpoint == null)
+            {
+                Logging.error("Endpoint was null. parseProtocolMessage");
+                return;
+            }
             try
             {
                 switch (code)
@@ -250,7 +255,7 @@ namespace DLT.Network
 
 
                     case ProtocolMessageCode.helloData:
-                        using (MemoryStream m = new MemoryStream(data))
+                      /* using (MemoryStream m = new MemoryStream(data))
                         {
                             using (BinaryReader reader = new BinaryReader(m))
                             {
@@ -269,27 +274,27 @@ namespace DLT.Network
                                 // Get presences
                                 socket.Send(prepareProtocolMessage(ProtocolMessageCode.syncPresenceList, new byte[1]), SocketFlags.None);
                             }
-                        }
+                        }*/
                         break;
 
                     case ProtocolMessageCode.s2data:
                         {
-                            StreamProcessor.receiveData(data, socket);
+                     //       StreamProcessor.receiveData(data, socket);
                         }
                         break;
 
                     case ProtocolMessageCode.s2keys:
                         {
                             Console.WriteLine("NET: Receiving S2 keys!");
-                            StreamProcessor.receivedKeys(data, socket);
+                    //        StreamProcessor.receivedKeys(data, socket);
                         }
                         break;
 
                     case ProtocolMessageCode.syncPresenceList:
                         {
                             byte[] pdata = PresenceList.getBytes();
-                            byte[] ba = prepareProtocolMessage(ProtocolMessageCode.presenceList, pdata);
-                            socket.Send(ba, SocketFlags.None);
+                     //       byte[] ba = prepareProtocolMessage(ProtocolMessageCode.presenceList, pdata);
+                     //       socket.Send(ba, SocketFlags.None);
                         }
                         break;
 
@@ -297,7 +302,7 @@ namespace DLT.Network
                         {
                             Logging.info("NET: Receiving complete presence list");
                             PresenceList.syncFromBytes(data);
-                            NetworkClientManager.searchForStreamNode();
+                     //       NetworkClientManager.searchForStreamNode();
                         }
                         break;
 
@@ -309,18 +314,10 @@ namespace DLT.Network
                         }
                         break;
 
-                    case ProtocolMessageCode.removePresence:
-                        {
-                            Console.WriteLine("NET: Receiving presence list entry removal");
-                            // Parse the data and remove the entry from the presence list
-                            Presence presence = new Presence(data);
-                            PresenceList.removeEntry(presence);
-                        }
-                        break;
 
                     case ProtocolMessageCode.balance:
                         {
-                            using (MemoryStream m = new MemoryStream(data))
+                      /*      using (MemoryStream m = new MemoryStream(data))
                             {
                                 using (BinaryReader reader = new BinaryReader(m))
                                 {
@@ -334,7 +331,7 @@ namespace DLT.Network
                                         Node.balance = balance;
                                     }
                                 }
-                            }
+                            }*/
                         }
                         break;
 
@@ -350,12 +347,12 @@ namespace DLT.Network
                         {
                             // Forward the new transaction message to the DLT network
                             Logging.info("RECIEVED NEW TRANSACTION");
-
+/*
                             Transaction transaction = new Transaction(data);
                             if (transaction.to.Equals(Node.walletStorage.address, StringComparison.Ordinal))
                             {
                                 TransactionCache.addTransaction(transaction);
-                            }
+                            }*/
                         }
                         break;
 
