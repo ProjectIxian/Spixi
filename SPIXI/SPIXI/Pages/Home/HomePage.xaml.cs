@@ -34,7 +34,7 @@ namespace SPIXI
             NavigationPage.SetHasNavigationBar(this, false);
 
 
-            Node.connectToNetwork();
+   //         Node.connectToNetwork();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -112,49 +113,31 @@ namespace SPIXI
 
         public void onCreateAccount(string nick)
         {
-            if (Node.generateWallet())
+            // Generate the account on a different thread
+            new Thread(() =>
             {
-//                DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
+                Thread.CurrentThread.IsBackground = true;
 
-                Node.localStorage.nickname = nick;
-                Node.localStorage.writeAccountFile();
-            }
-            else
-            {
-                DisplayAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
-                return;
-            }
+                if (Node.generateWallet())
+                {
+                    // DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
+                    Node.localStorage.nickname = nick;
+                    Node.localStorage.writeAccountFile();
 
-            //Navigation.PushAsync(new LaunchRestorePage());
-            Navigation.PushAsync(new HomePage());
-            Navigation.RemovePage(this);
+                    Device.BeginInvokeOnMainThread(() => {
+                        Navigation.PushAsync(new HomePage());
+                        Navigation.RemovePage(this);
+                    });
+                }
+                else
+                {
+                    Device.BeginInvokeOnMainThread(() => {
+                        DisplayAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
+                    });
+                    return;
+                }
+            }).Start();
         }
 
-
-        /*
-        public void onCreateAccount(object sender, EventArgs e)
-        {
-            if(nameInput.Text.Length < 1)
-            {
-                DisplayAlert("Error", "Please type a nickname.", "Ok");
-                return;
-            }
-
-            if (Node.generateWallet())
-            {
-                DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
-            }
-            else
-            {
-                DisplayAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
-                return;
-            }
-
-            //Navigation.PopAsync();
-            //Navigation.PopAsync();
-
-            Navigation.PushAsync(new HomePage());
-            Navigation.RemovePage(this);
-        }*/
     }
 }
