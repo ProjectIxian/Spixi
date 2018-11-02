@@ -14,6 +14,9 @@ namespace SPIXI
 		{
 			InitializeComponent();
 
+            // Start logging
+            Logging.start();
+
             // Load or generate a device ID.
             if (Application.Current.Properties.ContainsKey("uid"))
             {

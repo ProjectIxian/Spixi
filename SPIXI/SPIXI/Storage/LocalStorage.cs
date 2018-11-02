@@ -79,7 +79,8 @@ namespace SPIXI.Storage
             {
                 // TODO: decrypt data and compare the address/pubkey
                 System.Int32 version = reader.ReadInt32();
-                string address = reader.ReadString();
+                int address_length = reader.ReadInt32();
+                byte[] address = reader.ReadBytes(address_length);
                 string nick = reader.ReadString();
 
                 nickname = nick;

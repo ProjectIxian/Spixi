@@ -114,7 +114,7 @@ namespace SPIXI
         {
             if (Node.generateWallet())
             {
-                //DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
+//                DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
 
                 Node.localStorage.nickname = nick;
                 Node.localStorage.writeAccountFile();
