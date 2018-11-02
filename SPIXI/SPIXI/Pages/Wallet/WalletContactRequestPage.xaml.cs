@@ -2,7 +2,6 @@
 using DLT.Meta;
 using DLT.Network;
 using SPIXI.Interfaces;
-using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
@@ -66,8 +65,10 @@ namespace SPIXI
 
         private void onSend()
         {
+            // TODOSPIXI
+            /*
             // Create an ixian transaction and send it to the dlt network
-            string from = Node.walletStorage.address;
+            byte[] from = Node.walletStorage.address;
             ulong _amount = Convert.ToUInt64(amount);
 
             if(_amount > Node.balance)
@@ -84,7 +85,7 @@ namespace SPIXI
 
             FriendList.addMessageWithType(FriendMessageType.sentFunds, friend.wallet_address, transaction.id);
 
-            Navigation.PopAsync();
+            Navigation.PopAsync();*/
         }
 
 

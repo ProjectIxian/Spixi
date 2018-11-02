@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
-using SPIXI.Network;
 using DLT;
 using SPIXI.Storage;
 using System.Globalization;
@@ -131,11 +130,12 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string id = split[1];
+                byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
                 Friend friend = null;
                 foreach(Friend friendl in FriendList.friends)
                 {
-                    if(friendl.wallet_address.Equals(id, StringComparison.Ordinal))
+                    if(friendl.wallet_address.SequenceEqual(id_bytes))
                     {
                         friend = friendl;
                         break;
@@ -154,11 +154,12 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:details:" }, StringSplitOptions.None);
                 string id = split[1];
+                byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
                 Friend friend = null;
                 foreach (Friend friendl in FriendList.friends)
                 {
-                    if (friendl.wallet_address.Equals(id, StringComparison.Ordinal))
+                    if (friendl.wallet_address.SequenceEqual(id_bytes))
                     {
                         friend = friendl;
                         break;
@@ -252,7 +253,7 @@ namespace SPIXI
                     split = result.Text.Split(new string[] { ":send:" }, StringSplitOptions.None);
                     if (split.Count() > 1)
                     {
-                        string wallet_to_send = split[0];
+                        byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);                       
                         Navigation.PushAsync(new WalletSend2Page(wallet_to_send, true));
                         return;
                     }
@@ -465,6 +466,8 @@ namespace SPIXI
 
             webView.Eval("clearRecentActivity()");
 
+            // TODOSPIXI
+            /*
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
                 string tx_type = "RECEIVED";
@@ -489,6 +492,7 @@ namespace SPIXI
 
                 webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
             }
+            */
         }
 
 
@@ -501,16 +505,16 @@ namespace SPIXI
             loadContacts();
             loadTransactions();
 
-
+            // TODOSPIXI
             // Check the ixian dlt
-            if (NetworkClientManager.isDltConnected())
+         /*   if (NetworkClientManager.isDltConnected())
             {
                 webView.Eval("showWarning(0)");
             }
             else
-            {
+            {*/
                 webView.Eval("showWarning(1)");
-            }
+          //  }
 
             webView.Eval(string.Format("setBalance('{0}','{1}')", Node.balance.ToString(), Node.localStorage.nickname));
 

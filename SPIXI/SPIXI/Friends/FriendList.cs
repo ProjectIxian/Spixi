@@ -19,11 +19,11 @@ namespace SPIXI
         }
 
         // Retrieves a friend based on the wallet_address
-        public static Friend getFriend(string wallet_address)
+        public static Friend getFriend(byte[] wallet_address)
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.Equals(wallet_address, StringComparison.Ordinal))
+                if (friend.wallet_address.SequenceEqual(wallet_address))
                 {
                     // Already in the list
                     return friend;
@@ -33,12 +33,12 @@ namespace SPIXI
         }
 
         // Set the nickname for a specific wallet address
-        public static void setNickname(string wallet_address, string nick)
+        public static void setNickname(byte[] wallet_address, string nick)
         {
             // Go through each friend and check for a matching wallet address
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.Equals(wallet_address, StringComparison.Ordinal))
+                if (friend.wallet_address.SequenceEqual(wallet_address))
                 {
                     friend.nickname = nick;
 
@@ -48,16 +48,16 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(string wallet_address, string message)
+        public static void addMessage(byte[] wallet_address, string message)
         {
             addMessageWithType(FriendMessageType.standard, wallet_address, message);
         }
 
-        public static void addMessageWithType(FriendMessageType type, string wallet_address, string message)
+        public static void addMessageWithType(FriendMessageType type, byte[] wallet_address, string message)
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.Equals(wallet_address, StringComparison.Ordinal))
+                if (friend.wallet_address.SequenceEqual(wallet_address))
                 {
                     DateTime dt = DateTime.Now;
                     // TODO: message date should be fetched, not generated here
@@ -90,11 +90,11 @@ namespace SPIXI
         }
 
 
-        public static void addFriend(string wallet_address, string public_key, string name, bool approved = true)
+        public static void addFriend(byte[] wallet_address, byte[] public_key, string name, bool approved = true)
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.Equals(wallet_address, StringComparison.Ordinal))
+                if (friend.wallet_address.SequenceEqual(wallet_address))
                 {
                     // Already in the list
                     return;
@@ -273,13 +273,14 @@ namespace SPIXI
                 // Go through each friend and check for the pubkey in the PL
                 foreach (Friend friend in friends)
                 {
-                    string pubkey = findContactPubkey(friend.wallet_address);
-                    if (pubkey.Length < 1)
+                    byte[] pubkey = findContactPubkey(friend.wallet_address);
+                    if (pubkey == null)
                     {
                         // No pubkey found, means contact is offline
                         friend.online = false;
                         continue;
                     }
+
                     friend.online = true;
 
                 }

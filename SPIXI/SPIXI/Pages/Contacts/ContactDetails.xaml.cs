@@ -32,8 +32,10 @@ namespace SPIXI
             source.Url = string.Format("{0}html/contact_details.html", DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
 
+            // TODOSPIXI
+            /*
             // If nickname is still "Unknown", request the nickname again
-            if(friend.nickname.Equals("Unknown", StringComparison.Ordinal))
+            if (friend.nickname.Equals("Unknown", StringComparison.Ordinal))
             {
                 // Send the message to the S2 nodes
                 string recipient_address = friend.wallet_address;
@@ -46,7 +48,7 @@ namespace SPIXI
 
                 StreamProcessor.sendMessage(message);
             }
-
+            */
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -167,6 +169,8 @@ namespace SPIXI
         {
             webView.Eval("clearRecentActivity()");
 
+            // TODOSPIXI
+            /*
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
                 // Filter out unrelated transactions
@@ -204,6 +208,8 @@ namespace SPIXI
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
                 webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
             }
+            */
+
         }
     }
 }

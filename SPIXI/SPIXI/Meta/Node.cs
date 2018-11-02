@@ -1,6 +1,5 @@
 ﻿using DLT.Network;
 using SPIXI;
-using SPIXI.Network;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -36,11 +35,11 @@ namespace DLT.Meta
             // Initialize the crypto manager
             CryptoManager.initLib();
 
-            // Initialize the wallet state
-            walletState = new WalletState();
-
             // Prepare the wallet
             walletStorage = new SPIXI.Wallet.WalletStorage(Config.walletFile);
+
+            // Initialize the wallet state
+            walletState = new WalletState();
 
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage();
@@ -75,7 +74,7 @@ namespace DLT.Meta
         static public void connectToNetwork()
         {
             // Start the network client manager
-            NetworkClientManager.startClients();
+            NetworkClientManager.start();
         }
 
         // Handle timer routines
@@ -84,8 +83,10 @@ namespace DLT.Meta
             // Update the friendlist
             FriendList.Update();
 
-            // Request balance
-            NetworkClientManager.requestBalanceFromDLT();
+            // Cleanup the presence list
+            // TODO: optimize this by using a different thread perhaps
+            PresenceList.performCleanup();
+
         }
 
         static public void stop()
@@ -96,7 +97,7 @@ namespace DLT.Meta
             // Stop the network queue
             NetworkQueue.stop();
 
-            NetworkClientManager.stopClients();
+            NetworkClientManager.stop();
 
             // Stop the stream processor
             StreamProcessor.uninitialize();

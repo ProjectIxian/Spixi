@@ -70,7 +70,7 @@ namespace SPIXI
             else if (current_url.Contains("ixian:next:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:next:" }, StringSplitOptions.None);
-                string wal = split[1];
+                byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
                 /*
                 if (Address.validateChecksum(wal) == false)
                 {

@@ -1,6 +1,6 @@
 ﻿using DLT.Meta;
+using IXICore;
 using SPIXI;
-using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
@@ -52,6 +52,70 @@ namespace DLT.Network
 
             return true;
         }
+
+        public static void sendHelloMessage(RemoteEndpoint endpoint, bool sendHelloData)
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    string publicHostname = string.Format("{0}:{1}", Config.publicServerIP, Config.serverPort);
+
+                    // Send the node version
+                    writer.Write(CoreConfig.protocolVersion);
+
+                    // Send the public node address
+                    byte[] address = Node.walletStorage.address;
+                    writer.Write(address.Length);
+                    writer.Write(address);
+
+                    // Send the testnet designator
+                    writer.Write(Config.isTestNet);
+
+                    // Send the node type
+                    char node_type = 'C'; // This is a Client node
+
+                    writer.Write(node_type);
+
+                    // Send the version
+                    writer.Write(Config.version);
+
+                    // Send the node device id
+                    writer.Write(Config.device_id);
+
+                    // Send the wallet public key
+                    writer.Write(Node.walletStorage.publicKey.Length);
+                    writer.Write(Node.walletStorage.publicKey);
+
+                    // Send listening port
+                    writer.Write(Config.serverPort);
+
+                    // Send timestamp
+                    long timestamp = Core.getCurrentTimestamp();
+                    writer.Write(timestamp);
+
+                    // send signature
+                    byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + publicHostname), Node.walletStorage.privateKey);
+                    writer.Write(signature.Length);
+                    writer.Write(signature);
+
+
+                    if (sendHelloData)
+                    {
+                        // Write the legacy level
+                        writer.Write(Legacy.getLegacyLevel());
+
+                        endpoint.sendData(ProtocolMessageCode.helloData, m.ToArray());
+
+                    }
+                    else
+                    {
+                        endpoint.sendData(ProtocolMessageCode.hello, m.ToArray());
+                    }
+                }
+            }
+        }
+
 
 
         // Read a protocol message from a byte array

@@ -98,6 +98,8 @@ namespace SPIXI
                 return;
             }
 
+            // TODOSPIXI
+            /*
             // Prepare and send the request message
             byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.requestFunds, amount, local_friend.pubkey);
             Message message = new Message();
@@ -106,7 +108,7 @@ namespace SPIXI
             StreamProcessor.sendMessage(message);
 
             Navigation.PopAsync();
-
+            */
         }
     }
 }

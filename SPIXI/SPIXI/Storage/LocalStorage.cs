@@ -88,8 +88,11 @@ namespace SPIXI.Storage
                 int num_contacts = reader.ReadInt32();
                 for(int i = 0; i < num_contacts; i++)
                 {
-                    string cwallet = reader.ReadString();
-                    string cpubkey = reader.ReadString();
+                    int wal_length = reader.ReadInt32();
+                    byte[] cwallet = reader.ReadBytes(wal_length);
+                    int pkey_length = reader.ReadInt32();
+                    byte[] cpubkey = reader.ReadBytes(pkey_length);
+
                     string cnick = reader.ReadString();
                     // Read chat history, todo
                     int num_messages = reader.ReadInt32();
@@ -141,7 +144,9 @@ namespace SPIXI.Storage
 
                 foreach(Friend friend in FriendList.friends)
                 {
+                    writer.Write(friend.wallet_address.Length);
                     writer.Write(friend.wallet_address);
+                    writer.Write(friend.pubkey.Length);
                     writer.Write(friend.pubkey);
                     writer.Write(friend.nickname);
 
@@ -175,8 +180,10 @@ namespace SPIXI.Storage
         }
 
         // Reads the message archive for a given wallet
-        public List<FriendMessage> readMessagesFile(string wallet)
+        public List<FriendMessage> readMessagesFile(byte[] wallet_bytes)
         {
+            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+
             List<FriendMessage> messages = new List<FriendMessage>();
             string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
 
@@ -229,8 +236,9 @@ namespace SPIXI.Storage
         }
 
         // Writes the message archive for a given wallet
-        public bool writeMessagesFile(string wallet, List<FriendMessage> messages)
+        public bool writeMessagesFile(byte[] wallet_bytes, List<FriendMessage> messages)
         {
+            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
             string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
 
             BinaryWriter writer;
@@ -281,8 +289,9 @@ namespace SPIXI.Storage
         }
 
         // Deletes the message archive if it exists for a given wallet
-        public bool deleteMessagesFile(string wallet)
+        public bool deleteMessagesFile(byte[] wallet_bytes)
         {
+            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
             string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
 
             if (File.Exists(messages_filename) == false)

@@ -2,7 +2,6 @@
 using DLT.Meta;
 using DLT.Network;
 using SPIXI.Interfaces;
-using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
@@ -18,15 +17,15 @@ namespace SPIXI
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletSend2Page : SpixiContentPage
 	{
-        private string recipient = "";
+        private byte[] recipient = null;
         private bool directPayment = false; // false if called from the wallet, true if called from a chat window
 
-		public WalletSend2Page (string wal, bool direct = false)
+		public WalletSend2Page (byte[] wal, bool direct = false)
 		{
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            recipient = wal;
+            recipient = wal.ToArray();
             directPayment = direct;
 
             // Load the platform specific home page url
@@ -114,16 +113,17 @@ namespace SPIXI
                 Navigation.PopAsync();
 
             // Create an ixian transaction and send it to the dlt network
-            string from = Node.walletStorage.address;
+            byte[] from = Node.walletStorage.address;
 
-            Transaction transaction = new Transaction(amount, wallet, from);
-            NetworkClientManager.sendDLTData(ProtocolMessageCode.newTransaction, transaction.getBytes());
+            // TODOSPIXI
+      //      Transaction transaction = new Transaction(amount, wallet, from);
+      //      NetworkClientManager.sendDLTData(ProtocolMessageCode.newTransaction, transaction.getBytes());
 
             // Add the unconfirmed transaction the the cache
-            TransactionCache.addUnconfirmedTransaction(transaction);
+      //      TransactionCache.addUnconfirmedTransaction(transaction);
 
             // Show the payment details
-            Navigation.PushAsync(new WalletSentPage(transaction));
+      //      Navigation.PushAsync(new WalletSentPage(transaction));
         }
 
     }

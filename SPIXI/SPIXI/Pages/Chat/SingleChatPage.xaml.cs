@@ -2,7 +2,6 @@
 using DLT.Meta;
 using DLT.Network;
 using SPIXI.Interfaces;
-using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
@@ -42,7 +41,8 @@ namespace SPIXI
             // Connect to the friend's S2 node
             node_ip = friend.getRelayIP();
 
-            NetworkClientManager.connectToStreamNode(node_ip);
+            //TODOSPIXI
+            //NetworkClientManager.connectToStreamNode(node_ip);
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -182,37 +182,38 @@ namespace SPIXI
                 return;
             }
 
-            // Send the message to the S2 nodes
-            string recipient_address = friend.wallet_address;
-            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.chat, str, friend.pubkey);
-            // CryptoManager.lib.encryptData(Encoding.UTF8.GetBytes(string_to_send), friend.pubkey);
+            // TODOSPIXI
+            /*            // Send the message to the S2 nodes
+                        byte[] recipient_address = friend.wallet_address;
+                        byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.chat, str, friend.pubkey);
+                        // CryptoManager.lib.encryptData(Encoding.UTF8.GetBytes(string_to_send), friend.pubkey);
 
-            // Check the relay ip
-            string relayip = friend.getRelayIP();
-            if (relayip == null)
-            {
-                Logging.warn("No relay node to send message to!");
-                return;
-            }
-            if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
-            {
+                        // Check the relay ip
+                        string relayip = friend.getRelayIP();
+                        if (relayip == null)
+                        {
+                            Logging.warn("No relay node to send message to!");
+                            return;
+                        }
+                        if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
+                        {
 
-                node_ip = relayip;
-                // Connect to the contact's S2 relay first
-                NetworkClientManager.connectToStreamNode(relayip);
+                            node_ip = relayip;
+                            // Connect to the contact's S2 relay first
+                            NetworkClientManager.connectToStreamNode(relayip);
 
-                // TODO: optimize this
-                while (NetworkClientManager.isNodeConnected(relayip) == false)
-                {
+                            // TODO: optimize this
+                            while (NetworkClientManager.isNodeConnected(relayip) == false)
+                            {
 
-                }
-            }
+                            }
+                        }
 
-            Message message = new Message();
-            message.recipientAddress = recipient_address;
-            message.data = encrypted_message;
+                        Message message = new Message();
+                        message.recipientAddress = recipient_address;
+                        message.data = encrypted_message;
 
-            StreamProcessor.sendMessage(message, node_ip);
+                        StreamProcessor.sendMessage(message, node_ip);*/
 
             // Finally, add the text bubble visually
             DateTime dt = DateTime.Now;
@@ -227,7 +228,8 @@ namespace SPIXI
         public void onAccept()
         {
             friend.approved = true;
-
+            // TODOSPIXI
+            /*
             string recipient_address = friend.wallet_address;
             byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.acceptAdd, "", friend.pubkey);
 
@@ -256,6 +258,7 @@ namespace SPIXI
             }
 
             StreamProcessor.sendMessage(message, node_ip);
+            */
         }
 
         public void onConfirmPaymentRequest(string amount)
@@ -356,7 +359,8 @@ namespace SPIXI
                 webView.Eval("showIndicator(false)");
             }
 
-
+            // TODOSPIXI
+            /*
             // Show connectivity warning bar
             if (NetworkClientManager.isNodeConnected(node_ip) == false)
             {
@@ -366,7 +370,7 @@ namespace SPIXI
                     webView.Eval("showWarning('Not connected to S2 node')");
                 }
             }
-            else
+            else*/
             {
                 if(connectedToNode == false)
                 {
