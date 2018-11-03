@@ -317,21 +317,22 @@ namespace DLT.Network
 
                     case ProtocolMessageCode.balance:
                         {
-                      /*      using (MemoryStream m = new MemoryStream(data))
+                            using (MemoryStream m = new MemoryStream(data))
                             {
                                 using (BinaryReader reader = new BinaryReader(m))
                                 {
-                                    string address = reader.ReadString();
+                                    int address_length = reader.ReadInt32();
+                                    byte[] address = reader.ReadBytes(address_length);
 
                                     // Retrieve the latest balance
                                     IxiNumber balance = reader.ReadString();
 
-                                    if(address.Equals(Node.walletStorage.address, StringComparison.Ordinal))
+                                    if(address.SequenceEqual(Node.walletStorage.address))
                                     {
                                         Node.balance = balance;
                                     }
                                 }
-                            }*/
+                            }
                         }
                         break;
 
@@ -347,12 +348,12 @@ namespace DLT.Network
                         {
                             // Forward the new transaction message to the DLT network
                             Logging.info("RECIEVED NEW TRANSACTION");
-/*
+
                             Transaction transaction = new Transaction(data);
-                            if (transaction.to.Equals(Node.walletStorage.address, StringComparison.Ordinal))
+                            if (transaction.to.SequenceEqual(Node.walletStorage.address))
                             {
                                 TransactionCache.addTransaction(transaction);
-                            }*/
+                            }
                         }
                         break;
 
