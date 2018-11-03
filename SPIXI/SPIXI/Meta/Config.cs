@@ -27,7 +27,7 @@ namespace DLT
             public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
             public static readonly string version = "spixi-0.1.0"; // Spixi version
-            public static bool isTestNet = false; // Testnet designator
+            public static bool isTestNet = true; // Testnet designator
 
             // Default SPIXI settings
 

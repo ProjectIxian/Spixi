@@ -357,6 +357,22 @@ namespace DLT.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.bye:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    // Retrieve the message
+                                    string message = reader.ReadString();
+                                    endpoint.stop();
+
+                                    Logging.error(string.Format("Disconnected with message: {0}", message));
+                                }
+                            }
+                        }
+                        break;
+
                     default:
                         break;
 

@@ -34,7 +34,7 @@ namespace SPIXI
             NavigationPage.SetHasNavigationBar(this, false);
 
 
-   //         Node.connectToNetwork();
+            Node.connectToNetwork();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -507,14 +507,14 @@ namespace SPIXI
 
             // TODOSPIXI
             // Check the ixian dlt
-         /*   if (NetworkClientManager.isDltConnected())
+            if (NetworkClientManager.getConnectedClients().Count() > 0)
             {
                 webView.Eval("showWarning(0)");
             }
             else
-            {*/
+            {
                 webView.Eval("showWarning(1)");
-          //  }
+            }
 
             webView.Eval(string.Format("setBalance('{0}','{1}')", Node.balance.ToString(), Node.localStorage.nickname));
 
