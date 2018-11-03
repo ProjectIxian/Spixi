@@ -45,7 +45,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
+            webView.Eval(string.Format("setAddress(\"{0}\")", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.address)));
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -54,7 +54,7 @@ namespace SPIXI
             }
             else
             {
-                webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", local_friend.wallet_address, local_friend.nickname));
+                webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.wallet_address), local_friend.nickname));
             }
         }
 
