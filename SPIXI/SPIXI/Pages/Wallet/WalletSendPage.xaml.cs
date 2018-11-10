@@ -71,13 +71,13 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:next:" }, StringSplitOptions.None);
                 byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
-                /*
+                
                 if (Address.validateChecksum(wal) == false)
                 {
-                    DisplayAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
                     e.Cancel = true;
+                    DisplayAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");                    
                     return;
-                }*/
+                }
 
                 Navigation.PushAsync(new WalletSend2Page(wal));
             }

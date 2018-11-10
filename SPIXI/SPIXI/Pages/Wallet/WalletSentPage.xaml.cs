@@ -68,7 +68,8 @@ namespace SPIXI
                 // Convert unix timestamp
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
-                webView.Eval(string.Format("setInitialData('{0}', '{1}', '{2}', '{3}')", transaction.amount.ToString(), addr, nickname, time));
+                webView.Eval(string.Format("setInitialData('{0}', '{1}', '{2}', '{3}')", transaction.amount.ToString(), 
+                    Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time));
             }
 
             checkTransaction();
@@ -145,7 +146,8 @@ namespace SPIXI
             // Convert unix timestamp
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
-            webView.Eval(string.Format("setConfirmedData('{0}', '{1}', '{2}', '{3}')", ctransaction.amount.ToString(), addr, nickname, time));
+            webView.Eval(string.Format("setConfirmedData('{0}', '{1}', '{2}', '{3}')", ctransaction.amount.ToString(), 
+                Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time));
             return false;
         }
 

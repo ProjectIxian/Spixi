@@ -106,6 +106,17 @@ namespace DLT.Meta
             // TODO: optimize this by using a different thread perhaps
             PresenceList.performCleanup();
 
+            // Request wallet balance
+            using (MemoryStream mw = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(mw))
+                {
+                    writer.Write(Node.walletStorage.address.Length);
+                    writer.Write(Node.walletStorage.address);
+                    NetworkClientManager.broadcastData(ProtocolMessageCode.getBalance, mw.ToArray());
+                }
+            }
+
         }
 
         static public void stop()

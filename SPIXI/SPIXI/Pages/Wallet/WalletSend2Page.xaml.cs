@@ -1,6 +1,7 @@
 ﻿using DLT;
 using DLT.Meta;
 using DLT.Network;
+using IXICore;
 using SPIXI.Interfaces;
 using SPIXI.Storage;
 using System;
@@ -44,7 +45,8 @@ namespace SPIXI
             if (friend != null)
                 nickname = friend.nickname;
 
-            webView.Eval(string.Format("setRecipient('{0}','{1}')", recipient, nickname));
+            webView.Eval(string.Format("setRecipient('{0}','{1}')", 
+                Base58Check.Base58CheckEncoding.EncodePlain(recipient), nickname));
 
         }
 
@@ -104,7 +106,7 @@ namespace SPIXI
 
         }
 
-        private void sendPayment(string wallet, string amount)
+        private void sendPayment(string wallet, string amount_string)
         {
             Navigation.PopAsync();
 
@@ -113,17 +115,32 @@ namespace SPIXI
                 Navigation.PopAsync();
 
             // Create an ixian transaction and send it to the dlt network
-            byte[] from = Node.walletStorage.address;
+            byte[] to = Base58Check.Base58CheckEncoding.DecodePlain(wallet);
 
-            // TODOSPIXI
-      //      Transaction transaction = new Transaction(amount, wallet, from);
-      //      NetworkClientManager.sendDLTData(ProtocolMessageCode.newTransaction, transaction.getBytes());
+            IxiNumber amount = new IxiNumber(amount_string) - CoreConfig.transactionPrice; // Subtract the fee
+            IxiNumber fee = CoreConfig.transactionPrice;
+
+            // Generate the transaction
+            Transaction transaction = new Transaction();
+            transaction.to = to;
+            transaction.from = Node.walletStorage.address;
+            transaction.amount = amount;
+            transaction.fee = fee;
+            transaction.data = null;
+            transaction.blockHeight = 4000; // TODO: provide proper blockheight
+            transaction.pubKey = Node.walletStorage.publicKey;
+            transaction.id = transaction.generateID();
+            transaction.checksum = Transaction.calculateChecksum(transaction);
+            transaction.signature = Transaction.getSignature(transaction.checksum);
+
+            NetworkClientManager.broadcastData(ProtocolMessageCode.newTransaction, transaction.getBytes());
+
 
             // Add the unconfirmed transaction the the cache
-      //      TransactionCache.addUnconfirmedTransaction(transaction);
+            TransactionCache.addUnconfirmedTransaction(transaction);
 
             // Show the payment details
-      //      Navigation.PushAsync(new WalletSentPage(transaction));
+            Navigation.PushAsync(new WalletSentPage(transaction));
         }
 
     }

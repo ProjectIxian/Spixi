@@ -489,7 +489,6 @@ namespace SPIXI
             loadContacts();
             loadTransactions();
 
-            // TODOSPIXI
             // Check the ixian dlt
             if (NetworkClientManager.getConnectedClients().Count() > 0)
             {
