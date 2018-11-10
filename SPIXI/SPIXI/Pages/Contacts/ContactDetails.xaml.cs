@@ -53,7 +53,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            webView.Eval(string.Format("setAddress(\"{0}\")", friend.wallet_address));
+            webView.Eval(string.Format("setAddress(\"{0}\")", friend.walletAddress));
             webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));
 
             loadTransactions();
@@ -88,7 +88,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSend2Page(friend.wallet_address, true));
+                Navigation.PushAsync(new WalletSend2Page(friend.walletAddress, true));
             }
             else if (current_url.Equals("ixian:chat", StringComparison.Ordinal))
             {

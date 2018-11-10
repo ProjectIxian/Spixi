@@ -54,7 +54,7 @@ namespace SPIXI
             }
             else
             {
-                webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.wallet_address), local_friend.nickname));
+                webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname));
             }
         }
 

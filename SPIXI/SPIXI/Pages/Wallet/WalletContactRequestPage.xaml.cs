@@ -38,7 +38,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}')", friend.wallet_address, friend.nickname, amount, date));
+            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}')", friend.walletAddress, friend.nickname, amount, date));
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

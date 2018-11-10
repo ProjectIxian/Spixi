@@ -132,15 +132,7 @@ namespace SPIXI
                 string id = split[1];
                 byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
-                Friend friend = null;
-                foreach(Friend friendl in FriendList.friends)
-                {
-                    if(friendl.wallet_address.SequenceEqual(id_bytes))
-                    {
-                        friend = friendl;
-                        break;
-                    }
-                }
+                Friend friend = FriendList.getFriend(id_bytes);
 
                 if(friend == null)
                 {
@@ -156,15 +148,7 @@ namespace SPIXI
                 string id = split[1];
                 byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
-                Friend friend = null;
-                foreach (Friend friendl in FriendList.friends)
-                {
-                    if (friendl.wallet_address.SequenceEqual(id_bytes))
-                    {
-                        friend = friendl;
-                        break;
-                    }
-                }
+                Friend friend = FriendList.getFriend(id_bytes);
 
                 if (friend == null)
                 {
@@ -342,7 +326,7 @@ namespace SPIXI
                 if (friend.online)
                     chk += "1";
                 chk += friend.nickname;
-                chk += friend.wallet_address;
+               // chk += friend.walletAddress;
             }
 
             if(lastContactsChecksum.Equals(chk, StringComparison.Ordinal))
@@ -364,7 +348,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", friend.wallet_address, friend.nickname, "avatar.png", str_online));
+                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", friend.walletAddress, friend.nickname, "avatar.png", str_online));
             }
         }
 
@@ -413,12 +397,12 @@ namespace SPIXI
                     //if (friend.checkLastUnread())
                     {
                         webView.Eval(string.Format("addUnreadActivity('{0}','{1}','{2}','{3}',{4},'{5}')",
-                            friend.wallet_address, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
+                            friend.walletAddress, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
                     }
 
 
                     webView.Eval(string.Format("addChat('{0}','{1}','{2}','{3}',{4},'{5}')",
-                        friend.wallet_address, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
+                        friend.walletAddress, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
                 }
 
             }
@@ -450,7 +434,7 @@ namespace SPIXI
 
 
                     webView.Eval(string.Format("addChat('{0}','{1}','{2}','{3}',{4},'{5}')",
-                        friend.wallet_address, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
+                        friend.walletAddress, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
                 }
             }
         }

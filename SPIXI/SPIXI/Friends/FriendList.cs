@@ -23,7 +23,7 @@ namespace SPIXI
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.SequenceEqual(wallet_address))
+                if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     // Already in the list
                     return friend;
@@ -38,7 +38,7 @@ namespace SPIXI
             // Go through each friend and check for a matching wallet address
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.SequenceEqual(wallet_address))
+                if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     friend.nickname = nick;
 
@@ -57,7 +57,7 @@ namespace SPIXI
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.SequenceEqual(wallet_address))
+                if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     DateTime dt = DateTime.Now;
                     // TODO: message date should be fetched, not generated here
@@ -94,7 +94,7 @@ namespace SPIXI
         {
             foreach (Friend friend in friends)
             {
-                if (friend.wallet_address.SequenceEqual(wallet_address))
+                if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     // Already in the list
                     return;
@@ -152,7 +152,7 @@ namespace SPIXI
         public static bool removeFriend(Friend friend)
         {
             // Remove history file
-            Node.localStorage.deleteMessagesFile(friend.wallet_address);
+            Node.localStorage.deleteMessagesFile(friend.walletAddress);
 
             bool stat = friends.Remove(friend);
             if (!stat)
@@ -260,7 +260,7 @@ namespace SPIXI
                     friend.messages.Clear();
 
                     // Remove history file
-                    Node.localStorage.deleteMessagesFile(friend.wallet_address);
+                    Node.localStorage.deleteMessagesFile(friend.walletAddress);
                 }
             }
         }
@@ -273,7 +273,7 @@ namespace SPIXI
                 // Go through each friend and check for the pubkey in the PL
                 foreach (Friend friend in friends)
                 {
-                    byte[] pubkey = findContactPubkey(friend.wallet_address);
+                    byte[] pubkey = findContactPubkey(friend.walletAddress);
                     if (pubkey == null)
                     {
                         // No pubkey found, means contact is offline

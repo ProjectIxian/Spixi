@@ -39,7 +39,7 @@ namespace SPIXI
             friend.chat_page = this;
 
             // Connect to the friend's S2 node
-            node_ip = friend.getRelayIP();
+            node_ip = friend.searchForRelay();
 
             //TODOSPIXI
             //NetworkClientManager.connectToStreamNode(node_ip);
@@ -92,7 +92,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSend2Page(friend.wallet_address, true));
+                Navigation.PushAsync(new WalletSend2Page(friend.walletAddress, true));
             }
             else if (current_url.Equals("ixian:accept", StringComparison.Ordinal))
             {
@@ -344,7 +344,7 @@ namespace SPIXI
 
             // Write to chat history
             if(message.from == false)
-                Node.localStorage.writeMessagesFile(friend.wallet_address, friend.messages);
+                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
         }
 
         // Executed every second

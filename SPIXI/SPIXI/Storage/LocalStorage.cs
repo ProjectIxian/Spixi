@@ -147,10 +147,10 @@ namespace SPIXI.Storage
 
                 foreach(Friend friend in FriendList.friends)
                 {
-                    writer.Write(friend.wallet_address.Length);
-                    writer.Write(friend.wallet_address);
-                    writer.Write(friend.pubkey.Length);
-                    writer.Write(friend.pubkey);
+                    writer.Write(friend.walletAddress.Length);
+                    writer.Write(friend.walletAddress);
+                    writer.Write(friend.publicKey.Length);
+                    writer.Write(friend.publicKey);
                     writer.Write(friend.nickname);
 
                     // Chat history, todo.

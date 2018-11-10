@@ -73,7 +73,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", friend.wallet_address, friend.nickname, "avatar.png", str_online));
+                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", friend.walletAddress, friend.nickname, "avatar.png", str_online));
             }
         }
 

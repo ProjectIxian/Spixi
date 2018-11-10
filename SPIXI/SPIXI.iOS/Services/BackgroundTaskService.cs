@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Foundation;
 using UIKit;
 using Xamarin.Forms;
-using SPIXI.Notifications;
+//using SPIXI.Notifications;
 
 namespace SPIXI.iOS.Services
 {
@@ -18,7 +18,7 @@ namespace SPIXI.iOS.Services
 
         public async Task Start()
         {
-            _cts = new CancellationTokenSource();
+   /*         _cts = new CancellationTokenSource();
 
             _taskId = UIApplication.SharedApplication.BeginBackgroundTask("LongRunningTask", OnExpiration);
 
@@ -43,7 +43,7 @@ namespace SPIXI.iOS.Services
                 }
             }
 
-            UIApplication.SharedApplication.EndBackgroundTask(_taskId);
+            UIApplication.SharedApplication.EndBackgroundTask(_taskId);*/
         }
 
         public void Stop()

@@ -112,7 +112,7 @@ namespace SPIXI
                     {
                         // Extract the public key from the Presence List
                         byte[] pub_k = FriendList.findContactPubkey(message.recipientAddress);
-                        if (pub_k.Length == null)
+                        if (pub_k == null)
                         {
                             // No public key found means the contact is still offline
                             continue;

@@ -1,9 +1,12 @@
 ﻿using DLT.Network;
+using IXICore;
 using SPIXI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
+using System.Threading;
 using System.Timers;
 
 namespace DLT.Meta
@@ -25,7 +28,14 @@ namespace DLT.Meta
         public static bool changedSettings = false;
 
         // Node timer
-        private static Timer mainLoopTimer;
+        private static System.Timers.Timer mainLoopTimer;
+
+
+        public static int keepAliveVersion = 0;
+
+        // Private data
+        private static Thread keepAliveThread;
+        private static bool autoKeepalive = false;
 
 
         public static IxiNumber balance = 0;
@@ -53,9 +63,13 @@ namespace DLT.Meta
             // Prepare the stream processor
             StreamProcessor.initialize();
 
+            // Start the keepalive thread
+            autoKeepalive = true;
+            keepAliveThread = new Thread(keepAlive);
+            keepAliveThread.Start();
 
             // Setup a timer to handle routine updates
-            mainLoopTimer = new Timer(2500);
+            mainLoopTimer = new System.Timers.Timer(2500);
             mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
             mainLoopTimer.Start();
         }
@@ -75,6 +89,9 @@ namespace DLT.Meta
         {
             // Start the network client manager
             NetworkClientManager.start();
+
+            // Start the s2 client manager
+            StreamClientManager.start();
         }
 
         // Handle timer routines
@@ -91,6 +108,14 @@ namespace DLT.Meta
 
         static public void stop()
         {
+            // Stop the keepalive thread
+            autoKeepalive = false;
+            if (keepAliveThread != null)
+            {
+                keepAliveThread.Abort();
+                keepAliveThread = null;
+            }
+
             // Stop the loop timer
             mainLoopTimer.Stop();
 
@@ -98,9 +123,86 @@ namespace DLT.Meta
             NetworkQueue.stop();
 
             NetworkClientManager.stop();
+            StreamClientManager.stop();
 
             // Stop the stream processor
             StreamProcessor.uninitialize();
+        }
+
+
+        // Sends periodic keepalive network messages
+        private static void keepAlive()
+        {
+            while (autoKeepalive)
+            {
+                // Wait x seconds before rechecking
+                for (int i = 0; i < CoreConfig.keepAliveInterval; i++)
+                {
+                    if (autoKeepalive == false)
+                    {
+                        Thread.Yield();
+                        return;
+                    }
+                    // Sleep for one second
+                    Thread.Sleep(1000);
+                }
+
+
+                try
+                {
+                    // Prepare the keepalive message
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(m))
+                        {
+                            writer.Write(keepAliveVersion);
+
+                            byte[] wallet = walletStorage.address;
+                            writer.Write(wallet.Length);
+                            writer.Write(wallet);
+
+                            writer.Write(Config.device_id);
+
+                            // Add the unix timestamp
+                            long timestamp = Core.getCurrentTimestamp();
+                            writer.Write(timestamp);
+
+                            string hostname = Node.getFullAddress();
+                            writer.Write(hostname);
+
+                            // Add a verifiable signature
+                            byte[] private_key = walletStorage.privateKey;
+                            byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + hostname), private_key);
+                            writer.Write(signature.Length);
+                            writer.Write(signature);
+
+                            PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
+                            PresenceList.curNodePresenceAddress.signature = signature;
+                        }
+
+
+                        // Update self presence
+                        PresenceList.receiveKeepAlive(m.ToArray());
+
+                        // Send this keepalive message to the primary S2 node only
+                        // TODO
+                        //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.keepAlivePresence, m.ToArray());
+                        StreamClientManager.broadcastData(ProtocolMessageCode.keepAlivePresence, m.ToArray());
+                    }
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+
+            }
+
+            Thread.Yield();
+        }
+
+        public static string getFullAddress()
+        {
+            return Config.publicServerIP + ":" + Config.serverPort;
         }
 
     }

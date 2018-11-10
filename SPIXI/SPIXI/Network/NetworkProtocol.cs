@@ -255,26 +255,26 @@ namespace DLT.Network
 
 
                     case ProtocolMessageCode.helloData:
-                      /* using (MemoryStream m = new MemoryStream(data))
+                       using (MemoryStream m = new MemoryStream(data))
                         {
                             using (BinaryReader reader = new BinaryReader(m))
                             {
                                 int node_version = reader.ReadInt32();
 
                                 // Check for incompatible nodes
-                                if (node_version < Config.nodeVersion)
+                        /*        if (node_version < Config.nodeVersion)
                                 {
                                     Console.WriteLine("Hello: Connected node version ({0}) is too old! Upgrade the node.", node_version);
                                     socket.Disconnect(true);
                                     return;
-                                }
+                                }*/
 
                                 Console.WriteLine("Connected version : {0}", node_version);
-
+                                endpoint.helloReceived = true;
                                 // Get presences
-                                socket.Send(prepareProtocolMessage(ProtocolMessageCode.syncPresenceList, new byte[1]), SocketFlags.None);
+                                endpoint.sendData(ProtocolMessageCode.syncPresenceList, new byte[1]);
                             }
-                        }*/
+                        }
                         break;
 
                     case ProtocolMessageCode.s2data:
@@ -370,6 +370,18 @@ namespace DLT.Network
                                     Logging.error(string.Format("Disconnected with message: {0}", message));
                                 }
                             }
+                        }
+                        break;
+
+                    case ProtocolMessageCode.ping:
+                        {
+                            endpoint.sendData(ProtocolMessageCode.pong, new byte[1]);
+                        }
+                        break;
+
+                    case ProtocolMessageCode.pong:
+                        {
+                            // do nothing
                         }
                         break;
 
