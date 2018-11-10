@@ -25,8 +25,6 @@ namespace SPIXI.Droid.Renderers
 
     public class SpixiWebviewRenderer : WebViewRenderer
     {
-        IWebViewController ElementController => Element;
-
         public SpixiWebviewRenderer(Context context) : base(context)
         {
 
@@ -55,7 +53,7 @@ namespace SPIXI.Droid.Renderers
             }
 
             // Override the page started call to trigger the Navigating callback
-            public override void OnPageStarted(global::Android.Webkit.WebView view, string url, Bitmap favicon)
+            /*public override void OnPageStarted(global::Android.Webkit.WebView view, string url, Bitmap favicon)
             {
                 if (_renderer.Element == null || url == WebViewRenderer.AssetBaseUrl)
                     return;
@@ -73,6 +71,21 @@ namespace SPIXI.Droid.Renderers
                     base.OnPageStarted(view, url, favicon);
                 }
             }
+            */
+
+            // Hackish solution to the Xamarin ERR_UNKNOWN_URL_SCHEME issue plaguing the latest releases
+            // TODO: find a better way to handle the Navigating event without triggering a page load
+            public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
+            {
+                var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
+                _renderer.ElementController.SendNavigating(args);
+                if (args.Cancel)
+                {
+                    return true;
+                }
+
+                return false;
+            }
 
             public override void OnPageFinished(global::Android.Webkit.WebView view, string url)
             {
@@ -85,7 +98,12 @@ namespace SPIXI.Droid.Renderers
                 base.OnPageFinished(view, url);
             }
 
-
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+                if (disposing)
+                    _renderer = null;
+            }
         }
     }
 
