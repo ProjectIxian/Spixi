@@ -127,7 +127,7 @@ namespace SPIXI
             transaction.amount = amount;
             transaction.fee = fee;
             transaction.data = null;
-            transaction.blockHeight = 4000; // TODO: provide proper blockheight
+            transaction.blockHeight = Node.blockHeight;
             transaction.pubKey = Node.walletStorage.publicKey;
             transaction.id = transaction.generateID();
             transaction.checksum = Transaction.calculateChecksum(transaction);

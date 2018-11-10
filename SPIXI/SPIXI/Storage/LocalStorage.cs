@@ -307,9 +307,9 @@ namespace SPIXI.Storage
         }
 
         // Reads the offline message archive
-        public List<Message> readOfflineMessagesFile()
+        public List<StreamMessage> readOfflineMessagesFile()
         {
-            List<Message> messages = new List<Message>();
+            List<StreamMessage> messages = new List<StreamMessage>();
             string messages_filename = Path.Combine(documentsPath, String.Format("offline.spx"));
 
             if (File.Exists(messages_filename) == false)
@@ -339,7 +339,7 @@ namespace SPIXI.Storage
                     int data_length = reader.ReadInt32();
                     byte[] data = reader.ReadBytes(data_length);
 
-                    Message message = new Message(data);
+                    StreamMessage message = new StreamMessage(data);
                     messages.Add(message);
                 }
 
@@ -356,7 +356,7 @@ namespace SPIXI.Storage
         }
 
         // Writes the cached offline messages to a file
-        public bool writeOfflineMessagesFile(List<Message> messages)
+        public bool writeOfflineMessagesFile(List<StreamMessage> messages)
         {
             string messages_filename = Path.Combine(documentsPath, String.Format("offline.spx"));
 
@@ -381,7 +381,7 @@ namespace SPIXI.Storage
                 int message_num = messages.Count;
                 writer.Write(message_num);
 
-                foreach (Message message in messages)
+                foreach (StreamMessage message in messages)
                 {
                     byte[] data = message.getBytes();
                     int data_length = data.Length;

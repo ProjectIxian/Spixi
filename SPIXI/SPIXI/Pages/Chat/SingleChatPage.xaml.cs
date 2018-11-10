@@ -215,6 +215,16 @@ namespace SPIXI
 
                         StreamProcessor.sendMessage(message, node_ip);*/
 
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.chat;
+            message.recipient = friend.walletAddress;
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = Encoding.UTF8.GetBytes(str);
+
+            string relayip = friend.searchForRelay();
+            StreamProcessor.sendMessage(message, relayip);
+
             // Finally, add the text bubble visually
             DateTime dt = DateTime.Now;
             FriendMessage msg = new FriendMessage(str, String.Format("{0:t}", dt), false);
@@ -228,6 +238,17 @@ namespace SPIXI
         public void onAccept()
         {
             friend.approved = true;
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.acceptAdd;
+            message.recipient = friend.walletAddress;
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = new byte[1];
+
+            string relayip = friend.searchForRelay();
+            StreamProcessor.sendMessage(message, relayip);
+
             // TODOSPIXI
             /*
             string recipient_address = friend.wallet_address;

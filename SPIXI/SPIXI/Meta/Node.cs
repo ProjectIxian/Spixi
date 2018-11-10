@@ -38,7 +38,8 @@ namespace DLT.Meta
         private static bool autoKeepalive = false;
 
 
-        public static IxiNumber balance = 0;
+        public static ulong blockHeight = 0;      // Stores the last known block height 
+        public static IxiNumber balance = 0;      // Stores the last known balance for this node
 
         public static string primaryS2Address = "";
 

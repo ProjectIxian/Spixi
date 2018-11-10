@@ -10,6 +10,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
 using DLT;
+using DLT.Network;
 
 namespace SPIXI
 {
@@ -28,8 +29,8 @@ namespace SPIXI
             source.Url = string.Format("{0}html/contact_new.html", DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
 
-            // TODOSPIXI
-//            NetworkClientManager.requestPresenceList();
+            // TODO optimize this         
+            NetworkClientManager.broadcastData(ProtocolMessageCode.syncPresenceList, new byte[1]);
         }
 
         public ContactNewPage(string wal_id)
@@ -135,7 +136,8 @@ namespace SPIXI
             byte[] pubkey = FriendList.findContactPubkey(wal);
             if(pubkey == null)
             {
-                DisplayAlert("Contact does not exist", "No such SPIXI user.", "OK");
+                DisplayAlert("Contact does not exist", "Try again later.", "OK");
+                NetworkClientManager.broadcastData(ProtocolMessageCode.syncPresenceList, new byte[1]);
                 return;
             }
 
@@ -143,28 +145,31 @@ namespace SPIXI
 
             // TODOSPIXI
             //FriendList.addFriend(wal, pubkey, "Unknown");
-            /*
+            
             // Send the message to the S2 nodes
             byte[] recipient_address = wal;
-            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.requestAdd, "", pubkey);
+            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(StreamMessageCode.requestAdd, "", pubkey);
 
 
             // Connect to the contact's S2 relay first
-            NetworkClientManager.connectToStreamNode(relayip);
+            //  StreamClientManager.connectToStreamNode(relayip);
 
-            Message message = new Message();
-            message.recipientAddress = recipient_address;
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.requestAdd;
+            message.recipient = recipient_address;
             message.data = encrypted_message;
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
 
-            // TODO: optimize this
+       /*     // TODO: optimize this
             while(NetworkClientManager.isNodeConnected(relayip) == false)
             {
                 
-            }
+            }*/
 
             StreamProcessor.sendMessage(message, relayip);
 
-            Navigation.PopAsync();*/
+            Navigation.PopAsync();
         }
     }
 }

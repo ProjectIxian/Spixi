@@ -279,7 +279,7 @@ namespace DLT.Network
 
                     case ProtocolMessageCode.s2data:
                         {
-                     //       StreamProcessor.receiveData(data, socket);
+                            StreamProcessor.receiveData(data, endpoint);
                         }
                         break;
 
@@ -331,6 +331,10 @@ namespace DLT.Network
                                     {
                                         Node.balance = balance;
                                     }
+
+                                    // Retrieve the blockheight for the balance
+                                    ulong blockheight = reader.ReadUInt64();
+                                    Node.blockHeight = blockheight;
                                 }
                             }
                         }

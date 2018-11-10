@@ -11,71 +11,11 @@ using System.Threading;
 
 namespace SPIXI
 {
-    public enum SpixiMessageCode
-    {
-        chat,
-        getNick,
-        nick,
-        requestAdd,
-        acceptAdd,
-        requestFunds
-    }
-
-
-    class Message
-    {
-        public byte[] recipientAddress;
-        public string transactionID;
-        public byte[] data;
-        private string id;
-
-        public Message()
-        {
-            id = Guid.NewGuid().ToString();
-        }
-
-        public Message(byte[] bytes)
-        {
-            using (MemoryStream m = new MemoryStream(bytes))
-            {
-                using (BinaryReader reader = new BinaryReader(m))
-                {
-                    id = reader.ReadString();
-                    recipientAddress = reader.ReadBytes(0);
-                    int data_length = reader.ReadInt32();
-                    data = reader.ReadBytes(data_length);
-                }
-            }
-        }
-
-        public string getID()
-        {
-            return id;
-        }
-
-        public byte[] getBytes()
-        {
-            using (MemoryStream m = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(m))
-                {
-                    writer.Write(id);
-                    writer.Write(recipientAddress);
-                    int data_length = data.Length;
-                    writer.Write(data_length);
-                    writer.Write(data);
-                }
-                return m.ToArray();
-            }
-        }
-
-    }
-
     class StreamProcessor
     {
-        static List<Message> messages = new List<Message>(); // List that stores messages until the keypair is generated
+        static List<StreamMessage> messages = new List<StreamMessage>(); // List that stores messages until the keypair is generated
 
-        static List<Message> offlineMessages = new List<Message>(); // List that stores messages until receiving contact is online
+        static List<StreamMessage> offlineMessages = new List<StreamMessage>(); // List that stores messages until receiving contact is online
         private static Thread offlineMessagesThread; // Thread that checks the offline messages list for outstanding messages
         private static bool continueRunning = false;
 
@@ -96,7 +36,7 @@ namespace SPIXI
         // Thread for checking offline message queue
         private static void offlineLoop()
         {
-            List<Message> cache = new List<Message>();
+            List<StreamMessage> cache = new List<StreamMessage>();
 
             // Read the persistent offline messages
             offlineMessages = Node.localStorage.readOfflineMessagesFile();
@@ -108,10 +48,10 @@ namespace SPIXI
                 lock (offlineMessages)
                 {
                     // Go through each message
-                    foreach (Message message in offlineMessages)
+                    foreach (StreamMessage message in offlineMessages)
                     {
                         // Extract the public key from the Presence List
-                        byte[] pub_k = FriendList.findContactPubkey(message.recipientAddress);
+                        byte[] pub_k = FriendList.findContactPubkey(message.recipient);
                         if (pub_k == null)
                         {
                             // No public key found means the contact is still offline
@@ -124,7 +64,7 @@ namespace SPIXI
                     }
 
                     // Check the removal cache for messages
-                    foreach (Message message in cache)
+                    foreach (StreamMessage message in cache)
                     {
                         writeToFile = true;
                         offlineMessages.Remove(message);
@@ -146,7 +86,7 @@ namespace SPIXI
             Thread.Yield();
         }
 
-        private static void addOfflineMessage(Message msg)
+        private static void addOfflineMessage(StreamMessage msg)
         {
             lock(offlineMessages)
             {
@@ -158,8 +98,11 @@ namespace SPIXI
 
 
         // Send an encrypted message using the S2 network
-        public static void sendMessage(Message msg, string hostname = null)
+        public static void sendMessage(StreamMessage msg, string hostname = null)
         {
+
+            StreamClientManager.broadcastData(ProtocolMessageCode.s2data, msg.getBytes());
+
    /*         string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
             if (pub_k.Length < 1)
             {
@@ -200,8 +143,8 @@ namespace SPIXI
 
                     lock (messages)
                     {
-                        Message tmp_message = null;
-                        foreach (Message message in messages)
+                        StreamMessage tmp_message = null;
+                        foreach (StreamMessage message in messages)
                         {
                             if (message.getID().Equals(messageID, StringComparison.Ordinal))
                             {
@@ -219,7 +162,7 @@ namespace SPIXI
         }
 
         // Called when an encryption key is received from the S2 server, as per step 4 of the WhitePaper
-        private static void sendEncryptedMessage(Message msg, string key, Socket socket)
+        private static void sendEncryptedMessage(StreamMessage msg, string key, Socket socket)
         {
  /*           Console.WriteLine("Sending encrypted message with key {0}", key);
 
@@ -252,53 +195,81 @@ namespace SPIXI
         }
 
         // Prepare a Spixi S2 message. Encrypts the provided text combined with a SpixiMessageCode using the provided publicKey
-        public static byte[] prepareSpixiMessage(SpixiMessageCode code, string text, string publicKey)
+        public static byte[] prepareSpixiMessage(StreamMessageCode code, string text, byte[] publicKey)
         {
             Logging.info(string.Format("PREP: {0} : {1}", (int)code, text));
-            /*          using (MemoryStream m = new MemoryStream())
-                      {
-                          using (BinaryWriter writer = new BinaryWriter(m))
-                          {
-                              // NOTE: storing a 0 value integer as the initial part of the message will result in decryption errors
-                              // on the other client. As such, we add a dummy offset of 23
-                              int safe_code = (int)code + 23;
-                              writer.Write(safe_code);
-                              writer.Write(text);
-
-                              byte[] encrypted_message = CryptoManager.lib.encryptData(m.ToArray(), publicKey);
-
-                              return encrypted_message;
-                          }
-                      }*/
-            return null;
-        }
-
-        public static void receiveData(byte[] bytes, Socket socket)
-        {
-            Console.WriteLine("NET: Receiving S2 data!");
-/*
-            //string message = Encoding.UTF8.GetString(data);
-            //Console.WriteLine("Encrypted message: {0}", message);
-
-            using (MemoryStream m = new MemoryStream(bytes))
+            using (MemoryStream m = new MemoryStream())
             {
-                using (BinaryReader reader = new BinaryReader(m))
+                using (BinaryWriter writer = new BinaryWriter(m))
                 {
+                    // NOTE: storing a 0 value integer as the initial part of the message will result in decryption errors
+                    // on the other client. As such, we add a dummy offset of 23
+                    int safe_code = (int)code + 23;
+                    writer.Write(safe_code);
+                    writer.Write(text);
 
-                    string sender = reader.ReadString();
-                    string transaction_id = reader.ReadString();
-                    string private_key = reader.ReadString();
+                    byte[] encrypted_message = CryptoManager.lib.encryptWithRSA(m.ToArray(), publicKey);
 
-                    int encrypted_bytes_count = reader.ReadInt32();
-                    // Decrypt the S2 message
-                    byte[] encrypted_message = CryptoManager.lib.decryptDataS2(reader.ReadBytes(encrypted_bytes_count),
-                        private_key);
-
-                    // Read and parse the Spixi message
-                    readSpixiMessage(encrypted_message, sender);
+                    return encrypted_message;
                 }
             }
-            */
+        }
+
+        // Called when receiving S2 data from clients
+        public static void receiveData(byte[] bytes, RemoteEndpoint endpoint)
+        {
+            Logging.info(string.Format("Receiving S2 data "));
+
+            StreamMessage message = new StreamMessage(bytes);
+
+            switch(message.type)
+            {
+                case StreamMessageCode.chat:
+                    {
+                        // Add the message to the friend list
+                        FriendList.addMessage(message.sender, Encoding.UTF8.GetString(message.data));
+                    }
+                    break;
+
+                case StreamMessageCode.requestAdd:
+                    {
+                        // Friend request
+                        handleRequestAdd(message.sender);
+                    }
+                    break;
+
+                case StreamMessageCode.acceptAdd:
+                    {
+                        // Friend accepted request
+                        handleAcceptAdd(message.sender);
+                    }
+                    break;
+            }
+
+
+            /*
+                        //string message = Encoding.UTF8.GetString(data);
+                        //Console.WriteLine("Encrypted message: {0}", message);
+
+                        using (MemoryStream m = new MemoryStream(bytes))
+                        {
+                            using (BinaryReader reader = new BinaryReader(m))
+                            {
+
+                                string sender = reader.ReadString();
+                                string transaction_id = reader.ReadString();
+                                string private_key = reader.ReadString();
+
+                                int encrypted_bytes_count = reader.ReadInt32();
+                                // Decrypt the S2 message
+                                byte[] encrypted_message = CryptoManager.lib.decryptDataS2(reader.ReadBytes(encrypted_bytes_count),
+                                    private_key);
+
+                                // Read and parse the Spixi message
+                                readSpixiMessage(encrypted_message, sender);
+                            }
+                        }
+                        */
         }
 
         // Extracts a Spixi message from an encrypted byte array
@@ -324,7 +295,7 @@ namespace SPIXI
         }
 
         // Parse a provided Spixi message
-        public static void parseSpixiMessage(SpixiMessageCode code, string text, string sender)
+        public static void parseSpixiMessage(StreamMessageCode code, string text, string sender)
         {
  /*           try
             {
@@ -427,57 +398,57 @@ namespace SPIXI
             return;
         }
 
-        private static void handleRequestAdd(string sender)
+        private static void handleRequestAdd(byte[] sender_wallet)
         {
-   /*         string pub_k = FriendList.findContactPubkey(sender);
-            if (pub_k.Length < 1)
+            byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
+            if (pub_k == null)
             {
-                Console.WriteLine("Contact {0} not found in presence list!", sender);
+                Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
 
                 foreach (Presence pr in PresenceList.presences)
                 {
-                    Console.WriteLine("Presence: {0}", pr.wallet);
+                    Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
                 }
                 return;
             }
 
-            FriendList.addFriend(sender, pub_k, "New Contact", false);
-            FriendList.addMessageWithType(FriendMessageType.requestAdd, sender, "");*/
+            FriendList.addFriend(sender_wallet, pub_k, "New Contact", false);
+            FriendList.addMessageWithType(FriendMessageType.requestAdd, sender_wallet, "");
         }
 
-        private static void handleAcceptAdd(string sender)
+        private static void handleAcceptAdd(byte[] sender_wallet)
         {
-    /*        // Retrieve the corresponding contact
-            Friend friend = FriendList.getFriend(sender);
+            // Retrieve the corresponding contact
+            Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                string pub_k = FriendList.findContactPubkey(sender);
-                if (pub_k.Length < 1)
+                byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
+                if (pub_k == null)
                 {
-                    Console.WriteLine("Contact {0} not found in presence list!", sender);
+                    Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
 
                     foreach (Presence pr in PresenceList.presences)
                     {
-                        Console.WriteLine("Presence: {0}", pr.wallet);
+                        Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
                     }
                     return;
                 }
 
-                friend = new Friend(sender, pub_k, "New Contact");
-                FriendList.addFriend(sender, pub_k, "New Contact");
+                friend = new Friend(sender_wallet, pub_k, "New Contact");
+                FriendList.addFriend(sender_wallet, pub_k, "New Contact");
 
                 // Also request the nickname of the sender
                 // Prepare the message and send to the S2 nodes
-                byte[] encrypted_message_get = prepareSpixiMessage(SpixiMessageCode.getNick, "", pub_k);
+          /*      byte[] encrypted_message_get = prepareSpixiMessage(StreamMessageCode.getNick, "", pub_k);
 
                 Message nick_message = new Message();
                 nick_message.recipientAddress = sender;
                 nick_message.data = encrypted_message_get;
-                sendMessage(nick_message);
+                sendMessage(nick_message);*/
             }
 
             // Send the nickname message to the S2 nodes
-            string recipient_address = friend.wallet_address;
+   /*         string recipient_address = friend.wallet_address;
             byte[] encrypted_message = prepareSpixiMessage(SpixiMessageCode.nick, Node.localStorage.nickname, friend.pubkey);
 
             Message reply_message = new Message();

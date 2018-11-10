@@ -78,7 +78,7 @@
             function setAddress(addr) {
                 wal_id = addr;
                 generateQR();
-                var parts = addr.match(/.{1,16}/g) || [];
+                var parts = addr.match(/.{1,17}/g) || [];
                 document.getElementById("wal1").innerHTML = parts[0];
                 document.getElementById("wal2").innerHTML = parts[1];
                 document.getElementById("wal3").innerHTML = parts[2];

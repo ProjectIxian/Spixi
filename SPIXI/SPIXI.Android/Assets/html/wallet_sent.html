@@ -46,7 +46,7 @@
     <div class="settings_desc2" id="time_sent"></div>
     <hr class="wallet_hr" />
     <div class="settings_subtitle" style="margin-top: -5px;">Fee</div>
-    <div class="settings_desc2">0</div>   
+    <div class="settings_desc2" id="sent_fee">0</div>   
     <hr class="wallet_hr" />
    
     
@@ -73,14 +73,16 @@
         document.getElementById('amount_label').innerHTML = "Amount received";
     }
 
-    function setInitialData(amount, from, nick, time) {
+    function setInitialData(amount, fee, from, nick, time) {
         document.getElementById('sent_amount').innerHTML = amount;
+        document.getElementById('sent_fee').innerHTML = fee;
         document.getElementById('wallet_from_text').innerHTML = "<b>" + nick + "</b><br/>" + from;
         document.getElementById('time_sent').innerHTML = time;
     }
 
-    function setConfirmedData(amount, from, nick, time) {
+    function setConfirmedData(amount, fee, from, nick, time) {
         document.getElementById('sent_amount').innerHTML = amount;
+        document.getElementById('sent_fee').innerHTML = fee;
         document.getElementById('wallet_from_text').innerHTML = "<b>" + nick + "</b><br/>" + from;
         document.getElementById('time_sent').innerHTML = time;
         document.getElementById('sent_status').innerHTML = "CONFIRMED";
