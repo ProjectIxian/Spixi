@@ -314,6 +314,8 @@ namespace SPIXI
                     streamClients.Add(new_client);
                 }
 
+                // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
+                Node.primaryS2Address = host;
             }
 
             // Remove this node from the connecting clients list

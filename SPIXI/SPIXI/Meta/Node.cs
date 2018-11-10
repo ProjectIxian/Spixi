@@ -40,6 +40,8 @@ namespace DLT.Meta
 
         public static IxiNumber balance = 0;
 
+        public static string primaryS2Address = "";
+
         static public void start()
         {
             // Initialize the crypto manager
@@ -167,7 +169,7 @@ namespace DLT.Meta
                             long timestamp = Core.getCurrentTimestamp();
                             writer.Write(timestamp);
 
-                            string hostname = Node.getFullAddress();
+                            string hostname = primaryS2Address;
                             writer.Write(hostname);
 
                             // Add a verifiable signature
@@ -176,8 +178,8 @@ namespace DLT.Meta
                             writer.Write(signature.Length);
                             writer.Write(signature);
 
-                            PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
-                            PresenceList.curNodePresenceAddress.signature = signature;
+                        //    PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
+                        //    PresenceList.curNodePresenceAddress.signature = signature;
                         }
 
 
@@ -190,8 +192,9 @@ namespace DLT.Meta
                         StreamClientManager.broadcastData(ProtocolMessageCode.keepAlivePresence, m.ToArray());
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Logging.error(String.Format("KA Exception: {0}", e.Message));
                     continue;
                 }
 
