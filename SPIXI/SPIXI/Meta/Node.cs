@@ -220,5 +220,9 @@ namespace DLT.Meta
             return Config.publicServerIP + ":" + Config.serverPort;
         }
 
+        public static ulong getLastBlockHeight()
+        {
+            return blockHeight;
+        }
     }
 }

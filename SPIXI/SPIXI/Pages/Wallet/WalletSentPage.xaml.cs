@@ -48,9 +48,9 @@ namespace SPIXI
             {
                 string nickname = "Unknown";
                 Friend friend = null;
-                byte[] addr = transaction.to;
+                byte[] addr = transaction.toList.Keys.First();
                 // Check if this is a received payment
-                if (transaction.to.SequenceEqual(Node.walletStorage.address))
+                if (addr.SequenceEqual(Node.walletStorage.address))
                 {
                     webView.Eval("setReceivedMode()");
                     friend = FriendList.getFriend(transaction.from);
@@ -59,7 +59,7 @@ namespace SPIXI
                 else
                 {
                     // This is a sent payment
-                    friend = FriendList.getFriend(transaction.to);
+                    friend = FriendList.getFriend(addr);
                 }
 
                 if (friend != null)
@@ -126,9 +126,9 @@ namespace SPIXI
 
             string nickname = "Unknown";
             Friend friend = null;
-            byte[] addr = ctransaction.to;
+            byte[] addr = ctransaction.toList.Keys.First();
             // Check if this is a received payment
-            if (ctransaction.to.SequenceEqual(Node.walletStorage.address))
+            if (addr.SequenceEqual(Node.walletStorage.address))
             {
                 webView.Eval("setReceivedMode()");
                 friend = FriendList.getFriend(transaction.from);
@@ -137,7 +137,7 @@ namespace SPIXI
             else
             {
                 // This is a sent payment
-                friend = FriendList.getFriend(transaction.to);
+                friend = FriendList.getFriend(addr);
             }
 
             if (friend != null)

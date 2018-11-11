@@ -354,7 +354,7 @@ namespace DLT.Network
                             Logging.info("RECIEVED NEW TRANSACTION");
 
                             Transaction transaction = new Transaction(data);
-                            if (transaction.to.SequenceEqual(Node.walletStorage.address))
+                            if (transaction.toList.Keys.First().SequenceEqual(Node.walletStorage.address))
                             {
                                 TransactionCache.addTransaction(transaction);
                             }

@@ -117,24 +117,14 @@ namespace SPIXI
             // Create an ixian transaction and send it to the dlt network
             byte[] to = Base58Check.Base58CheckEncoding.DecodePlain(wallet);
 
-            IxiNumber amount = new IxiNumber(amount_string) - CoreConfig.transactionPrice; // Subtract the fee
+            IxiNumber amount = new IxiNumber(amount_string);
             IxiNumber fee = CoreConfig.transactionPrice;
+            byte[] from = Node.walletStorage.getWalletAddress();
+            byte[] pubKey = Node.walletStorage.publicKey;
 
-            // Generate the transaction
-            Transaction transaction = new Transaction();
-            transaction.to = to;
-            transaction.from = Node.walletStorage.address;
-            transaction.amount = amount;
-            transaction.fee = fee;
-            transaction.data = null;
-            transaction.blockHeight = Node.blockHeight;
-            transaction.pubKey = Node.walletStorage.publicKey;
-            transaction.id = transaction.generateID();
-            transaction.checksum = Transaction.calculateChecksum(transaction);
-            transaction.signature = Transaction.getSignature(transaction.checksum);
+            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());
 
             NetworkClientManager.broadcastData(ProtocolMessageCode.newTransaction, transaction.getBytes());
-
 
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
