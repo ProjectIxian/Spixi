@@ -162,57 +162,62 @@ namespace DLT.Meta
                 }
 
 
-                try
-                {
-                    // Prepare the keepalive message
-                    using (MemoryStream m = new MemoryStream())
-                    {
-                        using (BinaryWriter writer = new BinaryWriter(m))
-                        {
-                            writer.Write(keepAliveVersion);
-
-                            byte[] wallet = walletStorage.address;
-                            writer.Write(wallet.Length);
-                            writer.Write(wallet);
-
-                            writer.Write(Config.device_id);
-
-                            // Add the unix timestamp
-                            long timestamp = Core.getCurrentTimestamp();
-                            writer.Write(timestamp);
-
-                            string hostname = primaryS2Address;
-                            writer.Write(hostname);
-
-                            // Add a verifiable signature
-                            byte[] private_key = walletStorage.privateKey;
-                            byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + hostname), private_key);
-                            writer.Write(signature.Length);
-                            writer.Write(signature);
-
-                        //    PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
-                        //    PresenceList.curNodePresenceAddress.signature = signature;
-                        }
-
-
-                        // Update self presence
-                        PresenceList.receiveKeepAlive(m.ToArray());
-
-                        // Send this keepalive message to the primary S2 node only
-                        // TODO
-                        //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.keepAlivePresence, m.ToArray());
-                        StreamClientManager.broadcastData(ProtocolMessageCode.keepAlivePresence, m.ToArray());
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logging.error(String.Format("KA Exception: {0}", e.Message));
-                    continue;
-                }
+                sendKeepAlive();
 
             }
 
             Thread.Yield();
+        }
+
+        // Sends a single keepalive message
+        public static void sendKeepAlive()
+        {
+            try
+            {
+                // Prepare the keepalive message
+                using (MemoryStream m = new MemoryStream())
+                {
+                    using (BinaryWriter writer = new BinaryWriter(m))
+                    {
+                        writer.Write(keepAliveVersion);
+
+                        byte[] wallet = walletStorage.address;
+                        writer.Write(wallet.Length);
+                        writer.Write(wallet);
+
+                        writer.Write(Config.device_id);
+
+                        // Add the unix timestamp
+                        long timestamp = Core.getCurrentTimestamp();
+                        writer.Write(timestamp);
+
+                        string hostname = primaryS2Address;
+                        writer.Write(hostname);
+
+                        // Add a verifiable signature
+                        byte[] private_key = walletStorage.privateKey;
+                        byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + hostname), private_key);
+                        writer.Write(signature.Length);
+                        writer.Write(signature);
+
+                        //    PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
+                        //    PresenceList.curNodePresenceAddress.signature = signature;
+                    }
+
+
+                    // Update self presence
+                    PresenceList.receiveKeepAlive(m.ToArray());
+
+                    // Send this keepalive message to the primary S2 node only
+                    // TODO
+                    //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.keepAlivePresence, m.ToArray());
+                    StreamClientManager.broadcastData(ProtocolMessageCode.keepAlivePresence, m.ToArray());
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error(String.Format("KA Exception: {0}", e.Message));               
+            }
         }
 
         public static string getFullAddress()

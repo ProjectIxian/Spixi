@@ -98,17 +98,18 @@ namespace SPIXI
                 return;
             }
 
-            // TODOSPIXI
-            /*
-            // Prepare and send the request message
-            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.requestFunds, amount, local_friend.pubkey);
-            Message message = new Message();
-            message.recipientAddress = local_friend.wallet_address;
-            message.data = encrypted_message;
-            StreamProcessor.sendMessage(message);
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.requestFunds;
+            message.recipient = local_friend.walletAddress;
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = Encoding.UTF8.GetBytes(amount);
+
+            string relayip = local_friend.searchForRelay();
+            StreamProcessor.sendMessage(message, relayip);
 
             Navigation.PopAsync();
-            */
+
         }
     }
 }

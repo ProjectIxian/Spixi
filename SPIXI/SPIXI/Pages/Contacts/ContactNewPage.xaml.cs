@@ -145,27 +145,19 @@ namespace SPIXI
 
             // TODOSPIXI
             //FriendList.addFriend(wal, pubkey, "Unknown");
-            
-            // Send the message to the S2 nodes
-            byte[] recipient_address = wal;
-            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(StreamMessageCode.requestAdd, "", pubkey);
-
 
             // Connect to the contact's S2 relay first
             //  StreamClientManager.connectToStreamNode(relayip);
 
+            // Send the message to the S2 nodes
+            byte[] recipient_address = wal;
+
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.requestAdd;
             message.recipient = recipient_address;
-            message.data = encrypted_message;
+            message.data = new byte[1];
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
-
-       /*     // TODO: optimize this
-            while(NetworkClientManager.isNodeConnected(relayip) == false)
-            {
-                
-            }*/
 
             StreamProcessor.sendMessage(message, relayip);
 

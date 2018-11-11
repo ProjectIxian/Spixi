@@ -1,6 +1,7 @@
 ﻿using DLT;
 using DLT.Meta;
 using DLT.Network;
+using IXICore;
 using SPIXI.Interfaces;
 using SPIXI.Storage;
 using System;
@@ -38,7 +39,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}')", friend.walletAddress, friend.nickname, amount, date));
+            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}','{4}')", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, amount, CoreConfig.transactionPrice.ToString(), date));
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -65,27 +66,23 @@ namespace SPIXI
 
         private void onSend()
         {
-            // TODOSPIXI
-            /*
             // Create an ixian transaction and send it to the dlt network
-            byte[] from = Node.walletStorage.address;
-            ulong _amount = Convert.ToUInt64(amount);
+            byte[] to = friend.walletAddress;
 
-            if(_amount > Node.balance)
-            {
-                DisplayAlert("Failed", "Insufficient funds", "OK");
-                return;
-            }
+            IxiNumber amounti = new IxiNumber(amount);
+            IxiNumber fee = CoreConfig.transactionPrice;
+            byte[] from = Node.walletStorage.getWalletAddress();
+            byte[] pubKey = Node.walletStorage.publicKey;
 
-            Transaction transaction = new Transaction(_amount, friend.wallet_address, from);
-            NetworkClientManager.sendDLTData(ProtocolMessageCode.newTransaction, transaction.getBytes());
+            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());
+
+            NetworkClientManager.broadcastData(ProtocolMessageCode.newTransaction, transaction.getBytes());
 
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
+            FriendList.addMessageWithType(FriendMessageType.sentFunds, friend.walletAddress, transaction.id);
+            Navigation.PopAsync();
 
-            FriendList.addMessageWithType(FriendMessageType.sentFunds, friend.wallet_address, transaction.id);
-
-            Navigation.PopAsync();*/
         }
 
 

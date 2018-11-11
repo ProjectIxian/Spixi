@@ -231,6 +231,20 @@ namespace SPIXI
                     }
                     break;
 
+                case StreamMessageCode.getNick:
+                    {
+                        // Send the nickname to the sender as requested
+                        handleGetNick(message.sender, Encoding.UTF8.GetString(message.data));
+                    }
+                    break;
+
+                case StreamMessageCode.nick:
+                    {
+                        // Set the nickname for the corresponding address
+                        FriendList.setNickname(message.sender, Encoding.UTF8.GetString(message.data));
+                    }
+                    break;
+
                 case StreamMessageCode.requestAdd:
                     {
                         // Friend request
@@ -244,157 +258,60 @@ namespace SPIXI
                         handleAcceptAdd(message.sender);
                     }
                     break;
+
+                case StreamMessageCode.requestFunds:
+                    {
+                        // Friend requested funds
+                        handleRequestFunds(message.sender, Encoding.UTF8.GetString(message.data));
+                    }
+                    break;
             }
-
-
-            /*
-                        //string message = Encoding.UTF8.GetString(data);
-                        //Console.WriteLine("Encrypted message: {0}", message);
-
-                        using (MemoryStream m = new MemoryStream(bytes))
-                        {
-                            using (BinaryReader reader = new BinaryReader(m))
-                            {
-
-                                string sender = reader.ReadString();
-                                string transaction_id = reader.ReadString();
-                                string private_key = reader.ReadString();
-
-                                int encrypted_bytes_count = reader.ReadInt32();
-                                // Decrypt the S2 message
-                                byte[] encrypted_message = CryptoManager.lib.decryptDataS2(reader.ReadBytes(encrypted_bytes_count),
-                                    private_key);
-
-                                // Read and parse the Spixi message
-                                readSpixiMessage(encrypted_message, sender);
-                            }
-                        }
-                        */
-        }
-
-        // Extracts a Spixi message from an encrypted byte array
-        public static void readSpixiMessage(byte[] bytes, string sender)
-        {
-/*            // Decrypt the client message
-            byte[] decrypted_message =  CryptoManager.lib.decryptData(bytes, Node.walletStorage.encPrivateKey);
-
-            SpixiMessageCode code = SpixiMessageCode.chat;
-            using (MemoryStream m = new MemoryStream(decrypted_message))
-            {
-                using (BinaryReader reader = new BinaryReader(m))
-                {
-                    int message_code = reader.ReadInt32() - 23;
-                    code = (SpixiMessageCode)message_code;
-
-                    string text_message = reader.ReadString();
-
-                    // Parse the message
-                    parseSpixiMessage(code, text_message, sender);
-                }
-            }*/
-        }
-
-        // Parse a provided Spixi message
-        public static void parseSpixiMessage(StreamMessageCode code, string text, string sender)
-        {
- /*           try
-            {
-                switch (code)
-                {
-                    case SpixiMessageCode.chat:
-                        {
-                            // Add the message to the friend list
-                            FriendList.addMessage(sender, text);
-                        }
-                        break;
-
-                    case SpixiMessageCode.getNick:
-                        {
-                            // Send the nickname to the sender as requested
-                            handleGetNick(sender, text);
-                        }
-                        break;
-
-                    case SpixiMessageCode.nick:
-                        {
-                            // Set the nickname for the corresponding address
-                            FriendList.setNickname(sender, text);
-                        }
-                        break;
-
-                    case SpixiMessageCode.requestAdd:
-                        {
-                            // Friend request
-                            handleRequestAdd(sender);
-                        }
-                        break;
-
-                    case SpixiMessageCode.acceptAdd:
-                        {
-                            // Friend accepted request
-                            handleAcceptAdd(sender);
-                        }
-                        break;
-
-                    case SpixiMessageCode.requestFunds:
-                        {
-                            // Friend requested funds
-                            handleRequestFunds(sender, text);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
-
-            }
-            catch (Exception e)
-            {
-                Logging.error(string.Format("Error parsing spixi message. Details: {0}", e.ToString()));
-            }*/
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
-        private static void handleGetNick(string sender, string text)
+        private static void handleGetNick(byte[] sender_wallet, string text)
         {
-/*            // Retrieve the corresponding contact
-            Friend friend = FriendList.getFriend(sender);
+            Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                string pub_k = FriendList.findContactPubkey(sender);
-                if (pub_k.Length < 1)
+                byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
+                if (pub_k == null)
                 {
-                    Console.WriteLine("Contact {0} not found in presence list!", sender);
+                    Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
 
                     foreach (Presence pr in PresenceList.presences)
                     {
-                        Console.WriteLine("Presence: {0}", pr.wallet);
+                        Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
                     }
                     return;
                 }
 
-                friend = new Friend(sender, pub_k, "Unknown");
-                FriendList.addFriend(sender, pub_k, "Unknown");
+                friend = new Friend(sender_wallet, pub_k, "Unknown");
+                FriendList.addFriend(sender_wallet, pub_k, "Unknown");
 
                 // Also request the nickname of the sender
                 // Prepare the message and send to the S2 nodes
-                byte[] encrypted_message_get = prepareSpixiMessage(SpixiMessageCode.getNick, "", pub_k);
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.getNick;
+                message.recipient = sender_wallet;
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = new byte[1];
 
-                Message nick_message = new Message();
-                nick_message.recipientAddress = sender;
-                nick_message.data = encrypted_message_get;
-                sendMessage(nick_message);
+                string relayip = friend.searchForRelay();
+                StreamProcessor.sendMessage(message, relayip);
+
             }
 
             // Send the nickname message to the S2 nodes
-            string recipient_address = friend.wallet_address;
-            byte[] encrypted_message = prepareSpixiMessage(SpixiMessageCode.nick, Node.localStorage.nickname, friend.pubkey);
+            StreamMessage reply_message = new StreamMessage();
+            reply_message.type = StreamMessageCode.nick;
+            reply_message.recipient = friend.walletAddress;
+            reply_message.transaction = new byte[1];
+            reply_message.sigdata = new byte[1];
+            reply_message.data = Encoding.UTF8.GetBytes(Node.localStorage.nickname);
+            StreamProcessor.sendMessage(reply_message, friend.searchForRelay());
 
-            Message reply_message = new Message();
-            reply_message.recipientAddress = recipient_address;
-            reply_message.data = encrypted_message;
-            sendMessage(reply_message);
-            */
             return;
         }
 
@@ -439,35 +356,42 @@ namespace SPIXI
 
                 // Also request the nickname of the sender
                 // Prepare the message and send to the S2 nodes
-          /*      byte[] encrypted_message_get = prepareSpixiMessage(StreamMessageCode.getNick, "", pub_k);
 
-                Message nick_message = new Message();
-                nick_message.recipientAddress = sender;
-                nick_message.data = encrypted_message_get;
-                sendMessage(nick_message);*/
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.getNick;
+                message.recipient = friend.walletAddress;
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = new byte[1];
+
+                string relayip = friend.searchForRelay();
+                StreamProcessor.sendMessage(message, relayip);
+
+
             }
 
             // Send the nickname message to the S2 nodes
-   /*         string recipient_address = friend.wallet_address;
-            byte[] encrypted_message = prepareSpixiMessage(SpixiMessageCode.nick, Node.localStorage.nickname, friend.pubkey);
+            StreamMessage reply_message = new StreamMessage();
+            reply_message.type = StreamMessageCode.nick;
+            reply_message.recipient = friend.walletAddress;
+            reply_message.transaction = new byte[1];
+            reply_message.sigdata = new byte[1];
+            reply_message.data = Encoding.UTF8.GetBytes(Node.localStorage.nickname);
+            StreamProcessor.sendMessage(reply_message, friend.searchForRelay());
 
-            Message reply_message = new Message();
-            reply_message.recipientAddress = recipient_address;
-            reply_message.data = encrypted_message;
-            sendMessage(reply_message);*/
         }
 
 
-        private static void handleRequestFunds(string sender, string amount)
+        private static void handleRequestFunds(byte[] sender_wallet, string amount)
         {
-     /*       // Retrieve the corresponding contact
-            Friend friend = FriendList.getFriend(sender);
+            // Retrieve the corresponding contact
+            Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
                 return;
             }
 
-            FriendList.addMessageWithType(FriendMessageType.requestFunds, sender, amount);*/
+            FriendList.addMessageWithType(FriendMessageType.requestFunds, sender_wallet, amount);
         }
 
 
