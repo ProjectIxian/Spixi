@@ -353,11 +353,9 @@ namespace SPIXI
             {
                 webView.Eval("showIndicator(false)");
             }
-
-            // TODOSPIXI
-            /*
+       
             // Show connectivity warning bar
-            if (NetworkClientManager.isNodeConnected(node_ip) == false)
+            if (StreamClientManager.isConnectedTo(node_ip) == null)
             {
                 if (connectedToNode == true)
                 {
@@ -365,7 +363,7 @@ namespace SPIXI
                     webView.Eval("showWarning('Not connected to S2 node')");
                 }
             }
-            else*/
+            else
             {
                 if(connectedToNode == false)
                 {
