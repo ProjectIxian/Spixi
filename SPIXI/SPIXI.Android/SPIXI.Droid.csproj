@@ -102,7 +102,6 @@
       <Name>SPIXI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <AndroidResource Include="Resources\layout\splash_screen.xml" />
   </ItemGroup>
@@ -243,6 +242,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\chatbackground.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\Chats_icon_active.png" />

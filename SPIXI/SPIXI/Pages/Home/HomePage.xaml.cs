@@ -85,6 +85,10 @@ namespace SPIXI
             {
                 quickScan();
             }
+            else if (current_url.Equals("ixian:newchat", StringComparison.Ordinal))
+            {
+                newChat();
+            }
             else if (current_url.Equals("ixian:test", StringComparison.Ordinal))
             {
                 DisplayAlert("Test", current_url, "Ok");
@@ -115,8 +119,8 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:lock", StringComparison.Ordinal))
             {
-                prepBackground();
-             //   Navigation.PushAsync(new SetLockPage());
+             //   prepBackground();
+                Navigation.PushAsync(new SetLockPage());
             }
             else if (current_url.Equals("ixian:about", StringComparison.Ordinal))
             {
@@ -249,6 +253,36 @@ namespace SPIXI
             await Navigation.PushAsync(ScannerPage);
 
         }
+
+        // Show the recipientpage
+        public void newChat()
+        {
+            var recipientPage = new WalletRecipientPage();
+            recipientPage.pickSucceeded += HandlePickSucceeded;
+            Navigation.PushModalAsync(recipientPage);
+        }
+
+        private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        {
+            //MainPage = new MainPage();
+            string id = e.Value;
+
+
+            byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
+
+            Friend friend = FriendList.getFriend(id_bytes);
+
+            if (friend == null)
+            {
+                return;
+            }
+
+            Navigation.PushAsync(new SingleChatPage(friend));
+            Navigation.PopModalAsync();
+
+
+        }
+
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
@@ -453,10 +487,10 @@ namespace SPIXI
 
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
-                string tx_type = "RECEIVED";
+                string tx_type = "Payment Received";
                 if (utransaction.from.SequenceEqual(Node.walletStorage.address))
                 {
-                    tx_type = "SENT";
+                    tx_type = "Payment Sent";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
                 webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", utransaction.id, tx_type, time, utransaction.amount.ToString()));
@@ -465,10 +499,10 @@ namespace SPIXI
             for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
             {
                 Transaction transaction = TransactionCache.transactions[i];
-                string tx_type = "RECEIVED";
+                string tx_type = "Payment Received";
                 if(transaction.from.SequenceEqual(Node.walletStorage.address))
                 {
-                    tx_type = "SENT";
+                    tx_type = "Payment Sent";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 

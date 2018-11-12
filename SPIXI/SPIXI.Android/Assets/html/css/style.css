@@ -79,7 +79,7 @@ img {
 .toolbar {
     width: 100%;
     height: 62px;
-    background: #D90063;
+    background: #e91e63;
     color: #fff;
     display: block;
     position: fixed;
@@ -162,6 +162,7 @@ img {
 
 #status_balance {
     padding-top: 7px;
+    padding-left: 20px;
     width: 100%;
     height: 119px;
     background: #1A1E2E;
@@ -171,7 +172,8 @@ img {
 .status_mybalance {
     font-style: italic;
     font-size: 16px;
-    padding-left: 20px;
+    padding-left: 30px;
+    padding-top: 6px;
 /*    text-decoration: underline;
     text-decoration-color: #47BD1E;*/
     
@@ -181,7 +183,7 @@ img {
     width: 85px;
     height: 2px;
     background-color: #26B615;
-    margin-left: 20px;
+    margin-left: 30px;
     margin-bottom: 5px;
 }
 
@@ -192,7 +194,7 @@ img {
 
     background: url("../img/Ixi_green.png") no-repeat;;
     background-size: 20px 25px;
-    background-position: center;
+    background-position: left;
 }
 
 .status_dbalance {
@@ -279,8 +281,9 @@ img {
 
 #wallet_balance {
     padding-top: 3px;
+    padding-left: 20px;
     width: 100%;
-    height: 93px;
+    height: 119px;
     background: #050505;
     color: #FFF;
     border-bottom: 2px solid #AC0855;
@@ -691,7 +694,7 @@ img {
 }
 
 #bottomTab {
-    background: #B4005B;
+    background: #e91e63;
     height: 64px;
     border-top: 1px solid #939292;
     text-decoration: none;
@@ -1074,7 +1077,7 @@ img {
 
 .menumodal-header {
     padding: 38px 24px;
-    background-color: #A70047;
+    background-color: #e91e63;
     color: white;
     height: 240px;
     font-size: 16px;
