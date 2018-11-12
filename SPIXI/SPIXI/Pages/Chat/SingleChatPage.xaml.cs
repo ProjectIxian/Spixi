@@ -248,38 +248,6 @@ namespace SPIXI
 
             string relayip = friend.searchForRelay();
             StreamProcessor.sendMessage(message, relayip);
-
-            // TODOSPIXI
-            /*
-            string recipient_address = friend.wallet_address;
-            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.acceptAdd, "", friend.pubkey);
-
-            Message message = new Message();
-            message.recipientAddress = recipient_address;
-            message.data = encrypted_message;
-
-            // Check the relay ip
-            // Check the relay ip
-            string relayip = friend.getRelayIP();
-            if (relayip == null)
-                return;
-
-            if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
-            {
-
-                node_ip = relayip;
-                // Connect to the contact's S2 relay first
-                NetworkClientManager.connectToStreamNode(relayip);
-
-                // TODO: optimize this
-                while (NetworkClientManager.isNodeConnected(relayip) == false)
-                {
-
-                }
-            }
-
-            StreamProcessor.sendMessage(message, node_ip);
-            */
         }
 
         public void onConfirmPaymentRequest(string amount)

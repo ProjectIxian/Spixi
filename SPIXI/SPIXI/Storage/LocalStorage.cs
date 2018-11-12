@@ -216,12 +216,13 @@ namespace SPIXI.Storage
                 int num_messages = reader.ReadInt32();
                 for (int i = 0; i < num_messages; i++)
                 {
+                    int s_type = reader.ReadInt32();
                     string s_message = reader.ReadString();
                     string s_timestamp = reader.ReadString();
                     bool s_from = reader.ReadBoolean();
                     bool s_read = reader.ReadBoolean();
 
-                    FriendMessage message = new FriendMessage(s_message, s_timestamp, s_from);
+                    FriendMessage message = new FriendMessage(s_message, s_timestamp, s_from, (FriendMessageType)s_type);
                     message.read = s_read;
                     messages.Add(message);
                 }
@@ -273,6 +274,8 @@ namespace SPIXI.Storage
                 {
                     if (message.type != FriendMessageType.requestAdd)
                     {
+                        int s_type = (int)message.type;
+                        writer.Write(s_type);
                         writer.Write(message.message);
                         writer.Write(message.timestamp);
                         writer.Write(message.from);
