@@ -141,24 +141,33 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ImageAsset Include="Media.xcassets\AppIcons.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Media.xcassets\LaunchImages.launchimage\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="html\address.html" />
     <BundleResource Include="html\avatar.png" />
     <BundleResource Include="html\avatar1.png" />
     <Content Include="html\chat.html" />
     <Content Include="html\contact_details.html" />
     <Content Include="html\contact_new.html" />
-    <BundleResource Include="html\css\bootstrap37.css" />
-    <BundleResource Include="html\css\normalize.css" />
-    <BundleResource Include="html\css\style.css" />
-    <BundleResource Include="html\css\styleaddress.css" />
-    <BundleResource Include="html\css\stylechat.css" />
-    <BundleResource Include="html\css\stylecontact.css" />
-    <BundleResource Include="html\css\styleintro.css" />
-    <BundleResource Include="html\css\styleintronew.css" />
-    <BundleResource Include="html\css\stylelock.css" />
-    <BundleResource Include="html\css\stylesecurity.css" />
-    <BundleResource Include="html\css\stylesettings.css" />
-    <BundleResource Include="html\css\stylewallet.css" />
+    <Content Include="html\css\bootstrap37.css" />
+    <Content Include="html\css\normalize.css" />
+    <Content Include="html\css\style.css" />
+    <Content Include="html\css\styleaddress.css" />
+    <Content Include="html\css\stylechat.css" />
+    <Content Include="html\css\stylecontact.css" />
+    <Content Include="html\css\styleintro.css" />
+    <Content Include="html\css\styleintronew.css" />
+    <Content Include="html\css\stylelock.css" />
+    <Content Include="html\css\stylesecurity.css" />
+    <Content Include="html\css\stylesettings.css" />
+    <Content Include="html\css\stylewallet.css" />
+    <BundleResource Include="html\img\About_icon.png" />
     <BundleResource Include="html\img\accept_icon.png" />
     <BundleResource Include="html\img\activity.png" />
     <BundleResource Include="html\img\address.png" />
@@ -168,6 +177,7 @@
     <BundleResource Include="html\img\Avatar_settings.png" />
     <BundleResource Include="html\img\Back_icon.png" />
     <BundleResource Include="html\img\backup.png" />
+    <BundleResource Include="html\img\Backup_icon.png" />
     <BundleResource Include="html\img\bottomIndicator.png" />
     <BundleResource Include="html\img\camera.png" />
     <BundleResource Include="html\img\Chats_icon_active.png" />
@@ -196,7 +206,9 @@
     <BundleResource Include="html\img\info_grey.png" />
     <BundleResource Include="html\img\info_icon.png" />
     <BundleResource Include="html\img\ixi.png" />
+    <BundleResource Include="html\img\Ixi_green.png" />
     <BundleResource Include="html\img\Ixi_icon.png" />
+    <BundleResource Include="html\img\Ixi_white.png" />
     <BundleResource Include="html\img\Lock_icon.png" />
     <BundleResource Include="html\img\lock_red.png" />
     <BundleResource Include="html\img\Locked_icon.png" />
@@ -204,12 +216,13 @@
     <BundleResource Include="html\img\lockScreen_icon.png" />
     <BundleResource Include="html\img\logofull.png" />
     <BundleResource Include="html\img\More_icon.png" />
+    <BundleResource Include="html\img\MyAddressi_icon.png" />
     <BundleResource Include="html\img\nav.png" />
     <BundleResource Include="html\img\Notifications_icon.png" />
     <BundleResource Include="html\img\onlineIndicator.png" />
     <BundleResource Include="html\img\Open_icon.png" />
     <BundleResource Include="html\img\payr.png" />
-    <BundleResource Include="html\img\quickscan.png" />
+    <BundleResource Include="html\img\QuickScan.png" />
     <BundleResource Include="html\img\receive.png" />
     <BundleResource Include="html\img\Received_icon.png" />
     <BundleResource Include="html\img\remove_contact.png" />
@@ -227,6 +240,7 @@
     <BundleResource Include="html\img\ScanButtonL_Active.png" />
     <BundleResource Include="html\img\ScanButtonL_Idle.png" />
     <BundleResource Include="html\img\security.png" />
+    <BundleResource Include="html\img\Security_icon.png" />
     <BundleResource Include="html\img\send.png" />
     <BundleResource Include="html\img\Send_Active.png" />
     <BundleResource Include="html\img\Send_icon_active.png" />
@@ -248,10 +262,19 @@
     <BundleResource Include="html\img\tabcontacts.png" />
     <BundleResource Include="html\img\tabhome.png" />
     <BundleResource Include="html\img\tabwallet.png" />
+    <BundleResource Include="html\img\wallet_Activity_active.png" />
+    <BundleResource Include="html\img\wallet_Activity_idle.png" />
+    <BundleResource Include="html\img\Wallet_icon.png" />
     <BundleResource Include="html\img\Wallet_icon_active.png" />
     <BundleResource Include="html\img\Wallet_icon_idle.png" />
+    <BundleResource Include="html\img\wallet_Receive_active.png" />
+    <BundleResource Include="html\img\wallet_Receive_idle.png" />
+    <BundleResource Include="html\img\wallet_ScanButton_Active.png" />
+    <BundleResource Include="html\img\wallet_ScanButton_Idle.png" />
+    <BundleResource Include="html\img\wallet_Send_active.png" />
+    <BundleResource Include="html\img\wallet_Send_button.png" />
     <Content Include="html\index.html" />
-    <BundleResource Include="html\intro.html" />
+    <Content Include="html\intro.html" />
     <Content Include="html\intro_new.html" />
     <Content Include="html\intro_restore.html" />
     <Content Include="html\js\bootstrap.min.js" />
@@ -268,13 +291,5 @@
     <Content Include="html\wallet_send.html" />
     <Content Include="html\wallet_send_2.html" />
     <Content Include="html\wallet_sent.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <ImageAsset Include="Media.xcassets\AppIcons.appiconset\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
-    <ImageAsset Include="Media.xcassets\LaunchImages.launchimage\Contents.json">
-      <Visible>false</Visible>
-    </ImageAsset>
   </ItemGroup>
 </Project>

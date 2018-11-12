@@ -3,7 +3,7 @@
  */
 
 .intro_description {
-    background-color: #A20033;
+    background-color: #BC005C;
     color: #FFF;
     font-size: 100%;
     font-weight: 100;
@@ -13,14 +13,20 @@
 
 .intro_top {
     width: 100%;
-    height: 103px;
-    background-color: #A20033;
+    height: 266px;
+    background-color: #BC005C;
     border-bottom: 1px solid #BEBEBE;
+}
+
+.restore_top {
+    width: 100%;
+    height: 158px;
+    background-color: #BC005C;
+    border-bottom: 1px solid #BEBEBE;    
 }
 
 .intro_avatar {
     margin: auto;
-    margin-top: -74px;
     width: 145px;
     height: 145px;
     
@@ -39,15 +45,17 @@
 .intro_avatar_text {
     width: 100%;
     text-align: center;
-    color: #9A9A9A;
+    color: #FFFFFF;
     font-size: 110%;
-    padding-top: 5px;
+    padding-top: 40px;
+    margin-bottom: 30px;
 }
 
 .intro_nick {
     margin: auto;
     margin-top: 23px;
     width: 85%;
+    margin-bottom: 56px;
 }
 
 #nicknameInput {
@@ -62,16 +70,12 @@
 }
 
 .intro_bottom {
-    color: #969696;
+    color: #404040;
     width: 330px;
     margin: auto;
-    margin-top: 44px;
+    margin-top: 20px;
+    margin-bottom: 35px;
     text-align: center;
- 
-    background-image: url('../img/info_grey.png');
-    background-repeat: no-repeat;
-    background-size: 22px 22px;
-    background-position: 20px 20px;
 }
 
 .intro_textarea {
@@ -83,22 +87,23 @@
 .button {
     width: 80%;
     height: 51px;
-    color: #fff;
+    color: #6B6B6B;    
+    background-color: #F9F9F9;
     text-align: center;
     outline: none;
     text-decoration: none;
     font-size: 140%;
     padding: 14px;
     border-radius: 25px;
+    border:solid 2px #6B6B6B;
     margin: auto;
-    background-color: #CD003F;
     margin-top: 20px;
 }
 
 .button:hover,
 .button:active {
-    background-color: #fff;
-    color: #CD003F;
+    background-color: #CD003F;
+    color: #FFF;
 }
 
 .hbutton {
@@ -138,11 +143,11 @@
 .restore_icon {
     margin: auto;
     width: 47px;
-    height: 50px;
-    margin-top: 20px;
-    
+    height: 88px;
+    margin-top: 0px;
     background-image: url('../img/Restore.png');
     background-size: 47px 50px;
+    background-position: center;
     background-repeat: no-repeat;
     
     
@@ -151,9 +156,10 @@
 .restore_description {
     margin: auto;
     width: 70%;
-    color: #878787;
+    color: #FFFFFF;
     text-align: center;
     margin-top: 10px;
+    font-size: 90%;
 }
 
 .restore_text_step1 {
@@ -214,7 +220,7 @@
     top: 0px;
     width: 100%;
     height: 100%;
-    background-color: #A20032;
+    background-color: #BC005C;
     opacity: 0.9;
     z-index: 99;
     color: #FFFFFF;
@@ -222,7 +228,7 @@
 
 .overheader {
     text-align: center;
-    margin-top: 160px;
+    margin-top: 60px;
     font-size: 16px;
 }
 
@@ -230,14 +236,9 @@
     color: #FFFFFF;
     width: 330px;
     margin: auto;
-    margin-top: 220px;
+    margin-top: 250px;
     text-align: center;
     font-style: italic;
- 
-    background-image: url('../img/info_icon.png');
-    background-repeat: no-repeat;
-    background-size: 22px 22px;
-    background-position: 20px 20px;
 }
 
 
@@ -246,7 +247,7 @@
     left: 50%;
     width: 64px;
     height: 79px;
-    margin: 30px 0 0 -32px;
+    margin: 130px 0 0 -32px;
     -webkit-animation:spin 4s linear infinite;
     -moz-animation:spin 4s linear infinite;
     animation:spin 4s linear infinite;

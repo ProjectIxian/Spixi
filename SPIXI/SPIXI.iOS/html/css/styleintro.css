@@ -2,13 +2,18 @@ body {
     font-family:'Roboto', sans-serif;
     font-size: 20px;
     font-weight: normal;
-    background-color: #CC0046;
+    background-color: #F9F9F9;
+}
+
+.top_part {
+    background-color: #BC005C;
     color: #FFFFFF;
 }
 
 #logo {
     margin: auto;
-    margin-top: 84px;
+    margin-top: 34px;
+    margin-bottom: 30px;
     width: 87px;
     height: 108px;
     background-image: url('../img/SpixiLogo_Splash.png');
@@ -43,6 +48,16 @@ hr {
     text-align: center;
     font-size: 70%;
     font-weight: 100;
+    margin-top: 5px;
+}
+
+.description2 {
+    width: 100%;
+    color: #000000;
+    text-align: center;
+    font-size: 70%;
+    font-weight: 100;
+    margin-top: 5px;
 }
 
 .button {
@@ -54,20 +69,40 @@ hr {
     text-decoration: none;
     font-size: 75%;
     padding: 14px;
-    border: 1px solid #fff;
+    border: 2px solid #fff;
+    border-radius: 25px;
+    margin: auto;
+    
+}
+
+.button_restore {
+    width: 80%;
+    height: 51px;
+    color: #4298D8;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 75%;
+    padding: 14px;
+    border: 2px solid #4298D8;
     border-radius: 25px;
     margin: auto;
     
 }
 
 .extra_margin {
-    margin-top: 37px;  
+    margin-top: 17px;  
+    margin-bottom: 46px;
 }
 
 .small_margin {
     margin-top: 20px;  
 }
 
+.bottom_part {
+    width: 100%;
+    
+}
 
 .icon_create {
     background-image: url('../img/Create_icon_Idle.png');
@@ -81,14 +116,14 @@ hr {
 }
 
 .icon_restore {
-    background-image: url('../img/Restore_icon_Idle.png');
+    background-image: url('../img/Restore_icon_Active.png');
     background-size: 21px 19px;
     background-repeat: no-repeat;
     background-position: 30px 13px;
 }
 .icon_restore:hover,
 .icon_restore:active {
-    background-image: url('../img/Restore_icon_Active.png');
+    background-image: url('../img/Restore_icon_Idle.png');
 }
 
 
@@ -97,4 +132,10 @@ hr {
 .button:active {
     background-color: #fff;
     color: #E01A52;
+}
+
+.button_restore:hover,
+.button_restore:active {
+    background-color: #4298D8;
+    color: #FFFFFF;
 }

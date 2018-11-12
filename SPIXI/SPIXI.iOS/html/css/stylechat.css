@@ -12,7 +12,7 @@ body {
 .toolbar {
     width: 100%;
     height: 62px;
-    background: #CD003F;
+    background: #D90063;
     color: #fff;
     display: block;
     position: fixed;
@@ -117,7 +117,7 @@ body {
     transition: all 0.6s;    
     
     width: 100%;
-    height: 52px;
+    height: 57px;
    /* background-color: aqua;*/
 }
 
@@ -133,7 +133,7 @@ body {
     display: table;
     width: 100%;
     bottom: 0;   
-    height: 50px;
+    height: 55px;
     background-color: #F3F3F3;
     border-top: 1px solid #CBCBCB;
 }
@@ -148,8 +148,8 @@ body {
     position: fixed;
     z-index: 99;    
     width: 100%;
-    bottom: -50px;
-    height: 50px;
+    bottom: -55px;
+    height: 55px;
     background-color: #F3F3F3;
     border-top: 1px solid #CBCBCB;
 }
@@ -168,7 +168,7 @@ body {
     display: table-cell;
     background-image: url('../img/SendMessage_icon.png');
     background-repeat: no-repeat;
-    background-size: 14px 14px;
+    background-size: 28px 24px;
     background-position: center;
     width: 50px;
     height: 50px;
@@ -187,28 +187,28 @@ body {
 
 #ca_request {
     position: absolute;
+    left: 120px;
     width: 120px;
-    height: 50px;
+    height: 55px;
     font-size: 12px;
     text-align: center;
-    padding-top: 30px;
+    padding-top: 35px;
     background-image: url('../img/Request_icon_idle.png');
     background-repeat: no-repeat;
-    background-size: 31px 25px;
+    background-size: 30px 30px;
     background-position: center 5px;
 }
 
 #ca_send {
     position: absolute;
-    left: 120px;
     width: 120px;
-    height: 50px;
+    height: 55px;
     font-size: 12px;
     text-align: center;
-    padding-top: 30px;
+    padding-top: 35px;
     background-image: url('../img/Send_icon_idle.png');
     background-repeat: no-repeat;
-    background-size: 31px 25px;
+    background-size: 30px 30px;
     background-position: center 5px;
 }
 
@@ -261,7 +261,7 @@ body {
 }
 
 .request_header {
-    background-color: #E2AF24;
+    background-color: #E5337B;
     width: 200px;
     float: left;
     text-align: center;
@@ -270,21 +270,18 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 10px 10px 0px 0px;
-    border: 1px solid #DAEBDD;
 }
 
 .sent_header {
     position: absolute;
-    background-color: #4EC432;
+    background-color: #398FD8;
     height: 40px;
     width: 200px;
-    text-align: left;
-    padding-left: 20px;
+    text-align: center;
     color: #FFF;
     font-style: italic;
     padding-top: 10px;
     border-radius: 10px 10px 0px 0px;
-    border: 1px solid #DAEBDD;
 }
 
 .sent_text {
@@ -294,7 +291,7 @@ body {
     height: 100px;   
     
     background:#f7f7f7;
-    border: 1px solid #DAEBDD;
+    border: 1px solid #E5337B;
     border-top: 0px solid #fff;
     border-bottom: 1px solid #D7D7D7;
 
@@ -302,36 +299,37 @@ body {
     color: black;
     padding: 15px;
     padding-top: 5px;
+    text-align: center;
 }
 
 .request_footer {
     position: absolute;
     top: 140px;
-    background-color: #f8f8f8;
+    background-color: #E5337B;
 
     width: 200px;
     height: 40px;
 
     float: left;
-    color: #606060;
+    color: #FFF;
     font-style: italic;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 15px;
     border-radius: 0px 0px 10px 10px;
-    border: 1px solid #DAEBDD;  
     border-top: 0px solid #fff;
+    text-align: center;
 
 }
 
 .sent_footer {
     position: absolute;
     top: 140px;
-    background-color: #f8f8f8;
-
+    background-color: #398FD8;
+    text-align: center;
     width: 200px;
     height: 40px;
-    color: #606060;
+    color: #FFF;
     font-style: italic;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -341,6 +339,7 @@ body {
     border-top: 0px solid #fff;
 
 }
+
 .from-them,
 .from-me
 {
@@ -502,42 +501,51 @@ body {
     width: 100%;
     height: 104px;
     top: 62px;
-    background: #FFF;
-    color: #555;
+    background: #2C4758;
+    color: #FFF;
     display: block;
     position: fixed;
     z-index: 99;
     border-bottom: 1px solid #AFAFAF;
+    
+    background-image: url('../img/Contacts_icon_active.png');
+    background-repeat: no-repeat;
+    background-size: 39px 26px;
+    background-position: 10px 12px;
 }
 
 .request_bar_text {
-    color: #555;
+    color: #FFF;
     font-style: italic;
-    text-align: center;
+    padding-left: 80px;
     margin-top: 16px;
     margin-bottom: 10px;
 }
 
 .request_bar_ignore {
-    width: 50%;
-    padding-top: 15px;
+    width: 130px;
+    position: absolute;
+    left: 80px;
+    padding-top: 8px;
     text-align: center;
     font-size: 15px;
-    position: absolute;
-    left: 0px;
-    height: 57px;
+    height: 37px;
     background-color: #F4F4F4;
+    border-radius: 30px;
+    color: #000;
 }
 
 .request_bar_accept {
-    width: 50%;
-    padding-top: 15px;
+    width: 130px;
+    position: absolute;
+    left: 220px;
+    padding-top: 8px;
     text-align: center;
     font-size: 15px;
-    position: absolute;
-    right: 0px;
-    height: 57px;
+    height: 37px;
     background-color: #F4F4F4;
+    border-radius: 30px;
+    color: #000;
 }
 
 .request_bar_icon {

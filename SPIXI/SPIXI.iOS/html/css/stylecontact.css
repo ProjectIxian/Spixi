@@ -184,17 +184,24 @@
 
 .contact_address {
     margin: auto;
-    margin-top: 58px;
+    margin-top: 18px;
     margin-left: 30px;
     margin-right: 30px;
 }
 
+.contact_address_info {
+    font-weight: 600;
+    font-style: italic;
+    margin-left: 30px;
+}
+
 .contact_quickscanbutton {
     float: right;
-    position: absolute;
-    right: 0;
+    position: fixed;  
+    right: 0;  
+    bottom: 0;
     z-index: 2;
-    margin-top: -45px;
+    margin-bottom: 45px;
     padding-right: 18px;
 }
 

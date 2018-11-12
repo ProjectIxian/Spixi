@@ -33,16 +33,27 @@
         <hr class="wallet_hr" />
     </div>
 
-    <div class="wallet_amount">
-        <input type="number" id="wallet_amount_input" onkeyup="generateQR()" placeholder="Enter amount" pattern="[0-9]*">
+    <div>
+        <div class="wallet_subtitle">Request specific amount</div>
+
+        <div class="wallet_amount">
+            <input type="number" id="wallet_amount_input" onkeyup="generateQR()" placeholder="0.0000" pattern="[0-9]*">
+        </div>
+        <div class="wallet_amount_info">Tap to generate an address for a specific amount</div>
+        <hr class="wallet_hr2" />
     </div>
     
     <div class="wallet_qr_holder">
         <div class="wallet_qr" id="qrcode"></div>
     </div>
     
-    <div class="wallet_current_address_label">Current address</div>
-    <div id="wal_addr" class="wallet_current_address">23423423</div>
+    <div>
+        <hr class="wallet_hr" />
+
+        <div class="wallet_subtitle">Current address</div>
+        <div id="wal_addr" class="wallet_current_address">00000000000000000000000</div>
+        <div class="wallet_amount_info">Tap to copy address to clipboard</div>
+    </div>
     
     <div id="sendr" class="button" style="margin-top: 20px; margin-bottom:40px; display:none;">Send payment request</div>
 
@@ -67,8 +78,8 @@
 
     var qrcode = new QRCode("qrcode", {
         text: "SPIXI",
-        width: 200,
-        height: 200,
+        width: 300,
+        height: 300,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H

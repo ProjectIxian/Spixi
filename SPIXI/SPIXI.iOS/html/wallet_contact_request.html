@@ -40,7 +40,7 @@
         </div>
     <hr class="wallet_hr" />
     <div class="settings_subtitle" style="margin-top: -5px;">Fee</div>
-    <div class="settings_desc2">0</div>
+    <div id="sent_fee" class="settings_desc2">0</div>
     <hr class="wallet_hr" />
     <div class="settings_subtitle" style="margin-top: -5px;">Date and time</div>
     <div id="date_text" class="settings_desc2"></div>
@@ -70,10 +70,11 @@
     } 
     
 
-    function setData(wallet, nick, amount, date) {
+    function setData(wallet, nick, amount, fee, date) {
 
         document.getElementById('from_text').innerHTML = "<b>" + nick + "</b><br/>" + wallet;
         document.getElementById('sent_amount').innerHTML = amount;
+        document.getElementById('sent_fee').innerHTML = fee;
         document.getElementById('date_text').innerHTML = date;
     }
 

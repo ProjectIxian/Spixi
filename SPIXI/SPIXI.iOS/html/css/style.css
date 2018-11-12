@@ -64,7 +64,7 @@ img {
   margin: 0 auto -0px;
   /* Pad bottom by footer height */
   padding: 0 0 0px;
-    background: #F6F6F6;
+    background: #F9F9F9;
     
     /* Prevent overscroll bounce  */
     position: absolute;
@@ -79,12 +79,12 @@ img {
 .toolbar {
     width: 100%;
     height: 62px;
-    background: #CD003F;
+    background: #D90063;
     color: #fff;
     display: block;
     position: fixed;
     z-index: 99;
-    border-bottom: solid 1px #6D3A47;
+    border-bottom: solid 1px #8F0046;
 }
 
 .toolbar_text {
@@ -140,7 +140,7 @@ img {
 .warning_bar {
     width: 100%;
     height: 54px;
-    background: #737373;
+    background: #688490;
     color: #fff;
     display: block;
 }
@@ -163,38 +163,61 @@ img {
 #status_balance {
     padding-top: 7px;
     width: 100%;
-    height: 79px;
-    background: #050505;
+    height: 119px;
+    background: #1A1E2E;
     color: #FFF;
 }
 
+.status_mybalance {
+    font-style: italic;
+    font-size: 16px;
+    padding-left: 20px;
+/*    text-decoration: underline;
+    text-decoration-color: #47BD1E;*/
+    
+}
+
+.status_mybalance_line {
+    width: 85px;
+    height: 2px;
+    background-color: #26B615;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
 
 
 .status_ixi {
     width: 100%;
     height: 40px;
 
-    background: url("../img/Ixi_icon.png") no-repeat;;
+    background: url("../img/Ixi_green.png") no-repeat;;
     background-size: 20px 25px;
     background-position: center;
 }
 
 .status_dbalance {
     font-size: 210%;
+    color: #F3F3F3;
 }
 
 .status_bottom {
+    padding-top: 10px;
     font-size: 85%;
     font-style: italic;
+    color: #B8BABE;
 }
-
+.wallet_status_bottom {
+    font-size: 85%;
+    font-style: italic;
+    color: #B8BABE;
+}
 
 .quickscanbutton {
     float: right;
     position: absolute;
     right: 0;
     z-index: 2;
-    margin-top: -32px;
+    margin-top: -92px;
     padding-right: 18px;
 }
 
@@ -218,15 +241,15 @@ img {
 
 .recent_activity_bar {
     width: 100%;
-    height: 35px;
-    background: #F6F6F6;
-    color: #4D4D4D;  
+    height: 28px;
+    background: #2C4758;
+    color: #FFF;  
     font-style: italic;
-    font-weight: 600;
+    font-weight: 400;
     
-    padding-top: 7px;
+    padding-top: 5px;
     font-size: 110%;
-    border-top: 1pt solid #E6E6E6;
+    border-bottom: 1pt solid #B8B8B8;
 }
 
 .recent_activity_bar_line 
@@ -241,66 +264,76 @@ img {
 }
 
 .unread_activity_bar {
-    color: #3BA7EF;
+    color: #FFF;
 }
 
 
 /* WALLET */
 #wallet_quickbuttons {
     width: 100%;
-    height: 62px;
-    background: #282828;
+    height: 80px;
+    background: #1A1D2E;
     color: #FFF;   
 }
 
 
 #wallet_balance {
-    padding-top: 7px;
+    padding-top: 3px;
     width: 100%;
-    height: 79px;
+    height: 93px;
     background: #050505;
     color: #FFF;
+    border-bottom: 2px solid #AC0855;
 }
 
+
 .wallet_request {
-    position:relative;
-    left: 20px;
-    top: 22px;
-    
-    background-image: url("../img/Request_white.png");
+    background-image: url("../img/wallet_Receive_idle.png");
     background-repeat: no-repeat;
-    background-size: 31px 25px;
-    padding-left: 40px;
-    
-    height: 30px;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
+    width: 80px;
     color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
 }
 
 .wallet_send {
-    position:relative;
-    right: 30px;
-    top: 22px;  
-    float: right;
-
-    background-image: url("../img/Send_white.png");
+    background-image: url("../img/wallet_Send_button.png");
     background-repeat: no-repeat;
-    background-size: 31px 25px;
-    background-position: right;
-    padding-right: 40px;
-    
-    height: 30px;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
     width: 80px;
     color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
 }
 
 .walletscanbutton {
-    position: relative;
-    margin: 0 auto;
-    width: 84px;
-    top: -30px;
+    background-image: url("../img/wallet_ScanButton_Active.png");
+    background-repeat: no-repeat;
+    background-size: 58px 58px;
+    background-position: center;  
+    height: 80px;
+    width: 80px;
 }
 
-
+.wallet_activity {
+    background-image: url("../img/wallet_Activity_idle.png");
+    background-repeat: no-repeat;
+    background-size: 39px 40px;
+    background-position: center 10px;    
+    height: 80px;
+    width: 80px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 55px;
+}
 
 
 .floatbutton {
@@ -308,7 +341,7 @@ img {
     position: fixed;  
     right: 0;  
     bottom: 0;
-    padding-bottom: 60px;
+    padding-bottom: 70px;
     padding-right: 15px;
 }
 
@@ -333,7 +366,7 @@ img {
 .pnoactivity {
     font-style: italic;
     font-size: 15px;
-    color: #4D4D4D;
+    color: #8E8E8E;
     padding-top: 16px;
 
     border-top: 2px;
@@ -352,6 +385,9 @@ img {
 .psign {
     padding-top: 8px;
     padding-left: 25px;
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
 }
 
 .pdesc {
@@ -635,6 +671,8 @@ img {
 #contactInput {
     width: 100%;
     padding: 12px 20px;
+    height: 60px;
+    font-size: 18px;
     box-sizing: border-box;
     border: none;
     background-color: #F6F6F6;
@@ -649,114 +687,171 @@ img {
 
 .bottomPlaceholder {
     width: 100%;
-    height: 57px;
+    height: 64px;
 }
 
 #bottomTab {
-    background: #CD003F;
-    height: 57px;
+    background: #B4005B;
+    height: 64px;
     border-top: 1px solid #939292;
+    text-decoration: none;
 }
 
 #bottomTab a {
-    color:#ddd;
+ /*   color:#440024;*/
+    text-decoration: none;
+
 }
 #bottomTab a:hover {
     color:#fff;
 }
 
-.tab1 {
-    height: 56px;  
-    background: url('../img/Home_icon_idle.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+.tablabel {
+    padding-top: 40px;
+    text-align: center;
 }
+
+.tab1 {
+    height: 63px;  
+    background: url('../img/Home_icon_idle.png') no-repeat;
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
+}
+
+.tab1 a {
+    color: #440024;
+}
+
 .tab1_active {
-    height: 56px;
+    height: 63px;
     background: url('../img/Home_icon_active.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab1_active a {
+    color: #fff;
 }
 
 .tab2 {
-    height: 56px;  
+    height: 63px;  
     background: url('../img/Chats_icon_idle.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
 }
+
+.tab2 a {
+    color: #440024;
+}
+
 .tab2_active {
-    height: 56px;
+    height: 63px;
     background: url('../img/Chats_icon_active.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab2_active a {
+    color: #fff;
 }
 
 .tab2_indicator {
     width: 56px;
-    height: 56px;    
+    height: 56px;
     margin:auto;
     text-decoration: none;
 
     font-size: 12px;
     padding-left: 34px;
     padding-top: 29px;
-    
+  
     background: url('../img/bottomIndicator.png') no-repeat;
     background-size: 20px 20px;
-    background-position: 27px 27px; 
+    background-position: 27px 27px;
 }
 
 .tab3 {
-    height: 56px;  
+    height: 63px;  
     background: url('../img/Wallet_icon_idle.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
 }
+
+.tab3 a {
+    color: #440024;
+}
+
 .tab3_active {
-    height: 56px;
+    height: 63px;
     background: url('../img/Wallet_icon_active.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab3_active a {
+    color: #fff;
 }
 
 .tab4 {
-    height: 56px;  
+    height: 63px;  
     background: url('../img/Contacts_icon_idle.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: normal;
 }
+
+.tab4 a {
+    color: #440024;
+}
+
 .tab4_active {
-    height: 56px;
+    height: 63px;
     background: url('../img/Contacts_icon_active.png') no-repeat;
-    background-size: 36px 27px;
-    background-position: center; 
+    background-size: 39px 27px;
+    background-position: center 10px; 
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.tab4_active a {
+    color: #fff;
 }
 
 .tab_placeholder {
+    margin-top: -65px;
     width:100%; 
     height:100%;
 }
 
 .menu_avatar {
-    margin: auto;
-    margin-top: -4px;
-    width: 128px;
-    height: 128px;
+    margin-top: 60px;
+    width: 86px;
+    height: 86px;
     
     background-image: url('../img/Avatar_bck.png');
-    background-size: 128px 128px;
+    background-size: 86px 86px;
 }
 
 .menu_user_avatar {
-    width: 113px;
-    height: 113px;
+    width: 76px;
+    height: 76px;
     border-radius: 105px;
-    margin-top: 8px;
+    margin-top: 5px;
     margin-left: 0px;
 }
 
 .menu_user_label {
     margin-top: 20px;
+    text-align: left;
 }
 
 
@@ -956,7 +1051,7 @@ img {
 /* Modal Content/Box */
 .menumodal-content {
     position: relative;
-    background-color: #800027;
+    background-color: #F9F9F9;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);    
     height: 100%;
     width: 85%;
@@ -979,7 +1074,7 @@ img {
 
 .menumodal-header {
     padding: 38px 24px;
-    background-color: #A20033;
+    background-color: #A70047;
     color: white;
     height: 240px;
     font-size: 16px;
@@ -987,7 +1082,7 @@ img {
 }
 .menuclose {
     color: white;
-    float: right;
+    float: left;
     font-size: 28px;
     font-weight: bold;
     width: 20px;
@@ -1001,8 +1096,9 @@ img {
     padding-top: 14px;
     height: 60px;
     font-size: 18px;    
-    color: #FFF;
+    color: #1A1D2E;
     text-decoration: none;
+    border-bottom: 1px solid #E1E1E1;
 }
 
 
@@ -1010,6 +1106,16 @@ img {
     padding-left: 30px;
 }
 
+.menumodal-bottom {
+    background-color: #43051E;
+    color: white;
+    height: 40px;    
+    position: fixed;
+    width: 85%;
+    bottom: 0;
+    padding-top: 9px;
+    padding-left: 14px;
+}
 
 
 /* Disable selection of page elements*/

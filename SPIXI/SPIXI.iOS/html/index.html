@@ -39,13 +39,13 @@
                     
                     
                     <div id="status_balance">
+                        <div class="status_mybalance">My balance</div>
+                        <div class="status_mybalance_line"></div>
                         <div class="">
-                            <div class="col-xs-2"> <div class="status_ixi" ></div> </div>
-                            <div class="col-xs-10 status_dbalance" id="activity_balance_number"></div> 
+                            <div class="col-xs-12 status_dbalance" id="activity_balance_number"></div> <div class="status_ixi" ></div>
                         </div>
                         <div class="">
-                            <div class="col-xs-2"></div>
-                            <div class="col-xs-10 status_bottom" id="activity_balance_info">* Tap and hold to hide</div>
+                            <div class="col-xs-12 status_bottom" id="activity_balance_info">* Tap and hold to hide</div>
                         </div>                        
                     </div>
                     
@@ -60,34 +60,30 @@
 
 
                     <div class="recent_activity_bar">
-                        <div class="col-xs-2"> </div>
-                        <div class="col-xs-10">Recent activity</div>
+                        <div class="col-xs-12">My notifications</div>
                     </div>
 
                     <div id="home_payments_no_activity" class="container-fluid">
                         <div class="payment">
                             <div class="row">
-                                <div class="col-xs-2 psign"></div>
-                                <div class="col-xs-10 pnoactivity">No activity to show</div>
+                                <div class="col-xs-12 pnoactivity">No new notifications</div>
                             </div>
                         </div>
                     </div>
                     
                     
-                    <div id="home_payments" class="container-fluid" style="display: none;">
+                    <div id="home_payments" class="" style="display: none;">
                     </div>
 
 
                     <div class="recent_activity_bar">
-                        <div class="col-xs-2"> </div>
-                        <div class="col-xs-10 unread_activity_bar">Unread chat messages</div>
+                        <div class="col-xs-12 unread_activity_bar">Unread chat messages</div>
                     </div>
                     
                     <div id="home_unread_no_activity" class="container-fluid">
                         <div class="payment">
                             <div class="row">
-                                <div class="col-xs-2 psign"></div>
-                                <div class="col-xs-10 pnoactivity">You have no unread<br/>messages</div>
+                                <div class="col-xs-12 pnoactivity">No chat messages</div>
                             </div>
                         </div>
                     </div>
@@ -132,31 +128,30 @@
                 <div id="wallet" class="tab-pane fade in">
 
                     <div id="wallet_balance">
+                        <div class="status_mybalance">My balance</div>
+                        <div class="status_mybalance_line"></div>
                         <div class="">
-                            <div class="col-xs-2"> <div class="status_ixi" ></div> </div>
-                            <div class="col-xs-10 status_dbalance" id="wallet_balance_number"></div> 
+                            <div class="col-xs-12 status_dbalance" id="wallet_balance_number"></div> <div class="status_ixi" ></div>
                         </div>
                         <div class="">
-                            <div class="col-xs-2"></div>
-                            <div class="col-xs-10 status_bottom" id="wallet_balance_info">* Tap and hold to hide</div>
+                            <div class="col-xs-12 wallet_status_bottom" id="wallet_balance_info">* Tap and hold to hide</div>
                         </div>                        
                     </div>
+                    
 
-                    <div id="wallet_quickbuttons" class="container-fluid">
-                        <div class="row">
-                        <a href="ixian:receiveixi" class="col-xs-4"><div class="wallet_request">Request</div></a>
-                        
-                        <div id="walletscanbutton" class="col-xs-4" style="text-align: center;">
-                            <a href="ixian:quickscan"><img src="img/ScanButtonL_Idle.png" style="width:84px;height:84px;" /></a>
-                        </div>
-                            
-                        <a href="ixian:sendixi" class="col-xs-4"><div class="wallet_send">Send</div></a>
+
+                    <div id="wallet_quickbuttons" >
+                        <div class="">
+                            <a href="ixian:sendixi" class="col-xs-3"><div class="wallet_send">SEND</div></a>                      
+                            <a href="ixian:receiveixi" class="col-xs-3"><div class="wallet_request">RECEIVE</div></a> 
+                            <a href="ixian:quickscan" class="col-xs-3"><div class="walletscanbutton"></div></a>  
+                            <a href="ixian:activity" class="col-xs-3"><div class="wallet_activity">ACTIVITY</div></a>                      
 
                         </div>
                     </div>
                     
                     <div class="recent_activity_bar">
-                        <div class="col-xs-12">Recent activity</div>
+                        <div class="col-xs-12">Recent</div>
                     </div>
                     
                     
@@ -169,7 +164,7 @@
                         </div>
                     </div>
                     
-                    <div id="wallet_payments" class="container-fluid" style="display: none;">
+                    <div id="wallet_payments" class="" style="display: none;">
                     </div>
 
                     <div class="bottomPlaceholder"></div>
@@ -185,7 +180,7 @@
                         <a href="ixian:newcontact"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
                     </div>
                     
-                    <input type="text" id="contactInput" onkeyup="contactSearch()" placeholder="Search for contacts..">
+                    <input type="text" id="contactInput" onkeyup="contactSearch()" placeholder="Search for contacts...">
                     
                     <div id="contactslist" class="container-fluid">                       
                     </div>
@@ -206,16 +201,16 @@
         <div id="footer">
             <div class="col-xs-12 navbar navbar-fixed-bottom">
                 <div class="row" id="bottomTab">
-                    <div id="tab1" class="col-xs-3 tab1 tab1_active"><a data-toggle="tab" href="#home" ><div class="tab_placeholder"></div></a></div>
+                    <div id="tab1" class="col-xs-3 tab1 tab1_active"><a data-toggle="tab" href="#home" ><div class="tablabel">home</div><div class="tab_placeholder"></div></a></div>
                     <div id="tab2" class="col-xs-3 tab2">
-                        <a data-toggle="tab" href="#chats">
-                        <div class="tab_placeholder">                
+                        <a data-toggle="tab" href="#chats"><div class="tablabel">chats</div>
+                        <div class="tab_placeholder">              
                             <div id="chat_indicator" class="tab2_indicator" style="display: none;">#</div>
                         </div>
                         </a>
                     </div>
-                    <div id="tab3" class="col-xs-3 tab3"><a data-toggle="tab" href="#wallet"><div class="tab_placeholder"></div></a></div>
-                    <div id="tab4" class="col-xs-3 tab4"><a data-toggle="tab" href="#contacts"><div class="tab_placeholder"></div></a></div>
+                    <div id="tab3" class="col-xs-3 tab3"><a data-toggle="tab" href="#wallet"><div class="tablabel">wallet</div><div class="tab_placeholder"></div></a></div>
+                    <div id="tab4" class="col-xs-3 tab4"><a data-toggle="tab" href="#contacts"><div class="tablabel">contacts</div><div class="tab_placeholder"></div></a></div>
                 </div>
             </div>
         </div>
@@ -254,11 +249,15 @@
                     </div>
                     <p id="menu_nickname" class="menu_user_label">Spixi User</p>
                 </div>
-                <a href="ixian:address"><div class="menumodallink"><img style="width: 26px; height: 26px;" src="img/address.png" /><span>My Spixi Address</span></div></a>
-                <a href="ixian:settings"><div class="menumodallink"><img style="width: 26px; height: 26px;" src="img/settings.png" /><span>Settings</span></div></a>                
-                <a href="ixian:lock"><div class="menumodallink"><img style="width: 26px; height: 26px;" src="img/security.png" /><span>Security</span></div></a>
-                <a href="ixian:backup"><div class="menumodallink"><img style="width: 26px; height: 26px;" src="img/backup.png" /><span>Backup my Spixi</span></div></a>
-                <a href="ixian:about"><div class="menumodallink"><img style="width: 26px; height: 26px;" src="img/info_about.png" /><span>About</span></div></a>
+                <a href="ixian:address"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Wallet_icon.png" /><span>My Spixi Address</span></div></a>
+                <a href="ixian:settings"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Settings_icon.png" /><span>Settings</span></div></a>                
+                <a href="ixian:lock"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/Security_icon.png" /><span>Security</span></div></a>
+                <a href="ixian:backup"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/MyAddressi_icon.png" /><span>Backup my Spixi</span></div></a>
+                <a href="ixian:about"><div class="menumodallink"><img style="width: 26px; height: 26px;margin-top: -6px;" src="img/About_icon.png" /><span>About</span></div></a>
+                
+                <div class="menumodal-bottom">
+                Spixi Prototype v0.1
+                </div>
             </div>
         </div>
                
@@ -381,6 +380,7 @@
             function setBalance(theText, theNick) {
                 var balDiv = document.getElementById('activity_balance_number');
                 var balDiv2 = document.getElementById('wallet_balance_number');
+
                 balance = theText;
                 
                 if(balDiv.innerHTML != "&nbsp;")
@@ -498,7 +498,7 @@
                     icon_name = "Sent_icon.png";
                 }
                 
-                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:24px;height:20px;" /></div><div class="col-xs-6 pdesc">'+text+'<br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></div></a>';
+                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></div></a>';
                 
                 paymentsNode.appendChild(payment);
                 
@@ -619,29 +619,34 @@
                 
 
                 clearRecentActivity();
-                addPaymentActivity('RECEIVED', 'NOW', '1234.4444');
-                addPaymentActivity('RECEIVED', '1h ago', '23');
-                addPaymentActivity('SENT', '1h ago', '43');
-                addPaymentActivity('RECEIVED', '2h ago', '65');
+                addPaymentActivity('111','RECEIVED', 'NOW', '1234.4444');
+                addPaymentActivity('112','RECEIVED', '1h ago', '23');
+                addPaymentActivity('113','SENT', '1h ago', '43');
+                addPaymentActivity('114','RECEIVED', '2h ago', '65');
 
                 
                 clearUnreadActivity();
-                addUnreadActivity('000','Maria','1h ago','avatar.png');
-                addUnreadActivity('000','Ma1ria','1h ago','avatar.png');
-                addUnreadActivity('000','3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria','1h ago','avatar.png');
-                addUnreadActivity('000','Ma3ria','1h ago','avatar.png');
-                addUnreadActivity('000','Ma4ria','1h ago','avatar.png');
+                addUnreadActivity('000','Maria','1h ago','avatar.png', true, 'Hi');
+                addUnreadActivity('000','Ma1ria','1h ago','avatar.png', false, 'Test');
+                addUnreadActivity('000','3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria3Maria','1h ago','avatar.png', false, 'Large nickname');
+                addUnreadActivity('000','Ma3ria','1h ago','avatar.png', true, 'Double');
+                addUnreadActivity('000','Ma4ria','1h ago','avatar.png', true, 'Triple');
 
+                addChat('000','Maria','1h ago','avatar.png', true, 'Hi');
+                addChat('000','Ma1ria','1h ago','avatar.png', false, 'Test');
+
+                
+                
                 clearContacts();
-                addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","avatar.png");
-                addContact("000","Abc","avatar.png");
-                addContact("000","ZAbc","avatar.png");
-                addContact("000","XAbc","avatar.png");
-                addContact("000","CAbc","avatar.png");
-                addContact("000","VAbc","avatar.png");
-                addContact("000","BAbc","avatar.png");
-                addContact("000","NAbc","avatar.png");
-                addContact("000","MAbc","avatar.png");
+                addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","avatar.png", false);
+                addContact("000","Abc","avatar.png", true);
+                addContact("000","ZAbc","avatar.png", true);
+                addContact("000","XAbc","avatar.png", false);
+                addContact("000","CAbc","avatar.png", true);
+                addContact("000","VAbc","avatar.png", false);
+                addContact("000","BAbc","avatar.png", false);
+                addContact("000","NAbc","avatar.png", false);
+                addContact("000","MAbc","avatar.png", false);
 
                 alert("Test Done");
                 

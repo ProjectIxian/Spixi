@@ -49,8 +49,8 @@
             <div id="chat_send"></div>
         </div>
         <div id="chatattachbar">
-            <div id="ca_request">Request IXI</div>
             <div id="ca_send">Send IXI</div>
+            <div id="ca_request">Request IXI</div>
         </div>
 
         
@@ -182,14 +182,14 @@
             function hideAttach()
             {
                 document.getElementById("chatbar").style.bottom = "0px";
-                document.getElementById("chatholder").style.height = "52px";
-                document.getElementById("chatattachbar").style.bottom = "-50px";
+                document.getElementById("chatholder").style.height = "57px";
+                document.getElementById("chatattachbar").style.bottom = "-55px";
                
             }
             
             function showAttach()
             {
-                document.getElementById("chatbar").style.bottom = "50px";
+                document.getElementById("chatbar").style.bottom = "55px";
                 document.getElementById("chatholder").style.height = "102px";
                 document.getElementById("chatattachbar").style.bottom = "0px";
                 
@@ -269,7 +269,7 @@
                                
                 var textEl = document.createElement('div');
                 textEl.className = "sent_text";
-                textEl.innerHTML = "Amount<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
+                textEl.innerHTML = "Amount requested<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
                 
                 var titleEl = document.createElement('div');
                 titleEl.className = "request_header";
@@ -303,7 +303,7 @@
                                
                 var textEl = document.createElement('div');
                 textEl.className = "sent_text";
-                textEl.innerHTML = "Amount<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
+                textEl.innerHTML = "Amount sent<br/><div class='request_amount'>"+htmlEscape(amount)+"</div>";
                 
                 var titleEl = document.createElement('div');
                 titleEl.className = "sent_header";
