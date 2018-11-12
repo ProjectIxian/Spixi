@@ -39,10 +39,10 @@
                     
                     
                     <div id="status_balance">
-                        <div class="status_mybalance">My balance</div>
+                        <div class="status_ixi" ><div class="status_mybalance">My Ixi balance</div>
                         <div class="status_mybalance_line"></div>
                         <div class="">
-                            <div class="col-xs-12 status_dbalance" id="activity_balance_number"></div> <div class="status_ixi" ></div>
+                            <div class="col-xs-12 status_dbalance" id="activity_balance_number"></div> </div>
                         </div>
                         <div class="">
                             <div class="col-xs-12 status_bottom" id="activity_balance_info">* Tap and hold to hide</div>
@@ -101,7 +101,7 @@
                 <div id="chats" class="tab-pane fade in">
 
                     <div id="floatbutton" class="floatbutton">
-                        <img src="img/FAB_Idle.png" style="width:72px;height:73px;" />
+                        <a href="ixian:newchat"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
                     </div>
 
                     
@@ -128,10 +128,10 @@
                 <div id="wallet" class="tab-pane fade in">
 
                     <div id="wallet_balance">
-                        <div class="status_mybalance">My balance</div>
+                        <div class="status_ixi"><div class="status_mybalance">My Ixi balance</div>
                         <div class="status_mybalance_line"></div>
                         <div class="">
-                            <div class="col-xs-12 status_dbalance" id="wallet_balance_number"></div> <div class="status_ixi" ></div>
+                            <div class="col-xs-12 status_dbalance" id="wallet_balance_number"></div></div>
                         </div>
                         <div class="">
                             <div class="col-xs-12 wallet_status_bottom" id="wallet_balance_info">* Tap and hold to hide</div>
@@ -205,7 +205,7 @@
                     <div id="tab2" class="col-xs-3 tab2">
                         <a data-toggle="tab" href="#chats"><div class="tablabel">chats</div>
                         <div class="tab_placeholder">              
-                            <div id="chat_indicator" class="tab2_indicator" style="display: none;">#</div>
+                            <div id="chat_indicator" class="tab2_indicator" style="display: none;">.</div>
                         </div>
                         </a>
                     </div>
@@ -493,7 +493,7 @@
                 var payment = document.createElement("div");
                 payment.className = "payment";
                 var icon_name = "Received_icon.png";
-                if(text == "SENT")
+                if(text == "Payment Sent")
                 {
                     icon_name = "Sent_icon.png";
                 }
@@ -557,7 +557,8 @@
 
                 // Update the chat indicator
                 document.getElementById("chat_indicator").style.display = 'block';
-                document.getElementById("chat_indicator").innerHTML = (+document.getElementById("chat_indicator").innerHTML) + 1;
+                document.getElementById("chat_indicator").innerHTML = "";
+                    //(+document.getElementById("chat_indicator").innerHTML) + 1;
             }
             
             // Adds a chat
@@ -610,7 +611,7 @@
             function test()
             {
                 showWarning(0);
-                setBalance("12.910,4511", "Spixi");
+                setBalance("120.910,45000011", "Spixi");
 
                 document.getElementById("home_unread").style.display = 'block';
                 document.getElementById("home_unread_no_activity").style.display = 'none';

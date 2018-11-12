@@ -2,7 +2,15 @@ body {
     font-family:'Roboto', sans-serif;
     font-size: 14px;
     font-weight: normal;
-    background-color: #F1F1F1;
+}
+
+#bg {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
 }
 
 .clear { clear: both }
@@ -12,7 +20,7 @@ body {
 .toolbar {
     width: 100%;
     height: 62px;
-    background: #D90063;
+    background: #e91e63;
     color: #fff;
     display: block;
     position: fixed;
@@ -31,8 +39,7 @@ body {
     padding-top: 0px;
     font-size: 14px;
     text-align: left;
-    font-style: italic;
-    font-weight: 200;
+    font-weight: 300;
 }
 
 
@@ -291,7 +298,7 @@ body {
     height: 100px;   
     
     background:#f7f7f7;
-    border: 1px solid #E5337B;
+    border: 0px solid #E5337B;
     border-top: 0px solid #fff;
     border-bottom: 1px solid #D7D7D7;
 
@@ -345,7 +352,6 @@ body {
 {
     position:relative;
     background:#f7f7f7;
-    border: 1px solid #e9c7cd;
     border-radius:10px;
     color: black;
     float: left;
@@ -354,8 +360,7 @@ body {
     margin-bottom: 20px;
     padding: 15px;
     padding-top: 5px;
-    box-shadow: 1px 1px 1px 1px #D3D3D3;
-    min-width: 60px;
+    min-width: 80px;
     
     animation-name: chat_animation;
     animation-duration: 0.3s;     
@@ -368,17 +373,15 @@ body {
 {
     float: right;
     margin-left: 125px;
-    margin-right: 56px;
-    box-shadow: -1px 1px 1px 1px #D3D3D3;
-    border: 1px solid #cccccc;
-    background: #edf2f9;
+    margin-right: 11px;
+    background: #D0F7FF;
 }
 
 .from-them .time,
 .from-me .time
 {
     font-size: 10px;
-    color: #424242;
+    color: #A0A0A0;
     z-index: 4;
     position: absolute;
 }
@@ -394,7 +397,7 @@ body {
     position: absolute;
     left: -45px;
     z-index: 6;
-    bottom: -14px;
+    bottom: 0px;
     width: 32px;
     height: 32px;
     border-radius: 32px;
@@ -402,41 +405,19 @@ body {
             
 .from-me .avatar
 {
-    left: auto;
-    right: -46px;
+
 }
 
 .from-them:before,
 .from-me:before
 {
-    content:"";
-    position:absolute;
-    background:#f7f7f7;
-    z-index:2;
-    bottom:-3px;
-    left:-8px;
-    width: 27px;
-    height:20px;
-    border-bottom:1px solid #e9c7cd;
-    -webkit-transform:translate(0, -2px);
-    -moz-transform:translate(0, -2px);
+
 }
 
 .from-them:after,
 .from-me:after
 {
-    content:"";
-    position:absolute;
-    z-index:3;
-    bottom:-3px;
-    left:5px;
-    width:26px;
-    height:21px;
-    background:#F1F1F1;
-    border-right: 1px solid #e9c7cd;
-    border-bottom-right-radius: 10px;
-    -webkit-transform:translate(-31px, -2px);
-    -moz-transform:translate(-31px, -2px);
+
 }
             
 .from-me:before {

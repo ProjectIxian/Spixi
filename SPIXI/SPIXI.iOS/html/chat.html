@@ -73,7 +73,7 @@
         </div>
         
         
-        
+        <img src="img/chatbackground.png" id="bg" alt="">
         
         
         <script type="text/javascript">
@@ -205,12 +205,12 @@
                 setTimeout(function () { addThem("avatar1.png", "Hey!", "11:24 AM"); }, 1300);
                 setTimeout(function () { addThem("avatar.png", "Great, thanks for asking.", "11:24 AM"); }, 1600);
                 setTimeout(function () { addThem("avatar1.png", "And how are you?", "11:24 AM"); }, 1900);
-           /*     setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
+                setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
                 setTimeout(function () { addThem("avatar1.png", "Ohh??? What were you doing there?", "11:25 AM"); }, 2500);
                 setTimeout(function () { addMe("avatar1.png", "Was building my own Luna Park...", "11:25 AM"); }, 3000);
-                setTimeout(function () { addMe("avatar1.png", "html<div>injection</div>test", "11:25 AM"); }, 4000);*/
+                setTimeout(function () { addMe("avatar1.png", "html<div>injection</div>test", "11:25 AM"); }, 4000);
                 setTimeout(function () { addPaymentRequest("1.200,5000");},1100);
-                setTimeout(function () { addPaymentSent("1.200,5000");},1500);
+                setTimeout(function () { addPaymentSent("1.200.200,50000000");},1500);
 
                 //setTimeout(function() {sentModal.display.style = "block";}, 4500);
                 //sentModal.style.display = "block";
@@ -332,8 +332,23 @@
             }
                        
 
-            function addMe(avatar, text, time) {
-                addText(avatar, text, time, "from-me");
+            function addMe(avatar, text, time) {                
+                var textEl = document.createElement('div');
+                textEl.className = "text";
+                textEl.innerHTML = htmlEscape(text);
+
+                var timeEl = document.createElement('div');
+                timeEl.className = "time";
+                timeEl.innerHTML = htmlEscape(time);
+
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = "from-me" + " clear";
+                bubbleEl.appendChild(textEl);
+                bubbleEl.appendChild(timeEl);
+
+                document.getElementById("messages").appendChild(bubbleEl);
+                //window.scrollTo(0, document.body.scrollHeight);             
+                bubbleEl.scrollIntoView(true);
             }
 
             function addThem(avatar, text, time) {

@@ -287,6 +287,12 @@ namespace SPIXI
                     return;
                 }
             }
+            else
+            {
+                // Don't show if the friend is already approved
+                if (message.type == FriendMessageType.requestAdd)
+                    return;
+            }
 
 
             if (message.type == FriendMessageType.requestFunds)

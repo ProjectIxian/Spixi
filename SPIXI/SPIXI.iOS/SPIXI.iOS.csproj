@@ -180,6 +180,7 @@
     <BundleResource Include="html\img\Backup_icon.png" />
     <BundleResource Include="html\img\bottomIndicator.png" />
     <BundleResource Include="html\img\camera.png" />
+    <BundleResource Include="html\img\chatbackground.png" />
     <BundleResource Include="html\img\Chats_icon_active.png" />
     <BundleResource Include="html\img\Chats_icon_idle.png" />
     <BundleResource Include="html\img\ChooseContact_icon.png" />
