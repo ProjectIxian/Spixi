@@ -125,7 +125,7 @@ namespace SPIXI
                         webView.Eval(string.Format("setRecipient(\"{0}\")", wal));
                         return;
                     }
-                    else
+                    else if (result.Text.Contains(":send"))
                     {
                         // Check for transaction request
                         string[] split = result.Text.Split(new string[] { ":send:" }, StringSplitOptions.None);
@@ -136,12 +136,21 @@ namespace SPIXI
                             return;
                         }
                     }
+                    else
+                    {
+                        // Handle direct addresses
+                        string wallet_to_send = result.Text;
+                        if(Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send)))
+                        {
+                            webView.Eval(string.Format("setRecipient(\"{0}\")", wallet_to_send));
+                            return;
+                        }
+                    }
 
                 });
             };
 
             await Navigation.PushAsync(ScannerPage);
-
         }
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
