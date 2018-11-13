@@ -444,7 +444,7 @@ namespace SPIXI.Storage
                 }
 
                 // Read unconfirmed transactions
-           /*     int num_utx = reader.ReadInt32();
+                /*int num_utx = reader.ReadInt32();
                 for (int i = 0; i < num_utx; i++)
                 {
                     int data_length = reader.ReadInt32();
@@ -455,7 +455,7 @@ namespace SPIXI.Storage
                 }*/
 
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot read from file. {0}", e.Message));
                 return false;
