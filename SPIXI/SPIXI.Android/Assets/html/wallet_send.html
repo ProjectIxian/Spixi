@@ -23,55 +23,54 @@
     <div class="toolbarholder">
     </div>
     
-    <div id="quickscanbutton" class="wallet_quickscanbutton">
-        <a href="ixian:quickscan"><img src="img/ScanButton_Idle.png" style="width:64px;height:64px;" /></a>
-    </div>
+
     
-    <div id="wallet_status_balance">
+
+    
+    <div id="status_balance">
+        <div class="status_ixi" ><div class="status_mybalance">My Ixi balance</div>
+            <div class="status_mybalance_line"></div>
+            <div class="">
+            <div class="col-xs-12 status_dbalance" id="activity_balance_number">0</div></div>
+        </div>
         <div class="">
-            <div class="col-xs-2"></div>
-            <div class="col-xs-10 wallet_status_bottom" id="activity_balance_info">Available balance</div>
-        </div>  
-        <div class="">
-            <div class="col-xs-2"> <div class="status_ixi" ></div> </div>
-            <div class="col-xs-10 wallet_status_dbalance" id="activity_balance_number"></div> 
-        </div>        
+            <div class="col-xs-12 status_bottom" id="activity_balance_info">* Tap and hold  hide</div>
+        </div>                        
+    </div>
+                
+    <div id="quickscanbutton" class="quickscanbutton">
+                        <a href="ixian:quickscan"><img src="img/ScanButton_Idle.png" style="width:64px;height:64px;" /></a>
+                    </div>
+    
+    <div class="wallet_sendto_amount">
+        <div class="wallet_subtitle">Enter amount to send</div>
+        <input type="number" id="wallet_sendto_amount_input" onkeyup="" placeholder="0.00000000">
+        <div class="send_status_bottom">Tap to enter the amount you would like to send</div>
     </div>
     
-    <div class="wallet_send_address">
-        <input type="text" id="wallet_send_address_input" onkeyup="" placeholder="Paste address">
-        <a href="ixian:pick"><div class="wallet_sendto_pick"></div></a>
-    </div>
     
-    
-    
-    <div id="send_to" style="display:none;">
+    <div id="send_2_to" style="display:none;">
         <div class="wallet_subtitle">Recipient</div>
         <div class="wallet_from_holder">
-            <div class="col-xs-2 wallet_from_avatar"><img src="" style="width:48px;height:48px;border-radius: 48px;" /></div>
-            <div class="col-xs-8 wallet_from_text"><b></b><br /></div>
-            <div class="col-xs-2 wallet_sendto_text">remove</div>
-        </div>
-    </div>
-
-    
-    <div class="recent_activity_bar">
-        <div class="col-xs-2"> </div>
-        <div class="col-xs-10">Recently used</div>
-    </div>
-
-    <div id="home_payments_no_activity" class="container-fluid">
-        <div class="payment">
-            <div class="row">
-            <div class="col-xs-2 psign"></div>
-            <div class="col-xs-10 pnoactivity">No activity to show</div>
+            <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
+            <div id="recipient_wal" class="col-xs-7 wallet_from_text"></div>
+                <div id="remove_recipient" class="col-xs-3 wallet_sendto_text">remove</div>
             </div>
-        </div>
+    </div>
+    
+    <div id="add_recipient" class="wallet_send_address">
+        <div class="wallet_subtitle">Add Recipient</div>
+        <input type="text" id="wallet_send_address_input" onkeyup="" placeholder="type or paste the address">
+        <a href="ixian:pick"><div class="wallet_sendto_pick">address book</div></a>
+    </div>
+    
+    
+    <div id="next" class="send_request_bottom">
+        Slide to send payment
+        <div id="accept" class="send_request_accept"></div>
     </div>
 
-    <div id="wallet_payments" class="container-fluid" style="display: none;"></div>
-    
-    <div id="next" class="button" style="margin-top: 10px; margin-bottom: 20px;">Next</div>
+
     
     
     <div class="spixi_notification" style="display: none;">
@@ -91,17 +90,31 @@
     } 
     
     document.getElementById("next").onclick = function() {
-        var wal = document.getElementById("wallet_send_address_input").value;
-        if (isBlank(wal)) {
+        var wallet = document.getElementById("wallet_send_address_input").value;
+        if (isBlank(wallet)) {
             location.href = "ixian:error";
             return;
         }
-        location.href = "ixian:next:" + wal;
+        var amount = document.getElementById("wallet_sendto_amount_input").value;
+        if (isBlank(amount)) {
+            location.href = "ixian:error2";
+            return;
+        }
+        location.href = "ixian:send:" + wallet + ":" + amount;
     }
 
-    function setRecipient(theText) {
-        document.getElementById("wallet_send_address_input").value = theText;
+    document.getElementById("remove_recipient").onclick = function () {
+        document.getElementById("send_2_to").style.display = "none";
+        document.getElementById("add_recipient").style.display = "block";  
+        document.getElementById("wallet_send_address_input").value = "";
+    } 
 
+    function setRecipient(theText, theName) {
+        document.getElementById("wallet_send_address_input").value = theText;
+        document.getElementById("recipient_wal").innerHTML = "<b>" + theName + "</b><br/>" + theText;
+
+        document.getElementById("send_2_to").style.display = "block";
+        document.getElementById("add_recipient").style.display = "none";        
     }
 
     function setBalance(theText) {

@@ -2,7 +2,29 @@
     opacity: 0.7;
 }
 
-.contact_user_avatar {
+.toolbar_mid {
+    position: absolute;
+    left:60px;
+    right:60px;
+    height: 62px;
+}
+
+.toolbar_stext {
+    
+    padding-top: 9px;
+    font-size: 20px;
+    text-align: left;
+}
+
+.toolbar_subtext {
+    padding-top: 0px;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 300;
+}
+
+.contact_user_avatar_bk {
+    display: none;
     max-width:100%;
     max-height:200px;
     width: auto;
@@ -10,29 +32,28 @@
 
 }
 
-.contact_description {
+.contact_user_avatar {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    height: 250px;
+    left: 25;
+    top: 75;
+    width: 80px;
+    height: 80px;
+}
+
+.contact_description {
+    height: 188px;
     
-    background-color: #F6F6F6;
+    background-color: #2f3342;
     color: #FFF;
     font-size: 100%;
     font-weight: 100;
     text-align: center;
-    
 }
 
-.avatar_placeholder {
-    height: 250px;
-    width: 100%;
-}
 
 
 .contact_actions {
-    height: 65px;
+    height: 35px;
     width: 300px;
     margin: auto;
     padding-top: 5px;
@@ -41,16 +62,16 @@
 
 .action_chat {
     width: 77px;
-    height: 87px; 
+    height: 77px; 
     background-image: url('../img/StartChat_Idle.png');
-    background-size: 67px 67px;
+    background-size: 57px 57px;
     background-repeat: no-repeat;
     background-position: center top;
     
     position: absolute;
-    left:10px;
-    top:-40px;
-    padding-top: 70px;
+    right:200px;
+    top:105px;
+    padding-top: 55px;
     
     text-align: center;
 }
@@ -61,16 +82,16 @@
 
 .request_chat {
     width: 77px;
-    height: 87px;  
+    height: 77px;  
     background-image: url('../img/Request_Idle.png');
-    background-size: 67px 67px;
+    background-size: 57px 57px;
     background-repeat: no-repeat;
     background-position: center top;
     
     position: absolute;
-    left:120px;
-    top:-40px;
-    padding-top: 70px;
+    right:110px;
+    top:105px;
+    padding-top: 55px;
     
     text-align: center;    
 }
@@ -81,16 +102,16 @@
 
 .send_chat {
     width: 77px;
-    height: 87px; 
+    height: 77px; 
     background-image: url('../img/Send_Idle.png');
-    background-size: 67px 67px;
+    background-size: 57px 57px;
     background-repeat: no-repeat;
     background-position: center top;
 
     position: absolute;
-    left:240px;
-    top:-40px;
-    padding-top: 70px;
+    right:20px;
+    top:105px;
+    padding-top: 55px;
     
     text-align: center;  
 }

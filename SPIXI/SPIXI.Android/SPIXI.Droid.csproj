@@ -205,6 +205,9 @@
     <AndroidAsset Include="Assets\html\css\stylewallet.css" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\abicon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\img\About_icon.png" />
   </ItemGroup>
   <ItemGroup>

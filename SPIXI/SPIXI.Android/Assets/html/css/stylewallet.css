@@ -106,15 +106,6 @@
 }
 
 
-.status_ixi {
-    width: 100%;
-    height: 40px;
-
-    background: url("../img/Ixi_icon.png") no-repeat;;
-    background-size: 20px 25px;
-    background-position: center;
-}
-
 
 #wallet_status_balance {
     padding-top: 7px;
@@ -160,8 +151,9 @@
 
 .wallet_sendto_text {
     color: #CE0041;
+    text-align: right;
     font-style: italic;
-    padding-right: 25px;
+    padding-right: 15px;
 }
 
 .wallet_send_address {
@@ -169,52 +161,54 @@
 }
 
 #wallet_send_address_input {
-    margin: auto;
-    margin-left: 10px;
-    margin-top: 30px;
-
-    width: 80%;
     
+    margin-left: 30px;
+    margin-top: 10px;
+    
+    width: 70%;
+    height: 50px;
+    
+    padding-left: 14px;
+    padding-right: 14px;
     background: transparent;
     border: none;
     outline: none;
-    border-bottom: 2px solid #CCC;
+    border: 1px solid #398FD8;
+    border-radius: 40px;
     color: #000;
     font-size: 110%;    
 }
 
 .wallet_sendto_pick {
     float: right;
-    width: 37px;
-    height: 37px;
-    margin-top: 20px;
+    width: 55px;
+    height: 65px;
+    margin-top: 6px;
     margin-right: 20px;
+    text-align: center;
+    font-size: 12px;
+    padding-top: 58px;
     
-    background-image: url('../img/ChooseContact_icon.png');
-    background-size: 37px 16px;
-    background-position: center center;
+    background-image: url('../img/abicon.png');
+    background-size: 55px 55px;
+    background-position: center top;
     background-repeat: no-repeat;
     
 }
 
 .wallet_sendto_amount {
-    margin-top: 30px;
-    background-image: url('../img/SendIXI_icon_blue.png');
-    background-size: 31px 25px;
-    background-repeat: no-repeat;
-    background-position: 25px 0px;
+    height: 60px;
+    margin-top: 0px;
 }
 
 #wallet_sendto_amount_input {
-    margin-left: 70px;
+    margin-left: 30px;
+    margin-top: 0px;
     background: transparent;
     border: none;
     outline: none;
-    border-bottom: 2px solid #CCC;
     color: #000;
-    font-size: 110%;
-    width: 200px;
-    
+    font-size: 24px;
 }
 
 .send_2_bottom {
@@ -228,6 +222,13 @@
     font-style: italic;
     padding-left: 20px;
     padding-top: 14px;
+}
+
+.send_status_bottom {
+    padding-left: 30px;
+    font-size: 85%;
+    font-style: italic;
+    color: #B8BABE;
 }
 
 .send_2_accept {
@@ -247,7 +248,7 @@
 .sent_amount {
     color: #505050;
     padding-top: 0px;
-    font-size: 22px;
+    font-size: 24px;
     text-align: left;
 }
 
@@ -274,7 +275,7 @@
     bottom: 0px;
     height: 60px;
     width: 100%;
-    background-color: #CD003F;
+    background-color: #BC005C;
     color: #FFF;
     font-size: 16px;
     padding-left: 80px;
