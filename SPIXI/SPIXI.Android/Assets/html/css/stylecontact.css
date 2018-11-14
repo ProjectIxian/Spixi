@@ -50,7 +50,35 @@
     text-align: center;
 }
 
+.contact_user_indicator {
+    position: absolute;
+    left: 140px;
+    top:70px;
+    
+    width: 21px;
+    height: 21px; 
+    background-image: url('../img/onlineIndicator.png');
+    background-size: 21px 21px;
+    background-repeat: no-repeat;
+    background-position: center top;
+}
 
+.contact_user_name {
+    color: #FFF;
+    position: absolute;
+    left: 170px;
+    top:70px;
+    font-size: 18px; 
+}
+
+.contact_user_subtitle {
+    color: #FFF;
+    position: absolute;
+    left: 170px;
+    top:94px;
+    font-size: 11px; 
+    font-style: italic;
+}
 
 .contact_actions {
     height: 35px;
@@ -60,98 +88,101 @@
     position:relative;
 }
 
+.action_line {
+    position: absolute;
+    right:10px;
+    top:115px;
+    width: 230px;
+    height: 1px;
+    background-color: #3F3F4D;
+}
+
 .action_chat {
     width: 77px;
-    height: 77px; 
-    background-image: url('../img/StartChat_Idle.png');
-    background-size: 57px 57px;
+    height: 67px; 
+    background-image: url('../img/details_chat.png');
+    background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
     
     position: absolute;
-    right:200px;
-    top:105px;
-    padding-top: 55px;
+    right:170px;
+    top:115px;
+    padding-top: 48px;
     
+    font-size: 12px;
     text-align: center;
-}
-.action_chat:hover,
-.action_chat:active {
-    background-image: url('../img/StartChat_Active.png');    
+    text-transform: uppercase;
 }
 
 .request_chat {
     width: 77px;
-    height: 77px;  
-    background-image: url('../img/Request_Idle.png');
-    background-size: 57px 57px;
+    height: 67px; 
+    background-image: url('../img/details_request.png');
+    background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
     
     position: absolute;
-    right:110px;
-    top:105px;
-    padding-top: 55px;
+    right:90px;
+    top:115px;
+    padding-top: 48px;
     
-    text-align: center;    
-}
-.request_chat:hover,
-.request_chat:active {
-    background-image: url('../img/Request_Active.png');    
+    font-size: 12px;
+    text-align: center;  
+    text-transform: uppercase;
 }
 
 .send_chat {
     width: 77px;
-    height: 77px; 
-    background-image: url('../img/Send_Idle.png');
-    background-size: 57px 57px;
+    height: 67px; 
+    background-image: url('../img/details_send.png');
+    background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
 
     position: absolute;
-    right:20px;
-    top:105px;
-    padding-top: 55px;
+    right:10px;
+    top:115px;
+    padding-top: 48px;
     
-    text-align: center;  
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
 }
-.send_chat:hover,
-.send_chat:active {
-    background-image: url('../img/Send_Active.png');    
-}
+
 
 .contact_remove {
-    background-color: #E7ECEE;
     height: 54px;
-    border-top: 1px solid #D5D8DB;
-    border-bottom: 1px solid #D5D8DB;
-
 }
 
 .contact_remove_btn {
     height: 54px;
-    color: #000;
+
     padding-top: 14px;
     padding-left: 90px;
+    color: #C90000;
+    font-weight: 800;
+    font-style: italic;
     font-size: 14px;
-    font-weight: 600;
     
-    background-image: url('../img/remove_contact.png');
+    background-image: url('../img/error.png');
     background-repeat: no-repeat;
-    background-size: 22px 22px;
+    background-size: 18px 18px;
     background-position: 30px 14px;
 }
 
 .contact_removehistory_btn {
     height: 54px;
-    color: #000;
     padding-top: 14px;
     padding-left: 90px;
     font-size: 14px;
-    font-weight: 600;
-    background-image: url('../img/historyDelete_icon_Black.png');
+    color: #C90000;
+    font-weight: 800;
+    font-style: italic;
+    background-image: url('../img/historyDelete_icon.png');
     background-repeat: no-repeat;
-    background-size: 23px 20px;
+    background-size: 24px 20px;
     background-position: 28px 14px;
 }
 

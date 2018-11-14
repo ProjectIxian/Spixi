@@ -16,53 +16,64 @@
 <body>
     <div id="wrap" class="container-fluid noselect">
 
-        <div id="toolbar" class="toolbar toolbar_transparent">
+        <div id="toolbar" class="toolbar">
             <div id="backbtn" class="toolbar_back"></div>
-            <div class="toolbar_text_center" id="title">Contact</div>
+            <div id="toolbar_mid" class="toolbar_mid">
+                <div class="toolbar_stext" id="title">Contact</div>
+                <div class="toolbar_subtext" id="subtitle"></div>
+            </div>
         </div>
 
 
         <div class="contact_description">
+            <img src="avatar.png" class="contact_user_avatar_bk" />
+
             <img src="avatar.png" class="contact_user_avatar" />
-        </div>
-        <div class="avatar_placeholder"></div>
-
-
-        <div class="contact_actions">
+            
+            <div id="contact_user_indicator" style="display:none;" class="contact_user_indicator"></div>
+            <div class="contact_user_name" id="title2"></div>
+            <div class="contact_user_subtitle" id="subtitle2"></div>
+            
+            <div class="action_line"></div>
             <div id="achat" class="action_chat">message</div>
             <div id="arequest" class="request_chat">request IXI</div>
             <div id="asend" class="send_chat">send IXI</div>
         </div>
 
+        <div class="recent_activity_bar">
+            <div class="col-xs-12">Notifications</div>
+        </div>
+        
+        <div id="payments_no_activity">
+            <div class="payment">
+                <div class="">
+                    <div class="col-xs-2 psign"></div>
+                    <div class="col-xs-10 pnoactivity">No recent notifications</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="payments" style="display: none;">
+        </div>
+
+        <div class="recent_activity_bar">
+            <div class="col-xs-12">History</div>
+        </div>
+
         <div class="contact_remove">
             <a href="javascript:onRemoveAction();">
-                <div class="contact_remove_btn">remove contact</div>
+                <div class="contact_remove_btn">Remove contact</div>
             </a>
         </div>
 
         <div class="contact_remove">
             <a href="javascript:onRemoveHistoryAction();">
-                <div class="contact_removehistory_btn">delete message history</div>
+                <div class="contact_removehistory_btn">Delete entire history</div>
             </a>
         </div>
 
-        <div class="recent_activity_bar">
-            <div class="col-xs-2"> </div>
-            <div class="col-xs-10">History</div>
-        </div>
-
-        <div id="payments_no_activity">
-            <div class="payment">
-                <div class="">
-                    <div class="col-xs-2 psign"></div>
-                    <div class="col-xs-10 pnoactivity">No history to show</div>
-                </div>
-            </div>
-        </div>
 
 
-        <div id="payments" style="display: none;">
-        </div>
 
 
 
@@ -198,11 +209,25 @@
 
     function setNickname(nick) {
         document.getElementById("title").innerHTML = nick;
+        document.getElementById("title2").innerHTML = nick;
+
     }
 
-    //    clearRecentActivity();
-    //    addPaymentActivity('RECEIVED', 'NOW', '1234.4444', '000');  
-    //    addPaymentActivity('SENT', 'NOW', '1234.4444', '000');  
+    function showIndicator(val) {
+        if (val == true) {
+            document.getElementById("contact_user_indicator").style.display = "block";
+            setSubtitle("online");
+        }
+        else {
+            document.getElementById("contact_user_indicator").style.display = "none";
+            setSubtitle("offline");
+        }
+    }
+
+    function setSubtitle(stat) {
+        document.getElementById("subtitle").innerHTML = stat;
+        document.getElementById("subtitle2").innerHTML = stat;
+    }
     
 </script>
     

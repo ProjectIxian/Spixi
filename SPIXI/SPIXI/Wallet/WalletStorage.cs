@@ -85,12 +85,7 @@ namespace SPIXI.Wallet
                 Address addr = new Address(publicKey);
                 address = addr.address;
 
-                Console.WriteLine();
-                Console.Write("Your IXIAN address is ");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(address);
-                Console.ResetColor();
-                Console.WriteLine();
+
 
             }
             catch (IOException e)

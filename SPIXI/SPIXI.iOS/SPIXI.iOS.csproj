@@ -100,6 +100,7 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\BackgroundTaskService.cs" />
     <None Include="Entitlements.plist" />
+    <None Include="html\.DS_Store" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -167,6 +168,7 @@
     <Content Include="html\css\stylesecurity.css" />
     <Content Include="html\css\stylesettings.css" />
     <Content Include="html\css\stylewallet.css" />
+    <BundleResource Include="html\img\abicon.png" />
     <BundleResource Include="html\img\About_icon.png" />
     <BundleResource Include="html\img\accept_icon.png" />
     <BundleResource Include="html\img\activity.png" />
@@ -188,6 +190,9 @@
     <BundleResource Include="html\img\Contacts_icon_idle.png" />
     <BundleResource Include="html\img\Create_icon_Active.png" />
     <BundleResource Include="html\img\Create_icon_Idle.png" />
+    <BundleResource Include="html\img\details_chat.png" />
+    <BundleResource Include="html\img\details_request.png" />
+    <BundleResource Include="html\img\details_send.png" />
     <BundleResource Include="html\img\dismissNotification.png" />
     <BundleResource Include="html\img\Done_icon.png" />
     <BundleResource Include="html\img\Edit_icon_Active.png" />

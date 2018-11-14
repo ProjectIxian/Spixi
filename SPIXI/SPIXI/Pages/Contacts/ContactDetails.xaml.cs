@@ -56,6 +56,15 @@ namespace SPIXI
             webView.Eval(string.Format("setAddress(\"{0}\")", friend.walletAddress));
             webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));
 
+            if (friend.online)
+            {
+                webView.Eval("showIndicator(true)");
+            }
+            else
+            {
+                webView.Eval("showIndicator(false)");
+            }
+
             loadTransactions();
 
             Device.StartTimer(TimeSpan.FromSeconds(2), () =>

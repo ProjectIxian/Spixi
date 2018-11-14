@@ -20,7 +20,7 @@
             <div id="backbtn" class="toolbar_back"></div>
             <div id="toolbar_mid" class="toolbar_mid">
                 <div class="toolbar_stext" id="title">Contact</div>
-                <div class="toolbar_subtext" id="subtitle">last online days ago</div>
+                <div class="toolbar_subtext" id="subtitle"></div>
             </div>
         </div>
 
@@ -30,6 +30,11 @@
 
             <img src="avatar.png" class="contact_user_avatar" />
             
+            <div id="contact_user_indicator" style="display:none;" class="contact_user_indicator"></div>
+            <div class="contact_user_name" id="title2"></div>
+            <div class="contact_user_subtitle" id="subtitle2"></div>
+            
+            <div class="action_line"></div>
             <div id="achat" class="action_chat">message</div>
             <div id="arequest" class="request_chat">request IXI</div>
             <div id="asend" class="send_chat">send IXI</div>
@@ -57,13 +62,13 @@
 
         <div class="contact_remove">
             <a href="javascript:onRemoveAction();">
-                <div class="contact_remove_btn">remove contact</div>
+                <div class="contact_remove_btn">Remove contact</div>
             </a>
         </div>
 
         <div class="contact_remove">
             <a href="javascript:onRemoveHistoryAction();">
-                <div class="contact_removehistory_btn">delete message history</div>
+                <div class="contact_removehistory_btn">Delete entire history</div>
             </a>
         </div>
 
@@ -204,11 +209,25 @@
 
     function setNickname(nick) {
         document.getElementById("title").innerHTML = nick;
+        document.getElementById("title2").innerHTML = nick;
+
     }
 
-    //    clearRecentActivity();
-    //    addPaymentActivity('RECEIVED', 'NOW', '1234.4444', '000');  
-    //    addPaymentActivity('SENT', 'NOW', '1234.4444', '000');  
+    function showIndicator(val) {
+        if (val == true) {
+            document.getElementById("contact_user_indicator").style.display = "block";
+            setSubtitle("online");
+        }
+        else {
+            document.getElementById("contact_user_indicator").style.display = "none";
+            setSubtitle("offline");
+        }
+    }
+
+    function setSubtitle(stat) {
+        document.getElementById("subtitle").innerHTML = stat;
+        document.getElementById("subtitle2").innerHTML = stat;
+    }
     
 </script>
     
