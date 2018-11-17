@@ -10,6 +10,7 @@ namespace SPIXI
 {
     public enum StreamMessageCode
     {
+        error,
         chat,
         getNick,
         nick,
