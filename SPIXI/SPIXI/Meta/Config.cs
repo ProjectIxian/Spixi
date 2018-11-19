@@ -37,6 +37,8 @@ namespace DLT
 
             // internal
             public static bool changePass = false;
+            public static int forceTimeOffset = int.MaxValue;
+
 
             private static Config singletonInstance;
             private Config()
