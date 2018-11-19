@@ -215,12 +215,15 @@ namespace SPIXI
 
                         StreamProcessor.sendMessage(message, node_ip);*/
 
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
+
+
             StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.chat;
+            message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
-            message.data = Encoding.UTF8.GetBytes(str);
+            message.data = spixi_message.getBytes();
 
             string relayip = friend.searchForRelay();
             StreamProcessor.sendMessage(message, relayip);
@@ -239,12 +242,14 @@ namespace SPIXI
         {
             friend.approved = true;
 
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, new byte[1]);
+
             StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.acceptAdd;
+            message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
-            message.data = new byte[1];
+            message.data = spixi_message.getBytes();
 
             string relayip = friend.searchForRelay();
             StreamProcessor.sendMessage(message, relayip);

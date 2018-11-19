@@ -128,7 +128,7 @@ namespace SPIXI
             }
             catch(Exception e)
             {
-                Logging.error("Exception looking up random stream node: " + e);
+                Logging.error("Exception looking up random stream node: " + e.Message);
                 return;
             }
 

@@ -85,8 +85,6 @@ namespace SPIXI.Wallet
                 Address addr = new Address(publicKey);
                 address = addr.address;
 
-
-
             }
             catch (IOException e)
             {

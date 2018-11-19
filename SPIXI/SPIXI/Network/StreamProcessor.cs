@@ -221,48 +221,56 @@ namespace SPIXI
             Logging.info(string.Format("Receiving S2 data "));
 
             StreamMessage message = new StreamMessage(bytes);
-
-            switch(message.type)
+            if(message.data == null)
             {
-                case StreamMessageCode.chat:
+                Logging.error(string.Format("Null message data."));
+                return;
+            }
+
+            // Extract the Spixi message
+            SpixiMessage spixi_message = new SpixiMessage(message.data);
+
+            switch(spixi_message.type)
+            {
+                case SpixiMessageCode.chat:
                     {
                         // Add the message to the friend list
-                        FriendList.addMessage(message.sender, Encoding.UTF8.GetString(message.data));
+                        FriendList.addMessage(message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
-                case StreamMessageCode.getNick:
+                case SpixiMessageCode.getNick:
                     {
                         // Send the nickname to the sender as requested
-                        handleGetNick(message.sender, Encoding.UTF8.GetString(message.data));
+                        handleGetNick(message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
-                case StreamMessageCode.nick:
+                case SpixiMessageCode.nick:
                     {
                         // Set the nickname for the corresponding address
-                        FriendList.setNickname(message.sender, Encoding.UTF8.GetString(message.data));
+                        FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
-                case StreamMessageCode.requestAdd:
+                case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
                         handleRequestAdd(message.sender);
                     }
                     break;
 
-                case StreamMessageCode.acceptAdd:
+                case SpixiMessageCode.acceptAdd:
                     {
                         // Friend accepted request
                         handleAcceptAdd(message.sender);
                     }
                     break;
 
-                case StreamMessageCode.requestFunds:
+                case SpixiMessageCode.requestFunds:
                     {
                         // Friend requested funds
-                        handleRequestFunds(message.sender, Encoding.UTF8.GetString(message.data));
+                        handleRequestFunds(message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
             }
@@ -289,27 +297,31 @@ namespace SPIXI
                 friend = new Friend(sender_wallet, pub_k, "Unknown");
                 FriendList.addFriend(sender_wallet, pub_k, "Unknown");
 
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getNick, new byte[1]);
+
                 // Also request the nickname of the sender
                 // Prepare the message and send to the S2 nodes
                 StreamMessage message = new StreamMessage();
-                message.type = StreamMessageCode.getNick;
+                message.type = StreamMessageCode.info;
                 message.recipient = sender_wallet;
                 message.transaction = new byte[1];
                 message.sigdata = new byte[1];
-                message.data = new byte[1];
+                message.data = spixi_message.getBytes();
 
                 string relayip = friend.searchForRelay();
                 StreamProcessor.sendMessage(message, relayip);
 
             }
 
+            SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
+
             // Send the nickname message to the S2 nodes
             StreamMessage reply_message = new StreamMessage();
-            reply_message.type = StreamMessageCode.nick;
+            reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
             reply_message.transaction = new byte[1];
             reply_message.sigdata = new byte[1];
-            reply_message.data = Encoding.UTF8.GetBytes(Node.localStorage.nickname);
+            reply_message.data = reply_spixi_message.getBytes();
             StreamProcessor.sendMessage(reply_message, friend.searchForRelay());
 
             return;
@@ -356,13 +368,14 @@ namespace SPIXI
 
                 // Also request the nickname of the sender
                 // Prepare the message and send to the S2 nodes
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getNick, new byte[1]);
 
                 StreamMessage message = new StreamMessage();
-                message.type = StreamMessageCode.getNick;
+                message.type = StreamMessageCode.info;
                 message.recipient = friend.walletAddress;
                 message.transaction = new byte[1];
                 message.sigdata = new byte[1];
-                message.data = new byte[1];
+                message.data = spixi_message.getBytes();
 
                 string relayip = friend.searchForRelay();
                 StreamProcessor.sendMessage(message, relayip);
@@ -370,13 +383,15 @@ namespace SPIXI
 
             }
 
+            SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
+
             // Send the nickname message to the S2 nodes
             StreamMessage reply_message = new StreamMessage();
-            reply_message.type = StreamMessageCode.nick;
+            reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
             reply_message.transaction = new byte[1];
             reply_message.sigdata = new byte[1];
-            reply_message.data = Encoding.UTF8.GetBytes(Node.localStorage.nickname);
+            reply_message.data = reply_spixi_message.getBytes();
             StreamProcessor.sendMessage(reply_message, friend.searchForRelay());
 
         }

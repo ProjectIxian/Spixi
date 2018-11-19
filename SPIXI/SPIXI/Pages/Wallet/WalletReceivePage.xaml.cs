@@ -98,12 +98,14 @@ namespace SPIXI
                 return;
             }
 
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
+
             StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.requestFunds;
+            message.type = StreamMessageCode.info;
             message.recipient = local_friend.walletAddress;
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
-            message.data = Encoding.UTF8.GetBytes(amount);
+            message.data = spixi_message.getBytes();
 
             string relayip = local_friend.searchForRelay();
             StreamProcessor.sendMessage(message, relayip);
