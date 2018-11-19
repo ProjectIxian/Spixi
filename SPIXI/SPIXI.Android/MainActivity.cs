@@ -33,6 +33,8 @@ namespace SPIXI.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
 
+            DLT.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
+
             prepareBackgroundService();
         }
 
