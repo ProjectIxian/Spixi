@@ -22,8 +22,8 @@ namespace SPIXI
         {
             streamClients = new List<StreamClient>();
 
-
-       //     connectTo(Config.testS2Node);
+            // Public DEMO S2 node address: 209.141.49.106 port 11235
+            // connectTo("209.141.49.106:11235");
 
             // Start the reconnect thread
             reconnectThread = new Thread(reconnectClients);
@@ -105,23 +105,31 @@ namespace SPIXI
         {
             string neighbor = null;
 
-            lock (PresenceList.presences)
+            try
             {
-                // Go through each presence again. This should be more optimized.
-                foreach (Presence s2presence in PresenceList.presences)
+                lock (PresenceList.presences)
                 {
-                    // Go through each single address
-                    foreach (PresenceAddress s2addr in s2presence.addresses)
+                    // Go through each presence again. This should be more optimized.
+                    foreach (Presence s2presence in PresenceList.presences)
                     {
-                        // Only check if it's a Relay node
-                        if (s2addr.type == 'R' )
+                        // Go through each single address
+                        foreach (PresenceAddress s2addr in s2presence.addresses)
                         {
-                            // We found our s2 node
-                            neighbor = s2addr.address;
-                            break;
+                            // Only check if it's a Relay node
+                            if (s2addr.type == 'R')
+                            {
+                                // We found our s2 node
+                                neighbor = s2addr.address;
+                                break;
+                            }
                         }
                     }
-                }                               
+                }
+            }
+            catch(Exception e)
+            {
+                Logging.error("Exception looking up random stream node: " + e);
+                return;
             }
 
             if (neighbor != null)
