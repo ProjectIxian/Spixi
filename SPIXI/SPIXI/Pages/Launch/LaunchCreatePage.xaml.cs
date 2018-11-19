@@ -118,11 +118,18 @@ namespace SPIXI
             {
                 Thread.CurrentThread.IsBackground = true;
 
+                // Aquire the wake lock
+                bool wake_lock = DependencyService.Get<IPowerManager>().AquireLock();
+
                 if (Node.generateWallet())
                 {
                     // DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
                     Node.localStorage.nickname = nick;
                     Node.localStorage.writeAccountFile();
+
+                    // Release the wake lock
+                    if(wake_lock)
+                        DependencyService.Get<IPowerManager>().ReleaseLock();
 
                     Device.BeginInvokeOnMainThread(() => {
                         Navigation.PushAsync(new HomePage());
@@ -131,6 +138,10 @@ namespace SPIXI
                 }
                 else
                 {
+                    // Release the wake lock
+                    if (wake_lock)
+                        DependencyService.Get<IPowerManager>().ReleaseLock();
+
                     Device.BeginInvokeOnMainThread(() => {
                         DisplayAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
                     });

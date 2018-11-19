@@ -94,6 +94,7 @@
     <Compile Include="Classes\BaseUrl.cs" />
     <Compile Include="Classes\PictureiOS.cs" />
     <Compile Include="Classes\PicturePickerImplementation.cs" />
+    <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\SpixiContentPageRenderer.cs" />
     <Compile Include="Classes\SpixiWebViewRenderer .cs" />
     <Compile Include="Main.cs" />
