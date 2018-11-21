@@ -304,6 +304,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;
                 message.recipient = sender_wallet;
+                message.sender = Node.walletStorage.address;
                 message.transaction = new byte[1];
                 message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
@@ -319,6 +320,7 @@ namespace SPIXI
             StreamMessage reply_message = new StreamMessage();
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
+            reply_message.sender = Node.walletStorage.address;
             reply_message.transaction = new byte[1];
             reply_message.sigdata = new byte[1];
             reply_message.data = reply_spixi_message.getBytes();
@@ -373,6 +375,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;
                 message.recipient = friend.walletAddress;
+                message.sender = Node.walletStorage.address;
                 message.transaction = new byte[1];
                 message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
@@ -389,6 +392,7 @@ namespace SPIXI
             StreamMessage reply_message = new StreamMessage();
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
+            reply_message.sender = Node.walletStorage.address;
             reply_message.transaction = new byte[1];
             reply_message.sigdata = new byte[1];
             reply_message.data = reply_spixi_message.getBytes();

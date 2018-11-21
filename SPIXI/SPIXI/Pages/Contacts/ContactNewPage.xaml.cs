@@ -11,6 +11,7 @@ using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
 using DLT;
 using DLT.Network;
+using DLT.Meta;
 
 namespace SPIXI
 {
@@ -158,6 +159,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = recipient_address;
+            message.sender = Node.walletStorage.address;
             message.data = spixi_message.getBytes();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];

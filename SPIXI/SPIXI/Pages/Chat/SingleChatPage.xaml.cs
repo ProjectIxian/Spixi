@@ -221,6 +221,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.address;
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
@@ -247,6 +248,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.address;
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
