@@ -163,7 +163,10 @@ namespace SPIXI.Wallet
             // Generate the private and public key pair
             try
             {
-                CryptoManager.lib.generateKeys(CoreConfig.defaultRsaKeySize);
+                if(!CryptoManager.lib.generateKeys(CoreConfig.defaultRsaKeySize))
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {

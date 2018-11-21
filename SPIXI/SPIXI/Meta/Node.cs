@@ -172,6 +172,10 @@ namespace DLT.Meta
         // Sends a single keepalive message
         public static void sendKeepAlive()
         {
+            if(walletStorage.privateKey == null)
+            {
+                return;
+            }
             try
             {
                 // Prepare the keepalive message

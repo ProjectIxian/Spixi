@@ -11,6 +11,8 @@ using Org.BouncyCastle.Crypto.Engines;
 using System.Security.Cryptography;
 using Java.Security;
 using Java.Security.Spec;
+using System.Text;
+using Javax.Crypto;
 
 namespace CryptoLibs
 {
@@ -33,106 +35,169 @@ namespace CryptoLibs
             privateKeyBytes = null;
         }
 
+        private Java.Math.BigInteger bigEndianToLittleEndian(byte[] input)
+        {
+            return new Java.Math.BigInteger(input.Prepend((byte)0).ToArray());
+        }
+
+        private byte[] littleEndianToBigEndian(Java.Math.BigInteger bigInt)
+        {
+            byte[] input = bigInt.ToByteArray();
+            if (input[0] == 0x00)
+            {
+                return input.Skip(1).ToArray();
+            }
+
+            return input;
+        }
+
         private byte[] rsaKeyToBytes(KeyPair rsaKey, bool includePrivateParameters)
         {
             List<byte> bytes = new List<byte>();
 
             KeyFactory kf = KeyFactory.GetInstance("RSA");
-            RSAPrivateCrtKeySpec rsaParams = null;
-            RSAPublicKeySpec rsaPubParams = null;
+            // the ToByteArray() function returns big-endian bytes, we need little-endian
             if (includePrivateParameters)
             {
-                rsaParams = (RSAPrivateCrtKeySpec)kf.GetKeySpec(rsaKey.Private, Java.Lang.Class.FromType(typeof(RSAPrivateCrtKeySpec)));
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.Modulus.ToByteArray().Length));
-                bytes.AddRange(rsaParams.Modulus.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PublicExponent.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PublicExponent.ToByteArray());
+                RSAPrivateCrtKeySpec rsaParams = (RSAPrivateCrtKeySpec)kf.GetKeySpec(rsaKey.Private, Java.Lang.Class.FromType(typeof(RSAPrivateCrtKeySpec)));
+                byte[] modulus = littleEndianToBigEndian(rsaParams.Modulus);
+                bytes.AddRange(BitConverter.GetBytes(modulus.Length));
+                bytes.AddRange(modulus);
 
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PrimeP.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PrimeP.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PrimeQ.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PrimeQ.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PrimeExponentP.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PrimeExponentP.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PrimeExponentQ.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PrimeExponentQ.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.CrtCoefficient.ToByteArray().Length));
-                bytes.AddRange(rsaParams.CrtCoefficient.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaParams.PrivateExponent.ToByteArray().Length));
-                bytes.AddRange(rsaParams.PrivateExponent.ToByteArray());
+                byte[] publicExponent = littleEndianToBigEndian(rsaParams.PublicExponent);
+                bytes.AddRange(BitConverter.GetBytes(publicExponent.Length));
+                bytes.AddRange(publicExponent);
+
+
+                byte[] primeP = littleEndianToBigEndian(rsaParams.PrimeP);
+                bytes.AddRange(BitConverter.GetBytes(primeP.Length));
+                bytes.AddRange(primeP);
+
+                byte[] primeQ = littleEndianToBigEndian(rsaParams.PrimeQ);
+                bytes.AddRange(BitConverter.GetBytes(primeQ.Length));
+                bytes.AddRange(primeQ);
+
+                byte[] primeExponentP = littleEndianToBigEndian(rsaParams.PrimeExponentP);
+                bytes.AddRange(BitConverter.GetBytes(primeExponentP.Length));
+                bytes.AddRange(primeExponentP);
+
+                byte[] primeExponentQ = littleEndianToBigEndian(rsaParams.PrimeExponentQ);
+                bytes.AddRange(BitConverter.GetBytes(primeExponentQ.Length));
+                bytes.AddRange(primeExponentQ);
+
+                byte[] crtCoefficient = littleEndianToBigEndian(rsaParams.CrtCoefficient);
+                bytes.AddRange(BitConverter.GetBytes(crtCoefficient.Length));
+                bytes.AddRange(crtCoefficient);
+
+                byte[] privateExponent = littleEndianToBigEndian(rsaParams.PrivateExponent);
+                bytes.AddRange(BitConverter.GetBytes(privateExponent.Length));
+                bytes.AddRange(privateExponent);
             }
             else
             {
-                rsaPubParams = (RSAPublicKeySpec)kf.GetKeySpec(rsaKey.Public, Java.Lang.Class.FromType(typeof(RSAPublicKeySpec)));
-                bytes.AddRange(BitConverter.GetBytes(rsaPubParams.Modulus.ToByteArray().Length));
-                bytes.AddRange(rsaPubParams.Modulus.ToByteArray());
-                bytes.AddRange(BitConverter.GetBytes(rsaPubParams.PublicExponent.ToByteArray().Length));
-                bytes.AddRange(rsaPubParams.PublicExponent.ToByteArray());
+                RSAPublicKeySpec rsaPubParams = (RSAPublicKeySpec)kf.GetKeySpec(rsaKey.Public, Java.Lang.Class.FromType(typeof(RSAPublicKeySpec)));
+                byte[] modulus = littleEndianToBigEndian(rsaPubParams.Modulus);
+                bytes.AddRange(BitConverter.GetBytes(modulus.Length));
+                bytes.AddRange(modulus);
+
+                byte[] publicExponent = littleEndianToBigEndian(rsaPubParams.PublicExponent);
+                bytes.AddRange(BitConverter.GetBytes(publicExponent.Length));
+                bytes.AddRange(publicExponent);
             }
 
             return bytes.ToArray();
         }
 
-        private RSACryptoServiceProvider rsaKeyFromBytes(byte [] keyBytes)
+        private KeyPair rsaKeyFromBytes(byte [] keyBytes)
         {
             try
             {
-                RSAParameters rsaParams = new RSAParameters();
 
                 int offset = 0;
                 int dataLen = 0;
 
                 dataLen = BitConverter.ToInt32(keyBytes, offset);
                 offset += 4;
-                rsaParams.Modulus = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                Java.Math.BigInteger modulus = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                 offset += dataLen;
 
                 dataLen = BitConverter.ToInt32(keyBytes, offset);
                 offset += 4;
-                rsaParams.Exponent = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                Java.Math.BigInteger exponent = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                 offset += dataLen;
+
+                RSAPrivateCrtKeySpec privKeySpec = null;
 
                 if (keyBytes.Length > offset)
                 {
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.P = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger P = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
 
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.Q = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger Q = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
 
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.DP = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger DP = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
 
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.DQ = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger DQ = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
 
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.InverseQ = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger InverseQ = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
 
                     dataLen = BitConverter.ToInt32(keyBytes, offset);
                     offset += 4;
-                    rsaParams.D = keyBytes.Skip(offset).Take(dataLen).ToArray();
+                    Java.Math.BigInteger D = bigEndianToLittleEndian(keyBytes.Skip(offset).Take(dataLen).ToArray());
                     offset += dataLen;
+                    privKeySpec = new RSAPrivateCrtKeySpec(modulus, exponent, D, P, Q, DP, DQ, InverseQ);
                 }
 
-                RSACryptoServiceProvider rcsp = new RSACryptoServiceProvider();
-                rcsp.ImportParameters(rsaParams);
-                return rcsp;
+                RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(modulus, exponent);
+
+                KeyFactory keyFactory = KeyFactory.GetInstance("RSA");
+                IPublicKey pubKey = keyFactory.GeneratePublic(pubKeySpec);
+                IPrivateKey privKey = null;
+                if (privKeySpec != null)
+                {
+                    privKey = keyFactory.GeneratePrivate(privKeySpec);
+                }
+
+                return new KeyPair(pubKey, privKey);
             }catch(Exception)
             {
                 Logging.warn("An exception occured while trying to reconstruct PKI from bytes");
             }
             return null;
+        }
+        
+        public bool testKeys(byte[] plain)
+        {
+            byte[] encrypted = encryptWithRSA(plain, publicKeyBytes);
+            byte[] signature = getSignature(plain, privateKeyBytes);
+
+            if (!verifySignature(plain, publicKeyBytes, signature))
+            {
+                Logging.warn(string.Format("Error verifying signatures while testing keys."));
+                return false;
+            }
+
+            if (!decryptWithRSA(encrypted, privateKeyBytes).SequenceEqual(plain))
+            {
+                Logging.warn(string.Format("Error decrypting data while testing keys."));
+                return false;
+            }
+
+            return true;
         }
 
         // Generates keys for RSA signing
@@ -146,9 +211,19 @@ namespace CryptoLibs
                 kp = kpg.GenKeyPair();
                 privateKeyBytes = rsaKeyToBytes(kp, true);
                 publicKeyBytes = rsaKeyToBytes(kp, false);
+
+                byte[] plain = Encoding.UTF8.GetBytes("Plain text string");
+                if (!testKeys(plain))
+                {
+                    privateKeyBytes = null;
+                    publicKeyBytes = null;
+                    return false;
+                }
             }
             catch (Exception e)
             {
+                privateKeyBytes = null;
+                publicKeyBytes = null;
                 Logging.warn(string.Format("Exception while generating signature keys: {0}", e.ToString()));
                 return false;
             }
@@ -169,9 +244,12 @@ namespace CryptoLibs
         {
             try
             {
-                RSACryptoServiceProvider rsa = rsaKeyFromBytes(privateKey);
+                KeyPair kp = rsaKeyFromBytes(privateKey);
 
-                byte[] signature = rsa.SignData(input_data, CryptoConfig.MapNameToOID("SHA512"));
+                Signature sig = Signature.GetInstance("SHA512withRSA");
+                sig.InitSign(kp.Private);
+                sig.Update(input_data);
+                byte[] signature = sig.Sign();
                 return signature;
             }
             catch (Exception e)
@@ -186,10 +264,12 @@ namespace CryptoLibs
             try
             {
 
-                RSACryptoServiceProvider rsa = rsaKeyFromBytes(publicKey);
+                KeyPair kp = rsaKeyFromBytes(publicKey);
 
-                byte[] signature_bytes = signature;
-                return rsa.VerifyData(input_data, CryptoConfig.MapNameToOID("SHA512"), signature_bytes);
+                Signature sig = Signature.GetInstance("SHA512withRSA");
+                sig.InitVerify(kp.Public);
+                sig.Update(input_data);
+                return sig.Verify(signature);
             }
             catch (Exception e)
             {
@@ -201,16 +281,20 @@ namespace CryptoLibs
         // Encrypt data using RSA
         public byte[] encryptWithRSA(byte[] input, byte[] publicKey)
         {
-            RSACryptoServiceProvider rsa = rsaKeyFromBytes(publicKey);
-            return rsa.Encrypt(input, false);
+            KeyPair kp = rsaKeyFromBytes(publicKey);
+            Cipher cipher = Cipher.GetInstance("RSA/None/PKCS1Padding");
+            cipher.Init(Javax.Crypto.CipherMode.EncryptMode, kp.Public);
+            return cipher.DoFinal(input);
         }
 
 
         // Decrypt data using RSA
         public byte[] decryptWithRSA(byte[] input, byte[] privateKey)
         {
-            RSACryptoServiceProvider rsa = rsaKeyFromBytes(privateKey);
-            return rsa.Decrypt(input, false);
+            KeyPair kp = rsaKeyFromBytes(privateKey);
+            Cipher cipher = Cipher.GetInstance("RSA/None/PKCS1Padding");
+            cipher.Init(Javax.Crypto.CipherMode.DecryptMode, kp.Private);
+            return cipher.DoFinal(input);
         }
 
         // Encrypt data using AES
@@ -367,7 +451,7 @@ namespace CryptoLibs
 
         public byte[] generateChildKey(byte[] parentKey, int seed = 0)
         {
-            RSACryptoServiceProvider origRsa = rsaKeyFromBytes(parentKey);
+            /*RSACryptoServiceProvider origRsa = rsaKeyFromBytes(parentKey);
             if(origRsa.PublicOnly)
             {
                 Logging.error("Child key cannot be generated from a public key! Private key is also required.");
@@ -398,7 +482,7 @@ namespace CryptoLibs
             AsymmetricCipherKeyPair keyPair = keyGen.GenerateKeyPair();
             //
             RSACryptoServiceProvider newRsa = (RSACryptoServiceProvider)DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)keyPair.Private);
-            //return rsaKeyToBytes(newRsa, true);
+            return rsaKeyToBytes(newRsa, true);*/
             return null;
         }
 
