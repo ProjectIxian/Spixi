@@ -122,6 +122,10 @@ namespace SPIXI
              //   prepBackground();
                 Navigation.PushAsync(new SetLockPage());
             }
+            else if (current_url.Equals("ixian:activity", StringComparison.Ordinal))
+            {
+                // TODO show wallet activity screen
+            }
             else if (current_url.Equals("ixian:about", StringComparison.Ordinal))
             {
                 Device.OpenUri(new Uri(Config.aboutUrl));
