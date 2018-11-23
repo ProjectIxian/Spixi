@@ -203,6 +203,7 @@ img {
 }
 
 .status_bottom {
+    padding-left: 0px;
     padding-top: 10px;
     font-size: 85%;
     font-style: italic;
@@ -244,11 +245,10 @@ img {
 .recent_activity_bar {
     width: 100%;
     height: 28px;
-    background: #303649;
-    color: #FFF;  
+    background: #303549;
+    color: #FFF;
     font-style: normal;
     font-weight: 400;
-    
     padding-top: 4px;
     font-size: 100%;
     border-bottom: 1pt solid #B8B8B8;

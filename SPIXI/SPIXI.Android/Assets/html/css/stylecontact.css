@@ -34,16 +34,15 @@
 
 .contact_user_avatar {
     position: absolute;
-    left: 25;
-    top: 75;
+    left: 25px;
+    top: 75px;
     width: 80px;
     height: 80px;
 }
 
 .contact_description {
-    height: 188px;
-    
-    background-color: #2f3342;
+    height: 265px;
+    background-color: #1a2030;
     color: #FFF;
     font-size: 100%;
     font-weight: 100;
@@ -90,8 +89,8 @@
 
 .action_line {
     position: absolute;
-    right:10px;
-    top:115px;
+    left: 25px;
+    top: 170px;
     width: 230px;
     height: 1px;
     background-color: #3F3F4D;
@@ -99,17 +98,15 @@
 
 .action_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_chat.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-    
     position: absolute;
-    right:170px;
-    top:115px;
+    left: 15px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
     text-align: center;
     text-transform: uppercase;
@@ -117,35 +114,31 @@
 
 .request_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_request.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-    
     position: absolute;
-    right:90px;
-    top:115px;
+    left: 95px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
-    text-align: center;  
+    text-align: center;
     text-transform: uppercase;
 }
 
 .send_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_send.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-
     position: absolute;
-    right:10px;
-    top:115px;
+    left: 175px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
     text-align: center;
     text-transform: uppercase;
