@@ -200,6 +200,7 @@ img {
 .status_dbalance {
     font-size: 210%;
     color: #F3F3F3;
+    padding-left: 0px;
 }
 
 .status_bottom {
@@ -210,6 +211,7 @@ img {
     color: #B8BABE;
 }
 .wallet_status_bottom {
+    padding-left: 0px;
     font-size: 85%;
     font-style: italic;
     color: #B8BABE;
