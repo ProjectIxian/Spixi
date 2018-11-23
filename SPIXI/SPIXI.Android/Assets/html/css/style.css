@@ -198,9 +198,10 @@ img {
 }
 
 .status_dbalance {
-    font-size: 210%;
+    font-size: 170%;
     color: #F3F3F3;
     padding-left: 0px;
+    padding-top: 3px;
 }
 
 .status_bottom {
