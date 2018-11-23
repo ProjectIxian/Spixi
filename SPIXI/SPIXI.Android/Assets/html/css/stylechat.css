@@ -361,9 +361,10 @@ body {
     margin-right: 85px;
     margin-bottom: 20px;
     padding: 15px;
-    padding-top: 5px;
+    padding-top: 10px;
     min-width: 80px;
-    
+    padding-bottom: 25px;    
+
     animation-name: chat_animation;
     animation-duration: 0.3s;     
 }
@@ -382,6 +383,7 @@ body {
 .from-them .time,
 .from-me .time
 {
+    padding-top: 5px;
     font-size: 10px;
     color: #A0A0A0;
     z-index: 4;
@@ -507,12 +509,12 @@ body {
 }
 
 .request_bar_ignore {
-    width: 130px;
+    width: 120px;
     position: absolute;
     left: 80px;
-    padding-top: 6px;
+    padding-top: 10px;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     height: 37px;
     background-color: #5D90B2;
     border: solid 2px #FFFFFF;
@@ -521,12 +523,12 @@ body {
 }
 
 .request_bar_accept {
-    width: 130px;
+    width: 120px;
     position: absolute;
-    left: 220px;
-    padding-top: 6px;
+    left: 210px;
+    padding-top: 10px;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
     height: 37px;
     background-color: #5D90B2;
     border: solid 2px #FFFFFF;
@@ -538,6 +540,7 @@ body {
     width: 18px;
     height: 18px;
     margin-right: 5px;
+    margin-top: -5px;
 }
 
 /*
