@@ -166,11 +166,13 @@
                 document.getElementById("chat_input").focus();
                 if(attachMode == true)
                 {
+                    document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon.png')";
                     attachMode = false;
                     hideAttach();
                 }
                 else 
                 {
+                    document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon_active.png')";
                     attachMode = true;
                     showAttach();
                 }    

@@ -82,6 +82,7 @@
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\.DS_Store" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
@@ -229,6 +230,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\AttachFile_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\AttachFile_icon_active.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\Avatar_bck.png" />
