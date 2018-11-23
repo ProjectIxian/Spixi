@@ -24,24 +24,29 @@
     <div class="toolbarholder">
     </div>
     
+
+    
     <div id="req_from">
-        <div id="subtitle" class="wallet_subtitle">Payment sent to</div>
+        <div class="recent_activity_bar">
+            <div id="subtitle" class="col-xs-12">Payment sent to</div>
+        </div>
         <div class="wallet_from_holder">
             <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
             <div class="col-xs-10 wallet_from_text" id="wallet_from_text"><b></b><br /></div>
         </div>
     </div>
     
-    <hr class="wallet_hr" />
-    <div id="amount_label" class="settings_subtitle" style="margin-top: -5px;">Amount sent</div>
+    <div id="amount_label" class="recent_activity_bar">
+            <div class="col-xs-12">Amount sent</div>
+    </div>
+    
         <div class="wallet_from_holder">
-            <div class="col-xs-2 wallet_from_avatar"><img src="img/SendIXI_icon_blue.png" style="width:30px;height:25px;" /></div>
+            <div class="col-xs-2 wallet_from_avatar"><img src="img/SendIXI_icon_blue.png" style="width:31px;height:25px;margin-top: 4px;" /></div>
             <div id="sent_amount" class="col-xs-10 sent_amount"></div>           
         </div>
-    <hr class="wallet_hr" />
     <div class="settings_subtitle" style="margin-top: -5px;">Status</div>
     <div class="unconfirmed_status" id="sent_status">UNCONFIRMED</div> 
-    <hr class="wallet_hr2" style="margin-top: 19px;" />
+    <hr class="wallet_hr" style="margin-top: 19px;" />
     <div class="settings_subtitle" style="margin-top: -5px;">Date and time</div>
     <div class="settings_desc2" id="time_sent"></div>
     <hr class="wallet_hr" />
@@ -89,7 +94,7 @@
         document.getElementById('sent_status').className = "sent_status";
     }
 
-    setConfirmedData("224,5000", "Me", "Nick", "15/02/2018");
+    //setConfirmedData("224,5000", "Me", "Nick", "15/02/2018");
 
 </script>
     
