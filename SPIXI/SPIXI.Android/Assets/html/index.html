@@ -498,7 +498,7 @@
                     icon_name = "Sent_icon.png";
                 }
                 
-                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></div></a>';
+                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+amount+'</div> <div class="col-xs-4 ptime">'+timestamp+'</div></div></a>';
                 
                 paymentsNode.appendChild(payment);
                 

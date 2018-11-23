@@ -418,6 +418,18 @@ img {
     border-top-color: #E6E6E6;
 }
 
+.ptime {
+    padding-top: 6px;
+    font-size: 12px;
+    text-align: right;
+    
+    color: #8C8C8C;
+    
+    border-top: 2px;
+    border-top-style: solid;
+    border-top-color: #E6E6E6;
+}
+
 .pamount {
     padding-top: 13px;
     text-align: right;
