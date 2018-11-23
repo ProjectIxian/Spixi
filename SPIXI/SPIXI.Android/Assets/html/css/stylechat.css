@@ -2,6 +2,7 @@ body {
     font-family:'Roboto', sans-serif;
     font-size: 14px;
     font-weight: normal;
+    background: #EEE;
 }
 
 #bg {
@@ -143,7 +144,7 @@ body {
     bottom: 0;   
     height: 55px;
     background-color: #F3F3F3;
-    border-top: 2px solid #719EBB;
+    border-top: 2px solid #5591b3;
 }
 
 #chatattachbar {
@@ -389,7 +390,8 @@ body {
 
 .from-me .time
 {
-    float: right;
+    text-align: right;
+    right: 15px;
 }
             
 .from-me .avatar,
