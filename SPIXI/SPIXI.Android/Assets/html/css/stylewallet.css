@@ -24,12 +24,11 @@
 
 .wallet_from_holder {
     padding-top: 14px;
-    height: 48px;
+    height: 73px;
 }
 
 .wallet_from_avatar {
     padding-top: 0px;
-    padding-left: 20px;   
 }
 
 .wallet_from_text {
@@ -307,12 +306,11 @@
 }
 
 .request_decline {
-    float:left;
+    float: left;
     width: 150px;
     height: 36px;
     margin-left: 30px;
-    color: #FFF;
-    background-color: #E20065;
+    color: #E20065;
     text-align: center;
     outline: none;
     text-decoration: none;
@@ -322,13 +320,18 @@
     border-radius: 20px;
 }
 
+.request_decline:hover,
+.request_decline:active {
+    background-color: #E20065;
+    color: #FFF;
+}
+
 .request_proceed {
-    float:right;
+    float: right;
     width: 150px;
     height: 36px;
     margin-right: 30px;
-    color: #FFF;
-    background-color: #398FD8;
+    color: #398FD8;
     text-align: center;
     outline: none;
     text-decoration: none;
@@ -338,6 +341,11 @@
     border-radius: 20px;
 }
 
+.request_proceed:hover,
+.request_proceed:active {
+    background-color: #398FD8;
+    color: #FFF;
+}
 
 .button {
     width: 80%;

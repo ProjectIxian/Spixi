@@ -15,50 +15,49 @@
 </head>
     
 <body>
-<div id="wrap" class="container-fluid noselect">
-    
-    <div id="toolbar" class="toolbar">
-        <div id="backbtn" class="toolbar_back"></div>
-        <div class="toolbar_text" id="title">Payment Request</div>
-    </div>
-    <div class="toolbarholder">
-    </div>
-    
-    <div id="req_from">
-        <div class="wallet_subtitle">Recipient</div>
-        <div class="wallet_from_holder">
-            <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
-            <div id="from_text" class="col-xs-10 wallet_from_text"><b></b><br /></div>
+    <div id="wrap" class="container-fluid noselect">
+
+        <div id="toolbar" class="toolbar">
+            <div id="backbtn" class="toolbar_back"></div>
+            <div class="toolbar_text" id="title">Payment Request</div>
         </div>
-    </div>
-    
-    <hr class="wallet_hr" />
-    <div class="settings_subtitle" style="margin-top: -5px;">Requested amount</div>
+        <div class="toolbarholder">
+        </div>
+
+        <div id="req_from">
+            <div class="recent_activity_bar"><div class="col-xs-12">Recipient</div></div>
+            <div class="wallet_from_holder">
+                <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
+                <div id="from_text" class="col-xs-10 wallet_from_text"><b></b><br /></div>
+            </div>
+        </div>
+
+        <div class="recent_activity_bar"><div class="col-xs-12">Requested amount</div></div>
         <div class="wallet_from_holder">
             <div class="col-xs-2 wallet_from_avatar"><img src="img/SendIXI_icon_blue.png" style="width:32px;height:25px;margin-top: 5px;" /></div>
             <div id="sent_amount" class="col-xs-10 sent_amount"></div>
         </div>
 
-    <hr class="wallet_hr" />
-    <div class="settings_subtitle" style="margin-top: -5px;">Date and time</div>
-    <div id="date_text" class="settings_desc2"></div>
-    <hr class="wallet_hr" />
-   
-    
-    <div class="request_button_area">
-        <a href="ixian:back"><div class="request_decline">DECLINE REQUEST</div></a>
-        <a href="ixian:send"><div class="request_proceed">PROCEED TO PAYMENT</div></a>
+        <div class="settings_desc2">User has requested a payment for this amount.</div>
+
+        <div id="date_text" class="settings_desc2"></div>
+        <hr class="wallet_hr" />
+
+
+        <div class="request_button_area">
+            <a href="ixian:back"><div class="request_decline">DECLINE REQUEST</div></a>
+            <a href="ixian:send"><div class="request_proceed">PROCEED TO PAYMENT</div></a>
+        </div>
+
+        <div class="spixi_notification" style="display: none;">
+            <div class="spixi_notification_avatar"><img src="avatar.png" /></div>
+            <div class="spixi_notification_title">Chat</div>
+            <div class="spixi_notification_line"></div>
+            <div class="spixi_notification_subtitle">New message received.</div>
+            <a href="ixian:closenotif"><div class="spixi_notification_close"></div></a>
+        </div>
+
     </div>
-        
-    <div class="spixi_notification" style="display: none;">
-        <div class="spixi_notification_avatar"><img src="avatar.png"/></div>
-        <div class="spixi_notification_title">Chat</div>
-        <div class="spixi_notification_line"></div>
-        <div class="spixi_notification_subtitle">New message received.</div>
-        <a href="ixian:closenotif"><div class="spixi_notification_close"></div></a>
-    </div>
-    
-</div>
 
 <script type="text/javascript">
     
