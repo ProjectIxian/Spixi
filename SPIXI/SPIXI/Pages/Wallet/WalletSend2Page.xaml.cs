@@ -31,7 +31,7 @@ namespace SPIXI
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/wallet_send_2.html", DependencyService.Get<IBaseUrl>().Get());
+            source.Url = string.Format("{0}html/wallet_send.html", DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
         }
 

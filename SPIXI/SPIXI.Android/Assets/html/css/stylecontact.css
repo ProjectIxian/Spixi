@@ -51,8 +51,8 @@
 
 .contact_user_indicator {
     position: absolute;
-    left: 140px;
-    top:70px;
+    left: 80px;
+    top: 130px;
     
     width: 21px;
     height: 21px; 
@@ -65,18 +65,18 @@
 .contact_user_name {
     color: #FFF;
     position: absolute;
-    left: 170px;
-    top:70px;
+    left: 130px;
+    top:95px;
     font-size: 18px; 
+    font-weight: bold;
 }
 
 .contact_user_subtitle {
     color: #FFF;
     position: absolute;
-    left: 170px;
-    top:94px;
+    left: 130px;
+    top:120px;
     font-size: 11px; 
-    font-style: italic;
 }
 
 .contact_actions {
@@ -109,7 +109,6 @@
     padding-top: 48px;
     font-size: 12px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 .request_chat {
@@ -125,7 +124,6 @@
     padding-top: 48px;
     font-size: 12px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 .send_chat {
@@ -141,7 +139,6 @@
     padding-top: 48px;
     font-size: 12px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 
@@ -154,9 +151,8 @@
 
     padding-top: 14px;
     padding-left: 90px;
-    color: #C90000;
+    color: #c10c53;
     font-weight: 800;
-    font-style: italic;
     font-size: 14px;
     
     background-image: url('../img/error.png');
@@ -170,9 +166,8 @@
     padding-top: 14px;
     padding-left: 90px;
     font-size: 14px;
-    color: #C90000;
+    color: #c10c53;
     font-weight: 800;
-    font-style: italic;
     background-image: url('../img/historyDelete_icon.png');
     background-repeat: no-repeat;
     background-size: 24px 20px;

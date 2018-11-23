@@ -96,7 +96,9 @@
 }
 
 .wallet_current_address {
-    margin-left: 15px;
+    margin-left: 0px;
+    padding-left: 15px;
+    box-sizing: border-box;
     color: #E31A70;
     margin-top: 7px;
     overflow: hidden;

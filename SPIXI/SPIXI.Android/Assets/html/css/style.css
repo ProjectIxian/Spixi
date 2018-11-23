@@ -283,7 +283,8 @@ img {
 #wallet_quickbuttons .col-xs-3
 {
     width: auto;
-    padding-right: 20px;
+    padding: 0px;
+    margin: 0px;
 }
 
 
