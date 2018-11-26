@@ -246,7 +246,7 @@ namespace SPIXI
                     if (split.Count() > 1)
                     {
                         byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);                       
-                        Navigation.PushAsync(new WalletSend2Page(wallet_to_send, true));
+                        Navigation.PushAsync(new WalletSendPage(wallet_to_send));
                         return;
                     }
 

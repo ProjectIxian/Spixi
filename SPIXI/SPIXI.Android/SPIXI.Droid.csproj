@@ -168,9 +168,6 @@
     <AndroidAsset Include="Assets\html\wallet_send.html" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\wallet_send_2.html" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\wallet_sent.html" />
   </ItemGroup>
   <ItemGroup>

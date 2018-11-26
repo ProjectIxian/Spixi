@@ -19,10 +19,25 @@ namespace SPIXI
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletSendPage : SpixiContentPage
 	{
-		public WalletSendPage ()
+        private byte[] recipient = null;
+
+        public WalletSendPage ()
 		{
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
+
+            // Load the platform specific home page url
+            var source = new UrlWebViewSource();
+            source.Url = string.Format("{0}html/wallet_send.html", DependencyService.Get<IBaseUrl>().Get());
+            webView.Source = source;
+        }
+
+        public WalletSendPage(byte[] wal)
+        {
+            InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            recipient = wal.ToArray();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -34,18 +49,18 @@ namespace SPIXI
         {
             webView.Eval(string.Format("setBalance('{0}')", Node.balance.ToString()));
 
+            // If we have a pre-set recipient, fill out the recipient wallet address and nickname
+            if (recipient != null)
+            {
+                string nickname = "Unknown";
 
-            /*         webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
+                Friend friend = FriendList.getFriend(recipient);
+                if (friend != null)
+                    nickname = friend.nickname;
 
-                     // Check if this page is accessed from the home wallet
-                     if (local_friend == null)
-                     {
-                         webView.Eval("hideRequest()");
-                     }
-                     else
-                     {
-                         webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", local_friend.wallet_address, local_friend.nickname));
-                     }*/
+                webView.Eval(string.Format("setRecipient('{0}','{1}')",
+                    Base58Check.Base58CheckEncoding.EncodePlain(recipient), nickname));
+            }
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

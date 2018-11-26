@@ -296,7 +296,6 @@
     <Content Include="html\wallet_recipient.html" />
     <Content Include="html\wallet_request.html" />
     <Content Include="html\wallet_send.html" />
-    <Content Include="html\wallet_send_2.html" />
     <Content Include="html\wallet_sent.html" />
   </ItemGroup>
 </Project>

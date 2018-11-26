@@ -97,7 +97,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSend2Page(friend.walletAddress, true));
+                Navigation.PushAsync(new WalletSendPage(friend.walletAddress));
             }
             else if (current_url.Equals("ixian:chat", StringComparison.Ordinal))
             {
