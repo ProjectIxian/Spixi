@@ -107,6 +107,10 @@ namespace DLT.Meta
             // TODO: optimize this by using a different thread perhaps
             PresenceList.performCleanup();
 
+
+            if (Node.walletStorage.address == null)
+                return;
+
             // Request wallet balance
             using (MemoryStream mw = new MemoryStream())
             {
