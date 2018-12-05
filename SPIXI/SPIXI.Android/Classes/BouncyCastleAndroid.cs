@@ -185,15 +185,15 @@ namespace CryptoLibs
             byte[] encrypted = encryptWithRSA(plain, publicKeyBytes);
             byte[] signature = getSignature(plain, privateKeyBytes);
 
-            if (!verifySignature(plain, publicKeyBytes, signature))
-            {
-                Logging.warn(string.Format("Error verifying signatures while testing keys."));
-                return false;
-            }
-
             if (!decryptWithRSA(encrypted, privateKeyBytes).SequenceEqual(plain))
             {
                 Logging.warn(string.Format("Error decrypting data while testing keys."));
+                return false;
+            }
+
+            if (!verifySignature(plain, publicKeyBytes, signature))
+            {
+                Logging.warn(string.Format("Error verifying signatures while testing keys."));
                 return false;
             }
 
@@ -228,6 +228,13 @@ namespace CryptoLibs
                 return false;
             }
             return true;
+        }
+
+        public void importKeys(byte[] priv_key)
+        {
+            KeyPair rsa = rsaKeyFromBytes(priv_key);
+            privateKeyBytes = rsaKeyToBytes(rsa, true);
+            publicKeyBytes = rsaKeyToBytes(rsa, false);
         }
 
         public byte[] getPublicKey()
