@@ -39,11 +39,11 @@ namespace SPIXI
             
             if (current_url.Equals("ixian:create", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new LaunchCreatePage());
+                Navigation.PushAsync(new LaunchCreatePage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:restore", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new LaunchRestorePage());
+                Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
             }
             else
             {
@@ -57,12 +57,12 @@ namespace SPIXI
 
         public void onCreateAccount(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new LaunchCreatePage());
+            Navigation.PushAsync(new LaunchCreatePage(), Config.defaultXamarinAnimations);
         }
 
         public void onRestoreAccount(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new LaunchRestorePage());
+            Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using DLT.Meta;
+using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,7 @@ namespace SPIXI
         private void doUnlock(string pass)
         {
 
-            Navigation.PushAsync(new HomePage());
+            Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
         }
 

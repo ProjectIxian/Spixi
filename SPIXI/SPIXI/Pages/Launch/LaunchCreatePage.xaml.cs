@@ -38,7 +38,7 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             /*else if (current_url.Equals("ixian:create", StringComparison.Ordinal))
             {
@@ -56,7 +56,6 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
-                //Navigation.PushAsync(new LaunchRestorePage());
                 onChangeAvatarAsync(sender, e);
             }
             else
@@ -132,7 +131,7 @@ namespace SPIXI
                         DependencyService.Get<IPowerManager>().ReleaseLock();
 
                     Device.BeginInvokeOnMainThread(() => {
-                        Navigation.PushAsync(new HomePage());
+                        Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
                 }

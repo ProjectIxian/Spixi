@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using DLT.Meta;
+using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace SPIXI
             
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {

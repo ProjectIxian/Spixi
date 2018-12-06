@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using DLT.Meta;
 
 namespace SPIXI
 {
@@ -36,11 +37,11 @@ namespace SPIXI
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:restore", StringComparison.Ordinal))
             {
-                //Navigation.PushAsync(new LaunchRestorePage());
+                //Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
             }
             else
             {
@@ -59,7 +60,7 @@ namespace SPIXI
             //Navigation.PopAsync();
             //Navigation.PopAsync();
 
-            Navigation.PushAsync(new HomePage());
+            Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
         }
     }

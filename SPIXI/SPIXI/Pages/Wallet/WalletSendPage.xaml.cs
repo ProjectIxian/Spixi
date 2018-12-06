@@ -78,7 +78,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:pick", StringComparison.Ordinal))
             {
@@ -167,7 +167,7 @@ namespace SPIXI
                 ScannerPage.IsScanning = false;
 
                 Device.BeginInvokeOnMainThread(() => {
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
                     //DisplayAlert("New contact", result.Text, "OK");
 
                     if (result.Text.Contains(":ixi"))
@@ -220,7 +220,7 @@ namespace SPIXI
                 });
             };
 
-            await Navigation.PushAsync(ScannerPage);
+            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
         }
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
@@ -238,7 +238,7 @@ namespace SPIXI
 
         private void sendPayment(string wallet, string amount_string)
         {
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             // Create an ixian transaction and send it to the dlt network
             byte[] to = Base58Check.Base58CheckEncoding.DecodePlain(wallet);
@@ -256,7 +256,7 @@ namespace SPIXI
             TransactionCache.addUnconfirmedTransaction(transaction);
 
             // Show the payment details
-            Navigation.PushAsync(new WalletSentPage(transaction));
+            Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
         }
 
     }

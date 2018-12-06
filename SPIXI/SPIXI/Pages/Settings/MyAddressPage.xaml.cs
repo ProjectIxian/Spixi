@@ -47,7 +47,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else
             {

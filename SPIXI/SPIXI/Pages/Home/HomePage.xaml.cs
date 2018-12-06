@@ -95,15 +95,15 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new ContactNewPage());
+                Navigation.PushAsync(new ContactNewPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:sendixi", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage());
+                Navigation.PushAsync(new WalletSendPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:receiveixi", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletReceivePage());
+                Navigation.PushAsync(new WalletReceivePage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
@@ -115,12 +115,12 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:address", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new MyAddressPage());
+                Navigation.PushAsync(new MyAddressPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:lock", StringComparison.Ordinal))
             {
              //   prepBackground();
-                Navigation.PushAsync(new SetLockPage());
+                Navigation.PushAsync(new SetLockPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:activity", StringComparison.Ordinal))
             {
@@ -132,7 +132,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new BackupPage());
+                Navigation.PushAsync(new BackupPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:chat:"))
             {
@@ -148,7 +148,7 @@ namespace SPIXI
                     return;
                 }
 
-                Navigation.PushAsync(new SingleChatPage(friend));
+                Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:details:"))
             {
@@ -164,7 +164,7 @@ namespace SPIXI
                     return;
                 }
 
-                Navigation.PushAsync(new ContactDetails(friend));
+                Navigation.PushAsync(new ContactDetails(friend), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:txdetails:"))
             {
@@ -199,7 +199,7 @@ namespace SPIXI
                     }
                 }
 
-                Navigation.PushAsync(new WalletSentPage(transaction));
+                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
             }
             else
             {
@@ -230,14 +230,14 @@ namespace SPIXI
                 ScannerPage.IsScanning = false;
 
                 Device.BeginInvokeOnMainThread(() => {
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
 
                     // Check for add contact
                     string[] split = result.Text.Split(new string[] { ":ixi" }, StringSplitOptions.None);
                     if(split.Count() > 1)
                     {
                         string id_to_add = split[0];
-                        Navigation.PushAsync(new ContactNewPage(id_to_add));
+                        Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
                         return;
                     }
 
@@ -246,7 +246,7 @@ namespace SPIXI
                     if (split.Count() > 1)
                     {
                         byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);                       
-                        Navigation.PushAsync(new WalletSendPage(wallet_to_send));
+                        Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
                         return;
                     }
 
@@ -254,7 +254,7 @@ namespace SPIXI
             };
 
 
-            await Navigation.PushAsync(ScannerPage);
+            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
 
         }
 
@@ -281,7 +281,7 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(new SingleChatPage(friend));
+            Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
             Navigation.PopModalAsync();
 
 
@@ -311,17 +311,17 @@ namespace SPIXI
 
         public void onSend(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new WalletSendPage());
+            Navigation.PushAsync(new WalletSendPage(), Config.defaultXamarinAnimations);
         }
 
         public void onReceive(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new WalletReceivePage());
+            Navigation.PushAsync(new WalletReceivePage(), Config.defaultXamarinAnimations);
         }
 
         public void onSettings(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new SettingsPage());
+            Navigation.PushAsync(new SettingsPage(), Config.defaultXamarinAnimations);
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)

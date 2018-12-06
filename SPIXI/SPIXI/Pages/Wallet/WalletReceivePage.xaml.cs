@@ -73,7 +73,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -87,7 +87,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                //Navigation.PushAsync(new LaunchRestorePage());
+                //Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace SPIXI
             string relayip = local_friend.searchForRelay();
             StreamProcessor.sendMessage(message, relayip);
 
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
         }
     }

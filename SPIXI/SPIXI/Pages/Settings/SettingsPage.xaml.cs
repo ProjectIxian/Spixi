@@ -61,7 +61,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -81,7 +81,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new BackupPage());
+                Navigation.PushAsync(new BackupPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:save:"))
             {
@@ -113,7 +113,7 @@ namespace SPIXI
             Node.localStorage.writeAccountFile();
             Node.changedSettings = true;
 
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
         public void onDeleteWallet(object sender, EventArgs e)
@@ -130,7 +130,7 @@ namespace SPIXI
                 Node.start();
 
                 // Show the launch page
-                Navigation.PushAsync(new LaunchPage());
+                Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
 
                 // Remove the settings page
                 Navigation.RemovePage(this);

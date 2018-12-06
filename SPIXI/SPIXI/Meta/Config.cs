@@ -30,6 +30,7 @@ namespace DLT
             public static bool isTestNet = true; // Testnet designator
 
             // Default SPIXI settings
+            public static bool defaultXamarinAnimations = false;
 
             // App-specific settings
             public static bool storeHistory = true;
@@ -38,6 +39,8 @@ namespace DLT
             // internal
             public static bool changePass = false;
             public static int forceTimeOffset = int.MaxValue;
+
+            
 
 
             private static Config singletonInstance;

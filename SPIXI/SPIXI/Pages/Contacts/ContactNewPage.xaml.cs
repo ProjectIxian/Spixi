@@ -67,7 +67,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -112,7 +112,7 @@ namespace SPIXI
                 ScannerPage.IsAnalyzing = false;
                 Device.BeginInvokeOnMainThread(() => {
 
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
 
                     //DisplayAlert("New contact", result.Text, "OK");
                     
@@ -130,7 +130,7 @@ namespace SPIXI
             };
 
 
-            await Navigation.PushAsync(ScannerPage);
+            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
 
         }
 
@@ -175,7 +175,7 @@ namespace SPIXI
 
             StreamProcessor.sendMessage(message, relayip);
 
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
     }
 }

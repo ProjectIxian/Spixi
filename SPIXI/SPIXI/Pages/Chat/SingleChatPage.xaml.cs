@@ -83,20 +83,20 @@ namespace SPIXI
             {
                 friend.chat_page = null;
 
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             }
             else if (current_url.Equals("ixian:request", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletReceivePage(friend));
+                Navigation.PushAsync(new WalletReceivePage(friend), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:details", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new ContactDetails(friend, true));
+                Navigation.PushAsync(new ContactDetails(friend, true), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage(friend.walletAddress));
+                Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:accept", StringComparison.Ordinal))
             {
@@ -147,7 +147,7 @@ namespace SPIXI
                     }
                 }
 
-                Navigation.PushAsync(new WalletSentPage(transaction));
+                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
             }
             else
             {
@@ -271,7 +271,7 @@ namespace SPIXI
             // TODO: extract the date from the corresponding message
             DateTime dt = DateTime.Now;
             string date_text = String.Format("{0:t}", dt);
-            Navigation.PushAsync(new WalletContactRequestPage(friend, amount, date_text));
+            Navigation.PushAsync(new WalletContactRequestPage(friend, amount, date_text), Config.defaultXamarinAnimations);
         }
 
         private void onEntryCompleted(object sender, EventArgs e)

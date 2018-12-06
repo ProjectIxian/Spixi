@@ -57,7 +57,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
@@ -90,7 +90,7 @@ namespace SPIXI
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
             FriendList.addMessageWithType(FriendMessageType.sentFunds, friend.walletAddress, transaction.id);
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
 
         }
 

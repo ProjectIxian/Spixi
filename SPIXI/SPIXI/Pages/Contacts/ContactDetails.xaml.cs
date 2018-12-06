@@ -89,12 +89,12 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:remove", StringComparison.Ordinal))
             {
                 onRemove();
-                Navigation.PopAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:removehistory", StringComparison.Ordinal))
             {
@@ -102,23 +102,23 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:request", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletReceivePage(friend));
+                Navigation.PushAsync(new WalletReceivePage(friend), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage(friend.walletAddress));
+                Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:chat", StringComparison.Ordinal))
             {
                 if (customChatBtn)
                 {
-                    Navigation.PopAsync();
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
                     e.Cancel = true;
                     return;
                 }
                 else
                 {
-                    Navigation.PushAsync(new SingleChatPage(friend));
+                    Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
                 }
             }
             else if (current_url.Contains("ixian:txdetails:"))
@@ -154,7 +154,7 @@ namespace SPIXI
                     }
                 }
 
-                Navigation.PushAsync(new WalletSentPage(transaction));
+                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
             }
             else
             {
