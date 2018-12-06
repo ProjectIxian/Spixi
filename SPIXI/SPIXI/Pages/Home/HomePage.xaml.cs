@@ -289,6 +289,10 @@ namespace SPIXI
 
         private void onLoaded()
         {
+            lastContactsChecksum = "";
+            lastChatsChange = 0;
+            lastTransactionChange = 0;
+
             webView.Eval(string.Format("loadAvatar(\"{0}\")", Node.localStorage.getOwnAvatarPath()));
 
             loadContacts();
