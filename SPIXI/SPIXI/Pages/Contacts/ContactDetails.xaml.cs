@@ -53,6 +53,11 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
+            // Deprecated due to WPF, use onLoad
+        }
+
+        private void onLoad()
+        {
             webView.Eval(string.Format("setAddress(\"{0}\")", friend.walletAddress));
             webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));
 
@@ -78,7 +83,11 @@ namespace SPIXI
         {
             string current_url = e.Url;
 
-            if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
+            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 Navigation.PopAsync();
             }

@@ -101,7 +101,6 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Services\BackgroundTaskService.cs" />
     <None Include="Entitlements.plist" />
-    <None Include="html\.DS_Store" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -176,6 +175,7 @@
     <BundleResource Include="html\img\address.png" />
     <BundleResource Include="html\img\Address_icon.png" />
     <BundleResource Include="html\img\AttachFile_icon.png" />
+    <BundleResource Include="html\img\AttachFile_icon_active.png" />
     <BundleResource Include="html\img\Avatar_bck.png" />
     <BundleResource Include="html\img\Avatar_settings.png" />
     <BundleResource Include="html\img\Back_icon.png" />
@@ -288,6 +288,7 @@
     <Content Include="html\js\clipboard.min.js" />
     <Content Include="html\js\jquery.min.js" />
     <Content Include="html\js\qrcode.min.js" />
+    <Content Include="html\js\spixi.js" />
     <Content Include="html\lock.html" />
     <Content Include="html\settings.html" />
     <Content Include="html\settings_backup.html" />

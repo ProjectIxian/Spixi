@@ -14,10 +14,11 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
-
+    <script src="js/spixi.js"></script>
+	
 </head>
 	
-    <body>
+    <body onload="onload()">
         <div id="wrap" class="container-fluid noselect">
             <div id="toolbar" class="toolbar">
                 <img class="toolbar_avatar" id="toolbar_avatar" src="avatar.png" />
@@ -56,7 +57,7 @@
 
                     <div id="floatbutton" class="floatbutton">
                         <a href="javascript:onHomeMenuAction();"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
-</div>
+                    </div>
 
 
                     <div class="recent_activity_bar">
@@ -142,10 +143,10 @@
 
                     <div id="wallet_quickbuttons" >
                         <div class="">
-                            <a href="ixian:sendixi" class="col-xs-3"><div class="wallet_send">SEND</div></a>                      
-                            <a href="ixian:receiveixi" class="col-xs-3"><div class="wallet_request">RECEIVE</div></a> 
-                            <a href="ixian:quickscan" class="col-xs-3"><div class="walletscanbutton"></div></a>  
-                            <a href="ixian:activity" class="col-xs-3"><div class="wallet_activity">ACTIVITY</div></a>                      
+                            <a href="ixian:sendixi" class="col-xs-3"><div class="wallet_send">send</div></a>
+                            <a href="ixian:receiveixi" class="col-xs-3"><div class="wallet_request">receive</div></a>
+                            <a href="ixian:activity" class="col-xs-3"><div class="wallet_activity">activity</div></a>
+                            <a href="ixian:quickscan" class="col-xs-3"><div class="walletscanbutton">scan QR code</div></a>
 
                         </div>
                     </div>
@@ -498,7 +499,7 @@
                     icon_name = "Sent_icon.png";
                 }
                 
-                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></div></a>';
+                payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class=""><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:27px;height:27px;" /></div><div class="col-xs-6 pdesc"><b>'+text+'</b><br />'+amount+'</div> <div class="col-xs-4 ptime">'+timestamp+'</div></div></a>';
                 
                 paymentsNode.appendChild(payment);
                 

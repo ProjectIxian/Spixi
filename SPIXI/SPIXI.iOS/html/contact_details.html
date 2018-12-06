@@ -11,9 +11,10 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+	<script src="js/spixi.js"></script>
 </head>
     
-<body>
+<body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
 
         <div id="toolbar" class="toolbar">
@@ -29,35 +30,15 @@
             <img src="avatar.png" class="contact_user_avatar_bk" />
 
             <img src="avatar.png" class="contact_user_avatar" />
-            
-            <div id="contact_user_indicator" style="display:none;" class="contact_user_indicator"></div>
+
+            <div id="contact_user_indicator" style="display:none !important;" class="contact_user_indicator"></div>
             <div class="contact_user_name" id="title2"></div>
             <div class="contact_user_subtitle" id="subtitle2"></div>
-            
+
             <div class="action_line"></div>
             <div id="achat" class="action_chat">message</div>
             <div id="arequest" class="request_chat">request IXI</div>
             <div id="asend" class="send_chat">send IXI</div>
-        </div>
-
-        <div class="recent_activity_bar">
-            <div class="col-xs-12">Notifications</div>
-        </div>
-        
-        <div id="payments_no_activity">
-            <div class="payment">
-                <div class="">
-                    <div class="col-xs-2 psign"></div>
-                    <div class="col-xs-10 pnoactivity">No recent notifications</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="payments" style="display: none;">
-        </div>
-
-        <div class="recent_activity_bar">
-            <div class="col-xs-12">History</div>
         </div>
 
         <div class="contact_remove">
@@ -71,6 +52,27 @@
                 <div class="contact_removehistory_btn">Delete entire history</div>
             </a>
         </div>
+
+        <div class="recent_activity_bar">
+            <div class="col-xs-12">Notifications</div>
+        </div>
+
+        <div id="payments_no_activity">
+            <div class="payment">
+                <div class="">
+                    <div class="col-xs-2 psign"></div>
+                    <div class="col-xs-10 pnoactivity">No recent notifications</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="payments" style="display: none;">
+        </div>
+
+        <div class="recent_activity_bar">
+            <div class="col-xs-12">History</div>
+        </div>
+
 
 
 
@@ -103,7 +105,7 @@
                     Delete History
                 </div>
                 <div class="hmodal-text">
-                    Delete message history<br/>for this contact?
+                    Delete message history<br />for this contact?
                 </div>
                 <div class="hmodal-footer">
                     <div class="hmodalclosehalf">CANCEL</div>

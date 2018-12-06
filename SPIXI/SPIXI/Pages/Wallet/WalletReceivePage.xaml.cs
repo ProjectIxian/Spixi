@@ -45,6 +45,11 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
+            // Deprecated due to WPF, use onLoad
+        }
+
+        private void onLoad()
+        {
             webView.Eval(string.Format("setAddress(\"{0}\")", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.address)));
 
             // Check if this page is accessed from the home wallet
@@ -62,7 +67,11 @@ namespace SPIXI
         {
             string current_url = e.Url;
 
-            if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
+            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 Navigation.PopAsync();
             }

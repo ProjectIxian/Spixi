@@ -2,6 +2,7 @@ body {
     font-family:'Roboto', sans-serif;
     font-size: 14px;
     font-weight: normal;
+    background: #EEE;
 }
 
 #bg {
@@ -20,7 +21,7 @@ body {
 .toolbar {
     width: 100%;
     height: 62px;
-    background: #e91e63;
+    background: #C10C53;
     color: #fff;
     display: block;
     position: fixed;
@@ -30,7 +31,7 @@ body {
 
 .toolbar_text {
     
-    padding-top: 9px;
+    padding-top: 8px;
     font-size: 20px;
     text-align: left;
 }
@@ -40,6 +41,7 @@ body {
     font-size: 14px;
     text-align: left;
     font-weight: 300;
+    font-style: italic;
 }
 
 
@@ -142,7 +144,7 @@ body {
     bottom: 0;   
     height: 55px;
     background-color: #F3F3F3;
-    border-top: 1px solid #CBCBCB;
+    border-top: 1px solid #5591b3;
 }
 
 #chatattachbar {
@@ -359,9 +361,10 @@ body {
     margin-right: 85px;
     margin-bottom: 20px;
     padding: 15px;
-    padding-top: 5px;
+    padding-top: 10px;
     min-width: 80px;
-    
+    padding-bottom: 25px;    
+
     animation-name: chat_animation;
     animation-duration: 0.3s;     
 }
@@ -380,6 +383,7 @@ body {
 .from-them .time,
 .from-me .time
 {
+    padding-top: 5px;
     font-size: 10px;
     color: #A0A0A0;
     z-index: 4;
@@ -388,7 +392,8 @@ body {
 
 .from-me .time
 {
-    float: right;
+    text-align: right;
+    right: 15px;
 }
             
 .from-me .avatar,
@@ -482,7 +487,7 @@ body {
     width: 100%;
     height: 104px;
     top: 62px;
-    background: #2C4758;
+    background: #5D90B2;
     color: #FFF;
     display: block;
     position: fixed;
@@ -492,47 +497,50 @@ body {
     background-image: url('../img/Contacts_icon_active.png');
     background-repeat: no-repeat;
     background-size: 39px 26px;
-    background-position: 10px 12px;
+    background-position: 25px 12px;
 }
 
 .request_bar_text {
     color: #FFF;
-    font-style: italic;
+    font-style: normal;
     padding-left: 80px;
     margin-top: 16px;
     margin-bottom: 10px;
 }
 
 .request_bar_ignore {
-    width: 130px;
+    width: 120px;
     position: absolute;
     left: 80px;
-    padding-top: 8px;
+    padding-top: 10px;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
     height: 37px;
-    background-color: #F4F4F4;
+    background-color: #5D90B2;
+    border: solid 2px #FFFFFF;
     border-radius: 30px;
-    color: #000;
+    color: #FFFFFF;
 }
 
 .request_bar_accept {
-    width: 130px;
+    width: 120px;
     position: absolute;
-    left: 220px;
-    padding-top: 8px;
+    left: 210px;
+    padding-top: 10px;
     text-align: center;
-    font-size: 15px;
+    font-size: 12px;
     height: 37px;
-    background-color: #F4F4F4;
+    background-color: #5D90B2;
+    border: solid 2px #FFFFFF;
     border-radius: 30px;
-    color: #000;
+    color: #FFFFFF;
 }
 
 .request_bar_icon {
     width: 18px;
     height: 18px;
-    margin-right: 10px;
+    margin-right: 5px;
+    margin-top: -5px;
 }
 
 /*

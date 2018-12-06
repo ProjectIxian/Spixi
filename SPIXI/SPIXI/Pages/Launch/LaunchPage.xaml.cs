@@ -30,7 +30,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            //webView.Eval(string.Format("setBalance(\"{0}\")", "99,899.0000"));
+
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

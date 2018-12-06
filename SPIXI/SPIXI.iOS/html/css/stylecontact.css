@@ -34,16 +34,15 @@
 
 .contact_user_avatar {
     position: absolute;
-    left: 25;
-    top: 75;
+    left: 25px;
+    top: 75px;
     width: 80px;
     height: 80px;
 }
 
 .contact_description {
-    height: 188px;
-    
-    background-color: #2f3342;
+    height: 265px;
+    background-color: #1a2030;
     color: #FFF;
     font-size: 100%;
     font-weight: 100;
@@ -52,8 +51,8 @@
 
 .contact_user_indicator {
     position: absolute;
-    left: 140px;
-    top:70px;
+    left: 80px;
+    top: 130px;
     
     width: 21px;
     height: 21px; 
@@ -66,18 +65,18 @@
 .contact_user_name {
     color: #FFF;
     position: absolute;
-    left: 170px;
-    top:70px;
+    left: 130px;
+    top:95px;
     font-size: 18px; 
+    font-weight: bold;
 }
 
 .contact_user_subtitle {
     color: #FFF;
     position: absolute;
-    left: 170px;
-    top:94px;
+    left: 130px;
+    top:120px;
     font-size: 11px; 
-    font-style: italic;
 }
 
 .contact_actions {
@@ -90,8 +89,8 @@
 
 .action_line {
     position: absolute;
-    right:10px;
-    top:115px;
+    left: 25px;
+    top: 170px;
     width: 230px;
     height: 1px;
     background-color: #3F3F4D;
@@ -99,56 +98,47 @@
 
 .action_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_chat.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-    
     position: absolute;
-    right:170px;
-    top:115px;
+    left: 15px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 .request_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_request.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-    
     position: absolute;
-    right:90px;
-    top:115px;
+    left: 95px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
-    text-align: center;  
-    text-transform: uppercase;
+    text-align: center;
 }
 
 .send_chat {
     width: 77px;
-    height: 67px; 
+    height: 67px;
     background-image: url('../img/details_send.png');
     background-size: 48px 48px;
     background-repeat: no-repeat;
     background-position: center top;
-
     position: absolute;
-    right:10px;
-    top:115px;
+    left: 175px;
+    top: 185px;
     padding-top: 48px;
-    
     font-size: 12px;
     text-align: center;
-    text-transform: uppercase;
 }
 
 
@@ -161,9 +151,8 @@
 
     padding-top: 14px;
     padding-left: 90px;
-    color: #C90000;
+    color: #c10c53;
     font-weight: 800;
-    font-style: italic;
     font-size: 14px;
     
     background-image: url('../img/error.png');
@@ -177,9 +166,8 @@
     padding-top: 14px;
     padding-left: 90px;
     font-size: 14px;
-    color: #C90000;
+    color: #c10c53;
     font-weight: 800;
-    font-style: italic;
     background-image: url('../img/historyDelete_icon.png');
     background-repeat: no-repeat;
     background-size: 24px 20px;

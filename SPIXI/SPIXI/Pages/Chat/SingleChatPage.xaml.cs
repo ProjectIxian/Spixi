@@ -75,7 +75,11 @@ namespace SPIXI
         {
             string current_url = e.Url;
 
-            if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
+            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 friend.chat_page = null;
 
@@ -155,6 +159,11 @@ namespace SPIXI
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
+        {
+            // Deprecated due to WPF, use onLoad
+        }
+
+        private void onLoad()
         {
             loadMessages();
             webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));

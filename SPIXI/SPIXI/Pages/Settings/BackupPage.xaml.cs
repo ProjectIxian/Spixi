@@ -30,8 +30,6 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            //webView.Eval(string.Format("setNickname(\"{0}\")", Node.localStorage.nickname));
-            //webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
 
         }
 

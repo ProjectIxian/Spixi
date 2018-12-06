@@ -73,9 +73,9 @@ namespace SPIXI
         {
             string current_url = e.Url;
 
-            if(current_url.Equals("ixian:chats", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new ContactsPage());
+                onLoaded();
             }
             else if (current_url.Equals("ixian:wallet", StringComparison.Ordinal))
             {
@@ -287,14 +287,9 @@ namespace SPIXI
 
         }
 
-
-        private void onNavigated(object sender, WebNavigatedEventArgs e)
+        private void onLoaded()
         {
-            //webView.Eval(string.Format("setBalance(\"{0}\")", "0.0000"));
-
             webView.Eval(string.Format("loadAvatar(\"{0}\")", Node.localStorage.getOwnAvatarPath()));
-
-            //webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
 
             loadContacts();
 
@@ -303,6 +298,14 @@ namespace SPIXI
                 onTimer();
                 return true; // True = Repeat again, False = Stop the timer
             });
+        }
+
+        private void onNavigated(object sender, WebNavigatedEventArgs e)
+        {
+            //webView.Eval(string.Format("setBalance(\"{0}\")", "0.0000"));
+            //webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
+
+
         }
 
 
@@ -319,16 +322,6 @@ namespace SPIXI
         public void onSettings(object sender, EventArgs e)
         {
             Navigation.PushAsync(new SettingsPage());
-        }
-
-        public void onWallet(object sender, EventArgs e)
-        {
-            // Deprecated
-        }
-
-        public void onContacts(object sender, EventArgs e)
-        {
-            Navigation.PushAsync(new ContactsPage());
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)

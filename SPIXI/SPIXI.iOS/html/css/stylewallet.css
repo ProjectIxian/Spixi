@@ -4,6 +4,7 @@
     border-color: #D4D4D4;
     width: 100%;
     margin-top: 29px;
+    box-sizing: border-box;
 }
 
 .wallet_hr2 {
@@ -17,19 +18,18 @@
 
 .wallet_subtitle {
     margin-top: 12px;
-    margin-left: 30px;
+    margin-left: 15px;
     font-style: italic;
     font-weight: 600;
 }
 
 .wallet_from_holder {
     padding-top: 14px;
-    height: 48px;
+    height: 73px;
 }
 
 .wallet_from_avatar {
     padding-top: 0px;
-    padding-left: 20px;   
 }
 
 .wallet_from_text {
@@ -55,7 +55,7 @@
 
 .wallet_amount {
     margin-top: 2px;
-    margin-left: 30px;
+    margin-left: 15px;
     width: 200px;
     background-image: url('../img/Ixi_white.png');
     background-size: 20px 25px;
@@ -64,7 +64,7 @@
 }
 
 .wallet_amount_info {
-    margin-left: 30px;
+    margin-left: 15px;
     margin-top: 6px;
     font-style: italic;
     font-size: 12px;
@@ -97,7 +97,9 @@
 }
 
 .wallet_current_address {
-    margin-left: 30px;
+    margin-left: 0px;
+    padding-left: 15px;
+    box-sizing: border-box;
     color: #E31A70;
     margin-top: 7px;
     overflow: hidden;
@@ -161,13 +163,10 @@
 }
 
 #wallet_send_address_input {
-    
-    margin-left: 30px;
+    margin-left: 15px;
     margin-top: 10px;
-    
     width: 70%;
     height: 50px;
-    
     padding-left: 14px;
     padding-right: 14px;
     background: transparent;
@@ -176,7 +175,7 @@
     border: 1px solid #398FD8;
     border-radius: 40px;
     color: #000;
-    font-size: 110%;    
+    font-size: 110%;
 }
 
 .wallet_sendto_pick {
@@ -204,7 +203,7 @@
 }
 
 #wallet_sendto_amount_input {
-    margin-left: 30px;
+    margin-left: 15px;
     margin-top: 0px;
     background: transparent;
     border: none;
@@ -227,7 +226,7 @@
 }
 
 .send_status_bottom {
-    padding-left: 30px;
+    padding-left: 15px;
     font-size: 85%;
     font-style: italic;
     color: #B8BABE;
@@ -307,12 +306,11 @@
 }
 
 .request_decline {
-    float:left;
+    float: left;
     width: 150px;
     height: 36px;
-    margin-left: 30px;
-    color: #FFF;
-    background-color: #E20065;
+    margin-left: 15px;
+    color: #E20065;
     text-align: center;
     outline: none;
     text-decoration: none;
@@ -322,13 +320,18 @@
     border-radius: 20px;
 }
 
+.request_decline:hover,
+.request_decline:active {
+    background-color: #E20065;
+    color: #FFF;
+}
+
 .request_proceed {
-    float:right;
+    float: right;
     width: 150px;
     height: 36px;
-    margin-right: 30px;
-    color: #FFF;
-    background-color: #398FD8;
+    margin-right: 15px;
+    color: #398FD8;
     text-align: center;
     outline: none;
     text-decoration: none;
@@ -338,6 +341,11 @@
     border-radius: 20px;
 }
 
+.request_proceed:hover,
+.request_proceed:active {
+    background-color: #398FD8;
+    color: #FFF;
+}
 
 .button {
     width: 80%;

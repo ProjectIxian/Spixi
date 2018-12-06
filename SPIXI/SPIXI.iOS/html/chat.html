@@ -10,9 +10,10 @@
         
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+		<script src="js/spixi.js"></script>
     </head>
     
-    <body onload="">
+    <body onload="onload()">
         <div id="toolbar" class="toolbar">
             <div id="backbtn" class="toolbar_back">
                 <div id="chat_indicator" class="back_indicator" style="display: none;">#</div>
@@ -71,9 +72,6 @@
 
             </div>
         </div>
-        
-        
-        <img src="img/chatbackground.png" id="bg" alt="">
         
         
         <script type="text/javascript">
@@ -169,11 +167,13 @@
                 document.getElementById("chat_input").focus();
                 if(attachMode == true)
                 {
+                    document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon.png')";
                     attachMode = false;
                     hideAttach();
                 }
                 else 
                 {
+                    document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon_active.png')";
                     attachMode = true;
                     showAttach();
                 }    
