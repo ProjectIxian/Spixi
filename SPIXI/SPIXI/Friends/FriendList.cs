@@ -71,7 +71,7 @@ namespace SPIXI
                     }
                     else
                     {
-                        CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
+                        //CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
                     }
 
                     // Write to chat history
