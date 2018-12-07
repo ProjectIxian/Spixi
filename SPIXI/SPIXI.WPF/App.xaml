@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:SPIXI.WPF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="SpixiWindowStyle" TargetType="{x:Type Window}">
+            <Setter Property="AllowsTransparency" Value="False"/>
+            <Setter Property="MinWidth" Value="400"/>
+            <Setter Property="MinHeight" Value="400"/>
+        </Style>
     </Application.Resources>
 </Application>

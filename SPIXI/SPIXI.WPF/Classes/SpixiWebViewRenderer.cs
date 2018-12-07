@@ -11,8 +11,10 @@ using Xamarin.Forms.Platform.WPF;
 
 namespace SPIXI.WPF.Classes
 {
-    internal class SpixiWebViewRenderer : Xamarin.Forms.Platform.WPF.WebViewRenderer
+    public class SpixiWebViewRenderer : Xamarin.Forms.Platform.WPF.WebViewRenderer
     {
+
+
 
     }
 }
