@@ -1,4 +1,5 @@
-﻿using SPIXI.GTK.Classes;
+﻿using Pango;
+using SPIXI.GTK.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,14 @@ namespace SPIXI.GTK.Classes
 {
     public class SpixiWebViewRenderer : WebViewRenderer
     {
+        protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.WebView> e)
+        {
+            base.OnElementChanged(e);
+          
+            if (Control != null)
+            {
+            }
+        }
 
     }
 }

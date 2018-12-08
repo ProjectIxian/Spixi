@@ -1,33 +1,32 @@
 .passwordHolder {
-    margin: auto;
     margin-top: 5px;
-    width: 50%;
 }
 .passwordInput {
-    width: 100%;
-
-    margin: auto;
-
+    width: 240px;
+    margin-left: 25px;
+    
     background: transparent;
     border: none;
     outline: none;
-    border-bottom: 2px solid #00aaf1;
+    border-bottom: 2px solid #E1E1E1;
     color: #000;
     font-size: 110%;
-    text-align: center;
+    text-align: left;   
+}
 
-    
+.passwordInput:focus {
+    border-bottom: 2px solid #00aaf1;
 }
 
 .passwordInfo {
     color: #A20C3A;
-    width: 250px;
+    width: 300px;
     margin: auto;
     height: 26px;
     text-align: left;
     padding-left: 35px;
     
-    font-size: 16px;
+    font-size: 14px;
     margin-top: 20px;
     
     background-image: url('../img/error.png');
@@ -60,9 +59,9 @@
 
 .lock_info {
     color: #6D6D6D;
-    width: 250px;
+    width: 90%;
     margin: auto;
-    margin-top: 50px;
+    margin-top: 10px;
     height: 26px;
     text-align: left;
     padding-left: 35px;
@@ -78,7 +77,7 @@
 .lockbutton {
     position: absolute;
     left: 0px;
-    top: 70px;
+    top: 80px;
     
     width: 90px;
     height: 60px;
@@ -95,14 +94,14 @@
 .locktext {
     position: absolute;
     left: 90px;
-    right: 10px;
+    right: 20px;
     top: 70px;
     color: #9E9E9E;
 }
 
 .lockplaceholder {
     width: 100%;
-    height: 110px;
+    height: 70px;
 }
 
 
@@ -114,6 +113,19 @@
     
     background-image: url('../img/Restore.png');
     background-size: 47px 50px;
+    background-repeat: no-repeat;
+    
+}
+
+
+.backup_icon {
+    width: 47px;
+    height: 50px;
+    margin-top: 20px;
+    margin-left: 20px;
+    
+    background-image: url('../img/Backup_icon.png');
+    background-size: 32px 32px;
     background-repeat: no-repeat;
     
 }

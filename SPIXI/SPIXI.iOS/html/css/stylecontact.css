@@ -191,11 +191,19 @@
     text-overflow: ellipsis;
 }
 
+.contact_new_icon {
+    width: 60px;
+    height: 90px;    
+    background-image: url('../img/Contacts_icon_idle.png');
+    background-repeat: no-repeat;
+    background-size: 38px 26px;
+    background-position: 12px 44px;
+}
 
 .contact_new_desc {
     padding-left: 25px;
     padding-top: 25px;
-    font-size: 16px;
+    font-size: 15px;
     color: #4D4D4D;
 }
 

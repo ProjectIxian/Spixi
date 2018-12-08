@@ -12,9 +12,10 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+	<script src="js/spixi.js"></script>    
 </head>
     
-<body>
+<body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
         <div id="toolbar" class="toolbar">
             <div id="backbtn" class="toolbar_back"></div>
@@ -23,12 +24,15 @@
         <div class="toolbarholder">
         </div>
         
-        <div class="restore_icon"></div>
+        <div class="backup_icon"></div>
         
-        <div id="textlocked" class="locktext" style="padding-top: 15px;">Backup your Spixi Account in 2 simple steps. Create your encryption password and save your backup file.</div>
+        <div id="textlocked" class="locktext" style="padding-top: 5px;">Backup your Spixi Account in 2 simple steps. Create your encryption password and save your backup file.</div>
 
 
-        <div class="restore_subtitle">Create your encryption password</div>
+        <hr class="settings_hr" />            
+        <div class="settings_subtitle">Create your encryption password</div>
+        <div class="settings_desc2" style="margin-bottom: 40px; width: 80%;">This password will be required to decrypt your backup file.</div>
+
         
         <div id="lockContent" >
         <div class="passwordHolder">
@@ -38,13 +42,12 @@
             <input type="password" id="passwordConfirm" class="passwordInput" onkeyup="checkPasswordMatch()" placeholder="re-type password">
         </div>  
             
-            <div id="passwordInfoText" class="passwordInfo" style="display: none;">The passwords you entered do not match</div>
+            <div id="passwordInfoText" class="passwordInfo" style="display: none;">Passwords to do not match</div>
         
             <hr style="settings_hr"/>
             <div class="lock_info"> This password will be required to decrypt your backup file.</div>
 
             <div id="backup_button" class="button" style="margin-top: 4px;">Save backup file</div>
-            <div class="lock_info"> You must create a password to save your backup file.</div>
             
         </div>
         
@@ -72,6 +75,28 @@
     }
 
 
+    function checkPasswordMatch() {
+        var password = $("#password").val();
+        var confirmPassword = $("#passwordConfirm").val();
+        
+        if(confirmPassword.length < 1)
+        {
+            return;
+        }
+        
+        document.getElementById("passwordInfoText").style = "display: block;";
+
+        if (password != confirmPassword)
+        {
+            $("#passwordInfoText").html("Passwords do not match");
+            document.getElementById("passwordInfoText").className = "passwordInfo";
+        }
+        else 
+        {
+            $("#passwordInfoText").html("Passwords match");
+            document.getElementById("passwordInfoText").className = "passwordInfoValid";
+        }
+    }
 </script>
     
 </body>

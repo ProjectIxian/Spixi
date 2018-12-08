@@ -30,7 +30,7 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-
+            
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

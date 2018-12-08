@@ -27,28 +27,40 @@
     <div class="restore_icon"></div>
     <div class="restore_description">Restore your Spixi Account. Select a backup file and enter the encryption password.</div>
     </div>
+    
+    <div class="restore_subtitle">Select backup file</div>
 
     
-    <div class="restore_text_step1" style="margin-top: 10px;">Please enter your backup encryption password</div>
+    <div class="restore_file_holder">
+        <div class="restore_remove_icon"> Backup file</div>
+        <div id="upload" class="hbutton">UPLOAD</div>
+    </div>
+    
+    <div id="selected" style="display:none;" class="selectedhbutton"><img src="img/dismissNotification.png" style="width:22px; height:22px;"/> Photo backup</div>
+    
+
+    
+    <hr class="restore_hr"/>
+
+    <div class="restore_text_step1" style="margin-top: 10px;">Enter the password associated with this backup file.</div>
     
     <div class="passwordHolder">
         <input type="password" id="password" class="passwordInput" onkeyup="" placeholder="">
     </div>
-    
-    <div class="restore_steps"></div>
 
-    <div id="select" class="hbutton">Select backup file</div>
-    <div id="selected" style="display:none;" class="selectedhbutton"><img src="img/dismissNotification.png" style="width:22px; height:22px;"/> Photo backup</div>
-
-    <div class="restore_steps"></div>
+    <hr class="restore_hr"/>
     
-    <div id="restore" class="button" style="margin-top: 0px;">RESTORE</div>
+    <div id="restore" class="button_restore small_margin icon_restore">RESTORE</div>
     
 </div>
 
 <script type="text/javascript">
     document.getElementById("restore").onclick = function() {
         location.href = "ixian:restore";
+    }
+       
+    document.getElementById("upload").onclick = function() {
+        location.href = "ixian:upload";
     }
     
     document.getElementById("backbtn").onclick = function() {

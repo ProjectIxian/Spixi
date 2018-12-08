@@ -25,6 +25,30 @@
     border-bottom: 1px solid #BEBEBE;    
 }
 
+.restore_subtitle {
+    margin-top: 12px;
+    margin-left: 25px;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.restore_file_holder {
+    margin-left: 25px;
+    margin-top: 15px;
+    width: 320px;
+    height: 20px;
+}
+
+.restore_remove_icon {
+    width: 150px;
+    margin-top: 10px;
+    padding-left: 30px;
+    background-image: url('../img/error.png');
+    background-repeat: no-repeat;
+    background-size: 18px 18px;
+    background-position: 0px 0px;
+}
+
 .intro_avatar {
     margin: auto;
     width: 145px;
@@ -107,18 +131,20 @@
 }
 
 .hbutton {
-    width: 80%;
-    height: 51px;
-    color: #CD003F;
+    width: 120px;
+    height: 31px;
+    color: #191C2D;
+    background-color: #E7E7E7;
     text-align: center;
     outline: none;
     text-decoration: none;
-    font-size: 125%;
-    padding: 12px;
-    border: 1px solid #CD003F;
+    font-size: 14px;
+    padding: 4px;
+    border: 1px solid #E7E7E7;
     border-radius: 25px;
-    margin: auto;
-    
+    position: absolute;
+    left: 200px;
+    top: 260px;
 }
 
 .hbutton:hover,
@@ -163,16 +189,9 @@
 }
 
 .restore_text_step1 {
-    margin: auto;
-    width: 70%;
-    padding-left: 50px;
-    min-height: 30px;
-    
-    background-image: url('../img/lock_red.png');
-    background-repeat: no-repeat;
-    background-size: 14px 18px;
-    background-position: 5px 10px;
-    
+    width: 250;
+    padding-left: 20px;
+    min-height: 30px;    
 }
 
 .restore_steps {
@@ -189,14 +208,48 @@
     color: #D4D4D4;
     background: #D4D4D4;
     border-color: #D4D4D4;
-    width: 70%;
     margin-top: 29px;
 }
 
-.passwordHolder {
+.button_restore {
+    width: 80%;
+    height: 51px;
+    color: #4298D8;
+    text-align: center;
+    outline: none;
+    text-decoration: none;
+    font-size: 125%;
+    padding: 14px;
+    border: 2px solid #4298D8;
+    border-radius: 25px;
     margin: auto;
+    
+}
+.button_restore:hover,
+.button_restore:active {
+    background-color: #4298D8;
+    color: #FFF;
+}
+
+.icon_restore {
+    background-image: url('../img/Restore_icon_Active.png');
+    background-size: 21px 19px;
+    background-repeat: no-repeat;
+    background-position: 30px 13px;
+}
+.icon_restore:hover,
+.icon_restore:active {
+    background-image: url('../img/Restore_icon_Idle.png');
+}
+
+.small_margin {
+    margin-top: 20px;  
+}
+
+.passwordHolder {
+    margin-left: 20px;
     margin-top: 10px;
-    width: 50%;
+    width: 250;
 }
 .passwordInput {
     width: 100%;
@@ -209,7 +262,7 @@
     border-bottom: 2px solid #3491C8;
     color: #3491C8;
     font-size: 130%;
-    text-align: center;
+    text-align: left;
 
     
 }
