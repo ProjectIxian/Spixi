@@ -15,6 +15,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
 	
 </head>
 	
@@ -32,11 +33,11 @@
             </div>
 
 
-            <div class="tab-content">
+             <div class="tab-content" >
                 
                 
                 <!-- HOME -->
-                <div id="home" class="tab-pane fade in active">
+                <div id="home" class="tab-pane in active">
                     
                     
                     <div id="status_balance">
@@ -99,7 +100,7 @@
                 
                 
                 <!-- CHATS -->
-                <div id="chats" class="tab-pane fade in">
+                <div id="chats" class="tab-pane in">
 
                     <div id="floatbutton" class="floatbutton">
                         <a href="ixian:newchat"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
@@ -126,7 +127,7 @@
 
 
                 <!-- Wallet -->
-                <div id="wallet" class="tab-pane fade in">
+                <div id="wallet" class="tab-pane in">
 
                     <div id="wallet_balance">
                         <div class="status_ixi"><div class="status_mybalance">My balance</div>
@@ -175,7 +176,7 @@
                 
                 
                 <!-- Contacts -->
-                <div id="contacts" class="tab-pane fade in">
+                <div id="contacts" class="tab-pane in">
 
                     <div id="floatbutton" class="floatbutton">
                         <a href="ixian:newcontact"><img src="img/FAB_Idle.png" style="width:72px;height:73px;" /></a>
@@ -218,6 +219,7 @@
 
         
 
+
         <div id="homeMenuModal" class="modal">
             <!-- Modal content -->
             <div class="modal-content">
@@ -238,6 +240,8 @@
         </div>
         
         
+        <div id="leftMenuModalHelper" class="menumodal_swipehelper">
+        </div>
         
         <div id="leftMenuModal" class="menumodal">
             <!-- Modal content -->
@@ -654,6 +658,65 @@
                 
             }
 
+
+            
+// Handle sidebar swiping
+$("#leftMenuModalHelper").swipe( {
+swipeStatus:function(event, phase, direction, distance)
+{
+    var str = "";
+    if(direction == "right")
+    {
+        leftMenuModal.style.display = "block";
+        document.getElementById('leftMenuModalHelper').style.display = "none";
+
+        var transformStyle = 'translateX(0px)';
+        leftMenuModal.style.webkitTransform = transformStyle;
+        leftMenuModal.style.MozTransform = transformStyle;
+        leftMenuModal.style.msTransform = transformStyle;
+        leftMenuModal.style.transform = transformStyle;
+    }
+},
+threshold:10,
+});            
+            
+$("#leftMenuModal").swipe( {
+swipeStatus:function(event, phase, direction, distance)
+{
+    if(direction == "left")
+    {
+        if (phase=="move")
+        {            
+            var transformStyle = 'translateX(-'+distance+'px)';
+            leftMenuModal.style.webkitTransform = transformStyle;
+            leftMenuModal.style.MozTransform = transformStyle;
+            leftMenuModal.style.msTransform = transformStyle;
+            leftMenuModal.style.transform = transformStyle;            
+        }
+        
+        if (phase == "end" || phase == "cancel")
+        {
+            if(distance > 100)
+            {
+                leftMenuModal.style.display = "none";
+                document.getElementById('leftMenuModalHelper').style.display = "block";
+            }
+            var transformStyle = 'translateX(0px)';
+            leftMenuModal.style.webkitTransform = transformStyle;
+            leftMenuModal.style.MozTransform = transformStyle;
+            leftMenuModal.style.msTransform = transformStyle;
+            leftMenuModal.style.transform = transformStyle;           
+        }
+    }
+},
+triggerOnTouchEnd:true,
+    threshold:100
+});
+            
+    
+
+
+            
         </script>
     </body>
     

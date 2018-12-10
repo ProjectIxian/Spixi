@@ -751,7 +751,7 @@ img {
 .tab1 a {
     color: #440024;
 }
-
+.tab1:hover,
 .tab1_active {
     height: 63px;
     background: url('../img/Home_icon_active.png') no-repeat;
@@ -773,10 +773,12 @@ img {
     font-style: normal;
 }
 
+
 .tab2 a {
     color: #440024;
 }
 
+.tab2:hover,
 .tab2_active {
     height: 63px;
     background: url('../img/Chats_icon_active.png') no-repeat;
@@ -817,6 +819,7 @@ img {
     color: #440024;
 }
 
+.tab3:hover,
 .tab3_active {
     height: 63px;
     background: url('../img/Wallet_icon_active.png') no-repeat;
@@ -842,6 +845,7 @@ img {
     color: #440024;
 }
 
+.tab4:hover,
 .tab4_active {
     height: 63px;
     background: url('../img/Contacts_icon_active.png') no-repeat;
@@ -1065,6 +1069,17 @@ img {
 }
 
 
+.menumodal_swipehelper {
+    display: block; 
+    position: fixed;
+    z-index: 5000; 
+    left: 0;
+    top: 0;
+    width: 30px; 
+    height: 100%; 
+    overflow: auto;
+}
+
 .menumodal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -1074,8 +1089,7 @@ img {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
 }
 /* Modal Content/Box */
 .menumodal-content {
