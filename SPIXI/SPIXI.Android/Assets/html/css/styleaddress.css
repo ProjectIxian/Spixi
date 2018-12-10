@@ -24,6 +24,12 @@
     font-style: italic;
 }
 
+.address_text_aligned {
+    color: #6D6D6D;
+    font-style: italic;    
+    margin-left: 15px;
+}
+
 .address_info {
     color: #6D6D6D;
     width: 200px;
@@ -72,4 +78,46 @@
 .wallet_top {
     width: 100%;
     border-bottom: 3px solid #DDD;   
+}
+
+
+#toastbar {
+  visibility: hidden;
+  min-width: 250px; 
+  margin-left: -125px; 
+  background-color: #40629F; 
+  color: #fff; 
+  text-align: center; 
+  border-radius: 20px; 
+  padding: 16px; 
+  position: fixed; 
+  z-index: 100; 
+  left: 50%; 
+  top: 50%;
+}
+
+#toastbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {opacity: 1;} 
+  to {opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {opacity: 1;}
+  to {opacity: 0;}
 }

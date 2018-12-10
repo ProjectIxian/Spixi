@@ -8,10 +8,12 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/stylewallet.css">
+    <link rel="stylesheet" type="text/css" href="css/styleaddress.css">
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>    
 	<script src="js/spixi.js"></script>
 </head>
     
@@ -44,17 +46,22 @@
         <hr class="wallet_hr2" />
     </div>
     
-    <div class="wallet_qr_holder">
+    <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
         <div class="wallet_qr" id="qrcode"></div>
-    </div>
-    
-    <div>
-        <hr class="wallet_hr" />
+            
+            <div class="wallet_subtitle">Current address</div>
 
-        <div class="wallet_subtitle">Current address</div>
-        <div id="wal_addr" class="wallet_current_address">00000000000000000000000</div>
-        <div class="wallet_amount_info">Tap to copy address to clipboard</div>
+            <div id="wal1" class="address_text">Generating</div>
+            <div id="wal2" class="address_text">your SPIXI</div>
+            <div id="wal3" class="address_text">address...</div>
+            <hr class="address_hr" />
+            <div class="address_info"> Tap to copy to clipboard</div>
+
+            <div id="toastbar">Address copied to clipboard</div>
     </div>
+
+    
+    <div id="toastbar">Address copied to clipboard</div>
     
     <div id="sendr" class="button" style="margin-top: 20px; margin-bottom:40px; display:none;">Send payment request</div>
 
@@ -77,6 +84,24 @@
 
     var wal_id = "";
 
+    var clipboard = new ClipboardJS('.address_qr_holder', {
+                text: function() {
+                    return wal_id;
+                }});
+
+            clipboard.on('success', function(e) {
+                e.clearSelection();
+                
+                var x = document.getElementById("toastbar");
+                x.className = "show";
+                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+
+            });
+
+            clipboard.on('error', function(e) {
+
+    });
+    
     var qrcode = new QRCode("qrcode", {
         text: "SPIXI",
         width: 300,
@@ -89,7 +114,10 @@
     function setAddress(addr) {
         wal_id = addr;
         generateQR();
-        document.getElementById("wal_addr").innerHTML = wal_id;
+        var parts = addr.match(/.{1,17}/g) || [];
+        document.getElementById("wal1").innerHTML = parts[0];
+        document.getElementById("wal2").innerHTML = parts[1];
+        document.getElementById("wal3").innerHTML = parts[2];
     }
 
     function generateQR() {

@@ -43,10 +43,10 @@
             <hr class="address_hr" />
             <div class="address_info"> Tap to copy to clipboard</div>
 
+            <div id="toastbar">Address copied to clipboard</div>
+            
         </div>
         
-
-
 
     </div>    
 
@@ -60,12 +60,16 @@
 
             clipboard.on('success', function(e) {
                 e.clearSelection();
+                
+                var x = document.getElementById("toastbar");
+                x.className = "show";
+                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+
             });
 
             clipboard.on('error', function(e) {
 
             });
-        
         
             var qrcode = new QRCode("qrcode", {
                 text: "",
