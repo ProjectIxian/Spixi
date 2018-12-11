@@ -13,21 +13,26 @@ namespace SPIXI.Wallet
     {
         private string filename;
 
+        // Version 1 parameters
         public byte[] privateKey = null;
         public byte[] publicKey = null;
         public byte[] address = null;
 
+        // Version 2 parameters
+        public byte[] passwordHash = null;
+
+        private static readonly int WALLET_VERSION = 2;
+
         public WalletStorage()
         {
-            filename = "ixian.wal";
-            //readWallet();
+            filename = "spixi.wal"; 
         }
 
         public WalletStorage(string file_name)
         {
+            // Store the wallet in the system's personal user folder
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             filename = Path.Combine(path, file_name);
-            //readWallet();
         }
 
         // Try to read wallet information from the file
@@ -60,9 +65,9 @@ namespace SPIXI.Wallet
                 // Read the wallet version
                 System.Int32 version = reader.ReadInt32();
 
-                if (version != 1)
+                if (version > WALLET_VERSION)
                 {
-                    Logging.error(string.Format("Wallet version mismatch, expecting {0}, got {1}", 1, version));
+                    Logging.error(string.Format("Wallet version mismatch, expecting {0}, got {1}", WALLET_VERSION, version));
                     return false;
                 }
 
@@ -80,10 +85,22 @@ namespace SPIXI.Wallet
                 privateKey = CryptoManager.lib.decryptWithPassword(b_privateKey, password);
                 publicKey = CryptoManager.lib.decryptWithPassword(b_publicKey, password);
 
-
-
                 Address addr = new Address(publicKey);
                 address = addr.address;
+
+
+                // Read the lock password hash if found
+                passwordHash = null;
+                if (version > 1) // Version 1 does not include password lock
+                {
+                    int b_passwordHashLength = reader.ReadInt32();
+                    if(b_passwordHashLength > 0)
+                    {
+                        // Password hash found, read it and decrypt it
+                        byte[] b_passwordHash = reader.ReadBytes(b_passwordHashLength);
+                        passwordHash = CryptoManager.lib.decryptWithPassword(b_passwordHash, password);
+                    }
+                }
 
             }
             catch (IOException e)
@@ -100,7 +117,7 @@ namespace SPIXI.Wallet
         // Write the wallet to the file
         private bool writeWallet()
         {
-            // TODOSPIXI
+            // TODOSPIXI replace with wallet password
             string password = "SPIXI";
 
             // Encrypt data first
@@ -121,7 +138,7 @@ namespace SPIXI.Wallet
 
             try
             {
-                System.Int32 version = 1; // Set the wallet version
+                System.Int32 version = WALLET_VERSION; // Set the wallet version
                 writer.Write(version);
 
                 // Write the address keypair
@@ -130,6 +147,21 @@ namespace SPIXI.Wallet
 
                 writer.Write(b_publicKey.Length);
                 writer.Write(b_publicKey);
+
+                // Write the password hash if set
+                if (passwordHash == null)
+                {
+                    // No password hash, set the length to 0
+                    writer.Write(0);
+                }
+                else
+                {
+                    // Encrypt and write the password hash
+                    byte[] b_passwordHash = CryptoManager.lib.encryptWithPassword(passwordHash, password);
+                    writer.Write(b_passwordHash.Length);
+                    writer.Write(b_passwordHash);
+                }
+
             }
 
             catch (IOException e)
@@ -176,6 +208,9 @@ namespace SPIXI.Wallet
 
             privateKey = CryptoManager.lib.getPrivateKey();
             publicKey = CryptoManager.lib.getPublicKey();
+
+            // Set the password hash to null
+            passwordHash = null;
 
             Address addr = new Address(publicKey);
             address = addr.address;
