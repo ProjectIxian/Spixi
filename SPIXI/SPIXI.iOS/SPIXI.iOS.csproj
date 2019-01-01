@@ -287,6 +287,7 @@
     <Content Include="html\js\bootstrap.min.js" />
     <Content Include="html\js\clipboard.min.js" />
     <Content Include="html\js\jquery.min.js" />
+    <Content Include="html\js\jquery.touchSwipe.min.js" />
     <Content Include="html\js\qrcode.min.js" />
     <Content Include="html\js\spixi.js" />
     <Content Include="html\lock.html" />
