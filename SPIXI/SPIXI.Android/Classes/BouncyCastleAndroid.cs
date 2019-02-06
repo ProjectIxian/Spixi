@@ -13,14 +13,12 @@ using Java.Security;
 using Java.Security.Spec;
 using System.Text;
 using Javax.Crypto;
+using DLT;
 
 namespace CryptoLibs
 {
-    class BouncyCastleAndroid : DLT.ICryptoLib
+    class BouncyCastleAndroid : ICryptoLib
     {
-        byte[] publicKeyBytes;
-        byte[] privateKeyBytes;
-
         // Private variables used for AES key expansion
         private int PBKDF2_iterations = 10000;
         private string AES_algorithm = "AES/CBC/PKCS7Padding";
@@ -31,8 +29,6 @@ namespace CryptoLibs
 
         public BouncyCastleAndroid()
         {
-            publicKeyBytes = null;
-            privateKeyBytes = null;
         }
 
         private Java.Math.BigInteger bigEndianToLittleEndian(byte[] input)
@@ -51,9 +47,15 @@ namespace CryptoLibs
             return input;
         }
 
-        private byte[] rsaKeyToBytes(KeyPair rsaKey, bool includePrivateParameters)
+        private byte[] rsaKeyToBytes(KeyPair rsaKey, bool includePrivateParameters, bool skip_header)
         {
             List<byte> bytes = new List<byte>();
+
+            // TODO TODO TODO TODO TODO skip header can be later removed after the upgrade/hard fork
+            if (!skip_header)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)0)); // prepend pub key version
+            }
 
             KeyFactory kf = KeyFactory.GetInstance("RSA");
             // the ToByteArray() function returns big-endian bytes, we need little-endian
@@ -115,6 +117,14 @@ namespace CryptoLibs
 
                 int offset = 0;
                 int dataLen = 0;
+                int version = 0;
+
+                if (keyBytes.Length != 523 && keyBytes.Length != 2339)
+                {
+                    offset += 1; // skip address version
+                    version = BitConverter.ToInt32(keyBytes, offset);
+                    offset += 4;
+                }
 
                 dataLen = BitConverter.ToInt32(keyBytes, offset);
                 offset += 4;
@@ -179,29 +189,38 @@ namespace CryptoLibs
             }
             return null;
         }
-        
-        public bool testKeys(byte[] plain)
-        {
-            byte[] encrypted = encryptWithRSA(plain, publicKeyBytes);
-            byte[] signature = getSignature(plain, privateKeyBytes);
 
-            if (!decryptWithRSA(encrypted, privateKeyBytes).SequenceEqual(plain))
+        public bool testKeys(byte[] plain, IxianKeyPair key_pair)
+        {
+            Logging.info("Testing generated keys.");
+            // Try if RSACryptoServiceProvider considers them a valid key
+            if (rsaKeyFromBytes(key_pair.privateKeyBytes) == null)
+            {
+                Logging.warn("RSA key is considered invalid by RSACryptoServiceProvider!");
+                return false;
+            }
+
+            byte[] encrypted = encryptWithRSA(plain, key_pair.publicKeyBytes);
+            byte[] signature = getSignature(plain, key_pair.privateKeyBytes);
+
+            if (!decryptWithRSA(encrypted, key_pair.privateKeyBytes).SequenceEqual(plain))
             {
                 Logging.warn(string.Format("Error decrypting data while testing keys."));
                 return false;
             }
 
-            if (!verifySignature(plain, publicKeyBytes, signature))
+            if (!verifySignature(plain, key_pair.publicKeyBytes, signature))
             {
-                Logging.warn(string.Format("Error verifying signatures while testing keys."));
+                Logging.warn(string.Format("Error verifying signature while testing keys."));
                 return false;
             }
 
+
             return true;
         }
-
+        
         // Generates keys for RSA signing
-        public bool generateKeys(int keySize)
+        public IxianKeyPair generateKeys(int keySize, bool skip_header = false)
         {
             KeyPair kp = null;
             try
@@ -209,44 +228,24 @@ namespace CryptoLibs
                 KeyPairGenerator kpg = KeyPairGenerator.GetInstance("RSA");
                 kpg.Initialize(keySize);
                 kp = kpg.GenKeyPair();
-                privateKeyBytes = rsaKeyToBytes(kp, true);
-                publicKeyBytes = rsaKeyToBytes(kp, false);
+                IxianKeyPair ixi_kp = new IxianKeyPair();
+                ixi_kp.privateKeyBytes = rsaKeyToBytes(kp, true, skip_header);
+                ixi_kp.publicKeyBytes = rsaKeyToBytes(kp, false, skip_header);
 
                 byte[] plain = Encoding.UTF8.GetBytes("Plain text string");
-                if (!testKeys(plain))
+                if (!testKeys(plain, ixi_kp))
                 {
-                    privateKeyBytes = null;
-                    publicKeyBytes = null;
-                    return false;
+                    return null;
                 }
+                return ixi_kp;
             }
             catch (Exception e)
             {
-                privateKeyBytes = null;
-                publicKeyBytes = null;
                 Logging.warn(string.Format("Exception while generating signature keys: {0}", e.ToString()));
-                return false;
+                return null;
             }
-            return true;
         }
 
-        public void importKeys(byte[] priv_key)
-        {
-            KeyPair rsa = rsaKeyFromBytes(priv_key);
-            privateKeyBytes = rsaKeyToBytes(rsa, true);
-            publicKeyBytes = rsaKeyToBytes(rsa, false);
-        }
-
-        public byte[] getPublicKey()
-        {
-            return publicKeyBytes;
-        }
-
-        public byte[] getPrivateKey()
-        {
-            return privateKeyBytes;
-        }
-        
         public byte[] getSignature(byte[] input_data, byte[] privateKey)
         {
             try
