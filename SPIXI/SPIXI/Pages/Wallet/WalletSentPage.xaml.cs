@@ -55,11 +55,12 @@ namespace SPIXI
                 Friend friend = null;
                 byte[] addr = transaction.toList.Keys.First();
                 // Check if this is a received payment
-                if (addr.SequenceEqual(Node.walletStorage.address))
+                if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     webView.Eval("setReceivedMode()");
-                    friend = FriendList.getFriend(transaction.from);
-                    addr = transaction.from;
+                    // TODO: FIX ME
+          /*          friend = FriendList.getFriend(transaction.from);
+                    addr = transaction.from;*/
                 }
                 else
                 {
@@ -137,11 +138,12 @@ namespace SPIXI
             Friend friend = null;
             byte[] addr = ctransaction.toList.Keys.First();
             // Check if this is a received payment
-            if (addr.SequenceEqual(Node.walletStorage.address))
+            if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
             {
-                webView.Eval("setReceivedMode()");
+                // TODO FIXME
+          /*      webView.Eval("setReceivedMode()");
                 friend = FriendList.getFriend(transaction.from);
-                addr = ctransaction.from;
+                addr = ctransaction.from;*/
             }
             else
             {

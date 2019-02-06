@@ -136,8 +136,8 @@ namespace SPIXI.Storage
                 writer.Write(version);
 
                 // Write the address used for verification
-                writer.Write(Node.walletStorage.address.Length);
-                writer.Write(Node.walletStorage.address);
+                writer.Write(Node.walletStorage.getPrimaryAddress().Length);
+                writer.Write(Node.walletStorage.getPrimaryAddress());
 
                 // Write account information
                 writer.Write(nickname);

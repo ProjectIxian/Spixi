@@ -33,7 +33,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            string address_string = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.address);
+            string address_string = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
             webView.Eval(string.Format("setAddress(\"{0}\")", address_string));
         }
 

@@ -132,7 +132,7 @@ namespace SPIXI
                 byte[] pubkey = presence.pubkey;
                 string name = "Unknown";
 
-                if (wallet.SequenceEqual(Node.walletStorage.address))
+                if (wallet.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     name = Node.localStorage.nickname;
                 }

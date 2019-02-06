@@ -163,7 +163,7 @@ namespace SPIXI
                     writer.Write(CoreConfig.protocolVersion);
 
                     // Send the public node address
-                    byte[] address = Node.walletStorage.address;
+                    byte[] address = Node.walletStorage.getPrimaryAddress();
                     writer.Write(address.Length);
                     writer.Write(address);
 
@@ -181,8 +181,8 @@ namespace SPIXI
                     writer.Write(Config.device_id);
 
                     // Send the wallet public key
-                    writer.Write(Node.walletStorage.publicKey.Length);
-                    writer.Write(Node.walletStorage.publicKey);
+                    writer.Write(Node.walletStorage.getPrimaryPublicKey().Length);
+                    writer.Write(Node.walletStorage.getPrimaryPublicKey());
 
                     // Send listening port
                     writer.Write(0);
@@ -192,7 +192,7 @@ namespace SPIXI
                     writer.Write(timestamp);
 
                     // send signature
-                    byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + publicHostname), Node.walletStorage.privateKey);
+                    byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + publicHostname), Node.walletStorage.getPrimaryPrivateKey());
                     writer.Write(signature.Length);
                     writer.Write(signature);
 

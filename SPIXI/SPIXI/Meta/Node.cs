@@ -108,7 +108,7 @@ namespace DLT.Meta
             PresenceList.performCleanup();
 
 
-            if (Node.walletStorage.address == null)
+            if (Node.walletStorage.getPrimaryAddress() == null)
                 return;
 
             // Request wallet balance
@@ -116,8 +116,8 @@ namespace DLT.Meta
             {
                 using (BinaryWriter writer = new BinaryWriter(mw))
                 {
-                    writer.Write(Node.walletStorage.address.Length);
-                    writer.Write(Node.walletStorage.address);
+                    writer.Write(Node.walletStorage.getPrimaryAddress().Length);
+                    writer.Write(Node.walletStorage.getPrimaryAddress());
                     NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray());
                 }
             }
@@ -176,7 +176,7 @@ namespace DLT.Meta
         // Sends a single keepalive message
         public static void sendKeepAlive()
         {
-            if(walletStorage.privateKey == null)
+            if(walletStorage.getPrimaryPrivateKey() == null)
             {
                 return;
             }
@@ -239,5 +239,9 @@ namespace DLT.Meta
             return blockHeight;
         }
 
+        public static int getLastBlockVersion()
+        {
+            return 3; // TODO
+        }
     }
 }

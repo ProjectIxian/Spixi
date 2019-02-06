@@ -486,11 +486,12 @@ namespace SPIXI
 
             webView.Eval("clearRecentActivity()");
 
-
+            // TODO: FIXME
+/*
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
                 string tx_type = "Payment Received";
-                if (utransaction.from.SequenceEqual(Node.walletStorage.address))
+                if (utransaction.from.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     tx_type = "Payment Sent";
                 }
@@ -502,7 +503,7 @@ namespace SPIXI
             {
                 Transaction transaction = TransactionCache.transactions[i];
                 string tx_type = "Payment Received";
-                if(transaction.from.SequenceEqual(Node.walletStorage.address))
+                if(transaction.from.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     tx_type = "Payment Sent";
                 }
@@ -510,7 +511,7 @@ namespace SPIXI
 
 
                 webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
-            }
+            }*/
             
         }
 

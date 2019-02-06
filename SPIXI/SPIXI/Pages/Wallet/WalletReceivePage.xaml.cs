@@ -50,7 +50,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setAddress(\"{0}\")", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.address)));
+            webView.Eval(string.Format("setAddress(\"{0}\")", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress())));
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -112,7 +112,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = local_friend.walletAddress;
-            message.sender = Node.walletStorage.address;
+            message.sender = Node.walletStorage.getPrimaryAddress();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
