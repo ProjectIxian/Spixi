@@ -349,7 +349,8 @@ namespace SPIXI
             // Call webview methods on the main UI thread only
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
             {
-                webView.Eval(string.Format("{0}(\"{1}\",\"{2}\",\"{3}\")", prefix, avatar, message.message, message.timestamp));
+                string escapedString = message.message.Replace("\"", "&quot;");
+                webView.Eval(string.Format("{0}(\"{1}\",\"{2}\",\"{3}\")", prefix, avatar, escapedString, message.timestamp));
             });
             message.read = true;
 

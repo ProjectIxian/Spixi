@@ -118,7 +118,7 @@ namespace DLT.Meta
                 {
                     writer.Write(Node.walletStorage.address.Length);
                     writer.Write(Node.walletStorage.address);
-                    NetworkClientManager.broadcastData(ProtocolMessageCode.getBalance, mw.ToArray());
+                    NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray());
                 }
             }
 
@@ -189,7 +189,7 @@ namespace DLT.Meta
                     {
                         writer.Write(keepAliveVersion);
 
-                        byte[] wallet = walletStorage.address;
+                        byte[] wallet = walletStorage.getPrimaryAddress();
                         writer.Write(wallet.Length);
                         writer.Write(wallet);
 
@@ -199,22 +199,23 @@ namespace DLT.Meta
                         long timestamp = Core.getCurrentTimestamp();
                         writer.Write(timestamp);
 
-                        string hostname = primaryS2Address;
+                        string hostname = Node.getFullAddress();
                         writer.Write(hostname);
 
                         // Add a verifiable signature
-                        byte[] private_key = walletStorage.privateKey;
+                        byte[] private_key = walletStorage.getPrimaryPrivateKey();
                         byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + hostname), private_key);
                         writer.Write(signature.Length);
                         writer.Write(signature);
 
-                        //    PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
-                        //    PresenceList.curNodePresenceAddress.signature = signature;
+                        PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
+                        PresenceList.curNodePresenceAddress.signature = signature;
                     }
 
 
+                    byte[] address = null;
                     // Update self presence
-                    PresenceList.receiveKeepAlive(m.ToArray());
+                    PresenceList.receiveKeepAlive(m.ToArray(), out address);
 
                     // Send this keepalive message to the primary S2 node only
                     // TODO
@@ -237,5 +238,6 @@ namespace DLT.Meta
         {
             return blockHeight;
         }
+
     }
 }

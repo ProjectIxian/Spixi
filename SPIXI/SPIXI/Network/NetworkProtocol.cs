@@ -44,11 +44,51 @@ namespace DLT.Network
             }
             else
             {
-                bool c_result = NetworkClientManager.broadcastData(code, data, skipEndpoint);
+                bool c_result = NetworkClientManager.broadcastData(new char[] { 'M', 'R' }, code, data, skipEndpoint);
 
                 if (!c_result)
                     return false;
             }
+
+            return true;
+        }
+
+        // Broadcast a protocol message across clients and nodes
+        // Returns true if it sent the message at least one endpoint. Returns false if the message couldn't be sent to any endpoints
+        public static bool broadcastProtocolMessage(char[] types, ProtocolMessageCode code, byte[] data, RemoteEndpoint skipEndpoint = null, bool sendToSingleRandomNode = false)
+        {
+            if (data == null)
+            {
+                Logging.warn(string.Format("Invalid protocol message data for {0}", code));
+                return false;
+            }
+
+            if (sendToSingleRandomNode)
+            {
+                int serverCount = NetworkClientManager.getConnectedClients().Count();
+
+                Random r = new Random();
+                int rIdx = r.Next(serverCount);
+
+                RemoteEndpoint re = null;
+
+                re = NetworkClientManager.getClient(rIdx);
+
+                if (re != null && re.isConnected())
+                {
+                    re.sendData(code, data);
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                bool c_result = NetworkClientManager.broadcastData(new char[] { 'M', 'R' }, code, data, skipEndpoint);
+
+                if (!c_result)
+                    return false;
+            }
+
 
             return true;
         }

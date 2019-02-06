@@ -85,7 +85,7 @@ namespace SPIXI
 
             Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());
 
-            NetworkClientManager.broadcastData(ProtocolMessageCode.newTransaction, transaction.getBytes());
+            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes());
 
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);

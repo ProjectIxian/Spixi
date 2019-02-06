@@ -45,6 +45,7 @@ namespace SPIXI
 
             handleBackground();
 
+          //  Navigation.PushAsync(new LockPage(), Config.defaultXamarinAnimations);
         }
 
         private void prepBackground()
