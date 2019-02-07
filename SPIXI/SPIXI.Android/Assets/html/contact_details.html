@@ -1,237 +1,206 @@
-﻿<html>
-<head>
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI Contact</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/stylecontact.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-	<script src="js/spixi.js"></script>
-</head>
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
     
-<body onload="onload()">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
+</head>
+<body>
     <div id="wrap" class="container-fluid noselect">
-
-        <div id="toolbar" class="toolbar">
-            <div id="backbtn" class="toolbar_back"></div>
-            <div id="toolbar_mid" class="toolbar_mid">
-                <div class="toolbar_stext" id="title">Contact</div>
-                <div class="toolbar_subtext" id="subtitle"></div>
+        
+        <!-- Toolbar Contact -->
+        <div class="spixi-toolbar-contact">
+            <div id="backbtn" class="col-2 spixi-center" style="padding-top: 10px;">
+                <i class="fas fa-arrow-left"></i>
             </div>
+            <div class="col-10"></div>
+            
+            <div class="spixi-toolbar-contact-name">Andrew</div>
+            <div class="spixi-toolbar-contact-status">last online 15 minutes ago</div>
         </div>
-
-
-        <div class="contact_description">
-            <img src="avatar.png" class="contact_user_avatar_bk" />
-
-            <img src="avatar.png" class="contact_user_avatar" />
-
-            <div id="contact_user_indicator" style="display:none !important;" class="contact_user_indicator"></div>
-            <div class="contact_user_name" id="title2"></div>
-            <div class="contact_user_subtitle" id="subtitle2"></div>
-
-            <div class="action_line"></div>
-            <div id="achat" class="action_chat">message</div>
-            <div id="arequest" class="request_chat">request IXI</div>
-            <div id="asend" class="send_chat">send IXI</div>
-        </div>
-
-        <div class="contact_remove">
-            <a href="javascript:onRemoveAction();">
-                <div class="contact_remove_btn">Remove contact</div>
-            </a>
-        </div>
-
-        <div class="contact_remove">
-            <a href="javascript:onRemoveHistoryAction();">
-                <div class="contact_removehistory_btn">Delete entire history</div>
-            </a>
-        </div>
-
-        <div class="recent_activity_bar">
-            <div class="col-xs-12">Notifications</div>
-        </div>
-
-        <div id="payments_no_activity">
-            <div class="payment">
-                <div class="">
-                    <div class="col-xs-2 psign"></div>
-                    <div class="col-xs-10 pnoactivity">No recent notifications</div>
-                </div>
+        <!-- End Toolbar Contact -->
+        
+        <!-- OptionBar -->
+        <div class="spixi-optionbar">
+            <div class="spixi-optionbar-frame">
+                <div class="row" id="">
+                    <div class="col-4 spixi-optionbar-tab">
+                      <a href="#home" >
+                          <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
+                          <div class="spixi-optionbar-label">chat</div>
+                      </a>
+                    </div>
+                    
+                    <div class="col-4 spixi-optionbar-tab">
+                      <a href="#home" >
+                          <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
+                          <div class="spixi-optionbar-label">send</div>
+                      </a>
+                    </div>
+                    
+                    <div class="col-4 spixi-optionbar-tab">
+                      <a href="#home" >
+                          <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
+                          <div class="spixi-optionbar-label">receive</div>
+                      </a>
+                    </div>                    
+                </div>  
             </div>
+        </div>        
+        <!-- End OptionBar -->
+        
+        
+        
+        <div id="exp1" class="spixi-expansion">
+            <div id="exp1-left" class="spixi-expansion-left"></div>
+            <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
+            <div class="spixi-expansion-text">Notifications (2)</div>
+            <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
         </div>
-
-        <div id="payments" style="display: none;">
+        <div id="exp1-contents" class="spixi-expansion-middle" style="display: none;">
+            
         </div>
-
-        <div class="recent_activity_bar">
-            <div class="col-xs-12">History</div>
+        <div class="spixi-expansion-bottom"></div>
+        
+        
+        
+        
+        <div id="exp2" class="spixi-expansion">
+            <div id="exp2-left" class="spixi-expansion-left"></div>
+            <div class="spixi-expansion-icon"><i class="fa fa-history"></i></div>
+            <div class="spixi-expansion-text">History</div>
+            <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-caret-down"></i></div>
         </div>
+        <div id="exp2-contents" class="spixi-expansion-middle" style="display: none;">
+            
+        </div>
+        <div class="spixi-expansion-bottom"></div>        
+        
+        
+        <div class="spixi-holder-20"></div>
+        
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Spixi Account and Wallet address
+        </div>        
+        <hr class="spixi-separator"/>
 
+        <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+            <div class="address_qr" id="qrcode"></div>
+            
+            <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; Address copied to clipboard</div>
 
+            <hr class="spixi-separator"/>
 
+            <div id="wal1" class="spixi-text-address">Retrieving</div>
+            <div id="wal2" class="spixi-text-address">SPIXI</div>
+            <div id="wal3" class="spixi-text-address">address...</div>
+        
+            <hr class="spixi-separator"/>
+            <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> tap to copy to clipboard</div>
+                    <div class="spixi-holder-20"></div>
 
+        </div>
+        
+        <hr class="spixi-separator-full"/>        
+        <div class="spixi-holder-20"></div>
 
-
-
-        <div id="removeModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="hmodal-header">
+        <div class="row">
+            <div class="col-6">
+                <div class="spixi-button center small smallwidth">
                     Remove Contact
                 </div>
-                <div class="hmodal-text">
-                    Remove this contact from your<br />contacts list and delete history?
-                </div>
-                <div class="hmodal-footer">
-                    <div class="hmodalclosehalf">CANCEL</div>
-
-                    <a href="ixian:remove">
-                        <div class="hmodalconfirmhalf">CONFIRM</div>
-                    </a>
-                </div>
             </div>
-        </div>
-
-        <div id="removeHistoryModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="hmodal-header">
+            <div class="col-6">
+                <div class="spixi-button center small smallwidth">
                     Delete History
-                </div>
-                <div class="hmodal-text">
-                    Delete message history<br />for this contact?
-                </div>
-                <div class="hmodal-footer">
-                    <div class="hmodalclosehalf">CANCEL</div>
-
-                    <a href="ixian:removehistory">
-                        <div class="hmodalconfirmhalf">CONFIRM</div>
-                    </a>
-                </div>
+                </div>  
             </div>
         </div>
+        
+        <div class="spixi-holder-40"></div>
+
     </div>
-
+    
+    
 <script type="text/javascript">
-    var removeModal = document.getElementById('removeModal');
-    var removeHistoryModal = document.getElementById('removeHistoryModal');
-
-    // Handle modals outside tap
-    window.onclick = function(event) {
-        if(event.target == removeModal) {
-            removeModal.style.display = "none";
-        }
-        else if (event.target == removeHistoryModal) {
-            removeHistoryModal.style.display = "none";
-        }
-    }
-            
-    document.getElementsByClassName("hmodal-footer")[0].onclick = function() {
-        removeModal.style.display = "none";
-    }
-    document.getElementsByClassName("hmodal-footer")[1].onclick = function () {
-        removeHistoryModal.style.display = "none";
-    }            
-    
-    function onRemoveAction()
-    {
-        removeModal.style.display = "block";
-    }
-
-    function onRemoveHistoryAction()
-    {
-        removeHistoryModal.style.display = "block";
-    }
-    
     
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 
     
-    document.getElementById("achat").onclick = function() {
-        location.href = "ixian:chat";
-    } 
-    document.getElementById("arequest").onclick = function() {
-        location.href = "ixian:request";
-    } 
-    document.getElementById("asend").onclick = function() {
-        location.href = "ixian:send";
-    }     
 
-
-    function removeContact() {
-        location.href = "ixian:remove";
+    function setAddress(addr) {
+        document.getElementById("addressInput").value = addr;
     }
     
-    // Clears recent activity from home and wallet pages
-    function clearRecentActivity()
-    {
-        var paymentsNode = document.getElementById("payments");
-        while (paymentsNode.firstChild) {
-            paymentsNode.removeChild(paymentsNode.firstChild);
-        }
-                
-        document.getElementById("payments").style.display = 'none';
-        document.getElementById("payments_no_activity").style.display = 'block';
-    }
-    
-    // Adds a payment
-    function addPaymentActivity(txid, text, timestamp, amount)
-    {
-        var paymentsNode = document.getElementById("payments");
+    document.getElementById("exp1").onclick = function() {
+        var x = document.getElementById("exp1-contents");   
+        var eleft = document.getElementById("exp1-left");        
+        var eicon = document.getElementById("exp1-icon");        
 
-
-        var payment = document.createElement("div");
-        payment.className = "payment";
         
-        var icon_name = "Received_icon.png";
-        if(text == "SENT")
+        
+        if (x.style.display === "none") 
         {
-            icon_name = "Sent_icon.png";
+            x.style.display = "block";
+            eleft.className = "spixi-expansion-left active";
+            eicon.className = "fa fa-minus";
+        } 
+        else 
+        {
+            x.style.display = "none";
+            eleft.className = "spixi-expansion-left"; 
+            eicon.className = "fa fa-caret-down";
+
         }
         
-        payment.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="col-xs-2 psign"><img src="img/'+icon_name+'" style="width:24px;height:20px;" /></div><div class="col-xs-6 pdesc">'+text+'<br />'+timestamp+'</div> <div class="col-xs-4 pamount"><i class="preceived">'+amount+'</i></div></a>';
-                
-        paymentsNode.appendChild(payment);
-                
-        document.getElementById("payments").style.display = 'block';
-        document.getElementById("payments_no_activity").style.display = 'none';
     }
     
-    function setAddress(address)
-    {
-        //document.getElementById("contact_wallet_address").innerHTML = address;
-    }
-
-    function setNickname(nick) {
-        document.getElementById("title").innerHTML = nick;
-        document.getElementById("title2").innerHTML = nick;
-
-    }
-
-    function showIndicator(val) {
-        if (val == true) {
-            document.getElementById("contact_user_indicator").style.display = "block";
-            setSubtitle("online");
-        }
-        else {
-            document.getElementById("contact_user_indicator").style.display = "none";
-            setSubtitle("offline");
-        }
-    }
-
-    function setSubtitle(stat) {
-        document.getElementById("subtitle").innerHTML = stat;
-        document.getElementById("subtitle2").innerHTML = stat;
-    }
     
+    
+    document.getElementById("exp2").onclick = function() {
+        var x = document.getElementById("exp2-contents");   
+        var eleft = document.getElementById("exp2-left");        
+        var eicon = document.getElementById("exp2-icon");        
+
+        
+        
+        if (x.style.display === "none") 
+        {
+            x.style.display = "block";
+            eleft.className = "spixi-expansion-left active";
+            eicon.className = "fa fa-minus";
+        } 
+        else 
+        {
+            x.style.display = "none";
+            eleft.className = "spixi-expansion-left"; 
+            eicon.className = "fa fa-caret-down";
+
+        }
+        
+    }    
+    
+
+
 </script>
-    
-</body>    
+
+</body>
 </html>

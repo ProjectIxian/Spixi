@@ -82,6 +82,20 @@
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\fonts\Roboto-Bold-webfont.woff" />
+    <AndroidAsset Include="Assets\html\fonts\Roboto-Regular-webfont.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.woff2" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.woff2" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.woff2" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
@@ -133,154 +147,132 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\address.html" />
-    <AndroidAsset Include="Assets\html\avatar.png" />
-    <AndroidAsset Include="Assets\html\avatar1.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\chat.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\contact_details.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\contact_new.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\index.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\intro.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\intro_new.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\intro_restore.html" />
-    <AndroidAsset Include="Assets\html\lock.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\settings.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\settings_backup.html" />
-    <AndroidAsset Include="Assets\html\settings_lock.html" />
-    <AndroidAsset Include="Assets\html\wallet_contact_request.html" />
-    <AndroidAsset Include="Assets\html\wallet_recipient.html" />
-    <AndroidAsset Include="Assets\html\wallet_request.html" />
-    <AndroidAsset Include="Assets\html\wallet_send.html" />
-    <AndroidAsset Include="Assets\html\wallet_sent.html" />
-    <AndroidAsset Include="Assets\html\css\bootstrap37.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings_encryption.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\bootstrap.min.css" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\css\normalize.css" />
-    <AndroidAsset Include="Assets\html\css\style.css" />
-    <AndroidAsset Include="Assets\html\css\styleaddress.css" />
-    <AndroidAsset Include="Assets\html\css\stylechat.css" />
-    <AndroidAsset Include="Assets\html\css\stylecontact.css" />
-    <AndroidAsset Include="Assets\html\css\styleintro.css" />
-    <AndroidAsset Include="Assets\html\css\styleintronew.css" />
-    <AndroidAsset Include="Assets\html\css\stylelock.css" />
-    <AndroidAsset Include="Assets\html\css\stylesecurity.css" />
-    <AndroidAsset Include="Assets\html\css\stylesettings.css" />
-    <AndroidAsset Include="Assets\html\css\stylewallet.css" />
-    <AndroidAsset Include="Assets\html\img\abicon.png" />
-    <AndroidAsset Include="Assets\html\img\About_icon.png" />
-    <AndroidAsset Include="Assets\html\img\accept_icon.png" />
-    <AndroidAsset Include="Assets\html\img\activity.png" />
-    <AndroidAsset Include="Assets\html\img\address.png" />
-    <AndroidAsset Include="Assets\html\img\Address_icon.png" />
-    <AndroidAsset Include="Assets\html\img\AttachFile_icon.png" />
-    <AndroidAsset Include="Assets\html\img\AttachFile_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Avatar_bck.png" />
-    <AndroidAsset Include="Assets\html\img\Avatar_settings.png" />
-    <AndroidAsset Include="Assets\html\img\Back_icon.png" />
-    <AndroidAsset Include="Assets\html\img\backup.png" />
-    <AndroidAsset Include="Assets\html\img\Backup_icon.png" />
-    <AndroidAsset Include="Assets\html\img\bottomIndicator.png" />
-    <AndroidAsset Include="Assets\html\img\camera.png" />
-    <AndroidAsset Include="Assets\html\img\chatbackground.png" />
-    <AndroidAsset Include="Assets\html\img\Chats_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Chats_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\ChooseContact_icon.png" />
-    <AndroidAsset Include="Assets\html\img\Contacts_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Contacts_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\Create_icon_Active.png" />
-    <AndroidAsset Include="Assets\html\img\Create_icon_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\details_chat.png" />
-    <AndroidAsset Include="Assets\html\img\details_request.png" />
-    <AndroidAsset Include="Assets\html\img\details_send.png" />
-    <AndroidAsset Include="Assets\html\img\dismissNotification.png" />
-    <AndroidAsset Include="Assets\html\img\Done_icon.png" />
-    <AndroidAsset Include="Assets\html\img\Edit_icon_Active.png" />
-    <AndroidAsset Include="Assets\html\img\Edit_icon_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\error.png" />
-    <AndroidAsset Include="Assets\html\img\FAB_Active.png" />
-    <AndroidAsset Include="Assets\html\img\FAB_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\Fail_icon.png" />
-    <AndroidAsset Include="Assets\html\img\floatbutton.png" />
-    <AndroidAsset Include="Assets\html\img\Forward_icon.png" />
-    <AndroidAsset Include="Assets\html\img\historyDelete_icon.png" />
-    <AndroidAsset Include="Assets\html\img\historyDelete_icon_Black.png" />
-    <AndroidAsset Include="Assets\html\img\Home_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Home_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\ignore_icon.png" />
-    <AndroidAsset Include="Assets\html\img\info_about.png" />
-    <AndroidAsset Include="Assets\html\img\info_grey.png" />
-    <AndroidAsset Include="Assets\html\img\info_icon.png" />
-    <AndroidAsset Include="Assets\html\img\ixi.png" />
-    <AndroidAsset Include="Assets\html\img\Ixi_green.png" />
-    <AndroidAsset Include="Assets\html\img\Ixi_icon.png" />
-    <AndroidAsset Include="Assets\html\img\Ixi_white.png" />
-    <AndroidAsset Include="Assets\html\img\Lock_icon.png" />
-    <AndroidAsset Include="Assets\html\img\lock_red.png" />
-    <AndroidAsset Include="Assets\html\img\Locked_icon.png" />
-    <AndroidAsset Include="Assets\html\img\LockScreen_background.jpg" />
-    <AndroidAsset Include="Assets\html\img\lockScreen_icon.png" />
-    <AndroidAsset Include="Assets\html\img\logofull.png" />
-    <AndroidAsset Include="Assets\html\img\More_icon.png" />
-    <AndroidAsset Include="Assets\html\img\MyAddressi_icon.png" />
-    <AndroidAsset Include="Assets\html\img\nav.png" />
-    <AndroidAsset Include="Assets\html\img\Notifications_icon.png" />
-    <AndroidAsset Include="Assets\html\img\onlineIndicator.png" />
-    <AndroidAsset Include="Assets\html\img\Open_icon.png" />
-    <AndroidAsset Include="Assets\html\img\payr.png" />
-    <AndroidAsset Include="Assets\html\img\QuickScan.png" />
-    <AndroidAsset Include="Assets\html\img\receive.png" />
-    <AndroidAsset Include="Assets\html\img\Received_icon.png" />
-    <AndroidAsset Include="Assets\html\img\remove_contact.png" />
-    <AndroidAsset Include="Assets\html\img\Request_Active.png" />
-    <AndroidAsset Include="Assets\html\img\Request_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Request_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\Request_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\Request_white.png" />
-    <AndroidAsset Include="Assets\html\img\Restore.png" />
-    <AndroidAsset Include="Assets\html\img\Restore_icon_Active.png" />
-    <AndroidAsset Include="Assets\html\img\Restore_icon_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\restore_steps.png" />
-    <AndroidAsset Include="Assets\html\img\ScanButton_Active.png" />
-    <AndroidAsset Include="Assets\html\img\ScanButton_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\ScanButtonL_Active.png" />
-    <AndroidAsset Include="Assets\html\img\ScanButtonL_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\security.png" />
-    <AndroidAsset Include="Assets\html\img\Security_icon.png" />
-    <AndroidAsset Include="Assets\html\img\send.png" />
-    <AndroidAsset Include="Assets\html\img\Send_Active.png" />
-    <AndroidAsset Include="Assets\html\img\Send_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Send_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\Send_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\Send_white.png" />
-    <AndroidAsset Include="Assets\html\img\SendIXI_icon_blue.png" />
-    <AndroidAsset Include="Assets\html\img\SendMessage_icon.png" />
-    <AndroidAsset Include="Assets\html\img\sendr.png" />
-    <AndroidAsset Include="Assets\html\img\Sent_icon.png" />
-    <AndroidAsset Include="Assets\html\img\settings.png" />
-    <AndroidAsset Include="Assets\html\img\Settings_icon.png" />
-    <AndroidAsset Include="Assets\html\img\Spixi_logo_loadin.png" />
-    <AndroidAsset Include="Assets\html\img\SpixiLogo_Splash.png" />
-    <AndroidAsset Include="Assets\html\img\StartChat_Active.png" />
-    <AndroidAsset Include="Assets\html\img\StartChat_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\Success_icon.png" />
-    <AndroidAsset Include="Assets\html\img\tabchat.png" />
-    <AndroidAsset Include="Assets\html\img\tabcontacts.png" />
-    <AndroidAsset Include="Assets\html\img\tabhome.png" />
-    <AndroidAsset Include="Assets\html\img\tabwallet.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Activity_active.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Activity_idle.png" />
-    <AndroidAsset Include="Assets\html\img\Wallet_icon.png" />
-    <AndroidAsset Include="Assets\html\img\Wallet_icon_active.png" />
-    <AndroidAsset Include="Assets\html\img\Wallet_icon_idle.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Receive_active.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Receive_idle.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_ScanButton_Active.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_ScanButton_Idle.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Send_active.png" />
-    <AndroidAsset Include="Assets\html\img\wallet_Send_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\spixiui-intro.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\spixiui.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\intrologo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\spixiavatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\spixitoolbarlogo.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\bootstrap.min.js" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\clipboard.min.js" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\jquery.min.js" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\jquery.touchSwipe.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\popper.min.js" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\qrcode.min.js" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\spixi.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

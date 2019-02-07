@@ -1,41 +1,60 @@
+<!DOCTYPE html>
 <html>
-<head>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI Intro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/styleintro.css">
-        
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui-intro.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
 </head>
-    
 <body>
-<div id="wrap" class="top_part container-fluid noselect">
+    <div id="wrap" class="container-fluid noselect">
+        
+        <div class="intro-logo-holder">
+            <img class="intro-logo" src="img/intrologo.png"/>
+        </div>
+        
+        <div class="intro-title">Welcome to Spixi,</div>
+        <div class="intro-subtitle">The most secure chat in the world</div>
+        
+        <div class="intro-holder-96"></div>
+        <hr class="intro-separator"/>
+        
+        <div class="intro-text center">Please create or restore your</div>
+        <div class="intro-text center">Spixi Account to proceed</div>
+        
+        <div class="intro-holder-20"></div>
 
-    <div id="title">Hello, I`m Spixi</div>
-    <div class="subtitle">This is my prototype phase.</div>
-    <div class="subtitle">Let`s get you started.</div>
-    <div id="logo"></div>
+        <div id="create" class="intro-button center">
+            New Account
+        </div>
+        
+        <div class="intro-holder-20"></div>
 
-    <div class="description">First you will need an account.</div>
-    <div class="description">Let's set one up for you.</div>
-   
-    <div id="create" class="button extra_margin icon_create">CREATE ACCOUNT</div>
+        <div id="restore" class="intro-button ghost center">
+            Restore your Account
+        </div>     
+        
+        <div class="intro-holder-70"></div>
 
+    </div>
     
-
-</div>
-    
-<div class="bottom_part container-fluid noselect">
-    <div class="description2">Already a Spixi user?</div>
-    <div class="description2">Restore access to your existing account.</div>
-    <div id="restore" class="button_restore small_margin icon_restore">RESTORE ACCOUNT</div>
-</div>
     
 <script type="text/javascript">
+    
     document.getElementById("create").onclick = function() {
         location.href = "ixian:create";
     } 
@@ -43,8 +62,8 @@
     document.getElementById("restore").onclick = function() {
         location.href = "ixian:restore";
     } 
-            
+
 </script>
-    
-</body>    
+
+</body>
 </html>

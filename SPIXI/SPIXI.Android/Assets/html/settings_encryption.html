@@ -33,7 +33,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    New Contact
+                    Encryption Password
                 </div>   
             </div>
             
@@ -44,27 +44,50 @@
         <!-- DescriptionBar -->
         <div class="spixi-descriptionbar">
             <div class="row spixi-descriptionbar-row">
-                <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details">Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.</div>
+                <div class="col-2 spixi-center"><i class="fa fa-fingerprint"></i></div>
+                <div class="col-10 spixi-descriptionbar-row-details">Encryption password is the most important password for your account and wallet. You will need to enter it every time you start Spixi or if you need to restore your account.</div>
             </div>
         </div>
         <!-- End DescriptionBar -->
+
+        <div class="spixi-holder-20"></div>
         
-        <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Paste / type address">
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Edit your Encryption Password
         </div>
         
+        <hr class="spixi-separator"/>
+        
+        <div class="spixi-textsection-holder">
+            Type in your <b>Current</b> Lock Password
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your Encryption Password">
+        </div>
+        
+        <hr class="spixi-separator"/>
+        
+        <div class="spixi-textsection-holder">
+            Type in your <b>NEW</b> Lock Password
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your new Encryption Password">
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Retype in your new Encryption Password">
+        </div>
+        <hr class="spixi-separator"/>
+        <div class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> Password has to be at least 10 characters long</div>
+
+        <div class="spixi-holder-20"></div>
+        <div class="spixi-holder-20"></div>
         <hr class="spixi-separator-main"/>
         
         <div id="sendrequest" class="spixi-button large center disabled">
-            <i class="fas fa-check"></i>&nbsp; Send Contact Request
+            <i class="fas fa-fingerprint"></i>&nbsp; Change Encryption Password
         </div>
+        <div class="spixi-holder-20"></div>
         
-        <a href="ixian:quickscan">
-            <div class="spixi-button round action-button">
-                <i class="fas fa-qrcode"></i>
-            </div>
-        </a>
         
     </div>
     
