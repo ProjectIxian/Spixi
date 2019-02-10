@@ -12,31 +12,15 @@ namespace SPIXI.Wallet
 {
 
     // SPIXI-specific wallet code
-    class WalletStorage
+    class SpixiWalletStorage : WalletStorage
     {
-        private string filename;
 
-        private int walletVersion = 0;
-        private string walletPassword = ""; // TODO TODO TODO TODO wallet password, seed and keys should be encrypted in memory
-
-        private byte[] seedHash = null;
-        private byte[] masterSeed = null;
-        private byte[] derivedMasterSeed = null;
-
-        private readonly Dictionary<byte[], IxianKeyPair> myKeys = new Dictionary<byte[], IxianKeyPair>(new IXICore.Utils.ByteArrayComparer());
-        private readonly Dictionary<byte[], AddressData> myAddresses = new Dictionary<byte[], AddressData>(new IXICore.Utils.ByteArrayComparer());
-
-        private byte[] privateKey = null;
-        private byte[] publicKey = null;
-        private byte[] address = null;
-        private byte[] lastAddress = null;
-
-        public WalletStorage()
+        public SpixiWalletStorage()
         {
             filename = "spixi.wal"; 
         }
 
-        public WalletStorage(string file_name)
+        public SpixiWalletStorage(string file_name)
         {
             // Store the wallet in the system's personal user folder
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -66,7 +50,7 @@ namespace SPIXI.Wallet
             while (!success)
             {
 
-                password = "SPIXI"; // TODO connect with UI
+                password = "SPIXISPIXISPIXI"; // TODO connect with UI
 
                 success = true;
                 try
@@ -221,7 +205,7 @@ namespace SPIXI.Wallet
         }
 
         // Try to read wallet information from the file
-        public bool readWallet()
+        new public bool readWallet()
         {
             if (File.Exists(filename) == false)
             {
@@ -398,7 +382,7 @@ namespace SPIXI.Wallet
         }
 
         // Write the wallet to the file
-        public bool writeWallet(string password)
+        new public bool writeWallet(string password)
         {
             if (walletVersion == 1 || walletVersion == 2)
             {
@@ -424,19 +408,18 @@ namespace SPIXI.Wallet
         }
 
         // Generate a new wallet with matching private/public key pairs
-        public bool generateWallet()
+        public bool generateWallet(string pass)
         {
             Logging.info("A new wallet will be generated for you.");
 
             // Request a password
-            string password = "SPIXI";  // TODO - integrate with UI
+            string password = pass;
 
             walletVersion = 1;
             walletPassword = password;
 
             Logging.log(LogSeverity.info, "Generating primary wallet keys, this may take a while, please wait...");
 
-            //IxianKeyPair kp = generateNewKeyPair(false);
             IxianKeyPair kp = CryptoManager.lib.generateKeys(CoreConfig.defaultRsaKeySize, true);
 
             if (kp == null)
@@ -477,376 +460,5 @@ namespace SPIXI.Wallet
             return writeWallet(password);
         }
 
-        // Obtain the mnemonic address
-        public byte[] getWalletAddress()
-        {
-            return address;
-        }
-
-
-        public byte[] getPrimaryAddress()
-        {
-            return address;
-        }
-
-        public byte[] getPrimaryPrivateKey()
-        {
-            return privateKey;
-        }
-
-        public byte[] getPrimaryPublicKey()
-        {
-            return publicKey;
-        }
-
-        public byte[] getLastAddress()
-        {
-            // TODO TODO TODO TODO TODO improve if possible for v3 wallets
-            // Also you have to take into account what happens when loading from file and the difference between v1 and v2 wallets (key related)
-            lock (myAddresses)
-            {
-                return lastAddress;
-            }
-        }
-
-        public byte[] getSeedHash()
-        {
-            return seedHash;
-        }
-
-        public IxiNumber getMyTotalBalance(byte[] primary_address)
-        {
-            IxiNumber balance = 0;
-            lock (myAddresses)
-            {
-                foreach (var entry in myAddresses)
-                {
-                    if (primary_address != null && !entry.Value.keyPair.addressBytes.SequenceEqual(primary_address))
-                    {
-                        continue;
-                    }
-                    IxiNumber amount = Node.walletState.getWalletBalance(entry.Key);
-                    if (amount == 0)
-                    {
-                        continue;
-                    }
-                    balance += amount;
-                }
-            }
-            return balance;
-        }
-
-        public Address generateNewAddress(Address key_primary_address, bool write_to_file = true)
-        {
-            if (walletVersion < 2)
-            {
-                return generateNewAddress_v0(key_primary_address, write_to_file);
-            }
-            else
-            {
-                return generateNewAddress_v1(key_primary_address, write_to_file);
-            }
-        }
-
-        public Address generateNewAddress_v0(Address key_primary_address, bool write_to_file = true)
-        {
-            lock (myKeys)
-            {
-                if (!myKeys.ContainsKey(key_primary_address.address))
-                {
-                    return null;
-                }
-
-                IxianKeyPair kp = myKeys[key_primary_address.address];
-
-                byte[] base_nonce = Crypto.sha512quTrunc(privateKey, publicKey.Length, 64);
-
-                byte[] last_nonce = kp.lastNonceBytes;
-
-                List<byte> new_nonce = base_nonce.ToList();
-                if (last_nonce != null)
-                {
-                    new_nonce.AddRange(last_nonce);
-                }
-                kp.lastNonceBytes = Crypto.sha512quTrunc(new_nonce.ToArray(), 0, 0, 16);
-
-                Address new_address = new Address(key_primary_address.address, kp.lastNonceBytes);
-
-                lock (myAddresses)
-                {
-                    AddressData ad = new AddressData() { nonce = kp.lastNonceBytes, keyPair = kp };
-                    myAddresses.Add(new_address.address, ad);
-                    lastAddress = new_address.address;
-                }
-
-                if (write_to_file)
-                {
-                    writeWallet(walletPassword);
-                }
-
-                return new_address;
-            }
-        }
-
-        public Address generateNewAddress_v1(Address key_primary_address, bool write_to_file = true)
-        {
-            lock (myKeys)
-            {
-                if (!myKeys.ContainsKey(key_primary_address.address))
-                {
-                    return null;
-                }
-
-                IxianKeyPair kp = myKeys[key_primary_address.address];
-
-                byte[] base_nonce = Crypto.sha512sqTrunc(privateKey, publicKey.Length, 64);
-
-                byte[] last_nonce = kp.lastNonceBytes;
-
-                List<byte> new_nonce = base_nonce.ToList();
-                if (last_nonce != null)
-                {
-                    new_nonce.AddRange(last_nonce);
-                }
-                kp.lastNonceBytes = Crypto.sha512sqTrunc(new_nonce.ToArray(), 0, 0, 16);
-
-                Address new_address = new Address(key_primary_address.address, kp.lastNonceBytes);
-
-                lock (myAddresses)
-                {
-                    AddressData ad = new AddressData() { nonce = kp.lastNonceBytes, keyPair = kp };
-                    myAddresses.Add(new_address.address, ad);
-                    lastAddress = new_address.address;
-                }
-
-                if (write_to_file)
-                {
-                    writeWallet(walletPassword);
-                }
-
-                return new_address;
-            }
-        }
-
-        public IxianKeyPair generateNewKeyPair(bool writeToFile = true)
-        {
-            if (walletVersion < 3)
-            {
-                lock (myKeys)
-                {
-                    return myKeys.First().Value;
-                }
-            }
-
-            IXICore.CryptoKey.KeyDerivation kd = new IXICore.CryptoKey.KeyDerivation(masterSeed);
-
-            int key_count = 0;
-
-            lock (myKeys)
-            {
-                key_count = myKeys.Count();
-            }
-
-            IxianKeyPair kp = kd.deriveKey(key_count, CoreConfig.defaultRsaKeySize, 65537);
-
-            if (kp == null)
-            {
-                Logging.error("An error occured generating new key pair, unable to derive key.");
-                return null;
-            }
-
-            if (!DLT.CryptoManager.lib.testKeys(Encoding.Unicode.GetBytes("TEST TEST"), kp))
-            {
-                Logging.error("An error occured while testing the newly generated keypair, unable to produce a valid address.");
-                return null;
-            }
-            Address addr = new Address(kp.publicKeyBytes);
-
-            if (addr.address == null)
-            {
-                Logging.error("An error occured generating new key pair, unable to produce a valid address.");
-                return null;
-            }
-            lock (myKeys)
-            {
-                lock (myAddresses)
-                {
-                    if (!writeToFile)
-                    {
-                        myKeys.Add(addr.address, kp);
-                        AddressData ad = new AddressData() { nonce = kp.lastNonceBytes, keyPair = kp };
-                        myAddresses.Add(addr.address, ad);
-                    }
-                    else
-                    {
-                        if (writeWallet(walletPassword))
-                        {
-                            myKeys.Add(addr.address, kp);
-                            AddressData ad = new AddressData() { nonce = kp.lastNonceBytes, keyPair = kp };
-                            myAddresses.Add(addr.address, ad);
-                        }
-                        else
-                        {
-                            Logging.error("An error occured while writing wallet file.");
-                            return null;
-                        }
-                    }
-                }
-            }
-
-            return kp;
-        }
-
-        public IxianKeyPair getKeyPair(byte[] address)
-        {
-            lock (myKeys)
-            {
-                if (myKeys.ContainsKey(address))
-                {
-                    return myKeys[address];
-                }
-                return null;
-            }
-        }
-
-        public AddressData getAddress(byte[] address)
-        {
-            lock (myAddresses)
-            {
-                if (myAddresses.ContainsKey(address))
-                {
-                    return myAddresses[address];
-                }
-            }
-            return null;
-        }
-
-        public bool isMyAddress(byte[] address)
-        {
-            lock (myAddresses)
-            {
-                if (myAddresses.ContainsKey(address))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public List<byte[]> extractMyAddressesFromAddressList(SortedDictionary<byte[], IxiNumber> address_list)
-        {
-            lock (myAddresses)
-            {
-                List<byte[]> found_address_list = new List<byte[]>();
-                foreach (var entry in address_list)
-                {
-                    if (myAddresses.ContainsKey(entry.Key))
-                    {
-                        found_address_list.Add(entry.Key);
-                    }
-                }
-                if (found_address_list.Count > 0)
-                {
-                    return found_address_list;
-                }
-            }
-            return null;
-        }
-
-        public List<Address> getMyAddresses()
-        {
-            lock (myAddresses)
-            {
-                return myAddresses.Select(x => new Address(x.Key)).ToList();
-            }
-        }
-
-        public List<string> getMyAddressesBase58()
-        {
-            lock (myAddresses)
-            {
-                return myAddresses.Select(x => (new Address(x.Key)).ToString()).ToList();
-            }
-        }
-
-        public SortedDictionary<byte[], IxiNumber> generateFromListFromAddress(byte[] from_address, IxiNumber total_amount_with_fee, bool full_pubkey = false)
-        {
-            lock (myAddresses)
-            {
-                SortedDictionary<byte[], IxiNumber> tmp_from_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
-                if (full_pubkey)
-                {
-                    if (!myAddresses.ContainsKey(from_address))
-                    {
-                        return null;
-                    }
-                    AddressData ad = myAddresses[from_address];
-                    tmp_from_list.Add(ad.nonce, total_amount_with_fee);
-                }
-                else
-                {
-                    tmp_from_list.Add(new byte[1] { 0 }, total_amount_with_fee);
-                }
-                return tmp_from_list;
-            }
-        }
-
-        public SortedDictionary<byte[], IxiNumber> generateFromList(byte[] primary_address, IxiNumber total_amount_with_fee, List<byte[]> skip_addresses)
-        {
-            lock (myAddresses)
-            {
-                Dictionary<byte[], IxiNumber> tmp_from_list = new Dictionary<byte[], IxiNumber>(new ByteArrayComparer());
-                foreach (var entry in myAddresses)
-                {
-                    if (!entry.Value.keyPair.addressBytes.SequenceEqual(primary_address))
-                    {
-                        continue;
-                    }
-
-                    if (skip_addresses.Contains(entry.Value.keyPair.addressBytes, new ByteArrayComparer()))
-                    {
-                        continue;
-                    }
-
-                    DLT.Wallet wallet = Node.walletState.getWallet(entry.Key);
-                    if (wallet.type != WalletType.Normal)
-                    {
-                        continue;
-                    }
-
-                    IxiNumber amount = wallet.balance;
-                    if (amount == 0)
-                    {
-                        continue;
-                    }
-
-                    tmp_from_list.Add(entry.Value.nonce, amount);
-                }
-
-                var tmp_from_list_ordered = tmp_from_list.OrderBy(x => x.Value.getAmount());
-
-                SortedDictionary<byte[], IxiNumber> from_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
-
-                IxiNumber tmp_total_amount = 0;
-                foreach (var entry in tmp_from_list_ordered)
-                {
-                    if (tmp_total_amount + entry.Value >= total_amount_with_fee)
-                    {
-                        IxiNumber tmp_amount = total_amount_with_fee - tmp_total_amount;
-                        from_list.Add(entry.Key, tmp_amount);
-                        tmp_total_amount += tmp_amount;
-                        break;
-                    }
-                    from_list.Add(entry.Key, entry.Value);
-                    tmp_total_amount += entry.Value;
-                }
-
-                if (from_list.Count > 0 && tmp_total_amount == total_amount_with_fee)
-                {
-                    return from_list;
-                }
-                return null;
-            }
-        }
     }
 }

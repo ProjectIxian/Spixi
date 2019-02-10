@@ -196,8 +196,15 @@
     
     function createAccount() {
         var nick = document.getElementById("nicknameInput").value;
-
-        location.href = "ixian:create:" + nick;
+        var pass = $("#password").val();
+        if(pass.length < 1)
+        {
+            return;
+        }
+        // TODO, do proper validation as in checkPasswordMatch
+        // Additionally show an error prompt if password is less than 10 chars
+        
+        location.href = "ixian:create:" + nick + ":" + pass;
     }
 
     

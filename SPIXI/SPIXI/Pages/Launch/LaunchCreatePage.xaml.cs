@@ -47,8 +47,15 @@ namespace SPIXI
             else if (current_url.Contains("ixian:create:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:create:" }, StringSplitOptions.None);
-                string nick = split[1];
-                onCreateAccount(nick);
+                string[] split2 = split[1].Split(new string[] { ":" }, StringSplitOptions.None);
+
+                // TODO: handle : character in Spixi passwords
+                string nick = split2[0];
+                string pass = split2[1];
+                    
+                onCreateAccount(nick, pass);
+                
+
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -110,7 +117,7 @@ namespace SPIXI
 
         }
 
-        public void onCreateAccount(string nick)
+        public void onCreateAccount(string nick, string pass)
         {
             // Generate the account on a different thread
             new Thread(() =>
@@ -120,9 +127,8 @@ namespace SPIXI
                 // Aquire the wake lock
                 bool wake_lock = DependencyService.Get<IPowerManager>().AquireLock();
 
-                if (Node.generateWallet())
+                if (Node.generateWallet(pass))
                 {
-                    // DisplayAlert("Account Created", "Don't forget to save your private key!", "Ok");
                     Node.localStorage.nickname = nick;
                     Node.localStorage.writeAccountFile();
 

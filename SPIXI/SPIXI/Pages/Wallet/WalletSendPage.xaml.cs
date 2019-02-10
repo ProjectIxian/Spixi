@@ -245,7 +245,7 @@ namespace SPIXI
 
             IxiNumber amount = new IxiNumber(amount_string);
             IxiNumber fee = CoreConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getWalletAddress();
+            byte[] from = Node.walletStorage.getPrimaryAddress();
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
             Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());

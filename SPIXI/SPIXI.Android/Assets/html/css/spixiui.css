@@ -527,7 +527,10 @@ a:active {
     padding-top: 20px;
     padding-bottom: 6px;
 }
-
+.spixi-textfield-holder.smallpadding {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
 .spixi-textfield-holder-icon {
     float: right;
     font-size: 14pt;
@@ -1008,8 +1011,20 @@ a:active {
     padding-left: 15px;
     padding-top: 12px;
 }
+.spixi-modal-header.warn {
+    color: #ad1457;
+}
 .spixi-modal-footer {
     height: 54px;
+}
+
+.spixi-modal-text {
+    font-size: 10pt;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    height: 100px;
+    color: #6a6a6a;
 }
 
 .spixi-modal-item {
@@ -1034,7 +1049,16 @@ a:active {
     font-size: 14pt;
     font-weight: bold;
     color: #ad1457;
-    padding-right: 10px;
+    padding-right: 14px;
+    padding-top: 14px;
+}
+
+.spixi-modal-confirm {
+    float: left;
+    font-size: 14pt;
+    font-weight: bold;
+    color: #ad1457;
+    padding-left: 14px;
     padding-top: 14px;
 }
 

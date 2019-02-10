@@ -1,6 +1,7 @@
 ﻿using DLT.Network;
 using IXICore;
 using SPIXI;
+using SPIXI.Wallet;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace DLT.Meta
         public static WalletState walletState;
 
         // Use the SPIXI-specific wallet storage code
-        public static SPIXI.Wallet.WalletStorage walletStorage;
+        public static SpixiWalletStorage walletStorage;
 
         // Store the in-memory friendlist here
         public static SPIXI.FriendList friendList;
@@ -49,7 +50,7 @@ namespace DLT.Meta
             CryptoManager.initLib();
 
             // Prepare the wallet
-            walletStorage = new SPIXI.Wallet.WalletStorage(Config.walletFile);
+            walletStorage = new SpixiWalletStorage(Config.walletFile);
 
             // Initialize the wallet state
             walletState = new WalletState();
@@ -82,9 +83,9 @@ namespace DLT.Meta
             return walletStorage.readWallet();
         }
 
-        static public bool generateWallet()
+        static public bool generateWallet(string pass)
         {
-            return walletStorage.generateWallet();
+            return walletStorage.generateWallet(pass);
         }
         
 
