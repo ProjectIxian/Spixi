@@ -264,3 +264,42 @@ a:active {
     text-align: center;
     font-size: 11pt;
 }
+
+.intro-overlay {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#951453, #2b0f45);
+    z-index: 99;
+    color: #FFFFFF;
+
+}
+.intro-overlay-title {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12pt;
+}
+.intro-overlay-loading {
+    width: 107px;
+    height: 107px;
+    background-image: url('../img/introloading.png');
+    background-size: 107px 107px;
+    margin: auto;
+    margin-top: 14px;
+}
+.intro-overlay-info {
+    margin-top: 50px;
+    font-size: 10pt;
+    text-align: center;
+}
+.intro-overlay-ixian {
+    width: 142px;
+    height: 46px;
+    background-image: url('../img/poweredbyixian.png');
+    background-size: 142px 46px;
+    margin: auto;
+    margin-top: 80px;
+}

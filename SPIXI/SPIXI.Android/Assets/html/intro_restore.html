@@ -44,7 +44,7 @@
         <!-- End DescriptionBar -->
         <hr class="intro-separator"/>            
         <div class="intro-textfield-holder">
-            <input type="text" class="intro-textfield" id="passwordConfirm" onkeyup="" placeholder="Enter your Encryption Password">
+            <input type="text" class="intro-textfield" id="password" onkeyup="" placeholder="Enter your Encryption Password">
         </div>            
         <hr class="intro-separator"/>
         
@@ -59,24 +59,47 @@
         </div>            
 
         <div class="intro-holder-20"></div>            
-                       
+                     
+        
+        <div id="overlay" class="intro-overlay" style="display: none;">
+            <div class="intro-logo-holder">
+                <img class="intro-logo" src="img/intrologo.png"/>
+            </div>
+        
+            <div class="intro-overlay-title">Restoring Access to<br/>your Spixi Account</div>
+            <div class="intro-overlay-loading"></div>
+            <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;This may take a while</div>
+            <div class="intro-overlay-ixian"></div>
+        </div>
+        
     </div>
     
     
-<script type="text/javascript">
-    
+<script type="text/javascript">    
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";       
     } 
     
+    document.getElementById("restorebtn").onclick = function () {
 
-    function setAddress(addr) {
-        document.getElementById("addressInput").value = addr;
+        if(document.getElementById("restorebtn").classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        document.getElementById("overlay").style.display = "block";    
+
+        setTimeout(function () { restoreAccount(); }, 400);
     }
-
-
-
     
+    function restoreAccount() {
+        var pass = $("#password").val();
+        if(pass.length < 1)
+            return;
+        
+
+        location.href = "ixian:restore:" + pass;
+    }
     
 </script>
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -116,7 +116,20 @@
             
         </div>
         
-               
+             
+        
+        
+        <div id="overlay" class="intro-overlay" style="display: none;">
+            <div class="intro-logo-holder">
+                <img class="intro-logo" src="img/intrologo.png"/>
+            </div>
+        
+            <div class="intro-overlay-title">Creating your<br/>Spixi Account...</div>
+            <div class="intro-overlay-loading"></div>
+            <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;This may take a while</div>
+            <div class="intro-overlay-ixian"></div>
+        </div>
+        
     </div>
     
     
@@ -167,42 +180,55 @@
         var secondnext = document.getElementById("secondnext");
         secondnext.className = "intro-button center disabled";
 
-        if(confirmPassword.length < 1)
+        if(password.length < 10)
         {
-            return;
+            $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Password needs to have at least 10 characters");
+            return false;
         }
         
-       // document.getElementById("passwordInfoText").style = "display: block;";
+        if(confirmPassword.length < 1)
+        {
+            $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Enter password confirmation");
 
+            return false;
+        }
+        
         if (password != confirmPassword)
         {
             $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Passwords do not match");
-         //   document.getElementById("passwordInfoText").className = "passwordInfo";
+            return false;
         }
         else 
         {
             $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Passwords match");
-        //    document.getElementById("passwordInfoText").className = "passwordInfoValid";
             secondnext.className = "intro-button center";
             
+            return true;
         }
     }
     
     document.getElementById("secondnext").onclick = function () {
 
-        setTimeout(function () { createAccount(); }, 200);
+        if(document.getElementById("secondnext").classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        document.getElementById("overlay").style.display = "block";    
+
+        setTimeout(function () { createAccount(); }, 400);
     }
     
     
     function createAccount() {
         var nick = document.getElementById("nicknameInput").value;
         var pass = $("#password").val();
-        if(pass.length < 1)
+        
+        // Check that the passwords are correct
+        if(checkPasswordMatch() == false)
         {
             return;
         }
-        // TODO, do proper validation as in checkPasswordMatch
-        // Additionally show an error prompt if password is less than 10 chars
         
         location.href = "ixian:create:" + nick + ":" + pass;
     }

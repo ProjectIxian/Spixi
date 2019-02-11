@@ -40,22 +40,18 @@ namespace SPIXI
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
-            /*else if (current_url.Equals("ixian:create", StringComparison.Ordinal))
-            {
-                onCreateAccount();
-            }*/
             else if (current_url.Contains("ixian:create:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:create:" }, StringSplitOptions.None);
+                // Extract the nickname
                 string[] split2 = split[1].Split(new string[] { ":" }, StringSplitOptions.None);
-
-                // TODO: handle : character in Spixi passwords
                 string nick = split2[0];
-                string pass = split2[1];
-                    
-                onCreateAccount(nick, pass);
-                
 
+                // All the remaining text, including seperator chars are part of the password
+                string pass = split[1].Replace(nick+":","");
+
+                // Create the account
+                onCreateAccount(nick, pass);              
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
