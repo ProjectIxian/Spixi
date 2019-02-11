@@ -110,7 +110,7 @@ namespace SPIXI
 
             var imageBytes = writer.Write("SPIXI");
             DependencyService.Get<IPicture>().writeToGallery("SpixiBackup", imageBytes);*/
-            DisplayAlert("SPIXI Account", "Backed up", "OK");
+            DisplayAlert("SPIXI Account", "Feature pending completion", "OK");
         }
     }
 }

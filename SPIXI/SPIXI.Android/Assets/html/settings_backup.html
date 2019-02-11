@@ -29,7 +29,7 @@
         <div class="spixi-toolbar shadow" >
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div class="col-2 spixi-center">
+                <div id="backbtn"  class="col-2 spixi-center">
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
@@ -83,18 +83,8 @@
     } 
     
     document.getElementById("sendrequest").onclick = function() {
-        var wal = document.getElementById("addressInput").value;
-        if (isBlank(wal)) {
-            location.href = "ixian:error";
-            return;
-        }
-        location.href = "ixian:request:" + wal;
+        location.href = "ixian:backup";
     } 
-
-    function setAddress(addr) {
-        document.getElementById("addressInput").value = addr;
-    }
-
 
 </script>
 
