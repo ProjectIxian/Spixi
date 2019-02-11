@@ -113,8 +113,6 @@ namespace SPIXI
                 Device.BeginInvokeOnMainThread(() => {
 
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
-
-                    //DisplayAlert("New contact", result.Text, "OK");
                     
                     if (result.Text.Contains(":ixi"))
                     {
@@ -124,6 +122,13 @@ namespace SPIXI
                         string wal = split[0];
                         webView.Eval(string.Format("setAddress(\"{0}\")", wal));
 
+                    }
+                    else
+                    {
+                        string wal = result.Text;
+                        // TODO: enter exact Ixian address length
+                        if(wal.Length > 20 && wal.Length < 128)
+                            webView.Eval(string.Format("setAddress(\"{0}\")", wal));
                     }
 
                 });
