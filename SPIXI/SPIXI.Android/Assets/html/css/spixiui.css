@@ -815,11 +815,16 @@ a:active {
 }
 
 .spixi-list-item-left {
-    margin-top: 20px;    
-    height: 40px;    
+    margin-top: 0px;    
+    height: 60px;    
     left: 30px;
     border-bottom: 1px solid #d1d5d7;
 }
+.spixi-list-item-left.small {
+    margin-top: 20px;    
+    height: 40px;    
+}
+
 
 .spixi-list-item-center {
     height: 60px;
@@ -851,6 +856,22 @@ a:active {
     font-size: 9pt;
     text-align: right;
     border-bottom: 1px solid #d1d5d7;
+}
+
+.spixi-list-item-action-icon {
+    font-size: 14pt;
+    margin-right: 15px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 2;
+    color: #c2185b;
+}
+
+.spixi-list-placeholer-text {
+    margin-left: 30px;
+    margin-top: 15px;
+    font-size: 10pt;
+    font-style: italic;   
 }
 
 /* Chat */

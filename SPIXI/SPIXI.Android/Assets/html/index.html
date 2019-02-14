@@ -106,11 +106,15 @@
             <div id="chats" class="tab-pane ">
                 
                 
-                <div id="chat_unread_no_activity" class="container">
-                    You have no existing conversations.
+                <div id="chat_unread_no_activity" class="container">                   
+                    <div class="spixi-list-placeholer-text">
+                        You have no existing conversations.
+                    </div>
                 </div>
                 
-                <div id="chat_unread" class="container-fluid" style="display: none;">
+                
+                
+                <div id="chat_unread" class="container-fluid" style="display: block;">
 
             <div class="spixi-list-item">
                 <div class="row">
@@ -211,7 +215,7 @@
 
                     <div class="spixi-list-item">
                         <div class="row">
-                            <div class="col-2 spixi-list-item-left"><i class="fa fa-check-circle"></i> </div>
+                            <div class="col-2 spixi-list-item-left small"><i class="fa fa-check-circle"></i> </div>
                             <div class="col-7 spixi-list-item-center">
                                 <div class="spixi-list-item-title">Payment Received</div>
                                 <div class="spixi-list-item-subtitle">2.100,000</div>
@@ -622,7 +626,7 @@
         var contactEntry = document.createElement("div");
         contactEntry.className = "spixi-list-item spixi-list-item-row";
         contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
-                        
+                
         contactsNode.appendChild(contactEntry);                             
     }    
     

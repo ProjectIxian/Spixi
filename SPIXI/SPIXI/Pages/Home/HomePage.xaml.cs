@@ -159,6 +159,7 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:details:" }, StringSplitOptions.None);
                 string id = split[1];
+                // TODO: handle exceptions
                 byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
                 Friend friend = FriendList.getFriend(id_bytes);

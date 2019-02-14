@@ -170,6 +170,9 @@
     <AndroidAsset Include="Assets\html\intro_restore.html" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\lock.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\settings.html" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_send.html" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\css\bootstrap.min.css" />
