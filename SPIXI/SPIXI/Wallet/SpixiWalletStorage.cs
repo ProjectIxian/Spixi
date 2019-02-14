@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Xamarin.Forms;
 
 namespace SPIXI.Wallet
 {
@@ -28,7 +29,7 @@ namespace SPIXI.Wallet
         }
 
 
-        private void readWallet_v1(BinaryReader reader)
+        private bool readWallet_v1(BinaryReader reader)
         {
             string password = "";
 
@@ -49,8 +50,11 @@ namespace SPIXI.Wallet
             bool success = false;
             while (!success)
             {
+                if (Application.Current.Properties.ContainsKey("walletpass") == false)
+                    return false;
 
-                password = "SPIXISPIXISPIXI"; // TODO connect with UI
+                // TODO: decrypt the password
+                password = Application.Current.Properties["walletpass"].ToString();
 
                 success = true;
                 try
@@ -106,9 +110,10 @@ namespace SPIXI.Wallet
                     }
                 }
             }
+            return true;
         }
 
-        private void readWallet_v3(BinaryReader reader)
+        private bool readWallet_v3(BinaryReader reader)
         {
             // Read the master seed
             int b_master_seed_length = reader.ReadInt32();
@@ -119,7 +124,11 @@ namespace SPIXI.Wallet
             bool success = false;
             while (!success)
             {
-                password = "SPIXI"; // TODO connect with UI
+                if (Application.Current.Properties.ContainsKey("walletpass") == false)
+                    return false;
+
+                // TODO: decrypt the password
+                password = Application.Current.Properties["walletpass"].ToString();
                 success = true;
                 try
                 {
@@ -202,6 +211,7 @@ namespace SPIXI.Wallet
             int seed_len = reader.ReadInt32();
             byte[] enc_derived_seed = reader.ReadBytes(seed_len);
             derivedMasterSeed = CryptoManager.lib.decryptWithPassword(enc_derived_seed, password);
+            return true;
         }
 
         // Try to read wallet information from the file
@@ -235,11 +245,13 @@ namespace SPIXI.Wallet
                 walletVersion = reader.ReadInt32();
                 if (walletVersion == 1 || walletVersion == 2)
                 {
-                    readWallet_v1(reader);
+                    if (!readWallet_v1(reader))
+                        return false;
                 }
                 else if (walletVersion == 3)
                 {
-                    readWallet_v3(reader);
+                    if (!readWallet_v3(reader))
+                        return false;
                 }
                 else
                 {

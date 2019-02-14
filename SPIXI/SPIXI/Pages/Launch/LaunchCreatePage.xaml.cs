@@ -128,8 +128,11 @@ namespace SPIXI
                     Node.localStorage.nickname = nick;
                     Node.localStorage.writeAccountFile();
 
+                    // TODO: encrypt the password
+                    Application.Current.Properties["walletpass"] = pass;
+
                     // Release the wake lock
-                    if(wake_lock)
+                    if (wake_lock)
                         DependencyService.Get<IPowerManager>().ReleaseLock();
 
                     Device.BeginInvokeOnMainThread(() => {

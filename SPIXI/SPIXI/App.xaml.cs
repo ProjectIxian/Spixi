@@ -43,7 +43,7 @@ namespace SPIXI
             }
             else
             {
-                // Wallet found, go to main page //MainPage(); //
+                // Wallet found, go to main page
                 MainPage = new NavigationPage(new SPIXI.HomePage());
                 //MainPage = new NavigationPage(new SPIXI.LockPage());
             }
