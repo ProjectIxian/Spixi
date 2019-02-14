@@ -835,6 +835,8 @@ a:active {
     color: #000000;
     font-size: 10pt;
     margin-top: 18px;
+    width:100%;
+    overflow: hidden;
 }
 
 .spixi-list-item-subtitle {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -25,7 +25,7 @@
     <script src="js/jquery.touchSwipe.min.js"></script>
 
 </head>
-<body>
+<body onload="">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar Main-->
@@ -50,9 +50,9 @@
             <!-- HOME -->
             <div id="home" class="tab-pane in active">
                 <!-- BalanceBar -->
-                <div class="spixi-balancebar">
+                <div id="status_balance" class="spixi-balancebar">
                     <div class="spixi-balancebar-label">My IxiCash Balance</div>
-                    <div class="spixi-balancebar-balance" id="activity_balance_number">1.123.200.910,45110010</div> 
+                    <div class="spixi-balancebar-balance" id="activity_balance_number"></div> 
                     <div class="spixi-balancebar-line"></div>
                     <div class="spixi-balancebar-info" id="activity_balance_info">* Tap and hold to hide</div>
 
@@ -157,9 +157,9 @@
             <!-- WALLET -->
             <div id="wallet" class="tab-pane ">
                 <!-- BalanceBar -->
-                <div class="spixi-balancebar">
+                <div id="wallet_balance" class="spixi-balancebar">
                     <div class="spixi-balancebar-label">My IxiCash Balance</div>
-                    <div class="spixi-balancebar-balance" id="wallet_balance_number">1.123.200.910,45110010</div> 
+                    <div class="spixi-balancebar-balance" id="wallet_balance_number"></div> 
                     <div class="spixi-balancebar-line"></div>
                     <div class="spixi-balancebar-info" id="wallet_balance_info">* Tap and hold to hide</div>
 
@@ -239,34 +239,7 @@
                 <hr class="spixi-separator-full"/>
 
                 <div id="contactslist" class="container-fluid">                       
-                    
-                    
-        <div class="spixi-list-item spixi-list-item-row">
-            <div class="row">
-                <div class="col-2 "><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                <div class="col-10">
-                    <div class="spixi-list-item-title-center">Andrew</div>
-                </div>
-            </div>
-        </div>   
-        <div class="spixi-list-item spixi-list-item-row">
-            <div class="row">
-                <div class="col-2 "><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                <div class="col-10">
-                    <div class="spixi-list-item-title-center">Andrew</div>
-                </div>
-            </div>
-        </div>                     
-        <div class="spixi-list-item spixi-list-item-row">
-            <div class="row">
-                <div class="col-2 "><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                <div class="col-10">
-                    <div class="spixi-list-item-title-center">Andrew</div>
-                </div>
-            </div>
-        </div>                     
-                    
-                                        
+                                                                        
                 </div>
                 
                 <a href="ixian:newcontact">
@@ -430,6 +403,11 @@
     
     
 <script type="text/javascript">
+    
+    var searchingContacts = false;
+    var timeoutId = 0;
+    var balance = "0";
+    
     var homeModal = document.getElementById('homeMenuModal');
 
     function onMainMenuAction() 
@@ -457,6 +435,18 @@
             leftSidebar.style.display = "none";
         }
     }
+    
+    $('#status_balance').on('mousedown touchstart', function() {
+        timeoutId = setTimeout(toggleBalance, 1000);
+    }).on('mouseup mouseleave touchend', function() {
+        clearTimeout(timeoutId);
+    });
+            
+    $('#wallet_balance').on('mousedown touchstart', function() {
+        timeoutId = setTimeout(toggleBalance, 1000);
+    }).on('mouseup mouseleave touchend', function() {
+        clearTimeout(timeoutId);
+    });   
     
     
     // Toolbar
@@ -536,6 +526,114 @@
     }     
             
 
+    function setBalance(theText, theNick) {
+        var balDiv = document.getElementById('activity_balance_number');
+        var balDiv2 = document.getElementById('wallet_balance_number');
+
+        balance = theText;
+                
+        if(balDiv.innerHTML != "&nbsp;")
+            balDiv.innerHTML = balance;
+            
+        if(balDiv2.innerHTML != "&nbsp;")
+            balDiv2.innerHTML = balance;    
+
+        // Set the user nickname
+        document.getElementById('menu_nickname').innerHTML = theNick;
+    }
+    
+    function toggleBalance()
+    {   
+        var balDiv = document.getElementById('activity_balance_number');
+        if(balDiv.innerHTML == "&nbsp;")
+        {
+            balDiv.innerHTML = balance;
+            document.getElementById('wallet_balance_number').innerHTML = balance;
+            document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to hide";
+            document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to hide";
+
+        }
+        else 
+        {
+            balDiv.innerHTML = "&nbsp;";  
+            document.getElementById('wallet_balance_number').innerHTML = "&nbsp;";
+            document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to show";
+            document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to show";
+
+        }
+    }
+    
+    // Filter in the CONTACTS tab
+    function contactSearch()
+    {
+        var a,b,i,row;
+        var input = document.getElementById('contactInput');
+        var filter = input.value.toUpperCase();
+        var c_contactlist = document.getElementById("contactslist");
+        var c_items = c_contactlist.getElementsByClassName('spixi-list-item');
+
+        if (isBlank(filter) == true) {
+            searchingContacts = false;
+        }
+        else {
+            searchingContacts = true;
+        }
+
+        // Go through each element and filter out non-matching elements
+        for (i = 0; i < c_items.length; i++) {
+            row = c_items[i].getElementsByTagName("div")[0];
+            b = row.getElementsByTagName("div")[1];
+            a = b.getElementsByTagName("div")[0];
+
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                c_items[i].style.display = "";
+            } else {
+                c_items[i].style.display = "none";
+            }
+        }
+    }
+    
+    // Clears all contacts from contacts page
+    function clearContacts()
+    {
+        if (searchingContacts == true) {
+            return;
+        }
+
+        var contactsNode = document.getElementById("contactslist");
+        while (contactsNode.firstChild) {
+            contactsNode.removeChild(contactsNode.firstChild);
+        }
+    }
+    
+    // Adds a contact to the contacts page
+    function addContact(wal, name, avatar, online)
+    {
+        if (searchingContacts == true) {
+            return;
+        }
+        var indicator = "none";
+        if (online == true) {
+            indicator = "block";
+        }
+
+        var contactsNode = document.getElementById("contactslist");
+                
+        var contactEntry = document.createElement("div");
+        contactEntry.className = "spixi-list-item spixi-list-item-row";
+        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+                        
+        contactsNode.appendChild(contactEntry);                             
+    }    
+    
+    
+    
+            
+                
+    
+
+    
+    
     // Function to toggle tab's active color    
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         // Not very elegant, but it works
@@ -606,6 +704,26 @@ swipeStatus:function(event, phase, direction, distance)
 triggerOnTouchEnd:true,
     threshold:100
 });
+    
+    
+    
+    function test()
+    {
+        //showWarning(0);
+        setBalance("120.910,45000011", "Spixi");
+
+        clearContacts();
+        addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
+        addContact("000","Abc","img/spixiavatar.png", true);
+        addContact("000","ZAbc","img/spixiavatar.png", true);
+        addContact("000","XAbc","img/spixiavatar.png", false);
+        addContact("000","CAbc","img/spixiavatar.png", true);
+        addContact("000","VAbc","img/spixiavatar.png", false);
+        addContact("000","BAbc","img/spixiavatar.png", false);
+        addContact("000","NAbc","img/spixiavatar.png", false);
+        addContact("000","MAbc","img/spixiavatar.png", false);
+    }
+    
 </script>
 
 </body>
