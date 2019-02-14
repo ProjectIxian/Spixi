@@ -179,6 +179,9 @@
     <AndroidAsset Include="Assets\html\settings_encryption.html" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings_lock.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\test.html" />
   </ItemGroup>
   <ItemGroup>
@@ -194,13 +197,25 @@
     <AndroidAsset Include="Assets\html\css\spixiui.css" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\introloading.png" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\img\intrologo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\poweredbyixian.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\spixiavatar.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\img\spixitoolbarlogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\switch-off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\switch-on.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\js\bootstrap.min.js" />

@@ -34,7 +34,7 @@ namespace SPIXI
             NavigationPage.SetHasNavigationBar(this, false);
 
 
-            Node.connectToNetwork();
+      //      Node.connectToNetwork();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -134,6 +134,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new BackupPage(), Config.defaultXamarinAnimations);
+            }
+            else if (current_url.Equals("ixian:encpass", StringComparison.Ordinal))
+            {
+                Navigation.PushAsync(new EncryptionPassword(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:chat:"))
             {

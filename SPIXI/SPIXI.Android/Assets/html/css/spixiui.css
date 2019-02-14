@@ -18,6 +18,7 @@
  * ErrorBar
  * Buttons
  * TextField
+ * Switch
  * Separators
  * ExpansionBox
  * Sidebar
@@ -565,6 +566,29 @@ a:active {
     text-align: center;
     color: #D5016E;
 }
+
+/* Switch */
+.spixi-switch {
+    width: 55px;
+    height: 50px;
+    background-image: url("../img/switch-on.png");
+    background-size: 55px 24px;
+    background-repeat: no-repeat;
+    background-position: center;
+    float: right;
+    margin-right: 15px;
+}
+.spixi-switch.off {
+    background-image: url("../img/switch-off.png");
+}
+
+.spixi-switch-description {
+    float: left;
+    margin-left: 20px;
+    color: #1692d9;
+    font-weight: bold;
+}
+
 
 /* Separators */
 .spixi-separator-main {
