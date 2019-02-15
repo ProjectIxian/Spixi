@@ -97,13 +97,8 @@ a:active {
 }
 
 .intro-toolbar-logo {
-    background-image: url('../img/spixitoolbarlogo.png');
     width: 122px;
     height: 40px;
-    background-size: 121px 40px;
-    background-repeat: no-repeat;
-    background-position: center;
-    margin: auto;
 }
 
 .intro-title {

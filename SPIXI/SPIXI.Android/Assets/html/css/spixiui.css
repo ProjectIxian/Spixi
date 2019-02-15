@@ -867,6 +867,10 @@ a:active {
     color: #c2185b;
 }
 
+.spixi-list-item-noborder{
+    border: 0;
+}
+
 .spixi-list-placeholer-text {
     margin-left: 30px;
     margin-top: 15px;
@@ -1145,6 +1149,12 @@ a:active {
 }
 
 /* Color combos */
+.spixi-text-green {
+    color: #5bbb0e;
+}
+.spixi-text-red {
+    color: #ad1457;
+}
 
 /* Animations */
 @-webkit-keyframes fadein {
