@@ -188,7 +188,19 @@
     <AndroidAsset Include="Assets\html\test.html" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_contact_request.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_recipient.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\wallet_send.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_send_2.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_sent.html" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\css\bootstrap.min.css" />
