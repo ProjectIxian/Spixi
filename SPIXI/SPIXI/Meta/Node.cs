@@ -54,8 +54,6 @@ namespace DLT.Meta
             // Read the account file
             localStorage.readAccountFile();
 
-            PresenceList.generatePresenceList("spixi:000", 'C'); // TODO TODO TODO TODO spixi:000 is used only for tech preview and will later be replaced with something more secure
-
             // Start the network queue
             NetworkQueue.start();
 
@@ -109,6 +107,11 @@ namespace DLT.Meta
 
             if (Node.walletStorage.getPrimaryAddress() == null)
                 return;
+
+            if (PresenceList.curNodePresence == null)
+            {
+                PresenceList.generatePresenceList("spixi:000", 'C'); // TODO TODO TODO TODO spixi:000 is used only for tech preview and will later be replaced with something more secure
+            }
 
             // Request wallet balance
             using (MemoryStream mw = new MemoryStream())
