@@ -173,25 +173,60 @@ namespace DLT.Network
                             {
                                 using (BinaryReader reader = new BinaryReader(m))
                                 {
-                                    // Retrieve the message
-                                    string message = reader.ReadString();
                                     endpoint.stop();
 
-                                    Logging.error(string.Format("Disconnected with message: {0}", message));
+                                    bool byeV1 = false;
+                                    try
+                                    {
+                                        int byeCode = reader.ReadInt32();
+                                        string byeMessage = reader.ReadString();
+                                        string byeData = reader.ReadString();
+
+                                        byeV1 = true;
+
+                                        if (byeCode != 200)
+                                        {
+                                            Logging.warn(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
+                                        }
+
+                                        if (byeCode == 600)
+                                        {
+                                            if (IxiUtils.validateIPv4(byeData))
+                                            {
+                                                if (NetworkClientManager.getConnectedClients().Length < 2)
+                                                {
+                                                    Config.publicServerIP = byeData;
+                                                    Logging.info("Changed internal IP Address to " + byeData + ", reconnecting");
+                                                }
+                                            }
+                                        }
+                                        else if (byeCode == 601)
+                                        {
+                                            Logging.error("This node must be connectable from the internet, to connect to the network.");
+                                            Logging.error("Please setup uPNP and/or port forwarding on your router for port " + Config.serverPort + ".");
+                                        }
+
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                    }
+                                    if (byeV1)
+                                    {
+                                        return;
+                                    }
+
+                                    reader.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                                    // Retrieve the message
+                                    string message = reader.ReadString();
+
+                                    if (message.Length > 0)
+                                        Logging.info(string.Format("Disconnected with message: {0}", message));
+                                    else
+                                        Logging.info("Disconnected");
                                 }
                             }
-                        }
-                        break;
-
-                    case ProtocolMessageCode.ping:
-                        {
-                            endpoint.sendData(ProtocolMessageCode.pong, new byte[1]);
-                        }
-                        break;
-
-                    case ProtocolMessageCode.pong:
-                        {
-                            // do nothing
                         }
                         break;
 
