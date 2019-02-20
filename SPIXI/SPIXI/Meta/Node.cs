@@ -1,14 +1,9 @@
 ﻿using DLT.Network;
-using IXICore;
 using SPIXI;
-using SPIXI.Wallet;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Timers;
+using Xamarin.Forms;
 
 namespace DLT.Meta
 {
@@ -17,7 +12,7 @@ namespace DLT.Meta
         public static WalletState walletState;
 
         // Use the SPIXI-specific wallet storage code
-        public static SpixiWalletStorage walletStorage;
+        public static WalletStorage walletStorage;
 
         // Store the in-memory friendlist here
         public static SPIXI.FriendList friendList;
@@ -31,16 +26,13 @@ namespace DLT.Meta
         // Node timer
         private static System.Timers.Timer mainLoopTimer;
 
-
-        public static int keepAliveVersion = 0;
-
         // Private data
-        private static Thread keepAliveThread;
-        private static bool autoKeepalive = false;
+        static Block lastBlock = null;
+        static int requiredConsensus = 0;
 
 
-        public static ulong blockHeight = 0;      // Stores the last known block height 
         public static IxiNumber balance = 0;      // Stores the last known balance for this node
+        public static ulong blockHeight = 0;
 
         public static string primaryS2Address = "";
 
@@ -50,7 +42,8 @@ namespace DLT.Meta
             CryptoManager.initLib();
 
             // Prepare the wallet
-            walletStorage = new SpixiWalletStorage(Config.walletFile);
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            walletStorage = new WalletStorage(Path.Combine(path, Config.walletFile));
 
             // Initialize the wallet state
             walletState = new WalletState();
@@ -61,6 +54,8 @@ namespace DLT.Meta
             // Read the account file
             localStorage.readAccountFile();
 
+            PresenceList.generatePresenceList("spixi:000", 'C'); // TODO TODO TODO TODO spixi:000 is used only for tech preview and will later be replaced with something more secure
+
             // Start the network queue
             NetworkQueue.start();
 
@@ -68,9 +63,7 @@ namespace DLT.Meta
             StreamProcessor.initialize();
 
             // Start the keepalive thread
-            autoKeepalive = true;
-            keepAliveThread = new Thread(keepAlive);
-            keepAliveThread.Start();
+            PresenceList.startKeepAlive();
 
             // Setup a timer to handle routine updates
             mainLoopTimer = new System.Timers.Timer(2500);
@@ -80,7 +73,12 @@ namespace DLT.Meta
 
         static public bool loadWallet()
         {
-            return walletStorage.readWallet();
+            if (Application.Current.Properties.ContainsKey("walletpass") == false)
+                return false;
+
+            // TODO: decrypt the password
+            string password = Application.Current.Properties["walletpass"].ToString();
+            return walletStorage.readWallet(password);
         }
 
         static public bool generateWallet(string pass)
@@ -128,12 +126,7 @@ namespace DLT.Meta
         static public void stop()
         {
             // Stop the keepalive thread
-            autoKeepalive = false;
-            if (keepAliveThread != null)
-            {
-                keepAliveThread.Abort();
-                keepAliveThread = null;
-            }
+            PresenceList.stopKeepAlive();
 
             // Stop the loop timer
             mainLoopTimer.Stop();
@@ -148,101 +141,67 @@ namespace DLT.Meta
             StreamProcessor.uninitialize();
         }
 
-
-        // Sends periodic keepalive network messages
-        private static void keepAlive()
-        {
-            while (autoKeepalive)
-            {
-                // Wait x seconds before rechecking
-                for (int i = 0; i < CoreConfig.keepAliveInterval; i++)
-                {
-                    if (autoKeepalive == false)
-                    {
-                        Thread.Yield();
-                        return;
-                    }
-                    // Sleep for one second
-                    Thread.Sleep(1000);
-                }
-
-
-                sendKeepAlive();
-
-            }
-
-            Thread.Yield();
-        }
-
-        // Sends a single keepalive message
-        public static void sendKeepAlive()
-        {
-            if(walletStorage.getPrimaryPrivateKey() == null)
-            {
-                return;
-            }
-            try
-            {
-                // Prepare the keepalive message
-                using (MemoryStream m = new MemoryStream())
-                {
-                    using (BinaryWriter writer = new BinaryWriter(m))
-                    {
-                        writer.Write(keepAliveVersion);
-
-                        byte[] wallet = walletStorage.getPrimaryAddress();
-                        writer.Write(wallet.Length);
-                        writer.Write(wallet);
-
-                        writer.Write(Config.device_id);
-
-                        // Add the unix timestamp
-                        long timestamp = Core.getCurrentTimestamp();
-                        writer.Write(timestamp);
-
-                        string hostname = Node.getFullAddress();
-                        writer.Write(hostname);
-
-                        // Add a verifiable signature
-                        byte[] private_key = walletStorage.getPrimaryPrivateKey();
-                        byte[] signature = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(CoreConfig.ixianChecksumLockString + "-" + Config.device_id + "-" + timestamp + "-" + hostname), private_key);
-                        writer.Write(signature.Length);
-                        writer.Write(signature);
-
-                        PresenceList.curNodePresenceAddress.lastSeenTime = timestamp;
-                        PresenceList.curNodePresenceAddress.signature = signature;
-                    }
-
-
-                    byte[] address = null;
-                    // Update self presence
-                    PresenceList.receiveKeepAlive(m.ToArray(), out address);
-
-                    // Send this keepalive message to the primary S2 node only
-                    // TODO
-                    //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.keepAlivePresence, m.ToArray());
-                    StreamClientManager.broadcastData(ProtocolMessageCode.keepAlivePresence, m.ToArray());
-                }
-            }
-            catch (Exception e)
-            {
-                Logging.error(String.Format("KA Exception: {0}", e.Message));               
-            }
-        }
-
         public static string getFullAddress()
         {
             return Config.publicServerIP + ":" + Config.serverPort;
         }
 
+
         public static ulong getLastBlockHeight()
         {
-            return blockHeight;
+            if (lastBlock != null)
+            {
+                return lastBlock.blockNum;
+            }
+            return 0;
         }
 
         public static int getLastBlockVersion()
         {
-            return 3; // TODO
+            if (lastBlock != null)
+            {
+                return lastBlock.version;
+            }
+            return 0;
+        }
+
+        public static char getNodeType()
+        {
+            return 'C';
+        }
+
+        public static bool isAcceptingConnections()
+        {
+            // TODO TODO TODO TODO implement this properly
+            return true;
+        }
+
+        public static void setRequiredConsensus(int required_consensus)
+        {
+            requiredConsensus = required_consensus;
+        }
+
+        public static int getRequiredConsensus()
+        {
+            return requiredConsensus;
+        }
+
+        public static void setLastBlock(ulong block_num, byte[] checksum, byte[] ws_checksum, int version)
+        {
+            Block b = new Block();
+            b.blockNum = block_num;
+            b.blockChecksum = checksum;
+            b.walletStateChecksum = ws_checksum;
+            b.version = version;
+
+            lastBlock = b;
+
+            blockHeight = block_num;
+        }
+
+        public static Block getLastBlock()
+        {
+            return lastBlock;
         }
     }
 }

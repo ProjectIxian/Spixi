@@ -12,7 +12,7 @@ namespace SPIXI
 {
     class StreamClientManager
     {
-        private static List<StreamClient> streamClients = new List<StreamClient>();
+        private static List<NetworkClient> streamClients = new List<NetworkClient>();
         private static List<string> connectingClients = new List<string>(); // A list of clients that we're currently connecting
 
         private static Thread reconnectThread;
@@ -20,7 +20,7 @@ namespace SPIXI
 
         public static void start()
         {
-            streamClients = new List<StreamClient>();
+            streamClients = new List<NetworkClient>();
 
             // Public DEMO S2 node address: 209.141.49.106 port 11235
             // connectTo("209.141.49.106:11235");
@@ -51,7 +51,7 @@ namespace SPIXI
             lock (streamClients)
             {
                 // Disconnect each client
-                foreach (StreamClient client in streamClients)
+                foreach (NetworkClient client in streamClients)
                 {
                     client.stop();
                 }
@@ -77,7 +77,7 @@ namespace SPIXI
             bool result = false;
             lock (streamClients)
             {
-                foreach (StreamClient client in streamClients)
+                foreach (NetworkClient client in streamClients)
                 {
                     if (client.isConnected())
                     {
@@ -154,10 +154,10 @@ namespace SPIXI
             {
                 handleDisconnectedClients();
 
-                List<StreamClient> netClients = null;
+                List<NetworkClient> netClients = null;
                 lock (streamClients)
                 {
-                    netClients = new List<StreamClient>(streamClients);
+                    netClients = new List<NetworkClient>(streamClients);
                 }
 
                 // Check if we need to connect to more neighbors
@@ -174,18 +174,18 @@ namespace SPIXI
 
         private static void handleDisconnectedClients()
         {
-            List<StreamClient> netClients = null;
+            List<NetworkClient> netClients = null;
             lock (streamClients)
             {
-                netClients = new List<StreamClient>(streamClients);
+                netClients = new List<NetworkClient>(streamClients);
             }
 
             // Prepare a list of failed clients
-            List<StreamClient> failed_clients = new List<StreamClient>();
+            List<NetworkClient> failed_clients = new List<NetworkClient>();
 
-            List<StreamClient> dup_clients = new List<StreamClient>();
+            List<NetworkClient> dup_clients = new List<NetworkClient>();
 
-            foreach (StreamClient client in netClients)
+            foreach (NetworkClient client in netClients)
             {
                 if (dup_clients.Find(x => x.getFullAddress(true) == client.getFullAddress(true)) != null)
                 {
@@ -211,7 +211,7 @@ namespace SPIXI
             }
 
             // Go through the list of failed clients and remove them
-            foreach (StreamClient client in failed_clients)
+            foreach (NetworkClient client in failed_clients)
             {
                 client.stop();
                 lock (streamClients)
@@ -224,7 +224,7 @@ namespace SPIXI
         // Connects to a specified node, with the syntax host:port
         // Returns the connected stream client
         // Returns null if connection failed
-        public static StreamClient connectTo(string host)
+        public static NetworkClient connectTo(string host)
         {
             Logging.info(String.Format("Connecting to S2 node: {0}", host));
 
@@ -297,7 +297,7 @@ namespace SPIXI
             // Check if node is already in the client list
             lock (streamClients)
             {
-                foreach (StreamClient client in streamClients)
+                foreach (NetworkClient client in streamClients)
                 {
                     if (client.getFullAddress(true).Equals(resolved_host, StringComparison.Ordinal))
                     {
@@ -309,7 +309,7 @@ namespace SPIXI
 
 
             // Connect to the specified node
-            StreamClient new_client = new StreamClient();
+            NetworkClient new_client = new NetworkClient();
             // Recompose the connection address from the resolved IP and the original port
             bool result = new_client.connectToServer(resolved_server_name, Convert.ToInt32(server[1]));
 
@@ -325,7 +325,7 @@ namespace SPIXI
                 // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                 Node.primaryS2Address = host;
                 // Send a keepalive
-                Node.sendKeepAlive();
+                //Node.sendKeepAlive();
             }
 
             // Remove this node from the connecting clients list
@@ -339,13 +339,13 @@ namespace SPIXI
 
         // Check if we're connected to a certain host address
         // Returns StreamClient or null if not found
-        public static StreamClient isConnectedTo(string address)
+        public static NetworkClient isConnectedTo(string address)
         {
             lock (streamClients)
             {
-                foreach (StreamClient client in streamClients)
+                foreach (NetworkClient client in streamClients)
                 {
-                    if (client.ip_address.Equals(address, StringComparison.Ordinal))
+                    if (client.remoteIP.Address.ToString().Equals(address, StringComparison.Ordinal))
                         return client;
                 }
             }
