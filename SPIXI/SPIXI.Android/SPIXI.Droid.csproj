@@ -170,6 +170,9 @@
     <AndroidAsset Include="Assets\html\intro_restore.html" />
   </ItemGroup>
   <ItemGroup>
+    <AndroidAsset Include="Assets\html\intro_retry.html" />
+  </ItemGroup>
+  <ItemGroup>
     <AndroidAsset Include="Assets\html\lock.html" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\wallet_recipient.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_request.html" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\wallet_send.html" />
