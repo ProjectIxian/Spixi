@@ -22,7 +22,7 @@
     <script src="js/spixi.js"></script>
     
 </head>
-<body onload="test()">
+<body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar -->
@@ -52,12 +52,12 @@
         
         <hr class="spixi-separator-main"/>
 
-        <div class="spixi-textsection-holder">
+        <div id="recipientslabel" class="spixi-textsection-holder">
             0 Recipients selected
         </div>
         <hr class="spixi-separator"/>
 
-        <div id="sendrequest" class="spixi-button small center padding-top">
+        <div id="sendrequest" class="spixi-button small center padding-top disabled">
             Add Recipient/-s
         </div>
             
@@ -67,6 +67,7 @@
     
     
 <script type="text/javascript">
+    var recipients = [];
     var searchingContacts = false;
 
     //var sendrequest = document.getElementById("sendrequest");
@@ -75,14 +76,20 @@
         location.href = "ixian:back";
     } 
     
- /*   document.getElementById("sendrequest").onclick = function() {
-        var wal = document.getElementById("addressInput").value;
-        if (isBlank(wal)) {
-            location.href = "ixian:error";
+    document.getElementById("sendrequest").onclick = function() {       
+        if(document.getElementById("sendrequest").classList.contains("disabled"))
+        {
             return;
         }
-        location.href = "ixian:request:" + wal;
-    }*/
+        
+        var suffix = "";
+        var i;
+        for (i = 0; i < recipients.length; i++) 
+        {
+           suffix = suffix + "|" + recipients[i];
+        }
+        location.href = "ixian:select:" + suffix;
+    }
 
     // Filter in the CONTACTS tab
     function contactSearch()
@@ -142,24 +149,72 @@
                 
         var contactEntry = document.createElement("div");
         contactEntry.className = "spixi-list-item spixi-list-item-row";
-        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+        contactEntry.innerHTML = '<a href="javascript:selectRecipient(' + wal + ')"><div class="row" id="row'+ wal + '"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="far fa-square spixi-list-item-action-icon"></i></div></div></a>';
                 
         contactsNode.appendChild(contactEntry);                             
     }    
+    
+    // TODO: store a list, check if item is in list, then apply proper params
+    // Pass the list as part of the request
+    
+    function selectRecipient(rep)
+    {                
+        var recipientNode = document.getElementById("row"+rep);
+        col_left = recipientNode.getElementsByTagName("div")[0];        
+        avatar = col_left.getElementsByTagName("img")[0];
+        avatar.className = "spixi-list-item-avatar";
+        
+        col_middle = recipientNode.getElementsByTagName("div")[2];        
+        col_middle.className = "spixi-list-item-title-center";
+        
+        col_right = recipientNode.getElementsByTagName("div")[3];        
+        check = col_right.firstElementChild;
+        check.className = "far fa-square spixi-list-item-action-icon";       
+        
+        
+        var i;
+        for (i = 0; i < recipients.length; i++) {
+            if(rep == recipients[i])
+            {
+                recipients.splice(i,1);
+                updateRecipientsLabel();
+                return;
+            }
+        }
+        avatar.className = "spixi-list-item-avatar selected";
+        col_middle.className = "spixi-list-item-title-center selected";
+        check.className = "fa fa-check-square spixi-list-item-action-icon";       
+
+        recipients.push(rep);
+        updateRecipientsLabel();
+    }
+    
+    function updateRecipientsLabel() 
+    {
+        var label = document.getElementById("recipientslabel");
+        var rLen = recipients.length;
+        
+        label.innerHTML = rLen + " Recipients selected";
+        
+        if(rLen > 0)
+            document.getElementById("sendrequest").className = "spixi-button small center padding-top";
+        else 
+            document.getElementById("sendrequest").className = "spixi-button small center padding-top disabled";
+    }
     
     
     function test()
     {
         clearContacts();
-        addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
-        addContact("000","Abc","img/spixiavatar.png", true);
-        addContact("000","ZAbc","img/spixiavatar.png", true);
-        addContact("000","XAbc","img/spixiavatar.png", false);
-        addContact("000","CAbc","img/spixiavatar.png", true);
-        addContact("000","VAbc","img/spixiavatar.png", false);
-        addContact("000","BAbc","img/spixiavatar.png", false);
-        addContact("000","NAbc","img/spixiavatar.png", false);
-        addContact("000","MAbc","img/spixiavatar.png", false);
+        addContact("1000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
+        addContact("2000","Abc","img/spixiavatar.png", true);
+        addContact("3000","ZAbc","img/spixiavatar.png", true);
+        addContact("4000","XAbc","img/spixiavatar.png", false);
+        addContact("5000","CAbc","img/spixiavatar.png", true);
+        addContact("6000","VAbc","img/spixiavatar.png", false);
+        addContact("7000","BAbc","img/spixiavatar.png", false);
+        addContact("8000","NAbc","img/spixiavatar.png", false);
+        addContact("9000","MAbc","img/spixiavatar.png", false);
     }
 
 </script>

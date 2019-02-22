@@ -823,6 +823,10 @@ a:active {
     margin-left: 0px;
 }
 
+.spixi-list-item-avatar.selected {
+    border: 2px solid #c2185b;
+}
+
 .spixi-list-item-left {
     margin-top: 0px;    
     height: 60px;    
@@ -851,6 +855,10 @@ a:active {
     margin-top: 18px;
     width:100%;
     overflow: hidden;
+}
+.spixi-list-item-title-center.selected {
+    font-weight: bold;
+    font-style: italic;
 }
 
 .spixi-list-item-subtitle {

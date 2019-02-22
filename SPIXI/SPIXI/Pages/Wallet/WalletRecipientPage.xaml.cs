@@ -48,10 +48,11 @@ namespace SPIXI
             {
                 Navigation.PopModalAsync();
             }
-            else if (current_url.Contains("ixian:choose:"))
+            else if (current_url.Contains("ixian:select:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:choose:" }, StringSplitOptions.None);
+                string[] split = current_url.Split(new string[] { "ixian:select:" }, StringSplitOptions.None);
                 string id = split[1];
+                // TODO check for | separator
                 onPickSucceeded(id);
             }
             else
