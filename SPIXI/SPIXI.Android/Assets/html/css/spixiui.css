@@ -304,6 +304,10 @@ a:active {
     font-size:9pt;
     max-height: 60px;
 }
+.spixi-descriptionbar.chat {
+    height: 92px;
+    background-color: #55516c;
+}
 
 /* TabBar */
 .spixi-footer {
@@ -446,6 +450,25 @@ a:active {
 }
 .spixi-button.smallwidth {
     width: 160px;
+}
+.spixi-button.extrasmallwidth {
+    width: 140px;
+}
+.spixi-button.darkshadow {
+    box-shadow:0px 8px 19px #333;
+}
+
+.spixi-button.ghost {
+    background-color: #55516c;
+    color: #f7f7f7;
+    border: 2px solid #fff;
+}
+.spixi-button.ghost:hover {
+    background-color: #c14c7f;
+}
+.spixi-button.ghost:active {
+    background-color: #901352;
+    box-shadow: 0px 0px;
 }
 
 .spixi-button.blue {
@@ -968,22 +991,30 @@ a:active {
     
     position: fixed;
     z-index: 99;
-    display: table;
+    
     width: 100%;
     bottom: 0;   
     height: 60px;
-    background-color: #F3F3F3;
+    background-color: #FFF;
     border-top: 1px solid #a6a9ab;
 }
+
+.chatbar-container {
+    display: table;
+    width: 90%;
+    margin: auto;
+}
+
 #chat_input {
     display: table-cell;
     width: 100%;
     height: 45px;
-    margin-top: 10px;
+    margin-top: 6px;
     padding: 12px 14px;
+    padding-right: 40px;
     border: 1px solid #888;
     border-radius: 25px;
-    background-color: #F3F3F3;
+    background-color: #FFF;
     font-size: 16px;
     outline: none;
 }
@@ -998,46 +1029,42 @@ a:active {
     position: fixed;
     z-index: 99;    
     width: 100%;
-    bottom: -55px;
-    height: 55px;
-    background-color: #F3F3F3;
+    bottom: -60px;
+    height: 60px;
+    background-color: #FFF;
     border-top: 1px solid #CBCBCB;
 }
 
 #chat_attach {
     display: table-cell;
-    width: 50px;
+    width: 35px;
     height: 50px;
     font-size: 16pt;
-    text-align: center;
+    text-align: left;
     color: #1693da;
 }
 
+.chatattachsymbol {
+    color: #1693da;
+    font-size: 18pt;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 #ca_request {
-    position: absolute;
-    left: 120px;
     width: 120px;
-    height: 55px;
+    height: 60px;
     font-size: 12px;
     text-align: center;
-    padding-top: 35px;
-    background-image: url('../img/Request_icon_idle.png');
-    background-repeat: no-repeat;
-    background-size: 30px 30px;
-    background-position: center 5px;
+    font-weight: bold;
 }
 
 #ca_send {
-    position: absolute;
     width: 120px;
-    height: 55px;
+    height: 60px;
     font-size: 12px;
     text-align: center;
-    padding-top: 35px;
-    background-image: url('../img/Send_icon_idle.png');
-    background-repeat: no-repeat;
-    background-size: 30px 30px;
-    background-position: center 5px;
+    font-weight: bold;
 }
 
 /* Modals */
