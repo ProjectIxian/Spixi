@@ -853,7 +853,7 @@ a:active {
 .spixi-list-item-left {
     margin-top: 0px;    
     height: 60px;    
-    left: 30px;
+    left: 0px;
     border-bottom: 1px solid #d1d5d7;
 }
 .spixi-list-item-left.small {
@@ -892,7 +892,7 @@ a:active {
 .spixi-list-item-right {
     margin-top: 20px;    
     height: 40px;
-    right: 30px;
+    right: 0px;
     font-size: 9pt;
     text-align: right;
     border-bottom: 1px solid #d1d5d7;

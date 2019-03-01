@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -61,7 +61,7 @@
         </div>
         <div class="spixi-textfield-holder smallpadding">
             <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Paste/type address">
-            <a href="#"> <span class="fa fa-address-book spixi-textfield-holder-icon"></span></a>
+            <a href="ixian:pick"> <span class="fa fa-address-book spixi-textfield-holder-icon"></span></a>
         </div>
         <div class="spixi-holder-20"></div>
         <div class="spixi-textsection-holder">
@@ -79,11 +79,10 @@
             </div>
         </div>
             
-        <div id="recipients">
-            <div class="">
-    <!--
+        <div id="recipients" class="container">
+ <!--   
     <div>
-        <div class="spixi-list-item">
+        <div class="spixi-list-item" style="">
             <div class="row">
                 <div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
                 <div class="col-8 spixi-list-item-center">
@@ -105,9 +104,7 @@
         </div>        
         <hr class="spixi-separator-full"/>
     </div>
-    -->      
-                                
-            </div>
+-->                                 
         </div>
         
         <div class="spixi-holder-20"></div>
@@ -125,39 +122,98 @@
     
     
 <script type="text/javascript">
-
+    var nextbtn = document.getElementById("sendrequest");
     
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 
+          
+    nextbtn.onclick = function () {
+        if(nextbtn.classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        var params = "";
+        
+        var recipientsContainer = document.getElementById("recipients");        
+        var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+        for (i = 0; i < c_items.length; i++) {
+            var addr = c_items[i].id;
+            
+            var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+            params = params + addr + ":" + input.value + "|";
+        }
+        
+        location.href = "ixian:send:" + params;
+    }
     
+    // Perform tests
     function test()
     {
-        addRecipient("Andrew","000");
-        addRecipient("Bart","001");
-        
+        addRecipient("First","3000");
+        addRecipient("Second","3001");
+        addRecipient("Third","3002");
+        addRecipient("Fourth","3003");       
     }
 
+    // Add a named recipient with address
     function addRecipient(rep, addr) {
         var contactsNode = document.getElementById("recipients");
                 
         var contactEntry = document.createElement("div");
-        contactEntry.className = "";
-        contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href=""><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield" onkeyup="" placeholder="0.00000000"></div><hr class="spixi-separator-full"/>';
+        contactEntry.className = "recipient";
+        contactEntry.setAttribute("id", addr);
+        contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient('+addr+')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield" onkeyup="validate()" placeholder="0.00000000"></div><hr class="spixi-separator-full"/>';
                 
-        contactsNode.appendChild(contactEntry);      
-    }
-    
-    function removeRecipient(addr) {
+        contactsNode.appendChild(contactEntry);     
         
+        validate();
     }
     
+    // Remove a specified recipient
+    function removeRecipient(addr) {
+        var element = document.getElementById(addr);
+        element.parentNode.removeChild(element);
+        validate();
+    }
+    
+    // Set the account wallet balance
     function setBalance(theText) {
         var balDiv = document.getElementById('activity_balance_number');
         balance = theText;
         if (balDiv.innerHTML != "&nbsp;")
             balDiv.innerHTML = balance;
     }
+    
+    // Validate all the amounts and enable the next button
+    function validate() {
+        var recipientsContainer = document.getElementById("recipients");        
+        var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+        nextbtn.className = "spixi-button large center disabled";
+
+        // If there are no recipients, do not enable the next button
+        if(c_items.length < 1)
+        {
+            return;
+        }
+        
+        for (i = 0; i < c_items.length; i++) {
+            var addr = c_items[i].id;
+            
+            var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+            if(input.value.length < 1)
+            {
+                return;
+            }
+        }
+        
+        // Enable the next button if we reach this point
+        nextbtn.className = "spixi-button large center";
+    }
+    
 </script>
 
 </body>
