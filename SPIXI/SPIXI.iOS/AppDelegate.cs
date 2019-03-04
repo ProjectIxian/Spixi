@@ -8,7 +8,7 @@ using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
 using SPIXI;
-using SPIXI.Notifications;
+//using SPIXI.Notifications;
 
 namespace SPIXI.iOS
 {
@@ -59,6 +59,7 @@ namespace SPIXI.iOS
 
         void prepareBackgroundService()
         {
+            /*
             MessagingCenter.Subscribe<StartMessage>(this, "StartMessage", async message => {
                 backgroundTaskService = new BackgroundTaskService();
                 await backgroundTaskService.Start();
@@ -67,6 +68,7 @@ namespace SPIXI.iOS
             MessagingCenter.Subscribe<StopMessage>(this, "StopMessage", message => {
                 backgroundTaskService.Stop();
             });
+            */
         }
 
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)

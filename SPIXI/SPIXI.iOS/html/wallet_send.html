@@ -1,134 +1,220 @@
-﻿<html>
-<head>
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI Wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/stylewallet.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
 
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
     <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	<script src="js/spixi.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
 </head>
-    
 <body onload="onload()">
-<div id="wrap" class="container-fluid noselect">
-    
-    <div id="toolbar" class="toolbar">
-        <div id="backbtn" class="toolbar_back"></div>
-        <div class="toolbar_text" id="title">Send IXI</div>
-    </div>
-    <div class="toolbarholder">
-    </div>
-    
-
-    
-
-    
-    <div id="status_balance">
-        <div class="status_ixi" ><div class="status_mybalance">My balance</div>
-            <div class="status_mybalance_line"></div>
-            <div class="">
-            <div class="col-xs-12 status_dbalance" id="activity_balance_number">0</div></div>
+    <div id="wrap" class="container-fluid noselect">
+        
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2 spixi-center">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10">
+                    Send Payment
+                </div>   
+            </div>            
         </div>
-        <div class="">
-            <div class="col-xs-12 status_bottom" id="activity_balance_info">* Tap and hold  hide</div>
-        </div>                        
-    </div>
-                
-    <div id="quickscanbutton" class="quickscanbutton">
-                        <a href="ixian:quickscan"><img src="img/ScanButton_Idle.png" style="width:64px;height:64px;" /></a>
-                    </div>
-    
-    <div class="wallet_sendto_amount">
-        <div class="wallet_subtitle">Enter amount to send</div>
-        <input type="number" id="wallet_sendto_amount_input" onkeyup="" placeholder="0.00000000">
-        <div class="send_status_bottom">Tap to enter the amount you would like to send</div>
-    </div>
-    
-    
-    <div id="send_2_to" style="display:none;">
-        <div class="wallet_subtitle">Recipient</div>
-        <div class="wallet_from_holder">
-            <div class="col-xs-2 wallet_from_avatar"><img src="avatar.png" style="width:48px;height:48px;border-radius: 48px;" /></div>
-            <div id="recipient_wal" class="col-xs-7 wallet_from_text"></div>
-                <div id="remove_recipient" class="col-xs-3 wallet_sendto_text">remove</div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- BalanceBar -->
+        <div id="status_balance" class="spixi-balancebar">
+            <div class="spixi-balancebar-label">My IxiCash Balance</div>
+            <div class="spixi-balancebar-balance" id="activity_balance_number">0</div> 
+            <div class="spixi-balancebar-line"></div>
+            <div class="spixi-balancebar-info" id="activity_balance_info">&nbsp;</div>
+
+            <a href="ixian:quickscan">
+            <div class="spixi-balancebar-quickscan">
+                <div class="spixi-button smallround">
+                <i class="fas fa-qrcode"></i>
+                </div>
+            </div>    
+            </a>
+        </div>        
+        <!-- End BalanceBar -->
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Add Recipient/-s
+        </div>
+        <div class="spixi-textfield-holder smallpadding">
+            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Paste/type address">
+            <a href="ixian:pick"> <span class="fa fa-address-book spixi-textfield-holder-icon"></span></a>
+        </div>
+        <div class="spixi-holder-20"></div>
+        <div class="spixi-textsection-holder">
+            You can add additional recipients for this transaction.
+        </div>
+        <hr class="spixi-separator-main"/>
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Recipient/-s
+        </div>
+        <hr class="spixi-separator-full"/>
+        
+        <div id="norecipients" style="display: none;">
+            <div class="spixi-list-placeholer-text">
+                No recipients selected
             </div>
+        </div>
+            
+        <div id="recipients" class="container">
+ <!--   
+    <div>
+        <div class="spixi-list-item" style="">
+            <div class="row">
+                <div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
+                <div class="col-8 spixi-list-item-center">
+                    <div class="spixi-list-item-title-center">Andrew</div>
+                </div>
+                <div class="col-2 spixi-list-item-right">
+                <a href="">
+                <i class="fa fa-minus-circle spixi-list-item-action-icon"></i>
+                    </a>
+                </div>
+            </div>
+        </div>   
+        <div class="spixi-holder-20"></div>
+        <div class="spixi-textsection-holder">
+            Amount to send to recipient
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="password" onkeyup="" placeholder="0.00000000">
+        </div>        
+        <hr class="spixi-separator-full"/>
+    </div>
+-->                                 
+        </div>
+        
+        <div class="spixi-holder-20"></div>
+        <hr class="spixi-separator-main"/>
+
+        <div id="sendrequest" class="spixi-button large center disabled">
+            Next
+        </div>
+        
+        <div class="spixi-holder-20"></div>
+
+        
+        
     </div>
     
-    <div id="add_recipient" class="wallet_send_address">
-        <div class="recent_activity_bar"><div class="col-xs-12">Recipient</div></div>
-        <input type="text" id="wallet_send_address_input" onkeyup="" placeholder="type or paste the address">
-        <a href="ixian:pick"><div class="wallet_sendto_pick">address book</div></a>
-    </div>
-
-
-        <div id="next" class="send_request_bottom">
-            Slide to send payment
-            <div id="accept" class="send_request_accept"></div>
-        </div>
-
-
-
-
-        <div class="spixi_notification" style="display: none;">
-            <div class="spixi_notification_avatar"><img src="avatar.png" /></div>
-            <div class="spixi_notification_title">Chat</div>
-            <div class="spixi_notification_line"></div>
-            <div class="spixi_notification_subtitle">New message received.</div>
-            <a href="ixian:closenotif"><div class="spixi_notification_close"></div></a>
-        </div>
-
-    </div>
-
+    
 <script type="text/javascript">
+    var nextbtn = document.getElementById("sendrequest");
     
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 
+          
+    nextbtn.onclick = function () {
+        if(nextbtn.classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        var params = "";
+        
+        var recipientsContainer = document.getElementById("recipients");        
+        var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+        for (i = 0; i < c_items.length; i++) {
+            var addr = c_items[i].id;
+            
+            var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+            params = params + addr + ":" + input.value + "|";
+        }
+        
+        location.href = "ixian:send:" + params;
+    }
     
-    document.getElementById("next").onclick = function() {
-        var wallet = document.getElementById("wallet_send_address_input").value;
-        if (isBlank(wallet)) {
-            location.href = "ixian:error";
-            return;
-        }
-        var amount = document.getElementById("wallet_sendto_amount_input").value;
-        if (isBlank(amount)) {
-            location.href = "ixian:error2";
-            return;
-        }
-        location.href = "ixian:send:" + wallet + ":" + amount;
+    // Perform tests
+    function test()
+    {
+        addRecipient("First","3000");
+        addRecipient("Second","3001");
+        addRecipient("Third","3002");
+        addRecipient("Fourth","3003");       
     }
 
-    document.getElementById("remove_recipient").onclick = function () {
-        document.getElementById("send_2_to").style.display = "none";
-        document.getElementById("add_recipient").style.display = "block";  
-        document.getElementById("wallet_send_address_input").value = "";
-    } 
-
-    function setRecipient(theText, theName) {
-        document.getElementById("wallet_send_address_input").value = theText;
-        document.getElementById("recipient_wal").innerHTML = "<b>" + theName + "</b><br/>" + theText;
-
-        document.getElementById("send_2_to").style.display = "block";
-        document.getElementById("add_recipient").style.display = "none";        
+    // Add a named recipient with address
+    function addRecipient(rep, addr) {
+        var contactsNode = document.getElementById("recipients");
+                
+        var contactEntry = document.createElement("div");
+        contactEntry.className = "recipient";
+        contactEntry.setAttribute("id", addr);
+        contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient('+addr+')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield" onkeyup="validate()" placeholder="0.00000000"></div><hr class="spixi-separator-full"/>';
+                
+        contactsNode.appendChild(contactEntry);     
+        
+        validate();
     }
-
+    
+    // Remove a specified recipient
+    function removeRecipient(addr) {
+        var element = document.getElementById(addr);
+        element.parentNode.removeChild(element);
+        validate();
+    }
+    
+    // Set the account wallet balance
     function setBalance(theText) {
         var balDiv = document.getElementById('activity_balance_number');
         balance = theText;
         if (balDiv.innerHTML != "&nbsp;")
             balDiv.innerHTML = balance;
     }
-
-    function isBlank(str) {
-        return (!str || /^\s*$/.test(str));
-    }
-</script>
     
-</body>    
+    // Validate all the amounts and enable the next button
+    function validate() {
+        var recipientsContainer = document.getElementById("recipients");        
+        var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+        nextbtn.className = "spixi-button large center disabled";
+
+        // If there are no recipients, do not enable the next button
+        if(c_items.length < 1)
+        {
+            return;
+        }
+        
+        for (i = 0; i < c_items.length; i++) {
+            var addr = c_items[i].id;
+            
+            var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+            if(input.value.length < 1)
+            {
+                return;
+            }
+        }
+        
+        // Enable the next button if we reach this point
+        nextbtn.className = "spixi-button large center";
+    }
+    
+</script>
+
+</body>
 </html>

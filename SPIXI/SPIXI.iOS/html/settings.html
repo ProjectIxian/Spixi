@@ -1,128 +1,197 @@
-﻿<html>
-<head>
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/stylesettings.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-	<script src="js/spixi.js"></script>
-</head>
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
     
-<body onload="onload()">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
+</head>
+<body>
     <div id="wrap" class="container-fluid noselect">
-        <div id="toolbar" class="toolbar">
-            <div id="backbtn" class="toolbar_back"></div>
-            <div class="toolbar_text" id="title">My Settings</div>
-            <div id="savebtn" class="toolbar_right_text">Save</div>
-        </div>
-        <div class="toolbarholder">
-        </div>
-
-        <div class="settings_subtitle">Edit Nickname</div>
-        <div class="settings_nick">
-            <input type="text" id="nicknameInput" onkeyup="" placeholder="Nickname">
-        </div>
-        <hr class="settings_hr" />
-        <div class="settings_subtitle" style="margin-top: -5px;">Avatar Options</div>
-        <div class="settings_desc2" style="margin-bottom: 20px;">Tap Avatar to select image</div>
-        <img id="avatar" src="avatar.png" class="settings_avatar" />
-        <a id="remove_avatar" class="settings_remove" href="ixian:remove" style="display:none;">Remove current image</a>
         
-        <hr class="settings_hr" />
-        <div class="settings_subtitle" style="margin-top: -5px;">Delete Wallet</div>
-        <div class="settings_desc2">Instructions on how to delete wallet</div>
+        <!-- Toolbar Settings-->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2 spixi-center">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-7">
+                    Settings
+                </div>
+                <div id="savebtn" class="col-3 spixi-center">
+                    <div class="spixi-toolbar-option">SAVE</div>
+                </div>     
+            </div>
+            
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar --> 
         
-        <div id="deletewallet" class="delbutton">Delete my WALLET</div>
-      
-        <div id="deleteWalletModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="hmodal-header">
-                    Delete my WALLET
-                </div>
-
-                <div class="hmodal-text">
-                Are you sure you want to delete your WALLET?
-                </div>
-                <div class="hmodal-footer">
-                    <div class="hmodalclosehalf">CANCEL</div>
-                    
-                    <a href="ixian:delete">
-                        <div class="hmodalconfirmhalf">CONFIRM</div>
-                    </a>
-                </div>
-
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar small">
+            <div class="row spixi-descriptionbar-row">
+                <div class="col-2 spixi-center"><i class="fa fa-cog"></i></div>
+                <div class="col-10 spixi-descriptionbar-row-details">Edit your Spixi Account information and manage the data stored on this device.</div>
             </div>
         </div>
+        <!-- End DescriptionBar -->
         
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Account Information
+        </div>
+        <div class="spixi-textsection-holder">
+            This is how you appear to other Spixi users.<br/>You can change your displayed name and image.
+        </div>
+        <hr class="spixi-separator"/>
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            Edit displayed image
+        </div>
         
+        <div id="avatar" class="spixi-button round padding-left padding-top">
+                <i class="fas fa-image"></i>
+        </div>
         
-        <hr class="settings_hr" />
-        <div class="settings_subtitle" style="margin-top: -5px;">Delete Account</div>
-        <div class="settings_desc2">Instructions on how to delete account</div>        
+        <hr class="spixi-separator"/>
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            Edit displayed name
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="nicknameInput" onkeyup="" placeholder="Type in your display name">
+            <span class="fa fa-pencil-alt spixi-textfield-holder-icon"></span>
+        </div>
         
-        <div id="deleteaccount" class="delbutton">Delete my ACCOUNT</div>
-
-        <div id="deleteAccountModal" class="modal">
+        <hr class="spixi-separator"/>
+        <div class="spixi-textsection-holder">
+            You can delete this account and all of the content associated with it from this device. To continue using Spixi you will have to create a new account.
+        </div>
+        <div id="deleteaccount" class="spixi-button small smallwidth padding-left padding-top">
+            Delete my Account
+        </div>
+        
+        <div id="deleteAccountModal" class="spixi-modal">
             <!-- Modal content -->
             <div class="modal-content">
-                <div class="hmodal-header">
+                <div class="spixi-modal-header warn">
                     Delete my ACCOUNT
                 </div>
+                <hr class="spixi-separator noheightmargins fullwidth"/>
 
-                <div class="hmodal-text">
+                <div class="spixi-modal-text">
                 Are you sure you want to delete your ACCOUNT?
                 </div>
-                <div class="hmodal-footer">
-                    <div class="hmodalclosehalf">CANCEL</div>
+                
+                <hr class="spixi-separator noheightmargins fullwidth"/>
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">CANCEL</div>
                     
                     <a href="ixian:deletea">
-                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                        <div class="spixi-modal-confirm">CONFIRM</div>
                     </a>
                 </div>
 
             </div>
         </div>
         
-        <hr class="settings_hr" />
-        <div class="settings_subtitle" style="margin-top: -5px;">Messages history</div>
-        <div class="settings_desc2">Instructions on how to delete messages history</div>
         
-        <div id="deletehistory" class="delmsgbutton">Delete ENTIRE messages history</div>
-
-        <div id="deleteHistoryModal" class="modal">
+               
+        <hr class="spixi-separator-main"/>
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Wallet Settings
+        </div>
+        <div class="spixi-textsection-holder">
+            Your wallet is associated with your Spixi account. To delete your wallet and all history on this device tap delete below.            
+        </div>  
+        <div id="deletewallet" class="spixi-button small smallwidth padding-left padding-top">
+            Delete my Wallet
+        </div>
+        
+        <div id="deleteWalletModal" class="spixi-modal">
             <!-- Modal content -->
             <div class="modal-content">
-                <div class="hmodal-header">
-                    Delete messages history
+                <div class="spixi-modal-header warn">
+                    Delete my WALLET
                 </div>
+                <hr class="spixi-separator noheightmargins fullwidth"/>
 
-                <div class="hmodal-text">
-                Are you sure you want to delete your ENTIRE messages history?
+                <div class="spixi-modal-text">
+                Are you sure you want to delete your WALLET?
                 </div>
-                <div class="hmodal-footer">
-                    <div class="hmodalclosehalf">CANCEL</div>
-                    
-                    <a href="ixian:deleteh">
-                        <div class="hmodalconfirmhalf">CONFIRM</div>
+                
+                <hr class="spixi-separator noheightmargins fullwidth"/>
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">CANCEL</div>
+                    <a href="ixian:delete">
+                        <div class="spixi-modal-confirm">CONFIRM</div>
                     </a>
                 </div>
 
             </div>
-        </div>        
-
-    </div>
-<script type="text/javascript">
+        </div>
         
+        <hr class="spixi-separator-main"/>
+        <div class="spixi-textsection-holder spixi-textsection-header">
+           Message History
+        </div>
+        <div class="spixi-textsection-holder">
+            Your wallet is associated with your Spixi account. To delete all your history on this device tap delete below.            
+        </div>  
+        <div id="deletehistory" class="spixi-button small padding-left padding-top">
+            Delete entire Message History
+        </div>   
+        
+        <div id="deleteHistoryModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    Delete messages history
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth"/>
+
+                <div class="spixi-modal-text">
+                Are you sure you want to delete your ENTIRE messages history?
+                </div>
+                
+                <hr class="spixi-separator noheightmargins fullwidth"/>
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">CANCEL</div>
+                    
+                    <a href="ixian:deleteh">
+                        <div class="spixi-modal-confirm">CONFIRM</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="spixi-holder-40"></div>
+
+    </div> 
+    
+<script type="text/javascript">
     var deleteWalletModal = document.getElementById('deleteWalletModal');
     var deleteAccountModal = document.getElementById('deleteAccountModal');
     var deleteHistoryModal = document.getElementById('deleteHistoryModal'); 
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    }
     
     document.getElementById("savebtn").onclick = function() {
         var nick = document.getElementById("nicknameInput").value;
@@ -132,15 +201,7 @@
         }
         location.href = "ixian:save:" + nick;
     } 
-    document.getElementById("backbtn").onclick = function() {
-        location.href = "ixian:back";
-    } 
-    document.getElementById("avatar").onclick = function() {
-        location.href = "ixian:avatar";
-    } 
-    document.getElementById("backup").onclick = function () {
-        location.href = "ixian:backup";
-    } 
+    
     document.getElementById("deletewallet").onclick = function() {
         deleteWalletModal.style.display = "block";
     }
@@ -151,15 +212,6 @@
         deleteHistoryModal.style.display = "block";
     }  
     
-    function isBlank(str) {
-        return (!str || /^\s*$/.test(str));
-    }
-
-    function setNickname(nick) {
-        document.getElementById("nicknameInput").value = nick;
-    }
-    
-   
     // Handle modals outside tap
     window.onclick = function(event) {
         if(event.target == deleteWalletModal) {
@@ -172,32 +224,40 @@
             deleteHistoryModal.style.display = "none";
         }
     }
-            
-    document.getElementsByClassName("hmodal-footer")[0].onclick = function() {
-        deleteWalletModal.style.display = "none";
-    }
-    document.getElementsByClassName("hmodal-footer")[1].onclick = function() {
+    
+    document.getElementsByClassName("spixi-modal-footer")[0].onclick = function() {
         deleteAccountModal.style.display = "none";
+
+    }
+    document.getElementsByClassName("spixi-modal-footer")[1].onclick = function() {
+        deleteWalletModal.style.display = "none";
     }    
-    document.getElementsByClassName("hmodal-footer")[2].onclick = function() {
+    document.getElementsByClassName("spixi-modal-footer")[2].onclick = function() {
         deleteHistoryModal.style.display = "none";
     }    
-
+ 
+    document.getElementById("avatar").onclick = function() {
+        location.href = "ixian:avatar";
+    }
+    
+    function setNickname(nick) {
+        document.getElementById("nicknameInput").value = nick;
+    }
+    
     function loadAvatar(avatar_path) {
         var av_path = avatar_path + "?t=" + new Date().getTime();
-        document.getElementById("avatar").src = av_path;
+        //document.getElementById("avatar").src = av_path;
     }
-
+      
     function showRemoveAvatar(show) {
         if (show == true) {
-            document.getElementById("remove_avatar").style = "display:block";
+            //document.getElementById("remove_avatar").style = "display:block";
         }
         else {
-            document.getElementById("remove_avatar").style = "display:none";
+            //document.getElementById("remove_avatar").style = "display:none";
         }
     }
     
-</script>
-    
+</script>    
 </body>
 </html>

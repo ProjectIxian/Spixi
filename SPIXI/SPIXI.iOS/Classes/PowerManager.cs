@@ -16,13 +16,13 @@ public class PowerManager_iOS : IPowerManager
 {
     public bool AquireLock()
     {
-        UIApplication.SharedApplication.IdleTimerDisabled = true;
+   //     UIApplication.SharedApplication.IdleTimerDisabled = true;
         return true;
     }
 
     public bool ReleaseLock()
     {
-        UIApplication.SharedApplication.IdleTimerDisabled = false;
+    //    UIApplication.SharedApplication.IdleTimerDisabled = false;
         return true;
     }
 }

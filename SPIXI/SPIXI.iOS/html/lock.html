@@ -1,90 +1,110 @@
-﻿<html>
-<head>
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI Intro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/stylelock.css">
-        
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui-intro.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
 </head>
-    
-<body onload="onLoad()">
-<div id="wrap" class="container-fluid noselect">
-    
-    <div style="width: 100%; height: 75px; margin-top: 40px;">
-        <div id="logo">SPIXI</div>
-    </div>
-    
-    <hr class="lock_hr" />
-    <div class="subtitle">This Spixi is LOCKED.</div>
-    <div class="subtitle">Please enter password to proceed.</div>
-    
-    <div class="passwordHolder">
-        <input type="password" id="password" class="passwordInput" placeholder="password">
-    </div>
-    
-    
-
-
-    
-    <div id="errorModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <div class="cmodal-header">
-                    <div id="cmodal_message">The password you entered is not valid.</div>
-                    <img id="cmodal-icon" src="img/error.png"/>
+<body>
+    <div id="wrap" class="container-fluid noselect">
+        
+        <div class="intro-logo-holder2">
+            <img class="intro-toolbar-logo" src="img/spixitoolbarlogo.png"/>
+        </div>
+        <div class="intro-holder-70"></div>
+        
+        <!-- DescriptionBar -->
+        <div class="intro-descriptionbar">
+            <div class="row spixi-descriptionbar-row">
+                <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-lock"></i></div>
+                <div class="col-10 spixi-descriptionbar-row-details">
+                <div>Spixi is LOCKED</div>
                 </div>
-                
-                <div class="cmodal-footer">
-                    <div class="cmodalclose">DISMISS</div>
-                </div>
-
             </div>
+        </div>
+        <!-- End DescriptionBar -->
+        <hr class="intro-separator"/>            
+        <div class="intro-textfield-holder">
+            <input type="text" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="Enter your LOCK PASSWORD">
+        </div>            
+        <hr class="intro-separator"/>
+        
+        <div id="errormessage" class="intro-text left" style="display: none;">
+            <i class="fa fa-info-circle"></i> Incorrect Password 
+        </div>
+
+        
+        <div class="intro-holder-70"></div>
+
+        <div id="unlockbtn" class="intro-button center disabled">
+            UNLOCK
+        </div>            
+
+        <div class="intro-holder-20"></div>            
+                            
     </div>
     
-</div>
     
-<script type="text/javascript">
-
-           
-    $("#password").keyup(function (event) {
-        if (event.keyCode === 13) {
-            var pass_text = document.getElementById("password").value;
-            location.href = "ixian:unlock:"+pass_text;
+<script type="text/javascript">    
+    var unlockbtn = document.getElementById("unlockbtn");
+    var errormessage = document.getElementById("errormessage");
+    
+    
+    unlockbtn.onclick = function () {
+        if(unlockbtn.classList.contains("disabled"))
+        {
+            return;
         }
-    });
-    
-    
-    var errorModal = document.getElementById('errorModal');
-
-    var attachMode = false;
-            
-    // Handle modals outside tap
-    window.onclick = function(event) {
-        if(event.target == errorModal) {
-            errorModal.style.display = "none";
-        }
+        
+        setTimeout(function () { unlock(); }, 400);
     }
-            
-    document.getElementsByClassName("cmodal-footer")[0].onclick = function() {
-        errorModal.style.display = "none";
+    
+    function checkPassword()
+    {
+        var password = $("#password").val();
+        errormessage.style.display = "none";
+        unlockbtn.className = "intro-button center disabled";
+
+        if(password.length < 1)
+            return false;
+        
+        unlockbtn.className = "intro-button center";
+        return true;
+    }
+    
+    function unlock() {
+        var pass = $("#password").val();
+
+        // Check that the passwords are correct
+        if(checkPassword() == false)
+        {
+            return;
+        }
+        
+        location.href = "ixian:unlock:" + pass;
     }
     
     function showError()
     {
-        errorModal.style.display = "block";
-    }
-
-    function onLoad()
-    {
-        document.getElementById("password").focus();
+        errormessage.style.display = "block";
     }
     
 </script>
-    
-</body>    
+
+</body>
 </html>

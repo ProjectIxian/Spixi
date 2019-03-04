@@ -1,122 +1,220 @@
-﻿<html>
-<head>
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SPIXI</title>
-    <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap37.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/stylewallet.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>IXIAN</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
     <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	<script src="js/spixi.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
 </head>
-    
 <body onload="onload()">
-<div id="wrap" class="container-fluid noselect">
-    
-    <div id="toolbar" class="toolbar">
-        <div id="backbtn" class="toolbar_back"></div>
-        <div class="toolbar_text" id="title">Select Recipient</div>
-    </div>
-    <div class="toolbarholder">
-    </div>
-    
-    <!-- Contacts -->
-    <div id="contacts" class="tab-pane fade in">
-                    
-        <input type="text" id="contactInput" onkeyup="contactSearch()" placeholder="Search for contacts..">
-                
+    <div id="wrap" class="container-fluid noselect">
+        
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2 spixi-center">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10">
+                    Select Recipient
+                </div>   
+            </div>
+            
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="contactInput" onkeyup="contactSearch()" placeholder="Search contacts">
+            <span class="fa fa-search spixi-textfield-holder-icon"></span>
+        </div>
+        <hr class="spixi-separator-main"/>
+
         <div id="contactslist" class="container-fluid">                       
         </div>
+        
+        <hr class="spixi-separator-main"/>
 
-        <div class="bottomPlaceholder"></div>
-    </div>               
+        <div id="recipientslabel" class="spixi-textsection-holder">
+            0 Recipients selected
+        </div>
+        <hr class="spixi-separator"/>
 
-
-
-</div>
-
+        <div id="sendrequest" class="spixi-button small center padding-top disabled">
+            Add Recipient/-s
+        </div>
+            
+        <div class="spixi-holder-20"></div>
+        
+    </div>
+    
+    
 <script type="text/javascript">
+    var recipients = [];
     var searchingContacts = false;
+
+    //var sendrequest = document.getElementById("sendrequest");
 
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 
     
-   /* document.getElementById("sendrequest").onclick = function() {
-        location.href = "ixian:sendrequest";
-    }*/
+    document.getElementById("sendrequest").onclick = function() {       
+        if(document.getElementById("sendrequest").classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        var suffix = "";
+        var i;
+        for (i = 0; i < recipients.length; i++) 
+        {
+           suffix = suffix + "|" + recipients[i];
+        }
+        location.href = "ixian:select:" + suffix;
+    }
 
-            // Filter in the CONTACTS tab
-            function contactSearch()
-            {
-                var a,i,row;
-                var input = document.getElementById('contactInput');
-                var filter = input.value.toUpperCase();
-                var c_contactlist = document.getElementById("contactslist");
-                var c_items = c_contactlist.getElementsByClassName('uchat');
+    // Filter in the CONTACTS tab
+    function contactSearch()
+    {
+        var a,b,i,row;
+        var input = document.getElementById('contactInput');
+        var filter = input.value.toUpperCase();
+        var c_contactlist = document.getElementById("contactslist");
+        var c_items = c_contactlist.getElementsByClassName('spixi-list-item');
 
-                if (isBlank(filter) == true) {
-                    searchingContacts = false;
-                }
-                else {
-                    searchingContacts = true;
-                }
+        if (isBlank(filter) == true) {
+            searchingContacts = false;
+        }
+        else {
+            searchingContacts = true;
+        }
 
-                // Go through each element and filter out non-matching elements
-                for (i = 0; i < c_items.length; i++) {
-                    row = c_items[i].getElementsByTagName("div")[0];
-                    a = row.getElementsByTagName("div")[1];
+        // Go through each element and filter out non-matching elements
+        for (i = 0; i < c_items.length; i++) {
+            row = c_items[i].getElementsByTagName("div")[0];
+            b = row.getElementsByTagName("div")[1];
+            a = b.getElementsByTagName("div")[0];
 
-                    if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        c_items[i].style.display = "";
-                    } else {
-                        c_items[i].style.display = "none";
-                    }
-                }
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                c_items[i].style.display = "";
+            } else {
+                c_items[i].style.display = "none";
             }
-            
-            // Clears all contacts from contacts page
-            function clearContacts()
-            {
-                if (searchingContacts == true) {
-                    return;
-                }
+        }
+    }
+    
+    // Clears all contacts from contacts page
+    function clearContacts()
+    {
+        if (searchingContacts == true) {
+            return;
+        }
 
-                var contactsNode = document.getElementById("contactslist");
-                while (contactsNode.firstChild) {
-                    contactsNode.removeChild(contactsNode.firstChild);
-                }
-            }
-            
-            // Adds a contact to the contacts page
-            function addContact(wal, name, avatar, online)
-            {
-                if (searchingContacts == true) {
-                    return;
-                }
-                var indicator = "none";
-                if (online == true) {
-                    indicator = "block";
-                }
+        var contactsNode = document.getElementById("contactslist");
+        while (contactsNode.firstChild) {
+            contactsNode.removeChild(contactsNode.firstChild);
+        }
+    }
+    
+    // Adds a contact to the contacts page
+    function addContact(wal, name, avatar, online)
+    {
+        if (searchingContacts == true) {
+            return;
+        }
+        var indicator = "none";
+        if (online == true) {
+            indicator = "block";
+        }
 
-                var contactsNode = document.getElementById("contactslist");
+        var contactsNode = document.getElementById("contactslist");
                 
-                var contactEntry = document.createElement("div");
-                contactEntry.className = "uchat";
-                contactEntry.innerHTML = '<a href="ixian:choose:' + wal + '"><div class="row"><div class="col-xs-2 cdesc"></div><div class="col-xs-6 contacts_name">' + name + '</div><div class="col-xs-4 contacts_avatar"><img class="contacts_avatar_img" src="' + avatar + '"/><img id="indicator" src="img/onlineIndicator.png" class="contacts_indicator" style="display:' + indicator +';"/></div></div></a>';
+        var contactEntry = document.createElement("div");
+        contactEntry.className = "spixi-list-item spixi-list-item-row";
+        contactEntry.innerHTML = '<a href="javascript:selectRecipient(' + wal + ')"><div class="row" id="row'+ wal + '"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="far fa-square spixi-list-item-action-icon"></i></div></div></a>';
                 
-                contactsNode.appendChild(contactEntry);                             
+        contactsNode.appendChild(contactEntry);                             
+    }    
+        
+    function selectRecipient(rep)
+    {                
+        var recipientNode = document.getElementById("row"+rep);
+        col_left = recipientNode.getElementsByTagName("div")[0];        
+        avatar = col_left.getElementsByTagName("img")[0];
+        avatar.className = "spixi-list-item-avatar";
+        
+        col_middle = recipientNode.getElementsByTagName("div")[2];        
+        col_middle.className = "spixi-list-item-title-center";
+        
+        col_right = recipientNode.getElementsByTagName("div")[3];        
+        check = col_right.firstElementChild;
+        check.className = "far fa-square spixi-list-item-action-icon";       
+        
+        
+        var i;
+        for (i = 0; i < recipients.length; i++) {
+            if(rep == recipients[i])
+            {
+                recipients.splice(i,1);
+                updateRecipientsLabel();
+                return;
             }
+        }
+        avatar.className = "spixi-list-item-avatar selected";
+        col_middle.className = "spixi-list-item-title-center selected";
+        check.className = "fa fa-check-square spixi-list-item-action-icon";       
 
-            function isBlank(str) {
-                return (!str || /^\s*$/.test(str));
-            }
+        recipients.push(rep);
+        updateRecipientsLabel();
+    }
+    
+    function updateRecipientsLabel() 
+    {
+        var label = document.getElementById("recipientslabel");
+        var rLen = recipients.length;
+        
+        label.innerHTML = rLen + " Recipients selected";
+        
+        if(rLen > 0)
+            document.getElementById("sendrequest").className = "spixi-button small center padding-top";
+        else 
+            document.getElementById("sendrequest").className = "spixi-button small center padding-top disabled";
+    }
+    
+    
+    function test()
+    {
+        clearContacts();
+        addContact("1000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
+        addContact("2000","Abc","img/spixiavatar.png", true);
+        addContact("3000","ZAbc","img/spixiavatar.png", true);
+        addContact("4000","XAbc","img/spixiavatar.png", false);
+        addContact("5000","CAbc","img/spixiavatar.png", true);
+        addContact("6000","VAbc","img/spixiavatar.png", false);
+        addContact("7000","BAbc","img/spixiavatar.png", false);
+        addContact("8000","NAbc","img/spixiavatar.png", false);
+        addContact("9000","MAbc","img/spixiavatar.png", false);
+    }
 
 </script>
-    
-</body>    
+
+</body>
 </html>
