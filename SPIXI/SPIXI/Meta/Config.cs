@@ -61,10 +61,7 @@ namespace DLT
                 }
             }
 
-            public static void readFromCommandLine(string[] args)
-            {
 
-            }
 
         }
 

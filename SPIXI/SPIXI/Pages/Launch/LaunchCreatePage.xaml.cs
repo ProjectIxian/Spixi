@@ -130,6 +130,7 @@ namespace SPIXI
 
                     // TODO: encrypt the password
                     Application.Current.Properties["walletpass"] = pass;
+                    Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
 
                     // Release the wake lock
                     if (wake_lock)
