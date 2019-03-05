@@ -112,6 +112,7 @@ namespace SPIXI
             Node.localStorage.nickname = nick;
             Node.localStorage.writeAccountFile();
             Node.changedSettings = true;
+            applyAvatar();
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
@@ -170,11 +171,7 @@ namespace SPIXI
                     BackgroundColor = Color.Gray
                 };
 
-                var filePath = Node.localStorage.getOwnAvatarPath();
-                if (filePath.Equals("avatar.png", StringComparison.Ordinal))
-                {
-                    filePath = Path.Combine(Node.localStorage.documentsPath, "avatar.jpg");
-                }
+                var filePath = Path.Combine(Node.localStorage.documentsPath, "avatar-tmp.jpg");
 
                 try
                 {
@@ -195,6 +192,36 @@ namespace SPIXI
                 Node.changedSettings = true;
             }
 
+        }
+
+        // Applies the avatar image once the user chooses to Save changes
+        public void applyAvatar()
+        {
+            var filePath = Node.localStorage.getOwnAvatarPath();
+            filePath = Path.Combine(Node.localStorage.documentsPath, "avatar.jpg");
+            
+            var sourceFilePath = Path.Combine(Node.localStorage.documentsPath, "avatar-tmp.jpg");
+
+            // Check if the source file exists before proceeding
+            if (!File.Exists(sourceFilePath))
+            {
+                DisplayAlert("Error", "Cannot apply avatar image", "ok");
+                return;
+            }
+
+            // Remove the avatar image first
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            File.Copy(sourceFilePath, filePath);
+
+            // Delete the temporary avatar image if the copy was successfull
+            if (File.Exists(filePath))
+            {
+                File.Delete(sourceFilePath);
+            }
         }
 
         public void onRemoveAvatar()

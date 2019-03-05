@@ -526,6 +526,12 @@ a:active {
     bottom: 80px;
 }
 
+.spixi-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    margin-top: -14px;
+}
 
 /* TextField */
 .spixi-textfield {
@@ -1227,6 +1233,7 @@ a:active {
     color: #1693da;
     margin-left: 20px;
 }
+
 
 
 

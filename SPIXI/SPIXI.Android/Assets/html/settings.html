@@ -22,7 +22,7 @@
     <script src="js/spixi.js"></script>
     
 </head>
-<body>
+<body onload="ixian:onload()">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar Settings-->
@@ -46,9 +46,11 @@
         
         <!-- DescriptionBar -->
         <div class="spixi-descriptionbar small">
+            <div class="container">
             <div class="row spixi-descriptionbar-row">
                 <div class="col-2 spixi-center"><i class="fa fa-cog"></i></div>
                 <div class="col-10 spixi-descriptionbar-row-details">Edit your Spixi Account information and manage the data stored on this device.</div>
+            </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
@@ -65,7 +67,8 @@
         </div>
         
         <div id="avatar" class="spixi-button round padding-left padding-top">
-                <i class="fas fa-image"></i>
+                <i id="avatar_icon" class="fas fa-image"></i>
+                <img id="avatar_image" class="spixi-avatar" src="" style="display: none"/>
         </div>
         
         <hr class="spixi-separator"/>
@@ -236,19 +239,21 @@
         deleteHistoryModal.style.display = "none";
     }    
  
-    document.getElementById("avatar").onclick = function() {
+    
+    document.getElementById("avatar").onclick = function () {
         location.href = "ixian:avatar";
     }
     
+    function loadAvatar(avatar_path) {
+        document.getElementById("avatar_image").src = avatar_path + "?t=" + new Date().getTime();
+        document.getElementById("avatar_icon").style.display = "none";
+        document.getElementById("avatar_image").style.display = "block";
+    }
+
     function setNickname(nick) {
         document.getElementById("nicknameInput").value = nick;
     }
-    
-    function loadAvatar(avatar_path) {
-        var av_path = avatar_path + "?t=" + new Date().getTime();
-        //document.getElementById("avatar").src = av_path;
-    }
-      
+          
     function showRemoveAvatar(show) {
         if (show == true) {
             //document.getElementById("remove_avatar").style = "display:block";
