@@ -221,6 +221,13 @@ a:active {
     background: #634e8e;
 }
 
+.intro-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    margin-top: -14px;
+}
+
 .intro-backarrow {
     position: absolute;
     margin-left: 20px;
@@ -290,10 +297,12 @@ a:active {
 .intro-overlay-loading {
     width: 107px;
     height: 107px;
+    border-radius: 107px;
     background-image: url('../img/introloading.png');
     background-size: 107px 107px;
     margin: auto;
     margin-top: 14px;
+    animation: shadow-pulse 1s infinite;
 }
 .intro-overlay-info {
     margin-top: 50px;
@@ -307,4 +316,15 @@ a:active {
     background-size: 142px 46px;
     margin: auto;
     margin-top: 80px;
+}
+
+
+@keyframes shadow-pulse
+{
+     0% {
+          box-shadow: 0 0 0 0px rgba(160, 0, 0, 0.4);
+     }
+     100% {
+          box-shadow: 0 0 0 55px rgba(0, 0, 0, 0);
+     }
 }

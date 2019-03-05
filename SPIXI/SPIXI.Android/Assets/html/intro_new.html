@@ -53,12 +53,12 @@
         <div class="intro-text left">Tap to change your displayed image</div>
         
         <div id="avatar" class="intro-button left round">
-            <i class="fas fa-image"></i>
+                <i id="avatar_icon" class="fas fa-image"></i>
+                <img id="avatar_image" class="intro-avatar" src="" style="display: none"/>
         </div>
         
         <hr class="intro-separator"/>
-        
-        
+               
         <div class="intro-holder-70"></div>
 
         <div id="firstnext" class="intro-button center disabled">
@@ -219,7 +219,6 @@
         setTimeout(function () { createAccount(); }, 400);
     }
     
-    
     function createAccount() {
         var nick = document.getElementById("nicknameInput").value;
         var pass = $("#password").val();
@@ -233,6 +232,15 @@
         location.href = "ixian:create:" + nick + ":" + pass;
     }
 
+    document.getElementById("avatar").onclick = function () {
+        location.href = "ixian:avatar";
+    }
+    
+    function loadAvatar(avatar_path) {
+        document.getElementById("avatar_image").src = avatar_path + "?t=" + new Date().getTime();
+        document.getElementById("avatar_icon").style.display = "none";
+        document.getElementById("avatar_image").style.display = "block";
+    }
     
 </script>
 
