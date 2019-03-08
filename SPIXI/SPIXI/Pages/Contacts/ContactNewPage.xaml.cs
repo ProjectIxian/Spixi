@@ -31,7 +31,7 @@ namespace SPIXI
             webView.Source = source;
 
             // TODO optimize this         
-            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1]);
+            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1], null);
         }
 
         public ContactNewPage(string wal_id)
@@ -152,7 +152,7 @@ namespace SPIXI
             if(pubkey == null)
             {
                 DisplayAlert("Contact does not exist", "Try again later.", "OK");
-                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1]);
+                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1], null);
                 return;
             }
 

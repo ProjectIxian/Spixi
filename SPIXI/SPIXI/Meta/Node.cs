@@ -120,7 +120,7 @@ namespace DLT.Meta
                 {
                     writer.Write(Node.walletStorage.getPrimaryAddress().Length);
                     writer.Write(Node.walletStorage.getPrimaryAddress());
-                    NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray());
+                    NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
                 }
             }
 

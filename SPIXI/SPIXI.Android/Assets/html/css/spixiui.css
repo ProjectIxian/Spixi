@@ -866,7 +866,12 @@ a:active {
     margin-top: 20px;    
     height: 40px;    
 }
-
+.spixi-list-item-left.payment {
+    margin-top: 14px;
+    margin-bottom: 22px;
+    height: 46px;    
+    font-size: 20px;
+}
 
 .spixi-list-item-center {
     height: 60px;
@@ -877,6 +882,7 @@ a:active {
     color: #000000;
     font-size: 10pt;
     margin-top: 10px;
+    font-weight: bold;
 }
 .spixi-list-item-title-center {
     color: #000000;
@@ -891,11 +897,13 @@ a:active {
 }
 
 .spixi-list-item-subtitle {
+    color: #000000;
     font-size: 9pt;
     margin-bottom: 10px;
 }
 
 .spixi-list-item-right {
+    color: #000000;
     margin-top: 20px;    
     height: 40px;
     right: 0px;

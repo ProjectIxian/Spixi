@@ -70,7 +70,7 @@
                 <div id="exp1" class="spixi-expansion">
                     <div id="exp1-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-                    <div class="spixi-expansion-text">My notifications ( )</div>
+                    <div class="spixi-expansion-text">My notifications ( 0 )</div>
                     <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp1-contents" class="spixi-expansion-middle" style="display: block;">
@@ -84,7 +84,7 @@
                 <div id="exp2" class="spixi-expansion">
                     <div id="exp2-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-comment"></i></div>
-                    <div class="spixi-expansion-text">Unread chats ( )</div>
+                    <div class="spixi-expansion-text">Unread chats ( 0 )</div>
                     <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp2-contents" class="spixi-expansion-middle" style="display: block;">
@@ -106,7 +106,7 @@
             <div id="chats" class="tab-pane ">
                 
                 
-                <div id="chat_unread_no_activity" class="container">                   
+                <div id="chat_no_activity" class="container">                   
                     <div class="spixi-list-placeholer-text">
                         You have no existing conversations.
                     </div>
@@ -114,39 +114,7 @@
                 
                 
                 
-                <div id="chat_unread" class="container-fluid" style="display: block;">
-
-            <div class="spixi-list-item">
-                <div class="row">
-                    <div class="col-2"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                    <div class="col-7 spixi-list-item-center">
-                        <div class="spixi-list-item-title">Andrew</div>
-                        <div class="spixi-list-item-subtitle">Unread message</div>
-                    </div>
-                    <div class="col-3 spixi-list-item-right">6h ago</div>
-                </div>
-            </div>
-            <div class="spixi-list-item">
-                <div class="row">
-                    <div class="col-2"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                    <div class="col-7 spixi-list-item-center">
-                        <div class="spixi-list-item-title">Andrew</div>
-                        <div class="spixi-list-item-subtitle">Unread message</div>
-                    </div>
-                    <div class="col-3 spixi-list-item-right">6h ago</div>
-                </div>
-            </div>
-            <div class="spixi-list-item">
-                <div class="row ">
-                    <div class="col-2"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                    <div class="col-7 spixi-list-item-center">
-                        <div class="spixi-list-item-title">Andrew</div>
-                        <div class="spixi-list-item-subtitle">Unread message</div>
-                    </div>
-                    <div class="col-3 spixi-list-item-right">6h ago</div>
-                </div>
-            </div>
-                    
+                <div id="chatlist" class="container-fluid" style="display: block;">                    
                 </div>
                 
                 
@@ -212,20 +180,9 @@
                     <div class="spixi-expansion-right"><i id="exp3-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp3-contents" class="spixi-expansion-middle container" style="display: block;">
-
-                    <div class="spixi-list-item">
-                        <div class="row">
-                            <div class="col-2 spixi-list-item-left small"><i class="fa fa-check-circle"></i> </div>
-                            <div class="col-7 spixi-list-item-center">
-                                <div class="spixi-list-item-title">Payment Received</div>
-                                <div class="spixi-list-item-subtitle">2.100,000</div>
-                            </div>
-                            <div class="col-3 spixi-list-item-right">6h ago</div>
-                        </div>
-                    </div>
-                    
-                    
-                    
+                    <div id="paymentlist">
+                                        
+                    </div>                   
                 </div>
                 <div class="spixi-expansion-bottom"></div>  
                 
@@ -255,27 +212,8 @@
             </div>
         </div>
         
-        
-        
-        <!--
-        <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Paste / type address">
-        </div>
-        
-        <hr class="spixi-separator-main"/>
-        
-        <div id="sendrequest" class="spixi-button large center">
-            <i class="fas fa-check"></i>&nbsp; Send Contact Request
-        </div>
-        
-        <a href="ixian:quickscan">
-            <div class="spixi-button round action-button">
-                <i class="fas fa-qrcode"></i>
-            </div>
-        </a>
-        -->
-        
-            <div class="spixi-holder-64"></div>
+                
+        <div class="spixi-holder-64"></div>
         
         </div>  <!-- Wrap -->
     
@@ -314,8 +252,8 @@
             </ul> 
             </div>
         </div>
-                
-    
+              
+
         <!-- Modal menu -->
         <div id="homeMenuModal" class="spixi-modal">
             <!-- Modal content -->
@@ -347,7 +285,7 @@
             <!-- Modal content -->
             <div class="spixi-sidebar-content">
                 <div class="spixi-sidebar-header">
-                    <div class="spixi-sidebar-closebutton">
+                    <div id="sidebarclose" class="spixi-sidebar-closebutton">
                         <i class="fa fa-arrow-left"></i>
                     </div>
 
@@ -440,6 +378,8 @@
         }
     }
     
+    
+    
     $('#status_balance').on('mousedown touchstart', function() {
         timeoutId = setTimeout(toggleBalance, 1000);
     }).on('mouseup mouseleave touchend', function() {
@@ -457,7 +397,9 @@
     document.getElementById("toolbar").onclick = function() {
         onMainMenuAction();            
     }   
-    
+    document.getElementById("sidebarclose").onclick = function() {
+            leftSidebar.style.display = "none";
+    }      
     
     
     document.getElementById("exp1").onclick = function() {
@@ -632,9 +574,32 @@
     
     
     
-            
+    // Adds a payment
+    function addPaymentActivity(txid, text, timestamp, amount)            
+    {
+        var paymentsNode = document.getElementById("paymentlist");
                 
+        var paymentEntry = document.createElement("div");
+        paymentEntry.className = "spixi-list-item";
+        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+        
+        paymentsNode.appendChild(paymentEntry);        
+    }
     
+    // Adds a chat
+    function addChat(wallet, from, timestamp, avatar, online, excerpt_msg)
+    {
+        var excerpt = excerpt_msg;
+      
+        var chatsNode = document.getElementById("chatlist");
+        var readmsg = document.createElement("a");
+        readmsg.href = "ixian:chat:" + wallet;
+        readmsg.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="'+avatar+'"/></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">'+from+'</div><div class="spixi-list-item-subtitle">'+excerpt+'</div></div><div class="col-3 spixi-list-item-right">'+timestamp+'</div></div></div>';
+        
+        chatsNode.appendChild(readmsg);
+        document.getElementById("chatlist").style.display = 'block';
+        document.getElementById("chat_no_activity").style.display = 'none';
+    }
 
     
     
@@ -726,6 +691,16 @@ triggerOnTouchEnd:true,
         addContact("000","BAbc","img/spixiavatar.png", false);
         addContact("000","NAbc","img/spixiavatar.png", false);
         addContact("000","MAbc","img/spixiavatar.png", false);
+        
+        addPaymentActivity('111','Payment Received', 'NOW', '1234.44441111');
+        addPaymentActivity('112','Payment Received', '1h ago', '23.00000000');
+        addPaymentActivity('113','Payment Sent', '1h ago', '43.34246721');
+        addPaymentActivity('114','Payment Received', '2h ago', '65.00000000');
+        
+        addChat("100", "One", "2hrs ago", "img/spixiavatar.png", true, "Unread message");
+        addChat("101", "Two", "3hrs ago", "img/spixiavatar.png", false, "Unread 1message");
+        addChat("102", "Three", "2 days ago", "img/spixiavatar.png", false, "Unread 2message");
+
     }
     
 </script>
