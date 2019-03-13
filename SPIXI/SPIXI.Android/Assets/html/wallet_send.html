@@ -172,11 +172,13 @@
 
     // Add a named recipient with address
     function addRecipient(rep, addr) {
+        // Check for empty values
+        if(addr.length < 1 || rep.length < 1)
+            return;
+        
         // Check for duplicates
         if(recipientExists(addr) == true)
-        {
-            return;    
-        }
+            return;
         
         var contactsNode = document.getElementById("recipients");
                 
