@@ -23,7 +23,7 @@
     <script src="js/spixi.js"></script>
     
 </head>
-<body onload="onload()">
+<body onload="ixian:onload()">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar -->
@@ -149,23 +149,41 @@
         location.href = "ixian:send:" + params;
     }
     
+    // Assign enter/return event to the address input
+    var input = document.getElementById("addressInput");
+    input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+
+            addRecipient(input.value, input.value);
+            input.value = "";
+        }
+    });
+    
+    
     // Perform tests
     function test()
     {
-        addRecipient("First","3000");
-        addRecipient("Second","3001");
-        addRecipient("Third","3002");
-        addRecipient("Fourth","3003");       
+        addRecipient("First","1ADQ");
+        addRecipient("Second","3B01");
+        addRecipient("Third","3C02");
+        addRecipient("Fourth","3D03");       
     }
 
     // Add a named recipient with address
     function addRecipient(rep, addr) {
+        // Check for duplicates
+        if(recipientExists(addr) == true)
+        {
+            return;    
+        }
+        
         var contactsNode = document.getElementById("recipients");
                 
         var contactEntry = document.createElement("div");
         contactEntry.className = "recipient";
         contactEntry.setAttribute("id", addr);
-        contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient('+addr+')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield" onkeyup="validate()" placeholder="0.00000000"></div><hr class="spixi-separator-full"/>';
+        contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient(\''+addr+'\')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield" onkeyup="validate()" placeholder="0.00000000"></div><hr class="spixi-separator-full"/>';
                 
         contactsNode.appendChild(contactEntry);     
         
@@ -212,6 +230,27 @@
         
         // Enable the next button if we reach this point
         nextbtn.className = "spixi-button large center";
+    }
+    
+    // Check if an address is already in the recipients list
+    function recipientExists(repaddr) {
+        var recipientsContainer = document.getElementById("recipients");        
+        var c_items = recipientsContainer.getElementsByClassName('recipient');
+        // If there are no recipients
+        if(c_items.length < 1)
+        {
+            return false;
+        }
+        
+        for (i = 0; i < c_items.length; i++) {
+            var addr = c_items[i].id;
+            if(repaddr == addr)
+            {
+                // Address found
+                return true;
+            }
+        }
+        return false;
     }
     
 </script>

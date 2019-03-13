@@ -57,14 +57,14 @@ namespace SPIXI
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
             {
-                string nickname = "Unknown";
+                string nickname = Base58Check.Base58CheckEncoding.EncodePlain(recipient);
 
                 Friend friend = FriendList.getFriend(recipient);
                 if (friend != null)
                     nickname = friend.nickname;
 
-                webView.Eval(string.Format("setRecipient('{0}','{1}')",
-                    Base58Check.Base58CheckEncoding.EncodePlain(recipient), nickname));
+                webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, 
+                    Base58Check.Base58CheckEncoding.EncodePlain(recipient)));
             }
         }
 
@@ -101,43 +101,48 @@ namespace SPIXI
             else if (current_url.Contains("ixian:send:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
-                string first_part = split[1];
-                string[] inner_split = first_part.Split(new string[] { ":" }, StringSplitOptions.None);
 
-                string wallet = inner_split[0];
+                // Extract all addresses and amounts
+                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
 
-                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet)) == false)
+                // Go through each entry
+                foreach(string address_and_amount in addresses_split)
                 {
-                    e.Cancel = true;
-                    DisplayAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
-                    return;
-                }
-                string amount = inner_split[1];
+                    if (address_and_amount.Length < 1)
+                        continue;
 
-                string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
-                if (amount_split.Length > 2)
-                {
-                    DisplayAlert("SPIXI", "Please type a correct decimal amount.", "OK");
-                    e.Cancel = true;
-                    return;
+                    // Extract the address and amount
+                    string[] asplit = address_and_amount.Split(new string[] { ":" }, StringSplitOptions.None);
+                    if (asplit.Count() < 2)
+                        continue;
+
+                    string address = asplit[0];
+                    string amount = asplit[1];
+
+                    if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
+                    {
+                        e.Cancel = true;
+                        DisplayAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                        return;
+                    }
+                    string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
+                    if (amount_split.Length > 2)
+                    {
+                        DisplayAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                        e.Cancel = true;
+                        return;
+                    }
+                    IxiNumber _amount = amount;
+
+                    if (_amount < (long)0)
+                    {
+                        DisplayAlert("SPIXI", "Please type a positive amount.", "OK");
+                        e.Cancel = true;
+                        return;
+                    }
                 }
 
-                IxiNumber _amount = amount;
-
-                if (_amount < (long)0)
-                {
-                    DisplayAlert("SPIXI", "Please type a positive amount.", "OK");
-                    e.Cancel = true;
-                    return;
-                }
-                else if (_amount > Node.balance)
-                {
-                    DisplayAlert("SPIXI", "Insufficient funds.", "OK");
-                    e.Cancel = true;
-                    return;
-                }
-
-                sendPayment(wallet, _amount.ToString());
+                Navigation.PushAsync(new WalletSend2Page());
             }
             else
             {
@@ -168,7 +173,6 @@ namespace SPIXI
 
                 Device.BeginInvokeOnMainThread(() => {
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
-                    //DisplayAlert("New contact", result.Text, "OK");
 
                     if (result.Text.Contains(":ixi"))
                     {
@@ -176,12 +180,12 @@ namespace SPIXI
                         if (split.Count() < 1)
                             return;
                         string wallet_to_send = split[0];
-                        string nickname = "Unknown";
+                        string nickname = wallet_to_send;
 
                         Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
                         if (friend != null)
                             nickname = friend.nickname;
-                        webView.Eval(string.Format("setRecipient('{0}','{1}')", wallet_to_send, nickname));
+                        webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
                         return;
                     }
                     else if (result.Text.Contains(":send"))
@@ -191,12 +195,12 @@ namespace SPIXI
                         if (split.Count() > 1)
                         {
                             string wallet_to_send = split[0];
-                            string nickname = "Unknown";
+                            string nickname = wallet_to_send;
 
                             Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
                             if (friend != null)
                                 nickname = friend.nickname;
-                            webView.Eval(string.Format("setRecipient('{0}','{1}')", wallet_to_send, nickname));
+                            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
                             return;
                         }
                     }
@@ -206,13 +210,13 @@ namespace SPIXI
                         string wallet_to_send = result.Text;
                         if(Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send)))
                         {
-                            string nickname = "Unknown";
+                            string nickname = wallet_to_send;
 
                             Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
                             if (friend != null)
                                 nickname = friend.nickname;
 
-                            webView.Eval(string.Format("setRecipient('{0}','{1}')", wallet_to_send, nickname));
+                            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
                             return;
                         }
                     }
@@ -227,12 +231,12 @@ namespace SPIXI
         {
             //MainPage = new MainPage();
             string wallet_to_send = e.Value;
-            string nickname = "Unknown";
+            string nickname = wallet_to_send;
 
             Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
             if (friend != null)
                 nickname = friend.nickname;
-            webView.Eval(string.Format("setRecipient('{0}','{1}')", wallet_to_send, nickname));
+            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
             Navigation.PopModalAsync();
         }
 
