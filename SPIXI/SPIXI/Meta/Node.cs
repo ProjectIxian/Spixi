@@ -90,8 +90,9 @@ namespace DLT.Meta
             // Start the network client manager
             NetworkClientManager.start();
 
+            // TODOSPIXI
             // Start the s2 client manager
-            StreamClientManager.start();
+            //StreamClientManager.start();
         }
 
         // Handle timer routines

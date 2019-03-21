@@ -240,28 +240,5 @@ namespace SPIXI
             Navigation.PopModalAsync();
         }
 
-        private void sendPayment(string wallet, string amount_string)
-        {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
-
-            // Create an ixian transaction and send it to the dlt network
-            byte[] to = Base58Check.Base58CheckEncoding.DecodePlain(wallet);
-
-            IxiNumber amount = new IxiNumber(amount_string);
-            IxiNumber fee = CoreConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getPrimaryAddress();
-            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
-
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());
-
-            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
-
-            // Add the unconfirmed transaction the the cache
-            TransactionCache.addUnconfirmedTransaction(transaction);
-
-            // Show the payment details
-            Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
-        }
-
     }
 }

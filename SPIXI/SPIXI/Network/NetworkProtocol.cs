@@ -50,7 +50,6 @@ namespace DLT.Network
                                 if (CoreProtocolMessage.processHelloMessage(endpoint, reader))
                                 {
                                     ulong last_block_num = reader.ReadUInt64();
-
                                     int bcLen = reader.ReadInt32();
                                     byte[] block_checksum = reader.ReadBytes(bcLen);
                                     int wsLen = reader.ReadInt32();
@@ -80,6 +79,14 @@ namespace DLT.Network
                                 }
                                 // Get presences
                                 endpoint.sendData(ProtocolMessageCode.syncPresenceList, new byte[1]);
+
+                                // Subscribe to transaction events
+                                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, Node.walletStorage.getPrimaryAddress());
+                                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+                                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, Node.walletStorage.getPrimaryAddress());
+                                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+                            
                             }
                         }
                         break;
