@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -25,7 +25,7 @@
     <script src="js/jquery.touchSwipe.min.js"></script>
 
 </head>
-<body onload="ixian:onload()">
+<body onload="ixian:onload();">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar Main-->
@@ -45,6 +45,14 @@
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
+        
+        <!-- ErrorBar -->
+        <div id="warning_bar" class="spixi-errorbar">
+            <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
+            <div class="spixi-errorbar-message">Not connected to Ixian DLT</div>
+        </div>        
+        <!-- End ErrorBar-->
+        
         
         <div id="tabholder" class="tab-content" >
             <!-- HOME -->
@@ -290,7 +298,7 @@
                     </div>
 
                     <div id="avatar" class="spixi-sidebar-avatar-holder">
-                        <img class="spixi-sidebar-avatar" src="img/spixiavatar.png"/>
+                        <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png"/>
                     </div>
                     <p id="menu_nickname" class="spixi-sidebar-title">Spixi User</p>
                 </div>
@@ -508,6 +516,22 @@
 
         }
     }
+    
+    function showWarning(value)
+    {
+        if (value == 0) {
+            document.getElementById("warning_bar").style.display = 'none';
+        }
+        else {
+            document.getElementById("warning_bar").style.display = 'block';
+        }
+    }
+    
+    function loadAvatar(avatar_path) {
+        var av_path = avatar_path + "?t=" + new Date().getTime();
+        document.getElementById("avatar_image").src = av_path;
+    }
+
     
     // Filter in the CONTACTS tab
     function contactSearch()
