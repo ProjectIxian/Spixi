@@ -19,6 +19,7 @@ namespace SPIXI
     public partial class WalletSend2Page : SpixiContentPage
     {
         SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>();
+        IxiNumber totalAmount = 0;
 
         public WalletSend2Page(string[] addresses_with_amounts)
         {
@@ -61,6 +62,7 @@ namespace SPIXI
                 }
 
                 to_list.Add(_address, _amount);
+                totalAmount = totalAmount + _amount;
             }
 
             // Load the platform specific home page url
@@ -77,7 +79,9 @@ namespace SPIXI
 
         private void onLoad()
         {
+            webView.Eval(string.Format("setFees('{0}')", CoreConfig.transactionPrice.ToString()));
             webView.Eval(string.Format("setBalance('{0}')", Node.balance.ToString()));
+            webView.Eval(string.Format("setTotalAmount('{0}')", totalAmount.ToString()));
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
