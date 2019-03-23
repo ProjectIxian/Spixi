@@ -597,6 +597,14 @@
     }    
     
     
+    // Clears payment activity from wallet page
+    function clearPaymentActivity()
+    {
+        var paymentsNode = document.getElementById("paymentlist");
+            while (paymentsNode.firstChild) {
+            paymentsNode.removeChild(paymentsNode.firstChild);
+        }
+    }
     
     // Adds a payment
     function addPaymentActivity(txid, text, timestamp, amount)            
