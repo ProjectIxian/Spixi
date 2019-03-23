@@ -117,7 +117,8 @@
     
     
 <script type="text/javascript">
-    
+    var nextbtn = document.getElementById("sendrequest");
+
     var popbutton = document.getElementById("popbutton");
     var feeinputholder = document.getElementById("feeInputHolder");
     var customFee = false;
@@ -126,6 +127,17 @@
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 
+    
+    nextbtn.onclick = function () {
+        if(nextbtn.classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        var params = "";
+
+        location.href = "ixian:send:" + params;
+    }
     
     popbutton.onclick = function() {
         //

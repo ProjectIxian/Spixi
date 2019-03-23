@@ -142,7 +142,7 @@ namespace SPIXI
                     }
                 }
 
-                Navigation.PushAsync(new WalletSend2Page());
+                Navigation.PushAsync(new WalletSend2Page(addresses_split));
             }
             else
             {
@@ -229,7 +229,6 @@ namespace SPIXI
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {
-            //MainPage = new MainPage();
             string wallet_to_send = e.Value;
             string nickname = wallet_to_send;
 
