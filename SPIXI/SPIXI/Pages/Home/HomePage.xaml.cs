@@ -15,6 +15,7 @@ using SPIXI.Storage;
 using System.Globalization;
 using Plugin.LocalNotifications;
 using SPIXI.Notifications;
+using System.Threading;
 
 namespace SPIXI
 {
@@ -33,19 +34,22 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
-
-      //      Node.connectToNetwork();
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                Node.connectToNetwork();
+            }).Start();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
             source.Url = string.Format("{0}html/index.html",DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
 
-            //CrossLocalNotifications.Current.Show("title", "body",100, DateTime.Now.AddSeconds(10));
 
+            //CrossLocalNotifications.Current.Show("title", "body",100, DateTime.Now.AddSeconds(10));
             handleBackground();
 
-          //  Navigation.PushAsync(new LockPage(), Config.defaultXamarinAnimations);
+            //  Navigation.PushAsync(new LockPage(), Config.defaultXamarinAnimations);
         }
 
         private void prepBackground()
@@ -395,6 +399,7 @@ namespace SPIXI
 
         public void loadChats()
         {
+            return;
             // Check if there are any changes from last time first
             ulong chk = 0;
             foreach (Friend friend in FriendList.friends)

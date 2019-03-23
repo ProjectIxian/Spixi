@@ -34,7 +34,7 @@ namespace SPIXI
             Node.start();
 
             // Attempt to load a pre-existing wallet
-            bool wallet_found = Node.loadWallet();
+            bool wallet_found = Node.checkForExistingWallet();
 
             if (!wallet_found)
             {
@@ -43,9 +43,19 @@ namespace SPIXI
             }
             else
             {
-                // Wallet found, go to main page
-                MainPage = new NavigationPage(new SPIXI.HomePage());
-                //MainPage = new NavigationPage(new SPIXI.LockPage());
+                // Wallet found, see if it can be decrypted
+                bool wallet_decrypted = Node.loadWallet();
+
+                if (wallet_decrypted == false)
+                {
+                    MainPage = new NavigationPage(new SPIXI.LaunchRetryPage());
+                }
+                else
+                {
+                    // Wallet found, go to main page
+                    MainPage = new NavigationPage(new SPIXI.HomePage());
+                    //MainPage = new NavigationPage(new SPIXI.LockPage());
+                }
             }
 
             

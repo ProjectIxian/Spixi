@@ -39,9 +39,17 @@ namespace SPIXI
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
-            else if (current_url.Equals("ixian:proceed", StringComparison.Ordinal))
+            else if (current_url.Contains("ixian:proceed:"))
             {
-                //Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
+                string[] split = current_url.Split(new string[] { "ixian:proceed:" }, StringSplitOptions.None);
+                if(split.Count() < 1)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                string password = split[1]; // Todo: secure this
+                proceed(password);
             }
             else
             {
@@ -52,5 +60,26 @@ namespace SPIXI
             e.Cancel = true;
 
         }
+
+        private void proceed(string pass)
+        {
+            // TODO: encrypt the password
+            Application.Current.Properties["walletpass"] = pass;
+            Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+
+            bool wallet_decrypted = Node.loadWallet();
+
+            if (wallet_decrypted == false)
+            {
+                DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                // Remove overlay
+                webView.Eval("removeLoadingOverlay()");
+                return;
+            }
+
+            Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
+            Navigation.RemovePage(this);
+        }
+
     }
 }

@@ -69,6 +69,20 @@ namespace DLT.Meta
             mainLoopTimer.Start();
         }
 
+
+        // Checks for existing wallet file. Can also be used to handle wallet/account upgrading in the future.
+        // Returns true if found, otherwise false.
+        static public bool checkForExistingWallet()
+        {
+            if (File.Exists(walletStorage.getFileName()) == false)
+            {
+                Logging.log(LogSeverity.error, "Cannot read wallet file.");
+                return false;
+            }
+
+            return true;
+        }
+
         static public bool loadWallet()
         {
             if (Application.Current.Properties.ContainsKey("walletpass") == false)
@@ -76,6 +90,8 @@ namespace DLT.Meta
 
             // TODO: decrypt the password
             string password = Application.Current.Properties["walletpass"].ToString();
+
+
             return walletStorage.readWallet(password);
         }
 
@@ -89,7 +105,6 @@ namespace DLT.Meta
         {
             // Start the network client manager
             NetworkClientManager.start();
-
             // TODOSPIXI
             // Start the s2 client manager
             //StreamClientManager.start();
