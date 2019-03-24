@@ -44,10 +44,15 @@
         <!-- End DescriptionBar -->
         <hr class="intro-separator"/>            
         <div class="intro-textfield-holder">
-            <input type="text" class="intro-textfield" id="password" onkeyup="" placeholder="Enter your Encryption Password">
+            <input type="text" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="Enter your Encryption Password">
         </div>            
         <hr class="intro-separator"/>
         
+        <div id="selectbtn" class="intro-button small disabled">
+            Select Backup File
+        </div>
+        <div class="intro-holder-20"></div>
+
         <div class="intro-text left">Set the Backup File that is associated with the Encryption Password</div>
         <hr class="intro-separator"/>
 
@@ -76,13 +81,32 @@
     
     
 <script type="text/javascript">    
+    var restorebtn = document.getElementById("restorebtn");
+    var selectbtn = document.getElementById("selectbtn");
+    
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";       
     } 
-    
-    document.getElementById("restorebtn").onclick = function () {
+        
+    function checkPassword()
+    {
+        var password = $("#password").val();
+        selectbtn.className = "intro-button center disabled";
 
-        if(document.getElementById("restorebtn").classList.contains("disabled"))
+        if(password.length < 1)
+            return false;
+        
+        selectbtn.className = "intro-button small";
+        return true;
+    }
+    
+    selectbtn.onclick = function () {
+        location.href = "ixian:selectfile";
+    }
+    
+    restorebtn.onclick = function () {
+
+        if(restorebtn.classList.contains("disabled"))
         {
             return;
         }
@@ -97,8 +121,16 @@
         if(pass.length < 1)
             return;
         
-
         location.href = "ixian:restore:" + pass;
+    }
+           
+    function enableRestore()
+    {
+        restorebtn.className = "intro-button center";
+    }
+    
+    function removeLoadingOverlay() {
+        document.getElementById("overlay").style.display = "none";    
     }
     
 </script>

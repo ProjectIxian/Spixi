@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using DLT.Meta;
+using Plugin.FilePicker.Abstractions;
+using Plugin.FilePicker;
+using System.IO;
 
 namespace SPIXI
 {
@@ -39,9 +42,21 @@ namespace SPIXI
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
-            else if (current_url.Equals("ixian:restore", StringComparison.Ordinal))
+            else if (current_url.Equals("ixian:selectfile", StringComparison.Ordinal))
             {
-                //Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
+                onSelectFile();
+            }
+            else if (current_url.Contains("ixian:restore:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:restore:" }, StringSplitOptions.None);
+                if (split.Count() < 1)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+                string password = split[1]; // Todo: secure this
+                onRestore(password);
             }
             else
             {
@@ -53,12 +68,62 @@ namespace SPIXI
 
         }
 
-
-        public void onRestoreAccount(object sender, EventArgs e)
+        // Shows a file picker to select the wallet file
+        private async void onSelectFile()
         {
-            DisplayAlert("Button", "Account restored", "Ok");
-            //Navigation.PopAsync();
-            //Navigation.PopAsync();
+            byte[] _data = null;
+            try
+            {
+                FileData fileData = await CrossFilePicker.Current.PickFile();
+                if (fileData == null)
+                    return; // User canceled file picking
+
+                string fileName = fileData.FileName;
+                _data = fileData.DataArray;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+                await DisplayAlert("Error", "Cannot select file", "OK");
+            }
+
+            if(_data == null)
+            {
+                await DisplayAlert("Error", "Cannot read file", "OK");
+                return;
+            }
+
+            string docpath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string filepath = Path.Combine(docpath, Config.walletFile);
+            try
+            {
+                File.WriteAllBytes(filepath, _data);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception caught in process: {0}", ex);
+                await DisplayAlert("Error", "Cannot prepare wallet file", "OK");
+                return;
+            }
+
+            webView.Eval("enableRestore()");
+        }
+
+        // Attempt to restore the wallet
+        private void onRestore(string pass)
+        {
+            Application.Current.Properties["walletpass"] = pass;
+            Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+
+            bool wallet_decrypted = Node.loadWallet();
+
+            if (wallet_decrypted == false)
+            {
+                DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                // Remove overlay
+                webView.Eval("removeLoadingOverlay()");
+                return;
+            }
 
             Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
