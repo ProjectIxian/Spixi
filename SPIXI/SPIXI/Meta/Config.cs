@@ -18,6 +18,8 @@ namespace DLT
 
             public static string walletFile = "spixi.wal";
 
+            public static int encryptionRetryPasswordAttempts = 3;   // How many allowed attempts in the LaunchRetry page before throwing the user back to Launch Page
+
             // Store the device id in a cache for reuse in later instances
             public static string device_id = Guid.NewGuid().ToString();
 
@@ -27,7 +29,7 @@ namespace DLT
             public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
             public static readonly string version = "spixi-0.1.0"; // Spixi version
-            public static bool isTestNet = true; // Testnet designator
+            public static bool isTestNet = false; // Testnet designator
 
             // Default SPIXI settings
             public static bool defaultXamarinAnimations = false;

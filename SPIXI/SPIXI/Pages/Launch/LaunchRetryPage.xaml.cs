@@ -15,6 +15,8 @@ namespace SPIXI
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchRetryPage : SpixiContentPage
     {
+        private int attempts = 0;   // Number of wrong password attempts
+
 		public LaunchRetryPage ()
 		{
 			InitializeComponent ();
@@ -72,8 +74,18 @@ namespace SPIXI
             if (wallet_decrypted == false)
             {
                 DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+
+                // If too many wrong attempts, throw the user to the launch screen, allowing creation or restoration of wallet
+                attempts++;
+                if(attempts > Config.encryptionRetryPasswordAttempts)
+                {
+                    Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
+                    Navigation.RemovePage(this);
+                }
+
                 // Remove overlay
                 webView.Eval("removeLoadingOverlay()");
+
                 return;
             }
 
