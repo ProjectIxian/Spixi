@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -213,7 +213,7 @@
     function setTotalAmount(totalAmount)
     {
         total_amount = totalAmount;
-        var amDiv = document.getElementById('totalamount');
+        var amDiv = document.getElementById('totalamountwithfees');
         amDiv.innerHTML = total_amount;
         
         calculateFees();
@@ -224,9 +224,9 @@
         var feeDiv = document.getElementById('fees');
         feeDiv.innerHTML = normal_fee;
         
-        var amFeeDiv = document.getElementById('totalamountwithfees');
+        var amFeeDiv = document.getElementById('totalamount');
 
-        var amount_with_fees = Number(total_amount) + Number(normal_fee);
+        var amount_with_fees = Number(total_amount) - Number(normal_fee);
         amFeeDiv.innerHTML = amount_with_fees;
         
     }
