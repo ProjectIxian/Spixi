@@ -103,7 +103,7 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
 
                 // Extract all addresses and amounts
-                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
+                string[] addresses_split = split[1].Split(new string[] { "%7C" }, StringSplitOptions.None);
 
                 // Go through each entry
                 foreach(string address_and_amount in addresses_split)
@@ -132,6 +132,10 @@ namespace SPIXI
                         e.Cancel = true;
                         return;
                     }
+                    // Add decimals if none found
+                    if (amount_split.Length == 1)
+                        amount = String.Format("{0}.0", amount);
+
                     IxiNumber _amount = amount;
 
                     if (_amount < (long)0)
