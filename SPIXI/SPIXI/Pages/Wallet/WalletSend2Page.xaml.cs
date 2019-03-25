@@ -2,6 +2,7 @@
 using DLT.Meta;
 using DLT.Network;
 using IXICore;
+using IXICore.Utils;
 using SPIXI.Interfaces;
 using SPIXI.Storage;
 using System;
@@ -18,7 +19,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WalletSend2Page : SpixiContentPage
     {
-        SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>();
+        SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
         IxiNumber totalAmount = 0;
 
         public WalletSend2Page(string[] addresses_with_amounts)
@@ -61,7 +62,7 @@ namespace SPIXI
                     return;
                 }
 
-                to_list.Add(_address, _amount);
+                to_list.AddOrReplace(_address, _amount);
                 totalAmount = totalAmount + _amount;
             }
 
