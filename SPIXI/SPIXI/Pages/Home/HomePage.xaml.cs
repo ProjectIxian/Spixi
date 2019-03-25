@@ -499,7 +499,7 @@ namespace SPIXI
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
                 string tx_type = "Payment Received";
-                if(utransaction.fromList.ContainsKey(Node.walletStorage.getPrimaryAddress()))
+                if (Node.walletStorage.isMyAddress((new Address(utransaction.pubKey).address)))
                 {
                     tx_type = "Payment Sent";
                 }
@@ -511,7 +511,7 @@ namespace SPIXI
             {
                 Transaction transaction = TransactionCache.transactions[i];
                 string tx_type = "Payment Received";
-                if (transaction.fromList.ContainsKey(Node.walletStorage.getPrimaryAddress()))
+                if (Node.walletStorage.isMyAddress((new Address(transaction.pubKey).address)))
                 {
                     tx_type = "Payment Sent";
                 }
