@@ -1,7 +1,10 @@
 ﻿using DLT.Meta;
+using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,45 +75,18 @@ namespace SPIXI
 
 
 
-        private void onBackup()
+        private async void onBackup()
         {
-            //var barcodeWrite = new ZXing.BarcodeWriter();
-
-            /*   var writer = new BarcodeWriter<byte[]>
-               {
-                   Format = BarcodeFormat.QR_CODE,
-                   Options = new EncodingOptions
-                   {
-                       Height = 400,
-                       Width = 400,
-                       PureBarcode = true,
-                       Margin = 0
-                   },
-                   Renderer = new RawRenderer()
-               /*WriteableBitmapRenderer
-                   {
-                       Foreground = new PixelDataRenderer.Color(unchecked((int)0xFF000000)),
-                       Background = new PixelDataRenderer.Color(unchecked((int)0xFFFFFFFF)),
-                   }*/
-            /*     };
-                 var imageBytes = writer.Write("SPIXI");
-                 */
-
-
-     /*       var writer = new BarcodeWriter();
-            writer.Format = BarcodeFormat.QR_CODE;
-            writer.Renderer = new ZXing.Mobile.BitmapRenderer()
+            try
             {
-                // Background = 
-                // Foreground = 
-            };
-            writer.Options.Height = 300;
-            writer.Options.Width = 300;
-            writer.Options.Margin = 1;
-
-            var imageBytes = writer.Write("SPIXI");
-            DependencyService.Get<IPicture>().writeToGallery("SpixiBackup", imageBytes);*/
-            DisplayAlert("SPIXI Account", "Feature pending completion", "OK");
+                string docpath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string filepath = Path.Combine(docpath, Config.walletFile);
+                await DependencyService.Get<IFileOperations>().share(filepath, "spixi.wal");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Exception fetching wallet: " + ex.ToString());
+            }
         }
     }
 }
