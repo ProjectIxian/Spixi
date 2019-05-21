@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
+</head>
+<body onload="ixian:onload();">
+    <div id="wrap" class="container-fluid noselect">
+        
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2 spixi-center">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10">
+                    Confirm Payment
+                </div>   
+            </div>            
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- BalanceBar -->
+        <div id="status_balance" class="spixi-balancebar">
+            <div class="spixi-balancebar-label">My IxiCash Balance</div>
+            <div class="spixi-balancebar-balance" id="activity_balance_number">0</div> 
+            <div class="spixi-balancebar-line"></div>
+            <div class="spixi-balancebar-info" id="activity_balance_info">&nbsp;</div>
+        </div>        
+        <!-- End BalanceBar -->
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Transaction fee policy
+        </div>
+        <div class="spixi-textsection-holder">
+            Every payment sent has a certain payment fee which is deducted from the amount you transferred.
+        </div>
+        <hr class="spixi-separator"/>
+        <div class="spixi-textsection-holder">
+            Set your transaction fee for this transaction. Choose from pre-set NORMAL or HIGH. You can set a custom transaction fee per KB.
+        </div>        
+        
+        
+        <div id="actualfee" class="spixi-textsection-holder spixi-textsection-header">
+            0
+        </div>
+        
+        <div id="popbutton" class="spixi-popbutton">
+            <div class="spixi-popbutton-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
+            <div id="popbuttonactiveitem" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; Normal</div>
+            <div id="popbuttonoptions" style="display: none;">
+                <a href="javascript:selectFee(0);"><div id="fee0" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; Normal</div></a>                
+                <a href="javascript:selectFee(1);"><div id="fee1" class="spixi-popbutton-item">High</div></a>
+                <a href="javascript:selectFee(2);"><div id="fee2" class="spixi-popbutton-item">Custom</div></a>
+            </div>
+        </div>
+        
+        <div id="feeInputHolder" class="spixi-textfield-holder" style="display: none;">
+            <input type="text" class="spixi-textfield" id="feeInput" onkeyup="" placeholder="Enter transaction fee">
+            <span class="spixi-textfield-holder-text">/KB</span>
+        </div>
+        
+        <hr class="spixi-separator-main"/>
+        
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Amount to send
+        </div>
+        <div id="totalamount" class="spixi-textsection-holder">
+            0
+        </div>   
+        
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Total transaction fee
+        </div>
+        <div id="fees" class="spixi-textsection-holder">
+            0
+        </div> 
+        
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Total amount to be paid from balance
+        </div>        
+        <div id="totalamountwithfees" class="spixi-textsection-holder spixi-text-red">
+            0
+        </div> 
+        
+        <div class="spixi-holder-20"></div>
+        <hr class="spixi-separator-main"/>
+
+        <div id="sendrequest" class="spixi-button large center">
+           <i class="fa fa-check"></i>&nbsp; Send Payment
+        </div>
+        
+        <div class="spixi-holder-20"></div>
+
+        
+        
+    </div>
+    
+    
+<script type="text/javascript">
+    var total_amount = 0;
+    var normal_fee = 0;
+    var nextbtn = document.getElementById("sendrequest");
+
+    var popbutton = document.getElementById("popbutton");
+    var feeinputholder = document.getElementById("feeInputHolder");
+    var customFee = false;
+    var expanded = false;
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    nextbtn.onclick = function () {
+        if(nextbtn.classList.contains("disabled"))
+        {
+            return;
+        }
+        
+        var params = "";
+
+        location.href = "ixian:send:" + params;
+    }
+    
+    popbutton.onclick = function() {
+        //
+        if(expanded == false)
+        {        
+            popbutton.className = "spixi-popbutton expanded";
+            document.getElementById("popbuttonoptions").style = "display:block";
+            document.getElementById("popbuttonactiveitem").style = "display:none";
+            expanded = true;
+        }
+        else 
+        {
+            popbutton.className = "spixi-popbutton";
+            document.getElementById("popbuttonoptions").style = "display:none";    
+            document.getElementById("popbuttonactiveitem").style = "display:block";
+            expanded = false;                
+        }
+    }
+    
+    function selectFee(feeidx)
+    {
+        document.getElementById("fee0").className = "spixi-popbutton-item";
+        document.getElementById("fee1").className = "spixi-popbutton-item";
+        document.getElementById("fee2").className = "spixi-popbutton-item";
+        document.getElementById("fee0").innerHTML = "Normal";
+        document.getElementById("fee1").innerHTML = "High";
+        document.getElementById("fee2").innerHTML = "Custom";
+        feeinputholder.style = "display:none";
+        
+        if(feeidx == 1)
+        {
+            document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; High';
+            document.getElementById("fee1").className = "spixi-popbutton-item selected";
+            document.getElementById("fee1").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; High';
+        }
+        else if(feeidx == 2)
+        {
+            document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Custom';
+            document.getElementById("fee2").className = "spixi-popbutton-item selected";
+            document.getElementById("fee2").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Custom';
+            feeinputholder.style = "display:block";
+        }
+        else {
+            document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Normal';  
+            document.getElementById("fee0").className = "spixi-popbutton-item selected";
+            document.getElementById("fee0").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Normal';
+        }
+        
+        document.getElementById("popbuttonactiveitem").style = "display:block";
+        document.getElementById("popbuttonoptions").style = "display:none";
+        popbutton.className = "spixi-popbutton";
+        expanded = false;
+    }
+    
+    
+    function setBalance(theText) {
+        var balDiv = document.getElementById('activity_balance_number');
+        balance = theText;
+        if (balDiv.innerHTML != "&nbsp;")
+            balDiv.innerHTML = balance;
+    }
+    
+    // Set normal and high fee values from the app
+    function setFees(normalFee)
+    {
+        var feeDiv = document.getElementById('actualfee');
+        feeDiv.innerHTML = normalFee;
+        normal_fee = normalFee;
+    }
+    
+    function setTotalAmount(totalAmount)
+    {
+        total_amount = totalAmount;
+        var amDiv = document.getElementById('totalamountwithfees');
+        amDiv.innerHTML = total_amount;
+        
+        calculateFees();
+    }
+    
+    function calculateFees()
+    {
+        var feeDiv = document.getElementById('fees');
+        feeDiv.innerHTML = normal_fee;
+        
+        var amFeeDiv = document.getElementById('totalamount');
+
+        var amount_with_fees = Number(total_amount) - Number(normal_fee);
+        amFeeDiv.innerHTML = amount_with_fees;
+        
+    }
+    
+</script>
+
+</body>
+</html>

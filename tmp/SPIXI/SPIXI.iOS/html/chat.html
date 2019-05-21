@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
+</head>
+<body onload="test()">
+    <div id="wrap" class="container-fluid noselect">
+        
+        <!-- Toolbar Chat -->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row" style="padding-top: 0px;">
+                <div id="backbtn" class="col-2 spixi-center" style="padding-top: 10px;">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-8">
+                    <div id="title" class="spixi-toolbar-chat-name">Andrew</div>
+                    <div class="spixi-toolbar-chat-status">last seen online</div>                    
+                </div>
+                <div class="col-2 spixi-center">
+                    
+                </div>     
+            </div>
+            
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->  
+        
+        <!-- DescriptionBar -->
+        <div id="contactrequestbar" class="spixi-descriptionbar chat" style="display:none;">
+            <div class="row spixi-descriptionbar-row">
+                <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
+                <div class="col-10 spixi-descriptionbar-row-details"><div id="contactrequesttitle">has sent a CONTACT REQUEST</div> 
+                    <div class="row" style="width: 300px; margin-top: 5px;">
+                        <div class="col-6">            
+                            <div id="request_bar_accept" class="spixi-button small extrasmallwidth darkshadow blue">Accept</div>
+                        </div>
+                        <div class="col-6">
+                            <div id="request_bar_ignore" class="spixi-button small extrasmallwidth darkshadow ghost">Ignore</div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+        
+        <div id="messages">
+            <div class="spixi-holder-20"></div>
+
+        </div>
+
+        <div id="chatholder" class="chatholder"></div>
+        <div id="chatbar">
+            <div class="chatbar-container">
+            <div id="chat_attach">
+                <i class="fa fa-wallet"></i>
+            </div>
+            <input type="text" id="chat_input" onkeyup="" placeholder="Type your message...">
+            <span id="chat_send" class="fa fa-arrow-circle-right spixi-textfield-holder-icon"></span>
+            </div>
+        </div>
+        <div id="chatattachbar">
+            <div class="row ">
+            <div class="col-6" id="ca_request">
+                <i class="fa fa-angle-double-down chatattachsymbol"></i><br/>
+                Request Payment
+            </div>
+            <div class="col-6" id="ca_send">
+                <i class="fa fa-angle-double-up chatattachsymbol"></i><br/>
+                Send Payment
+            </div>
+            </div>  
+        </div>
+        
+    </div>
+    
+    
+<script type="text/javascript">
+    var attachMode = false;
+
+    var contactrequestbar = document.getElementById("contactrequestbar");
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    function htmlEscape(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\//g, '&#x2F;');
+    }
+    
+    function test() {
+            setNickname("Tester");
+            showContactRequest(true);
+            addMe("avatar1.png", "Hi!", "11:23 AM");
+            setTimeout(function () { addMe("avatar.png", "How are you today?", "11:23 AM"); }, 1000);
+            setTimeout(function () { addThem("avatar1.png", "Hey!", "11:24 AM"); }, 1300);
+            setTimeout(function () { addThem("avatar.png", "Great, thanks for asking.", "11:24 AM"); }, 1600);
+            setTimeout(function () { addThem("avatar1.png", "And how are you?", "11:24 AM"); }, 1900);
+            setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
+            setTimeout(function () { addThem("avatar1.png", "Ohh??? What were you doing there?", "11:25 AM"); }, 2500);
+            setTimeout(function () { addMe("avatar1.png", "Was building my own Luna Park...", "11:25 AM"); }, 3000);
+            setTimeout(function () { addMe("avatar1.png", "html<div>injection</div>test", "11:25 AM"); }, 4000);               
+    }
+    
+    
+    document.getElementById("ca_request").onclick = function () {
+        location.href = "ixian:request";
+    } 
+    document.getElementById("ca_send").onclick = function () {
+        location.href = "ixian:send";
+    } 
+    
+    document.getElementById("request_bar_ignore").onclick = function () {
+        location.href = "ixian:back";
+    } 
+    document.getElementById("request_bar_accept").onclick = function () {
+        showContactRequest(false);
+        location.href = "ixian:accept";
+    }
+    function showContactRequest(show) {
+        if(show == true)
+        {
+            contactrequestbar.style.display = "block";
+            document.getElementById("chat_input").disabled = true;
+        }
+        else 
+        {
+            contactrequestbar.style.display = "none";
+            document.getElementById("chat_input").disabled = false;
+        }
+    }
+    
+    document.getElementById("chat_send").onclick = function () {
+        document.getElementById("chat_input").click();
+        document.getElementById("chat_input").focus();
+        var chat_text = document.getElementById("chat_input").value;
+        location.href = "ixian:chat:"+chat_text;
+    }
+
+    $("#chat_input").keyup(function (event) {
+        if (event.keyCode === 13) {
+            $("#chat_send").click();
+
+        }
+    });
+
+    function clearInput() {
+        document.getElementById("chat_input").value = "";
+    }
+    
+    function addText(avatar, text, time, className) {
+
+                var textEl = document.createElement('div');
+                textEl.className = "text";
+                textEl.innerHTML = htmlEscape(text);
+
+                var timeEl = document.createElement('div');
+                timeEl.className = "time";
+                timeEl.innerHTML = htmlEscape(time);
+
+                var avatarEl = document.createElement('img');
+                avatarEl.className = "avatar";
+                avatarEl.src = avatar;
+
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = className + "";
+                bubbleEl.appendChild(textEl);
+                bubbleEl.appendChild(timeEl);
+                bubbleEl.appendChild(avatarEl);
+
+                document.getElementById("messages").appendChild(bubbleEl);
+                //window.scrollTo(0, document.body.scrollHeight);             
+                bubbleEl.scrollIntoView(true);
+    }
+
+    function addMe(avatar, text, time) {                
+                var textEl = document.createElement('div');
+                textEl.className = "text";
+                textEl.innerHTML = htmlEscape(text);
+
+                var timeEl = document.createElement('div');
+                timeEl.className = "time";
+                timeEl.innerHTML = htmlEscape(time);
+
+                var bubbleEl = document.createElement('div');
+                bubbleEl.className = "spixi-bubble myself" + "";
+                bubbleEl.appendChild(textEl);
+                bubbleEl.appendChild(timeEl);
+
+                document.getElementById("messages").appendChild(bubbleEl);
+                //window.scrollTo(0, document.body.scrollHeight);             
+                bubbleEl.scrollIntoView(true);
+    }
+
+    function addThem(avatar, text, time) {
+        addText(avatar, text, time, "spixi-bubble");
+    }    
+    
+    function setNickname(nick) {
+        document.getElementById("title").innerHTML = nick;
+        document.getElementById("contactrequesttitle").innerHTML = nick + " has sent a CONTACT REQUEST";
+    }
+    
+    // Handle 'attach' bar, allowing to send and request IXI
+    document.getElementById("chat_attach").onclick = function () {
+        document.getElementById("chat_input").click();
+        document.getElementById("chat_input").focus();
+        if(attachMode == true)
+        {
+            document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon.png')";
+            attachMode = false;
+            hideAttach();
+        }
+        else 
+        {
+            document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon_active.png')";
+            attachMode = true;
+            showAttach();
+        }    
+    }
+    
+    function hideAttach()
+    {
+        document.getElementById("chatbar").style.bottom = "0px";
+        document.getElementById("chatholder").style.height = "57px";
+        document.getElementById("chatattachbar").style.bottom = "-60px";              
+    }
+            
+    function showAttach()
+    {
+        document.getElementById("chatbar").style.bottom = "60px";
+        document.getElementById("chatholder").style.height = "102px";
+        document.getElementById("chatattachbar").style.bottom = "0px";        
+    }
+            
+</script>
+
+</body>
+</html>

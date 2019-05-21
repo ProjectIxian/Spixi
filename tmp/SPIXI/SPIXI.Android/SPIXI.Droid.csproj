@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AEC7336F-589C-4076-9D34-FA39EC42FF8A}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SPIXI.Droid</RootNamespace>
+    <AssemblyName>SPIXI.Android</AssemblyName>
+    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
+    <AndroidSupportedAbis />
+    <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2.1" />
+    <PackageReference Include="Xamarin.Plugin.FilePicker">
+      <Version>2.0.135</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\BouncyCastleAndroid.cs" />
+    <Compile Include="Classes\FileOperations.cs" />
+    <Compile Include="Classes\PictureAndroid.cs" />
+    <Compile Include="Classes\PicturePickerImplementation.cs" />
+    <Compile Include="Classes\PowerManager.cs" />
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Renderers\SpixiWebviewRenderer.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BackgroundTaskService.cs" />
+    <Compile Include="SplashActivity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\fonts\Roboto-Bold-webfont.woff" />
+    <AndroidAsset Include="Assets\html\fonts\Roboto-Regular-webfont.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.woff2" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.woff2" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.eot" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.ttf" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.woff" />
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.woff2" />
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\Tabbar.axml" />
+    <AndroidResource Include="Resources\layout\Toolbar.axml" />
+    <AndroidResource Include="Resources\values\styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SPIXI\SPIXI.csproj">
+      <Project>{BB0B0DC8-91EA-425A-8597-A81725EC8BA3}</Project>
+      <Name>SPIXI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\splash_screen.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\splash.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\statusicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\statusicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\statusicon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\address.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\chat.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\contact_details.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\contact_new.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\intro.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\intro_new.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\intro_restore.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\intro_retry.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\lock.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings_backup.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings_encryption.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\settings_lock.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\test.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_contact_request.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_recipient.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_request.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_send.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_send_2.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\wallet_sent.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\bootstrap.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\normalize.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\spixiui-intro.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\css\spixiui.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\introloading.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\intrologo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\poweredbyixian.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\spixiavatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\spixitoolbarlogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\switch-off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\img\switch-on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\bootstrap.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\clipboard.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\jquery.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\jquery.touchSwipe.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\popper.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\qrcode.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\spixi.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-brands-400.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-regular-400.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.svg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+</Project>

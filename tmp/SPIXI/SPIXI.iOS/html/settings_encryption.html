@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>IXIAN</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    
+</head>
+<body>
+    <div id="wrap" class="container-fluid noselect">
+        
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow" >
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2 spixi-center">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10">
+                    Encryption Password
+                </div>   
+            </div>
+            
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div class="row spixi-descriptionbar-row">
+                <div class="col-2 spixi-center"><i class="fa fa-fingerprint"></i></div>
+                <div class="col-10 spixi-descriptionbar-row-details">Encryption password is the most important password for your account and wallet. You will need to enter it every time you start Spixi or if you need to restore your account.</div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+
+        <div class="spixi-holder-20"></div>
+        
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            Edit your Encryption Password
+        </div>
+        
+        <hr class="spixi-separator"/>
+        
+        <div class="spixi-textsection-holder">
+            Type in your <b>Current</b> Lock Password
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="passwordOld" onkeyup="checkPasswordMatch()" placeholder="Type in your Encryption Password">
+        </div>
+        
+        <hr class="spixi-separator"/>
+        
+        <div class="spixi-textsection-holder">
+            Type in your <b>NEW</b> Lock Password
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="password" onkeyup="checkPasswordMatch()" placeholder="Type in your new Encryption Password">
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="passwordConfirm" onkeyup="checkPasswordMatch()" placeholder="Retype in your new Encryption Password">
+        </div>
+        <hr class="spixi-separator"/>
+        <div id="passwordInfoText" class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> Password needs to have at least 10 characters</div>
+
+        <div class="spixi-holder-20"></div>
+        <div class="spixi-holder-20"></div>
+        <hr class="spixi-separator-main"/>
+        
+        <div id="sendrequest" class="spixi-button large center disabled">
+            <i class="fas fa-fingerprint"></i>&nbsp; Change Encryption Password
+        </div>
+        <div class="spixi-holder-20"></div>
+        
+        
+    </div>
+    
+    
+<script type="text/javascript">
+    
+    document.getElementById("backbtn").onclick = function() {
+        location.href = "ixian:back";
+    } 
+    
+    document.getElementById("sendrequest").onclick = function() {
+        var password = $("#password").val();
+        
+        // Check that the passwords are correct
+        if(checkPasswordMatch() == false)
+        {
+            return;
+        }
+        
+        location.href = "ixian:changepass:" + password;
+    } 
+
+    function checkPasswordMatch() {
+        var password = $("#password").val();
+        var confirmPassword = $("#passwordConfirm").val();
+        var sendrequest = document.getElementById("sendrequest");
+        sendrequest.className = "spixi-button large center disabled";
+
+        if(password.length < 10)
+        {
+            $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Password needs to have at least 10 characters");
+            return false;
+        }
+        
+        if(confirmPassword.length < 1)
+        {
+            $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Enter password confirmation");
+
+            return false;
+        }
+        
+        if (password != confirmPassword)
+        {
+            $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Passwords do not match");
+            return false;
+        }
+        else 
+        {
+            $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Passwords match");
+            
+            var passwordOld = $("#passwordOld").val();
+            if(passwordOld.length < 10)
+                return false;
+            
+            sendrequest.className = "spixi-button large center";
+            
+            return true;
+        }
+    }
+    
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E113D2C0-6445-4CE6-A535-55513BCAC96F}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SPIXI.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>SPIXI.iOS</AssemblyName>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>x86_64</MtouchArch>
+    <MtouchLink>None</MtouchLink>
+    <MtouchDebug>true</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchLink>None</MtouchLink>
+    <MtouchArch>x86_64</MtouchArch>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\iPhone\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <MtouchDebug>true</MtouchDebug>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\iPhone\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <MtouchArch>ARM64</MtouchArch>
+    <ConsolePause>false</ConsolePause>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <BuildIpa>True</BuildIpa>
+    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\iPhone\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <MtouchArch>ARM64</MtouchArch>
+    <CodesignProvision>Automatic:AppStore</CodesignProvision>
+    <CodesignKey>iPhone Distribution</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\FileOperations.cs" />
+    <Compile Include="Classes\PictureiOS.cs" />
+    <Compile Include="Classes\PicturePickerImplementation.cs" />
+    <Compile Include="Classes\PowerManager.cs" />
+    <Compile Include="Classes\SpixiContentPageRenderer.cs" />
+    <Compile Include="Classes\SpixiWebViewRenderer .cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="AppDelegate.cs" />
+    <Compile Include="Services\BackgroundTaskService.cs" />
+    <None Include="Entitlements.plist" />
+    <None Include="html\fonts\Roboto-Bold-webfont.woff" />
+    <None Include="html\fonts\Roboto-Regular-webfont.woff" />
+    <None Include="html\libs\fontawesome\webfonts\fa-brands-400.eot" />
+    <None Include="html\libs\fontawesome\webfonts\fa-brands-400.ttf" />
+    <None Include="html\libs\fontawesome\webfonts\fa-brands-400.woff" />
+    <None Include="html\libs\fontawesome\webfonts\fa-brands-400.woff2" />
+    <None Include="html\libs\fontawesome\webfonts\fa-regular-400.eot" />
+    <None Include="html\libs\fontawesome\webfonts\fa-regular-400.ttf" />
+    <None Include="html\libs\fontawesome\webfonts\fa-regular-400.woff" />
+    <None Include="html\libs\fontawesome\webfonts\fa-regular-400.woff2" />
+    <None Include="html\libs\fontawesome\webfonts\fa-solid-900.eot" />
+    <None Include="html\libs\fontawesome\webfonts\fa-solid-900.ttf" />
+    <None Include="html\libs\fontawesome\webfonts\fa-solid-900.woff" />
+    <None Include="html\libs\fontawesome\webfonts\fa-solid-900.woff2" />
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Default-568h%402x.png" />
+    <BundleResource Include="Resources\Default-Portrait.png" />
+    <BundleResource Include="Resources\Default-Portrait%402x.png" />
+    <BundleResource Include="Resources\Default.png" />
+    <BundleResource Include="Resources\Default%402x.png" />
+    <BundleResource Include="Resources\Icon-60%402x.png" />
+    <BundleResource Include="Resources\Icon-60%403x.png" />
+    <BundleResource Include="Resources\Icon-76.png" />
+    <BundleResource Include="Resources\Icon-76%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40.png" />
+    <BundleResource Include="Resources\Icon-Small-40%402x.png" />
+    <BundleResource Include="Resources\Icon-Small-40%403x.png" />
+    <BundleResource Include="Resources\Icon-Small.png" />
+    <BundleResource Include="Resources\Icon-Small%402x.png" />
+    <BundleResource Include="Resources\Icon-Small%403x.png" />
+    <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
+    <PackageReference Include="Xamarin.Plugin.FilePicker">
+      <Version>2.0.135</Version>
+    </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\SPIXI\SPIXI.csproj">
+      <Project>{BB0B0DC8-91EA-425A-8597-A81725EC8BA3}</Project>
+      <Name>SPIXI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageAsset Include="Media.xcassets\AppIcons.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Media.xcassets\LaunchImages.launchimage\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="html\address.html" />
+    <Content Include="html\chat.html" />
+    <Content Include="html\contact_details.html" />
+    <Content Include="html\contact_new.html" />
+    <Content Include="html\css\bootstrap.min.css" />
+    <Content Include="html\css\normalize.css" />
+    <Content Include="html\css\spixiui-intro.css" />
+    <Content Include="html\css\spixiui.css" />
+    <BundleResource Include="html\img\introloading.png" />
+    <BundleResource Include="html\img\intrologo.png" />
+    <BundleResource Include="html\img\poweredbyixian.png" />
+    <BundleResource Include="html\img\spixiavatar.png" />
+    <BundleResource Include="html\img\spixitoolbarlogo.png" />
+    <BundleResource Include="html\img\switch-off.png" />
+    <BundleResource Include="html\img\switch-on.png" />
+    <Content Include="html\index.html" />
+    <Content Include="html\intro.html" />
+    <Content Include="html\intro_new.html" />
+    <Content Include="html\intro_restore.html" />
+    <Content Include="html\intro_retry.html" />
+    <Content Include="html\js\bootstrap.min.js" />
+    <Content Include="html\js\clipboard.min.js" />
+    <Content Include="html\js\jquery.min.js" />
+    <Content Include="html\js\jquery.touchSwipe.min.js" />
+    <Content Include="html\js\popper.min.js" />
+    <Content Include="html\js\qrcode.min.js" />
+    <Content Include="html\js\spixi.js" />
+    <Content Include="html\libs\fontawesome\css\all.css" />
+    <Content Include="html\libs\fontawesome\css\all.min.css" />
+    <Content Include="html\libs\fontawesome\css\brands.css" />
+    <Content Include="html\libs\fontawesome\css\brands.min.css" />
+    <Content Include="html\libs\fontawesome\css\fontawesome.css" />
+    <Content Include="html\libs\fontawesome\css\fontawesome.min.css" />
+    <Content Include="html\libs\fontawesome\css\regular.css" />
+    <Content Include="html\libs\fontawesome\css\regular.min.css" />
+    <Content Include="html\libs\fontawesome\css\solid.css" />
+    <Content Include="html\libs\fontawesome\css\solid.min.css" />
+    <Content Include="html\libs\fontawesome\css\svg-with-js.css" />
+    <Content Include="html\libs\fontawesome\css\svg-with-js.min.css" />
+    <Content Include="html\libs\fontawesome\css\v4-shims.css" />
+    <Content Include="html\libs\fontawesome\css\v4-shims.min.css" />
+    <Content Include="html\libs\fontawesome\webfonts\fa-brands-400.svg" />
+    <Content Include="html\libs\fontawesome\webfonts\fa-regular-400.svg" />
+    <Content Include="html\libs\fontawesome\webfonts\fa-solid-900.svg" />
+    <Content Include="html\lock.html" />
+    <Content Include="html\settings.html" />
+    <Content Include="html\settings_backup.html" />
+    <Content Include="html\settings_encryption.html" />
+    <Content Include="html\settings_lock.html" />
+    <Content Include="html\test.html" />
+    <Content Include="html\wallet_contact_request.html" />
+    <Content Include="html\wallet_recipient.html" />
+    <Content Include="html\wallet_request.html" />
+    <Content Include="html\wallet_send.html" />
+    <Content Include="html\wallet_send_2.html" />
+    <Content Include="html\wallet_sent.html" />
+  </ItemGroup>
+</Project>
