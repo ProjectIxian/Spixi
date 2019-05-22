@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIXI.iOS", "SPIXI\SPIXI.iO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPIXI", "SPIXI\SPIXI\SPIXI.csproj", "{004D6286-86B5-410F-85FE-E38522C0622B}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IXICore", "..\IxianCore\IXICore.shproj", "{80487C64-619A-4B60-97BD-ED7670BF45B3}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IXICore", "..\Ixian-Core\IXICore.shproj", "{80487C64-619A-4B60-97BD-ED7670BF45B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIXI.WPF", "SPIXI\SPIXI.WPF\SPIXI.WPF.csproj", "{80D8F308-6F98-4F9D-BA56-56D63A0A6AFE}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIXI.GTK", "SPIXI\SPIXI.GT
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\IxianCore\IXICore.projitems*{80487c64-619a-4b60-97bd-ed7670bf45b3}*SharedItemsImports = 13
+		..\Ixian-Core\IXICore.projitems*{80487c64-619a-4b60-97bd-ed7670bf45b3}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU

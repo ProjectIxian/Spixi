@@ -91,5 +91,5 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Import Project="..\..\..\IxianCore\IXICore.projitems" Label="Shared" />
+  <Import Project="..\..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
 </Project>
