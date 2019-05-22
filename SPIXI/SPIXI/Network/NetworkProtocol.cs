@@ -31,7 +31,21 @@ namespace DLT.Network
                                 {
                                     if (CoreProtocolMessage.processHelloMessage(endpoint, reader))
                                     {
-                                        CoreProtocolMessage.sendHelloMessage(endpoint, true);
+                                        byte[] challenge_response = null;
+                                        try
+                                        {
+                                            // TODO TODO TODO TODO TODO try/catch wrapper will be removed when everybody upgrades
+                                            int challenge_len = reader.ReadInt32();
+                                            byte[] challenge = reader.ReadBytes(challenge_len);
+
+                                            challenge_response = CryptoManager.lib.getSignature(challenge, Node.walletStorage.getPrimaryPrivateKey());
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                        }
+
+                                        CoreProtocolMessage.sendHelloMessage(endpoint, true, challenge_response);
                                         endpoint.helloReceived = true;
                                         return;
                                     }

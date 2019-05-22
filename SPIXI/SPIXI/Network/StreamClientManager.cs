@@ -103,6 +103,7 @@ namespace SPIXI
         // Scan for and connect to a new stream node
         private static void connectToRandomStreamNode()
         {
+            // TODO TODO TODO TODO improve this
             string neighbor = null;
 
             try
@@ -135,7 +136,7 @@ namespace SPIXI
             if (neighbor != null)
             {
                 Logging.info(string.Format("Attempting to add new stream node: {0}", neighbor));
-                connectTo(neighbor);
+                connectTo(neighbor, null);
             }
             else
             {
@@ -224,7 +225,7 @@ namespace SPIXI
         // Connects to a specified node, with the syntax host:port
         // Returns the connected stream client
         // Returns null if connection failed
-        public static NetworkClient connectTo(string host)
+        public static NetworkClient connectTo(string host, byte[] wallet_address)
         {
             Logging.info(String.Format("Connecting to S2 node: {0}", host));
 
@@ -311,7 +312,7 @@ namespace SPIXI
             // Connect to the specified node
             NetworkClient new_client = new NetworkClient();
             // Recompose the connection address from the resolved IP and the original port
-            bool result = new_client.connectToServer(resolved_server_name, Convert.ToInt32(server[1]));
+            bool result = new_client.connectToServer(resolved_server_name, Convert.ToInt32(server[1]), wallet_address);
 
             // Add this node to the client list if connection was successfull
             if (result == true)

@@ -22,6 +22,7 @@ namespace DLT
 
             // Store the device id in a cache for reuse in later instances
             public static string device_id = Guid.NewGuid().ToString();
+            public static string externalIp = "";
 
             // Read-only values
             public static readonly string aboutUrl = "https://ixian.io";
