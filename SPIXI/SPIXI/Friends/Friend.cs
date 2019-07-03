@@ -224,7 +224,7 @@ namespace SPIXI
         {
             string ip = null;
             byte[] wallet = null;
-            Presence presence = PresenceList.containsWalletAddress(walletAddress);
+            Presence presence = PresenceList.getPresenceByAddress(walletAddress);
             if (presence == null)
                 return ip;
 

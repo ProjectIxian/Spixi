@@ -2,6 +2,7 @@
 using DLT.Meta;
 using DLT.Network;
 using IXICore;
+using IXICore.Meta;
 using IXICore.Utils;
 using SPIXI.Interfaces;
 using SPIXI.Storage;
@@ -80,7 +81,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setFees('{0}')", CoreConfig.transactionPrice.ToString()));
+            webView.Eval(string.Format("setFees('{0}')", ConsensusConfig.transactionPrice.ToString()));
             webView.Eval(string.Format("setBalance('{0}')", Node.balance.ToString()));
             webView.Eval(string.Format("setTotalAmount('{0}')", totalAmount.ToString()));
         }
@@ -122,12 +123,12 @@ namespace SPIXI
             //Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             // Create an ixian transaction and send it to the dlt network
-            IxiNumber fee = CoreConfig.transactionPrice;
+            IxiNumber fee = ConsensusConfig.transactionPrice;
             byte[] from = Node.walletStorage.getPrimaryAddress();
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
             Logging.info("Preparing tx");
 
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, Node.getLastBlockHeight());
+            Transaction transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getLastBlockHeight());
             Logging.info("Broadcasting tx");
 
             NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);

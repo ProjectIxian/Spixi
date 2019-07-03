@@ -2,6 +2,7 @@
 using DLT.Meta;
 using DLT.Network;
 using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Storage;
 using System;
@@ -44,7 +45,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}','{4}')", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, amount, CoreConfig.transactionPrice.ToString(), date));
+            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}','{4}')", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, amount, ConsensusConfig.transactionPrice.ToString(), date));
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -79,11 +80,11 @@ namespace SPIXI
             byte[] to = friend.walletAddress;
 
             IxiNumber amounti = new IxiNumber(amount);
-            IxiNumber fee = CoreConfig.transactionPrice;
+            IxiNumber fee = ConsensusConfig.transactionPrice;
             byte[] from = Node.walletStorage.getPrimaryAddress();
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, Node.getLastBlockHeight());
+            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getLastBlockHeight());
 
             NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
 

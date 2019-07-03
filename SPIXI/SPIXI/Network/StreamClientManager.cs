@@ -256,9 +256,9 @@ namespace SPIXI
 
             // Verify against the publicly disclosed ip
             // Don't connect to self
-            if (resolved_server_name.Equals(Config.publicServerIP, StringComparison.Ordinal))
+            if (resolved_server_name.Equals(NetworkClientManager.publicIP, StringComparison.Ordinal))
             {
-                if (server[1].Equals(string.Format("{0}", Config.serverPort), StringComparison.Ordinal))
+                if (server[1].Equals(string.Format("{0}", NetworkServer.listeningPort), StringComparison.Ordinal))
                 {
                     Logging.info(string.Format("Skipping connection to public self seed node {0}", host));
                     return null;
@@ -272,7 +272,7 @@ namespace SPIXI
                 // Don't connect to self
                 if (resolved_server_name.Equals(self_address, StringComparison.Ordinal))
                 {
-                    if (server[1].Equals(string.Format("{0}", Config.serverPort), StringComparison.Ordinal))
+                    if (server[1].Equals(string.Format("{0}", NetworkServer.listeningPort), StringComparison.Ordinal))
                     {
                         Logging.info(string.Format("Skipping connection to self seed node {0}", host));
                         return null;

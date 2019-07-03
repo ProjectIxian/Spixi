@@ -1,4 +1,6 @@
 ﻿using DLT.Network;
+using IXICore;
+using IXICore.Meta;
 using SPIXI;
 using System;
 using System.IO;
@@ -7,7 +9,7 @@ using Xamarin.Forms;
 
 namespace DLT.Meta
 {
-    class Node
+    class Node: IxianNode
     {
         public static WalletState walletState;
 
@@ -28,13 +30,18 @@ namespace DLT.Meta
 
         // Private data
         static Block lastBlock = null;
-        static int requiredConsensus = 0;
 
 
         public static IxiNumber balance = 0;      // Stores the last known balance for this node
         public static ulong blockHeight = 0;
 
         public static string primaryS2Address = "";
+
+        public Node()
+        {
+            CoreConfig.productVersion = Config.version;
+            IxianHandler.setHandler(this);
+        }
 
         static public void start()
         {
@@ -160,13 +167,7 @@ namespace DLT.Meta
             StreamProcessor.uninitialize();
         }
 
-        public static string getFullAddress()
-        {
-            return Config.publicServerIP + ":" + Config.serverPort;
-        }
-
-
-        public static ulong getLastBlockHeight()
+        public override ulong getLastBlockHeight()
         {
             if (lastBlock != null)
             {
@@ -175,7 +176,7 @@ namespace DLT.Meta
             return 0;
         }
 
-        public static int getLastBlockVersion()
+        public override int getLastBlockVersion()
         {
             if (lastBlock != null)
             {
@@ -184,25 +185,15 @@ namespace DLT.Meta
             return 0;
         }
 
-        public static char getNodeType()
+        public override char getNodeType()
         {
             return 'C';
         }
 
-        public static bool isAcceptingConnections()
+        public override bool isAcceptingConnections()
         {
             // TODO TODO TODO TODO implement this properly
             return true;
-        }
-
-        public static void setRequiredConsensus(int required_consensus)
-        {
-            requiredConsensus = required_consensus;
-        }
-
-        public static int getRequiredConsensus()
-        {
-            return requiredConsensus;
         }
 
         public static void setLastBlock(ulong block_num, byte[] checksum, byte[] ws_checksum, int version)
@@ -218,9 +209,38 @@ namespace DLT.Meta
             blockHeight = block_num;
         }
 
-        public static Block getLastBlock()
+        public override Block getLastBlock()
         {
             return lastBlock;
+        }
+
+        public override void shutdown()
+        {
+
+        }
+
+        public override ulong getHighestKnownNetworkBlockHeight()
+        {
+            if (lastBlock != null)
+            {
+                return lastBlock.blockNum;
+            }
+            return 0;
+        }
+
+        public override bool addTransaction(Transaction tx)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Wallet getWallet(byte[] id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IxiNumber getWalletBalance(byte[] id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

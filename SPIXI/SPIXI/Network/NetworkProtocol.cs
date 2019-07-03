@@ -1,5 +1,6 @@
 ﻿using DLT.Meta;
 using IXICore;
+using IXICore.Meta;
 using IXICore.Utils;
 using SPIXI;
 using SPIXI.Storage;
@@ -32,18 +33,11 @@ namespace DLT.Network
                                     if (CoreProtocolMessage.processHelloMessage(endpoint, reader))
                                     {
                                         byte[] challenge_response = null;
-                                        try
-                                        {
-                                            // TODO TODO TODO TODO TODO try/catch wrapper will be removed when everybody upgrades
-                                            int challenge_len = reader.ReadInt32();
-                                            byte[] challenge = reader.ReadBytes(challenge_len);
 
-                                            challenge_response = CryptoManager.lib.getSignature(challenge, Node.walletStorage.getPrimaryPrivateKey());
-                                        }
-                                        catch (Exception e)
-                                        {
+                                        int challenge_len = reader.ReadInt32();
+                                        byte[] challenge = reader.ReadBytes(challenge_len);
 
-                                        }
+                                        challenge_response = CryptoManager.lib.getSignature(challenge, Node.walletStorage.getPrimaryPrivateKey());
 
                                         CoreProtocolMessage.sendHelloMessage(endpoint, true, challenge_response);
                                         endpoint.helloReceived = true;
@@ -68,23 +62,30 @@ namespace DLT.Network
                                     byte[] block_checksum = reader.ReadBytes(bcLen);
                                     int wsLen = reader.ReadInt32();
                                     byte[] walletstate_checksum = reader.ReadBytes(wsLen);
-                                    int consensus = reader.ReadInt32();
+                                    int consensus = reader.ReadInt32(); // deprecated
 
                                     endpoint.blockHeight = last_block_num;
 
                                     int block_version = reader.ReadInt32();
 
                                     Node.setLastBlock(last_block_num, block_checksum, walletstate_checksum, block_version);
-                                    Node.setRequiredConsensus(consensus);
 
                                     // Check for legacy level
-                                    ulong legacy_level = reader.ReadUInt64();
+                                    ulong legacy_level = reader.ReadUInt64(); // deprecated
 
-                                    // Check for legacy node
-                                    if (Legacy.isLegacy(legacy_level))
+                                    int challenge_response_len = reader.ReadInt32();
+                                    byte[] challenge_response = reader.ReadBytes(challenge_response_len);
+                                    if (!CryptoManager.lib.verifySignature(endpoint.challenge, endpoint.serverPubKey, challenge_response))
                                     {
-                                        // TODO TODO TODO TODO check this out
-                                        //endpoint.setLegacy(true);
+                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.authFailed, string.Format("Invalid challenge response."), "", true);
+                                        return;
+                                    }
+
+                                    ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
+                                    if (last_block_num + 10 < highest_block_height)
+                                    {
+                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
+                                        return;
                                     }
 
                                     // Process the hello data
@@ -200,34 +201,46 @@ namespace DLT.Network
                                     bool byeV1 = false;
                                     try
                                     {
-                                        int byeCode = reader.ReadInt32();
+                                        ProtocolByeCode byeCode = (ProtocolByeCode)reader.ReadInt32();
                                         string byeMessage = reader.ReadString();
                                         string byeData = reader.ReadString();
 
                                         byeV1 = true;
 
-                                        if (byeCode != 200)
+                                        switch (byeCode)
                                         {
-                                            Logging.warn(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
-                                        }
+                                            case ProtocolByeCode.bye: // all good
+                                                break;
 
-                                        if (byeCode == 600)
-                                        {
-                                            if (IxiUtils.validateIPv4(byeData))
-                                            {
-                                                if (NetworkClientManager.getConnectedClients().Length < 2)
+                                            case ProtocolByeCode.forked: // forked node disconnected
+                                                Logging.info(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
+                                                break;
+
+                                            case ProtocolByeCode.deprecated: // deprecated node disconnected
+                                                Logging.info(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
+                                                break;
+
+                                            case ProtocolByeCode.incorrectIp: // incorrect IP
+                                                if (IxiUtils.validateIPv4(byeData))
                                                 {
-                                                    Config.publicServerIP = byeData;
-                                                    Logging.info("Changed internal IP Address to " + byeData + ", reconnecting");
+                                                    if (NetworkClientManager.getConnectedClients().Length < 2)
+                                                    {
+                                                        NetworkClientManager.publicIP = byeData;
+                                                        Logging.info("Changed internal IP Address to " + byeData + ", reconnecting");
+                                                    }
                                                 }
-                                            }
-                                        }
-                                        else if (byeCode == 601)
-                                        {
-                                            Logging.error("This node must be connectable from the internet, to connect to the network.");
-                                            Logging.error("Please setup uPNP and/or port forwarding on your router for port " + Config.serverPort + ".");
-                                        }
+                                                break;
 
+                                            case ProtocolByeCode.notConnectable: // not connectable from the internet
+                                                Logging.error("This node must be connectable from the internet, to connect to the network.");
+                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + NetworkServer.listeningPort + ".");
+                                                NetworkServer.connectable = false;
+                                                break;
+
+                                            default:
+                                                Logging.warn(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
+                                                break;
+                                        }
                                     }
                                     catch (Exception)
                                     {
@@ -250,6 +263,7 @@ namespace DLT.Network
                                 }
                             }
                         }
+                        break;
                         break;
 
                     default:

@@ -1,4 +1,5 @@
 ﻿using DLT.Meta;
+using IXICore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SPIXI
 {
 	public partial class App : Application
 	{
+        Node node = null;
 		public App ()
 		{
 			InitializeComponent();
@@ -22,15 +24,16 @@ namespace SPIXI
             {
                 string uid = Application.Current.Properties["uid"] as string;
                 // TODO: sanitize the uid if necessary
-                Config.device_id = uid;
+                CoreConfig.device_id = uid;
             }
             else
             {
                 // Generate and save the device ID
-                Application.Current.Properties["uid"] = Config.device_id;
+                Application.Current.Properties["uid"] = CoreConfig.device_id;
             }
 
             // Start the IXIAN DLT
+            node = new Node();
             Node.start();
 
             // Attempt to load a pre-existing wallet
