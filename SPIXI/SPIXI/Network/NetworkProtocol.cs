@@ -233,7 +233,7 @@ namespace DLT.Network
 
                                             case ProtocolByeCode.notConnectable: // not connectable from the internet
                                                 Logging.error("This node must be connectable from the internet, to connect to the network.");
-                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + NetworkServer.listeningPort + ".");
+                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + NetworkServer.getListeningPort() + ".");
                                                 NetworkServer.connectable = false;
                                                 break;
 
