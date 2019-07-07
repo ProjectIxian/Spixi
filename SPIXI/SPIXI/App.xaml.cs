@@ -34,7 +34,6 @@ namespace SPIXI
 
             // Start the IXIAN DLT
             node = new Node();
-            Node.start();
 
             // Attempt to load a pre-existing wallet
             bool wallet_found = Node.checkForExistingWallet();
@@ -58,6 +57,7 @@ namespace SPIXI
                     // Wallet found, go to main page
                     MainPage = new NavigationPage(new SPIXI.HomePage());
                     //MainPage = new NavigationPage(new SPIXI.LockPage());
+                    Node.start();
                 }
             }
 

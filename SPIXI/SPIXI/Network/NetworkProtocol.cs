@@ -7,11 +7,29 @@ using SPIXI.Storage;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace DLT.Network
 {
     public class ProtocolMessage
     {
+        public static ProtocolMessageCode waitingFor = 0;
+        public static bool blocked = false;
+
+        public static void setWaitFor(ProtocolMessageCode value)
+        {
+            waitingFor = value;
+            blocked = true;
+        }
+
+        public static void wait()
+        {
+            while (blocked)
+            {
+                Thread.Sleep(250);
+            }
+        }
+
         // Unified protocol message parsing
         public static void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
@@ -93,7 +111,8 @@ namespace DLT.Network
                                     NetworkClientManager.recalculateLocalTimeDifference();
                                 }
                                 // Get presences
-                                endpoint.sendData(ProtocolMessageCode.syncPresenceList, new byte[1]);
+                                endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+                                endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
 
                                 // Subscribe to transaction events
                                 byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, Node.walletStorage.getPrimaryAddress());
@@ -119,13 +138,13 @@ namespace DLT.Network
                         }
                         break;
 
-                    case ProtocolMessageCode.syncPresenceList:
+                    /*case ProtocolMessageCode.syncPresenceList:
                         {
                             byte[] pdata = PresenceList.getBytes();
                      //       byte[] ba = prepareProtocolMessage(ProtocolMessageCode.presenceList, pdata);
                      //       socket.Send(ba, SocketFlags.None);
                         }
-                        break;
+                        break;*/
 
                     case ProtocolMessageCode.presenceList:
                         {
@@ -143,6 +162,42 @@ namespace DLT.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.keepAlivePresence:
+                        {
+                            byte[] address = null;
+                            bool updated = PresenceList.receiveKeepAlive(data, out address, endpoint);
+                        }
+                        break;
+
+                    case ProtocolMessageCode.getPresence:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    int walletLen = reader.ReadInt32();
+                                    byte[] wallet = reader.ReadBytes(walletLen);
+                                    lock (PresenceList.presences)
+                                    {
+                                        Presence p = PresenceList.presences.Find(x => x.wallet.SequenceEqual(wallet));
+                                        if (p != null)
+                                        {
+                                            byte[][] presence_chunks = p.getByteChunks();
+                                            foreach (byte[] presence_chunk in presence_chunks)
+                                            {
+                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // TODO blacklisting point
+                                            Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", Base58Check.Base58CheckEncoding.EncodePlain(wallet)));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
 
                     case ProtocolMessageCode.balance:
                         {
@@ -264,7 +319,6 @@ namespace DLT.Network
                             }
                         }
                         break;
-                        break;
 
                     default:
                         break;
@@ -274,6 +328,11 @@ namespace DLT.Network
             catch (Exception e)
             {
                 Logging.error(string.Format("Error parsing network message. Details: {0}", e.ToString()));
+            }
+
+            if (waitingFor == code)
+            {
+                blocked = false;
             }
         }
     }

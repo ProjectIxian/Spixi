@@ -140,6 +140,8 @@ namespace SPIXI
                         Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
+
+                    Node.start();
                 }
                 else
                 {

@@ -166,35 +166,11 @@ namespace SPIXI
         // Finds a presence entry's pubkey
         public static byte[] findContactPubkey(byte[] wallet_address)
         {
-            lock (PresenceList.presences)
+            // TODO check local database first
+            Presence p = PresenceList.getPresenceByAddress(wallet_address);
+            if(p.addresses.Find(x => x.type == 'C') != null)
             {
-                foreach (Presence presence in PresenceList.presences)
-                {
-                    // Find only client nodes as contacts
-                    bool client_found = false;
-                    foreach (PresenceAddress addr in presence.addresses)
-                    {
-                        if (addr.type == 'C')
-                        {
-                            client_found = true;
-                            break;
-                        }
-                    }
-
-                    if (client_found == false)
-                    {
-                        continue;
-                    }
-
-
-                    byte[] wallet = presence.wallet;
-
-                    if (wallet.SequenceEqual(wallet_address))
-                    {
-                        return presence.pubkey;
-                    }
-
-                }
+                return p.pubkey;
             }
             return null;
         }

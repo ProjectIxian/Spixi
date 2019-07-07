@@ -11,8 +11,6 @@ namespace DLT.Meta
 {
     class Node: IxianNode
     {
-        public static WalletState walletState;
-
         // Use the SPIXI-specific wallet storage code
         public static WalletStorage walletStorage;
 
@@ -41,10 +39,9 @@ namespace DLT.Meta
         {
             CoreConfig.productVersion = Config.version;
             IxianHandler.setHandler(this);
-        }
 
-        static public void start()
-        {
+            CoreConfig.isTestNet = Config.isTestNet;
+
             // Initialize the crypto manager
             CryptoManager.initLib();
 
@@ -52,8 +49,12 @@ namespace DLT.Meta
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             walletStorage = new WalletStorage(Path.Combine(path, Config.walletFile));
 
-            // Initialize the wallet state
-            walletState = new WalletState();
+        }
+
+        static public void start()
+        {
+            // Generate presence list
+            PresenceList.generatePresenceList(NetworkClientManager.publicIP, 'C');
 
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage();
@@ -114,7 +115,7 @@ namespace DLT.Meta
             NetworkClientManager.start();
             // TODOSPIXI
             // Start the s2 client manager
-            //StreamClientManager.start();
+            StreamClientManager.start();
         }
 
         // Handle timer routines
@@ -130,11 +131,6 @@ namespace DLT.Meta
 
             if (Node.walletStorage.getPrimaryAddress() == null)
                 return;
-
-            if (PresenceList.curNodePresence == null)
-            {
-                PresenceList.generatePresenceList("spixi:000", 'C'); // TODO TODO TODO TODO spixi:000 is used only for tech preview and will later be replaced with something more secure
-            }
 
             // Request wallet balance
             using (MemoryStream mw = new MemoryStream())
@@ -193,7 +189,7 @@ namespace DLT.Meta
         public override bool isAcceptingConnections()
         {
             // TODO TODO TODO TODO implement this properly
-            return true;
+            return false;
         }
 
         public static void setLastBlock(ulong block_num, byte[] checksum, byte[] ws_checksum, int version)

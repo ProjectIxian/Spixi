@@ -12,6 +12,8 @@ using ZXing.Net.Mobile.Forms;
 using DLT;
 using DLT.Network;
 using DLT.Meta;
+using System.IO;
+using IXICore;
 
 namespace SPIXI
 {
@@ -29,9 +31,6 @@ namespace SPIXI
             var source = new UrlWebViewSource();
             source.Url = string.Format("{0}html/contact_new.html", DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
-
-            // TODO optimize this         
-            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1], null);
         }
 
         public ContactNewPage(string wal_id)
@@ -147,12 +146,27 @@ namespace SPIXI
                 return;
             }
 
+            // TODO check if contact has already been added
+
+            ProtocolMessage.setWaitFor(ProtocolMessageCode.updatePresence);
+
+            using (MemoryStream mw = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(mw))
+                {
+                    writer.Write(wal.Length);
+                    writer.Write(wal);
+
+                    CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'R' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                }
+            }
+
+            ProtocolMessage.wait();
 
             byte[] pubkey = FriendList.findContactPubkey(wal);
             if(pubkey == null)
             {
                 DisplayAlert("Contact does not exist", "Try again later.", "OK");
-                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.syncPresenceList, new byte[1], null);
                 return;
             }
 
