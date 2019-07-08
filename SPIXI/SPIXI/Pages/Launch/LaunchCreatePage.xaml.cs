@@ -125,6 +125,8 @@ namespace SPIXI
 
                 if (Node.generateWallet(pass))
                 {
+                    Node.start();
+
                     Node.localStorage.nickname = nick;
                     Node.localStorage.writeAccountFile();
 
@@ -140,8 +142,6 @@ namespace SPIXI
                         Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
-
-                    Node.start();
                 }
                 else
                 {

@@ -181,7 +181,7 @@ namespace SPIXI
             // Send the message to the S2 nodes
             byte[] recipient_address = wal;
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, new byte[1]);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, Node.walletStorage.getPrimaryPublicKey());
 
 
             StreamMessage message = new StreamMessage();
@@ -191,7 +191,7 @@ namespace SPIXI
             message.data = spixi_message.getBytes();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
-
+            
             StreamProcessor.sendMessage(message, relayip);
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);

@@ -256,7 +256,7 @@ namespace SPIXI
                 case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
-                        handleRequestAdd(message.sender);
+                        handleRequestAdd(message.sender, spixi_message.data);
                     }
                     break;
 
@@ -329,9 +329,9 @@ namespace SPIXI
             return;
         }
 
-        private static void handleRequestAdd(byte[] sender_wallet)
+        private static void handleRequestAdd(byte[] sender_wallet, byte[] pub_key)
         {
-            byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
+            /*byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
             if (pub_k == null)
             {
                 Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
@@ -341,10 +341,16 @@ namespace SPIXI
                     Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
                 }
                 return;
-            }
+            }*/
 
-            FriendList.addFriend(sender_wallet, pub_k, "New Contact", false);
-            FriendList.addMessageWithType(FriendMessageType.requestAdd, sender_wallet, "");
+            if (FriendList.addFriend(sender_wallet, pub_key, "New Contact", false))
+            {
+                FriendList.addMessageWithType(FriendMessageType.requestAdd, sender_wallet, "");
+            }else
+            {
+                Friend friend = FriendList.getFriend(sender_wallet);
+                sendAcceptAdd(friend);
+            }
         }
 
         private static void handleAcceptAdd(byte[] sender_wallet)
@@ -413,7 +419,21 @@ namespace SPIXI
             FriendList.addMessageWithType(FriendMessageType.requestFunds, sender_wallet, amount);
         }
 
+        public static void sendAcceptAdd(Friend friend)
+        {
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, new byte[1]);
 
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            string relayip = friend.searchForRelay();
+            StreamProcessor.sendMessage(message, relayip);
+        }
 
     }
 }

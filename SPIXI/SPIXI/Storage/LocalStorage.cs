@@ -105,7 +105,6 @@ namespace SPIXI.Storage
             catch (IOException e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot read from account file. {0}", e.Message));
-                return false;
             }
 
             reader.Close();
@@ -162,7 +161,6 @@ namespace SPIXI.Storage
             catch (IOException e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot write to account file. {0}", e.Message));
-                return false;
             }
             writer.Close();
             return true;
@@ -230,8 +228,8 @@ namespace SPIXI.Storage
             }
             catch (IOException e)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot read from chat file. {0}", e.Message));
-                return messages;
+                Logging.error("Cannot read from chat file. {0}", e.Message);
+                // TODO TODO notify the user or something like that
             }
 
             reader.Close();
@@ -272,22 +270,21 @@ namespace SPIXI.Storage
 
                 foreach(FriendMessage message in messages)
                 {
-                    if (message.type != FriendMessageType.requestAdd)
-                    {
+                    /*if (message.type != FriendMessageType.requestAdd)
+                    {*/
                         int s_type = (int)message.type;
                         writer.Write(s_type);
                         writer.Write(message.message);
                         writer.Write(message.timestamp);
                         writer.Write(message.from);
                         writer.Write(message.read);
-                    }
+                    //}
                 }
 
             }
             catch (IOException e)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot write to chat file. {0}", e.Message));
-                return false;
+                Logging.error("Cannot write to chat file. {0}", e.Message);
             }
             writer.Close();
 

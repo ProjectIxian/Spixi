@@ -15,7 +15,7 @@ namespace SPIXI
 
         public static bool saveToStorage()
         {
-            return Node.localStorage.writeAccountFile(); ;
+            return Node.localStorage.writeAccountFile();
         }
 
         // Retrieves a friend based on the wallet_address
@@ -90,19 +90,20 @@ namespace SPIXI
         }
 
 
-        public static void addFriend(byte[] wallet_address, byte[] public_key, string name, bool approved = true)
+        public static bool addFriend(byte[] wallet_address, byte[] public_key, string name, bool approved = true)
         {
             foreach (Friend friend in friends)
             {
                 if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     // Already in the list
-                    return;
+                    return false;
                 }
             }
 
             // Add new friend to the friendlist
             friends.Add(new Friend(wallet_address, public_key, name, approved));
+            return true;
         }
 
         // Scan the presence list for new contacts
@@ -168,7 +169,7 @@ namespace SPIXI
         {
             // TODO check local database first
             Presence p = PresenceList.getPresenceByAddress(wallet_address);
-            if(p.addresses.Find(x => x.type == 'C') != null)
+            if(p != null && p.addresses.Find(x => x.type == 'C') != null)
             {
                 return p.pubkey;
             }

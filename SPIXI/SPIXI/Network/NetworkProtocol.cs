@@ -73,43 +73,57 @@ namespace DLT.Network
                         {
                             using (BinaryReader reader = new BinaryReader(m))
                             {
-                                if (CoreProtocolMessage.processHelloMessage(endpoint, reader))
+                                if (!CoreProtocolMessage.processHelloMessage(endpoint, reader))
                                 {
-                                    ulong last_block_num = reader.ReadUInt64();
-                                    int bcLen = reader.ReadInt32();
-                                    byte[] block_checksum = reader.ReadBytes(bcLen);
-                                    int wsLen = reader.ReadInt32();
-                                    byte[] walletstate_checksum = reader.ReadBytes(wsLen);
-                                    int consensus = reader.ReadInt32(); // deprecated
-
-                                    endpoint.blockHeight = last_block_num;
-
-                                    int block_version = reader.ReadInt32();
-
-                                    Node.setLastBlock(last_block_num, block_checksum, walletstate_checksum, block_version);
-
-                                    // Check for legacy level
-                                    ulong legacy_level = reader.ReadUInt64(); // deprecated
-
-                                    int challenge_response_len = reader.ReadInt32();
-                                    byte[] challenge_response = reader.ReadBytes(challenge_response_len);
-                                    if (!CryptoManager.lib.verifySignature(endpoint.challenge, endpoint.serverPubKey, challenge_response))
-                                    {
-                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.authFailed, string.Format("Invalid challenge response."), "", true);
-                                        return;
-                                    }
-
-                                    ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
-                                    if (last_block_num + 10 < highest_block_height)
-                                    {
-                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
-                                        return;
-                                    }
-
-                                    // Process the hello data
-                                    endpoint.helloReceived = true;
-                                    NetworkClientManager.recalculateLocalTimeDifference();
+                                    return;
                                 }
+
+                                ulong last_block_num = reader.ReadUInt64();
+                                int bcLen = reader.ReadInt32();
+                                byte[] block_checksum = reader.ReadBytes(bcLen);
+                                int wsLen = reader.ReadInt32();
+                                byte[] walletstate_checksum = reader.ReadBytes(wsLen);
+                                int consensus = reader.ReadInt32(); // deprecated
+
+                                endpoint.blockHeight = last_block_num;
+
+                                int block_version = reader.ReadInt32();
+
+                                Node.setLastBlock(last_block_num, block_checksum, walletstate_checksum, block_version);
+
+                                // Check for legacy level
+                                ulong legacy_level = reader.ReadUInt64(); // deprecated
+
+                                int challenge_response_len = reader.ReadInt32();
+                                byte[] challenge_response = reader.ReadBytes(challenge_response_len);
+                                if (!CryptoManager.lib.verifySignature(endpoint.challenge, endpoint.serverPubKey, challenge_response))
+                                {
+                                    CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.authFailed, string.Format("Invalid challenge response."), "", true);
+                                    return;
+                                }
+
+                                ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
+                                if (last_block_num + 10 < highest_block_height)
+                                {
+                                    CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
+                                    return;
+                                }
+
+                                // Process the hello data
+                                endpoint.helloReceived = true;
+                                NetworkClientManager.recalculateLocalTimeDifference();
+
+                                if (endpoint.presenceAddress.type == 'R')
+                                {
+                                    if (StreamClientManager.countStreamClients() == 1)
+                                    {
+                                        // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
+                                        Node.primaryS2Address = endpoint.getFullAddress(true);
+                                        PresenceList.curNodePresenceAddress.address = endpoint.getFullAddress(true);
+                                        PresenceList.forceSendKeepAlive = true;
+                                    }
+                                }
+
                                 // Get presences
                                 endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                                 endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });

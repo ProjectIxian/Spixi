@@ -322,13 +322,6 @@ namespace SPIXI
                 {
                     streamClients.Add(new_client);
                 }
-                if (streamClients.Count() == 1)
-                {
-                    // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
-                    Node.primaryS2Address = host;
-                    PresenceList.curNodePresenceAddress.address = host;
-                    PresenceList.forceSendKeepAlive = true;
-                }
             }
 
             // Remove this node from the connecting clients list
@@ -356,5 +349,12 @@ namespace SPIXI
             return null;
         }
 
+        public static int countStreamClients()
+        {
+            lock(streamClients)
+            {
+                return streamClients.Count();
+            }
+        }
     }
 }

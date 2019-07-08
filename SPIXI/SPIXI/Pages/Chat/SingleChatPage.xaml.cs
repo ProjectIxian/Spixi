@@ -252,18 +252,7 @@ namespace SPIXI
         {
             friend.approved = true;
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, new byte[1]);
-
-            StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
-            message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
-            message.data = spixi_message.getBytes();
-
-            string relayip = friend.searchForRelay();
-            StreamProcessor.sendMessage(message, relayip);
+            StreamProcessor.sendAcceptAdd(friend);
         }
 
         public void onConfirmPaymentRequest(string amount)
@@ -364,11 +353,11 @@ namespace SPIXI
         {
             if(friend.online)
             {
-                webView.Eval("showIndicator(true)");
+                //webView.Eval("showIndicator(true)");
             }
             else
             {
-                webView.Eval("showIndicator(false)");
+                //webView.Eval("showIndicator(false)");
             }
        
             // Show connectivity warning bar
@@ -395,7 +384,7 @@ namespace SPIXI
             if(msgCount != lastMessageCount)
             {
                 lastMessageCount = msgCount;
-                webView.Eval(string.Format("showUnread({0})", lastMessageCount));
+                //webView.Eval(string.Format("showUnread({0})", lastMessageCount));
             }
         }
     }
