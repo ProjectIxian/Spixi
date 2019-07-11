@@ -1,19 +1,15 @@
-﻿using DLT;
-using DLT.Meta;
+﻿using IXICore;
 using SPIXI.Interfaces;
+using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ContactDetails : SpixiContentPage
 	{
         private Friend friend = null;

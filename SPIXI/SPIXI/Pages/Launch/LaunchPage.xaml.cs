@@ -1,18 +1,13 @@
-﻿using System;
+﻿using IXICore.Meta;
 using SPIXI.Interfaces;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using SPIXI.Meta;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DLT.Meta;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchPage : SpixiContentPage
 	{
 		public LaunchPage ()

@@ -1,21 +1,16 @@
-﻿using System;
+﻿using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
-
-using System.Collections.Generic;
+using SPIXI.Meta;
+using System;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DLT.Meta;
-using Plugin.FilePicker.Abstractions;
-using Plugin.FilePicker;
-using System.IO;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchRestorePage : SpixiContentPage
 	{
 		public LaunchRestorePage ()

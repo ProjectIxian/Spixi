@@ -1,25 +1,22 @@
-﻿using DLT.Meta;
+﻿using IXICore;
+using IXICore.Network;
 using SPIXI.Interfaces;
+using SPIXI.Meta;
+using SPIXI.Notifications;
+using SPIXI.Storage;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
-using DLT;
-using SPIXI.Storage;
-using System.Globalization;
-using Plugin.LocalNotifications;
-using SPIXI.Notifications;
-using System.Threading;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class HomePage : SpixiContentPage
 	{
 

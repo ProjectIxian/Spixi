@@ -1,17 +1,13 @@
-﻿using DLT;
-using DLT.Meta;
-using DLT.Network;
-using IXICore;
+﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
 using IXICore.Utils;
 using SPIXI.Interfaces;
+using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

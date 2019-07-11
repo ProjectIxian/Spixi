@@ -1,15 +1,12 @@
-﻿using DLT.Meta;
-using IXICore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using IXICore;
+using IXICore.Meta;
+using SPIXI.Meta;
 
 using Xamarin.Forms;
 
 namespace SPIXI
 {
-	public partial class App : Application
+    public partial class App : Application
 	{
         Node node = null;
 		public App ()

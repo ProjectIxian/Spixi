@@ -1,22 +1,16 @@
-﻿using DLT;
-using DLT.Meta;
-using DLT.Network;
-using IXICore;
+﻿using IXICore;
 using SPIXI.Interfaces;
-using SPIXI.Storage;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletSendPage : SpixiContentPage
 	{
         private byte[] recipient = null;

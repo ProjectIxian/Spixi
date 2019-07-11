@@ -1,18 +1,13 @@
-﻿using System;
-using SPIXI.Interfaces;
-
-using System.Collections.Generic;
+﻿using SPIXI.Interfaces;
+using SPIXI.Meta;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DLT.Meta;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchRetryPage : SpixiContentPage
     {
         private int attempts = 0;   // Number of wrong password attempts

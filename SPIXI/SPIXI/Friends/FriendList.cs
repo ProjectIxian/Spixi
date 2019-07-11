@@ -1,10 +1,8 @@
-﻿using DLT;
-using DLT.Meta;
-using Plugin.LocalNotifications;
+﻿using IXICore;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SPIXI
 {

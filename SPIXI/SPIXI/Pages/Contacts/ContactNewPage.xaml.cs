@@ -1,23 +1,19 @@
-﻿using System;
+﻿using IXICore;
+using IXICore.Network;
 using SPIXI.Interfaces;
-
+using SPIXI.Meta;
+using SPIXI.Network;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
-using DLT;
-using DLT.Network;
-using DLT.Meta;
-using System.IO;
-using IXICore;
 
 namespace SPIXI
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ContactNewPage : SpixiContentPage
 	{
         private string wallet_to_add = "";

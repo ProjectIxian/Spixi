@@ -1,15 +1,15 @@
-﻿using DLT.Meta;
-using IXICore;
+﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
 using IXICore.Utils;
-using SPIXI;
+using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace DLT.Network
+namespace SPIXI.Network
 {
     public class ProtocolMessage
     {

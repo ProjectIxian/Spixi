@@ -1,10 +1,10 @@
-﻿using DLT;
-using DLT.Meta;
+﻿using IXICore;
+using IXICore.Meta;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SPIXI
 {

@@ -1,13 +1,12 @@
-﻿using DLT.Network;
-using IXICore;
+﻿using IXICore;
 using IXICore.Meta;
-using SPIXI;
+using IXICore.Network;
 using System;
 using System.IO;
 using System.Timers;
 using Xamarin.Forms;
 
-namespace DLT.Meta
+namespace SPIXI.Meta
 {
     class Node: IxianNode
     {

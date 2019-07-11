@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DefineConstants>TRACE;__MOBILE__</DefineConstants>
+    <DefineConstants>TRACE;__MOBILE__;SPIXI_BUILD</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;__MOBILE__</DefineConstants>
+    <DefineConstants>TRACE;__MOBILE__;SPIXI_BUILD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
