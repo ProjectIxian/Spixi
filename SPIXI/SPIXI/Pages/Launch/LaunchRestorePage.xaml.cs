@@ -101,7 +101,7 @@ namespace SPIXI
                 return;
             }
 
-            webView.Eval("enableRestore()");
+            Utils.sendUiCommand(webView, "enableRestore");
         }
 
         // Attempt to restore the wallet
@@ -116,7 +116,7 @@ namespace SPIXI
             {
                 DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
                 // Remove overlay
-                webView.Eval("removeLoadingOverlay()");
+                Utils.sendUiCommand(webView, "removeLoadingOverlay");
                 return;
             }
 

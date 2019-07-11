@@ -93,7 +93,7 @@ namespace SPIXI
                     file.Write(bytes, 0, bytes.Length);
                     stream.Close();
                 }*/
-            webView.Eval(string.Format("loadAvatar(\"{0}\")", filePath));
+                Utils.sendUiCommand(webView, "loadAvatar", filePath);
                 stream.Close();
                 fs.Close();
 

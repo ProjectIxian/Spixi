@@ -300,7 +300,7 @@ namespace SPIXI
             lastChatsChange = 0;
             lastTransactionChange = 0;
 
-            webView.Eval(string.Format("loadAvatar(\"{0}\")", Node.localStorage.getOwnAvatarPath()));
+            Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
             loadContacts();
 
@@ -350,7 +350,7 @@ namespace SPIXI
                 var filePath = Node.localStorage.getOwnAvatarPath();
                 FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
                 stream.CopyTo(fs);
-                webView.Eval(string.Format("loadAvatar(\"{0}\")", filePath));
+                Utils.sendUiCommand(webView, "loadAvatar", filePath);
                 stream.Close();
                 fs.Close();
             }
@@ -381,7 +381,7 @@ namespace SPIXI
             lastContactsChecksum = chk;
 
             // Clear everything
-            webView.Eval("clearContacts()");
+            Utils.sendUiCommand(webView, "clearContacts");
 
             // Add contacts one-by-one
             foreach(Friend friend in FriendList.friends)
@@ -390,13 +390,12 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "avatar.png", str_online));
+                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online);
             }
         }
 
         public void loadChats()
         {
-            return;
             // Check if there are any changes from last time first
             ulong chk = 0;
             foreach (Friend friend in FriendList.friends)
@@ -417,7 +416,7 @@ namespace SPIXI
             lastChatsChange = chk;
 
 
-            webView.Eval("clearUnreadActivity()");
+            //webView.Eval("clearUnreadActivity()");
 
             foreach (Friend friend in FriendList.friends)
             {
@@ -437,15 +436,15 @@ namespace SPIXI
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
 
-                    //if (friend.checkLastUnread())
+                    /*if (friend.checkLastUnread())
                     {
                         webView.Eval(string.Format("addUnreadActivity('{0}','{1}','{2}','{3}',{4},'{5}')",
                             Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
-                    }
+                    }*/
 
 
-                    webView.Eval(string.Format("addChat('{0}','{1}','{2}','{3}',{4},'{5}')",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
+                    Utils.sendUiCommand(webView, "addChat",
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);
                 }
 
             }
@@ -475,9 +474,8 @@ namespace SPIXI
                             friend.wallet_address, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
                     }*/
 
-
-                    webView.Eval(string.Format("addChat('{0}','{1}','{2}','{3}',{4},'{5}')",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
+                    Utils.sendUiCommand(webView, "addChat",
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);
                 }
             }
         }
@@ -491,7 +489,7 @@ namespace SPIXI
             }
             lastTransactionChange = TransactionCache.lastChange;
 
-            webView.Eval("clearPaymentActivity()");
+            Utils.sendUiCommand(webView, "clearPaymentActivity");
 
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
@@ -501,7 +499,7 @@ namespace SPIXI
                     tx_type = "Payment Sent";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", utransaction.id, tx_type, time, utransaction.amount.ToString()));
+                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString());
             }
 
             for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
@@ -515,7 +513,7 @@ namespace SPIXI
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
 
-                webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString());
             }
         }
 
@@ -532,19 +530,19 @@ namespace SPIXI
             // Check the ixian dlt
             if (NetworkClientManager.getConnectedClients().Count() > 0)
             {
-                webView.Eval("showWarning(0)");
+                Utils.sendUiCommand(webView, "showWarning", "0");
             }
             else
             {
-                webView.Eval("showWarning(1)");
+                Utils.sendUiCommand(webView, "showWarning", "1");
             }
 
-            webView.Eval(string.Format("setBalance('{0}','{1}')", Node.balance.ToString(), Node.localStorage.nickname));
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString(), Node.localStorage.nickname);
 
             // Check if we should reload certain elements
             if(Node.changedSettings == true)
             {
-                webView.Eval(string.Format("loadAvatar(\"{0}\")", Node.localStorage.getOwnAvatarPath()));
+                Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
             }
 
         }

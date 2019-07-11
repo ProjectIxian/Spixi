@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Xamarin.Forms;
 
 namespace SPIXI
 {
@@ -18,6 +17,28 @@ namespace SPIXI
         {
             DateTime datetime = UnixTimeStampToDateTime(unixTimeStamp);
             return datetime.ToString("MM/dd/yyyy HH:mm:ss");
+        }
+
+        public static string escapeHtmlParameter(string str)
+        {
+            return str.Replace("\"", "&#34;").Replace("'", "&#39;").Replace("\\", "&#92;");
+        }
+
+        public static void sendUiCommand(WebView webView, string command, params string[] arguments)
+        {
+            string cmd_str = command + "(";
+            bool first = true;
+            foreach(string arg in arguments)
+            {
+                if(!first)
+                {
+                    cmd_str += ",";
+                }
+                cmd_str += "'" + escapeHtmlParameter(arg) + "'";
+                first = false;
+            }
+            cmd_str += ");";
+            webView.Eval(cmd_str);
         }
     }
 }

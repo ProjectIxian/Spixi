@@ -46,7 +46,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setBalance('{0}')", Node.balance.ToString()));
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
 
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
@@ -57,8 +57,8 @@ namespace SPIXI
                 if (friend != null)
                     nickname = friend.nickname;
 
-                webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, 
-                    Base58Check.Base58CheckEncoding.EncodePlain(recipient)));
+                Utils.sendUiCommand(webView, "addRecipient", nickname, 
+                    Base58Check.Base58CheckEncoding.EncodePlain(recipient));
             }
         }
 
@@ -183,7 +183,7 @@ namespace SPIXI
                         Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
                         if (friend != null)
                             nickname = friend.nickname;
-                        webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
+                        Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
                         return;
                     }
                     else if (result.Text.Contains(":send"))
@@ -198,7 +198,7 @@ namespace SPIXI
                             Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
                             if (friend != null)
                                 nickname = friend.nickname;
-                            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
+                            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
                             return;
                         }
                     }
@@ -214,7 +214,7 @@ namespace SPIXI
                             if (friend != null)
                                 nickname = friend.nickname;
 
-                            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
+                            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
                             return;
                         }
                     }
@@ -233,7 +233,7 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
             if (friend != null)
                 nickname = friend.nickname;
-            webView.Eval(string.Format("addRecipient('{0}','{1}')", nickname, wallet_to_send));
+            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
             Navigation.PopModalAsync();
         }
 

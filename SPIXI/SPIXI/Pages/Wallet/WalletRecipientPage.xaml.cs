@@ -1,9 +1,5 @@
 ﻿using SPIXI.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -75,7 +71,7 @@ namespace SPIXI
 
         public void loadContacts()
         {
-            webView.Eval("clearContacts()");
+            Utils.sendUiCommand(webView, "clearContacts");
 
             foreach (Friend friend in FriendList.friends)
             {
@@ -83,7 +79,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                webView.Eval(string.Format("addContact(\"{0}\", \"{1}\", \"{2}\", {3})", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "avatar.png", str_online));
+                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online);
             }
         }
 

@@ -52,7 +52,7 @@ namespace SPIXI
                 // Check if this is a received payment
                 if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
-                    webView.Eval("setReceivedMode()");
+                    Utils.sendUiCommand(webView, "setReceivedMode");
                     // TODO: FIX ME
           /*          friend = FriendList.getFriend(transaction.from);
                     addr = transaction.from;*/
@@ -69,8 +69,8 @@ namespace SPIXI
                 // Convert unix timestamp
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
-                webView.Eval(string.Format("setInitialData('{0}', '{1}', '{2}', '{3}', '{4}')", transaction.amount.ToString(), transaction.fee.ToString(),
-                    Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time));
+                Utils.sendUiCommand(webView, "setInitialData", transaction.amount.ToString(), transaction.fee.ToString(),
+                    Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time);
             }
 
             checkTransaction();
@@ -152,8 +152,8 @@ namespace SPIXI
             // Convert unix timestamp
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
-            webView.Eval(string.Format("setConfirmedData('{0}', '{1}', '{2}', '{3}', '{4}')", ctransaction.amount.ToString(), ctransaction.fee.ToString(),
-                Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time));
+            Utils.sendUiCommand(webView, "setConfirmedData", ctransaction.amount.ToString(), ctransaction.fee.ToString(),
+                Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time);
             return false;
         }
 

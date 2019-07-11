@@ -77,9 +77,9 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setFees('{0}')", ConsensusConfig.transactionPrice.ToString()));
-            webView.Eval(string.Format("setBalance('{0}')", Node.balance.ToString()));
-            webView.Eval(string.Format("setTotalAmount('{0}')", totalAmount.ToString()));
+            Utils.sendUiCommand(webView, "setFees", ConsensusConfig.transactionPrice.ToString());
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
+            Utils.sendUiCommand(webView, "setTotalAmount", totalAmount.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

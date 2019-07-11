@@ -30,20 +30,20 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setNickname(\"{0}\")", Node.localStorage.nickname));
+            Utils.sendUiCommand(webView, "setNickname", Node.localStorage.nickname);
 
             var filePath = Node.localStorage.getOwnAvatarPath();
-            if (filePath.Equals("avatar.png", StringComparison.Ordinal))
+            if (filePath.Equals("img/spixiavatar.png", StringComparison.Ordinal))
             {
                 // No custom avatar has been chosen
             }
             else
             {
                 // A custom avatar has been chosen previously
-                webView.Eval("showRemoveAvatar(true)");
+                Utils.sendUiCommand(webView, "showRemoveAvatar", "1");
             }
 
-            webView.Eval(string.Format("loadAvatar(\"{0}\")", filePath));
+            Utils.sendUiCommand(webView, "loadAvatar", filePath);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -182,8 +182,8 @@ namespace SPIXI
                     return;
                 }
 
-                webView.Eval(string.Format("loadAvatar(\"{0}\")", filePath));
-                webView.Eval("showRemoveAvatar(true)");
+                Utils.sendUiCommand(webView, "loadAvatar", filePath);
+                Utils.sendUiCommand(webView, "showRemoveAvatar", "1");
                 Node.changedSettings = true;
             }
 
@@ -223,8 +223,8 @@ namespace SPIXI
         {
             if (Node.localStorage.deleteOwnAvatar())
             {
-                webView.Eval("showRemoveAvatar(false)");
-                webView.Eval(string.Format("loadAvatar(\"{0}\")", Node.localStorage.getOwnAvatarPath()));
+                Utils.sendUiCommand(webView, "showRemoveAvatar", "0");
+                Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
                 Node.changedSettings = true;
             }
         }

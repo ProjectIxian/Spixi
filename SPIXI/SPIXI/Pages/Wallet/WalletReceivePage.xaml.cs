@@ -46,7 +46,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setAddress(\"{0}\")", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress())));
+            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress()));
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -55,7 +55,7 @@ namespace SPIXI
             }
             else
             {
-                webView.Eval(string.Format("setContactAddress(\"{0}\", \"{1}\")", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname));
+                Utils.sendUiCommand(webView, "setContactAddress", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname);
             }
         }
 

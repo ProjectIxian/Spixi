@@ -28,7 +28,7 @@ namespace SPIXI
         private void onLoad()
         {
             string address_string = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
-            webView.Eval(string.Format("setAddress(\"{0}\")", address_string));
+            Utils.sendUiCommand(webView, "setAddress", address_string);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

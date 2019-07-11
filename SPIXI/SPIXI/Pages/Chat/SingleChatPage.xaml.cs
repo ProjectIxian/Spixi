@@ -160,7 +160,7 @@ namespace SPIXI
         private void onLoad()
         {
             loadMessages();
-            webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));
+            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             //webView.Eval("setSubtitle(\"online\")");
 
@@ -239,7 +239,7 @@ namespace SPIXI
             insertMessage(msg);
 
             // Finally, clear the input field
-            webView.Eval("clearInput()");
+            Utils.sendUiCommand(webView, "clearInput");
         }
 
         public void onAccept()
@@ -280,7 +280,7 @@ namespace SPIXI
                     // Call webview methods on the main UI thread only
                     Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                     {
-                        webView.Eval(string.Format("showContactRequest(true)"));
+                        Utils.sendUiCommand(webView, "showContactRequest", "1");
                     });
                     message.read = true;
                     return;
@@ -299,7 +299,7 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                 {
-                    webView.Eval(string.Format("addPaymentRequest('{0}')", message.message));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", message.message);
                 });
                 message.read = true;
                 return;
@@ -317,7 +317,7 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                 {
-                    webView.Eval(string.Format("addPaymentSent('{0}','{1}')", transaction.amount.ToString(), message.message));
+                    Utils.sendUiCommand(webView, "addPaymentSent", transaction.amount.ToString(), message.message);
                 });
                 return;
             }
@@ -327,13 +327,12 @@ namespace SPIXI
             if (message.from == true)
             {
                 prefix = "addThem";
-                avatar = "avatar.png";
+                avatar = "img/spixiavatar.png";
             }
             // Call webview methods on the main UI thread only
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
             {
-                string escapedString = message.message.Replace("\"", "&quot;");
-                webView.Eval(string.Format("{0}(\"{1}\",\"{2}\",\"{3}\")", prefix, avatar, escapedString, message.timestamp));
+                Utils.sendUiCommand(webView, prefix, avatar, message.message, message.timestamp);
             });
             message.read = true;
 
@@ -360,7 +359,7 @@ namespace SPIXI
                 if (connectedToNode == true)
                 {
                     connectedToNode = false;
-                    webView.Eval("showWarning('Not connected to S2 node')");
+                    Utils.sendUiCommand(webView, "showWarning", "Not connected to S2 node");
                 }
             }
             else
@@ -368,7 +367,7 @@ namespace SPIXI
                 if(connectedToNode == false)
                 {
                     connectedToNode = true;
-                    webView.Eval("showWarning('')");
+                    Utils.sendUiCommand(webView, "showWarning", "");
                 }
             }
             

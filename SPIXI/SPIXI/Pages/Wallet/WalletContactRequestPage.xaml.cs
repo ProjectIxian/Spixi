@@ -39,7 +39,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setData('{0}','{1}','{2}','{3}','{4}')", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, amount, ConsensusConfig.transactionPrice.ToString(), date));
+            Utils.sendUiCommand(webView, "setData", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, amount, ConsensusConfig.transactionPrice.ToString(), date);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

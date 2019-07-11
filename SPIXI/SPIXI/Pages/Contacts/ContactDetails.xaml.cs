@@ -3,7 +3,6 @@ using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -54,16 +53,16 @@ namespace SPIXI
 
         private void onLoad()
         {
-            webView.Eval(string.Format("setAddress(\"{0}\")", friend.walletAddress));
-            webView.Eval(string.Format("setNickname(\"{0}\")", friend.nickname));
+            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             if (friend.online)
             {
-                webView.Eval("showIndicator(true)");
+                Utils.sendUiCommand(webView, "showIndicator", "1");
             }
             else
             {
-                webView.Eval("showIndicator(false)");
+                Utils.sendUiCommand(webView, "showIndicator", "0");
             }
 
             loadTransactions();
@@ -181,7 +180,7 @@ namespace SPIXI
 
         public void loadTransactions()
         {
-            webView.Eval("clearRecentActivity()");
+            Utils.sendUiCommand(webView, "clearRecentActivity");
 
             // TODOSPIXI
             /*
