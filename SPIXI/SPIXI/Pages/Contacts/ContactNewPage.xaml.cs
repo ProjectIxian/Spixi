@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
@@ -178,13 +179,13 @@ namespace SPIXI
             // Send the message to the S2 nodes
             byte[] recipient_address = wal;
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, Node.walletStorage.getPrimaryPublicKey());
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = recipient_address;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];

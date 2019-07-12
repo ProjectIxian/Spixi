@@ -135,8 +135,8 @@ namespace SPIXI.Storage
                 writer.Write(version);
 
                 // Write the address used for verification
-                writer.Write(Node.walletStorage.getPrimaryAddress().Length);
-                writer.Write(Node.walletStorage.getPrimaryAddress());
+                writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().Length);
+                writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress());
 
                 // Write account information
                 writer.Write(nickname);

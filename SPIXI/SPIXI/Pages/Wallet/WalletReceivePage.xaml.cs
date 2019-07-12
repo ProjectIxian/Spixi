@@ -56,7 +56,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "setContactAddress", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname);
+                Utils.sendUiCommand(webView, "addRecipient", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname);
             }
         }
 
@@ -76,9 +76,9 @@ namespace SPIXI
             {
                 DisplayAlert("SPIXI", "Please type an amount.", "OK");
             }
-            else if (current_url.Contains("ixian:request:"))
+            else if (current_url.Contains("ixian:sendrequest:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:request:" }, StringSplitOptions.None);
+                string[] split = current_url.Split(new string[] { "ixian:sendrequest:" }, StringSplitOptions.None);
                 string amount = split[1];
                 onRequest(amount);
             }

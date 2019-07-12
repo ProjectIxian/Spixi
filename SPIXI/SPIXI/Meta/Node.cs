@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using SPIXI.Network;
 using System;
 using System.IO;
 using System.Timers;
@@ -211,7 +212,7 @@ namespace SPIXI.Meta
 
         public override void shutdown()
         {
-
+            stop();
         }
 
         public override ulong getHighestKnownNetworkBlockHeight()
@@ -236,6 +237,16 @@ namespace SPIXI.Meta
         public override IxiNumber getWalletBalance(byte[] id)
         {
             throw new NotImplementedException();
+        }
+
+        public override WalletStorage getWalletStorage()
+        {
+            return walletStorage;
+        }
+
+        public override void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
+        {
+            ProtocolMessage.parseProtocolMessage(code, data, endpoint);
         }
     }
 }

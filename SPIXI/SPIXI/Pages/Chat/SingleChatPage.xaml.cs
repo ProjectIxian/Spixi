@@ -348,13 +348,13 @@ namespace SPIXI
 
             if (friend.online)
             {
-                //webView.Eval("showIndicator(true)");
+                Utils.sendUiCommand(webView, "showIndicator", "1");
             }
             else
             {
-                //webView.Eval("showIndicator(false)");
+                Utils.sendUiCommand(webView, "showIndicator", "0");
             }
-       
+
             // Show connectivity warning bar
             if (StreamClientManager.isConnectedTo(node_ip) == null)
             {

@@ -55,7 +55,7 @@ namespace SPIXI.Network
                                         int challenge_len = reader.ReadInt32();
                                         byte[] challenge = reader.ReadBytes(challenge_len);
 
-                                        challenge_response = CryptoManager.lib.getSignature(challenge, Node.walletStorage.getPrimaryPrivateKey());
+                                        challenge_response = CryptoManager.lib.getSignature(challenge, IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
                                         CoreProtocolMessage.sendHelloMessage(endpoint, true, challenge_response);
                                         endpoint.helloReceived = true;
@@ -129,10 +129,10 @@ namespace SPIXI.Network
                                 endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
 
                                 // Subscribe to transaction events
-                                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, Node.walletStorage.getPrimaryAddress());
+                                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, IxianHandler.getWalletStorage().getPrimaryAddress());
                                 endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
 
-                                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, Node.walletStorage.getPrimaryAddress());
+                                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, IxianHandler.getWalletStorage().getPrimaryAddress());
                                 endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
                             
                             }
@@ -225,7 +225,7 @@ namespace SPIXI.Network
                                     // Retrieve the latest balance
                                     IxiNumber balance = reader.ReadString();
 
-                                    if(address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                                    if(address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                                     {
                                         Node.balance = balance;
                                     }
@@ -252,7 +252,7 @@ namespace SPIXI.Network
                             Logging.info("RECIEVED NEW TRANSACTION");
 
                             Transaction transaction = new Transaction(data);
-                            if (transaction.toList.Keys.First().SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                            if (transaction.toList.Keys.First().SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                             {
                                 TransactionCache.addTransaction(transaction);
                             }
