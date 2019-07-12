@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -6,6 +7,7 @@ using System;
 using System.Net;
 using System.Text;
 using System.Timers;
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -67,9 +69,13 @@ namespace SPIXI
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
+            {
+                updateScreen();
+            }
+            else if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
             }
@@ -165,13 +171,7 @@ namespace SPIXI
             //webView.Eval("setSubtitle(\"online\")");
 
             // Execute timer-related functionality immediately
-            onTimer();
-
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-            {
-                onTimer();
-                return true; // True = Repeat again, False = Stop the timer
-            });
+            updateScreen();
 
             // Set the last message as read
             friend.setLastRead();
@@ -342,9 +342,11 @@ namespace SPIXI
         }
 
         // Executed every second
-        private void onTimer()
+        private void updateScreen()
         {
-            if(friend.online)
+            Logging.info("Updating chat");
+
+            if (friend.online)
             {
                 //webView.Eval("showIndicator(true)");
             }

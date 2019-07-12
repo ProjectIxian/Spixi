@@ -4,6 +4,7 @@ using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
@@ -64,7 +65,7 @@ namespace SPIXI
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
@@ -97,7 +98,7 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
 
                 // Extract all addresses and amounts
-                string[] addresses_split = split[1].Split(new string[] { "%7C" }, StringSplitOptions.None);
+                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
 
                 // Go through each entry
                 foreach(string address_and_amount in addresses_split)
@@ -227,13 +228,20 @@ namespace SPIXI
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {
-            string wallet_to_send = e.Value;
-            string nickname = wallet_to_send;
+            string wallets_to_send = e.Value;
 
-            Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
-            if (friend != null)
-                nickname = friend.nickname;
-            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+            string[] wallet_arr = wallets_to_send.Split('|');
+
+            foreach (string wallet_to_send in wallet_arr)
+            {
+                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+
+                string nickname = wallet_to_send;
+                if (friend != null)
+                    nickname = friend.nickname;
+
+                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+            }
             Navigation.PopModalAsync();
         }
 

@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -30,7 +31,7 @@ namespace SPIXI
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
             if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {

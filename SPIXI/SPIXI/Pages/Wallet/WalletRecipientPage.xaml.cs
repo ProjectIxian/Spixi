@@ -1,6 +1,6 @@
 ﻿using SPIXI.Interfaces;
 using System;
-
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -34,7 +34,7 @@ namespace SPIXI
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
@@ -48,7 +48,6 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:select:" }, StringSplitOptions.None);
                 string id = split[1];
-                // TODO check for | separator
                 onPickSucceeded(id);
             }
             else

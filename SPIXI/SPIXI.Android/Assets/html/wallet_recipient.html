@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -149,13 +149,13 @@
                 
         var contactEntry = document.createElement("div");
         contactEntry.className = "spixi-list-item spixi-list-item-row";
-        contactEntry.innerHTML = '<a href="javascript:selectRecipient(' + wal + ')"><div class="row" id="row'+ wal + '"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="far fa-square spixi-list-item-action-icon"></i></div></div></a>';
+        contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row'+ wal + '"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="far fa-square spixi-list-item-action-icon"></i></div></div></a>';
                 
         contactsNode.appendChild(contactEntry);                             
     }    
         
     function selectRecipient(rep)
-    {                
+    {
         var recipientNode = document.getElementById("row"+rep);
         col_left = recipientNode.getElementsByTagName("div")[0];        
         avatar = col_left.getElementsByTagName("img")[0];

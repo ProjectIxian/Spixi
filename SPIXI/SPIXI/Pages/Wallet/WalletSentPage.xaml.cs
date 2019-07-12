@@ -1,10 +1,12 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
 using System.IO;
 using System.Linq;
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -71,21 +73,20 @@ namespace SPIXI
 
                 Utils.sendUiCommand(webView, "setInitialData", transaction.amount.ToString(), transaction.fee.ToString(),
                     Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time);
+
+                updateScreen();
             }
-
-            checkTransaction();
-
-            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
-            {
-                return checkTransaction(); // True = Repeat again, False = Stop the timer
-            });
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
+            {
+                updateScreen();
+            }
+            else if(current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
             }
@@ -157,6 +158,11 @@ namespace SPIXI
             return false;
         }
 
+        private void updateScreen()
+        {
+            Logging.info("Updating wallet send");
 
+            checkTransaction();
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace SPIXI.Storage
             if (File.Exists(avatarPath) == false)
             {
                 // Use the default avatar instead
-                avatarPath = "avatar.png";
+                avatarPath = "img/spixiavatar.png";
             }
 
             return avatarPath;

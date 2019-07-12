@@ -107,6 +107,7 @@
     } 
     
     function htmlEscape(str) {
+        return str;
         return str
             .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;')
@@ -260,7 +261,27 @@
         document.getElementById("chatholder").style.height = "102px";
         document.getElementById("chatattachbar").style.bottom = "0px";        
     }
-            
+
+    var pinging = false;
+    function ping() {
+        pinging = true;
+        location.href = "ixian:ping";
+        setTimeout(function () {
+            ping();
+        }, 1000);
+    }
+
+    function startPing() {
+        if (pinging) {
+            return;
+        }
+        pinging = true;
+        setTimeout(function () {
+            ping();
+        }, 5000);
+    }
+
+    startPing();
 </script>
 
 </body>

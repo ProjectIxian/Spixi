@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head lang="en">
@@ -107,6 +107,11 @@
                 correctLevel: QRCode.CorrectLevel.H
             });
 
+    function generateQR() {
+        qrcode.clear(); // clear the code.
+        qrcode.makeCode(wal_id);
+    }
+
     function setAddress(addr) {
         wal_id = addr;
         generateQR();
@@ -116,13 +121,7 @@
         document.getElementById("wal3").innerHTML = parts[2];
         document.getElementById("wal4").innerHTML = parts[3];
     }
-        
-    function generateQR() {
-        qrcode.clear(); // clear the code.
-        qrcode.makeCode(wal_id);
-    }
-
-    
+           
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     } 

@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
@@ -73,9 +75,13 @@ namespace SPIXI
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
-            string current_url = e.Url;
+            string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
+            {
+                updateScreen();
+            }
+            else if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoaded();
             }
@@ -302,13 +308,7 @@ namespace SPIXI
 
             Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
-            loadContacts();
-
-            Device.StartTimer(TimeSpan.FromSeconds(1), () =>
-            {
-                onTimer();
-                return true; // True = Repeat again, False = Stop the timer
-            });
+            updateScreen();
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -520,8 +520,9 @@ namespace SPIXI
 
 
         // Executed every second
-        private void onTimer()
+        private void updateScreen()
         {
+            Logging.info("Updating Home");
 
             loadChats();
             loadContacts();
