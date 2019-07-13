@@ -119,7 +119,8 @@ namespace SPIXI.Network
                                     {
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                                         Node.primaryS2Address = endpoint.getFullAddress(true);
-                                        PresenceList.curNodePresenceAddress.address = endpoint.getFullAddress(true);
+                                        // TODO TODO do not set if directly connectable
+                                        PresenceList.myPublicAddress = endpoint.getFullAddress(true);
                                         PresenceList.forceSendKeepAlive = true;
                                     }
                                 }
@@ -294,7 +295,8 @@ namespace SPIXI.Network
                                                 {
                                                     if (NetworkClientManager.getConnectedClients().Length < 2)
                                                     {
-                                                        NetworkClientManager.publicIP = byeData;
+                                                        // TODO TODO do not set if not directly connectable
+                                                        IxianHandler.publicIP = byeData;
                                                         Logging.info("Changed internal IP Address to " + byeData + ", reconnecting");
                                                     }
                                                 }

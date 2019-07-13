@@ -254,7 +254,7 @@ namespace SPIXI
 
             // Verify against the publicly disclosed ip
             // Don't connect to self
-            if (resolved_server_name.Equals(NetworkClientManager.publicIP, StringComparison.Ordinal))
+            if (resolved_server_name.Equals(IxianHandler.publicIP, StringComparison.Ordinal))
             {
                 if (server[1].Equals(string.Format("{0}", NetworkServer.getListeningPort()), StringComparison.Ordinal))
                 {

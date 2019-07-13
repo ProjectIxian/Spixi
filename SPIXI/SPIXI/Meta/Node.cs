@@ -54,7 +54,7 @@ namespace SPIXI.Meta
         static public void start()
         {
             // Generate presence list
-            PresenceList.generatePresenceList(NetworkClientManager.publicIP, 0, 'C');
+            PresenceList.generatePresenceList(IxianHandler.publicIP, 0, 'C');
 
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage();
@@ -179,11 +179,6 @@ namespace SPIXI.Meta
                 return lastBlock.version;
             }
             return 0;
-        }
-
-        public override char getNodeType()
-        {
-            return 'C';
         }
 
         public override bool isAcceptingConnections()
