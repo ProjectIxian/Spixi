@@ -22,10 +22,15 @@ namespace SPIXI.Network
             blocked = true;
         }
 
-        public static void wait()
+        public static void wait(int timeout_seconds)
         {
+            DateTime start = DateTime.UtcNow;
             while (blocked)
             {
+                if ((DateTime.UtcNow - start).TotalSeconds > timeout_seconds)
+                {
+                    Logging.warn("Timeout occured while waiting for " + waitingFor);
+                }
                 Thread.Sleep(250);
             }
         }
@@ -153,22 +158,6 @@ namespace SPIXI.Network
                         }
                         break;
 
-                    /*case ProtocolMessageCode.syncPresenceList:
-                        {
-                            byte[] pdata = PresenceList.getBytes();
-                     //       byte[] ba = prepareProtocolMessage(ProtocolMessageCode.presenceList, pdata);
-                     //       socket.Send(ba, SocketFlags.None);
-                        }
-                        break;*/
-
-                    case ProtocolMessageCode.presenceList:
-                        {
-                            Logging.info("NET: Receiving complete presence list");
-                            PresenceList.syncFromBytes(data);
-                     //       NetworkClientManager.searchForStreamNode();
-                        }
-                        break;
-
                     case ProtocolMessageCode.updatePresence:
                         {
                             Console.WriteLine("NET: Receiving presence list update");
@@ -192,10 +181,10 @@ namespace SPIXI.Network
                                 {
                                     int walletLen = reader.ReadInt32();
                                     byte[] wallet = reader.ReadBytes(walletLen);
-                                    lock (PresenceList.presences)
+                                    Presence p = PresenceList.getPresenceByAddress(wallet);
+                                    if (p != null)
                                     {
-                                        Presence p = PresenceList.presences.Find(x => x.wallet.SequenceEqual(wallet));
-                                        if (p != null)
+                                        lock (p)
                                         {
                                             byte[][] presence_chunks = p.getByteChunks();
                                             foreach (byte[] presence_chunk in presence_chunks)
@@ -203,11 +192,11 @@ namespace SPIXI.Network
                                                 endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
                                             }
                                         }
-                                        else
-                                        {
-                                            // TODO blacklisting point
-                                            Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", Base58Check.Base58CheckEncoding.EncodePlain(wallet)));
-                                        }
+                                    }
+                                    else
+                                    {
+                                        // TODO blacklisting point
+                                        Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", Base58Check.Base58CheckEncoding.EncodePlain(wallet)));
                                     }
                                 }
                             }
@@ -293,7 +282,7 @@ namespace SPIXI.Network
                                             case ProtocolByeCode.incorrectIp: // incorrect IP
                                                 if (IxiUtils.validateIPv4(byeData))
                                                 {
-                                                    if (NetworkClientManager.getConnectedClients().Length < 2)
+                                                    if (NetworkClientManager.getConnectedClients(true).Length < 2)
                                                     {
                                                         // TODO TODO do not set if not directly connectable
                                                         IxianHandler.publicIP = byeData;

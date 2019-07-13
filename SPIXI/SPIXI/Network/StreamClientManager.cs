@@ -106,22 +106,14 @@ namespace SPIXI
 
             try
             {
-                lock (PresenceList.presences)
+                List<Presence> presences = PresenceList.getPresencesByType('R');
+                if(presences.Count > 0)
                 {
-                    // Go through each presence again. This should be more optimized.
-                    foreach (Presence s2presence in PresenceList.presences)
+                    Random rnd = new Random();
+                    Presence p = presences[rnd.Next(presences.Count)];
+                    lock(p)
                     {
-                        // Go through each single address
-                        foreach (PresenceAddress s2addr in s2presence.addresses)
-                        {
-                            // Only check if it's a Relay node
-                            if (s2addr.type == 'R')
-                            {
-                                // We found our s2 node
-                                neighbor = s2addr.address;
-                                break;
-                            }
-                        }
+                        neighbor = p.addresses.Find(x => x.type == 'R').address;
                     }
                 }
             }
@@ -139,6 +131,7 @@ namespace SPIXI
             else
             {
                 Logging.error("FAILED TO ADD RANDOM STREAM NODE");
+                CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' }, null, null);
             }
         }
 

@@ -529,7 +529,7 @@ namespace SPIXI
             loadTransactions();
 
             // Check the ixian dlt
-            if (NetworkClientManager.getConnectedClients().Count() > 0)
+            if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
                 Utils.sendUiCommand(webView, "showWarning", "0");
             }

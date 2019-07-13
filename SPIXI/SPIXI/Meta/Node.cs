@@ -54,7 +54,7 @@ namespace SPIXI.Meta
         static public void start()
         {
             // Generate presence list
-            PresenceList.generatePresenceList(IxianHandler.publicIP, 0, 'C');
+            PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage();

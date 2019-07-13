@@ -159,7 +159,7 @@ namespace SPIXI
                 }
             }
 
-            ProtocolMessage.wait();
+            ProtocolMessage.wait(30);
 
             byte[] pubkey = FriendList.findContactPubkey(wal);
             if(pubkey == null)
@@ -168,7 +168,12 @@ namespace SPIXI
                 return;
             }
 
-            string relayip = FriendList.getRelayHostname(wal);
+            object[] relay = FriendList.getRelay(wal);
+            string relayip = null;
+            if(relay != null)
+            {
+                relayip = (string)relay[0];
+            }
 
             // TODOSPIXI
             //FriendList.addFriend(wal, pubkey, "Unknown");

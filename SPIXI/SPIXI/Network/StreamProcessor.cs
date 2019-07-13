@@ -286,11 +286,6 @@ namespace SPIXI
                 if (pub_k == null)
                 {
                     Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
-
-                    foreach (Presence pr in PresenceList.presences)
-                    {
-                        Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
-                    }
                     return;
                 }
 
@@ -363,11 +358,6 @@ namespace SPIXI
                 if (pub_k == null)
                 {
                     Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
-
-                    foreach (Presence pr in PresenceList.presences)
-                    {
-                        Console.WriteLine("Presence: {0}", Base58Check.Base58CheckEncoding.EncodePlain(pr.wallet));
-                    }
                     return;
                 }
 

@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Network;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,7 @@ namespace SPIXI
         public static void refreshList()
         {
             return;
-            foreach (Presence presence in PresenceList.presences)
+            /*foreach (Presence presence in PresenceList.presences)
             {
                 // Show only client nodes as contacts
                 bool client_found = false;
@@ -137,7 +138,7 @@ namespace SPIXI
                 }
 
                 addFriend(wallet, pubkey, name);
-            }
+            }*/
         }
 
         // Clear the entire list of contacts
@@ -175,53 +176,53 @@ namespace SPIXI
         }
 
         // Retrieve a presence entry connected S2 node. Returns null if not found
-        public static string getRelayHostname(byte[] wallet_address)
+        public static object[] getRelay(byte[] wallet_address)
         {
-            string ip = null;
-            lock (PresenceList.presences)
-            {
-                // TODO: optimize this
-                // Go through each presence
-                foreach (Presence presence in PresenceList.presences)
-                {
-                    // Check if it matches the entry's wallet address
-                    if (presence.wallet.SequenceEqual(wallet_address))
-                    {
-                        // Go through each presence address searching for C nodes
-                        foreach (PresenceAddress addr in presence.addresses)
-                        {
-                            // Only check Client nodes
-                            if (addr.type == 'C')
-                            {
-                                // We have a potential candidate here, store it
-                                string candidate_ip = addr.address;
+            string hostname = null;
+            Presence presence = PresenceList.getPresenceByAddress(wallet_address);
+            if (presence == null)
+                return null;
 
-                                // Go through each presence again. This should be more optimized.
-                                foreach (Presence s2presence in PresenceList.presences)
-                                {
-                                    // Go through each single address
-                                    foreach (PresenceAddress s2addr in s2presence.addresses)
-                                    {
-                                        // Only check Relay nodes that have the candidate ip
-                                        if (s2addr.type == 'R' && s2addr.address.Equals(candidate_ip, StringComparison.Ordinal))
-                                        {
-                                            // We found the friend's connected s2 node
-                                            ip = s2addr.address;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            // If we find a valid node ip, don't continue searching
-                            if (ip != null)
-                                break;
+            byte[] wallet = presence.wallet;
+
+            lock (presence)
+            {
+                // Go through each presence address searching for C nodes
+                foreach (PresenceAddress addr in presence.addresses)
+                {
+                    // Only check Client nodes
+                    if (addr.type == 'C')
+                    {
+                        // We have a potential candidate here, store it
+                        hostname = addr.address;
+
+                        string[] hostname_split = hostname.Split(':');
+
+                        if (hostname_split.Count() == 2 && NetworkUtils.validateIP(hostname_split[0]))
+                        {
+                            // client is directly connectable
+                            break;
                         }
-                        break;
+
+                        // find a relay node
+                        Presence s2presence = PresenceList.getPresenceByDeviceId(hostname);
+                        if (s2presence != null)
+                        {
+                            PresenceAddress s2addr = s2presence.addresses.Find(x => x.device == hostname);
+                            if (s2addr != null)
+                            {
+                                // We found the friend's connected s2 node
+                                hostname = s2addr.address;
+                                wallet = s2presence.wallet;
+                                break;
+                            }
+                        }
                     }
                 }
             }
+
             // Finally, return the ip address of the node
-            return ip;
+            return new object[2] { hostname, wallet };
         }
 
         // Deletes entire history for all friends in the friendlist
