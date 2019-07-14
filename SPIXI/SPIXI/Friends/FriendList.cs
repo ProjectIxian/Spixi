@@ -166,7 +166,12 @@ namespace SPIXI
         // Finds a presence entry's pubkey
         public static byte[] findContactPubkey(byte[] wallet_address)
         {
-            // TODO check local database first
+            Friend f = getFriend(wallet_address);
+            if(f != null)
+            {
+                return f.publicKey;
+            }
+
             Presence p = PresenceList.getPresenceByAddress(wallet_address);
             if(p != null && p.addresses.Find(x => x.type == 'C') != null)
             {
@@ -176,7 +181,7 @@ namespace SPIXI
         }
 
         // Retrieve a presence entry connected S2 node. Returns null if not found
-        public static object[] getRelay(byte[] wallet_address)
+        public static string getRelayHostname(byte[] wallet_address)
         {
             string hostname = null;
             Presence presence = PresenceList.getPresenceByAddress(wallet_address);
@@ -200,29 +205,14 @@ namespace SPIXI
 
                         if (hostname_split.Count() == 2 && NetworkUtils.validateIP(hostname_split[0]))
                         {
-                            // client is directly connectable
                             break;
-                        }
-
-                        // find a relay node
-                        Presence s2presence = PresenceList.getPresenceByDeviceId(hostname);
-                        if (s2presence != null)
-                        {
-                            PresenceAddress s2addr = s2presence.addresses.Find(x => x.device == hostname);
-                            if (s2addr != null)
-                            {
-                                // We found the friend's connected s2 node
-                                hostname = s2addr.address;
-                                wallet = s2presence.wallet;
-                                break;
-                            }
                         }
                     }
                 }
             }
 
             // Finally, return the ip address of the node
-            return new object[2] { hostname, wallet };
+            return hostname;
         }
 
         // Deletes entire history for all friends in the friendlist

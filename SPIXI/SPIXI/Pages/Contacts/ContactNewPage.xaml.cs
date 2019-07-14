@@ -144,7 +144,12 @@ namespace SPIXI
                 return;
             }
 
-            // TODO check if contact has already been added
+            if(FriendList.getFriend(wal) != null)
+            {
+                DisplayAlert("Already exists", "This contact is already in your contacts list.", "OK");
+                return;
+            }
+
 
             ProtocolMessage.setWaitFor(ProtocolMessageCode.updatePresence);
 
@@ -161,6 +166,7 @@ namespace SPIXI
 
             ProtocolMessage.wait(30);
 
+
             byte[] pubkey = FriendList.findContactPubkey(wal);
             if(pubkey == null)
             {
@@ -168,11 +174,11 @@ namespace SPIXI
                 return;
             }
 
-            object[] relay = FriendList.getRelay(wal);
+            string hostname = FriendList.getRelayHostname(wal);
             string relayip = null;
-            if(relay != null)
+            if(hostname != null)
             {
-                relayip = (string)relay[0];
+                relayip = hostname;
             }
 
             // TODOSPIXI

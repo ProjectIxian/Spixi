@@ -223,15 +223,15 @@ namespace SPIXI
         // Retrieve the friend's connected S2 node address. Returns null if not found
         public string searchForRelay()
         {
-            object[] relay = FriendList.getRelay(walletAddress);
-
             relayIP = null;
             relayWallet = null;
-            if (relay != null)
+
+            string hostname = FriendList.getRelayHostname(walletAddress);
+
+            if (hostname != null)
             {
                 // Store the last relay ip and wallet for this friend
-                relayIP = (string)relay[0];
-                relayWallet = (byte[])relay[1];
+                relayIP = hostname;
             }
             // Finally, return the ip address of the node
             return relayIP;
