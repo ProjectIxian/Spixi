@@ -51,16 +51,17 @@ namespace SPIXI
                     foreach (StreamMessage message in offlineMessages)
                     {
                         // Extract the public key from the Presence List
-                        byte[] pub_k = FriendList.findContactPubkey(message.recipient);
-                        if (pub_k == null)
+                        Friend f = FriendList.getFriend(message.recipient);
+                        if (f == null || !f.online)
                         {
-                            // No public key found means the contact is still offline
                             continue;
                         }
                         // Send the message
-                        sendMessage(message);
-                        // Add the message to the removal cache
-                        cache.Add(message);
+                        if (sendMessage(message, f.searchForRelay(), false))
+                        {
+                            // Add the message to the removal cache
+                            cache.Add(message);
+                        }
                     }
 
                     // Check the removal cache for messages
@@ -98,37 +99,48 @@ namespace SPIXI
 
 
         // Send an encrypted message using the S2 network
-        public static void sendMessage(StreamMessage msg, string hostname = null)
+        public static bool sendMessage(StreamMessage msg, string hostname, bool add_to_offline_messages = true)
         {
-
-            StreamClientManager.broadcastData(ProtocolMessageCode.s2data, msg.getBytes());
-
-   /*         string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
-            if (pub_k.Length < 1)
+            // TODO this has to be improved
+            if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), Encoding.UTF8.GetBytes(msg.getID())))
             {
-                Console.WriteLine("Contact {0} not found, adding to offline queue!", msg.recipientAddress);
-                addOfflineMessage(msg);
-                return;
+                StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
+                Console.WriteLine("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                if (add_to_offline_messages)
+                {
+                    addOfflineMessage(msg);
+                }
+                return false;
             }
 
+            return true;
 
-            // Create a new IXIAN transaction
-            //  byte[] checksum = Crypto.sha256(encrypted_message);
-            Transaction transaction = new Transaction(0, msg.recipientAddress, Node.walletStorage.address);
-            //  transaction.data = Encoding.UTF8.GetString(checksum);
-            msg.transactionID = transaction.id;
-            //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.newTransaction, transaction.getBytes());
+            /*         string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
+                     if (pub_k.Length < 1)
+                     {
+                         Console.WriteLine("Contact {0} not found, adding to offline queue!", msg.recipientAddress);
+                         addOfflineMessage(msg);
+                         return;
+                     }
 
-            // Add message to the queue
-            messages.Add(msg);
 
-            // Request a new keypair from the S2 Node
-            if(hostname == null)
-                ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()));
-            else
-            {
-                NetworkClientManager.sendData(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()), hostname);
-            }*/
+                     // Create a new IXIAN transaction
+                     //  byte[] checksum = Crypto.sha256(encrypted_message);
+                     Transaction transaction = new Transaction(0, msg.recipientAddress, Node.walletStorage.address);
+                     //  transaction.data = Encoding.UTF8.GetString(checksum);
+                     msg.transactionID = transaction.id;
+                     //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.newTransaction, transaction.getBytes());
+
+                     // Add message to the queue
+                     messages.Add(msg);
+
+                     // Request a new keypair from the S2 Node
+                     if(hostname == null)
+                         ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()));
+                     else
+                     {
+                         NetworkClientManager.sendData(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()), hostname);
+                     }*/
         }
 
         // Called when receiving an encryption key from the S2 node

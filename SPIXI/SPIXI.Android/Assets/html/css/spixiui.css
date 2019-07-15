@@ -80,7 +80,7 @@ a:active {
     bottom: 0;
     left: 0;
     right: 0;
-    overflow: scroll;
+    overflow: auto;
     
     background: #eef2f5;
 }
@@ -1079,6 +1079,22 @@ a:active {
     font-size: 12px;
     text-align: center;
     font-weight: bold;
+}
+
+.spixi-friend-status-indicator {
+    display: none;
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+    background: green;
+    position: relative;
+    margin-top: -10px;
+    margin-left: 30px;
+    z-index: 100;
+}
+
+.online .spixi-friend-status-indicator {
+    display: block;
 }
 
 /* Modals */

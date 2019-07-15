@@ -5,6 +5,7 @@ using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -32,6 +33,56 @@ namespace SPIXI.Network
                     Logging.warn("Timeout occured while waiting for " + waitingFor);
                 }
                 Thread.Sleep(250);
+            }
+        }
+
+        public static void resubscribeEvents()
+        {
+            lock (NetworkClientManager.networkClients)
+            {
+                foreach (var client in NetworkClientManager.networkClients)
+                {
+                    if (client.isConnected() && client.helloReceived)
+                    {
+                        byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.all, new byte[0]);
+                        client.sendData(ProtocolMessageCode.detachEvent, event_data);
+                        subscribeToEvents(client);
+                    }
+                }
+            }
+        }
+
+        private static void subscribeToEvents(RemoteEndpoint endpoint)
+        {
+            if (endpoint.presenceAddress.type != 'M')
+            {
+                return;
+            }
+            // Get presences
+            endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+            endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+
+            // TODO TODO TODO events can be optimized as there is no real need to subscribe them to every connected node
+
+            // Subscribe to transaction events
+            byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, IxianHandler.getWalletStorage().getPrimaryAddress());
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, IxianHandler.getWalletStorage().getPrimaryAddress());
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.balance, IxianHandler.getWalletStorage().getPrimaryAddress());
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+
+            List<byte[]> match_addresses = FriendList.getHiddenMatchAddresses();
+            if (match_addresses != null)
+            {
+                foreach (var address in match_addresses)
+                {
+                    event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, address);
+                    endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+                }
             }
         }
 
@@ -125,22 +176,14 @@ namespace SPIXI.Network
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                                         Node.primaryS2Address = endpoint.getFullAddress(true);
                                         // TODO TODO do not set if directly connectable
-                                        PresenceList.myPublicAddress = endpoint.getFullAddress(true);
+                                        IxianHandler.publicIP = endpoint.address;
+                                        IxianHandler.publicPort = endpoint.incomingPort;
                                         PresenceList.forceSendKeepAlive = true;
+                                        Logging.info("Forcing KA from networkprotocol");
                                     }
                                 }
 
-                                // Get presences
-                                endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
-                                endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
-
-                                // Subscribe to transaction events
-                                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, IxianHandler.getWalletStorage().getPrimaryAddress());
-                                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-                                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, IxianHandler.getWalletStorage().getPrimaryAddress());
-                                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-                            
+                                subscribeToEvents(endpoint);
                             }
                         }
                         break;
@@ -170,6 +213,7 @@ namespace SPIXI.Network
                         {
                             byte[] address = null;
                             bool updated = PresenceList.receiveKeepAlive(data, out address, endpoint);
+                            Logging.info("Received KA for " + Base58Check.Base58CheckEncoding.EncodePlain(address));
                         }
                         break;
 
@@ -293,7 +337,7 @@ namespace SPIXI.Network
 
                                             case ProtocolByeCode.notConnectable: // not connectable from the internet
                                                 Logging.error("This node must be connectable from the internet, to connect to the network.");
-                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + NetworkServer.getListeningPort() + ".");
+                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + IxianHandler.publicPort + ".");
                                                 NetworkServer.connectable = false;
                                                 break;
 

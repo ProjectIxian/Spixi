@@ -14,9 +14,6 @@ namespace SPIXI.Meta
         // Use the SPIXI-specific wallet storage code
         public static WalletStorage walletStorage;
 
-        // Store the in-memory friendlist here
-        public static SPIXI.FriendList friendList;
-
         // Used for all local data storage
         public static SPIXI.Storage.LocalStorage localStorage;
 

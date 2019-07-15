@@ -56,16 +56,6 @@ namespace SPIXI
         private void onLoad()
         {
             Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
-            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
-
-            if (friend.online)
-            {
-                Utils.sendUiCommand(webView, "showIndicator", "1");
-            }
-            else
-            {
-                Utils.sendUiCommand(webView, "showIndicator", "0");
-            }
 
             updateScreen();
         }
@@ -229,6 +219,17 @@ namespace SPIXI
         private void updateScreen()
         {
             Logging.info("Updating contact details");
+
+            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
+
+            if (friend.online)
+            {
+                Utils.sendUiCommand(webView, "showIndicator", "true");
+            }
+            else
+            {
+                Utils.sendUiCommand(webView, "showIndicator", "false");
+            }
 
             loadTransactions();
         }

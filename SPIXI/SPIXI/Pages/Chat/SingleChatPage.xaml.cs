@@ -168,8 +168,6 @@ namespace SPIXI
             loadMessages();
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
-            //webView.Eval("setSubtitle(\"online\")");
-
             // Execute timer-related functionality immediately
             updateScreen();
 
@@ -230,6 +228,10 @@ namespace SPIXI
             message.data = spixi_message.getBytes();
 
             string relayip = friend.searchForRelay();
+            if(relayip == null)
+            {
+                Logging.error("Couldn't find relay node for contact.");
+            }
             StreamProcessor.sendMessage(message, relayip);
 
             // Finally, add the text bubble visually
@@ -346,13 +348,15 @@ namespace SPIXI
         {
             Logging.info("Updating chat");
 
+            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
+
             if (friend.online)
             {
-                Utils.sendUiCommand(webView, "showIndicator", "1");
+                Utils.sendUiCommand(webView, "showIndicator", "true");
             }
             else
             {
-                Utils.sendUiCommand(webView, "showIndicator", "0");
+                Utils.sendUiCommand(webView, "showIndicator", "false");
             }
 
             // Show connectivity warning bar

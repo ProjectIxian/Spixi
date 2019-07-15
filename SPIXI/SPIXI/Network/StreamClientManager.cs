@@ -218,6 +218,7 @@ namespace SPIXI
         // Returns null if connection failed
         public static NetworkClient connectTo(string host, byte[] wallet_address)
         {
+            // TODO check if already connected
             Logging.info(String.Format("Connecting to S2 node: {0}", host));
 
             if (host == null || host.Length < 3)
@@ -245,28 +246,31 @@ namespace SPIXI
 
             string resolved_host = string.Format("{0}:{1}", resolved_server_name, server[1]);
 
-            // Verify against the publicly disclosed ip
-            // Don't connect to self
-            if (resolved_server_name.Equals(IxianHandler.publicIP, StringComparison.Ordinal))
+            if (NetworkServer.isRunning())
             {
-                if (server[1].Equals(string.Format("{0}", NetworkServer.getListeningPort()), StringComparison.Ordinal))
-                {
-                    Logging.info(string.Format("Skipping connection to public self seed node {0}", host));
-                    return null;
-                }
-            }
-
-            // Get all self addresses and run through them
-            List<string> self_addresses = CoreNetworkUtils.GetAllLocalIPAddresses();
-            foreach (string self_address in self_addresses)
-            {
+                // Verify against the publicly disclosed ip
                 // Don't connect to self
-                if (resolved_server_name.Equals(self_address, StringComparison.Ordinal))
+                if (resolved_server_name.Equals(IxianHandler.publicIP, StringComparison.Ordinal))
                 {
-                    if (server[1].Equals(string.Format("{0}", NetworkServer.getListeningPort()), StringComparison.Ordinal))
+                    if (server[1].Equals(string.Format("{0}", IxianHandler.publicPort), StringComparison.Ordinal))
                     {
-                        Logging.info(string.Format("Skipping connection to self seed node {0}", host));
+                        Logging.info(string.Format("Skipping connection to public self seed node {0}", host));
                         return null;
+                    }
+                }
+
+                // Get all self addresses and run through them
+                List<string> self_addresses = CoreNetworkUtils.GetAllLocalIPAddresses();
+                foreach (string self_address in self_addresses)
+                {
+                    // Don't connect to self
+                    if (resolved_server_name.Equals(self_address, StringComparison.Ordinal))
+                    {
+                        if (server[1].Equals(string.Format("{0}", IxianHandler.publicPort), StringComparison.Ordinal))
+                        {
+                            Logging.info(string.Format("Skipping connection to self seed node {0}", host));
+                            return null;
+                        }
                     }
                 }
             }
@@ -346,6 +350,30 @@ namespace SPIXI
             {
                 return streamClients.Count();
             }
+        }
+
+        public static bool sendToClient(string neighbor, ProtocolMessageCode code, byte[] data, byte[] helper_data)
+        {
+            NetworkClient client = null;
+            lock (streamClients)
+            {
+                foreach (NetworkClient c in streamClients)
+                {
+                    if (c.getFullAddress() == neighbor)
+                    {
+                        client = c;
+                        break;
+                    }
+                }
+            }
+
+            if (client != null)
+            {
+                client.sendData(code, data, helper_data);
+                return true;
+            }
+
+            return false;
         }
     }
 }

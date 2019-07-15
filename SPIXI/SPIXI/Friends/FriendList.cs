@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Network;
 using SPIXI.Meta;
+using SPIXI.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace SPIXI
     {
         public static List<Friend> friends = new List<Friend>();
 
+        private static List<byte[]> cachedHiddenMatchAddresses = new List<byte[]>();
 
         public static bool saveToStorage()
         {
@@ -102,6 +104,11 @@ namespace SPIXI
 
             // Add new friend to the friendlist
             friends.Add(new Friend(wallet_address, public_key, name, approved));
+
+            cachedHiddenMatchAddresses = null;
+
+            ProtocolMessage.resubscribeEvents();
+
             return true;
         }
 
@@ -157,6 +164,8 @@ namespace SPIXI
             bool stat = friends.Remove(friend);
             if (!stat)
                 return stat;
+
+            cachedHiddenMatchAddresses = null;
 
             // Write changes to storage
             stat = saveToStorage();
@@ -239,16 +248,13 @@ namespace SPIXI
                 // Go through each friend and check for the pubkey in the PL
                 foreach (Friend friend in friends)
                 {
-                    byte[] pubkey = findContactPubkey(friend.walletAddress);
-                    if (pubkey == null)
+                    if (PresenceList.getPresenceByAddress(friend.walletAddress) != null)
                     {
-                        // No pubkey found, means contact is offline
+                        friend.online = true;
+                    }else
+                    {
                         friend.online = false;
-                        continue;
                     }
-
-                    friend.online = true;
-
                 }
             }
         }
@@ -268,5 +274,31 @@ namespace SPIXI
             return unreadCount;
         }
 
+        public static List<byte[]> getHiddenMatchAddresses()
+        {
+            if(cachedHiddenMatchAddresses != null)
+            {
+                return cachedHiddenMatchAddresses;
+            }
+
+            lock (friends)
+            {
+                if(friends.Count() == 0)
+                {
+                    return null;
+                }
+
+                AddressClient ac = new AddressClient();
+                foreach (var friend in friends)
+                {
+                    ac.addAddress(friend.walletAddress);
+                }
+
+                Random rnd = new Random();
+                cachedHiddenMatchAddresses = ac.generateHiddenMatchAddresses(rnd, CoreConfig.matcherBytesPerAddress);
+
+                return cachedHiddenMatchAddresses;
+            }
+        }
     }
 }

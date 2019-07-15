@@ -33,7 +33,7 @@
             </div>
             <div class="col-10"></div>
 
-            <div class="spixi-toolbar-contact-name" id="nickname">Unknown</div>
+            <div class="spixi-toolbar-contact-name" id="nickname"></div>
             <div class="spixi-toolbar-contact-status" id="status"></div>
         </div>
         <!-- End Toolbar Contact -->
@@ -196,10 +196,11 @@
         }
 
         function showIndicator(ind) {
-            if (ind == "1") {
+            if (ind == "true") {
                 document.getElementById("status").innerHTML = "online";
+            } else {
+                document.getElementById("status").innerHTML = "offline";
             }
-            document.getElementById("status").innerHTML = "offline";
         }
 
         function clearRecentActivity() {

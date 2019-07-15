@@ -33,8 +33,8 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-8">
-                    <div id="title" class="spixi-toolbar-chat-name">Andrew</div>
-                    <div class="spixi-toolbar-chat-status">last seen online</div>                    
+                    <div id="title" class="spixi-toolbar-chat-name"></div>
+                    <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
                 <div class="col-2 spixi-center">
                     
@@ -107,9 +107,7 @@
     } 
     
     function htmlEscape(str) {
-        return str;
         return str
-            .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;')
             .replace(/</g, '&lt;')
@@ -224,7 +222,11 @@
     function addThem(avatar, text, time) {
         addText(avatar, text, time, "spixi-bubble");
     }    
-    
+
+    function addPaymentRequest(msg) {
+        addThem("", "Please send me " + msg + "Ixis.", "");
+    }
+
     function setNickname(nick) {
         document.getElementById("title").innerHTML = nick;
         document.getElementById("contactrequesttitle").innerHTML = nick + " has sent a CONTACT REQUEST";
@@ -261,6 +263,15 @@
         document.getElementById("chatholder").style.height = "102px";
         document.getElementById("chatattachbar").style.bottom = "0px";        
     }
+
+    function showIndicator(ind) {
+        if (ind == "true") {
+            document.getElementById("status").innerHTML = "online";
+        } else {
+            document.getElementById("status").innerHTML = "offline";
+        }
+    }
+
 
     var pinging = false;
     function ping() {

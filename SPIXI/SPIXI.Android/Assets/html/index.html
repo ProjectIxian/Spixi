@@ -360,6 +360,15 @@
     
     var homeModal = document.getElementById('homeMenuModal');
 
+    function htmlEscape(str) {
+        return str
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\//g, '&#x2F;');
+    }
+
     function onMainMenuAction() 
     {
         leftSidebar.style.display = "block";
@@ -579,19 +588,22 @@
     // Adds a contact to the contacts page
     function addContact(wal, name, avatar, online)
     {
+        name = htmlEscape(name);
+        avatar = htmlEscape(avatar);
+
         if (searchingContacts == true) {
             return;
         }
-        var indicator = "none";
-        if (online == true) {
-            indicator = "block";
+        var indicator = "offline";
+        if (online == "true") {
+            indicator = "online";
         }
 
         var contactsNode = document.getElementById("contactslist");
                 
         var contactEntry = document.createElement("div");
-        contactEntry.className = "spixi-list-item spixi-list-item-row";
-        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+        contactEntry.className = "spixi-list-item spixi-list-item-row " + indicator;
+        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
                 
         contactsNode.appendChild(contactEntry);                             
     }    
@@ -617,17 +629,32 @@
         
         paymentsNode.appendChild(paymentEntry);        
     }
+
+    // Clears all chats from chats page
+    function clearChats() {
+        document.getElementById("chatlist").innerHTML = "";
+    }
     
     // Adds a chat
     function addChat(wallet, from, timestamp, avatar, online, excerpt_msg)
     {
+        from = htmlEscape(from);
+        timestamp = htmlEscape(timestamp);
+        avatar = htmlEscape(avatar);
+        excerpt_msg = htmlEscape(excerpt_msg);
+
         var excerpt = excerpt_msg;
       
+        var indicator = "offline";
+        if (online == "true") {
+            indicator = "online";
+        }
+
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="'+avatar+'"/></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">'+from+'</div><div class="spixi-list-item-subtitle">'+excerpt+'</div></div><div class="col-3 spixi-list-item-right">'+timestamp+'</div></div></div>';
-        
+        readmsg.innerHTML = '<div class="spixi-list-item ' + indicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar +'"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">'+from+'</div><div class="spixi-list-item-subtitle">'+excerpt+'</div></div><div class="col-3 spixi-list-item-right">'+timestamp+'</div></div></div>';
+
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
         document.getElementById("chat_no_activity").style.display = 'none';
@@ -715,8 +742,8 @@ triggerOnTouchEnd:true,
 
         clearContacts();
         addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
-        addContact("000","Abc","img/spixiavatar.png", true);
-        addContact("000","ZAbc","img/spixiavatar.png", true);
+        addContact("000","Abc","img/spixiavatar.png", "true");
+        addContact("000","ZAbc","img/spixiavatar.png", "true");
         addContact("000","XAbc","img/spixiavatar.png", false);
         addContact("000","CAbc","img/spixiavatar.png", true);
         addContact("000","VAbc","img/spixiavatar.png", false);

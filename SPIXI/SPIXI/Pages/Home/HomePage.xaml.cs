@@ -404,6 +404,10 @@ namespace SPIXI
                 int umc = friend.getUnreadMessageCount();
                 chk += (ulong)mc;
                 chk += (ulong)umc;
+                if (friend.online)
+                {
+                    chk += 1;
+                }
             }
 
             if (lastChatsChange == chk)
@@ -416,7 +420,7 @@ namespace SPIXI
             lastChatsChange = chk;
 
 
-            //webView.Eval("clearUnreadActivity()");
+            webView.Eval("clearChats()");
 
             foreach (Friend friend in FriendList.friends)
             {
