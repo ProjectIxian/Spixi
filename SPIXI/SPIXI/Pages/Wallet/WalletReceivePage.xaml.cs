@@ -56,7 +56,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "addRecipient", Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress), local_friend.nickname);
+                Utils.sendUiCommand(webView, "addRecipient", local_friend.nickname, Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress));
             }
         }
 
@@ -72,6 +72,12 @@ namespace SPIXI
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
+            else if (current_url.Equals("ixian:pick", StringComparison.Ordinal))
+            {
+                var recipientPage = new WalletRecipientPage();
+                recipientPage.pickSucceeded += HandlePickSucceeded;
+                Navigation.PushModalAsync(recipientPage);
+            }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
                 DisplayAlert("SPIXI", "Please type an amount.", "OK");
@@ -79,12 +85,15 @@ namespace SPIXI
             else if (current_url.Contains("ixian:sendrequest:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:sendrequest:" }, StringSplitOptions.None);
-                string amount = split[1];
-                onRequest(amount);
-            }
-            else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
-            {
-                //Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
+
+                // Extract all addresses and amounts
+                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
+
+                string[] split_address = addresses_split[0].Split(':');
+
+                string recipient = split_address[0];
+                string amount = split_address[1];
+                onRequest(recipient, amount);
             }
             else
             {
@@ -96,29 +105,42 @@ namespace SPIXI
 
         }
 
-        private void onRequest(string amount)
+        private void onRequest(string recipient, string amount)
         {
-            // Make sure we have a valid friend to send to
-            if (local_friend == null)
-            {
-                return;
-            }
-
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
-            message.recipient = local_friend.walletAddress;
+            message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
             message.sender = Node.walletStorage.getPrimaryAddress();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
-            string relayip = local_friend.searchForRelay();
+            string relayip = FriendList.getRelayHostname(message.recipient);
             StreamProcessor.sendMessage(message, relayip);
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
+        }
+
+        private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        {
+            string wallets_to_send = e.Value;
+
+            string[] wallet_arr = wallets_to_send.Split('|');
+
+            foreach (string wallet_to_send in wallet_arr)
+            {
+                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+
+                string nickname = wallet_to_send;
+                if (friend != null)
+                    nickname = friend.nickname;
+
+                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+            }
+            Navigation.PopModalAsync();
         }
     }
 }

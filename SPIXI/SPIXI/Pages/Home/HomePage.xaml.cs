@@ -27,6 +27,8 @@ namespace SPIXI
         private ulong lastChatsChange = 0;
         private ulong lastTransactionChange = 9999;
 
+        private string currentTab = "tab1";
+
 		public HomePage ()
 		{
 			InitializeComponent ();
@@ -127,7 +129,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:lock", StringComparison.Ordinal))
             {
-             //   prepBackground();
+                //   prepBackground();
                 Navigation.PushAsync(new SetLockPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:activity", StringComparison.Ordinal))
@@ -154,7 +156,7 @@ namespace SPIXI
 
                 Friend friend = FriendList.getFriend(id_bytes);
 
-                if(friend == null)
+                if (friend == null)
                 {
                     e.Cancel = true;
                     return;
@@ -213,6 +215,10 @@ namespace SPIXI
                 }
 
                 Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+            }
+            else if (current_url.Contains("ixian:tab:"))
+            {
+                currentTab = current_url.Split(new string[] { "ixian:tab:" }, StringSplitOptions.None)[1];
             }
             else
             {
@@ -306,6 +312,8 @@ namespace SPIXI
             lastChatsChange = 0;
             lastTransactionChange = 0;
 
+            Utils.sendUiCommand(webView, "selectTab", currentTab);
+
             Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
             updateScreen();
@@ -390,7 +398,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online);
+                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online, friend.getUnreadMessageCount().ToString());
             }
         }
 
@@ -398,16 +406,29 @@ namespace SPIXI
         {
             // Check if there are any changes from last time first
             ulong chk = 0;
+            bool unread = false;
             foreach (Friend friend in FriendList.friends)
             {
                 int mc = friend.getMessageCount();
                 int umc = friend.getUnreadMessageCount();
+                if(umc > 0)
+                {
+                    unread = true;
+                }
                 chk += (ulong)mc;
                 chk += (ulong)umc;
                 if (friend.online)
                 {
                     chk += 1;
                 }
+            }
+
+            if(unread)
+            {
+                Utils.sendUiCommand(webView, "setUnreadIndicator", "true");
+            }else
+            {
+                Utils.sendUiCommand(webView, "setUnreadIndicator", "false");
             }
 
             if (lastChatsChange == chk)
@@ -420,7 +441,8 @@ namespace SPIXI
             lastChatsChange = chk;
 
 
-            webView.Eval("clearChats()");
+            Utils.sendUiCommand(webView, "clearChats");
+            Utils.sendUiCommand(webView, "clearUnreadActivity");
 
             foreach (Friend friend in FriendList.friends)
             {
@@ -440,14 +462,10 @@ namespace SPIXI
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
 
-                    /*if (friend.checkLastUnread())
-                    {
-                        webView.Eval(string.Format("addUnreadActivity('{0}','{1}','{2}','{3}',{4},'{5}')",
-                            Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
-                    }*/
-
-
                     Utils.sendUiCommand(webView, "addChat",
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount().ToString());
+
+                    Utils.sendUiCommand(webView, "addUnreadActivity",
                         Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);
                 }
 
@@ -471,12 +489,6 @@ namespace SPIXI
                         excerpt = "Payment Sent";
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
-
-                    /*if (friend.checkLastUnread())
-                    {
-                        webView.Eval(string.Format("addUnreadActivity('{0}','{1}','{2}','{3}',{4},'{5}')", 
-                            friend.wallet_address, friend.nickname, lastmsg.timestamp, "avatar.png", str_online, excerpt));
-                    }*/
 
                     Utils.sendUiCommand(webView, "addChat",
                         Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);

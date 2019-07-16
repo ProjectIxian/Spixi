@@ -300,5 +300,13 @@ namespace SPIXI
                 return cachedHiddenMatchAddresses;
             }
         }
+
+        public static void requestAllFriendsPresences()
+        {
+            foreach(var entry in friends)
+            {
+                CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.updatePresence, entry.walletAddress, 0, null);
+            }
+        }
     }
 }

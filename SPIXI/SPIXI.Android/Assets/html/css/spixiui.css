@@ -326,7 +326,9 @@ a:active {
 .spixi-footer-row a {
  /*   color:#440024;*/
     text-decoration: none;
-
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 .spixi-footer-row a:hover {
     color:#fff;
@@ -358,6 +360,24 @@ a:active {
     font-size: 16pt;
     height: 26px;
 }
+
+.spixi-footer-chat-unread-indicator {
+    display: none;
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+    box-sizing: border-box;
+    background: #66bced;
+    border: 1px solid white;
+    position: relative;
+    margin: -17px auto;
+    right: -6px;
+}
+
+.unread .spixi-footer-chat-unread-indicator {
+    display: block;
+}
+
 
 
 /* ToastBar */
@@ -668,7 +688,14 @@ a:active {
     width: 20px;
     height: 50px;
     background-color: #dbdee1;
+    margin-right: 10px;
 }
+
+.spixi-expansion .spixi-expansion-left
+{
+    margin-right: 0px;
+}
+
 .spixi-expansion-left.active {
     background-color: #ad1457;
 }
@@ -828,6 +855,7 @@ a:active {
     width: 100%;
     height: 60px;
     background-color: #eef2f5;
+    overflow: hidden;
 }
 .spixi-list-item:hover {
     background-color: #dae2e9;
@@ -850,6 +878,15 @@ a:active {
     border-radius: 40px;
     margin-top: 10px;
     margin-left: 0px;
+}
+
+#exp2-contents .spixi-list-item-avatar
+{
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    margin-top: 15px;
+    margin-left: -5px;
 }
 
 .spixi-list-item-avatar.selected {
@@ -1024,13 +1061,13 @@ a:active {
     width: 100%;
     height: 45px;
     margin-top: 6px;
-    padding: 12px 14px;
-    padding-right: 40px;
+    padding: 0px 40px 0px 14px;
     border: 1px solid #888;
     border-radius: 25px;
     background-color: #FFF;
     font-size: 16px;
     outline: none;
+    vertical-align: middle;
 }
 
 #chatattachbar {
@@ -1056,6 +1093,7 @@ a:active {
     font-size: 16pt;
     text-align: left;
     color: #1693da;
+    vertical-align: middle;
 }
 
 .chatattachsymbol {
@@ -1090,10 +1128,33 @@ a:active {
     position: relative;
     margin-top: -10px;
     margin-left: 30px;
-    z-index: 100;
 }
 
 .online .spixi-friend-status-indicator {
+    display: block;
+}
+
+.spixi-chat-unread-indicator {
+    display: none;
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+    background: #c2185b;
+    float: right;
+    position: relative;
+    margin-top: -15px;
+    margin-right: 20px;
+}
+
+#chatlist .spixi-chat-unread-indicator {
+    float: none;
+    display: inline-block;
+    position: static;
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+.unread .spixi-chat-unread-indicator {
     display: block;
 }
 

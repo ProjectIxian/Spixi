@@ -187,7 +187,7 @@
                     <div class="spixi-expansion-text">Recent Activity</div>
                     <div class="spixi-expansion-right"><i id="exp3-icon" class="fa fa-minus"></i></div>
                 </div>
-                <div id="exp3-contents" class="spixi-expansion-middle container" style="display: block;">
+                <div id="exp3-contents" class="spixi-expansion-middle" style="display: block;">
                     <div id="paymentlist">
                                         
                     </div>                   
@@ -230,32 +230,32 @@
             <div class="" style="width:90%; margin: auto;">
             <ul class="nav nav-tabs row spixi-footer-row">
                 <li id="tab1" class="col-3 spixi-tab active">
-                                  <a data-toggle="tab" href="#home" >
-                                      <div class="spixi-tab-icon"><i class="fa fa-home"></i></div>
-                                      home
-                                  <div class="tab_placeholder"></div>
-                                  </a>
+                    <a data-toggle="tab" href="#home" >
+                        <div class="spixi-tab-icon"><i class="fa fa-home"></i></div>
+                        home
+                        <div class="tab_placeholder"></div>
+                    </a>
                 </li>
                 <li id="tab2" class="col-3 spixi-tab">
-                                  <a data-toggle="tab" href="#chats" >
-                                      <div class="spixi-tab-icon"><i class="fa fa-comment"></i></div>
-                                      chats
-                                  <div class="tab_placeholder"></div>
-                                  </a>  
+                    <a data-toggle="tab" href="#chats" >
+                        <div class="spixi-tab-icon"><i class="fa fa-comment"></i><div class="spixi-footer-chat-unread-indicator"></div></div>
+                        chats
+                        <div class="tab_placeholder"></div>
+                    </a>  
                 </li>
                 <li id="tab3" class="col-3 spixi-tab">
-                                  <a data-toggle="tab" href="#wallet" >
-                                      <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
-                                      wallet
-                                  <div class="tab_placeholder"></div>
-                                  </a>
+                    <a data-toggle="tab" href="#wallet" >
+                        <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
+                        wallet
+                        <div class="tab_placeholder"></div>
+                    </a>
                 </li>    
                 <li id="tab4" class="col-3 spixi-tab">
-                                  <a data-toggle="tab" href="#contacts" >
-                                      <div class="spixi-tab-icon"><i class="fa fa-address-book"></i></div>
-                                      contacts
-                                  <div class="tab_placeholder"></div>
-                                  </a>
+                    <a data-toggle="tab" href="#contacts" >
+                        <div class="spixi-tab-icon"><i class="fa fa-address-book"></i></div>
+                        contacts
+                        <div class="tab_placeholder"></div>
+                    </a>
                 </li>      
             </ul> 
             </div>
@@ -561,7 +561,7 @@
         // Go through each element and filter out non-matching elements
         for (i = 0; i < c_items.length; i++) {
             row = c_items[i].getElementsByTagName("div")[0];
-            b = row.getElementsByTagName("div")[1];
+            b = row.getElementsByTagName("div")[2];
             a = b.getElementsByTagName("div")[0];
 
             if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
@@ -586,7 +586,7 @@
     }
     
     // Adds a contact to the contacts page
-    function addContact(wal, name, avatar, online)
+    function addContact(wal, name, avatar, online, unread)
     {
         name = htmlEscape(name);
         avatar = htmlEscape(avatar);
@@ -594,16 +594,22 @@
         if (searchingContacts == true) {
             return;
         }
-        var indicator = "offline";
+
+        var indicator = " offline";
         if (online == "true") {
-            indicator = "online";
+            indicator = " online";
+        }
+
+        var unreadIndicator = "";
+        if (unread > 0) {
+            unreadIndicator = " unread";
         }
 
         var contactsNode = document.getElementById("contactslist");
                 
         var contactEntry = document.createElement("div");
-        contactEntry.className = "spixi-list-item spixi-list-item-row " + indicator;
-        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="'+ avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+        contactEntry.className = "spixi-list-item spixi-list-item-row" + indicator + unreadIndicator;
+        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div><div class="spixi-chat-unread-indicator"></div></div></div></a>';
                 
         contactsNode.appendChild(contactEntry);                             
     }    
@@ -625,7 +631,7 @@
                 
         var paymentEntry = document.createElement("div");
         paymentEntry.className = "spixi-list-item";
-        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
         
         paymentsNode.appendChild(paymentEntry);        
     }
@@ -636,7 +642,7 @@
     }
     
     // Adds a chat
-    function addChat(wallet, from, timestamp, avatar, online, excerpt_msg)
+    function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread)
     {
         from = htmlEscape(from);
         timestamp = htmlEscape(timestamp);
@@ -645,21 +651,62 @@
 
         var excerpt = excerpt_msg;
       
-        var indicator = "offline";
+        var indicator = " offline";
         if (online == "true") {
-            indicator = "online";
+            indicator = " online";
         }
+
+        var unreadIndicator = "";
+        if (unread > 0) {
+            unreadIndicator = " unread";
+        }
+
 
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item ' + indicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar +'"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">'+from+'</div><div class="spixi-list-item-subtitle">'+excerpt+'</div></div><div class="col-3 spixi-list-item-right">'+timestamp+'</div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt +'</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>'+timestamp+'</div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
         document.getElementById("chat_no_activity").style.display = 'none';
     }
 
+    function setUnreadIndicator(indicator) {
+        if (indicator == "true") {
+            document.getElementById("tab2").firstElementChild.className = "unread";
+        } else {
+            document.getElementById("tab2").firstElementChild.className = "";
+        }
+    }
+
+    // Clears all unread activity from main page
+    function clearUnreadActivity() {
+        document.getElementById("exp2-contents").innerHTML = "";
+    }
+
+    function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg) {
+        from = htmlEscape(from);
+        timestamp = htmlEscape(timestamp);
+        avatar = htmlEscape(avatar);
+        excerpt_msg = htmlEscape(excerpt_msg);
+
+        var excerpt = excerpt_msg;
+
+        var indicator = " offline";
+        if (online == "true") {
+            indicator = " online";
+        }
+
+        var chatsNode = document.getElementById("exp2-contents");
+        var readmsg = document.createElement("a");
+        readmsg.href = "ixian:chat:" + wallet;
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-2 spixi-list-item-right">' + timestamp + '</div></div></div>';
+
+        chatsNode.appendChild(readmsg);
+        document.getElementById("chatlist").style.display = 'block';
+        document.getElementById("chat_no_activity").style.display = 'none';
+    }
     
     
     // Function to toggle tab's active color    
@@ -670,12 +717,11 @@
         document.getElementById("tab3").className = "col-3 spixi-tab";
         document.getElementById("tab4").className = "col-3 spixi-tab";
                 
-        var tab=$(this).children('a').attr('href');
-
-        var tabid = e.target.parentNode.id;
         var cl = "active";                
-        e.target.parentElement.className = "col-3 spixi-tab " + cl; 
-                         
+        e.target.parentElement.className = "col-3 spixi-tab " + cl;
+
+        var tabid = e.target.parentElement.id;
+        location.href = "ixian:tab:" + tabid;
     });
 
     
@@ -732,7 +778,11 @@ swipeStatus:function(event, phase, direction, distance)
 triggerOnTouchEnd:true,
     threshold:100
 });
-    
+
+
+    function selectTab(tab) {
+        $("#" + tab + " > a").tab('show');
+    }
     
     
     function test()
@@ -742,9 +792,9 @@ triggerOnTouchEnd:true,
 
         clearContacts();
         addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
-        addContact("000","Abc","img/spixiavatar.png", "true");
+        addContact("000","Abc","img/spixiavatar.png", "true", 1);
         addContact("000","ZAbc","img/spixiavatar.png", "true");
-        addContact("000","XAbc","img/spixiavatar.png", false);
+        addContact("000","XAbc","img/spixiavatar.png", false, 5);
         addContact("000","CAbc","img/spixiavatar.png", true);
         addContact("000","VAbc","img/spixiavatar.png", false);
         addContact("000","BAbc","img/spixiavatar.png", false);
@@ -756,8 +806,8 @@ triggerOnTouchEnd:true,
         addPaymentActivity('113','Payment Sent', '1h ago', '43.34246721');
         addPaymentActivity('114','Payment Received', '2h ago', '65.00000000');
         
-        addChat("100", "One", "2hrs ago", "img/spixiavatar.png", true, "Unread message");
-        addChat("101", "Two", "3hrs ago", "img/spixiavatar.png", false, "Unread 1message");
+        addChat("100", "One", "2hrs ago", "img/spixiavatar.png", "true", "Unread message", 1);
+        addChat("101", "Two", "3hrs ago", "img/spixiavatar.png", false, "Unread 1message", 1);
         addChat("102", "Three", "2 days ago", "img/spixiavatar.png", false, "Unread 2message");
 
     }

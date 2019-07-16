@@ -173,6 +173,10 @@ namespace SPIXI.Network
                                 {
                                     if (StreamClientManager.countStreamClients() == 1)
                                     {
+                                        if(Node.primaryS2Address == "")
+                                        {
+                                            FriendList.requestAllFriendsPresences();
+                                        }
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
                                         Node.primaryS2Address = endpoint.getFullAddress(true);
                                         // TODO TODO do not set if directly connectable
@@ -196,16 +200,16 @@ namespace SPIXI.Network
 
                     case ProtocolMessageCode.s2keys:
                         {
-                            Console.WriteLine("NET: Receiving S2 keys!");
+                            Logging.info("NET: Receiving S2 keys!");
                     //        StreamProcessor.receivedKeys(data, socket);
                         }
                         break;
 
                     case ProtocolMessageCode.updatePresence:
                         {
-                            Console.WriteLine("NET: Receiving presence list update");
+                            Logging.info("NET: Receiving presence list update");
                             // Parse the data and update entries in the presence list
-                            PresenceList.updateFromBytes(data);
+                            Presence p = PresenceList.updateFromBytes(data);
                         }
                         break;
 
@@ -213,7 +217,6 @@ namespace SPIXI.Network
                         {
                             byte[] address = null;
                             bool updated = PresenceList.receiveKeepAlive(data, out address, endpoint);
-                            Logging.info("Received KA for " + Base58Check.Base58CheckEncoding.EncodePlain(address));
                         }
                         break;
 
@@ -225,6 +228,7 @@ namespace SPIXI.Network
                                 {
                                     int walletLen = reader.ReadInt32();
                                     byte[] wallet = reader.ReadBytes(walletLen);
+
                                     Presence p = PresenceList.getPresenceByAddress(wallet);
                                     if (p != null)
                                     {

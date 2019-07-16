@@ -17,7 +17,6 @@ namespace SPIXI
     public partial class SingleChatPage : SpixiContentPage
     {
         private Friend friend = null;
-        private static Timer chatLoopTimer;
 
         private int lastMessageCount = 0;
         private bool connectedToNode = false;
