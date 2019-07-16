@@ -4,6 +4,7 @@ using SPIXI.Meta;
 using SPIXI.Network;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SPIXI
@@ -303,9 +304,21 @@ namespace SPIXI
 
         public static void requestAllFriendsPresences()
         {
-            foreach(var entry in friends)
+            lock (friends)
             {
-                CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.updatePresence, entry.walletAddress, 0, null);
+                foreach (var entry in friends)
+                {
+                    using (MemoryStream m = new MemoryStream(1280))
+                    {
+                        using (BinaryWriter writer = new BinaryWriter(m))
+                        {
+                            writer.Write(entry.walletAddress.Length);
+                            writer.Write(entry.walletAddress);
+
+                            CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence, m.ToArray(), 0, null);
+                        }
+                    }
+                }
             }
         }
     }
