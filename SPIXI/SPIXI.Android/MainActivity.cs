@@ -1,16 +1,9 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using System.Threading.Tasks;
 using System.IO;
 using Android.Content;
-using Xamarin.Forms;
-using SPIXI.Droid.Services;
 using Plugin.LocalNotifications;
 //using SPIXI.Notifications;
 
@@ -34,7 +27,7 @@ namespace SPIXI.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
-            DLT.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
+            IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
 
             prepareBackgroundService();
         }

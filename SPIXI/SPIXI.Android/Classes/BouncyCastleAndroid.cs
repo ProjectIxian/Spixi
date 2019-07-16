@@ -1,19 +1,17 @@
-﻿using DLT.Meta;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Crypto.Engines;
 using System.Security.Cryptography;
 using Java.Security;
 using Java.Security.Spec;
 using System.Text;
 using Javax.Crypto;
-using DLT;
+using IXICore;
+using IXICore.Meta;
 
 namespace CryptoLibs
 {
