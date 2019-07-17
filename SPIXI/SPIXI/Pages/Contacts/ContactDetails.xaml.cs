@@ -155,7 +155,7 @@ namespace SPIXI
         {
             if (FriendList.removeFriend(friend) == true)
             {
-                DisplayAlert("Removed", "Contact removed from list.", "OK");
+                displaySpixiAlert("Removed", "Contact removed from list.", "OK");
             }
         }
 
@@ -164,7 +164,7 @@ namespace SPIXI
             // Remove history file
             if(friend.deleteHistory())
             {
-                DisplayAlert("Deleted", "Message history deleted.", "OK");
+                displaySpixiAlert("Deleted", "Message history deleted.", "OK");
             }
         }
 

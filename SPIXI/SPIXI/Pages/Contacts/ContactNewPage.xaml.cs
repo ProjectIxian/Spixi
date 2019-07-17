@@ -68,7 +68,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI Account", "Please type a wallet address.", "OK");
+                displaySpixiAlert("SPIXI Account", "Please type a wallet address.", "OK");
             }
             else if (current_url.Contains("ixian:request:"))
             {
@@ -140,13 +140,13 @@ namespace SPIXI
         {
             if(Address.validateChecksum(wal) == false)
             {
-                DisplayAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
+                displaySpixiAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
                 return;
             }
 
             if(FriendList.getFriend(wal) != null)
             {
-                DisplayAlert("Already exists", "This contact is already in your contacts list.", "OK");
+                displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace SPIXI
             byte[] pubkey = FriendList.findContactPubkey(wal);
             if(pubkey == null)
             {
-                DisplayAlert("Contact does not exist", "Try again later.", "OK");
+                displaySpixiAlert("Contact does not exist", "Try again later.", "OK");
                 return;
             }
 

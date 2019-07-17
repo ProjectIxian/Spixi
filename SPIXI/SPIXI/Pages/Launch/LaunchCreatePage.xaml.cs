@@ -52,7 +52,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI Account", "Please type your nickname.", "OK");
+                displaySpixiAlert("SPIXI Account", "Please type your nickname.", "OK");
             }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
@@ -83,7 +83,7 @@ namespace SPIXI
 
                 var filePath = Node.localStorage.getOwnAvatarPath();
 
-                //DisplayAlert("Alert", filePath, "OK");
+                //displaySpixiAlert("Alert", filePath, "OK");
 
                 FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
                 stream.CopyTo(fs);
@@ -147,7 +147,7 @@ namespace SPIXI
                         DependencyService.Get<IPowerManager>().ReleaseLock();
 
                     Device.BeginInvokeOnMainThread(() => {
-                        DisplayAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
+                        displaySpixiAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
                     });
                     return;
                 }

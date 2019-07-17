@@ -80,7 +80,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI", "Please type an amount.", "OK");
+                displaySpixiAlert("SPIXI", "Please type an amount.", "OK");
             }
             else if (current_url.Contains("ixian:sendrequest:"))
             {

@@ -87,11 +87,11 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI", "Please type a wallet address.", "OK");
+                displaySpixiAlert("SPIXI", "Please type a wallet address.", "OK");
             }
             else if (current_url.Equals("ixian:error2", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI", "Please type an amount.", "OK");
+                displaySpixiAlert("SPIXI", "Please type an amount.", "OK");
             }
             else if (current_url.Contains("ixian:send:"))
             {
@@ -117,13 +117,13 @@ namespace SPIXI
                     if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
                     {
                         e.Cancel = true;
-                        DisplayAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                        displaySpixiAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
                         return;
                     }
                     string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
                     if (amount_split.Length > 2)
                     {
-                        DisplayAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                        displaySpixiAlert("SPIXI", "Please type a correct decimal amount.", "OK");
                         e.Cancel = true;
                         return;
                     }
@@ -135,7 +135,7 @@ namespace SPIXI
 
                     if (_amount < (long)0)
                     {
-                        DisplayAlert("SPIXI", "Please type a positive amount.", "OK");
+                        displaySpixiAlert("SPIXI", "Please type a positive amount.", "OK");
                         e.Cancel = true;
                         return;
                     }

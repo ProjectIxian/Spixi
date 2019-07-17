@@ -101,7 +101,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:test", StringComparison.Ordinal))
             {
-                DisplayAlert("Test", current_url, "Ok");
+                displaySpixiAlert("Test", current_url, "Ok");
             }
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {

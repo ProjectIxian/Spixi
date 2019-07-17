@@ -42,13 +42,13 @@ namespace SPIXI
                 byte[] _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
                 if (Address.validateChecksum(_address) == false)
                 {
-                    DisplayAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                    displaySpixiAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
                     return;
                 }
                 string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
                 if (amount_split.Length > 2)
                 {
-                    DisplayAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                    displaySpixiAlert("SPIXI", "Please type a correct decimal amount.", "OK");
                     return;
                 }
 
@@ -56,7 +56,7 @@ namespace SPIXI
 
                 if (_amount < (long)0)
                 {
-                    DisplayAlert("SPIXI", "Please type a positive amount.", "OK");
+                    displaySpixiAlert("SPIXI", "Please type a positive amount.", "OK");
                     return;
                 }
 

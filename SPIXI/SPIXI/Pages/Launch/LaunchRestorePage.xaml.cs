@@ -80,12 +80,12 @@ namespace SPIXI
             catch (Exception ex)
             {
                 System.Console.WriteLine("Exception choosing file: " + ex.ToString());
-                await DisplayAlert("Error", "Cannot select file", "OK");
+                await displaySpixiAlert("Error", "Cannot select file", "OK");
             }
 
             if(_data == null)
             {
-                await DisplayAlert("Error", "Cannot read file", "OK");
+                await displaySpixiAlert("Error", "Cannot read file", "OK");
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace SPIXI
             catch (Exception ex)
             {
                 Console.WriteLine("Exception caught in process: {0}", ex);
-                await DisplayAlert("Error", "Cannot prepare wallet file", "OK");
+                await displaySpixiAlert("Error", "Cannot prepare wallet file", "OK");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace SPIXI
 
             if (wallet_decrypted == false)
             {
-                DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                displaySpixiAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
                 // Remove overlay
                 Utils.sendUiCommand(webView, "removeLoadingOverlay");
                 return;

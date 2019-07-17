@@ -61,7 +61,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI Account", "Please type your nickname.", "OK");
+                displaySpixiAlert("SPIXI Account", "Please type your nickname.", "OK");
             }
             else if (current_url.Equals("ixian:delete", StringComparison.Ordinal))
             {
@@ -136,7 +136,7 @@ namespace SPIXI
             }
             else
             {
-                DisplayAlert("Error", "Cannot delete wallet file.", "OK");
+                displaySpixiAlert("Error", "Cannot delete wallet file.", "OK");
             }
 
         }
@@ -147,13 +147,13 @@ namespace SPIXI
             FriendList.deleteEntireHistory();
             FriendList.clear();
 
-            DisplayAlert("Done", "This account is now empty.", "OK");
+            displaySpixiAlert("Done", "This account is now empty.", "OK");
         }
 
         public void onDeleteHistory()
         {
             FriendList.deleteEntireHistory();
-            DisplayAlert("Done", "Entire messages history deleted.", "OK");
+            displaySpixiAlert("Done", "Entire messages history deleted.", "OK");
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)
@@ -179,7 +179,7 @@ namespace SPIXI
                 }
                 catch (Exception ex)
                 {
-                    await DisplayAlert("Error", ex.ToString(), "ok");
+                    await displaySpixiAlert("Error", ex.ToString(), "ok");
                     return;
                 }
 
@@ -201,7 +201,7 @@ namespace SPIXI
             // Check if the source file exists before proceeding
             if (!File.Exists(sourceFilePath))
             {
-                DisplayAlert("Error", "Cannot apply avatar image", "ok");
+                displaySpixiAlert("Error", "Cannot apply avatar image", "ok");
                 return;
             }
 

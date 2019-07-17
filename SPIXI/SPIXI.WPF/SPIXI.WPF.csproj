@@ -97,6 +97,7 @@
     <Compile Include="Classes\FileOperations.cs" />
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\SpixiWebViewRenderer.cs" />
+    <Compile Include="Classes\SystemAlert.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

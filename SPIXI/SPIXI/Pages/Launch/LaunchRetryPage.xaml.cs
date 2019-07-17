@@ -69,7 +69,7 @@ namespace SPIXI
 
             if (wallet_decrypted == false)
             {
-                DisplayAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                displaySpixiAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
 
                 // If too many wrong attempts, throw the user to the launch screen, allowing creation or restoration of wallet
                 attempts++;

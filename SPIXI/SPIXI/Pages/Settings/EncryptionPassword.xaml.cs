@@ -45,7 +45,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                DisplayAlert("SPIXI Account", "Please type a password.", "OK");
+                displaySpixiAlert("SPIXI Account", "Please type a password.", "OK");
             }
             else if (current_url.Equals("ixian:changepass", StringComparison.Ordinal))
             {
