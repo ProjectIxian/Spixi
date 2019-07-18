@@ -78,7 +78,22 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
             {
+                ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
+                if (scanner != null && scanner.useCustomQRScanner())
+                {
+                    Utils.sendUiCommand(webView, "quickScanJS");
+                    e.Cancel = true;
+                    return;
+                }
                 quickScan();
+            }
+            else if (current_url.Contains("ixian:qrresult:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:qrresult:" }, StringSplitOptions.None);
+                string result = split[1];
+                processQRResult(result);
+                e.Cancel = true;
+                return;
             }
             else
             {
@@ -110,29 +125,34 @@ namespace SPIXI
                 Device.BeginInvokeOnMainThread(() => {
 
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
-                    
-                    if (result.Text.Contains(":ixi"))
-                    {
-                        string[] split = result.Text.Split(new string[] { ":ixi" }, StringSplitOptions.None);
-                        if (split.Count() < 1)
-                            return;
-                        string wal = split[0];
-                        Utils.sendUiCommand(webView, "setAddress", wal);
 
-                    }
-                    else
-                    {
-                        string wal = result.Text;
-                        // TODO: enter exact Ixian address length
-                        if(wal.Length > 20 && wal.Length < 128)
-                            Utils.sendUiCommand(webView, "setAddress", wal);
-                    }
-
+                    processQRResult(result.Text);
                 });
             };
 
 
             await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
+
+        }
+
+        public void processQRResult(string result)
+        {
+            if (result.Contains(":ixi"))
+            {
+                string[] split = result.Split(new string[] { ":ixi" }, StringSplitOptions.None);
+                if (split.Count() < 1)
+                    return;
+                string wal = split[0];
+                Utils.sendUiCommand(webView, "setAddress", wal);
+
+            }
+            else
+            {
+                string wal = result;
+                // TODO: enter exact Ixian address length
+                if (wal.Length > 20 && wal.Length < 128)
+                    Utils.sendUiCommand(webView, "setAddress", wal);
+            }
 
         }
 

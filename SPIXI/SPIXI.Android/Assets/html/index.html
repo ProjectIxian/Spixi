@@ -541,25 +541,6 @@
         var av_path = avatar_path + "?t=" + new Date().getTime();
         document.getElementById("avatar_image").src = av_path;
     }
-
-    function quickScanJS() {
-        let scanner = new Instascan.Scanner({});
-        scanner.addListener('scan', function (content) {
-            location.href = "ixian:qrresult:" + content;
-        });
-        Instascan.Camera.getCameras().then(function (cameras) {
-            if (cameras.length > 0) {
-                scanner.start(cameras[0]);
-            } else {
-                console.error('No cameras found.');
-                alert("No cameras found.");
-            }
-        }).catch(function (e) {
-            console.error(e);
-            alert("Cannot connect to camera.");
-        });
-    }
-
     
     // Filter in the CONTACTS tab
     function contactSearch()

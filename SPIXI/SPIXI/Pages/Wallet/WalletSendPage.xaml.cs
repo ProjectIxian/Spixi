@@ -83,7 +83,22 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
             {
+                ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
+                if (scanner != null && scanner.useCustomQRScanner())
+                {
+                    Utils.sendUiCommand(webView, "quickScanJS");
+                    e.Cancel = true;
+                    return;
+                }
                 quickScan();
+            }
+            else if (current_url.Contains("ixian:qrresult:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:qrresult:" }, StringSplitOptions.None);
+                string result = split[1];
+                processQRResult(result);
+                e.Cancel = true;
+                return;
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -173,58 +188,65 @@ namespace SPIXI
                 Device.BeginInvokeOnMainThread(() => {
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
 
-                    if (result.Text.Contains(":ixi"))
-                    {
-                        string[] split = result.Text.Split(new string[] { ":ixi" }, StringSplitOptions.None);
-                        if (split.Count() < 1)
-                            return;
-                        string wallet_to_send = split[0];
-                        string nickname = wallet_to_send;
-
-                        Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
-                        if (friend != null)
-                            nickname = friend.nickname;
-                        Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
-                        return;
-                    }
-                    else if (result.Text.Contains(":send"))
-                    {
-                        // Check for transaction request
-                        string[] split = result.Text.Split(new string[] { ":send:" }, StringSplitOptions.None);
-                        if (split.Count() > 1)
-                        {
-                            string wallet_to_send = split[0];
-                            string nickname = wallet_to_send;
-
-                            Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
-                            if (friend != null)
-                                nickname = friend.nickname;
-                            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        // Handle direct addresses
-                        string wallet_to_send = result.Text;
-                        if(Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send)))
-                        {
-                            string nickname = wallet_to_send;
-
-                            Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
-                            if (friend != null)
-                                nickname = friend.nickname;
-
-                            Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
-                            return;
-                        }
-                    }
+                    processQRResult(result.Text);
 
                 });
             };
 
             await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
         }
+
+        public void processQRResult(string result)
+        {
+            if (result.Contains(":ixi"))
+            {
+                string[] split = result.Split(new string[] { ":ixi" }, StringSplitOptions.None);
+                if (split.Count() < 1)
+                    return;
+                string wallet_to_send = split[0];
+                string nickname = wallet_to_send;
+
+                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                if (friend != null)
+                    nickname = friend.nickname;
+                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                return;
+            }
+            else if (result.Contains(":send"))
+            {
+                // Check for transaction request
+                string[] split = result.Split(new string[] { ":send:" }, StringSplitOptions.None);
+                if (split.Count() > 1)
+                {
+                    string wallet_to_send = split[0];
+                    string nickname = wallet_to_send;
+
+                    Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                    if (friend != null)
+                        nickname = friend.nickname;
+                    Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                    return;
+                }
+            }
+            else
+            {
+                // Handle direct addresses
+                string wallet_to_send = result;
+                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send)))
+                {
+                    string nickname = wallet_to_send;
+
+                    Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                    if (friend != null)
+                        nickname = friend.nickname;
+
+                    Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                    return;
+                }
+            }
+        }
+
+
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {

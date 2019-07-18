@@ -96,7 +96,7 @@ namespace SPIXI
                 ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
                 if (scanner != null && scanner.useCustomQRScanner())
                 {
-                    Utils.sendUiCommand(webView, "quickScanJS", currentTab);
+                    Utils.sendUiCommand(webView, "quickScanJS");
                     e.Cancel = true;
                     return;
                 }
