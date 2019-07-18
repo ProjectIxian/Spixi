@@ -318,5 +318,8 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\webfonts\fa-solid-900.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\html\js\instascan.min.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

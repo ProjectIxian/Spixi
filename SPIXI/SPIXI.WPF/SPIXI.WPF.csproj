@@ -94,6 +94,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\CustomQRScanner.cs" />
     <Compile Include="Classes\FileOperations.cs" />
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\SpixiWebViewRenderer.cs" />

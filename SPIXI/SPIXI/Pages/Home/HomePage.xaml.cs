@@ -93,7 +93,22 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
             {
+                ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
+                if (scanner != null && scanner.useCustomQRScanner())
+                {
+                    Utils.sendUiCommand(webView, "quickScanJS", currentTab);
+                    e.Cancel = true;
+                    return;
+                }
                 quickScan();
+            }
+            else if (current_url.Contains("ixian:qrresult:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:qrresult:" }, StringSplitOptions.None);
+                string result = split[1];
+                processQRResult(result);
+                e.Cancel = true;
+                return;
             }
             else if (current_url.Equals("ixian:newchat", StringComparison.Ordinal))
             {
@@ -233,7 +248,6 @@ namespace SPIXI
 
         public async void quickScan()
         {
-
             var options = new ZXing.Mobile.MobileBarcodeScanningOptions();
 
             // Restrict to QR codes only
@@ -251,30 +265,34 @@ namespace SPIXI
                 Device.BeginInvokeOnMainThread(() => {
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
 
-                    // Check for add contact
-                    string[] split = result.Text.Split(new string[] { ":ixi" }, StringSplitOptions.None);
-                    if(split.Count() > 1)
-                    {
-                        string id_to_add = split[0];
-                        Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
-                        return;
-                    }
-
-                    // Check for transaction request
-                    split = result.Text.Split(new string[] { ":send:" }, StringSplitOptions.None);
-                    if (split.Count() > 1)
-                    {
-                        byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);                       
-                        Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
-                        return;
-                    }
-
+                    processQRResult(result.Text);
                 });
             };
 
 
             await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
 
+        }
+
+        public void processQRResult(string result)
+        {
+            // Check for add contact
+            string[] split = result.Split(new string[] { ":ixi" }, StringSplitOptions.None);
+            if (split.Count() > 1)
+            {
+                string id_to_add = split[0];
+                Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
+                return;
+            }
+
+            // Check for transaction request
+            split = result.Split(new string[] { ":send:" }, StringSplitOptions.None);
+            if (split.Count() > 1)
+            {
+                byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);
+                Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
+                return;
+            }
         }
 
         // Show the recipientpage
