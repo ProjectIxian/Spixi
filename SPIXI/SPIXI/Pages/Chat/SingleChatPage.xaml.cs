@@ -226,12 +226,7 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
-            string relayip = friend.searchForRelay();
-            if(relayip == null)
-            {
-                Logging.error("Couldn't find relay node for contact.");
-            }
-            StreamProcessor.sendMessage(message, relayip);
+            StreamProcessor.sendMessage(friend, message);
 
             // Finally, add the text bubble visually
             DateTime dt = DateTime.Now;

@@ -194,6 +194,14 @@ namespace SPIXI
                 return;
             }
 
+            if (!(new Address(pubkey)).address.SequenceEqual(wal))
+            {
+                displaySpixiAlert("Invalid public key", "Received invalid public key for address " + Base58Check.Base58CheckEncoding.EncodePlain(wal), "OK");
+                Logging.error("Received invalid pubkey in onRequest for {0}", Base58Check.Base58CheckEncoding.EncodePlain(wal));
+                return;
+            }
+
+
             string hostname = FriendList.getRelayHostname(wal);
             string relayip = null;
             if(hostname != null)
@@ -201,11 +209,7 @@ namespace SPIXI
                 relayip = hostname;
             }
 
-            // TODOSPIXI
-            //FriendList.addFriend(wal, pubkey, "Unknown");
-
-            // Connect to the contact's S2 relay first
-            //  StreamClientManager.connectToStreamNode(relayip);
+            Friend friend = FriendList.addFriend(wal, pubkey, Base58Check.Base58CheckEncoding.EncodePlain(wal), null, null, 0);
 
             // Send the message to the S2 nodes
             byte[] recipient_address = wal;
@@ -215,13 +219,14 @@ namespace SPIXI
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
-            message.recipient = recipient_address;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = recipient_address;
             message.data = spixi_message.getBytes();
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
             
-            StreamProcessor.sendMessage(message, relayip);
+            StreamProcessor.sendMessage(friend, message);
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }

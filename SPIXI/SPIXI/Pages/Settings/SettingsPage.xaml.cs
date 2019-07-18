@@ -105,7 +105,11 @@ namespace SPIXI
 
         public void onSaveSettings(string nick)
         {
-            Node.localStorage.nickname = nick;
+            if (Node.localStorage.nickname != nick)
+            {
+                Node.localStorage.nickname = nick;
+                FriendList.broadcastNicknameChange();
+            }
             Node.localStorage.writeAccountFile();
             Node.changedSettings = true;
             applyAvatar();

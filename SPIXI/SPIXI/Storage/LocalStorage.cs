@@ -98,7 +98,15 @@ namespace SPIXI.Storage
                     // Read chat history, todo
                     int num_messages = reader.ReadInt32();
 
-                    FriendList.addFriend(cwallet, cpubkey, cnick);
+                    int aes_len = reader.ReadInt32();
+                    byte[] aes = reader.ReadBytes(aes_len);
+
+                    int cc_len = reader.ReadInt32();
+                    byte[] chacha = reader.ReadBytes(cc_len);
+
+                    long key_generated_time = reader.ReadInt64();
+
+                    FriendList.addFriend(cwallet, cpubkey, cnick, aes, chacha, key_generated_time);
                 }
 
             }
@@ -155,6 +163,28 @@ namespace SPIXI.Storage
                     // Chat history, todo.
                     int num_messages = 0;
                     writer.Write(num_messages);
+
+                    // encryption keys
+                    if (friend.aesKey != null)
+                    {
+                        writer.Write(friend.aesKey.Length);
+                        writer.Write(friend.aesKey);
+                    }else
+                    {
+                        writer.Write(0);
+                    }
+
+                    if (friend.chachaKey != null)
+                    {
+                        writer.Write(friend.chachaKey.Length);
+                        writer.Write(friend.chachaKey);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    writer.Write(friend.keyGeneratedTime);
                 }
 
             }

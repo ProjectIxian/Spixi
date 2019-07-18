@@ -17,6 +17,8 @@ namespace CryptoLibs
 {
     class BouncyCastleAndroid : ICryptoLib
     {
+        private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+
         // Private variables used for AES key expansion
         private int PBKDF2_iterations = 10000;
         private string AES_algorithm = "AES/CBC/PKCS7Padding";
@@ -490,5 +492,11 @@ namespace CryptoLibs
             return null;
         }
 
+        public byte[] getSecureRandomBytes(int length)
+        {
+            byte[] random_data = new byte[length];
+            rngCsp.GetBytes(random_data);
+            return random_data;
+        }
     }
 }

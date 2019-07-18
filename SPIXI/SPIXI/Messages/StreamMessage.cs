@@ -15,6 +15,14 @@ namespace SPIXI
         data        // Paid, transaction-based type
     }
 
+    // The encryption message codes available in S2.
+    public enum StreamMessageEncryptionCode
+    {
+        none,
+        rsa,
+        spixi1
+    }
+
     class StreamMessage
     {
         public StreamMessageCode type;          // Stream Message type
@@ -24,6 +32,11 @@ namespace SPIXI
         public byte[] transaction = null;       // Unsigned transaction
         public byte[] data = null;              // Actual message data, encrypted
         public byte[] sigdata = null;           // Signature data, encrypted
+
+        public StreamMessageEncryptionCode encryptionType;
+
+        public bool encrypted = false; // used locally to avoid double encryption of data
+        public bool sigEncrypted = false; // used locally to avoid double encryption of tx sig
 
         private string id;                      // Message unique id
 
@@ -36,6 +49,7 @@ namespace SPIXI
             transaction = null;
             data = null;
             sigdata = null;
+            encryptionType = StreamMessageEncryptionCode.spixi1;
         }
 
         public StreamMessage(byte[] bytes)
@@ -50,6 +64,9 @@ namespace SPIXI
 
                         int message_type = reader.ReadInt32();
                         type = (StreamMessageCode)message_type;
+
+                        int encryption_type = reader.ReadInt32();
+                        encryptionType = (StreamMessageEncryptionCode)encryption_type;
 
                         int sender_length = reader.ReadInt32();
                         if (sender_length > 0)
@@ -89,6 +106,9 @@ namespace SPIXI
 
                     // Write the type
                     writer.Write((int)type);
+
+                    // Write the encryption type
+                    writer.Write((int)encryptionType);
 
                     // Write the sender
                     int sender_length = sender.Length;
@@ -150,23 +170,124 @@ namespace SPIXI
         }
 
         // Encrypts a provided message with aes, then chacha based on the keys provided
-        public bool encryptMessage(byte[] message, string aesPassword, byte[] chachaKey)
+        public bool encrypt(byte[] public_key, byte[] aes_password, byte[] chacha_key)
         {
-            byte[] aes_encrypted = CryptoManager.lib.encryptWithPassword(message, aesPassword);
-            byte[] chacha_encrypted = CryptoManager.lib.encryptWithChacha(aes_encrypted, chachaKey);
-            data = chacha_encrypted.ToArray();
-            return true;
+            if(encrypted)
+            {
+                return true;
+            }
+            byte[] encrypted_data = _encrypt(data, public_key, aes_password, chacha_key);
+            if(encrypted_data != null)
+            {
+                data = encrypted_data;
+                encrypted = true;
+                return true;
+            }
+            return false;
+        }
+
+        public bool decrypt(byte[] private_key, byte[] aes_key, byte[] chacha_key)
+        {
+            if (sigEncrypted)
+            {
+                return true;
+            }
+            byte[] decrypted_data = _decrypt(data, private_key, aes_key, chacha_key);
+            if (decrypted_data != null)
+            {
+                data = decrypted_data;
+                sigEncrypted = true;
+                return true;
+            }
+            return false;
         }
 
         // Encrypts a provided signature with aes, then chacha based on the keys provided
-        public bool encryptSignature(byte[] signature, string aesPassword, byte[] chachaKey)
+        public bool encryptSignature(byte[] public_key, byte[] aes_password, byte[] chacha_key)
         {
-            byte[] aes_encrypted = CryptoManager.lib.encryptWithPassword(signature, aesPassword);
-            byte[] chacha_encrypted = CryptoManager.lib.encryptWithChacha(aes_encrypted, chachaKey);
-            sigdata = chacha_encrypted.ToArray();
-            return true;
+            byte[] encrypted_data = _encrypt(sigdata, public_key, aes_password, chacha_key);
+            if (encrypted_data != null)
+            {
+                sigdata = encrypted_data;
+                return true;
+            }
+            return false;
         }
 
+        public bool decryptSignature(byte[] private_key, byte[] aes_key, byte[] chacha_key)
+        {
+            byte[] decrypted_data = _decrypt(sigdata, private_key, aes_key, chacha_key);
+            if (decrypted_data != null)
+            {
+                sigdata = decrypted_data;
+                return true;
+            }
+            return false;
+        }
+
+        private byte[] _encrypt(byte[] data_to_encrypt, byte[] public_key, byte[] aes_key, byte[] chacha_key)
+        {
+            if (encryptionType == StreamMessageEncryptionCode.spixi1)
+            {
+                if (aes_key != null && chacha_key != null)
+                {
+                    byte[] aes_encrypted = CryptoManager.lib.encryptDataAES(data_to_encrypt, aes_key);
+                    byte[] chacha_encrypted = CryptoManager.lib.encryptWithChacha(aes_encrypted, chacha_key);
+                    return chacha_encrypted;
+                }
+                else
+                {
+                    Logging.error("Cannot encrypt message, no AES and CHACHA keys were provided.");
+                }
+            }
+            else if (encryptionType == StreamMessageEncryptionCode.rsa)
+            {
+                if (public_key != null)
+                {
+                    return CryptoManager.lib.encryptWithRSA(data_to_encrypt, public_key);
+                }
+                else
+                {
+                    Logging.error("Cannot encrypt message, no RSA key was provided.");
+                }
+            }
+            else
+            {
+                Logging.error("Cannot encrypt message, invalid encryption type {0} was specified.", encryptionType);
+            }
+            return null;
+        }
+
+        private byte[] _decrypt(byte[] data_to_decrypt, byte[] private_key, byte[] aes_key, byte[] chacha_key)
+        {
+            if(encryptionType == StreamMessageEncryptionCode.spixi1)
+            {
+                if (aes_key != null && chacha_key != null)
+                {
+                    byte[] chacha_decrypted = CryptoManager.lib.decryptWithChacha(data_to_decrypt, chacha_key);
+                    byte[] aes_decrypted = CryptoManager.lib.decryptDataAES(chacha_decrypted, aes_key);
+                    return aes_decrypted;
+                }else
+                {
+                    Logging.error("Cannot decrypt message, no AES and CHACHA keys were provided.");
+                }
+            }
+            else if (encryptionType == StreamMessageEncryptionCode.rsa)
+            {
+                if(private_key != null)
+                {
+                    return CryptoManager.lib.decryptWithRSA(data_to_decrypt, private_key);
+                }else
+                {
+                    Logging.error("Cannot decrypt message, no RSA key was provided.");
+                }
+            }
+            else
+            {
+                Logging.error("Cannot decrypt message, invalid encryption type {0} was specified.", encryptionType);
+            }
+            return null;
+        }
 
     }
 }

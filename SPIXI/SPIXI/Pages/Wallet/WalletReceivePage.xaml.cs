@@ -117,10 +117,13 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
-            string relayip = FriendList.getRelayHostname(message.recipient);
-            StreamProcessor.sendMessage(message, relayip);
+            Friend friend = FriendList.getFriend(message.recipient);
+            if (friend != null)
+            {
+                StreamProcessor.sendMessage(friend, message);
 
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
+            }// else error?
 
         }
 

@@ -11,7 +11,8 @@ namespace SPIXI
         nick,
         requestAdd,
         acceptAdd,
-        requestFunds
+        requestFunds,
+        keys
     }
 
     class SpixiMessage

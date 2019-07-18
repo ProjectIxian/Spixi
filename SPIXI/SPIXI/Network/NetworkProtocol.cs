@@ -31,6 +31,7 @@ namespace SPIXI.Network
                 if ((DateTime.UtcNow - start).TotalSeconds > timeout_seconds)
                 {
                     Logging.warn("Timeout occured while waiting for " + waitingFor);
+                    break;
                 }
                 Thread.Sleep(250);
             }
@@ -195,13 +196,6 @@ namespace SPIXI.Network
                     case ProtocolMessageCode.s2data:
                         {
                             StreamProcessor.receiveData(data, endpoint);
-                        }
-                        break;
-
-                    case ProtocolMessageCode.s2keys:
-                        {
-                            Logging.info("NET: Receiving S2 keys!");
-                    //        StreamProcessor.receivedKeys(data, socket);
                         }
                         break;
 

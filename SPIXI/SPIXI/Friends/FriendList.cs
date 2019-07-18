@@ -92,25 +92,27 @@ namespace SPIXI
         }
 
 
-        public static bool addFriend(byte[] wallet_address, byte[] public_key, string name, bool approved = true)
+        public static Friend addFriend(byte[] wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
         {
             foreach (Friend friend in friends)
             {
                 if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
                     // Already in the list
-                    return false;
+                    return null;
                 }
             }
 
+            Friend new_friend = new Friend(wallet_address, public_key, name, aes_key, chacha_key, key_generated_time, approved);
+
             // Add new friend to the friendlist
-            friends.Add(new Friend(wallet_address, public_key, name, approved));
+            friends.Add(new_friend);
 
             cachedHiddenMatchAddresses = null;
 
             ProtocolMessage.resubscribeEvents();
 
-            return true;
+            return new_friend;
         }
 
         // Scan the presence list for new contacts
@@ -196,7 +198,9 @@ namespace SPIXI
             string hostname = null;
             Presence presence = PresenceList.getPresenceByAddress(wallet_address);
             if (presence == null)
+            {
                 return null;
+            }
 
             byte[] wallet = presence.wallet;
 
@@ -304,6 +308,7 @@ namespace SPIXI
 
         public static void requestAllFriendsPresences()
         {
+            // TODO TODO use hidden address matcher
             lock (friends)
             {
                 foreach (var entry in friends)
@@ -318,6 +323,18 @@ namespace SPIXI
                             CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence, m.ToArray(), 0, null);
                         }
                     }
+                }
+            }
+        }
+
+        public static void broadcastNicknameChange()
+        {
+            // TODO TODO use hidden address matcher
+            lock (friends)
+            {
+                foreach (var entry in friends)
+                {
+                    StreamProcessor.sendNickname(entry);
                 }
             }
         }
