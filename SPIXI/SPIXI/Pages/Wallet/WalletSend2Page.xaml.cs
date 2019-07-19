@@ -136,7 +136,7 @@ namespace SPIXI
             Logging.info("Showing payment details");
 
             // Show the payment details
-            Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new WalletSentPage(transaction, false), Config.defaultXamarinAnimations);
         }
 
     }

@@ -466,7 +466,7 @@ namespace SPIXI.Storage
                     int data_length = reader.ReadInt32();
                     byte[] data = reader.ReadBytes(data_length);
 
-                    Transaction transaction = new Transaction(data);
+                    Transaction transaction = new Transaction(data, true);
                     TransactionCache.addTransaction(transaction, false);
                 }
 
@@ -524,7 +524,7 @@ namespace SPIXI.Storage
 
                     foreach (Transaction transaction in TransactionCache.transactions)
                     {
-                        byte[] data = transaction.getBytes();
+                        byte[] data = transaction.getBytes(true);
                         int data_length = data.Length;
                         writer.Write(data_length);
                         writer.Write(data);
@@ -539,7 +539,7 @@ namespace SPIXI.Storage
 
                     foreach (Transaction transaction in TransactionCache.unconfirmedTransactions)
                     {
-                        byte[] data = transaction.getBytes();
+                        byte[] data = transaction.getBytes(true);
                         int data_length = data.Length;
                         writer.Write(data_length);
                         writer.Write(data);

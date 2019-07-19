@@ -92,12 +92,13 @@ namespace SPIXI
         public int getUnreadMessageCount()
         {
             int unreadCount = 0;
-            foreach(FriendMessage message in messages)
+            for(int i = messages.Count - 1; i > 0; i--)
             {
-                if(message.read == false)
+                if(messages[i].read == true)
                 {
-                    unreadCount++;
+                    break;
                 }
+                unreadCount++;
             }
             return unreadCount;
         }

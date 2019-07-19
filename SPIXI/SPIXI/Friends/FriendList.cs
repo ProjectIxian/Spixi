@@ -296,7 +296,10 @@ namespace SPIXI
                 AddressClient ac = new AddressClient();
                 foreach (var friend in friends)
                 {
-                    ac.addAddress(friend.walletAddress);
+                    if (friend.approved)
+                    {
+                        ac.addAddress(friend.walletAddress);
+                    }
                 }
 
                 Random rnd = new Random();

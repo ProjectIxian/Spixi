@@ -21,7 +21,7 @@ namespace SPIXI
 
         public static string escapeHtmlParameter(string str)
         {
-            return str.Replace("\"", "&#34;").Replace("'", "&#39;").Replace("\\", "&#92;");
+            return str.Replace("\"", "&#34;").Replace("'", "&#39;").Replace("\\", "&#92;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         public static void sendUiCommand(WebView webView, string command, params string[] arguments)

@@ -17,8 +17,12 @@ namespace SPIXI
     {
         private Transaction transaction = null;
 
-        public WalletSentPage(Transaction tx)
+        private bool viewOnly = true;
+
+        public WalletSentPage(Transaction tx, bool view_only = true)
         {
+            viewOnly = view_only;
+
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
@@ -48,33 +52,7 @@ namespace SPIXI
             }
             else
             {
-                string nickname = "Unknown";
-                Friend friend = null;
-                byte[] addr = transaction.toList.Keys.First();
-                // Check if this is a received payment
-                if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
-                {
-                    Utils.sendUiCommand(webView, "setReceivedMode");
-                    // TODO: FIX ME
-          /*          friend = FriendList.getFriend(transaction.from);
-                    addr = transaction.from;*/
-                }
-                else
-                {
-                    // This is a sent payment
-                    friend = FriendList.getFriend(addr);
-                }
-
-                if (friend != null)
-                    nickname = friend.nickname;
-
-                // Convert unix timestamp
-                string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-
-                Utils.sendUiCommand(webView, "setInitialData", transaction.amount.ToString(), transaction.fee.ToString(),
-                    Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time);
-
-                updateScreen();
+                checkTransaction();
             }
         }
 
@@ -90,9 +68,14 @@ namespace SPIXI
             {
                 onLoad();
             }
-            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            else if (current_url.Equals("ixian:dismiss", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                if (!viewOnly)
+                {
+                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                }
+                Navigation.PopAsync();
             }
             else
             {
@@ -107,55 +90,76 @@ namespace SPIXI
         // Request transaction data
         private void requestTransactionData()
         {
+            Logging.info("Requesting transaction data for: {0}", transaction.id);
             using (MemoryStream m = new MemoryStream())
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
                     writer.Write(transaction.id);
+                    writer.Write((ulong)0);
 
-                    // TODOSPIXI
-                    //NetworkClientManager.sendDLTData(ProtocolMessageCode.getTransaction, m.ToArray());
+                    CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, IXICore.Network.ProtocolMessageCode.getTransaction, m.ToArray(), 0, null);
                 }
             }
 
         }
 
         // Retrieve the transaction from local cache storage
-        private bool checkTransaction()
+        private void checkTransaction()
         {
+            string confirmed_text = "CONFIRMED";
             Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
-            if (ctransaction == null)
+            if (ctransaction == null || ctransaction.applied == 0)
             {
                 requestTransactionData();
-                return true;
+                ctransaction = transaction;
+                confirmed_text = "UNCONFIRMED";
             }
 
-            string nickname = "Unknown";
-            Friend friend = null;
-            byte[] addr = ctransaction.toList.Keys.First();
-            // Check if this is a received payment
+            IxiNumber amount = ctransaction.amount;
+
+            string addresses = "";
+            byte[] addr = new Address(ctransaction.pubKey).address;
             if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
             {
-                // TODO FIXME
-          /*      webView.Eval("setReceivedMode()");
-                friend = FriendList.getFriend(transaction.from);
-                addr = ctransaction.from;*/
+                // this is a sent payment
+
+                foreach (var entry in ctransaction.toList)
+                {
+                    Friend friend = FriendList.getFriend(entry.Key);
+                    if (friend != null)
+                    {
+                        addresses += friend.nickname + ": " + entry.Value.ToString() + "|";
+                    }
+                    else
+                    {
+                        addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
+                    }
+                }
             }
             else
             {
-                // This is a sent payment
-                friend = FriendList.getFriend(addr);
-            }
+                // this is a received payment
 
-            if (friend != null)
-                nickname = friend.nickname;
+                amount = 0;
+
+                Utils.sendUiCommand(webView, "setReceivedMode");
+                foreach (var entry in ctransaction.toList)
+                {
+                    if (entry.Key.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                    {
+                        addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
+                        amount += entry.Value;
+                    }
+                }
+            }
 
             // Convert unix timestamp
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
-            Utils.sendUiCommand(webView, "setConfirmedData", ctransaction.amount.ToString(), ctransaction.fee.ToString(),
-                Base58Check.Base58CheckEncoding.EncodePlain(addr), nickname, time);
-            return false;
+            Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
+                addresses, time, confirmed_text, (amount/ctransaction.fee).ToString());
+            return;
         }
 
         private void updateScreen()

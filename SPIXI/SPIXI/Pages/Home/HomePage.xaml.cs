@@ -9,6 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,8 +26,8 @@ namespace SPIXI
 	{
 
         // Temporary optimizations for native->js data transfer
-        private string lastContactsChecksum = "";
-        private ulong lastChatsChange = 0;
+        private BigInteger lastContactsChange = 0;
+        private BigInteger lastChatsChange = 0;
         private ulong lastTransactionChange = 9999;
 
         private string currentTab = "tab1";
@@ -326,7 +329,7 @@ namespace SPIXI
 
         private void onLoaded()
         {
-            lastContactsChecksum = "";
+            lastContactsChange = 0;
             lastChatsChange = 0;
             lastTransactionChange = 0;
 
@@ -388,23 +391,27 @@ namespace SPIXI
         public void loadContacts()
         {
             // Check if there are any changes from last time first
-            string chk = "";
+            BigInteger chk = 0;
             foreach (Friend friend in FriendList.friends)
             {
+                int umc = friend.getUnreadMessageCount();
+                chk += new BigInteger(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(friend.nickname)));
+                chk += umc;
                 if (friend.online)
-                    chk += "1";
-                chk += friend.nickname;
-               // chk += friend.walletAddress;
+                {
+                    chk += 100000;
+                }
             }
 
-            if(lastContactsChecksum.Equals(chk, StringComparison.Ordinal))
+
+            if (lastContactsChange == chk)
             {
                 //  No changes detected, stop here
                 return;
             }
 
             // Update the checksum
-            lastContactsChecksum = chk;
+            lastContactsChange = chk;
 
             // Clear everything
             Utils.sendUiCommand(webView, "clearContacts");
@@ -423,21 +430,20 @@ namespace SPIXI
         public void loadChats()
         {
             // Check if there are any changes from last time first
-            ulong chk = 0;
+            BigInteger chk = 0;
             bool unread = false;
             foreach (Friend friend in FriendList.friends)
             {
-                int mc = friend.getMessageCount();
                 int umc = friend.getUnreadMessageCount();
                 if(umc > 0)
                 {
                     unread = true;
                 }
-                chk += (ulong)mc;
-                chk += (ulong)umc;
+                chk += new BigInteger(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(friend.nickname)));
+                chk += umc;
                 if (friend.online)
                 {
-                    chk += 1;
+                    chk += 100000;
                 }
             }
 
@@ -509,7 +515,7 @@ namespace SPIXI
                         excerpt = "Contact Request";
 
                     Utils.sendUiCommand(webView, "addChat",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, "0");
                 }
             }
         }

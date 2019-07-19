@@ -273,7 +273,7 @@ namespace SPIXI.Network
                     case ProtocolMessageCode.transactionData:
                         {
                             // TODO: check for errors/exceptions
-                            Transaction transaction = new Transaction(data);
+                            Transaction transaction = new Transaction(data, true);
                             TransactionCache.addTransaction(transaction);
                         }
                         break;
@@ -281,13 +281,8 @@ namespace SPIXI.Network
                     case ProtocolMessageCode.newTransaction:
                         {
                             // Forward the new transaction message to the DLT network
-                            Logging.info("RECIEVED NEW TRANSACTION");
-
-                            Transaction transaction = new Transaction(data);
-                            if (transaction.toList.Keys.First().SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
-                            {
-                                TransactionCache.addTransaction(transaction);
-                            }
+                            Transaction transaction = new Transaction(data, true);
+                            TransactionCache.addTransaction(transaction);
                         }
                         break;
 
