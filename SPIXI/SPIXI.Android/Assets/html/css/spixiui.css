@@ -1149,7 +1149,6 @@ a:active {
 
 #chatlist .spixi-chat-unread-indicator {
     float: none;
-    display: inline-block;
     position: static;
     margin-top: 5px;
     margin-right: 10px;
@@ -1157,6 +1156,10 @@ a:active {
 
 .unread .spixi-chat-unread-indicator {
     display: block;
+}
+
+#chatlist .unread .spixi-chat-unread-indicator {
+    display: inline-block;
 }
 
 /* Modals */

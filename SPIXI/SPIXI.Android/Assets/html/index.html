@@ -665,7 +665,7 @@
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt +'</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>'+timestamp+'</div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>' + timestamp + '</div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
