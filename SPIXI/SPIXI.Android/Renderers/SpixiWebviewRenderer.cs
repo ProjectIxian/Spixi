@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Android.Graphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using IXICore.Meta;
 
 [assembly: ExportRenderer(typeof(Xamarin.Forms.WebView), typeof(SPIXI.Droid.Renderers.SpixiWebviewRenderer))]
 
@@ -77,13 +78,19 @@ namespace SPIXI.Droid.Renderers
             // TODO: find a better way to handle the Navigating event without triggering a page load
             public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
             {
+                Logging.info("in Should override Url loading");
                 var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
-                _renderer.ElementController.SendNavigating(args);
+                try
+                {
+                    _renderer.ElementController.SendNavigating(args);
+                }catch(Exception e)
+                {
+                    Logging.error("Exception in should override url loading {0}", e);
+                }
                 if (args.Cancel)
                 {
                     return true;
                 }
-
                 return false;
             }
 

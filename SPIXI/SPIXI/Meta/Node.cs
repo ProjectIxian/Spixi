@@ -46,6 +46,8 @@ namespace SPIXI.Meta
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             walletStorage = new WalletStorage(Path.Combine(path, Config.walletFile));
 
+            PeerStorage.init();
+
         }
 
         static public void start()

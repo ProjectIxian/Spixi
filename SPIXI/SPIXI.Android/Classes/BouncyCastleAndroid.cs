@@ -54,6 +54,7 @@ namespace CryptoLibs
             // TODO TODO TODO TODO TODO skip header can be later removed after the upgrade/hard fork
             if (!skip_header)
             {
+                bytes.Add((byte)1); // add version
                 bytes.AddRange(BitConverter.GetBytes((int)0)); // prepend pub key version
             }
 
@@ -288,7 +289,7 @@ namespace CryptoLibs
         public byte[] encryptWithRSA(byte[] input, byte[] publicKey)
         {
             KeyPair kp = rsaKeyFromBytes(publicKey);
-            Cipher cipher = Cipher.GetInstance("RSA/None/PKCS1Padding");
+            Cipher cipher = Cipher.GetInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding");
             cipher.Init(Javax.Crypto.CipherMode.EncryptMode, kp.Public);
             return cipher.DoFinal(input);
         }
@@ -298,7 +299,7 @@ namespace CryptoLibs
         public byte[] decryptWithRSA(byte[] input, byte[] privateKey)
         {
             KeyPair kp = rsaKeyFromBytes(privateKey);
-            Cipher cipher = Cipher.GetInstance("RSA/None/PKCS1Padding");
+            Cipher cipher = Cipher.GetInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding");
             cipher.Init(Javax.Crypto.CipherMode.DecryptMode, kp.Private);
             return cipher.DoFinal(input);
         }
@@ -310,12 +311,7 @@ namespace CryptoLibs
 
             int blockSize = outCipher.GetBlockSize();
             // Perform key expansion
-            byte[] salt = new byte[blockSize];
-            using (RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider())
-            {
-                // Fill the array with a random value.
-                rngCsp.GetBytes(salt);
-            }
+            byte[] salt = getSecureRandomBytes(blockSize);
 
             ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
             try
@@ -376,12 +372,7 @@ namespace CryptoLibs
         // Encrypt using password
         public byte[] encryptWithPassword(byte[] data, string password)
         {
-            byte[] salt = new byte[16];
-            using (RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider())
-            {
-                // Fill the array with a random value.
-                rngCsp.GetBytes(salt);
-            }
+            byte[] salt = getSecureRandomBytes(16);
             byte[] key = getPbkdf2BytesFromPassphrase(password, salt, PBKDF2_iterations, 16);
             byte[] ret_data = encryptDataAES(data, key);
 
@@ -411,9 +402,7 @@ namespace CryptoLibs
             byte[] outData = new byte[input.Length + 8];
 
             // Generate the 8 byte nonce
-            Random rnd = new Random();
-            byte[] nonce = new byte[8];
-            rnd.NextBytes(nonce);
+            byte[] nonce = getSecureRandomBytes(8);
 
             // Prevent leading 0 to avoid edge cases
             if (nonce[0] == 0)
