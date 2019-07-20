@@ -335,12 +335,14 @@ a:active {
 }
 
 .spixi-tab {
-    padding-top: 11px;
     background: #ad1457;
     text-align: center;
     font-size: 10pt;
     font-weight: bold;
     color: #3a061d;
+}
+.spixi-tab-pad {
+    padding-top: 11px;
 }
 .spixi-tab.active {
     color: #FFF;
