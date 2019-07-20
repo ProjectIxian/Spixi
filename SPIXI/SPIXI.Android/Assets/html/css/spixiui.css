@@ -1333,6 +1333,13 @@ a:active {
     margin-left: 20px;
 }
 
+.spixi-version {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    text-align: center;
+    color: #b5b5b5;
+}
 
 
 
