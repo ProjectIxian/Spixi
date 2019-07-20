@@ -678,6 +678,7 @@ a:active {
     height: 50px;
     background-color: #eef2f5;
     border-bottom: 1px solid #d1d5d7;
+    cursor: pointer;
 }
 .spixi-expanion.active {
     background-color: #e9eaeb;
