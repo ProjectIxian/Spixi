@@ -989,7 +989,9 @@ a:active {
     padding-bottom: 28px;   
     
     animation-name: chat_animation;
-    animation-duration: 0.3s;     
+    animation-duration: 0.3s;
+
+    word-wrap: break-word;
 }
 .spixi-bubble.myself {
     margin-left: 125px;

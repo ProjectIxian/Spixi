@@ -280,22 +280,17 @@ namespace SPIXI
         public void processQRResult(string result)
         {
             // Check for add contact
-            string[] split = result.Split(new string[] { ":ixi" }, StringSplitOptions.None);
-            if (split.Count() > 1)
-            {
-                string id_to_add = split[0];
-                Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
-                return;
-            }
-
-            // Check for transaction request
-            split = result.Split(new string[] { ":send:" }, StringSplitOptions.None);
+            string[] split = result.Split(new string[] { ":send" }, StringSplitOptions.None);
             if (split.Count() > 1)
             {
                 byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);
                 Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
                 return;
             }
+
+            string id_to_add = split[0];
+            Navigation.PushAsync(new ContactNewPage(id_to_add), Config.defaultXamarinAnimations);
+            return;
         }
 
         // Show the recipientpage
@@ -431,13 +426,13 @@ namespace SPIXI
         {
             // Check if there are any changes from last time first
             BigInteger chk = 0;
-            bool unread = false;
+            int unread = 0;
             foreach (Friend friend in FriendList.friends)
             {
                 int umc = friend.getUnreadMessageCount();
                 if(umc > 0)
                 {
-                    unread = true;
+                    unread += umc;
                 }
                 chk += new BigInteger(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(friend.nickname)));
                 chk += umc;
@@ -447,12 +442,12 @@ namespace SPIXI
                 }
             }
 
-            if(unread)
+            if(unread > 0)
             {
-                Utils.sendUiCommand(webView, "setUnreadIndicator", "true");
+                Utils.sendUiCommand(webView, "setUnreadIndicator", unread.ToString());
             }else
             {
-                Utils.sendUiCommand(webView, "setUnreadIndicator", "false");
+                Utils.sendUiCommand(webView, "setUnreadIndicator", "0");
             }
 
             if (lastChatsChange == chk)
@@ -470,7 +465,7 @@ namespace SPIXI
 
             foreach (Friend friend in FriendList.friends)
             {
-                if (friend.getUnreadMessageCount() > 0)
+                if (!friend.approved || friend.getUnreadMessageCount() > 0)
                 {
                     string str_online = "false";
                     if (friend.online)

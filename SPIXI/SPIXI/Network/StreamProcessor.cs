@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Meta;
+using SPIXI.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -392,6 +393,8 @@ namespace SPIXI
             requestNickname(friend);
 
             sendNickname(friend);
+
+            FriendList.addMessage(friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
 
 
@@ -426,6 +429,8 @@ namespace SPIXI
             message.encryptionType = StreamMessageEncryptionCode.rsa;
 
             StreamProcessor.sendMessage(friend, message);
+
+            ProtocolMessage.resubscribeEvents();
         }
 
         public static void sendNickname(Friend friend)

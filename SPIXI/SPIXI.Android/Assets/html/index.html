@@ -79,7 +79,7 @@
                 <div id="exp1" class="spixi-expansion">
                     <div id="exp1-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-                    <div class="spixi-expansion-text">My notifications ( 0 )</div>
+                    <div class="spixi-expansion-text">My notifications (<span id="notification_count">0</span>)</div>
                     <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp1-contents" class="spixi-expansion-middle" style="display: block;">
@@ -93,7 +93,7 @@
                 <div id="exp2" class="spixi-expansion">
                     <div id="exp2-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-comment"></i></div>
-                    <div class="spixi-expansion-text">Unread chats ( 0 )</div>
+                    <div class="spixi-expansion-text">Unread chats (<span id="unread_count">0</span>)</div>
                     <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp2-contents" class="spixi-expansion-middle" style="display: block;">
@@ -387,11 +387,10 @@
     
     // Handle modals outside tap
     window.onclick = function(event) {
-        if(event.target == homeModal) {
+        if (event.target == homeModal) {
             onHomeMenuClose();
         }
-        else 
-            if(event.target == leftSidebar) {
+        else if (event.target == leftSidebar) {
             leftSidebar.style.display = "none";
         }
     }
@@ -672,9 +671,10 @@
         document.getElementById("chat_no_activity").style.display = 'none';
     }
 
-    function setUnreadIndicator(indicator) {
-        if (indicator == "true") {
+    function setUnreadIndicator(unread_count) {
+        if (unread_count != "0") {
             document.getElementById("tab2").firstElementChild.className = "unread";
+            document.getElementById("unread_count").innerHTML = unread_count;
         } else {
             document.getElementById("tab2").firstElementChild.className = "";
         }
@@ -707,8 +707,11 @@
         document.getElementById("chatlist").style.display = 'block';
         document.getElementById("chat_no_activity").style.display = 'none';
     }
-    
-    
+
+    function setNotificationCount(notification_count) {
+        document.getElementById("notification_count").innerHTML = notification_count;
+    }
+
     // Function to toggle tab's active color    
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         // Not very elegant, but it works

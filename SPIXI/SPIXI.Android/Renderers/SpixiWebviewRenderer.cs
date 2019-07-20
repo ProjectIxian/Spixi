@@ -78,7 +78,6 @@ namespace SPIXI.Droid.Renderers
             // TODO: find a better way to handle the Navigating event without triggering a page load
             public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
             {
-                Logging.info("in Should override Url loading");
                 var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);
                 try
                 {

@@ -13,7 +13,7 @@
     <!-- colorPrimary is used for the default action bar background -->
     <item name="colorPrimary">#CD003F</item>
     <!-- colorPrimaryDark is used for the status bar -->
-    <item name="colorPrimaryDark">#970941</item>
+    <item name="colorPrimaryDark">#951453</item>
     <!-- colorAccent is used as the default value for colorControlActivated
          which is used to tint widgets -->
     <item name="colorAccent">#FF4081</item>
@@ -22,7 +22,7 @@
     <item name="windowActionModeOverlay">true</item>
 
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
-    <item name="android:navigationBarColor">#970941</item>
+    <item name="android:navigationBarColor">#ad1457</item>
     <item name="android:windowLightNavigationBar">false</item>
   </style>
 
@@ -30,7 +30,7 @@
     <item name="android:windowBackground">@layout/splash_screen</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowFullscreen">true</item>
-    <item name="android:navigationBarColor">#970941</item>
+    <item name="android:navigationBarColor">#951453</item>
     <item name="android:windowLightNavigationBar">false</item>
   </style>
   
