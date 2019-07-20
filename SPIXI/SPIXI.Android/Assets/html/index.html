@@ -271,10 +271,10 @@
                     NEW
                 </div>
                 <hr class="spixi-separator noheightmargins"/>
-                <a href="ixian:newcontact"><div class="spixi-modal-item">Contact</div></a>
-                <a href="ixian:newchat"><div class="spixi-modal-item">Chat</div></a>
-                <a href="ixian:sendixi"><div class="spixi-modal-item">Send Ixi</div></a>
-                <a href="ixian:receiveixi"><div class="spixi-modal-item">Request Ixi</div></a>
+                <a href="javascript:selectFABOption('newcontact');"><div class="spixi-modal-item">Contact</div></a>
+                <a href="javascript:selectFABOption('newchat');"><div class="spixi-modal-item">Chat</div></a>
+                <a href="javascript:selectFABOption('sendixi');"><div class="spixi-modal-item">Send Ixi</div></a>
+                <a href="javascript:selectFABOption('receiveixi');"><div class="spixi-modal-item">Request Ixi</div></a>
                 <hr class="spixi-separator noheightmargins fullwidth"/>
                 <div class="spixi-modal-footer">
                     <a href="javascript:onHomeMenuClose();">
@@ -524,6 +524,12 @@
             document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to show";
 
         }
+    }
+
+    function selectFABOption(link)
+    {
+        onHomeMenuClose();
+        location.href = "ixian:" + link;      
     }
     
     function showWarning(value)
