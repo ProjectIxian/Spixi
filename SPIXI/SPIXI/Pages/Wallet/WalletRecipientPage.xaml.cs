@@ -46,7 +46,7 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:select:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:select:" }, StringSplitOptions.None);
+                string[] split = current_url.Split(new string[] { "ixian:select:|" }, StringSplitOptions.None);
                 string id = split[1];
                 onPickSucceeded(id);
             }

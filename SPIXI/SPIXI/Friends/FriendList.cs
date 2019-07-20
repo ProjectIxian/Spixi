@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Meta;
 using SPIXI.Network;
@@ -108,9 +109,11 @@ namespace SPIXI
             // Add new friend to the friendlist
             friends.Add(new_friend);
 
-            cachedHiddenMatchAddresses = null;
-
-            ProtocolMessage.resubscribeEvents();
+            if (approved)
+            {
+                cachedHiddenMatchAddresses = null;
+                ProtocolMessage.resubscribeEvents();
+            }
 
             return new_friend;
         }
@@ -340,6 +343,11 @@ namespace SPIXI
                     StreamProcessor.sendNickname(entry);
                 }
             }
+        }
+
+        public static void resetHiddenMatchAddressesCache()
+        {
+            cachedHiddenMatchAddresses = null;
         }
     }
 }

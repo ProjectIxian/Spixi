@@ -87,6 +87,9 @@ namespace SPIXI
                         int sig_length = reader.ReadInt32();
                         if (sig_length > 0)
                             sigdata = reader.ReadBytes(sig_length);
+
+                        encrypted = reader.ReadBoolean();
+                        sigEncrypted = reader.ReadBoolean();
                     }
                 }
             }
@@ -158,6 +161,9 @@ namespace SPIXI
                     else
                         writer.Write(0);
 
+                    writer.Write(encrypted);
+                    writer.Write(sigEncrypted);
+
                 }
                 return m.ToArray();
             }
@@ -188,15 +194,10 @@ namespace SPIXI
 
         public bool decrypt(byte[] private_key, byte[] aes_key, byte[] chacha_key)
         {
-            if (sigEncrypted)
-            {
-                return true;
-            }
             byte[] decrypted_data = _decrypt(data, private_key, aes_key, chacha_key);
             if (decrypted_data != null)
             {
                 data = decrypted_data;
-                sigEncrypted = true;
                 return true;
             }
             return false;
@@ -205,10 +206,15 @@ namespace SPIXI
         // Encrypts a provided signature with aes, then chacha based on the keys provided
         public bool encryptSignature(byte[] public_key, byte[] aes_password, byte[] chacha_key)
         {
+            if (sigEncrypted)
+            {
+                return true;
+            }
             byte[] encrypted_data = _encrypt(sigdata, public_key, aes_password, chacha_key);
             if (encrypted_data != null)
             {
                 sigdata = encrypted_data;
+                sigEncrypted = true;
                 return true;
             }
             return false;

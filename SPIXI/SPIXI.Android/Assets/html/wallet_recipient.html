@@ -81,12 +81,14 @@
         {
             return;
         }
-        
+        selectContacts();
+    }
+
+    function selectContacts() {
         var suffix = "";
         var i;
-        for (i = 0; i < recipients.length; i++) 
-        {
-           suffix = suffix + "|" + recipients[i];
+        for (i = 0; i < recipients.length; i++) {
+            suffix = suffix + "|" + recipients[i];
         }
         location.href = "ixian:select:" + suffix;
     }

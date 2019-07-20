@@ -294,7 +294,7 @@
             <!-- Modal content -->
             <div class="spixi-sidebar-content">
                 <div class="spixi-sidebar-header">
-                    <div id="sidebarclose" class="spixi-sidebar-closebutton">
+                    <div id="sidebarclose" class="spixi-sidebar-closebutton" onclick="javascript: onMainMenuClose();">
                         <i class="fa fa-arrow-left"></i>
                     </div>
 
@@ -306,42 +306,42 @@
                 
                 
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:address" class="">
+                    <a href="javascript:selectMenuOption('address');" class="">
                         <i class="fa fa-wallet spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">My Spixi Address</div>
                     </a>
                 </div>
                 
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:settings" class="">
+                    <a href="javascript:selectMenuOption('settings');" class="">
                         <i class="fa fa-cog spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">Settings</div>
                     </a>
                 </div>
                 
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:lock" class="">
+                    <a href="javascript:selectMenuOption('lock');" class="">
                         <i class="fa fa-lock spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">Security</div>
                     </a>
                 </div>
                 
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:backup" class="">
+                    <a href="javascript:selectMenuOption('backup');" class="">
                         <i class="fa fa-save spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">Backup</div>
                     </a>
                 </div>
  
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:encpass" class="">
+                    <a href="javascript:selectMenuOption('encpass');" class="">
                         <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">Encryption Password</div>
                     </a>
                 </div>                
 
                 <div class="spixi-sidebar-item">
-                    <a href="ixian:about" class="">
+                    <a href="javascript:selectMenuOption('about');" class="">
                         <i class="fa fa-info spixi-sidebar-item-icon"></i>
                         <div class="spixi-sidebar-item-text">About</div>
                     </a>
@@ -370,11 +370,14 @@
             .replace(/\//g, '&#x2F;');
     }
 
-    function onMainMenuAction() 
-    {
+    function onMainMenuAction() {
         leftSidebar.style.display = "block";
     }
-    
+
+    function onMainMenuClose() {
+        leftSidebar.style.display = "none";
+    }
+
     function onHomeMenuAction()
     {
         homeModal.style.display = "block";
@@ -413,11 +416,7 @@
     // Toolbar
     document.getElementById("toolbar").onclick = function() {
         onMainMenuAction();            
-    }   
-    document.getElementById("sidebarclose").onclick = function() {
-            leftSidebar.style.display = "none";
-    }      
-    
+    }       
     
     document.getElementById("exp1").onclick = function() {
         var x = document.getElementById("exp1-contents");   
@@ -526,12 +525,16 @@
         }
     }
 
-    function selectFABOption(link)
-    {
+    function selectFABOption(link) {
         onHomeMenuClose();
-        location.href = "ixian:" + link;      
+        location.href = "ixian:" + link;
     }
-    
+
+    function selectMenuOption(link) {
+        onMainMenuClose();
+        location.href = "ixian:" + link;
+    }
+
     function showWarning(value)
     {
         if (value == 0) {
@@ -624,7 +627,7 @@
     function clearPaymentActivity()
     {
         var paymentsNode = document.getElementById("paymentlist");
-            while (paymentsNode.firstChild) {
+        while (paymentsNode.firstChild) {
             paymentsNode.removeChild(paymentsNode.firstChild);
         }
     }

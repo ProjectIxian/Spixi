@@ -240,6 +240,8 @@ namespace SPIXI
 
         public void onAccept()
         {
+            FriendList.resetHiddenMatchAddressesCache();
+
             friend.approved = true;
 
             StreamProcessor.sendAcceptAdd(friend);

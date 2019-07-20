@@ -203,8 +203,24 @@
             }
         }
 
-        function clearRecentActivity() {
 
+        // Clears payment activity from wallet page
+        function clearRecentActivity() {
+            var paymentsNode = document.getElementById("exp2-contents");
+            while (paymentsNode.firstChild) {
+                paymentsNode.removeChild(paymentsNode.firstChild);
+            }
+        }
+
+        // Adds a payment
+        function addRecentActivity(txid, text, timestamp, amount) {
+            var paymentsNode = document.getElementById("exp2-contents");
+
+            var paymentEntry = document.createElement("div");
+            paymentEntry.className = "spixi-list-item";
+            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+
+            paymentsNode.appendChild(paymentEntry);
         }
 
         document.getElementById("exp1").onclick = function () {

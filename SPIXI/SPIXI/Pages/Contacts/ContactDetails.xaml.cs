@@ -4,6 +4,7 @@ using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
+using System.Linq;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -172,47 +173,45 @@ namespace SPIXI
         {
             Utils.sendUiCommand(webView, "clearRecentActivity");
 
-            // TODOSPIXI
-            /*
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
+                byte[] from_address = new Address(utransaction.pubKey).address;
                 // Filter out unrelated transactions
-                if(utransaction.from.Equals(friend.wallet_address, StringComparison.Ordinal) == false)
+                if(from_address.SequenceEqual(friend.walletAddress) == false)
                 {
-                    if (utransaction.to.Equals(friend.wallet_address, StringComparison.Ordinal) == false)
+                    if (utransaction.toList.ContainsKey(friend.walletAddress) == false)
                         continue;
                 }
 
                 string tx_type = "RECEIVED";
-                if (utransaction.from.Equals(Node.walletStorage.address, StringComparison.Ordinal))
+                if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     tx_type = "SENT";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", utransaction.id, tx_type, time, utransaction.amount.ToString(), utransaction.id));
+                webView.Eval(string.Format("addRecentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", utransaction.id, tx_type, time, utransaction.amount.ToString(), utransaction.id));
             }
 
             for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
             {
                 Transaction transaction = TransactionCache.transactions[i];
 
+                byte[] from_address = new Address(transaction.pubKey).address;
                 // Filter out unrelated transactions
-                if (transaction.from.Equals(friend.wallet_address, StringComparison.Ordinal) == false)
+                if (from_address.SequenceEqual(friend.walletAddress) == false)
                 {
-                    if (transaction.to.Equals(friend.wallet_address, StringComparison.Ordinal) == false)
+                    if (transaction.toList.ContainsKey(friend.walletAddress) == false)
                         continue;
                 }
 
                 string tx_type = "RECEIVED";
-                if (transaction.from.Equals(Node.walletStorage.address, StringComparison.Ordinal))
+                if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
                     tx_type = "SENT";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-                webView.Eval(string.Format("addPaymentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
+                webView.Eval(string.Format("addRecentActivity(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", transaction.id, tx_type, time, transaction.amount.ToString()));
             }
-            */
-
         }
 
         // Executed every second

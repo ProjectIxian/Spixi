@@ -213,7 +213,7 @@
     function setTotalAmount(totalAmount)
     {
         total_amount = totalAmount;
-        var amDiv = document.getElementById('totalamountwithfees');
+        var amDiv = document.getElementById('totalamount');
         amDiv.innerHTML = total_amount;
         
         calculateFees();
@@ -224,7 +224,7 @@
         var feeDiv = document.getElementById('fees');
         feeDiv.innerHTML = normal_fee;
         
-        var amFeeDiv = document.getElementById('totalamount');
+        var amFeeDiv = document.getElementById('totalamountwithfees');
 
         var amount_with_fees = Number(total_amount) + Number(normal_fee);
         amFeeDiv.innerHTML = amount_with_fees;

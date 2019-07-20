@@ -158,7 +158,7 @@ namespace SPIXI
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                addresses, time, confirmed_text, (amount/ctransaction.fee).ToString());
+                addresses, time, confirmed_text, (ctransaction.fee/amount).ToString() + "%");
             return;
         }
 

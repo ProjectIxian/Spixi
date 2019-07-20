@@ -52,7 +52,7 @@ namespace SPIXI
                     {
                         // Extract the public key from the Presence List
                         Friend f = FriendList.getFriend(message.recipient);
-                        if (f == null || !f.online)
+                        if (f == null)
                         {
                             continue;
                         }
@@ -102,11 +102,14 @@ namespace SPIXI
         {
             // TODO this function has to be improved and node's wallet address has to be added
 
+            string hostname = friend.searchForRelay();
+
             if (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null))
             {
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
             }else if(msg.encryptionType != StreamMessageEncryptionCode.none)
             {
+                StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 Console.WriteLine("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
@@ -114,8 +117,6 @@ namespace SPIXI
                 }
                 return false;
             }
-
-            string hostname = friend.searchForRelay();
 
             if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), Encoding.UTF8.GetBytes(msg.getID())))
             {
@@ -363,7 +364,10 @@ namespace SPIXI
             }else
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
-                sendAcceptAdd(friend);
+                if (friend.approved)
+                {
+                    sendAcceptAdd(friend);
+                }
             }
         }
 

@@ -1134,6 +1134,11 @@ a:active {
     margin-left: 30px;
 }
 
+#exp2-contents .spixi-friend-status-indicator {
+    margin-left: 15px;
+}
+
+
 .online .spixi-friend-status-indicator {
     display: block;
 }
