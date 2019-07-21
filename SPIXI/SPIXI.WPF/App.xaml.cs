@@ -13,5 +13,10 @@ namespace SPIXI.WPF
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            // TODO: pass down the exit call to the MainActivity in Spixi
+            Environment.Exit(0);
+        }
     }
 }
