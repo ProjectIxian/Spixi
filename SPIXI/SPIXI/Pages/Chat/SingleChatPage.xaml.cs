@@ -342,6 +342,11 @@ namespace SPIXI
         // Executed every second
         private void updateScreen()
         {
+            if (Navigation.NavigationStack[Navigation.NavigationStack.Count - 1] != this)
+            {
+                return;
+            }
+
             Logging.info("Updating chat");
 
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);

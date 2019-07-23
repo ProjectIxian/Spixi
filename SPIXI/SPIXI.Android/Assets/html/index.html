@@ -348,7 +348,7 @@
                 </div>
 
                 <div class="spixi-version">
-                    Spixi v0.2.0 BETA
+                    Spixi v0.1.1 BETA
                 </div>
             </div>
         </div>
@@ -687,10 +687,10 @@
     function setUnreadIndicator(unread_count) {
         if (unread_count != "0") {
             document.getElementById("tab2").firstElementChild.className = "spixi-tab-pad unread";
-            document.getElementById("unread_count").innerHTML = unread_count;
         } else {
             document.getElementById("tab2").firstElementChild.className = "spixi-tab-pad";
         }
+        document.getElementById("unread_count").innerHTML = unread_count;
     }
 
     // Clears all unread activity from main page
@@ -829,22 +829,33 @@ triggerOnTouchEnd:true,
     }
 
     var pinging = false;
+    var pingRefreshTime = 1000;
+    var hTimeout = null;
+
     function ping() {
         pinging = true;
+
+        if (hTimeout != null)
+        {
+            clearTimeout(hTimeout);
+        }
+
         location.href = "ixian:ping";
-        setTimeout(function () {
+        hTimeout = setTimeout(function () {
             ping();
-        }, 1000);
+        }, pingRefreshTime);
     }
 
     function startPing() {
         if (pinging) {
             return;
         }
+
         pinging = true;
+
         setTimeout(function () {
             ping();
-        }, 5000);
+        }, pingRefreshTime);
     }
 
     startPing();

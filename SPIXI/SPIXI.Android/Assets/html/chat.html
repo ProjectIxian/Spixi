@@ -272,24 +272,33 @@
         }
     }
 
-
     var pinging = false;
+    var pingRefreshTime = 1000;
+    var hTimeout = null;
+
     function ping() {
         pinging = true;
+
+        if (hTimeout != null) {
+            clearTimeout(hTimeout);
+        }
+
         location.href = "ixian:ping";
-        setTimeout(function () {
+        hTimeout = setTimeout(function () {
             ping();
-        }, 1000);
+        }, pingRefreshTime);
     }
 
     function startPing() {
         if (pinging) {
             return;
         }
+
         pinging = true;
+
         setTimeout(function () {
             ping();
-        }, 5000);
+        }, pingRefreshTime);
     }
 
     startPing();

@@ -62,6 +62,19 @@ namespace SPIXI
             {
                 if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
+                    if(!friend.online)
+                    {
+                        using (MemoryStream mw = new MemoryStream())
+                        {
+                            using (BinaryWriter writer = new BinaryWriter(mw))
+                            {
+                                writer.Write(wallet_address.Length);
+                                writer.Write(wallet_address);
+
+                                CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                            }
+                        }
+                    }
                     DateTime dt = DateTime.Now;
                     // TODO: message date should be fetched, not generated here
                     FriendMessage friend_message = new FriendMessage(message, String.Format("{0:t}", dt), true, type);
