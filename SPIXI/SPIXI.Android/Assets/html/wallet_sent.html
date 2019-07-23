@@ -140,29 +140,6 @@
                 document.getElementById('sent_status').className = "spixi-textsection-holder spixi-textsection-header spixi-text-green";
             }
         }
-
-        var pinging = false;
-        function ping() {
-            pinging = true;
-            location.href = "ixian:ping";
-            setTimeout(function () {
-                ping();
-            }, 5000);
-        }
-
-        function startPing() {
-            if (pinging) {
-                return;
-            }
-            pinging = true;
-            setTimeout(function () {
-                ping();
-            }, 5000);
-        }
-
-        startPing();
-
     </script>
-
 </body>
 </html>

@@ -65,11 +65,7 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
-            {
-                updateScreen();
-            }
-            else if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
             }
@@ -215,13 +211,8 @@ namespace SPIXI
         }
 
         // Executed every second
-        private void updateScreen()
+        public override void updateScreen()
         {
-            if (Navigation.NavigationStack[Navigation.NavigationStack.Count - 1] != this)
-            {
-                return;
-            }
-
             Logging.info("Updating contact details");
 
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);

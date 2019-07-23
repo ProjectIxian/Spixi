@@ -1,8 +1,4 @@
 ﻿using SPIXI.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -29,7 +25,12 @@ namespace SPIXI
             return DisplayAlert(title, message, cancel);
         }
 
-   
+
+        public virtual void updateScreen()
+        {
+
+        }
+
     }
 }
  

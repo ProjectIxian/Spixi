@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -32,7 +33,10 @@ namespace SPIXI
 
         private string currentTab = "tab1";
 
-		public HomePage ()
+        // UI timer
+        private static System.Timers.Timer uiTimer;
+
+        public HomePage ()
 		{
 			InitializeComponent ();
             NavigationPage.SetHasBackButton(this, false);
@@ -54,6 +58,15 @@ namespace SPIXI
             handleBackground();
 
             //  Navigation.PushAsync(new LockPage(), Config.defaultXamarinAnimations);
+
+
+            // Setup a timer to handle UI updates
+            if (uiTimer == null)
+            {
+                uiTimer = new System.Timers.Timer(2000);
+                uiTimer.Elapsed += new ElapsedEventHandler(onUpdateUI);
+                uiTimer.Start();
+            }
         }
 
         private void prepBackground()
@@ -82,11 +95,7 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
-            {
-                updateScreen();
-            }
-            else if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoaded();
             }
@@ -555,13 +564,8 @@ namespace SPIXI
 
 
         // Executed every second
-        private void updateScreen()
+        public override void updateScreen()
         {
-            if(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1] != this)
-            {
-                return;
-            }
-
             Logging.info("Updating Home");
 
             loadChats();
@@ -588,5 +592,19 @@ namespace SPIXI
 
         }
 
+        private void onUpdateUI(object source, ElapsedEventArgs e)
+        {
+            try
+            {
+                Page page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 1];
+                if (page != null && page is SpixiContentPage)
+                {
+                    ((SpixiContentPage)page).updateScreen();
+                }
+            }catch(Exception ex)
+            {
+                Logging.error("Exception occured in onUpdateUI: {0}", ex);
+            }
+        }
     }
 }

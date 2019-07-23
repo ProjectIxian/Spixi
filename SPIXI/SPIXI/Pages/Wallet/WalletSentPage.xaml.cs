@@ -60,11 +60,7 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:ping", StringComparison.Ordinal))
-            {
-                updateScreen();
-            }
-            else if(current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if(current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
             }
@@ -162,7 +158,7 @@ namespace SPIXI
             return;
         }
 
-        private void updateScreen()
+        public override void updateScreen()
         {
             Logging.info("Updating wallet send");
 

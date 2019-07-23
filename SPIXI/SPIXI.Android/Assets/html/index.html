@@ -827,38 +827,6 @@ triggerOnTouchEnd:true,
         addChat("102", "Three", "2 days ago", "img/spixiavatar.png", false, "Unread 2message");
 
     }
-
-    var pinging = false;
-    var pingRefreshTime = 1000;
-    var hTimeout = null;
-
-    function ping() {
-        pinging = true;
-
-        if (hTimeout != null)
-        {
-            clearTimeout(hTimeout);
-        }
-
-        location.href = "ixian:ping";
-        hTimeout = setTimeout(function () {
-            ping();
-        }, pingRefreshTime);
-    }
-
-    function startPing() {
-        if (pinging) {
-            return;
-        }
-
-        pinging = true;
-
-        setTimeout(function () {
-            ping();
-        }, pingRefreshTime);
-    }
-
-    startPing();
 </script>
 
 </body>
