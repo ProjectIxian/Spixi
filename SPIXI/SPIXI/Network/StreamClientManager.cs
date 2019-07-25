@@ -344,12 +344,36 @@ namespace SPIXI
             return null;
         }
 
-        public static int countStreamClients()
+        // Returns all the connected clients
+        public static string[] getConnectedClients(bool only_fully_connected = false)
         {
-            lock(streamClients)
+            List<String> result = new List<String>();
+
+            lock (streamClients)
             {
-                return streamClients.Count();
+                foreach (NetworkClient client in streamClients)
+                {
+                    if (client.isConnected())
+                    {
+                        if (only_fully_connected && !client.helloReceived)
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            string client_name = client.getFullAddress();
+                            result.Add(client_name);
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.error(string.Format("NetworkClientManager->getConnectedClients: {0}", e.ToString()));
+                        }
+                    }
+                }
             }
+
+            return result.ToArray();
         }
 
         public static bool sendToClient(string neighbor, ProtocolMessageCode code, byte[] data, byte[] helper_data)

@@ -50,18 +50,25 @@ namespace SPIXI
                     // Go through each message
                     foreach (StreamMessage message in offlineMessages)
                     {
-                        // Extract the public key from the Presence List
-                        Friend f = FriendList.getFriend(message.recipient);
-                        if (f == null)
+                        try
                         {
-                            continue;
-                        }
-                        // Send the message
-                        if (sendMessage(f, message, false))
+                            // Extract the public key from the Presence List
+                            Friend f = FriendList.getFriend(message.recipient);
+                            if (f == null)
+                            {
+                                continue;
+                            }
+                            // Send the message
+                            if (sendMessage(f, message, false))
+                            {
+                                // Add the message to the removal cache
+                                cache.Add(message);
+                            }
+                        }catch(Exception e)
                         {
-                            // Add the message to the removal cache
-                            cache.Add(message);
+                            Logging.error("Exception occured while trying to send offline message {0}", e);
                         }
+
                     }
 
                     // Check the removal cache for messages
@@ -102,13 +109,22 @@ namespace SPIXI
         {
             // TODO this function has to be improved and node's wallet address has to be added
 
+
             string hostname = friend.searchForRelay();
 
-            if (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null))
+            if (friend.publicKey != null && (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null)))
             {
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
-            }else if(msg.encryptionType != StreamMessageEncryptionCode.none)
+            }else if(msg.encryptionType != StreamMessageEncryptionCode.none || !friend.online)
             {
+                if (friend.publicKey == null)
+                {
+                    byte[] pub_k = FriendList.findContactPubkey(friend.walletAddress);
+                    friend.publicKey = pub_k;
+                }
+
+
+
                 StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 Console.WriteLine("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
@@ -342,17 +358,6 @@ namespace SPIXI
             {
                 Logging.error("Received invalid pubkey in handleRequestAdd for {0}", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
                 return;
-            }
-
-            using (MemoryStream mw = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(mw))
-                {
-                    writer.Write(sender_wallet.Length);
-                    writer.Write(sender_wallet);
-
-                    CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'R' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
-                }
             }
 
             Friend new_friend = FriendList.addFriend(sender_wallet, pub_key, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), null, null, 0, false);

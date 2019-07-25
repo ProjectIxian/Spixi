@@ -164,43 +164,17 @@ namespace SPIXI
                 return;
             }
 
-            if(FriendList.getFriend(wal) != null)
+            if(wal.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+            {
+                displaySpixiAlert("Cannot add yourself", "The address you have entered is your own address.", "OK");
+                return;
+            }
+
+            if (FriendList.getFriend(wal) != null)
             {
                 displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
                 return;
             }
-
-
-            ProtocolMessage.setWaitFor(ProtocolMessageCode.updatePresence);
-
-            using (MemoryStream mw = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(mw))
-                {
-                    writer.Write(wal.Length);
-                    writer.Write(wal);
-
-                    CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'R' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
-                }
-            }
-
-            ProtocolMessage.wait(30);
-
-
-            byte[] pubkey = FriendList.findContactPubkey(wal);
-            if(pubkey == null)
-            {
-                displaySpixiAlert("Contact does not exist", "Try again later.", "OK");
-                return;
-            }
-
-            if (!(new Address(pubkey)).address.SequenceEqual(wal))
-            {
-                displaySpixiAlert("Invalid public key", "Received invalid public key for address " + Base58Check.Base58CheckEncoding.EncodePlain(wal), "OK");
-                Logging.error("Received invalid pubkey in onRequest for {0}", Base58Check.Base58CheckEncoding.EncodePlain(wal));
-                return;
-            }
-
 
             string hostname = FriendList.getRelayHostname(wal);
             string relayip = null;
@@ -208,6 +182,8 @@ namespace SPIXI
             {
                 relayip = hostname;
             }
+
+            byte[] pubkey = FriendList.findContactPubkey(wal);
 
             Friend friend = FriendList.addFriend(wal, pubkey, Base58Check.Base58CheckEncoding.EncodePlain(wal), null, null, 0);
 

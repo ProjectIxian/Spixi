@@ -156,8 +156,14 @@ namespace SPIXI.Storage
                 {
                     writer.Write(friend.walletAddress.Length);
                     writer.Write(friend.walletAddress);
-                    writer.Write(friend.publicKey.Length);
-                    writer.Write(friend.publicKey);
+                    if (friend.publicKey != null)
+                    {
+                        writer.Write(friend.publicKey.Length);
+                        writer.Write(friend.publicKey);
+                    }else
+                    {
+                        writer.Write(0);
+                    }
                     writer.Write(friend.nickname);
 
                     // Chat history, todo.

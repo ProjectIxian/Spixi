@@ -195,7 +195,7 @@ namespace SPIXI
         public static byte[] findContactPubkey(byte[] wallet_address)
         {
             Friend f = getFriend(wallet_address);
-            if(f != null)
+            if(f != null && f.publicKey != null)
             {
                 return f.publicKey;
             }
@@ -215,6 +215,16 @@ namespace SPIXI
             Presence presence = PresenceList.getPresenceByAddress(wallet_address);
             if (presence == null)
             {
+                using (MemoryStream mw = new MemoryStream())
+                {
+                    using (BinaryWriter writer = new BinaryWriter(mw))
+                    {
+                        writer.Write(wallet_address.Length);
+                        writer.Write(wallet_address);
+
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                    }
+                }
                 return null;
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IXICore.Meta;
+using System;
 using Xamarin.Forms;
 
 namespace SPIXI
@@ -26,19 +27,29 @@ namespace SPIXI
 
         public static void sendUiCommand(WebView webView, string command, params string[] arguments)
         {
-            string cmd_str = command + "(";
-            bool first = true;
-            foreach(string arg in arguments)
+            try
             {
-                if(!first)
+                if(!webView.IsEnabled)
                 {
-                    cmd_str += ",";
+                    return;
                 }
-                cmd_str += "'" + escapeHtmlParameter(arg) + "'";
-                first = false;
+                string cmd_str = command + "(";
+                bool first = true;
+                foreach (string arg in arguments)
+                {
+                    if (!first)
+                    {
+                        cmd_str += ",";
+                    }
+                    cmd_str += "'" + escapeHtmlParameter(arg) + "'";
+                    first = false;
+                }
+                cmd_str += ");";
+                webView.Eval("try { " + cmd_str + " }catch(e){  }");
+            }catch(Exception e)
+            {
+                Logging.error("Exception occured in sendUiCommand " + e);
             }
-            cmd_str += ");";
-            webView.Eval(cmd_str);
         }
     }
 }

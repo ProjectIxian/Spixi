@@ -33,9 +33,6 @@ namespace SPIXI
 
         private string currentTab = "tab1";
 
-        // UI timer
-        private static System.Timers.Timer uiTimer;
-
         public HomePage ()
 		{
 			InitializeComponent ();
@@ -61,12 +58,11 @@ namespace SPIXI
 
 
             // Setup a timer to handle UI updates
-            if (uiTimer == null)
+            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
-                uiTimer = new System.Timers.Timer(2000);
-                uiTimer.Elapsed += new ElapsedEventHandler(onUpdateUI);
-                uiTimer.Start();
-            }
+                onUpdateUI();
+                return true; // True = Repeat again, False = Stop the timer
+            });
         }
 
         private void prepBackground()
@@ -348,8 +344,6 @@ namespace SPIXI
         {
             //webView.Eval(string.Format("setBalance(\"{0}\")", "0.0000"));
             //webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
-
-
         }
 
 
@@ -592,10 +586,14 @@ namespace SPIXI
 
         }
 
-        private void onUpdateUI(object source, ElapsedEventArgs e)
+        private void onUpdateUI(/*object source, ElapsedEventArgs e*/)
         {
             try
             {
+                if (!webView.IsEnabled)
+                {
+                    return;
+                }
                 Page page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 1];
                 if (page != null && page is SpixiContentPage)
                 {
