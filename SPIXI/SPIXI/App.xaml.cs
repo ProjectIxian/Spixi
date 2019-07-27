@@ -1,7 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Meta;
-
+using System.IO;
 using Xamarin.Forms;
 
 namespace SPIXI
@@ -13,8 +13,16 @@ namespace SPIXI
 		{
 			InitializeComponent();
 
+            // Prepare the personal folder
+            if (!Directory.Exists(Config.spixiUserFolder))
+            {
+                Directory.CreateDirectory(Config.spixiUserFolder);
+            }
+
+            movePersonalFiles();
+
             // Start logging
-            Logging.start();
+            Logging.start(Config.spixiUserFolder);
 
             // Load or generate a device ID.
             if (Application.Current.Properties.ContainsKey("uid"))
@@ -62,7 +70,16 @@ namespace SPIXI
             NavigationPage.SetHasNavigationBar(MainPage, false);
         }
 
-		protected override void OnStart ()
+        private void movePersonalFiles()
+        {
+            string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            if (File.Exists(Path.Combine(path, "spixi.wal")) && !File.Exists(Path.Combine(Config.spixiUserFolder, Config.walletFile)))
+            {
+                File.Move(Path.Combine(path, "spixi.wal"), Path.Combine(Config.spixiUserFolder, Config.walletFile));
+            }
+        }
+
+        protected override void OnStart ()
 		{
 			// Handle when your app starts
 		}

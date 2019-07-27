@@ -171,7 +171,7 @@ namespace SPIXI
                     BackgroundColor = Color.Gray
                 };
 
-                var filePath = Path.Combine(Node.localStorage.documentsPath, "avatar-tmp.jpg");
+                var filePath = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
 
                 try
                 {
@@ -197,30 +197,27 @@ namespace SPIXI
         // Applies the avatar image once the user chooses to Save changes
         public void applyAvatar()
         {
-            var filePath = Node.localStorage.getOwnAvatarPath();
-            filePath = Path.Combine(Node.localStorage.documentsPath, "avatar.jpg");
-            
-            var sourceFilePath = Path.Combine(Node.localStorage.documentsPath, "avatar-tmp.jpg");
+            var file_path = Node.localStorage.getOwnAvatarPath(false);
+            var source_file_path = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
 
             // Check if the source file exists before proceeding
-            if (!File.Exists(sourceFilePath))
+            if (!File.Exists(source_file_path))
             {
-                displaySpixiAlert("Error", "Cannot apply avatar image", "ok");
                 return;
             }
 
             // Remove the avatar image first
-            if (File.Exists(filePath))
+            if (File.Exists(file_path))
             {
-                File.Delete(filePath);
+                File.Delete(file_path);
             }
 
-            File.Copy(sourceFilePath, filePath);
+            File.Copy(source_file_path, file_path);
 
             // Delete the temporary avatar image if the copy was successfull
-            if (File.Exists(filePath))
+            if (File.Exists(file_path))
             {
-                File.Delete(sourceFilePath);
+                File.Delete(source_file_path);
             }
         }
 

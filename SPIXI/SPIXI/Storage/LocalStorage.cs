@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,27 +9,44 @@ namespace SPIXI.Storage
     // Used for storing and retrieving local data for SPIXI
     class LocalStorage
     {
-        public string documentsPath = "";
-
         public string nickname = "";
 
+        // storage paths
+        private string documentsPath = "";
 
-        public LocalStorage()
+        private string accountFileName = "account.ixi";
+        private string txCacheFileName = "txcache.ixi";
+        private string offlineFileName = "offline.ixi";
+
+
+        public LocalStorage(string path)
         {
             // Retrieve the app-specific and platform-specific documents path
-            documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            documentsPath = path;
+
+            // prepare tmp path
+            if (!Directory.Exists(Path.Combine(documentsPath, "tmp")))
+            {
+                Directory.CreateDirectory(Path.Combine(documentsPath, "tmp"));
+            }
+
+            // prepare chats path
+            if (!Directory.Exists(Path.Combine(documentsPath, "Chats")))
+            {
+                Directory.CreateDirectory(Path.Combine(documentsPath, "Chats"));
+            }
 
             // Read transactions
             readTransactionCacheFile();
         }
 
         // Returns the user's avatar path
-        public string getOwnAvatarPath()
+        public string getOwnAvatarPath(bool override_with_default = true)
         {
             var avatarPath = Path.Combine(documentsPath, "avatar.jpg");
 
             // Check if the file exists
-            if (File.Exists(avatarPath) == false)
+            if (File.Exists(avatarPath) == false && override_with_default)
             {
                 // Use the default avatar instead
                 avatarPath = "img/spixiavatar.png";
@@ -54,7 +70,7 @@ namespace SPIXI.Storage
         // Read the account file from local storage
         public bool readAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, "account.ixi");
+            string account_filename = Path.Combine(documentsPath, accountFileName);
 
             if (File.Exists(account_filename) == false)
             {
@@ -71,7 +87,7 @@ namespace SPIXI.Storage
             }
             catch (IOException e)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot open wallet file. {0}", e.Message));
+                Logging.log(LogSeverity.error, String.Format("Cannot open account file. {0}", e.Message));
                 return false;
             }
 
@@ -89,24 +105,14 @@ namespace SPIXI.Storage
                 int num_contacts = reader.ReadInt32();
                 for(int i = 0; i < num_contacts; i++)
                 {
-                    int wal_length = reader.ReadInt32();
-                    byte[] cwallet = reader.ReadBytes(wal_length);
-                    int pkey_length = reader.ReadInt32();
-                    byte[] cpubkey = reader.ReadBytes(pkey_length);
+                    int friend_len = reader.ReadInt32();
 
-                    string cnick = reader.ReadString();
-                    // Read chat history, todo
-                    int num_messages = reader.ReadInt32();
+                    Friend friend = new Friend(reader.ReadBytes(friend_len));
 
-                    int aes_len = reader.ReadInt32();
-                    byte[] aes = reader.ReadBytes(aes_len);
+                    // Read messages from chat history
+                    friend.messages = readMessagesFile(friend.walletAddress);
 
-                    int cc_len = reader.ReadInt32();
-                    byte[] chacha = reader.ReadBytes(cc_len);
-
-                    long key_generated_time = reader.ReadInt64();
-
-                    FriendList.addFriend(cwallet, cpubkey, cnick, aes, chacha, key_generated_time);
+                    FriendList.addFriend(friend);
                 }
 
             }
@@ -123,7 +129,7 @@ namespace SPIXI.Storage
         // Write the account file to local storage
         public bool writeAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, "account.ixi");
+            string account_filename = Path.Combine(documentsPath, accountFileName);
 
             BinaryWriter writer;
             try
@@ -154,43 +160,10 @@ namespace SPIXI.Storage
 
                 foreach(Friend friend in FriendList.friends)
                 {
-                    writer.Write(friend.walletAddress.Length);
-                    writer.Write(friend.walletAddress);
-                    if (friend.publicKey != null)
-                    {
-                        writer.Write(friend.publicKey.Length);
-                        writer.Write(friend.publicKey);
-                    }else
-                    {
-                        writer.Write(0);
-                    }
-                    writer.Write(friend.nickname);
+                    byte[] friend_bytes = friend.getBytes();
 
-                    // Chat history, todo.
-                    int num_messages = 0;
-                    writer.Write(num_messages);
-
-                    // encryption keys
-                    if (friend.aesKey != null)
-                    {
-                        writer.Write(friend.aesKey.Length);
-                        writer.Write(friend.aesKey);
-                    }else
-                    {
-                        writer.Write(0);
-                    }
-
-                    if (friend.chachaKey != null)
-                    {
-                        writer.Write(friend.chachaKey.Length);
-                        writer.Write(friend.chachaKey);
-                    }
-                    else
-                    {
-                        writer.Write(0);
-                    }
-
-                    writer.Write(friend.keyGeneratedTime);
+                    writer.Write(friend_bytes.Length);
+                    writer.Write(friend_bytes);
                 }
 
             }
@@ -205,7 +178,7 @@ namespace SPIXI.Storage
         // Deletes the account file if it exists
         public bool deleteAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, "account.ixi");
+            string account_filename = Path.Combine(documentsPath, accountFileName);
 
             if (File.Exists(account_filename) == false)
             {
@@ -222,7 +195,7 @@ namespace SPIXI.Storage
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
 
             List<FriendMessage> messages = new List<FriendMessage>();
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
+            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
 
             if (File.Exists(messages_filename) == false)
             {
@@ -277,13 +250,11 @@ namespace SPIXI.Storage
         public bool writeMessagesFile(byte[] wallet_bytes, List<FriendMessage> messages)
         {
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
+            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
 
             BinaryWriter writer;
             try
             {
-                // Create the chats directory if it doesn't exist
-                Directory.CreateDirectory(Path.Combine(documentsPath, "Chats"));
                 // Prepare the file for writing
                 writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
             }
@@ -331,7 +302,7 @@ namespace SPIXI.Storage
         public bool deleteMessagesFile(byte[] wallet_bytes)
         {
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.spx", wallet));
+            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
 
             if (File.Exists(messages_filename) == false)
             {
@@ -346,7 +317,7 @@ namespace SPIXI.Storage
         public List<StreamMessage> readOfflineMessagesFile()
         {
             List<StreamMessage> messages = new List<StreamMessage>();
-            string messages_filename = Path.Combine(documentsPath, String.Format("offline.spx"));
+            string messages_filename = Path.Combine(documentsPath, offlineFileName);
 
             if (File.Exists(messages_filename) == false)
             {
@@ -394,7 +365,7 @@ namespace SPIXI.Storage
         // Writes the cached offline messages to a file
         public bool writeOfflineMessagesFile(List<StreamMessage> messages)
         {
-            string messages_filename = Path.Combine(documentsPath, String.Format("offline.spx"));
+            string messages_filename = Path.Combine(documentsPath, offlineFileName);
 
             BinaryWriter writer;
             try
@@ -440,7 +411,7 @@ namespace SPIXI.Storage
         // Reads the message archive for a given wallet
         public bool readTransactionCacheFile()
         {
-            string tx_filename = Path.Combine(documentsPath, String.Format("txcache.spx"));
+            string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
             if (File.Exists(tx_filename) == false)
             {
@@ -502,7 +473,7 @@ namespace SPIXI.Storage
         // Writes the cached offline messages to a file
         public bool writeTransactionCacheFile()
         {
-            string tx_filename = Path.Combine(documentsPath, String.Format("txcache.spx"));
+            string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
             BinaryWriter writer;
             try
@@ -561,6 +532,11 @@ namespace SPIXI.Storage
             writer.Close();
 
             return true;
+        }
+
+        public string getTmpPath()
+        {
+            return Path.Combine(documentsPath, "tmp");
         }
 
     }

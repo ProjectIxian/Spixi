@@ -56,7 +56,7 @@ namespace SPIXI
             addMessageWithType(FriendMessageType.standard, wallet_address, message);
         }
 
-        public static void addMessageWithType(FriendMessageType type, byte[] wallet_address, string message)
+        public static void addMessageWithType(FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false)
         {
             foreach (Friend friend in friends)
             {
@@ -77,7 +77,7 @@ namespace SPIXI
                     }
                     DateTime dt = DateTime.Now;
                     // TODO: message date should be fetched, not generated here
-                    FriendMessage friend_message = new FriendMessage(message, String.Format("{0:t}", dt), true, type);
+                    FriendMessage friend_message = new FriendMessage(message, String.Format("{0:t}", dt), !local_sender, type);
                     friend.messages.Add(friend_message);
 
                     // If a chat page is visible, insert the message directly
@@ -123,6 +123,26 @@ namespace SPIXI
             friends.Add(new_friend);
 
             if (approved)
+            {
+                cachedHiddenMatchAddresses = null;
+                ProtocolMessage.resubscribeEvents();
+            }
+
+            return new_friend;
+        }
+
+        public static Friend addFriend(Friend new_friend)
+        {
+            if(friends.Find(x => x.walletAddress.SequenceEqual(new_friend.walletAddress)) != null)
+            {
+                // Already in the list
+                return null;
+            }
+
+            // Add new friend to the friendlist
+            friends.Add(new_friend);
+
+            if (new_friend.approved)
             {
                 cachedHiddenMatchAddresses = null;
                 ProtocolMessage.resubscribeEvents();

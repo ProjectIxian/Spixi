@@ -43,11 +43,15 @@ namespace SPIXI.Meta
             CryptoManager.initLib();
 
             // Prepare the wallet
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            walletStorage = new WalletStorage(Path.Combine(path, Config.walletFile));
+            walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
-            PeerStorage.init();
+            string peers_filename = "peers.ixi";
+            if(CoreConfig.isTestNet)
+            {
+                peers_filename = "testnet-peers.ixi";
+            }
 
+            PeerStorage.init(Config.spixiUserFolder, peers_filename);
         }
 
         static public void start()
@@ -56,7 +60,7 @@ namespace SPIXI.Meta
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
             // Prepare the local storage
-            localStorage = new SPIXI.Storage.LocalStorage();
+            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
             // Read the account file
             localStorage.readAccountFile();

@@ -1172,6 +1172,11 @@ a:active {
     display: inline-block;
 }
 
+.spixi-payment-request
+{
+
+}
+
 /* Modals */
 .spixi-modal {
     display: none; /* Hidden by default */

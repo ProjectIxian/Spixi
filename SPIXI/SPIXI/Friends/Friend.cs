@@ -82,9 +82,83 @@ namespace SPIXI
             chachaKey = chacha_key;
             aesKey = aes_key;
             keyGeneratedTime = key_generated_time;
+        }
 
-            // Read messages from chat history
-            messages = Node.localStorage.readMessagesFile(wallet);
+        public Friend(byte[] bytes)
+        {
+
+            using (MemoryStream m = new MemoryStream(bytes))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    int wal_length = reader.ReadInt32();
+                    walletAddress = reader.ReadBytes(wal_length);
+
+                    int pkey_length = reader.ReadInt32();
+                    publicKey = reader.ReadBytes(pkey_length);
+
+                    nickname = reader.ReadString();
+
+                    int aes_len = reader.ReadInt32();
+                    aesKey = reader.ReadBytes(aes_len);
+
+                    int cc_len = reader.ReadInt32();
+                    chachaKey = reader.ReadBytes(cc_len);
+
+                    keyGeneratedTime = reader.ReadInt64();
+
+                    approved = reader.ReadBoolean();
+                }
+            }
+        }
+
+        public byte[] getBytes()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+
+                    writer.Write(walletAddress.Length);
+                    writer.Write(walletAddress);
+                    if (publicKey != null)
+                    {
+                        writer.Write(publicKey.Length);
+                        writer.Write(publicKey);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+                    writer.Write(nickname);
+
+                    // encryption keys
+                    if (aesKey != null)
+                    {
+                        writer.Write(aesKey.Length);
+                        writer.Write(aesKey);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    if (chachaKey != null)
+                    {
+                        writer.Write(chachaKey.Length);
+                        writer.Write(chachaKey);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    writer.Write(keyGeneratedTime);
+
+                    writer.Write(approved);
+                }
+                return m.ToArray();
+            }
         }
 
         // Get the number of unread messages

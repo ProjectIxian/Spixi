@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
 using System.Text;
@@ -118,9 +119,11 @@ namespace SPIXI
             message.data = spixi_message.getBytes();
 
             Friend friend = FriendList.getFriend(message.recipient);
-            if (friend != null)
+            if (friend != null && (new IxiNumber(amount)) > 0)
             {
                 StreamProcessor.sendMessage(friend, message);
+
+                FriendList.addMessageWithType(FriendMessageType.requestFunds, friend.walletAddress, amount, true);
 
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }// else error?

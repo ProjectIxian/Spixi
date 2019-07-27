@@ -69,7 +69,7 @@ namespace SPIXI
         {
             try
             {
-                string docpath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+                string docpath = Config.spixiUserFolder;
                 string filepath = Path.Combine(docpath, Config.walletFile);
                 await DependencyService.Get<IFileOperations>().share(filepath, "spixi.wal");
             }

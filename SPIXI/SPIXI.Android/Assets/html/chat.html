@@ -104,17 +104,8 @@
     
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
-    } 
-    
-    function htmlEscape(str) {
-        return str
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/\//g, '&#x2F;');
     }
-    
+
     function test() {
             setNickname("Tester");
             showContactRequest(true);
@@ -179,11 +170,11 @@
 
                 var textEl = document.createElement('div');
                 textEl.className = "text";
-                textEl.innerHTML = htmlEscape(text);
+                textEl.innerHTML = text;
 
                 var timeEl = document.createElement('div');
                 timeEl.className = "time";
-                timeEl.innerHTML = htmlEscape(time);
+                timeEl.innerHTML = time;
 
                 var avatarEl = document.createElement('img');
                 avatarEl.className = "avatar";
@@ -203,14 +194,14 @@
     function addMe(avatar, text, time) {                
                 var textEl = document.createElement('div');
                 textEl.className = "text";
-                textEl.innerHTML = htmlEscape(text);
+                textEl.innerHTML = text;
 
                 var timeEl = document.createElement('div');
                 timeEl.className = "time";
-                timeEl.innerHTML = htmlEscape(time);
+                timeEl.innerHTML = time;
 
                 var bubbleEl = document.createElement('div');
-                bubbleEl.className = "spixi-bubble myself" + "";
+                bubbleEl.className = "spixi-bubble myself";
                 bubbleEl.appendChild(textEl);
                 bubbleEl.appendChild(timeEl);
 
@@ -223,8 +214,14 @@
         addText(avatar, text, time, "spixi-bubble");
     }    
 
-    function addPaymentRequest(msg) {
-        addThem("", "Please send me " + msg + "Ixis.", "");
+    function addPaymentRequest(text, amount, time) {
+        var message = text;
+        if (amount != "0") {
+            message += "<br/><div class=\"spixi-button small smallwidth center\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\">View details</div>";
+            addText("", message, time, "spixi-bubble spixi-payment-request");
+        } else {
+            addText("", message, time, "spixi-bubble myself spixi-payment-request");
+        }
     }
 
     function setNickname(nick) {

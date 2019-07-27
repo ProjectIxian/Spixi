@@ -362,7 +362,7 @@ namespace SPIXI
 
                         try
                         {
-                            string client_name = client.getFullAddress();
+                            string client_name = client.getFullAddress(true);
                             result.Add(client_name);
                         }
                         catch (Exception e)

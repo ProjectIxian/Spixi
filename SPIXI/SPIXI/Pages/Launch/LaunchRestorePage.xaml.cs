@@ -89,7 +89,7 @@ namespace SPIXI
                 return;
             }
 
-            string docpath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string docpath = Config.spixiUserFolder;
             string filepath = Path.Combine(docpath, Config.walletFile);
             try
             {

@@ -172,7 +172,8 @@ namespace SPIXI.Network
 
                                 if (endpoint.presenceAddress.type == 'R')
                                 {
-                                    if (StreamClientManager.getConnectedClients(true).Count() == 1)
+                                    string[] connected_servers = StreamClientManager.getConnectedClients(true);
+                                    if (connected_servers.Count() == 1 || !connected_servers.Contains(Node.primaryS2Address))
                                     {
                                         if(Node.primaryS2Address == "")
                                         {

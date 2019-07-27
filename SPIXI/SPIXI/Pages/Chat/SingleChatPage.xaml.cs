@@ -272,10 +272,7 @@ namespace SPIXI
                 {
 
                     // Call webview methods on the main UI thread only
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-                    {
-                        Utils.sendUiCommand(webView, "showContactRequest", "1");
-                    });
+                    Utils.sendUiCommand(webView, "showContactRequest", "1");
                     message.read = true;
                     return;
                 }
@@ -291,10 +288,14 @@ namespace SPIXI
             if (message.type == FriendMessageType.requestFunds)
             {
                 // Call webview methods on the main UI thread only
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+                if (message.from)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", message.message);
-                });
+                    Utils.sendUiCommand(webView, "addPaymentRequest", friend.nickname + " has sent a payment request" + " for " + message.message + " IxiCash.", message.message, message.timestamp);
+                }
+                else
+                {
+                    Utils.sendUiCommand(webView, "addPaymentRequest", "Payment request for " + message.message + " IxiCash has been sent.", "0", message.timestamp);
+                }
                 message.read = true;
                 return;
             }
@@ -309,10 +310,7 @@ namespace SPIXI
                 if (transaction == null)
                     return;
                 // Call webview methods on the main UI thread only
-                Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-                {
-                    Utils.sendUiCommand(webView, "addPaymentSent", transaction.amount.ToString(), message.message);
-                });
+                Utils.sendUiCommand(webView, "addPaymentSent", transaction.amount.ToString(), message.message);
                 return;
             }
 
@@ -324,10 +322,7 @@ namespace SPIXI
                 avatar = "img/spixiavatar.png";
             }
             // Call webview methods on the main UI thread only
-            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-            {
-                Utils.sendUiCommand(webView, prefix, avatar, message.message, message.timestamp);
-            });
+            Utils.sendUiCommand(webView, prefix, avatar, message.message, message.timestamp);
             message.read = true;
 
             // Write to chat history
