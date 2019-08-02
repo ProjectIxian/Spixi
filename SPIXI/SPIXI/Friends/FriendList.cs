@@ -105,6 +105,11 @@ namespace SPIXI
             //addMessage(wallet_address, message);
         }
 
+        // Sort the friend list alphabetically based on nickname
+        public static void sortFriends()
+        {
+            friends = friends.OrderBy(x => x.nickname).ToList();
+        }
 
         public static Friend addFriend(byte[] wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
         {
@@ -128,6 +133,8 @@ namespace SPIXI
                 ProtocolMessage.resubscribeEvents();
             }
 
+            sortFriends();
+
             return new_friend;
         }
 
@@ -147,6 +154,8 @@ namespace SPIXI
                 cachedHiddenMatchAddresses = null;
                 ProtocolMessage.resubscribeEvents();
             }
+
+            sortFriends();
 
             return new_friend;
         }
