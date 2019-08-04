@@ -22,7 +22,7 @@
     <script src="js/spixi.js"></script>
     
 </head>
-<body onload="location.href = 'ixian:onload';">
+<body onload="onload();">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar Chat -->
@@ -36,8 +36,8 @@
                     <div id="title" class="spixi-toolbar-chat-name"></div>
                     <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
-                <div class="col-2 spixi-center">
-                    
+                <div id="phonebtn" class="col-2 spixi-center" style="padding-top: 10px;">
+                    <i class="fas fa-phone"></i>
                 </div>     
             </div>
             
@@ -74,11 +74,11 @@
         <div id="chatholder" class="chatholder"></div>
         <div id="chatbar">
             <div class="chatbar-container">
-            <div id="chat_attach">
-                <i class="fa fa-wallet"></i>
-            </div>
-            <input type="text" id="chat_input" onkeyup="" placeholder="Type your message..."/>
-            <span id="chat_send" class="fa fa-arrow-circle-right spixi-textfield-holder-icon"></span>
+                <div id="chat_attach">
+                    <i class="fa fa-wallet"></i>
+                </div>
+                <input type="text" id="chat_input" onkeyup="" placeholder="Type your message..." />
+                <span id="chat_send" class="fa fa-arrow-circle-right spixi-textfield-holder-icon"></span>
             </div>
         </div>
         <div id="chatattachbar">
@@ -105,10 +105,14 @@
     document.getElementById("backbtn").onclick = function() {
         location.href = "ixian:back";
     }
+    
+    document.getElementById("phonebtn").onclick = function() {
+        location.href = "ixian:call";
+    }    
 
     function test() {
             setNickname("Tester");
-            showContactRequest(true);
+            //showContactRequest(true);
             addMe("avatar1.png", "Hi!", "11:23 AM");
             setTimeout(function () { addMe("avatar.png", "How are you today?", "11:23 AM"); }, 1000);
             setTimeout(function () { addThem("avatar1.png", "Hey!", "11:24 AM"); }, 1300);

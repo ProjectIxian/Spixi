@@ -97,6 +97,10 @@ namespace SPIXI
             {
                 onAccept();
             }
+            else if (current_url.Equals("ixian:call", StringComparison.Ordinal))
+            {
+                
+            }
             else if (current_url.Contains("ixian:chat:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
