@@ -337,6 +337,8 @@ namespace SPIXI
 
             Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
+            Utils.sendUiCommand(webView, "setVersion", Config.version);
+
             updateScreen();
         }
 

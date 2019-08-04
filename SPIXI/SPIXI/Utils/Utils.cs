@@ -45,7 +45,12 @@ namespace SPIXI
                     first = false;
                 }
                 cmd_str += ");";
-                webView.Eval("try { " + cmd_str + " }catch(e){  }");
+
+                // Call webview methods on the main UI thread only
+                Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+                {
+                    webView.Eval("try { " + cmd_str + " }catch(e){  }");
+                });
             }catch(Exception e)
             {
                 Logging.error("Exception occured in sendUiCommand " + e);

@@ -21,7 +21,7 @@ namespace SPIXI.Meta
 
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
-        public static readonly string version = "spixi-0.1.1"; // Spixi version
+        public static readonly string version = "spixi-0.1.2"; // Spixi version
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;

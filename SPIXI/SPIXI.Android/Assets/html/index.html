@@ -347,8 +347,7 @@
                     </a>
                 </div>
 
-                <div class="spixi-version">
-                    Spixi v0.1.1 BETA
+                <div class="spixi-version" id="version">
                 </div>
             </div>
         </div>
@@ -402,7 +401,9 @@
         }
     }
     
-    
+    function setVersion(version) {
+        document.getElementById("version").innerHTML = "Spixi " + version + " BETA";
+    }
     
     $('#status_balance').on('mousedown touchstart', function() {
         timeoutId = setTimeout(toggleBalance, 1000);
