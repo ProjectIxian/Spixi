@@ -16,6 +16,7 @@
  * TabBar
  * ToastBar
  * ErrorBar
+ * CallBar
  * Buttons
  * TextField
  * Switch
@@ -83,6 +84,13 @@ a:active {
     overflow: auto;
     
     background: #eef2f5;
+}
+
+img.emoji {
+   height: 2em;
+   width: 2em;
+   margin: 0 .05em 0 .1em;
+   vertical-align: -0.5em;
 }
 
 .spixi-center {
@@ -421,6 +429,36 @@ a:active {
 }
 .spixi-errorbar-message {
     margin-left: 60px;
+}
+
+/* CallBar */
+.spixi-callbar {
+    width: 100%;
+    /*position: fixed;*/
+    z-index: 101;
+    
+    font-size: 16pt;
+    height: 164px;
+    background-color: #25193C;
+    color: #FFFFFF;
+    padding-top: 3px;
+    font-size: 12pt;
+}
+
+.spixi-callbar-title {
+    font-size: 18pt;
+    margin-top: 16px;
+    margin-left: 26px;
+}
+
+.spixi-callbar-separator {
+    width: 90%;
+    height: 1px;
+
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    background-color: #403554;
 }
 
 /* Buttons */
@@ -1380,8 +1418,6 @@ a:active {
     text-align: center;
     color: #b5b5b5;
 }
-
-
 
 /* Color combos */
 .spixi-text-green {

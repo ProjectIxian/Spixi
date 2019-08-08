@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
+    <script src="libs/twemoji/twemoji.min.js"></script>
     
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
@@ -21,9 +22,17 @@
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
     
+
+    
+    <link href="css/jquery.lsxemojipicker.css" rel="stylesheet">
+	<script src="js/jquery.lsxemojipicker.js"></script>
+    
 </head>
 <body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
+
+             
+        
         
         <!-- Toolbar Chat -->
         <div class="spixi-toolbar shadow" >
@@ -119,8 +128,8 @@
             setNickname("Tester");
             //showContactRequest(true);
             addMe("avatar1.png", "Hi!", "11:23 AM");
-            setTimeout(function () { addMe("avatar.png", "How are you today?", "11:23 AM"); }, 1000);
-            setTimeout(function () { addThem("avatar1.png", "Hey!", "11:24 AM"); }, 1300);
+            setTimeout(function () { addMe("avatar.png", "How are you today? &#x1f602", "11:23 AM"); }, 1000);
+            setTimeout(function () { addThem("avatar1.png", "Hey! &#x1f604", "11:24 AM"); }, 1300);
             setTimeout(function () { addThem("avatar.png", "Great, thanks for asking.", "11:24 AM"); }, 1600);
             setTimeout(function () { addThem("avatar1.png", "And how are you?", "11:24 AM"); }, 1900);
             setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
@@ -189,6 +198,8 @@
                 textEl.className = "text";
                 textEl.innerHTML = text;
 
+                twemoji.parse(textEl);
+        
                 var timeEl = document.createElement('div');
                 timeEl.className = "time";
                 timeEl.innerHTML = time;
@@ -212,7 +223,9 @@
                 var textEl = document.createElement('div');
                 textEl.className = "text";
                 textEl.innerHTML = text;
-
+                
+                twemoji.parse(textEl);
+        
                 var timeEl = document.createElement('div');
                 timeEl.className = "time";
                 timeEl.innerHTML = time;
@@ -245,6 +258,14 @@
         document.getElementById("title").innerHTML = nick;
         document.getElementById("contactrequesttitle").innerHTML = nick + " has sent a CONTACT REQUEST";
     }
+    
+    $('#chat_emoji').lsxEmojiPicker({
+  twemoji: false,
+  onSelect: function(emoji){
+    console.log(emoji);
+      document.getElementById("chat_input").value += emoji.value + " ";
+  }
+    });
     
     // Handle 'attach' bar, allowing to send and request IXI
     document.getElementById("chat_attach").onclick = function () {
