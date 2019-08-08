@@ -1058,19 +1058,40 @@ a:active {
 
 .chatbar-container {
     display: table;
-    width: 90%;
+    width: 100%;
+    height: 100%;
     margin: auto;
+}
+
+.chatbar-sendbutton {
+    display: table-cell;
+    float: right;
+    font-size: 17pt;
+    margin-right: 15px;
+    margin-top: -48px;
+    position: relative;
+    z-index: 2;
+    color: #FFF;
+    padding-left: 7px;
+    padding-top: 8px;
+    
+    background: #BABABA none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
 }
 
 #chat_input {
     display: table-cell;
     width: 100%;
-    height: 45px;
-    margin-top: 6px;
-    padding: 0px 40px 0px 14px;
-    border: 1px solid #888;
-    border-radius: 25px;
+    height: 100%;
+    margin-top: 0px;
+    padding-right: 50px;
+    padding: 0px 70px 0px 3px;
+    border: 0px;
     background-color: #FFF;
+    caret-color: #C2185B;
     font-size: 16px;
     outline: none;
     vertical-align: middle;
@@ -1095,13 +1116,27 @@ a:active {
 #chat_attach {
     display: table-cell;
     width: 35px;
-    height: 50px;
-    font-size: 16pt;
+    font-size: 18pt;
     text-align: left;
-    color: #1693da;
+    color: #BABABA;
     vertical-align: middle;
+    padding-top: 4px;
+    padding-left: 17px;
+    padding-right: 9px;
+    
 }
 
+#chat_emoji {
+    display: table-cell;
+    width: 35px;
+
+    font-size: 18pt;
+    text-align: left;
+    color: #BABABA;
+    padding-top: 4px;
+    vertical-align: middle;
+    
+}
 .chatattachsymbol {
     color: #1693da;
     font-size: 18pt;

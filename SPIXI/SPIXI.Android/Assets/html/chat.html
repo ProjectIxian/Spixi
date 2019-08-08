@@ -22,7 +22,7 @@
     <script src="js/spixi.js"></script>
     
 </head>
-<body onload="onload();">
+<body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
         
         <!-- Toolbar Chat -->
@@ -75,10 +75,15 @@
         <div id="chatbar">
             <div class="chatbar-container">
                 <div id="chat_attach">
-                    <i class="fa fa-wallet"></i>
+                    <i class="fa fa-plus-circle"></i>
                 </div>
+                <div id="chat_emoji">
+                    <i class="fa fa-smile-wink"></i>
+                </div>
+                
                 <input type="text" id="chat_input" onkeyup="" placeholder="Type your message..." />
-                <span id="chat_send" class="fa fa-arrow-circle-right spixi-textfield-holder-icon"></span>
+                <div id="chat_send" class="fa fa-paper-plane chatbar-sendbutton"></div>
+                
             </div>
         </div>
         <div id="chatattachbar">
