@@ -161,18 +161,26 @@
         document.getElementById("chat_input").click();
         document.getElementById("chat_input").focus();
         var chat_text = document.getElementById("chat_input").value;
-        location.href = "ixian:chat:"+chat_text;
+        if(chat_text.length > 0)
+            location.href = "ixian:chat:"+chat_text;
     }
 
     $("#chat_input").keyup(function (event) {
         if (event.keyCode === 13) {
             $("#chat_send").click();
-
         }
+    
+        var chat_text = document.getElementById("chat_input").value;
+        if(chat_text.length > 0)        
+            document.getElementById("chat_send").style.backgroundColor = "#C1185B";
+        else 
+            document.getElementById("chat_send").style.backgroundColor = "#BABABA";
+        
     });
 
     function clearInput() {
         document.getElementById("chat_input").value = "";
+        document.getElementById("chat_send").style.backgroundColor = "#BABABA";
     }
     
     function addText(avatar, text, time, className) {
