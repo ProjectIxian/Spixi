@@ -254,7 +254,10 @@
 
             var textEls = msgEl.getElementsByClassName("text");
             if (textEls.length > 0) {
-                textEls[0].innerHTML = message;
+                var textEl = textEls[0];
+                textEl.innerHTML = message;
+
+                twemoji.parse(textEl);
             }
         }
     }

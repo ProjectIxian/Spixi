@@ -348,14 +348,16 @@ namespace SPIXI
                 case SpixiMessageCode.msgReceived:
                     {
                         handleMsgReceived(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
                     }
-                    break;
 
                 case SpixiMessageCode.msgRead:
                     {
                         handleMsgRead(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
                     }
-                    break;
             }
 
             if(friend == null)

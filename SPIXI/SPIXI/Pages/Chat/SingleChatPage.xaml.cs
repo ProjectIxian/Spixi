@@ -347,6 +347,7 @@ namespace SPIXI
 
         public void updateMessage(FriendMessage message)
         {
+            Logging.info("Sending update message for {0}, content {1} ", Crypto.hashToString(message.id), message.message);
             Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString());
         }
 

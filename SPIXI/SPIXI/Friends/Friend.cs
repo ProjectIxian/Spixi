@@ -402,15 +402,18 @@ namespace SPIXI
                 return false;
             }
 
-            if (!msg.read)
+            if (msg.localSender)
             {
-                msg.read = true;
-                Node.localStorage.writeMessagesFile(walletAddress, messages);
-            }
+                if (!msg.read)
+                {
+                    msg.read = true;
+                    Node.localStorage.writeMessagesFile(walletAddress, messages);
+                }
 
-            if(chat_page != null)
-            {
-                chat_page.updateMessage(msg);
+                if(chat_page != null)
+                {
+                    chat_page.updateMessage(msg);
+                }
             }
 
             return true;
@@ -425,15 +428,18 @@ namespace SPIXI
                 return false;
             }
 
-            if (!msg.confirmed)
+            if (msg.localSender)
             {
-                msg.confirmed = true;
-                Node.localStorage.writeMessagesFile(walletAddress, messages);
-            }
+                if (!msg.confirmed)
+                {
+                    msg.confirmed = true;
+                    Node.localStorage.writeMessagesFile(walletAddress, messages);
+                }
 
-            if (chat_page != null)
-            {
-                chat_page.updateMessage(msg);
+                if (chat_page != null)
+                {
+                    chat_page.updateMessage(msg);
+                }
             }
 
             return true;
