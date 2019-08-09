@@ -215,8 +215,14 @@ namespace SPIXI
 
                         StreamProcessor.sendMessage(message, node_ip);*/
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
+            // store the message and display it
+            FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, str, true);
 
+            // Finally, clear the input field
+            Utils.sendUiCommand(webView, "clearInput");
+
+            // Send the message
+            SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.data;
@@ -228,14 +234,6 @@ namespace SPIXI
 
             StreamProcessor.sendMessage(friend, message);
 
-            // Finally, add the text bubble visually
-            DateTime dt = DateTime.Now;
-            FriendMessage msg = new FriendMessage(str, String.Format("{0:t}", dt), false);
-            friend.messages.Add(msg);
-            insertMessage(msg);
-
-            // Finally, clear the input field
-            Utils.sendUiCommand(webView, "clearInput");
         }
 
         public void onAccept()
@@ -292,13 +290,13 @@ namespace SPIXI
             if (message.type == FriendMessageType.requestFunds)
             {
                 // Call webview methods on the main UI thread only
-                if (message.from)
+                if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", friend.nickname + " has sent a payment request" + " for " + message.message + " IxiCash.", message.message, message.timestamp);
+                    Utils.sendUiCommand(webView, "addPaymentRequest", "Payment request for " + message.message + " IxiCash has been sent.", "0", Clock.getRelativeTime(message.timestamp));
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", "Payment request for " + message.message + " IxiCash has been sent.", "0", message.timestamp);
+                    Utils.sendUiCommand(webView, "addPaymentRequest", friend.nickname + " has sent a payment request" + " for " + message.message + " IxiCash.", message.message, Clock.getRelativeTime(message.timestamp));
                 }
                 message.read = true;
                 return;
@@ -319,19 +317,37 @@ namespace SPIXI
             }
 
             string prefix = "addMe";
-            string avatar = Node.localStorage.getOwnAvatarPath();
-            if (message.from == true)
+            string avatar = "";//Node.localStorage.getOwnAvatarPath();
+            if (!message.localSender)
             {
                 prefix = "addThem";
                 avatar = "img/spixiavatar.png";
             }
             // Call webview methods on the main UI thread only
-            Utils.sendUiCommand(webView, prefix, avatar, message.message, message.timestamp);
-            message.read = true;
+            Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
 
-            // Write to chat history
-            if(message.from == false)
+            if (!message.read && !message.localSender)
+            {
+                message.read = true;
                 Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+
+                // Send read confirmation
+                StreamMessage msg_received = new StreamMessage();
+                msg_received.type = StreamMessageCode.info;
+                msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                msg_received.recipient = friend.walletAddress;
+                msg_received.data = new SpixiMessage(message.id, SpixiMessageCode.msgRead, null).getBytes();
+                msg_received.transaction = new byte[1];
+                msg_received.sigdata = new byte[1];
+                msg_received.encryptionType = StreamMessageEncryptionCode.none;
+
+                StreamProcessor.sendMessage(friend, msg_received, true);
+            }
+        }
+
+        public void updateMessage(FriendMessage message)
+        {
+            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString());
         }
 
         // Executed every second

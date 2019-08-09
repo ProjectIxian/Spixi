@@ -85,7 +85,7 @@ namespace SPIXI
 
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
-            FriendList.addMessageWithType(FriendMessageType.sentFunds, friend.walletAddress, transaction.id);
+            FriendList.addMessageWithType(null, FriendMessageType.sentFunds, friend.walletAddress, transaction.id);
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
         }

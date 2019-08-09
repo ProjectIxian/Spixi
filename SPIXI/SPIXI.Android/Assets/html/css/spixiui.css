@@ -1065,6 +1065,27 @@ img.emoji {
     border-radius: 32px;    
 }
 
+.spixi-bubble .statusIndicator {
+    display: none;
+}
+
+/* TODO replace statusIndicator with images */
+.spixi-bubble.myself .statusIndicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+}
+
+.spixi-bubble.sent .statusIndicator {
+    content: 'sent';
+    background-color: yellow;
+}
+
+.spixi-bubble.read .statusIndicator {
+    content: 'read';
+    background-color: green;
+}
 
 .chatholder {
     -moz-transition: all 0.6s ease-in-out;

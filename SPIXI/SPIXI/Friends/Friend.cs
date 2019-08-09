@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SPIXI
 {
@@ -20,28 +21,49 @@ namespace SPIXI
 
     public class FriendMessage
     {
+        private byte[] _id;
         public string message;
-        public string timestamp;
-        public bool from;
+        public long timestamp;
+        public bool localSender;
         public bool read;
+        public bool confirmed;
         public FriendMessageType type;
 
-        public FriendMessage(string msg, string time, bool fr)
+        public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t)
         {
+            _id = id;
             message = msg;
             timestamp = time;
-            from = fr;
-            read = false;
-            type = FriendMessageType.standard;
-        }
-
-        public FriendMessage(string msg, string time, bool fr, FriendMessageType t)
-        {
-            message = msg;
-            timestamp = time;
-            from = fr;
+            localSender = local_sender;
             read = false;
             type = t;
+            confirmed = false;
+        }
+
+        public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t)
+        {
+            message = msg;
+            timestamp = time;
+            localSender = local_sender;
+            read = false;
+            type = t;
+            confirmed = false;
+        }
+
+        public byte[] id
+        {
+            get
+            {
+                if (_id == null)
+                {
+                    _id = Guid.NewGuid().ToByteArray(); // Generate a new unique id
+                }
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
         }
     }
 
@@ -168,7 +190,7 @@ namespace SPIXI
             int unreadCount = 0;
             for(int i = messages.Count - 1; i > 0; i--)
             {
-                if(messages[i].read == true)
+                if(messages[i].read == true || messages[i].localSender == true)
                 {
                     break;
                 }
@@ -203,7 +225,7 @@ namespace SPIXI
             if (messages.Count < 1)
                 return false;
             FriendMessage last_message = messages[messages.Count - 1];
-            if (last_message.read == false)
+            if (last_message.read == false && !last_message.localSender)
                 return true;
 
             return false;
@@ -220,7 +242,10 @@ namespace SPIXI
             if (messages.Count < 1)
                 return;
             FriendMessage last_message = messages[messages.Count - 1];
-            last_message.read = true;
+            if (!last_message.localSender)
+            {
+                last_message.read = true;
+            }
         }
 
 
@@ -283,7 +308,7 @@ namespace SPIXI
 
                         Logging.info("Preparing key message");
 
-                        SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.keys, m.ToArray());
+                        SpixiMessage spixi_message = new SpixiMessage(new byte[] { 2 }, SpixiMessageCode.keys, m.ToArray());
 
                         // Send the nickname message to the S2 nodes
                         StreamMessage sm = new StreamMessage();
@@ -366,6 +391,52 @@ namespace SPIXI
             }
             // Finally, return the ip address of the node
             return relayIP;
+        }
+
+        public bool setMessageRead(byte[] id)
+        {
+            FriendMessage msg = messages.Find(x => x.id.SequenceEqual(id));
+            if(msg == null)
+            {
+                Logging.error("Error trying to set read indicator, message does not exist");
+                return false;
+            }
+
+            if (!msg.read)
+            {
+                msg.read = true;
+                Node.localStorage.writeMessagesFile(walletAddress, messages);
+            }
+
+            if(chat_page != null)
+            {
+                chat_page.updateMessage(msg);
+            }
+
+            return true;
+        }
+
+        public bool setMessageReceived(byte[] id)
+        {
+            FriendMessage msg = messages.Find(x => x.id.SequenceEqual(id));
+            if (msg == null)
+            {
+                Logging.error("Error trying to set received indicator, message does not exist");
+                return false;
+            }
+
+            if (!msg.confirmed)
+            {
+                msg.confirmed = true;
+                Node.localStorage.writeMessagesFile(walletAddress, messages);
+            }
+
+            if (chat_page != null)
+            {
+                chat_page.updateMessage(msg);
+            }
+
+            return true;
         }
     }
 }

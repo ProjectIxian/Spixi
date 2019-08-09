@@ -108,22 +108,23 @@ namespace SPIXI
 
         private void onRequest(string recipient, string amount)
         {
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
-
-            StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
-            message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
-            message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
-            message.data = spixi_message.getBytes();
-
-            Friend friend = FriendList.getFriend(message.recipient);
+            byte[] recipient_bytes = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
+            Friend friend = FriendList.getFriend(recipient_bytes);
             if (friend != null && (new IxiNumber(amount)) > 0)
             {
-                StreamProcessor.sendMessage(friend, message);
+                FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, amount, true);
 
-                FriendList.addMessageWithType(FriendMessageType.requestFunds, friend.walletAddress, amount, true);
+                SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
+
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.info;
+                message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
+                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = spixi_message.getBytes();
+
+                StreamProcessor.sendMessage(friend, message);
 
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }// else error?

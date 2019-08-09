@@ -337,7 +337,7 @@ namespace SPIXI
 
             Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
-            Utils.sendUiCommand(webView, "setVersion", Config.version);
+            Utils.sendUiCommand(webView, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
             updateScreen();
         }
@@ -487,10 +487,10 @@ namespace SPIXI
                         excerpt = "Contact Request";
 
                     Utils.sendUiCommand(webView, "addChat",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount().ToString());
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount().ToString());
 
                     Utils.sendUiCommand(webView, "addUnreadActivity",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt);
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt);
                 }
 
             }
@@ -515,7 +515,7 @@ namespace SPIXI
                         excerpt = "Contact Request";
 
                     Utils.sendUiCommand(webView, "addChat",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, "0");
+                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, "0");
                 }
             }
         }

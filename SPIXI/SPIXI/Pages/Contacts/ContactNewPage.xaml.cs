@@ -190,7 +190,7 @@ namespace SPIXI
             // Send the message to the S2 nodes
             byte[] recipient_address = wal;
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 0 }, SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
 
             StreamMessage message = new StreamMessage();

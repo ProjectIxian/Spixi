@@ -223,14 +223,18 @@ namespace SPIXI.Storage
                 int num_messages = reader.ReadInt32();
                 for (int i = 0; i < num_messages; i++)
                 {
+                    int id_len = reader.ReadInt32();
+                    byte[] id = reader.ReadBytes(id_len);
                     int s_type = reader.ReadInt32();
                     string s_message = reader.ReadString();
-                    string s_timestamp = reader.ReadString();
-                    bool s_from = reader.ReadBoolean();
+                    long s_timestamp = reader.ReadInt64();
+                    bool s_local_sender = reader.ReadBoolean();
                     bool s_read = reader.ReadBoolean();
+                    bool s_confirmed = reader.ReadBoolean();
 
-                    FriendMessage message = new FriendMessage(s_message, s_timestamp, s_from, (FriendMessageType)s_type);
+                    FriendMessage message = new FriendMessage(id, s_message, s_timestamp, s_local_sender, (FriendMessageType)s_type);
                     message.read = s_read;
+                    message.confirmed = s_confirmed;
                     messages.Add(message);
                 }
 
@@ -277,15 +281,14 @@ namespace SPIXI.Storage
 
                 foreach(FriendMessage message in messages)
                 {
-                    /*if (message.type != FriendMessageType.requestAdd)
-                    {*/
-                        int s_type = (int)message.type;
-                        writer.Write(s_type);
-                        writer.Write(message.message);
-                        writer.Write(message.timestamp);
-                        writer.Write(message.from);
-                        writer.Write(message.read);
-                    //}
+                    writer.Write(message.id.Length);
+                    writer.Write(message.id);
+                    writer.Write((int)message.type);
+                    writer.Write(message.message);
+                    writer.Write(message.timestamp);
+                    writer.Write(message.localSender);
+                    writer.Write(message.read);
+                    writer.Write(message.confirmed);
                 }
 
             }

@@ -1,5 +1,4 @@
 ﻿using IXICore;
-using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Meta;
 using SPIXI.Network;
@@ -51,12 +50,12 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(byte[] wallet_address, string message)
+        public static void addMessage(byte[] id, byte[] wallet_address, string message)
         {
-            addMessageWithType(FriendMessageType.standard, wallet_address, message);
+            addMessageWithType(id, FriendMessageType.standard, wallet_address, message);
         }
 
-        public static void addMessageWithType(FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false)
         {
             foreach (Friend friend in friends)
             {
@@ -75,9 +74,8 @@ namespace SPIXI
                             }
                         }
                     }
-                    DateTime dt = DateTime.Now;
                     // TODO: message date should be fetched, not generated here
-                    FriendMessage friend_message = new FriendMessage(message, String.Format("{0:t}", dt), !local_sender, type);
+                    FriendMessage friend_message = new FriendMessage(id, message, Clock.getTimestamp(), local_sender, type);
                     friend.messages.Add(friend_message);
 
                     // If a chat page is visible, insert the message directly
@@ -93,7 +91,7 @@ namespace SPIXI
                     // Write to chat history
                     Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
 
-                    return;
+                    return friend_message;
                 }
             }
 
@@ -103,6 +101,7 @@ namespace SPIXI
             // Ignoring such messages for now
             //addFriend(wallet_address, "pubkey", "Unknown");
             //addMessage(wallet_address, message);
+            return null;
         }
 
         // Sort the friend list alphabetically based on nickname
@@ -158,42 +157,6 @@ namespace SPIXI
             sortFriends();
 
             return new_friend;
-        }
-
-        // Scan the presence list for new contacts
-        public static void refreshList()
-        {
-            return;
-            /*foreach (Presence presence in PresenceList.presences)
-            {
-                // Show only client nodes as contacts
-                bool client_found = false;
-                foreach (PresenceAddress addr in presence.addresses)
-                {
-                    if (addr.type == 'C')
-                    {
-                        client_found = true;
-                        break;
-                    }
-                }
-
-                if (client_found == false)
-                {
-                    continue;
-                }
-
-
-                byte[] wallet = presence.wallet;
-                byte[] pubkey = presence.pubkey;
-                string name = "Unknown";
-
-                if (wallet.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
-                {
-                    name = Node.localStorage.nickname;
-                }
-
-                addFriend(wallet, pubkey, name);
-            }*/
         }
 
         // Clear the entire list of contacts

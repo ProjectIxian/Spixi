@@ -114,52 +114,62 @@ namespace SPIXI
                     writer.Write((int)encryptionType);
 
                     // Write the sender
-                    int sender_length = sender.Length;
-                    writer.Write(sender_length);
-
-                    if (sender_length > 0)
+                    if (sender != null)
+                    {
+                        writer.Write(sender.Length);
                         writer.Write(sender);
+                    }
                     else
+                    {
                         writer.Write(0);
+                    }
 
 
                     // Write the recipient
-                    int recipient_length = recipient.Length;
-                    writer.Write(recipient_length);
-
-                    if (recipient_length > 0)
+                    if (recipient != null)
+                    {
+                        writer.Write(recipient.Length);
                         writer.Write(recipient);
+                    }
                     else
+                    {
                         writer.Write(0);
+                    }
 
 
                     // Write the data
-                    int data_length = data.Length;
-                    writer.Write(data_length);
-
-                    if (data_length > 0)
+                    if (data != null)
+                    {
+                        writer.Write(data.Length);
                         writer.Write(data);
+                    }
                     else
+                    {
                         writer.Write(0);
+                    }
 
                     // Write the tx
-                    int tx_length = transaction.Length;
-                    writer.Write(tx_length);
-
-                    if (tx_length > 0)
+                    if (transaction != null)
+                    {
+                        writer.Write(transaction.Length);
                         writer.Write(transaction);
+                    }
                     else
+                    {
                         writer.Write(0);
+                    }
 
 
                     // Write the sig
-                    int sig_length = sigdata.Length;
-                    writer.Write(sig_length);
-
-                    if (sig_length > 0)
+                    if (sigdata != null)
+                    {
+                        writer.Write(sigdata.Length);
                         writer.Write(sigdata);
+                    }
                     else
+                    {
                         writer.Write(0);
+                    }
 
                     writer.Write(encrypted);
                     writer.Write(sigEncrypted);
@@ -290,7 +300,7 @@ namespace SPIXI
             }
             else
             {
-                Logging.error("Cannot decrypt message, invalid encryption type {0} was specified.", encryptionType);
+                Logging.error("Cannot decrypt message, invalid decryption type {0} was specified.", encryptionType);
             }
             return null;
         }

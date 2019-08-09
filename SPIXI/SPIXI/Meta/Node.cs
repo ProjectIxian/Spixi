@@ -32,6 +32,8 @@ namespace SPIXI.Meta
 
         public static string primaryS2Address = "";
 
+        public static int startCounter = 0;
+
         public Node()
         {
             CoreConfig.productVersion = Config.version;
@@ -73,6 +75,8 @@ namespace SPIXI.Meta
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();
+
+            startCounter++;
 
             // Setup a timer to handle routine updates
             mainLoopTimer = new System.Timers.Timer(2500);

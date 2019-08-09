@@ -192,57 +192,72 @@
         document.getElementById("chat_send").style.backgroundColor = "#BABABA";
     }
     
-    function addText(avatar, text, time, className) {
+    function addText(id, avatar, text, time, className) {
 
-                var textEl = document.createElement('div');
-                textEl.className = "text";
-                textEl.innerHTML = text;
+            var textEl = document.createElement('div');
+            textEl.className = "text";
+            textEl.innerHTML = text;
 
-                twemoji.parse(textEl);
-        
-                var timeEl = document.createElement('div');
-                timeEl.className = "time";
-                timeEl.innerHTML = time;
+            twemoji.parse(textEl);
 
+            var timeEl = document.createElement('div');
+            timeEl.className = "time";
+            timeEl.innerHTML = "<div class=\"statusIndicator\"></div>" + time;
+
+
+            var bubbleEl = document.createElement('div');
+            bubbleEl.id = "msg_" + id;
+            bubbleEl.className = className + "";
+            bubbleEl.appendChild(textEl);
+            bubbleEl.appendChild(timeEl);
+
+            if (avatar != "") {
                 var avatarEl = document.createElement('img');
                 avatarEl.className = "avatar";
                 avatarEl.src = avatar;
-
-                var bubbleEl = document.createElement('div');
-                bubbleEl.className = className + "";
-                bubbleEl.appendChild(textEl);
-                bubbleEl.appendChild(timeEl);
                 bubbleEl.appendChild(avatarEl);
+            }
 
-                document.getElementById("messages").appendChild(bubbleEl);
-                //window.scrollTo(0, document.body.scrollHeight);             
-                bubbleEl.scrollIntoView(true);
+            document.getElementById("messages").appendChild(bubbleEl);
+            //window.scrollTo(0, document.body.scrollHeight);             
+            bubbleEl.scrollIntoView(true);
     }
 
-    function addMe(avatar, text, time) {                
-                var textEl = document.createElement('div');
-                textEl.className = "text";
-                textEl.innerHTML = text;
-                
-                twemoji.parse(textEl);
-        
-                var timeEl = document.createElement('div');
-                timeEl.className = "time";
-                timeEl.innerHTML = time;
-
-                var bubbleEl = document.createElement('div');
-                bubbleEl.className = "spixi-bubble myself";
-                bubbleEl.appendChild(textEl);
-                bubbleEl.appendChild(timeEl);
-
-                document.getElementById("messages").appendChild(bubbleEl);
-                //window.scrollTo(0, document.body.scrollHeight);             
-                bubbleEl.scrollIntoView(true);
+    function addMe(id, avatar, text, time, sent, read) {    
+        var additionalClasses = "";
+        if (sent == "True") {
+            additionalClasses = " sent";
+        }
+        if (read == "True") {
+            additionalClasses += " read";
+        }
+        addText(id, avatar, text, time, "spixi-bubble myself" + additionalClasses);
     }
 
-    function addThem(avatar, text, time) {
-        addText(avatar, text, time, "spixi-bubble");
-    }    
+    function addThem(id, avatar, text, time) {
+        addText(id, avatar, text, time, "spixi-bubble");
+    }
+
+    function updateMessage(id, message, sent, read) {
+        var msgEl = document.getElementById("msg_" + id);
+        if (msgEl != null) {
+
+            var additionalClasses = "";
+            if (sent == "True") {
+                additionalClasses = " sent";
+            }
+            if (read == "True") {
+                additionalClasses += " read";
+            }
+
+            msgEl.className = "spixi-bubble myself" + additionalClasses;
+
+            var textEls = msgEl.getElementsByClassName("text");
+            if (textEls.length > 0) {
+                textEls[0].innerHTML = message;
+            }
+        }
+    }
 
     function addPaymentRequest(text, amount, time) {
         var message = text;

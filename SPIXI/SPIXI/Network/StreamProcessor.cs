@@ -175,17 +175,47 @@ namespace SPIXI
                      }*/
         }
 
+
         // Called when receiving encryption keys from the S2 node
         public static void handleReceivedKeys(byte[] sender, byte[] data)
         {
             Friend friend = FriendList.getFriend(sender);
-            if(friend != null)
+            if (friend != null)
             {
                 friend.receiveKeys(data);
-            }else
+            }
+            else
             {
                 // TODO TODO TODO handle this edge case, by displaying request to add notification to user
                 Logging.error("Received keys for an unknown friend.");
+            }
+        }
+
+        // Called when receiving received confirmation from the message recipient
+        public static void handleMsgReceived(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                friend.setMessageReceived(data.id);
+            }
+            else
+            {
+                Logging.error("Received Message received for an unknown friend.");
+            }
+        }
+
+        // Called when receiving read confirmation from the message recipient
+        public static void handleMsgRead(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                friend.setMessageRead(data.id);
+            }
+            else
+            {
+                Logging.error("Received Message read for an unknown friend.");
             }
         }
 
@@ -232,27 +262,6 @@ namespace SPIXI
                     }
         }*/
 
-        // Prepare a Spixi S2 message. Encrypts the provided text combined with a SpixiMessageCode using the provided publicKey
-        public static byte[] prepareSpixiMessage(StreamMessageCode code, string text, byte[] publicKey)
-        {
-            Logging.info(string.Format("PREP: {0} : {1}", (int)code, text));
-            using (MemoryStream m = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(m))
-                {
-                    // NOTE: storing a 0 value integer as the initial part of the message will result in decryption errors
-                    // on the other client. As such, we add a dummy offset of 23
-                    int safe_code = (int)code + 23;
-                    writer.Write(safe_code);
-                    writer.Write(text);
-
-                    byte[] encrypted_message = CryptoManager.lib.encryptWithRSA(m.ToArray(), publicKey);
-
-                    return encrypted_message;
-                }
-            }
-        }
-
         // Called when receiving S2 data from clients
         public static void receiveData(byte[] bytes, RemoteEndpoint endpoint)
         {
@@ -265,6 +274,8 @@ namespace SPIXI
 
             Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(message.sender), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
 
+            Friend friend = null;
+
             // decrypt the message if necessary
             // TODO TODO TODO add message receive queue for when the keys aren't available yet
             if (message.encryptionType != StreamMessageEncryptionCode.none)
@@ -272,7 +283,7 @@ namespace SPIXI
                 byte[] aes_key = null;
                 byte[] chacha_key = null;
 
-                Friend friend = FriendList.getFriend(message.sender);
+                friend = FriendList.getFriend(message.sender);
                 if(friend != null)
                 {
                     aes_key = friend.aesKey;
@@ -284,13 +295,12 @@ namespace SPIXI
             // Extract the Spixi message
             SpixiMessage spixi_message = new SpixiMessage(message.data);
 
-
             switch(spixi_message.type)
             {
                 case SpixiMessageCode.chat:
                     {
                         // Add the message to the friend list
-                        FriendList.addMessage(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        FriendList.addMessage(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -311,7 +321,7 @@ namespace SPIXI
                 case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
-                        handleRequestAdd(message.sender, spixi_message.data);
+                        handleRequestAdd(spixi_message.id, message.sender, spixi_message.data);
                     }
                     break;
 
@@ -325,7 +335,7 @@ namespace SPIXI
                 case SpixiMessageCode.requestFunds:
                     {
                         // Friend requested funds
-                        handleRequestFunds(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleRequestFunds(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -334,7 +344,41 @@ namespace SPIXI
                         handleReceivedKeys(message.sender, spixi_message.data);
                     }
                     break;
+
+                case SpixiMessageCode.msgReceived:
+                    {
+                        handleMsgReceived(message.sender, spixi_message);
+                    }
+                    break;
+
+                case SpixiMessageCode.msgRead:
+                    {
+                        handleMsgRead(message.sender, spixi_message);
+                    }
+                    break;
             }
+
+            if(friend == null)
+            {
+                friend = FriendList.getFriend(message.sender);
+            }
+
+            if(friend == null)
+            {
+                Logging.error("Cannot send received confirmation, friend is null");
+            }
+
+            // Send received confirmation
+            StreamMessage msg_received = new StreamMessage();
+            msg_received.type = StreamMessageCode.info;
+            msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            msg_received.recipient = message.sender;
+            msg_received.data = new SpixiMessage(spixi_message.id, SpixiMessageCode.msgReceived, null).getBytes();
+            msg_received.transaction = new byte[1];
+            msg_received.sigdata = new byte[1];
+            msg_received.encryptionType = StreamMessageEncryptionCode.none;
+
+            sendMessage(friend, msg_received, true);
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
@@ -352,7 +396,7 @@ namespace SPIXI
             return;
         }
 
-        private static void handleRequestAdd(byte[] sender_wallet, byte[] pub_key)
+        private static void handleRequestAdd(byte[] id, byte[] sender_wallet, byte[] pub_key)
         {
             if(!(new Address(pub_key)).address.SequenceEqual(sender_wallet))
             {
@@ -364,7 +408,7 @@ namespace SPIXI
 
             if (new_friend != null)
             {
-                FriendList.addMessageWithType(FriendMessageType.requestAdd, sender_wallet, "");
+                FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, "");
                 requestNickname(new_friend);
             }else
             {
@@ -403,11 +447,11 @@ namespace SPIXI
 
             sendNickname(friend);
 
-            FriendList.addMessage(friend.walletAddress, friend.nickname + " has accepted your friend request.");
+            FriendList.addMessage(null, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
 
 
-        private static void handleRequestFunds(byte[] sender_wallet, string amount)
+        private static void handleRequestFunds(byte[] id, byte[] sender_wallet, string amount)
         {
             // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender_wallet);
@@ -416,7 +460,7 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(FriendMessageType.requestFunds, sender_wallet, amount);
+            FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
         }
 
         public static void sendAcceptAdd(Friend friend)
@@ -426,7 +470,7 @@ namespace SPIXI
 
             friend.generateKeys();
 
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 1 }, SpixiMessageCode.acceptAdd, friend.aesKey);
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
@@ -444,7 +488,7 @@ namespace SPIXI
 
         public static void sendNickname(Friend friend)
         {
-            SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
+            SpixiMessage reply_spixi_message = new SpixiMessage(new byte[] { 4 }, SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
 
             // Send the nickname message to friend
             StreamMessage reply_message = new StreamMessage();
@@ -467,7 +511,7 @@ namespace SPIXI
         public static void requestNickname(Friend friend)
         {
             // Prepare the message and send to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getNick, new byte[1]);
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 3 }, SpixiMessageCode.getNick, new byte[1]);
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
