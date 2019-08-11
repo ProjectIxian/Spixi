@@ -30,9 +30,6 @@
 </head>
 <body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
-
-             
-        
         
         <!-- Toolbar Chat -->
         <div class="spixi-toolbar shadow" >
@@ -77,7 +74,6 @@
         
         <div id="messages">
             <div class="spixi-holder-20"></div>
-
         </div>
 
         <div id="chatholder" class="chatholder"></div>
@@ -128,14 +124,14 @@
             setNickname("Tester");
             //showContactRequest(true);
             addMe("avatar1.png", "Hi!", "11:23 AM");
-            setTimeout(function () { addMe("avatar.png", "How are you today? &#x1f602", "11:23 AM"); }, 1000);
-            setTimeout(function () { addThem("avatar1.png", "Hey! &#x1f604", "11:24 AM"); }, 1300);
-            setTimeout(function () { addThem("avatar.png", "Great, thanks for asking.", "11:24 AM"); }, 1600);
-            setTimeout(function () { addThem("avatar1.png", "And how are you?", "11:24 AM"); }, 1900);
-            setTimeout(function () { addMe("avatar1.png", "Great! Just got back from the moon.", "11:24 AM"); }, 2200);
-            setTimeout(function () { addThem("avatar1.png", "Ohh??? What were you doing there?", "11:25 AM"); }, 2500);
-            setTimeout(function () { addMe("avatar1.png", "Was building my own Luna Park...", "11:25 AM"); }, 3000);
-            setTimeout(function () { addMe("avatar1.png", "html<div>injection</div>test", "11:25 AM"); }, 4000);               
+            setTimeout(function () { addMe(1, "avatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
+            setTimeout(function () { addThem(2, "avatar1.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
+            setTimeout(function () { addThem(3, "avatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
+            setTimeout(function () { addThem(4, "avatar1.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
+            setTimeout(function () { addMe(5, "avatar1.png", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
+            setTimeout(function () { addThem(6, "avatar1.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
+            setTimeout(function () { addMe(7, "avatar1.png", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
+            setTimeout(function () { addMe(8, "avatar1.png", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);               
     }
     
     
@@ -202,7 +198,7 @@
 
             var timeEl = document.createElement('div');
             timeEl.className = "time";
-            timeEl.innerHTML = "<div class=\"statusIndicator\"></div>" + time;
+            timeEl.innerHTML = time + " <i class=\"statusIndicator fas fa-check\"></i>";
 
 
             var bubbleEl = document.createElement('div');

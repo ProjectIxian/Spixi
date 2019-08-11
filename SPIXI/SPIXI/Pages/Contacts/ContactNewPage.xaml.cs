@@ -156,53 +156,29 @@ namespace SPIXI
 
         }
 
-        public void onRequest(byte[] wal)
+        public void onRequest(byte[] recipient_address)
         {
-            if(Address.validateChecksum(wal) == false)
+            if(Address.validateChecksum(recipient_address) == false)
             {
                 displaySpixiAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
                 return;
             }
 
-            if(wal.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+            if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
             {
                 displaySpixiAlert("Cannot add yourself", "The address you have entered is your own address.", "OK");
                 return;
             }
 
-            if (FriendList.getFriend(wal) != null)
+            if (FriendList.getFriend(recipient_address) != null)
             {
                 displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
                 return;
             }
 
-            string hostname = FriendList.getRelayHostname(wal);
-            string relayip = null;
-            if(hostname != null)
-            {
-                relayip = hostname;
-            }
+            Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);
 
-            byte[] pubkey = FriendList.findContactPubkey(wal);
-
-            Friend friend = FriendList.addFriend(wal, pubkey, Base58Check.Base58CheckEncoding.EncodePlain(wal), null, null, 0);
-
-            // Send the message to the S2 nodes
-            byte[] recipient_address = wal;
-
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 0 }, SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
-
-
-            StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
-            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.recipient = recipient_address;
-            message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
-            message.encryptionType = StreamMessageEncryptionCode.none;
-            
-            StreamProcessor.sendMessage(friend, message);
+            StreamProcessor.sendContactRequest(friend);
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }

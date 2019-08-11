@@ -73,11 +73,7 @@ namespace SPIXI
         public byte[] walletAddress;
         public byte[] publicKey;
 
-        public string nickname
-        {
-            get;
-            set;
-        }
+        private string _nick = "";
 
         public byte[] chachaKey = null; // TODO TODO don't keep keys in plaintext in memory
         public byte[] aesKey = null; // TODO TODO don't keep keys in plaintext in memory
@@ -93,6 +89,8 @@ namespace SPIXI
         public SingleChatPage chat_page = null;
 
         public bool approved = true;
+
+        private int _handshakeStatus = 0;
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -130,6 +128,8 @@ namespace SPIXI
                     keyGeneratedTime = reader.ReadInt64();
 
                     approved = reader.ReadBoolean();
+
+                    handshakeStatus = reader.ReadInt32();
                 }
             }
         }
@@ -178,6 +178,8 @@ namespace SPIXI
                     writer.Write(keyGeneratedTime);
 
                     writer.Write(approved);
+
+                    writer.Write(handshakeStatus);
                 }
                 return m.ToArray();
             }
@@ -443,6 +445,32 @@ namespace SPIXI
             }
 
             return true;
+        }
+
+        public int handshakeStatus
+        {
+            get
+            {
+                return _handshakeStatus;
+            }
+            set
+            {
+                _handshakeStatus = value;
+                FriendList.saveToStorage();
+            }
+        }
+
+        public string nickname
+        {
+            get
+            {
+                return _nick;
+            }
+            set
+            {
+                _nick = value;
+                FriendList.saveToStorage();
+            }
         }
     }
 }

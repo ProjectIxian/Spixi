@@ -23,7 +23,11 @@ namespace SPIXI
         public static void initialize()
         {
             continueRunning = true;
-            offlineMessagesThread = new Thread(offlineLoop);
+
+            // Read the persistent offline messages
+            offlineMessages = Node.localStorage.readOfflineMessagesFile();
+
+            offlineMessagesThread = new Thread(streamProcessorLoop);
             offlineMessagesThread.Start();
         }
 
@@ -33,65 +37,116 @@ namespace SPIXI
             continueRunning = false;
         }
 
-        // Thread for checking offline message queue
-        private static void offlineLoop()
+        private static void streamProcessorLoop()
         {
-            List<StreamMessage> cache = new List<StreamMessage>();
-
-            // Read the persistent offline messages
-            offlineMessages = Node.localStorage.readOfflineMessagesFile();
-
             // Only check for offline messages when the loop is active
             while (continueRunning)
             {
-                bool writeToFile = false;
-                lock (offlineMessages)
+                try
                 {
-                    // Go through each message
-                    foreach (StreamMessage message in offlineMessages)
-                    {
-                        try
-                        {
-                            // Extract the public key from the Presence List
-                            Friend f = FriendList.getFriend(message.recipient);
-                            if (f == null)
-                            {
-                                continue;
-                            }
-                            // Send the message
-                            if (sendMessage(f, message, false))
-                            {
-                                // Add the message to the removal cache
-                                cache.Add(message);
-                            }
-                        }catch(Exception e)
-                        {
-                            Logging.error("Exception occured while trying to send offline message {0}", e);
-                        }
-
-                    }
-
-                    // Check the removal cache for messages
-                    foreach (StreamMessage message in cache)
-                    {
-                        writeToFile = true;
-                        offlineMessages.Remove(message);
-                    }
-
-                    // Finally, clear the removal cache
-                    cache.Clear();
-                }
-
-                // Save changes to the offline messages file
-                if(writeToFile)
+                    sendOfflineMessages();
+                    sendPendingRequests();
+                }catch(Exception e)
                 {
-                    Node.localStorage.writeOfflineMessagesFile(offlineMessages);
+                    Logging.error("Unknown exception occured in streamProcessorLoop: " + e);
                 }
 
                 // Wait 5 seconds before next round
                 Thread.Sleep(5000);
             }
-            Thread.Yield();
+        }
+
+        // Thread for checking offline message queue
+        private static void sendOfflineMessages()
+        {
+            List<StreamMessage> cache = new List<StreamMessage>();
+
+            bool writeToFile = false;
+            lock (offlineMessages)
+            {
+                // Go through each message
+                foreach (StreamMessage message in offlineMessages)
+                {
+                    try
+                    {
+                        // Extract the public key from the Presence List
+                        Friend f = FriendList.getFriend(message.recipient);
+                        if (f == null)
+                        {
+                            continue;
+                        }
+                        // Send the message
+                        if (sendMessage(f, message, false))
+                        {
+                            // Add the message to the removal cache
+                            cache.Add(message);
+                        }
+                    }catch(Exception e)
+                    {
+                        Logging.error("Exception occured while trying to send offline message {0}", e);
+                    }
+
+                }
+
+                // Check the removal cache for messages
+                foreach (StreamMessage message in cache)
+                {
+                    writeToFile = true;
+                    offlineMessages.Remove(message);
+                }
+
+            }
+
+            // Finally, clear the removal cache
+            cache.Clear();
+
+            // Save changes to the offline messages file
+            if (writeToFile)
+            {
+                Node.localStorage.writeOfflineMessagesFile(offlineMessages);
+            }
+        }
+
+        private static void sendPendingRequests()
+        {
+            lock(FriendList.friends)
+            {
+                foreach(var friend in FriendList.friends.FindAll(x => x.handshakeStatus < 4 && x.online))
+                {
+                    switch(friend.handshakeStatus)
+                    {
+                        // Add friend request has been sent but no confirmation has been received
+                        case 0:
+                            if(friend.approved)
+                            {
+                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
+                                sendContactRequest(friend);
+                            }
+                            break;
+
+                        // Request has been accepted but no confirmation received, resend acceptance
+                        case 1:
+                            if(friend.approved && friend.aesKey != null)
+                            {
+                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
+                                sendAcceptAdd(friend);
+                            }
+                            break;
+
+                        // Acceptance has been received and the second encryption key was sent but no confirmation received, resend second key
+                        case 2:
+                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
+                            friend.sendKeys(2);
+                            break;
+
+                        // Nickname confirmation hasn't been received
+                        case 3:
+                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
+                            sendNickname(friend);
+                            break;
+                    }
+                }
+            }
         }
 
         private static void addOfflineMessage(StreamMessage msg)
@@ -182,6 +237,8 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
+                friend.handshakeStatus = 3;
+
                 friend.receiveKeys(data);
             }
             else
@@ -195,13 +252,48 @@ namespace SPIXI
         public static void handleMsgReceived(byte[] sender, SpixiMessage data)
         {
             Friend friend = FriendList.getFriend(sender);
+
+            Logging.info("Received msg received confirmation for: {0}, data: {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender), Crypto.hashToString(data.id));
+
             if (friend != null)
             {
+                Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
+
+                if(data.id.SequenceEqual(new byte[] { 0 }))
+                {
+                    if (friend.handshakeStatus == 0)
+                    {
+                        friend.handshakeStatus = 1;
+                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                    }
+                    return;
+                }
+
+                if (data.id.SequenceEqual(new byte[] { 2 }))
+                {
+                    if (friend.handshakeStatus == 2)
+                    {
+                        friend.handshakeStatus = 3;
+                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                    }
+                    return;
+                }
+
+                if (data.id.SequenceEqual(new byte[] { 4 }))
+                {
+                    if (friend.handshakeStatus == 3)
+                    {
+                        friend.handshakeStatus = 4;
+                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                    }
+                    return;
+                }
+
                 friend.setMessageReceived(data.id);
             }
             else
             {
-                Logging.error("Received Message received for an unknown friend.");
+                Logging.error("Received Message received confirmation for an unknown friend.");
             }
         }
 
@@ -289,7 +381,11 @@ namespace SPIXI
                     aes_key = friend.aesKey;
                     chacha_key = friend.chachaKey;
                 }
-                message.decrypt(Node.walletStorage.getPrimaryPrivateKey(), aes_key, chacha_key);
+                if(!message.decrypt(Node.walletStorage.getPrimaryPrivateKey(), aes_key, chacha_key))
+                {
+                    Logging.error("Could not decrypt message from {0}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    return;
+                }
             }
 
             // Extract the Spixi message
@@ -314,7 +410,13 @@ namespace SPIXI
                 case SpixiMessageCode.nick:
                     {
                         // Set the nickname for the corresponding address
-                        FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        if (spixi_message.data != null)
+                        {
+                            FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        }else
+                        {
+                            FriendList.setNickname(message.sender, Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
+                        }
                     }
                     break;
 
@@ -410,11 +512,13 @@ namespace SPIXI
 
             if (new_friend != null)
             {
+                new_friend.handshakeStatus = 1;
                 FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, "");
                 requestNickname(new_friend);
             }else
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
+                friend.handshakeStatus = 1;
                 if (friend.approved)
                 {
                     sendAcceptAdd(friend);
@@ -440,6 +544,8 @@ namespace SPIXI
             {
                 friend.aesKey = aes_key;
             }
+
+            friend.handshakeStatus = 2;
 
             friend.generateKeys();
 
@@ -467,6 +573,11 @@ namespace SPIXI
 
         public static void sendAcceptAdd(Friend friend)
         {
+            if(friend.handshakeStatus > 1)
+            {
+                return;
+            }
+
             friend.aesKey = null;
             friend.chachaKey = null;
 
@@ -490,6 +601,11 @@ namespace SPIXI
 
         public static void sendNickname(Friend friend)
         {
+            if (friend.handshakeStatus == 4)
+            {
+                friend.handshakeStatus = 3;
+            }
+
             SpixiMessage reply_spixi_message = new SpixiMessage(new byte[] { 4 }, SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
 
             // Send the nickname message to friend
@@ -527,6 +643,24 @@ namespace SPIXI
             {
                 message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
+
+            StreamProcessor.sendMessage(friend, message);
+        }
+
+        public static void sendContactRequest(Friend friend)
+        {
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 0 }, SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
 
             StreamProcessor.sendMessage(friend, message);
         }

@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Meta;
 using SPIXI.Network;
@@ -27,7 +28,6 @@ namespace SPIXI
             {
                 if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
-                    // Already in the list
                     return friend;
                 }
             }
@@ -37,17 +37,14 @@ namespace SPIXI
         // Set the nickname for a specific wallet address
         public static void setNickname(byte[] wallet_address, string nick)
         {
-            // Go through each friend and check for a matching wallet address
-            foreach (Friend friend in friends)
+            Friend friend = getFriend(wallet_address);
+            if(friend == null)
             {
-                if (friend.walletAddress.SequenceEqual(wallet_address))
-                {
-                    friend.nickname = nick;
-
-                    saveToStorage();
-                    return;
-                }
+                Logging.error("Received nickname for a friend that's not in the friend list.");
             }
+
+            friend.nickname = nick;
+            saveToStorage();
         }
 
         public static void addMessage(byte[] id, byte[] wallet_address, string message)
@@ -353,9 +350,12 @@ namespace SPIXI
             // TODO TODO use hidden address matcher
             lock (friends)
             {
-                foreach (var entry in friends)
+                foreach (var friend in friends)
                 {
-                    StreamProcessor.sendNickname(entry);
+                    if (friend.approved)
+                    {
+                        StreamProcessor.sendNickname(friend);
+                    }
                 }
             }
         }

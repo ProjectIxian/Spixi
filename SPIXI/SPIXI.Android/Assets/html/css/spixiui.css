@@ -1038,7 +1038,13 @@ img.emoji {
     margin-left: 125px;
     margin-right: 11px;
     background: #cbe3f1;
-    border: 0;
+    border: 1px solid rgba(255, 30, 30, 0.3);
+}
+
+.spixi-bubble.sent,
+.spixi-bubble.read
+{
+    border: none;
 }
 
 .spixi-bubble .time
@@ -1069,22 +1075,18 @@ img.emoji {
     display: none;
 }
 
-/* TODO replace statusIndicator with images */
 .spixi-bubble.myself .statusIndicator {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background-color: red;
+    display: none;
 }
 
 .spixi-bubble.sent .statusIndicator {
-    content: 'sent';
-    background-color: yellow;
+    color: #a7a7a7;
+    display: inline-block;
 }
 
 .spixi-bubble.read .statusIndicator {
-    content: 'read';
-    background-color: green;
+    color: #1fb817;
+    display: inline-block;
 }
 
 .chatholder {
