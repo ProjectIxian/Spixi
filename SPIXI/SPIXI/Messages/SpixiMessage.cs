@@ -14,7 +14,15 @@ namespace SPIXI
         requestFunds,
         keys,
         msgRead,
-        msgReceived // this code will likely be replaced by payment to S2
+        msgReceived, // this code will likely be replaced by payment to S2
+        fileData,
+        requestFileData,
+        fileHeader,
+        acceptFile,
+        requestCall,
+        acceptCall,
+        rejectCall,
+        callData
     }
 
     class SpixiMessage
