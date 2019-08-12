@@ -30,9 +30,9 @@
 </head>
 <body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
-        
+
         <!-- Toolbar Chat -->
-        <div class="spixi-toolbar shadow" >
+        <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row" style="padding-top: 0px;">
                 <div id="backbtn" class="col-2 spixi-center" style="padding-top: 10px;">
@@ -44,34 +44,34 @@
                 </div>
                 <div id="phonebtn" class="col-2 spixi-center" style="padding-top: 10px;">
                     <i class="fas fa-phone"></i>
-                </div>     
+                </div>
             </div>
-            
+
         </div>
         <div class="spixi-toolbar-holder"></div>
-        <!-- End Toolbar -->  
-        
+        <!-- End Toolbar -->
         <!-- DescriptionBar -->
         <div id="contactrequestbar" class="spixi-descriptionbar chat" style="display:none;">
             <div class="container">
-            <div class="row spixi-descriptionbar-row">
-                <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details"><div id="contactrequesttitle">has sent a CONTACT REQUEST</div> 
-                    <div class="row" style="width: 300px; margin-top: 5px;">
-                        <div class="col-6">            
-                            <div id="request_bar_accept" class="spixi-button small extrasmallwidth darkshadow blue">Accept</div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">
+                        <div id="contactrequesttitle">has sent a CONTACT REQUEST</div>
+                        <div class="row" style="width: 300px; margin-top: 5px;">
+                            <div class="col-6">
+                                <div id="request_bar_accept" class="spixi-button small extrasmallwidth darkshadow blue">Accept</div>
+                            </div>
+                            <div class="col-6">
+                                <div id="request_bar_ignore" class="spixi-button small extrasmallwidth darkshadow ghost">Ignore</div>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <div id="request_bar_ignore" class="spixi-button small extrasmallwidth darkshadow ghost">Ignore</div>
-                        </div>
+
                     </div>
-                
                 </div>
-            </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
-        
+
         <div id="messages">
             <div class="spixi-holder-20"></div>
         </div>
@@ -85,25 +85,29 @@
                 <div id="chat_emoji">
                     <i class="fa fa-smile-wink"></i>
                 </div>
-                
+
                 <input type="text" id="chat_input" onkeyup="" placeholder="Type your message..." />
                 <div id="chat_send" class="fa fa-paper-plane chatbar-sendbutton"></div>
-                
+
             </div>
         </div>
         <div id="chatattachbar">
             <div class="row ">
-            <div class="col-6" id="ca_request">
-                <i class="fa fa-angle-double-down chatattachsymbol"></i><br/>
-                Request Payment
+                <div class="col-4 chat_attach_tab" id="ca_sendfile">
+                    <i class="fa fa-file-alt chatattachsymbol"></i><br />
+                    Send File
+                </div>
+                <div class="col-4 chat_attach_tab" id="ca_request">
+                    <i class="fa fa-angle-double-down chatattachsymbol"></i><br />
+                    Request Payment
+                </div>
+                <div class="col-4 chat_attach_tab" id="ca_send">
+                    <i class="fa fa-angle-double-up chatattachsymbol"></i><br />
+                    Send Payment
+                </div>
             </div>
-            <div class="col-6" id="ca_send">
-                <i class="fa fa-angle-double-up chatattachsymbol"></i><br/>
-                Send Payment
-            </div>
-            </div>  
         </div>
-        
+
     </div>
     
     
@@ -140,7 +144,11 @@
     } 
     document.getElementById("ca_send").onclick = function () {
         location.href = "ixian:send";
-    } 
+    }
+
+    document.getElementById("ca_sendfile").onclick = function () {
+        location.href = "ixian:sendfile";
+    }
     
     document.getElementById("request_bar_ignore").onclick = function () {
         location.href = "ixian:back";
