@@ -1,5 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using Plugin.FilePicker;
+using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -103,7 +105,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:sendfile", StringComparison.Ordinal))
             {
-
+                onSendFile();
             }
             else if (current_url.Contains("ixian:chat:"))
             {
@@ -238,6 +240,37 @@ namespace SPIXI
 
             StreamProcessor.sendMessage(friend, message);
 
+        }
+
+        public async System.Threading.Tasks.Task onSendFile()
+        {
+            try
+            {
+                FileData fileData = await CrossFilePicker.Current.PickFile();
+                if (fileData == null)
+                    return; // User canceled file picking
+
+                string fileName = fileData.FileName;
+
+                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.DataArray);
+                System.Console.WriteLine("File Transfer uid: " + transfer.uid);
+
+                SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.fileHeader, transfer.getBytes());
+
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.data;
+                message.recipient = friend.walletAddress;
+                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = spixi_message.getBytes();
+
+                StreamProcessor.sendMessage(friend, message);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+            }
         }
 
         public void onAccept()

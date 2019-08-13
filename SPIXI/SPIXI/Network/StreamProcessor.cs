@@ -248,6 +248,20 @@ namespace SPIXI
             }
         }
 
+        // Called when receiving file headers from the message recipient
+        public static void handleFileHeader(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                Logging.info("Received file header");
+            }
+            else
+            {
+                Logging.error("Received File Header for an unknown friend.");
+            }
+        }
+
         // Called when receiving received confirmation from the message recipient
         public static void handleMsgReceived(byte[] sender, SpixiMessage data)
         {
@@ -460,6 +474,12 @@ namespace SPIXI
                         // don't send confirmation back, so just return
                         return;
                     }
+
+                case SpixiMessageCode.fileHeader:
+                    {
+                        handleFileHeader(message.sender, spixi_message);
+                    }
+                    break;
             }
 
             if(friend == null)
