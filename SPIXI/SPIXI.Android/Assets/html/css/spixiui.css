@@ -1069,7 +1069,7 @@ img.emoji {
     position: absolute;
     left: -45px;
     z-index: 6;
-    bottom: 0px;
+    top: 0px;
     width: 32px;
     height: 32px;
     border-radius: 32px;    
