@@ -128,6 +128,7 @@
             setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
             //showContactRequest(true);
             addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
+            addFile(10, "img/spixiavatar.png", "file.png", "10:23 AM");
             setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
             setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
             setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
@@ -240,6 +241,44 @@
 
     function addThem(id, avatar, text, time) {
         addText(id, avatar, text, time, "spixi-bubble");
+    }
+    
+    function addFile(id, avatar, name, time) {
+            
+        var textEl = document.createElement('div');
+        textEl.className = "text";
+        textEl.innerHTML = name;
+
+        var timeEl = document.createElement('div');
+        timeEl.className = "time";
+        timeEl.innerHTML = time + " <i class=\"statusIndicator fas fa-check\"></i>";
+
+
+        var bubbleEl = document.createElement('div');
+        bubbleEl.id = "msg_" + id;
+        bubbleEl.className = "spixi-bubble file";
+        bubbleEl.appendChild(textEl);
+        bubbleEl.appendChild(timeEl);
+
+        if (avatar != "") {
+            var avatarEl = document.createElement('img');
+            avatarEl.className = "avatar";
+            avatarEl.src = avatar;
+            bubbleEl.appendChild(avatarEl);
+        }
+        
+        var icon = document.createElement('div');
+        icon.className = "fa fa-folder-open actionicon";
+        bubbleEl.appendChild(icon);
+        
+        //                <div id="chat_send" class="fa fa-paper-plane chatbar-sendbutton"></div>
+
+        var linkEl = document.createElement('a');
+        linkEl.href = "ixian:acceptfile:"+id;
+        linkEl.appendChild(bubbleEl);
+        
+        document.getElementById("messages").appendChild(linkEl);         
+        linkEl.scrollIntoView(true);
     }
 
     function updateMessage(id, message, sent, read) {

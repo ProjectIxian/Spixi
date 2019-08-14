@@ -15,7 +15,8 @@ namespace SPIXI
         standard,
         requestAdd,
         requestFunds,
-        sentFunds
+        sentFunds,
+        fileHeader
     }
 
 

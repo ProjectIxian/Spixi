@@ -107,6 +107,12 @@ namespace SPIXI
             {
                 onSendFile();
             }
+            else if (current_url.Contains("ixian:acceptfile:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:acceptfile:" }, StringSplitOptions.None);
+                string id = split[1];
+
+            }
             else if (current_url.Contains("ixian:chat:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
@@ -353,6 +359,8 @@ namespace SPIXI
                 return;
             }
 
+
+
             string prefix = "addMe";
             string avatar = "";//Node.localStorage.getOwnAvatarPath();
             if (!message.localSender)
@@ -360,6 +368,12 @@ namespace SPIXI
                 prefix = "addThem";
                 avatar = "img/spixiavatar.png";
             }
+
+            if (message.type == FriendMessageType.fileHeader)
+            {
+                prefix = "addFile";
+            }
+
             // Call webview methods on the main UI thread only
             Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
 

@@ -1049,6 +1049,10 @@ img.emoji {
     border: 1px solid rgba(255, 30, 30, 0.3);
 }
 
+.spixi-bubble.file {
+    font-size: 14pt;
+}
+
 .spixi-bubble.sent,
 .spixi-bubble.read
 {
@@ -1077,6 +1081,24 @@ img.emoji {
     width: 32px;
     height: 32px;
     border-radius: 32px;    
+}
+
+.spixi-bubble .actionicon {
+    display: table-cell;
+    float: right;
+    font-size: 14pt;
+    margin-top: -25px;
+    position: relative;
+    z-index: 2;
+    color: #FFF;
+    padding-left: 10px;
+    padding-top: 12px;
+    
+    background: #7E7F94 none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
 }
 
 .spixi-bubble .statusIndicator {

@@ -255,6 +255,8 @@ namespace SPIXI
             if (friend != null)
             {
                 Logging.info("Received file header");
+                FileTransfer transfer = new FileTransfer(data.data);
+                FriendList.addMessageWithType(data.id, FriendMessageType.fileHeader, sender, transfer.name);         
             }
             else
             {
