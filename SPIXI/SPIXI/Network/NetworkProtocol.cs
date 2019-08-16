@@ -173,14 +173,14 @@ namespace SPIXI.Network
                                 if (endpoint.presenceAddress.type == 'R')
                                 {
                                     string[] connected_servers = StreamClientManager.getConnectedClients(true);
-                                    if (connected_servers.Count() == 1 || !connected_servers.Contains(Node.primaryS2Address))
+                                    if (connected_servers.Count() == 1 || !connected_servers.Contains(StreamClientManager.primaryS2Address))
                                     {
-                                        if(Node.primaryS2Address == "")
+                                        if(StreamClientManager.primaryS2Address == "")
                                         {
                                             FriendList.requestAllFriendsPresences();
                                         }
                                         // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
-                                        Node.primaryS2Address = endpoint.getFullAddress(true);
+                                        StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
                                         // TODO TODO do not set if directly connectable
                                         IxianHandler.publicIP = endpoint.address;
                                         IxianHandler.publicPort = endpoint.incomingPort;

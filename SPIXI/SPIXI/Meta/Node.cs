@@ -30,8 +30,6 @@ namespace SPIXI.Meta
         public static IxiNumber balance = 0;      // Stores the last known balance for this node
         public static ulong blockHeight = 0;
 
-        public static string primaryS2Address = "";
-
         public static int startCounter = 0;
 
         public Node()

@@ -18,6 +18,11 @@ namespace SPIXI.Storage
         private string txCacheFileName = "txcache.ixi";
         private string offlineFileName = "offline.ixi";
 
+        // locks, for thread concurrency
+        private object accountLock = new object();
+        private object txCacheLock = new object();
+        private object offlineLock = new object();
+
 
         public LocalStorage(string path)
         {
@@ -129,49 +134,52 @@ namespace SPIXI.Storage
         // Write the account file to local storage
         public bool writeAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, accountFileName);
-
-            BinaryWriter writer;
-            try
+            lock (accountLock)
             {
-                writer = new BinaryWriter(new FileStream(account_filename, FileMode.Create));
-            }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot create account file. {0}", e.Message));
-                return false;
-            }
+                string account_filename = Path.Combine(documentsPath, accountFileName);
 
-            try
-            {
-                // TODO: encrypt written data
-                System.Int32 version = 1; // Set the account file version
-                writer.Write(version);
-
-                // Write the address used for verification
-                writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().Length);
-                writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress());
-
-                // Write account information
-                writer.Write(nickname);
-
-                int num_contacts = FriendList.friends.Count;
-                writer.Write(num_contacts);
-
-                foreach(Friend friend in FriendList.friends)
+                BinaryWriter writer;
+                try
                 {
-                    byte[] friend_bytes = friend.getBytes();
-
-                    writer.Write(friend_bytes.Length);
-                    writer.Write(friend_bytes);
+                    writer = new BinaryWriter(new FileStream(account_filename, FileMode.Create));
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot create account file. {0}", e.Message));
+                    return false;
                 }
 
+                try
+                {
+                    // TODO: encrypt written data
+                    System.Int32 version = 1; // Set the account file version
+                    writer.Write(version);
+
+                    // Write the address used for verification
+                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().Length);
+                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress());
+
+                    // Write account information
+                    writer.Write(nickname);
+
+                    int num_contacts = FriendList.friends.Count;
+                    writer.Write(num_contacts);
+
+                    foreach (Friend friend in FriendList.friends)
+                    {
+                        byte[] friend_bytes = friend.getBytes();
+
+                        writer.Write(friend_bytes.Length);
+                        writer.Write(friend_bytes);
+                    }
+
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot write to account file. {0}", e.Message));
+                }
+                writer.Close();
             }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot write to account file. {0}", e.Message));
-            }
-            writer.Close();
             return true;
         }
 
@@ -368,44 +376,47 @@ namespace SPIXI.Storage
         // Writes the cached offline messages to a file
         public bool writeOfflineMessagesFile(List<StreamMessage> messages)
         {
-            string messages_filename = Path.Combine(documentsPath, offlineFileName);
-
-            BinaryWriter writer;
-            try
+            lock (offlineLock)
             {
-                // Prepare the file for writing
-                writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
-            }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
-                return false;
-            }
+                string messages_filename = Path.Combine(documentsPath, offlineFileName);
 
-            try
-            {
-                // TODO: encrypt written data
-                System.Int32 version = 1; // Set the messages file version
-                writer.Write(version);
-
-                int message_num = messages.Count;
-                writer.Write(message_num);
-
-                foreach (StreamMessage message in messages)
+                BinaryWriter writer;
+                try
                 {
-                    byte[] data = message.getBytes();
-                    int data_length = data.Length;
-                    writer.Write(data_length);
-                    writer.Write(data);
+                    // Prepare the file for writing
+                    writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
+                    return false;
                 }
 
+                try
+                {
+                    // TODO: encrypt written data
+                    System.Int32 version = 1; // Set the messages file version
+                    writer.Write(version);
+
+                    int message_num = messages.Count;
+                    writer.Write(message_num);
+
+                    foreach (StreamMessage message in messages)
+                    {
+                        byte[] data = message.getBytes();
+                        int data_length = data.Length;
+                        writer.Write(data_length);
+                        writer.Write(data);
+                    }
+
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
+                    return false;
+                }
+                writer.Close();
             }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
-                return false;
-            }
-            writer.Close();
 
             return true;
         }
@@ -476,63 +487,66 @@ namespace SPIXI.Storage
         // Writes the cached offline messages to a file
         public bool writeTransactionCacheFile()
         {
-            string tx_filename = Path.Combine(documentsPath, txCacheFileName);
-
-            BinaryWriter writer;
-            try
+            lock (txCacheLock)
             {
-                // Prepare the file for writing
-                writer = new BinaryWriter(new FileStream(tx_filename, FileMode.Create));
-            }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
-                return false;
-            }
+                string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
-            try
-            {
-                // TODO: encrypt written data
-                System.Int32 version = 1; // Set the tx cache file version
-                writer.Write(version);
-
-                // Write confirmed transaction
-                lock (TransactionCache.transactions)
+                BinaryWriter writer;
+                try
                 {
-                    int tx_num = TransactionCache.transactions.Count;
-                    writer.Write(tx_num);
-
-                    foreach (Transaction transaction in TransactionCache.transactions)
-                    {
-                        byte[] data = transaction.getBytes(true);
-                        int data_length = data.Length;
-                        writer.Write(data_length);
-                        writer.Write(data);
-                    }
+                    // Prepare the file for writing
+                    writer = new BinaryWriter(new FileStream(tx_filename, FileMode.Create));
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
+                    return false;
                 }
 
-                // Write unconfirmed transactions
-                lock (TransactionCache.unconfirmedTransactions)
+                try
                 {
-                    int tx_num = TransactionCache.unconfirmedTransactions.Count;
-                    writer.Write(tx_num);
+                    // TODO: encrypt written data
+                    System.Int32 version = 1; // Set the tx cache file version
+                    writer.Write(version);
 
-                    foreach (Transaction transaction in TransactionCache.unconfirmedTransactions)
+                    // Write confirmed transaction
+                    lock (TransactionCache.transactions)
                     {
-                        byte[] data = transaction.getBytes(true);
-                        int data_length = data.Length;
-                        writer.Write(data_length);
-                        writer.Write(data);
-                    }
-                }
+                        int tx_num = TransactionCache.transactions.Count;
+                        writer.Write(tx_num);
 
+                        foreach (Transaction transaction in TransactionCache.transactions)
+                        {
+                            byte[] data = transaction.getBytes(true);
+                            int data_length = data.Length;
+                            writer.Write(data_length);
+                            writer.Write(data);
+                        }
+                    }
+
+                    // Write unconfirmed transactions
+                    lock (TransactionCache.unconfirmedTransactions)
+                    {
+                        int tx_num = TransactionCache.unconfirmedTransactions.Count;
+                        writer.Write(tx_num);
+
+                        foreach (Transaction transaction in TransactionCache.unconfirmedTransactions)
+                        {
+                            byte[] data = transaction.getBytes(true);
+                            int data_length = data.Length;
+                            writer.Write(data_length);
+                            writer.Write(data);
+                        }
+                    }
+
+                }
+                catch (IOException e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
+                    return false;
+                }
+                writer.Close();
             }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
-                return false;
-            }
-            writer.Close();
 
             return true;
         }

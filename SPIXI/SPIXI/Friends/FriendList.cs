@@ -44,7 +44,6 @@ namespace SPIXI
             }
 
             friend.nickname = nick;
-            saveToStorage();
         }
 
         public static void addMessage(byte[] id, byte[] wallet_address, string message)

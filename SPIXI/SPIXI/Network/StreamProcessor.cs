@@ -153,6 +153,12 @@ namespace SPIXI
         {
             lock(offlineMessages)
             {
+                if(offlineMessages.Find(x => x.recipient.SequenceEqual(msg.recipient) && x.data.SequenceEqual(msg.data)) != null)
+                {
+                    Logging.info("Message already exists in the offline queue, not adding.");
+                    return;
+                }
+
                 offlineMessages.Add(msg);
                 //
                 Node.localStorage.writeOfflineMessagesFile(offlineMessages);
@@ -181,7 +187,7 @@ namespace SPIXI
 
 
                 StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
-                Console.WriteLine("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
                     addOfflineMessage(msg);
@@ -192,7 +198,7 @@ namespace SPIXI
             if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), Encoding.UTF8.GetBytes(msg.getID())))
             {
                 StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
-                Console.WriteLine("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
                     addOfflineMessage(msg);

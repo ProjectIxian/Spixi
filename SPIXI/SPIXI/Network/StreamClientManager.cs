@@ -16,12 +16,11 @@ namespace SPIXI
         private static Thread reconnectThread;
         private static bool autoReconnect = true;
 
+        public static string primaryS2Address = "";
+
         public static void start()
         {
             streamClients = new List<NetworkClient>();
-
-            // Public DEMO S2 node address: 209.141.49.106 port 11235
-            // connectTo("209.141.49.106:11235");
 
             // Start the reconnect thread
             reconnectThread = new Thread(reconnectClients);
@@ -146,14 +145,10 @@ namespace SPIXI
             {
                 handleDisconnectedClients();
 
-                List<NetworkClient> netClients = null;
-                lock (streamClients)
-                {
-                    netClients = new List<NetworkClient>(streamClients);
-                }
+                string[] netClients = getConnectedClients();
 
                 // Check if we need to connect to more neighbors
-                if (netClients.Count < 1)
+                if (netClients.Length < 1 || !netClients.Contains(primaryS2Address))
                 {
                     // Scan for and connect to a new neighbor
                     connectToRandomStreamNode();
@@ -218,9 +213,6 @@ namespace SPIXI
         // Returns null if connection failed
         public static NetworkClient connectTo(string host, byte[] wallet_address)
         {
-            // TODO check if already connected
-            Logging.info(String.Format("Connecting to S2 node: {0}", host));
-
             if (host == null || host.Length < 3)
             {
                 Logging.error(String.Format("Invalid host address {0}", host));

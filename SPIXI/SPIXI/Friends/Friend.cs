@@ -118,7 +118,7 @@ namespace SPIXI
                     int pkey_length = reader.ReadInt32();
                     publicKey = reader.ReadBytes(pkey_length);
 
-                    nickname = reader.ReadString();
+                    _nick = reader.ReadString(); // use internal variable, to avoid writing to file
 
                     int aes_len = reader.ReadInt32();
                     aesKey = reader.ReadBytes(aes_len);
@@ -130,7 +130,7 @@ namespace SPIXI
 
                     approved = reader.ReadBoolean();
 
-                    handshakeStatus = reader.ReadInt32();
+                    _handshakeStatus = reader.ReadInt32(); // use internal variable, to avoid writing to file
                 }
             }
         }
@@ -456,8 +456,11 @@ namespace SPIXI
             }
             set
             {
-                _handshakeStatus = value;
-                FriendList.saveToStorage();
+                if (_handshakeStatus != value)
+                {
+                    _handshakeStatus = value;
+                    FriendList.saveToStorage();
+                }
             }
         }
 
@@ -469,8 +472,11 @@ namespace SPIXI
             }
             set
             {
-                _nick = value;
-                FriendList.saveToStorage();
+                if (_nick != value)
+                {
+                    _nick = value;
+                    FriendList.saveToStorage();
+                }
             }
         }
     }
