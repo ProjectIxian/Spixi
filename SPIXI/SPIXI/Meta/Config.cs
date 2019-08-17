@@ -17,11 +17,11 @@ namespace SPIXI.Meta
         public static int encryptionRetryPasswordAttempts = 3;   // How many allowed attempts in the LaunchRetry page before throwing the user back to Launch Page
 
         // Read-only values
-        public static readonly string aboutUrl = "https://ixian.io";
+        public static readonly string aboutUrl = "https://www.spixi.io";
 
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
-        public static readonly string version = "spixi-0.1.2"; // Spixi version
+        public static readonly string version = "spixi-0.2.0-dev"; // Spixi version
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;
