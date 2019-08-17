@@ -78,9 +78,15 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setFees", ConsensusConfig.transactionPrice.ToString());
+            IxiNumber fee = ConsensusConfig.transactionPrice;
+            byte[] from = Node.walletStorage.getPrimaryAddress();
+            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+
+            Transaction tmp_tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getLastBlockHeight());
+
+            Utils.sendUiCommand(webView, "setFees", tmp_tx.fee.ToString());
             Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
-            Utils.sendUiCommand(webView, "setTotalAmount", totalAmount.ToString());
+            Utils.sendUiCommand(webView, "setTotalAmount", tmp_tx.amount.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

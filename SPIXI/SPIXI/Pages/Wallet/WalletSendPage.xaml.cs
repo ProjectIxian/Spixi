@@ -116,7 +116,7 @@ namespace SPIXI
                 string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
 
                 // Go through each entry
-                foreach(string address_and_amount in addresses_split)
+                foreach (string address_and_amount in addresses_split)
                 {
                     if (address_and_amount.Length < 1)
                         continue;
@@ -157,6 +157,14 @@ namespace SPIXI
                 }
 
                 Navigation.PushAsync(new WalletSend2Page(addresses_split));
+            }
+            else if (current_url.Contains("ixian:getMaxAmount"))
+            {
+                if (Node.balance > ConsensusConfig.transactionPrice * 2)
+                {
+                    // TODO needs to be improved and pubKey length needs to be taken into account
+                    Utils.sendUiCommand(webView, "setAmount", (Node.balance - (ConsensusConfig.transactionPrice * 2)).ToString());
+                }
             }
             else
             {
