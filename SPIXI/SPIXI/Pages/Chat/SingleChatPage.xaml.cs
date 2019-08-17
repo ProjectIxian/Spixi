@@ -116,8 +116,8 @@ namespace SPIXI
             else if (current_url.Contains("ixian:chat:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
-                string id = WebUtility.UrlDecode(split[1]);
-                onSend(id);
+                string msg = split[1];
+                onSend(msg);
             }
             else if (current_url.Contains("ixian:confirmrequest:"))
             {

@@ -175,8 +175,9 @@
         document.getElementById("chat_input").click();
         document.getElementById("chat_input").focus();
         var chat_text = document.getElementById("chat_input").value;
-        if(chat_text.length > 0)
-            location.href = "ixian:chat:"+chat_text;
+
+        if (chat_text.length > 0)
+            location.href = "ixian:chat:" + encodeURIComponent(chat_text);
     }
 
     $("#chat_input").keyup(function (event) {
@@ -198,7 +199,6 @@
     }
     
     function addText(id, avatar, text, time, className) {
-
             var textEl = document.createElement('div');
             textEl.className = "text";
             textEl.innerHTML = text;
