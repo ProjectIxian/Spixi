@@ -329,17 +329,24 @@ namespace SPIXI
                     return;
             }
 
+            string prefix = "addMe";
+            string avatar = "";//Node.localStorage.getOwnAvatarPath();
+            if (!message.localSender)
+            {
+                prefix = "addThem";
+                avatar = "img/spixiavatar.png";
+            }
 
             if (message.type == FriendMessageType.requestFunds)
             {
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", "Payment request for " + message.message + " IxiCash has been sent.", "0", Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request SENT", "0", "PENDING", "fa-clock", Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", friend.nickname + " has sent a payment request" + " for " + message.message + " IxiCash.", message.message, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request RECEIVED", message.message, "PENDING", "fa-clock", Clock.getRelativeTime(message.timestamp));
                 }
                 message.read = true;
                 return;
@@ -354,20 +361,29 @@ namespace SPIXI
 
                 if (transaction == null)
                     return;
+
+                string status = "PENDING";
+                string status_icon = "fa-clock";
+
+                if(transaction.applied > 0)
+                {
+                    status = "CONFIRMED";
+                    status_icon = "fa-check-circle";
+                }
+
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, "addPaymentSent", transaction.amount.ToString(), message.message);
+                if (message.localSender)
+                {
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment SENT", transaction.amount.ToString(), status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                }
+                else
+                {
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment RECEIVED", transaction.amount.ToString(), status, status_icon, Clock.getRelativeTime(message.timestamp));
+                }
+
                 return;
             }
 
-
-
-            string prefix = "addMe";
-            string avatar = "";//Node.localStorage.getOwnAvatarPath();
-            if (!message.localSender)
-            {
-                prefix = "addThem";
-                avatar = "img/spixiavatar.png";
-            }
 
             if (message.type == FriendMessageType.fileHeader)
             {

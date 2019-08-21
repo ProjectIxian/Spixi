@@ -11,6 +11,7 @@ namespace SPIXI
         nick,
         requestAdd,
         acceptAdd,
+        sentFunds,
         requestFunds,
         keys,
         msgRead,

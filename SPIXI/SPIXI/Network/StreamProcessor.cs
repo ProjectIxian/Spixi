@@ -456,6 +456,13 @@ namespace SPIXI
                     }
                     break;
 
+                case SpixiMessageCode.sentFunds:
+                    {
+                        // Friend requested funds
+                        handleSentFunds(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                    }
+                    break;
+
                 case SpixiMessageCode.requestFunds:
                     {
                         // Friend requested funds
@@ -597,6 +604,18 @@ namespace SPIXI
             }
 
             FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
+        }
+
+        private static void handleSentFunds(byte[] id, byte[] sender_wallet, string amount)
+        {
+            // Retrieve the corresponding contact
+            Friend friend = FriendList.getFriend(sender_wallet);
+            if (friend == null)
+            {
+                return;
+            }
+
+            FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, amount);
         }
 
         public static void sendAcceptAdd(Friend friend)

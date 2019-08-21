@@ -87,7 +87,7 @@
                 </div>
 
                 <input type="text" id="chat_input" onkeyup="" placeholder="Type your message..." />
-                <div id="chat_send" class="fa fa-paper-plane chatbar-sendbutton"></div>
+                <div id="chat_send" class="chatbar-sendbutton"><i class="fa fa-paper-plane"></i></div>
 
             </div>
         </div>
@@ -305,14 +305,26 @@
         }
     }
 
-    function addPaymentRequest(text, amount, time) {
-        var message = text;
-        if (amount != "0") {
-            message += "<br/><div class=\"spixi-button small smallwidth center\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\">View details</div>";
-            addText("", message, time, "spixi-bubble spixi-payment-request");
-        } else {
-            addText("", message, time, "spixi-bubble myself spixi-payment-request");
+    function addPaymentRequest(id, avatar, title, amount, status, statusIcon, time, localSender) {
+        var message = "<div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
+        message += "<div class=\"status\">Status:<div class=\"content\">" + status + "<i class=\"fas "+statusIcon+"\"></i></div></div>";
+        message += "<div class=\"amount\">Amount:<div class=\"content\"><div class=\"ixiCashIcon\"></div>" + amount + "</div></div>";
+        if (!localSender) {
+            message += "<div class=\"view\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\"><i class=\"fas fa-search\"></i> View</div>";
         }
+
+        var additionalClasses = "";
+        if (localSender == "True") {
+            additionalClasses = " myself";
+        }
+
+        addText(id, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
+
+        /*if (amount != "0") {
+            message += "<br/><div class=\"spixi-button small smallwidth center\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\">View details</div>";
+        } else {
+            addText(id, "", message, time, "spixi-bubble myself spixi-payment-request");
+        }*/
     }
 
     function setNickname(nick) {
