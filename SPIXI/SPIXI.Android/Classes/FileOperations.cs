@@ -13,6 +13,9 @@ using SPIXI.Interfaces;
 using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using Android.Support.V4.Content;
+using Android.Support.Compat;
+using Java.IO;
 
 [assembly: Dependency(typeof(FileOperations_Android))]
 
@@ -26,30 +29,14 @@ public class FileOperations_Android : IFileOperations
 
     public Task share(string filepath, string title)
     {
-        var extension = filepath.Substring(filepath.LastIndexOf(".") + 1).ToLower();
-        var contentType = string.Empty;
+        File file = new File(filepath);
+        Intent shareIntent = new Intent();
+        shareIntent.SetAction(Intent.ActionSend);
+        shareIntent.SetType("application/octetstream");
+        Android.Net.Uri uriShare = FileProvider.GetUriForFile(_context, "com.ixian.provider", file);
+        shareIntent.PutExtra(Intent.ExtraStream, uriShare);
 
-        // You can manually map more ContentTypes here if you want.
-        switch (extension)
-        {
-            case "pdf":
-                contentType = "application/pdf";
-                break;
-            case "png":
-                contentType = "image/png";
-                break;
-            default:
-                contentType = "application/octetstream";
-                break;
-        }
-
-        var intent = new Intent(Intent.ActionSend);
-        intent.SetType(contentType);
-        intent.PutExtra(Intent.ExtraStream, Android.Net.Uri.Parse("file://" + filepath));
-        intent.PutExtra(Intent.ExtraText, string.Empty);
-        intent.PutExtra(Intent.ExtraSubject, string.Empty);
-
-        var chooserIntent = Intent.CreateChooser(intent, title ?? string.Empty);
+        var chooserIntent = Intent.CreateChooser(shareIntent, title ?? string.Empty);
         chooserIntent.SetFlags(ActivityFlags.ClearTop);
         chooserIntent.SetFlags(ActivityFlags.NewTask);
         _context.StartActivity(chooserIntent);
