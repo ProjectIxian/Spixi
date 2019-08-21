@@ -16,6 +16,7 @@ public class FileOperations_WPF : IFileOperations
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         saveFileDialog.Filter = "Ixian Wallet (*.wal)|*.wal";
+        saveFileDialog.FileName = "wallet";
         saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         if (saveFileDialog.ShowDialog() == true)

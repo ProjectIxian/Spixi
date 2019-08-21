@@ -1083,6 +1083,29 @@ img.emoji {
     right: 15px;
 }
 
+.spixi-bubble.myself .actionicon {
+    display: table-cell;
+    float: left;
+    font-size: 14pt;
+    margin-top: -25px;
+    position: relative;
+    z-index: 2;
+    color: #FFF;
+    padding-left: 10px;
+    padding-top: 12px;
+    
+    background: #7E7F94 none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: left;
+}
+.spixi-bubble.file.myself {
+    font-size: 14pt;
+    text-align: right;
+}
+
 .spixi-bubble .avatar
 {
     position: absolute;
