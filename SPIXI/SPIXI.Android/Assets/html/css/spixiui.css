@@ -212,6 +212,8 @@ img.emoji {
 .spixi-toolbar-contact-name {
     margin-top: 24px;
     margin-left: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .spixi-toolbar-contact-status {
     margin-left: 20px;
