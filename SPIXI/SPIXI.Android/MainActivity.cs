@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Android.Content;
 using Plugin.LocalNotifications;
+using Android.Content.Res;
+using Xamarin.Forms;
 //using SPIXI.Notifications;
 
 namespace SPIXI.Droid
@@ -25,6 +27,10 @@ namespace SPIXI.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+            ZXing.Mobile.MobileBarcodeScanner.Initialize(this.Application);
+
             LoadApplication(new App());
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
@@ -68,10 +74,18 @@ namespace SPIXI.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
+            if (permissions[0] == "android.permission.CAMERA")
+            {
+                // prevent ZXing related crash on denied
+                if (grantResults[0] == Permission.Denied)
+                {
+                    Xamarin.Forms.Application.Current.MainPage.Navigation.PopAsync();
+                    Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Permission error", "Permission '" + permissions[0] + "' must be allowed to use this feature.", "OK");
+                    return;
+                }
+            }
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
-
     }
 }
 

@@ -107,7 +107,6 @@ namespace SPIXI
 
         public async void quickScan()
         {
-
             var options = new ZXing.Mobile.MobileBarcodeScanningOptions();
 
             // Restrict to QR codes only
@@ -117,13 +116,11 @@ namespace SPIXI
 
             var ScannerPage = new ZXingScannerPage(options);
 
-
             ScannerPage.OnScanResult += (result) => {
 
                 ScannerPage.IsScanning = false;
-                ScannerPage.IsAnalyzing = false;
-                Device.BeginInvokeOnMainThread(() => {
 
+                Device.BeginInvokeOnMainThread(() => {
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
 
                     processQRResult(result.Text);
@@ -131,8 +128,9 @@ namespace SPIXI
             };
 
 
-            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
-
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public void processQRResult(string result)

@@ -262,9 +262,8 @@ namespace SPIXI
             options.PossibleFormats = new List<ZXing.BarcodeFormat>() {
                 ZXing.BarcodeFormat.QR_CODE
             };
-            
-            var ScannerPage = new ZXingScannerPage(options);
 
+            var ScannerPage = new ZXingScannerPage(options);
 
             ScannerPage.OnScanResult += (result) => {
 
@@ -278,8 +277,9 @@ namespace SPIXI
             };
 
 
-            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
-
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         public void processQRResult(string result)
