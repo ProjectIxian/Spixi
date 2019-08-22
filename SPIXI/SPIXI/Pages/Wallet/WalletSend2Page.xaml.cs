@@ -84,6 +84,15 @@ namespace SPIXI
 
             Transaction tmp_tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getLastBlockHeight());
 
+            IxiNumber total_amount = tmp_tx.amount + tmp_tx.fee;
+
+            if (Node.balance < total_amount)
+            {
+                displaySpixiAlert("Insufficient balance", "Your balance is insufficient for this transaction. Total cost of the transaction is " + total_amount.ToString() + ", while your balance is " + Node.balance.ToString() + ".", "OK");
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                return;
+            }
+
             Utils.sendUiCommand(webView, "setFees", tmp_tx.fee.ToString());
             Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
             Utils.sendUiCommand(webView, "setTotalAmount", tmp_tx.amount.ToString());

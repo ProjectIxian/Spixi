@@ -124,7 +124,7 @@ img.emoji {
 /* Toolbar */
 .spixi-toolbar {
     width: 100%;
-    height: 54px;
+    height: 56px;
     position: fixed;
     z-index: 100;
     
@@ -160,7 +160,7 @@ img.emoji {
 
 .spixi-toolbar-holder {
     width: 100%;
-    height: 54px;
+    height: 56px;
 }
 .spixi-toolbar-holder.extended {
     height: 128px;
@@ -226,11 +226,11 @@ img.emoji {
     color: #fff;
     background-color: #25193c;
     box-shadow:0px 4px 10px #777;
+    padding: 10px 0px;
 }
 .spixi-balancebar-label {
     font-size: 12pt;
     padding-left: 20px;
-    padding-top: 16px;
 }
 .spixi-balancebar-balance {
     font-size: 14pt;
@@ -259,23 +259,21 @@ img.emoji {
 /* OptionBar */
 .spixi-optionbar {
     width: 100%;
-    height: 81px;
     color: #fff;
     background-color: #25193c;
     box-shadow:0px 4px 10px #777;
 }
 .spixi-optionbar-frame {
-    width:90%; 
+    width:100%; 
     margin: auto;
 }
 .spixi-optionbar-tab {
-    padding-top: 20px;
-    height: 81px;
     background: #25193c;
     text-align: center;
     font-size: 10pt;
     font-weight: bold;
     color: #FFFFFF;
+    padding: 10px 0px;
 }
 .spixi-optionbar-tab:hover {
     background: #543c83;
@@ -1157,7 +1155,12 @@ img.emoji {
     color: white;
     padding: 10px;
     border-radius: 16px 16px 0px 0px;
+    font-size: 12pt;
+}
+
+.spixi-bubble .title i {
     font-size: 16pt;
+    margin-right: 20px;
 }
 
 .spixi-bubble .status {
@@ -1165,31 +1168,30 @@ img.emoji {
     background-color: white;
     color: #9c9c9c;
     border-bottom: 1px solid #e0e0e0;
+    font-size: 10pt;
 }
 
 .spixi-bubble .status .content {
     color: black;
+    font-size: 12pt;
 }
 
 .spixi-bubble .status .fa-exclamation-circle {
     color: #c42425;
     font-size: 16pt;
     float: right;
-    margin-top: -10px;
 }
 
 .spixi-bubble .status .fa-check-circle {
     color: #5cc31d;
     font-size: 16pt;
     float: right;
-    margin-top: -10px;
 }
 
 .spixi-bubble .status .fa-clock {
     color: #df920c;
     font-size: 16pt;
     float: right;
-    margin-top: -10px;
 }
 
 .spixi-bubble .amount {
@@ -1197,11 +1199,13 @@ img.emoji {
     background-color: white;
     color: #9c9c9c;
     border-bottom: 1px solid #e0e0e0;
+    font-size: 10pt;
 }
 
 .spixi-bubble .amount .content
 {
     color: black;
+    font-size: 12pt;
 }
 
 .spixi-bubble .view {
@@ -1209,6 +1213,10 @@ img.emoji {
     background-color: white;
     color: #1692d9;
     border-radius: 0px 0px 16px 16px;
+    font-size: 12pt;
+}
+
+.spixi-bubble .view i {
     font-size: 16pt;
 }
 
