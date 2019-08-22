@@ -27,8 +27,6 @@ namespace SPIXI
 	{
 
         // Temporary optimizations for native->js data transfer
-        private BigInteger lastContactsChange = 0;
-        private BigInteger lastChatsChange = 0;
         private ulong lastTransactionChange = 9999;
 
         private string currentTab = "tab1";
@@ -329,8 +327,7 @@ namespace SPIXI
 
         private void onLoaded()
         {
-            lastContactsChange = 0;
-            lastChatsChange = 0;
+            Node.shouldRefreshContacts = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(webView, "selectTab", currentTab);
@@ -390,28 +387,11 @@ namespace SPIXI
         // TODO: optimize this
         public void loadContacts()
         {
-            // Check if there are any changes from last time first
-            BigInteger chk = 0;
-            foreach (Friend friend in FriendList.friends)
-            {
-                int umc = friend.getUnreadMessageCount();
-                chk += new BigInteger(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(friend.nickname)));
-                chk += umc;
-                if (friend.online)
-                {
-                    chk += 100000;
-                }
-            }
-
-
-            if (lastContactsChange == chk)
+            if (!Node.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
             }
-
-            // Update the checksum
-            lastContactsChange = chk;
 
             // Clear everything
             Utils.sendUiCommand(webView, "clearContacts");
@@ -430,7 +410,6 @@ namespace SPIXI
         public void loadChats()
         {
             // Check if there are any changes from last time first
-            BigInteger chk = 0;
             int unread = 0;
             foreach (Friend friend in FriendList.friends)
             {
@@ -438,12 +417,6 @@ namespace SPIXI
                 if(umc > 0)
                 {
                     unread += umc;
-                }
-                chk += new BigInteger(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(friend.nickname)));
-                chk += umc;
-                if (friend.online)
-                {
-                    chk += 100000;
                 }
             }
 
@@ -455,15 +428,11 @@ namespace SPIXI
                 Utils.sendUiCommand(webView, "setUnreadIndicator", "0");
             }
 
-            if (lastChatsChange == chk)
+            if (!Node.shouldRefreshContacts)
             {
                 //  No changes detected, stop here
                 return;
             }
-
-            // Update the checksum
-            lastChatsChange = chk;
-
 
             Utils.sendUiCommand(webView, "clearChats");
             Utils.sendUiCommand(webView, "clearUnreadActivity");
@@ -603,6 +572,9 @@ namespace SPIXI
 
             loadChats();
             loadContacts();
+
+            Node.shouldRefreshContacts = false;
+
             loadTransactions();
 
             // Check the ixian dlt
@@ -642,6 +614,11 @@ namespace SPIXI
             {
                 Logging.error("Exception occured in onUpdateUI: {0}", ex);
             }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }

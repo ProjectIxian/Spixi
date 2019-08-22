@@ -32,6 +32,8 @@ namespace SPIXI.Meta
 
         public static int startCounter = 0;
 
+        public static bool shouldRefreshContacts = true;
+
         public Node()
         {
             CoreConfig.productVersion = Config.version;

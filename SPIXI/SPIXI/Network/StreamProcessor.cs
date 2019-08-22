@@ -511,6 +511,7 @@ namespace SPIXI
             if(friend == null)
             {
                 Logging.error("Cannot send received confirmation, friend is null");
+                return;
             }
 
             // Send received confirmation

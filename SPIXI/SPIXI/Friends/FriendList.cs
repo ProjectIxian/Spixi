@@ -41,9 +41,12 @@ namespace SPIXI
             if(friend == null)
             {
                 Logging.error("Received nickname for a friend that's not in the friend list.");
+                return;
             }
 
             friend.nickname = nick;
+
+            Node.shouldRefreshContacts = true;
         }
 
         public static void addMessage(byte[] id, byte[] wallet_address, string message)
@@ -57,7 +60,9 @@ namespace SPIXI
             {
                 if (friend.walletAddress.SequenceEqual(wallet_address))
                 {
-                    if(!friend.online)
+                    Node.shouldRefreshContacts = true;
+
+                    if (!friend.online)
                     {
                         using (MemoryStream mw = new MemoryStream())
                         {
@@ -269,9 +274,17 @@ namespace SPIXI
                 {
                     if (PresenceList.getPresenceByAddress(friend.walletAddress) != null)
                     {
+                        if(friend.online == false)
+                        {
+                            Node.shouldRefreshContacts = true;
+                        }
                         friend.online = true;
                     }else
                     {
+                        if (friend.online == true)
+                        {
+                            Node.shouldRefreshContacts = true;
+                        }
                         friend.online = false;
                     }
                 }
