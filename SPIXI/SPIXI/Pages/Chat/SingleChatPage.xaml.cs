@@ -6,6 +6,7 @@ using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Timers;
@@ -119,47 +120,11 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string msg = split[1];
                 onSend(msg);
-            }
-            else if (current_url.Contains("ixian:confirmrequest:"))
+            }else if(current_url.Contains("ixian:viewPayment:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:confirmrequest:" }, StringSplitOptions.None);
-                string amount = split[1];
-                onConfirmPaymentRequest(amount);
-            }
-            else if (current_url.Contains("ixian:txdetails:"))
-            {
-                string[] split = current_url.Split(new string[] { "ixian:txdetails:" }, StringSplitOptions.None);
+                string[] split = current_url.Split(new string[] { "ixian:viewPayment:" }, StringSplitOptions.None);
                 string id = split[1];
-
-                Transaction transaction = null;
-                foreach (Transaction tx in TransactionCache.transactions)
-                {
-                    if (tx.id.Equals(id, StringComparison.Ordinal))
-                    {
-                        transaction = tx;
-                        break;
-                    }
-                }
-
-                if (transaction == null)
-                {
-                    foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
-                    {
-                        if (tx.id.Equals(id, StringComparison.Ordinal))
-                        {
-                            transaction = tx;
-                            break;
-                        }
-                    }
-
-                    if (transaction == null)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-                }
-
-                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+                onViewPayment(id);
             }
             else
             {
@@ -289,12 +254,62 @@ namespace SPIXI
             StreamProcessor.sendAcceptAdd(friend);
         }
 
-        public void onConfirmPaymentRequest(string amount)
+        public void onViewPayment(string msg_id)
+        {
+            FriendMessage msg = friend.messages.Find(x => x.id.SequenceEqual(Crypto.stringToHash(msg_id)));
+
+            if(msg.type == FriendMessageType.sentFunds || msg.message.StartsWith(":"))
+            {
+                string id = msg.message;
+                if(id.StartsWith(":"))
+                {
+                    id = id.Substring(1);
+                }
+
+                Transaction transaction = null;
+                foreach (Transaction tx in TransactionCache.transactions)
+                {
+                    if (tx.id.Equals(id, StringComparison.Ordinal))
+                    {
+                        transaction = tx;
+                        break;
+                    }
+                }
+
+                if (transaction == null)
+                {
+                    foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
+                    {
+                        if (tx.id.Equals(id, StringComparison.Ordinal))
+                        {
+                            transaction = tx;
+                            break;
+                        }
+                    }
+
+                    if (transaction == null)
+                    {
+                        return;
+                    }
+                }
+
+                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+
+                return;
+            }
+
+            if(msg.type == FriendMessageType.requestFunds && !msg.localSender)
+            {
+                onConfirmPaymentRequest(msg, msg.message);
+            }
+        }
+
+        public void onConfirmPaymentRequest(FriendMessage msg, string amount)
         {
             // TODO: extract the date from the corresponding message
             DateTime dt = DateTime.Now;
             string date_text = String.Format("{0:t}", dt);
-            Navigation.PushAsync(new WalletContactRequestPage(friend, amount, date_text), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(new WalletContactRequestPage(msg, friend, amount, date_text), Config.defaultXamarinAnimations);
         }
 
         private void onEntryCompleted(object sender, EventArgs e)
@@ -340,14 +355,44 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.requestFunds)
             {
-                // Call webview methods on the main UI thread only
+                string status = "PENDING";
+                string status_icon = "fa-clock";
+
+                string amount = message.message;
+
+                if(message.message.StartsWith("::"))
+                {
+                    status = "DECLINED";
+                    status_icon = "fa-exclamation-circle";
+                    amount = message.message.Substring(2);
+                }else if(message.message.StartsWith(":"))
+                {
+                    Transaction transaction = TransactionCache.getTransaction(message.message.Substring(1));
+                    if (transaction == null)
+                        transaction = TransactionCache.getUnconfirmedTransaction(message.message.Substring(1));
+
+                    amount = "?";
+
+                    if (transaction != null)
+                    {
+                        amount = transaction.amount.ToString();
+
+                        if (transaction.applied > 0)
+                        {
+                            status = "CONFIRMED";
+                            status_icon = "fa-check-circle";
+                        }
+                    }
+                }
+
+
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request SENT", "0", "PENDING", "fa-clock", Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request RECEIVED", message.message, "PENDING", "fa-clock", Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
                 message.read = true;
                 return;
@@ -360,26 +405,29 @@ namespace SPIXI
                 if (transaction == null)
                     transaction = TransactionCache.getUnconfirmedTransaction(message.message);
 
-                if (transaction == null)
-                    return;
-
                 string status = "PENDING";
                 string status_icon = "fa-clock";
 
-                if(transaction.applied > 0)
+                string amount = "?";
+
+                if (transaction != null)
                 {
-                    status = "CONFIRMED";
-                    status_icon = "fa-check-circle";
+                    if (transaction.applied > 0)
+                    {
+                        status = "CONFIRMED";
+                        status_icon = "fa-check-circle";
+                    }
+                    amount = transaction.amount.ToString();
                 }
 
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment SENT", transaction.amount.ToString(), status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment RECEIVED", transaction.amount.ToString(), status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
 
                 return;

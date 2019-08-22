@@ -8,6 +8,7 @@ using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -149,6 +150,29 @@ namespace SPIXI
             // Add the unconfirmed transaction the the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
             Logging.info("Showing payment details");
+
+            // Send message to recipients
+            foreach (var entry in to_list)
+            {
+                Friend friend = FriendList.getFriend(entry.Key);
+
+                if (friend != null)
+                {
+                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, transaction.id, true);
+
+                    SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.sentFunds, Encoding.UTF8.GetBytes(transaction.id));
+
+                    StreamMessage message = new StreamMessage();
+                    message.type = StreamMessageCode.info;
+                    message.recipient = friend.walletAddress;
+                    message.sender = Node.walletStorage.getPrimaryAddress();
+                    message.transaction = new byte[1];
+                    message.sigdata = new byte[1];
+                    message.data = spixi_message.getBytes();
+
+                    StreamProcessor.sendMessage(friend, message);
+                }
+            }
 
             // Show the payment details
             Navigation.PushAsync(new WalletSentPage(transaction, false), Config.defaultXamarinAnimations);

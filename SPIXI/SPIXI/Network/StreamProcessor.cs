@@ -470,6 +470,12 @@ namespace SPIXI
                     }
                     break;
 
+                case SpixiMessageCode.requestFundsResponse:
+                    {
+                        handleRequestFundsResponse(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                    }
+                    break;
+
                 case SpixiMessageCode.keys:
                     {
                         handleReceivedKeys(message.sender, spixi_message.data);
@@ -606,7 +612,7 @@ namespace SPIXI
             FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
         }
 
-        private static void handleSentFunds(byte[] id, byte[] sender_wallet, string amount)
+        public static void handleRequestFundsResponse(byte[] id, byte[] sender_wallet, string msg_id_tx_id)
         {
             // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender_wallet);
@@ -615,7 +621,45 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, amount);
+            string[] msg_id_tx_id_split = msg_id_tx_id.Split(':');
+            byte[] msg_id = null;
+            string tx_id = null;
+            if(msg_id_tx_id_split.Length == 2)
+            {
+                msg_id = Crypto.stringToHash(msg_id_tx_id_split[0]);
+                tx_id = msg_id_tx_id_split[1];
+            }else
+            {
+                msg_id = Crypto.stringToHash(msg_id_tx_id);
+            }
+
+            FriendMessage msg = friend.messages.Find(x => x.id.SequenceEqual(msg_id));
+            if(msg == null)
+            {
+                return;
+            }
+            if(tx_id != null)
+            {
+                msg.message = ":" + tx_id;
+            }else
+            {
+                msg.message = "::" + msg.message; // declined
+            }
+
+            // Write to chat history
+            Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+        }
+
+        private static void handleSentFunds(byte[] id, byte[] sender_wallet, string txid)
+        {
+            // Retrieve the corresponding contact
+            Friend friend = FriendList.getFriend(sender_wallet);
+            if (friend == null)
+            {
+                return;
+            }
+
+            FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, txid);
         }
 
         public static void sendAcceptAdd(Friend friend)

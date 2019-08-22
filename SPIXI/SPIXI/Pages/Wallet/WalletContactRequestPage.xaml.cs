@@ -16,10 +16,11 @@ namespace SPIXI
 	public partial class WalletContactRequestPage : SpixiContentPage
 	{
         private Friend friend = null;
+        private FriendMessage requestMsg = null;
         private string amount = null;
         private string date = null;
 
-        public WalletContactRequestPage (Friend fr, string am, string dt)
+        public WalletContactRequestPage (FriendMessage request_msg, Friend fr, string am, string dt)
 		{
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -27,6 +28,10 @@ namespace SPIXI
             friend = fr;
             amount = am;
             date = dt;
+            if(request_msg != null)
+            {
+                requestMsg = request_msg;
+            }
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -52,13 +57,17 @@ namespace SPIXI
             {
                 onLoad();
             }
-            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            else if (current_url.Equals("ixian:decline", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                onDecline();
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
                 onSend();
+            }
+            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            {
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else
             {
@@ -70,35 +79,70 @@ namespace SPIXI
 
         }
 
+        private void onDecline()
+        {
+            if (requestMsg != null)
+            {
+                string msgId = Crypto.hashToString(requestMsg.id);
+
+                // send decline
+                if (!requestMsg.message.StartsWith(":"))
+                {
+                    SpixiMessage spixi_message = new SpixiMessage(null, SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId));
+
+                    requestMsg.message = "::" + requestMsg.message;
+
+                    StreamMessage message = new StreamMessage();
+                    message.type = StreamMessageCode.info;
+                    message.recipient = friend.walletAddress;
+                    message.sender = Node.walletStorage.getPrimaryAddress();
+                    message.transaction = new byte[1];
+                    message.sigdata = new byte[1];
+                    message.data = spixi_message.getBytes();
+
+                    StreamProcessor.sendMessage(friend, message);
+
+                    Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                }
+            }
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+        }
+
         private void onSend()
         {
-            // Create an ixian transaction and send it to the dlt network
-            byte[] to = friend.walletAddress;
+            string msgId = Crypto.hashToString(requestMsg.id);
 
-            IxiNumber amounti = new IxiNumber(amount);
-            IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getPrimaryAddress();
-            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+            // send tx details to the request
+            if (!requestMsg.message.StartsWith(":"))
+            {
+                // Create an ixian transaction and send it to the dlt network
+                byte[] to = friend.walletAddress;
 
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getLastBlockHeight());
+                IxiNumber amounti = new IxiNumber(amount);
+                IxiNumber fee = ConsensusConfig.transactionPrice;
+                byte[] from = Node.walletStorage.getPrimaryAddress();
+                byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
-            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
+                Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getLastBlockHeight());
 
-            // Add the unconfirmed transaction the the cache
-            TransactionCache.addUnconfirmedTransaction(transaction);
-            FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, friend.walletAddress, transaction.id, true);
+                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
 
-            SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.sentFunds, Encoding.UTF8.GetBytes(amount));
+                SpixiMessage spixi_message = new SpixiMessage(null, SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId + ":" + transaction.id));
 
-            StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
-            message.recipient = to;
-            message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
-            message.data = spixi_message.getBytes();
+                requestMsg.message = ":" + transaction.id;
 
-            StreamProcessor.sendMessage(friend, message);
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.info;
+                message.recipient = to;
+                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = spixi_message.getBytes();
+
+                StreamProcessor.sendMessage(friend, message);
+
+                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+            }
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 

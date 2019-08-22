@@ -302,6 +302,10 @@
                 additionalClasses += " read";
             }
 
+            if (msgEl.className.indexOf("spixi-payment-request") > -1) {
+                additionalClasses += " spixi-payment-request";
+            }
+
             msgEl.className = "spixi-bubble myself" + additionalClasses;
 
             var textEls = msgEl.getElementsByClassName("text");
@@ -318,9 +322,8 @@
         var message = "<div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
         message += "<div class=\"status\">Status:<div class=\"content\">" + status + "<i class=\"fas "+statusIcon+"\"></i></div></div>";
         message += "<div class=\"amount\">Amount:<div class=\"content\"><div class=\"ixiCashIcon\"></div>" + amount + "</div></div>";
-        if (!localSender) {
-            message += "<div class=\"view\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\"><i class=\"fas fa-search\"></i> View</div>";
-        }
+        message += "<div class=\"view\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> View</div>";
+        message += " <i class=\"statusIndicator fas fa-check\"></i>";
 
         var additionalClasses = "";
         if (localSender == "True") {

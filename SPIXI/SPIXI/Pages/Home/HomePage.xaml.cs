@@ -480,9 +480,27 @@ namespace SPIXI
                     FriendMessage lastmsg = friend.messages.Last();
                     string excerpt = lastmsg.message;
                     if (lastmsg.type == FriendMessageType.requestFunds)
-                        excerpt = "Payment Request";
+                    {
+                        if (lastmsg.localSender)
+                        {
+                            excerpt = "Payment Request Sent";
+                        }
+                        else
+                        {
+                            excerpt = "Payment Request Received";
+                        }
+                    }
                     else if (lastmsg.type == FriendMessageType.sentFunds)
-                        excerpt = "Payment Sent";
+                    {
+                        if (lastmsg.localSender)
+                        {
+                            excerpt = "Payment Sent";
+                        }
+                        else
+                        {
+                            excerpt = "Payment Received";
+                        }
+                    }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
 
@@ -508,11 +526,30 @@ namespace SPIXI
                     FriendMessage lastmsg = friend.messages.Last();
                     string excerpt = lastmsg.message;
                     if (lastmsg.type == FriendMessageType.requestFunds)
-                        excerpt = "Payment Request";
+                    {
+                        if (lastmsg.localSender)
+                        {
+                            excerpt = "Payment Request Sent";
+                        }
+                        else
+                        {
+                            excerpt = "Payment Request Received";
+                        }
+                    }
                     else if (lastmsg.type == FriendMessageType.sentFunds)
-                        excerpt = "Payment Sent";
+                    {
+                        if (lastmsg.localSender)
+                        {
+                            excerpt = "Payment Sent";
+                        }
+                        else
+                        {
+                            excerpt = "Payment Received";
+                        }
+                    }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
+
 
                     Utils.sendUiCommand(webView, "addChat",
                         Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, "0");

@@ -281,7 +281,6 @@ namespace SPIXI.Network
 
                     case ProtocolMessageCode.newTransaction:
                         {
-                            // Forward the new transaction message to the DLT network
                             Transaction transaction = new Transaction(data, true);
                             TransactionCache.addTransaction(transaction);
                         }
