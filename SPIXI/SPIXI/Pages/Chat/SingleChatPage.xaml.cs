@@ -101,11 +101,12 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:call", StringComparison.Ordinal))
             {
-                
+                displaySpixiAlert("Voice Call", "Coming soon.\nCheck regularly for new version on www.spixi.io", "Ok");
+
             }
             else if (current_url.Equals("ixian:sendfile", StringComparison.Ordinal))
             {
-                onSendFile();
+                displaySpixiAlert("Send File", "\nCheck regularly for new version on www.spixi.io", "Ok");
             }
             else if (current_url.Contains("ixian:acceptfile:"))
             {
