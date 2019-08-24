@@ -226,8 +226,7 @@ namespace SPIXI
                         if (transfer == null)
                             return false;
 
-                        //transfer.fileStream.Position = 0;
-                        //transfer.fileStream.Write(file_data, Config.packetDataSize * (int)packet_number, file_data.Length);
+                        transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
                         transfer.fileStream.Write(file_data, 0, file_data.Length);
 
                         ulong new_packet_number = packet_number + 1;
@@ -317,7 +316,7 @@ namespace SPIXI
 
                 transfer.filepath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.filename);
                 transfer.fileStream = File.Create(transfer.filepath);
-
+                transfer.fileStream.SetLength((long)transfer.filesize);
 
                 SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.acceptFile, m.ToArray());
 
