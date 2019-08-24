@@ -260,15 +260,92 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                Logging.info("Received file header");
-                FileTransfer transfer = new FileTransfer(data.data);
-                FriendList.addMessageWithType(data.id, FriendMessageType.fileHeader, sender, transfer.name);         
+                FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data);
+                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.filename);
+                FriendList.addMessageWithType(data.id, FriendMessageType.fileHeader, sender, message_data);         
             }
             else
             {
-                Logging.error("Received File Header for an unknown friend.");
+                Logging.error("Received File Header from an unknown friend.");
             }
         }
+
+        // Called when accepting a file
+        public static void handleAcceptFile(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                Logging.info("Received accept file");
+
+                try
+                {
+                    using (MemoryStream m = new MemoryStream(data.data))
+                    {
+                        using (BinaryReader reader = new BinaryReader(m))
+                        {
+                            string uid = reader.ReadString();
+
+                            TransferManager.receiveAcceptFile(friend, uid);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured while handling accept file from bytes: " + e);
+                }
+            }
+            else
+            {
+                Logging.error("Received accept file from an unknown friend.");
+            }
+        }
+
+        public static void handleRequestFileData(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                Logging.info("Received request file data");
+
+                try
+                {
+                    using (MemoryStream m = new MemoryStream(data.data))
+                    {
+                        using (BinaryReader reader = new BinaryReader(m))
+                        {
+                            string uid = reader.ReadString();
+                            ulong packet_number = reader.ReadUInt64();
+
+                            TransferManager.sendFileData(friend, uid, packet_number);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured while handling request file data from bytes: " + e);
+                }
+
+            }
+            else
+            {
+                Logging.error("Received request file data from an unknown friend.");
+            }
+        }
+
+        public static void handlefileData(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend != null)
+            {
+                TransferManager.receiveFileData(data.data, sender);
+            }
+            else
+            {
+                Logging.error("Received file data from an unknown friend.");
+            }
+        }
+
 
         // Called when receiving received confirmation from the message recipient
         public static void handleMsgReceived(byte[] sender, SpixiMessage data)
@@ -501,6 +578,29 @@ namespace SPIXI
                         handleFileHeader(message.sender, spixi_message);
                     }
                     break;
+
+                case SpixiMessageCode.acceptFile:
+                    {
+                        handleAcceptFile(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
+                    }
+
+                case SpixiMessageCode.requestFileData:
+                    {
+                        handleRequestFileData(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
+                    }
+
+                case SpixiMessageCode.fileData:
+                    {
+                        handlefileData(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
+                    }
+
+
             }
 
             if(friend == null)

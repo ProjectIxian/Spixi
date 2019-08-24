@@ -6,6 +6,7 @@ using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -98,7 +99,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:accept", StringComparison.Ordinal))
             {
-                onAccept();
+                onAcceptFriendRequest();
             }
             else if (current_url.Equals("ixian:call", StringComparison.Ordinal))
             {
@@ -107,13 +108,16 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:sendfile", StringComparison.Ordinal))
             {
-                displaySpixiAlert("Send File", "\nCheck regularly for new version on www.spixi.io", "Ok");
+                //displaySpixiAlert("Send File", "\nCheck regularly for new version on www.spixi.io", "Ok");
+                onSendFile();
             }
             else if (current_url.Contains("ixian:acceptfile:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:acceptfile:" }, StringSplitOptions.None);
                 string id = split[1];
 
+                onAcceptFile(id);
+               
             }
             else if (current_url.Contains("ixian:chat:"))
             {
@@ -224,7 +228,7 @@ namespace SPIXI
 
                 string fileName = fileData.FileName;
 
-                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.DataArray);
+                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream());
                 System.Console.WriteLine("File Transfer uid: " + transfer.uid);
 
                 SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.fileHeader, transfer.getBytes());
@@ -245,7 +249,13 @@ namespace SPIXI
             }
         }
 
-        public void onAccept()
+        public void onAcceptFile(string uid)
+        {
+            //displaySpixiAlert("File", uid, "Ok");
+            TransferManager.acceptFile(friend, uid);
+        }
+
+        public void onAcceptFriendRequest()
         {
             FriendList.resetHiddenMatchAddressesCache();
 
@@ -436,11 +446,21 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.fileHeader)
             {
-                prefix = "addFile";
-            }
+                string[] split = message.message.Split(new string[] { ":" }, StringSplitOptions.None);
+                if (split != null && split.Length > 1)
+                {
+                    string uid = split[0];
+                    string name = split[1];
 
-            // Call webview methods on the main UI thread only
-            Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
+                    Utils.sendUiCommand(webView, "addFile", uid, avatar, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
+                }
+            }
+            else
+            {
+                // Normal chat message
+                // Call webview methods on the main UI thread only
+                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
+            }
 
             if (!message.read && !message.localSender)
             {

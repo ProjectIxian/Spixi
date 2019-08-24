@@ -246,10 +246,10 @@
     
     function addFile(id, avatar, name, time, me, sent, read) {
         var additionalClasses = "";
-        if (sent == true) {
+        if (sent == "True") {
             additionalClasses = " sent";
         }
-        if (read == true) {
+        if (read == "True") {
             additionalClasses += " read";
         }
         
@@ -263,9 +263,9 @@
 
 
         var bubbleEl = document.createElement('div');
-        bubbleEl.id = "msg_" + id;
+        bubbleEl.id = "file_" + id;
         bubbleEl.className = "spixi-bubble file" + additionalClasses;
-        if(me == true)
+        if(me == "True")
             bubbleEl.className = bubbleEl.className + " myself";
         
         bubbleEl.appendChild(textEl);

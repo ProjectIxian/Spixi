@@ -29,16 +29,22 @@ namespace SPIXI.Storage
             // Retrieve the app-specific and platform-specific documents path
             documentsPath = path;
 
-            // prepare tmp path
+            // Prepare tmp path
             if (!Directory.Exists(Path.Combine(documentsPath, "tmp")))
             {
                 Directory.CreateDirectory(Path.Combine(documentsPath, "tmp"));
             }
 
-            // prepare chats path
+            // Prepare Chats path
             if (!Directory.Exists(Path.Combine(documentsPath, "Chats")))
             {
                 Directory.CreateDirectory(Path.Combine(documentsPath, "Chats"));
+            }
+
+            // Prepare Downloads path
+            if (!Directory.Exists(Path.Combine(documentsPath, "Downloads")))
+            {
+                Directory.CreateDirectory(Path.Combine(documentsPath, "Downloads"));
             }
 
             // Read transactions
