@@ -233,6 +233,7 @@ namespace SPIXI
                         if (new_packet_number * (ulong)Config.packetDataSize > transfer.filesize + (ulong)Config.packetDataSize)
                         {
                             transfer.fileStream.Dispose();
+                            completeFileTransfer(sender, uid);
                             return true;
                         }
                         requestFileData(sender, uid, new_packet_number);
@@ -270,10 +271,24 @@ namespace SPIXI
             return transfer;
         }
 
+        public static void completeFileTransfer(byte[] sender, string uid)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend == null)
+                return;
+
+            if (friend.chat_page != null)
+            {
+                friend.chat_page.updateFile(uid, "100", true);
+            }
+        }
+
         public static void requestFileData(byte[] sender, string uid, ulong packet_number)
         {
             Logging.info("Requesting File Data, packet #{0}", packet_number);
             Friend friend = FriendList.getFriend(sender);
+            if (friend == null)
+                return;
 
             using (MemoryStream m = new MemoryStream())
             {
@@ -297,6 +312,17 @@ namespace SPIXI
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message);
+
+                if (friend.chat_page != null)
+                {
+                    FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
+                    if (transfer == null)
+                        return;
+
+                    ulong totalPackets = transfer.filesize / (ulong)Config.packetDataSize;
+                    ulong fp = 100 / totalPackets * (packet_number-1);
+                    friend.chat_page.updateFile(uid, fp.ToString(), false);
+                }
             }
         }
 

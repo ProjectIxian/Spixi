@@ -73,6 +73,7 @@ namespace SPIXI
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
+            e.Cancel = true;
 
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
@@ -118,6 +119,20 @@ namespace SPIXI
 
                 onAcceptFile(id);
                
+            }
+            else if (current_url.Contains("ixian:openfile:"))
+            {
+                // TODO: save the file path for later instances
+                string[] split = current_url.Split(new string[] { "ixian:openfile:" }, StringSplitOptions.None);
+                string id = split[1];
+
+                FileTransfer transfer = TransferManager.getIncomingTransfer(id);
+                if (transfer == null)
+                    return;
+
+                // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
+                Device.OpenUri(new Uri(transfer.filepath));
+
             }
             else if (current_url.Contains("ixian:chat:"))
             {
@@ -253,6 +268,7 @@ namespace SPIXI
         {
             //displaySpixiAlert("File", uid, "Ok");
             TransferManager.acceptFile(friend, uid);
+            updateFile(uid, "0", false);
         }
 
         public void onAcceptFriendRequest()
@@ -485,6 +501,11 @@ namespace SPIXI
         {
             Logging.info("Sending update message for {0}, content {1} ", Crypto.hashToString(message.id), message.message);
             Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString());
+        }
+
+        public void updateFile(string uid, string progress, bool complete)
+        {
+            Utils.sendUiCommand(webView, "updateFile", uid, progress, complete.ToString());
         }
 
         // Executed every second

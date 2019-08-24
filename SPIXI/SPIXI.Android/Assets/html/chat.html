@@ -128,16 +128,20 @@
             //showContactRequest(true);
             addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
             addFile(10, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
+                setTimeout(function () { updateFile(10,"25","False"); }, 1000);   
+                setTimeout(function () { updateFile(10,"50","False"); }, 2000);  
         
             setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
             setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
             setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
             setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
-            setTimeout(function () { addFile(12, "", "file.png", "10:27 AM", true, true,true); }, 2200);        
+            setTimeout(function () { addFile(12, "", "file.png", "10:27 AM", "True", "True","True"); }, 2200);        
             setTimeout(function () { addMe(5, "", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
             setTimeout(function () { addThem(6, "img/spixiavatar.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
             setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
-            setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);               
+            setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);      
+        
+        
     }
     
     
@@ -266,7 +270,7 @@
         bubbleEl.id = "file_" + id;
         bubbleEl.className = "spixi-bubble file" + additionalClasses;
         if(me == "True")
-            bubbleEl.className = bubbleEl.className + " myself";
+            bubbleEl.className = "spixi-bubble file myself";
         
         bubbleEl.appendChild(textEl);
         bubbleEl.appendChild(timeEl);
@@ -279,15 +283,58 @@
         }
         
         var icon = document.createElement('div');
-        icon.className = "fa fa-folder-open actionicon";
+        icon.className = "fa fa-arrow-down actionicon";
+        
+        if(me == "True")
+            icon.className = "fa fa-redo-alt actionicon";
+        
         bubbleEl.appendChild(icon);
         
         var linkEl = document.createElement('a');
-        linkEl.href = "ixian:acceptfile:"+id;
+        if(me == "True")
+            linkEl.href = "ixian:retryfile:"+id;
+        else
+            linkEl.href = "ixian:acceptfile:"+id;
+        
         linkEl.appendChild(bubbleEl);
         
         document.getElementById("messages").appendChild(linkEl);         
         linkEl.scrollIntoView(true);
+    }
+    
+    function updateFile(id,progress,complete)
+    {
+        var aEl = document.getElementById("file_" + id).parentElement;
+        if (aEl != null) {
+            if(complete == "True")
+            {
+                aEl.href = "ixian:openfile:"+id;
+            }
+            else
+            {
+                aEl.href = "javascript:void(0)"; 
+            }
+        }
+        
+        var fileEl = document.getElementById("file_" + id);
+        if (fileEl != null) {
+            var additionalClasses = "";
+
+            var aEls = fileEl.getElementsByClassName("actionicon");
+            if (aEls.length > 0) {
+                var aEl = aEls[0];
+                if(complete == "True")
+                {
+                    aEl.className = "fa fa-folder-open actionicon";
+                    aEl.innerHTML = "";
+                }
+                else
+                {
+                    aEl.className = "actionicon";
+                    aEl.innerHTML = progress;
+                }
+            }
+        }        
     }
 
     function updateMessage(id, message, sent, read) {
