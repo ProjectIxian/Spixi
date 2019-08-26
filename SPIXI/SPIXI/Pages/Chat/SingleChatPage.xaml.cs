@@ -128,7 +128,13 @@ namespace SPIXI
 
                 FileTransfer transfer = TransferManager.getIncomingTransfer(id);
                 if (transfer == null)
+                    transfer = TransferManager.getOutgoingTransfer(id);
+
+                if (transfer == null)
+                {
+                    displaySpixiAlert("Expired", "File link has expired.", "Ok");
                     return;
+                }
 
                 // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
                 Device.OpenUri(new Uri(transfer.filepath));
@@ -242,8 +248,9 @@ namespace SPIXI
                     return; // User canceled file picking
 
                 string fileName = fileData.FileName;
+                string filePath = fileData.FilePath;
 
-                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream());
+                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream(), filePath);
                 System.Console.WriteLine("File Transfer uid: " + transfer.uid);
 
                 SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.fileHeader, transfer.getBytes());
@@ -257,6 +264,12 @@ namespace SPIXI
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message);
+
+
+                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.filename);
+
+                // store the message and display it
+                FriendMessage friend_message = FriendList.addMessageWithType(spixi_message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);
             }
             catch (Exception ex)
             {
@@ -468,7 +481,7 @@ namespace SPIXI
                     string uid = split[0];
                     string name = split[1];
 
-                    Utils.sendUiCommand(webView, "addFile", uid, avatar, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), uid, avatar, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
                 }
             }
             else

@@ -130,11 +130,12 @@ namespace SPIXI
         static List<FileTransfer> outgoingTransfers = new List<FileTransfer>();
         static List<FileTransfer> incomingTransfers = new List<FileTransfer>();
 
-        public static FileTransfer prepareFileTransfer(string filename, Stream stream)
+        public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null)
         {
             FileTransfer transfer = new FileTransfer(filename, stream);
+            if (filepath != null)
+                transfer.filepath = filepath;
             outgoingTransfers.Add(transfer);
-
             return transfer;
         }
 

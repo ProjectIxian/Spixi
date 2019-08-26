@@ -127,7 +127,7 @@
             setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
             //showContactRequest(true);
             addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
-            addFile(10, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
+            addFile(10, 10, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
                 setTimeout(function () { updateFile(10,"25","False"); }, 1000);   
                 setTimeout(function () { updateFile(10,"50","False"); }, 2000);  
         
@@ -135,13 +135,13 @@
             setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
             setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
             setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
-            setTimeout(function () { addFile(12, "", "file.png", "10:27 AM", "True", "True","True"); }, 2200);        
+            setTimeout(function () { addFile(12, 12, "", "file.png", "10:27 AM", "True", "True","True"); }, 2200);        
             setTimeout(function () { addMe(5, "", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
             setTimeout(function () { addThem(6, "img/spixiavatar.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
             setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
             setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);      
         
-        
+        setTimeout(function () { updateMessage(12,"50","True","True"); }, 5000); 
     }
     
     
@@ -248,7 +248,7 @@
         addText(id, avatar, text, time, "spixi-bubble");
     }
     
-    function addFile(id, avatar, name, time, me, sent, read) {
+    function addFile(id, fileid, avatar, name, time, me, sent, read) {
         var additionalClasses = "";
         if (sent == "True") {
             additionalClasses = " sent";
@@ -267,7 +267,8 @@
 
 
         var bubbleEl = document.createElement('div');
-        bubbleEl.id = "file_" + id;
+        bubbleEl.id = "file_" + fileid;
+
         bubbleEl.className = "spixi-bubble file" + additionalClasses;
         if(me == "True")
             bubbleEl.className = "spixi-bubble file myself";
@@ -286,19 +287,23 @@
         icon.className = "fa fa-arrow-down actionicon";
         
         if(me == "True")
-            icon.className = "fa fa-redo-alt actionicon";
+            icon.className = "fa fa-folder-open actionicon";
         
         bubbleEl.appendChild(icon);
         
         var linkEl = document.createElement('a');
         if(me == "True")
-            linkEl.href = "ixian:retryfile:"+id;
+            linkEl.href = "ixian:openfile:"+id;
         else
             linkEl.href = "ixian:acceptfile:"+id;
         
         linkEl.appendChild(bubbleEl);
         
-        document.getElementById("messages").appendChild(linkEl);         
+        var fileBubbleEl = document.createElement('div');
+        fileBubbleEl.id = "msgfile_" + id;
+        fileBubbleEl.appendChild(linkEl);
+        
+        document.getElementById("messages").appendChild(fileBubbleEl);         
         linkEl.scrollIntoView(true);
     }
     
@@ -339,6 +344,13 @@
 
     function updateMessage(id, message, sent, read) {
         var msgEl = document.getElementById("msg_" + id);
+        var isFile = false;
+        if(msgEl == null)
+        {
+            isFile = true;
+            msgEl = document.getElementById("msgfile_" + id).firstChild.firstChild;
+        }
+        
         if (msgEl != null) {
 
             var additionalClasses = "";
@@ -352,15 +364,21 @@
             if (msgEl.className.indexOf("spixi-payment-request") > -1) {
                 additionalClasses += " spixi-payment-request";
             }
+            
+            if (isFile) {
+                additionalClasses += " file";
+            }            
 
             msgEl.className = "spixi-bubble myself" + additionalClasses;
+            
+            if (isFile == false) {
+                var textEls = msgEl.getElementsByClassName("text");
+                if (textEls.length > 0) {
+                    var textEl = textEls[0];
+                    textEl.innerHTML = message;
 
-            var textEls = msgEl.getElementsByClassName("text");
-            if (textEls.length > 0) {
-                var textEl = textEls[0];
-                textEl.innerHTML = message;
-
-                twemoji.parse(textEl);
+                    twemoji.parse(textEl);
+                }
             }
         }
     }
