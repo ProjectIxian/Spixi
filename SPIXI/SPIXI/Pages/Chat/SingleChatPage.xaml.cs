@@ -235,6 +235,11 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
+            if(friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+            }
+
             StreamProcessor.sendMessage(friend, message);
 
         }

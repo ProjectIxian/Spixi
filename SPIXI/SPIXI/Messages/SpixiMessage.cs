@@ -24,7 +24,8 @@ namespace SPIXI
         acceptCall,
         rejectCall,
         callData,
-        requestFundsResponse
+        requestFundsResponse,
+        acceptAddBot
     }
 
     class SpixiMessage

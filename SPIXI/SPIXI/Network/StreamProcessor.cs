@@ -73,6 +73,7 @@ namespace SPIXI
                         Friend f = FriendList.getFriend(message.recipient);
                         if (f == null)
                         {
+                            cache.Add(message);
                             continue;
                         }
                         // Send the message
@@ -463,6 +464,13 @@ namespace SPIXI
                 return;
             }
 
+            if(endpoint.presence.wallet.SequenceEqual(message.recipient))
+            {
+                // message from a bot group chat
+                message.realSender = message.sender;
+                message.sender = message.recipient;
+            }
+
             Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(message.sender), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
 
             Friend friend = null;
@@ -600,10 +608,17 @@ namespace SPIXI
                         return;
                     }
 
+                case SpixiMessageCode.acceptAddBot:
+                    {
+                        // Friend accepted request
+                        handleAcceptAddBot(message.sender, spixi_message.data);
+                    }
+                    break;
+
 
             }
 
-            if(friend == null)
+            if (friend == null)
             {
                 friend = FriendList.getFriend(message.sender);
             }
@@ -682,7 +697,8 @@ namespace SPIXI
                 }
 
                 friend = FriendList.addFriend(sender_wallet, pub_k, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), aes_key, null, 0);
-            }else
+            }
+            else
             {
                 friend.aesKey = aes_key;
             }
@@ -696,6 +712,37 @@ namespace SPIXI
             requestNickname(friend);
 
             sendNickname(friend);
+
+            FriendList.addMessage(null, friend.walletAddress, friend.nickname + " has accepted your friend request.");
+        }
+
+        private static void handleAcceptAddBot(byte[] sender_wallet, byte[] aes_key)
+        {
+            // Retrieve the corresponding contact
+            Friend friend = FriendList.getFriend(sender_wallet);
+            if (friend == null)
+            {
+                byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
+                if (pub_k == null)
+                {
+                    Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                    return;
+                }
+
+                friend = FriendList.addFriend(sender_wallet, pub_k, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), aes_key, null, 0);
+            }
+            else
+            {
+                friend.aesKey = aes_key;
+            }
+
+            friend.bot = true;
+
+            friend.handshakeStatus = 3;
+
+            requestNickname(friend);
+
+            //sendNickname(friend);
 
             FriendList.addMessage(null, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }

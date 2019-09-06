@@ -26,6 +26,7 @@ namespace SPIXI
     class StreamMessage
     {
         public StreamMessageCode type;          // Stream Message type
+        public byte[] realSender = null;        // Used by group chat bots, isn't transmitted to the network
         public byte[] sender = null;            // Sender wallet
         public byte[] recipient = null;         // Recipient wallet 
 

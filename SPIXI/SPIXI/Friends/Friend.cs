@@ -91,6 +91,8 @@ namespace SPIXI
 
         public bool approved = true;
 
+        public bool bot = false;
+
         private int _handshakeStatus = 0;
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
@@ -131,6 +133,15 @@ namespace SPIXI
                     approved = reader.ReadBoolean();
 
                     _handshakeStatus = reader.ReadInt32(); // use internal variable, to avoid writing to file
+
+                    // TODO try/catch wrapper can be removed after the upgrade
+                    try
+                    {
+                        bot = reader.ReadBoolean();
+                    }catch(Exception e)
+                    {
+
+                    }
                 }
             }
         }
@@ -181,6 +192,8 @@ namespace SPIXI
                     writer.Write(approved);
 
                     writer.Write(handshakeStatus);
+
+                    writer.Write(bot);
                 }
                 return m.ToArray();
             }
