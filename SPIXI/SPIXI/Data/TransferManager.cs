@@ -125,10 +125,28 @@ namespace SPIXI
 
     }
 
+    class FilePacket
+    {
+        public string transfer_uid;
+        public ulong packet_number = 0;
+        public bool added = false;
+
+        public FilePacket(string uid, ulong number)
+        {
+            transfer_uid = uid;
+            packet_number = number;
+            added = false;
+        }
+
+    }
+
     class TransferManager
     {
         static List<FileTransfer> outgoingTransfers = new List<FileTransfer>();
         static List<FileTransfer> incomingTransfers = new List<FileTransfer>();
+
+        static List<FilePacket> incomingPacketsLog = new List<FilePacket>();
+
 
         public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null)
         {
@@ -150,7 +168,17 @@ namespace SPIXI
             return transfer;
         }
 
-
+        public static bool checkPacket(FilePacket packet)
+        {
+            foreach (FilePacket ipacket in incomingPacketsLog)
+            {
+                if (ipacket.transfer_uid.Equals(packet.transfer_uid) && ipacket.packet_number == packet.packet_number && ipacket.added)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public static bool sendFileData(Friend friend, string uid, ulong packet_number)
         {
@@ -217,6 +245,10 @@ namespace SPIXI
                         string uid = reader.ReadString();
                         ulong packet_number = reader.ReadUInt64();
 
+                        FilePacket packet = new FilePacket(uid, packet_number);
+                        if (checkPacket(packet))
+                            return false;
+
                         int data_length = reader.ReadInt32();
                         if (data_length > 0)
                             file_data = reader.ReadBytes(data_length);
@@ -226,6 +258,8 @@ namespace SPIXI
                         FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
                         if (transfer == null)
                             return false;
+
+                        incomingPacketsLog.Add(packet);
 
                         transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
                         transfer.fileStream.Write(file_data, 0, file_data.Length);
