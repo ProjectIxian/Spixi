@@ -472,6 +472,8 @@ namespace SPIXI
                     }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
+                    else if (lastmsg.type == FriendMessageType.fileHeader)
+                        excerpt = "File";
 
                     Utils.sendUiCommand(webView, "addChat",
                         Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount().ToString());
@@ -518,7 +520,8 @@ namespace SPIXI
                     }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                         excerpt = "Contact Request";
-
+                    else if (lastmsg.type == FriendMessageType.fileHeader)
+                        excerpt = "File";
 
                     Utils.sendUiCommand(webView, "addChat",
                         Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, "0");

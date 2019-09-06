@@ -127,8 +127,8 @@
             setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
             //showContactRequest(true);
             addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
-            addFile(10, 10, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
-                setTimeout(function () { updateFile(10,"25","False"); }, 1000);   
+            addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
+                setTimeout(function () { updateFile(9090,"25","False"); }, 1000);   
                 setTimeout(function () { updateFile(10,"50","False"); }, 2000);  
         
             setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
@@ -293,9 +293,9 @@
         
         var linkEl = document.createElement('a');
         if(me == "True")
-            linkEl.href = "ixian:openfile:"+id;
+            linkEl.href = "ixian:openfile:"+fileid;
         else
-            linkEl.href = "ixian:acceptfile:"+id;
+            linkEl.href = "ixian:acceptfile:"+fileid;
         
         linkEl.appendChild(bubbleEl);
         
