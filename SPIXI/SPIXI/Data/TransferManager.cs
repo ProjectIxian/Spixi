@@ -1,4 +1,5 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -11,49 +12,52 @@ namespace SPIXI
     class FileTransfer
     {
         public string uid = null;
-        public string filename = null;
-        public ulong filesize = 0;
-        public byte[] preview = null;
+        public string fileName = null;
+        public ulong fileSize = 0;
+        public byte[] preview = null;       // Additional preview data
+        public byte[] sender = null;        // Additional sender address field
 
+        public bool incoming = false;       // Incoming or outgoing flag
+        public bool completed = false;
 
-        public bool incoming = false;
+        public string filePath = null;
+        public Stream fileStream = null;    
 
-        public string filepath = null;
-
-        private bool completed = false;
-        public Stream fileStream = null;
+        public long lastTimeStamp = 0;      // Last activity timestamp in seconds
+        public ulong lastPacket = 0;        // Last processed packet number
 
         public FileTransfer()
         {
             uid = Guid.NewGuid().ToString("N");
-            filename = "New File";
-            filesize = 0;
+            fileName = "New File";
+            fileSize = 0;
             preview = null;
+            completed = false;
+            lastTimeStamp = 0;
+            lastPacket = 0;
         }
 
-     /*   public FileTransfer(string in_name, byte[] in_preview = null)
-        {
-            uid = Guid.NewGuid().ToString("N");
-            filename = in_name;
-            filesize = 0;
-            preview = in_preview;
-        }
-        */
         public FileTransfer(string in_name, Stream in_stream)
         {
             uid = Guid.NewGuid().ToString("N");
-            filename = in_name;
+            fileName = in_name;
             fileStream = in_stream;
-            filesize = (ulong)fileStream.Length;
+            fileSize = (ulong)fileStream.Length;
             preview = null;
+            completed = false;
+            lastTimeStamp = 0;
+            lastPacket = 0;
         }
 
         public FileTransfer(string in_uid, string in_name, ulong in_size, byte[] in_preview = null)
         {
             uid = in_uid;
-            filename = in_name;
-            filesize = in_size;
+            fileName = in_name;
+            fileSize = in_size;
             preview = in_preview;
+            completed = false;
+            lastTimeStamp = 0;
+            lastPacket = 0;
         }
 
         public FileTransfer(byte[] bytes)
@@ -65,8 +69,8 @@ namespace SPIXI
                     using (BinaryReader reader = new BinaryReader(m))
                     {
                         uid = reader.ReadString();
-                        filename = reader.ReadString();
-                        filesize = reader.ReadUInt64();
+                        fileName = reader.ReadString();
+                        fileSize = reader.ReadUInt64();
 
                         int data_length = reader.ReadInt32();
                         if (data_length > 0)
@@ -89,10 +93,10 @@ namespace SPIXI
                     if (uid != null)
                         writer.Write(uid);
 
-                    if (filename != null)
-                        writer.Write(filename);
+                    if (fileName != null)
+                        writer.Write(fileName);
 
-                    writer.Write(filesize);
+                    writer.Write(fileSize);
 
                     // Write the data
                     if (preview != null)
@@ -114,13 +118,19 @@ namespace SPIXI
         {
             byte[] data = new byte[Config.packetDataSize];
 
-            if ((ulong)Config.packetDataSize * packet_num > filesize + (ulong)Config.packetDataSize)
+            if ((ulong)Config.packetDataSize * packet_num > fileSize + (ulong)Config.packetDataSize)
                 return data;
 
             fileStream.Seek((int)packet_num * Config.packetDataSize, SeekOrigin.Begin);
             fileStream.Read(data, 0, Config.packetDataSize);
 
             return data;
+        }
+
+        public void updateActivity(ulong last_packet)
+        {
+            lastTimeStamp = Clock.getTimestamp();
+            lastPacket = last_packet;
         }
 
     }
@@ -130,12 +140,14 @@ namespace SPIXI
         public string transfer_uid;
         public ulong packet_number = 0;
         public bool added = false;
+        public long timestamp = 0;
 
         public FilePacket(string uid, ulong number)
         {
             transfer_uid = uid;
             packet_number = number;
             added = false;
+            timestamp = Clock.getTimestamp();
         }
 
     }
@@ -152,23 +164,25 @@ namespace SPIXI
         {
             FileTransfer transfer = new FileTransfer(filename, stream);
             if (filepath != null)
-                transfer.filepath = filepath;
+                transfer.filePath = filepath;
             outgoingTransfers.Add(transfer);
             return transfer;
         }
 
-        public static FileTransfer prepareIncomingFileTransfer(byte[] data)
+        public static FileTransfer prepareIncomingFileTransfer(byte[] data, byte[] sender)
         {
             FileTransfer transfer = new FileTransfer(data);
             transfer.incoming = true;
+            transfer.sender = sender;
             incomingTransfers.Add(transfer);
 
-            Logging.info("File Transfer Size: {0} {1}", transfer.filename, transfer.filesize);
+            Logging.info("File Transfer Size: {0} {1}", transfer.fileName, transfer.fileSize);
 
             return transfer;
         }
 
-        public static bool checkPacket(FilePacket packet)
+        // Check if a packet already exists in the incomingPackets log
+        public static bool checkPacketLog(FilePacket packet)
         {
             foreach (FilePacket ipacket in incomingPacketsLog)
             {
@@ -178,6 +192,11 @@ namespace SPIXI
                 }
             }
             return false;
+        }
+
+        public static void removePacketsForFileTransfer(string uid)
+        {
+            incomingPacketsLog.RemoveAll(item => item.transfer_uid == uid);
         }
 
         public static bool sendFileData(Friend friend, string uid, ulong packet_number)
@@ -246,7 +265,7 @@ namespace SPIXI
                         ulong packet_number = reader.ReadUInt64();
 
                         FilePacket packet = new FilePacket(uid, packet_number);
-                        if (checkPacket(packet))
+                        if (checkPacketLog(packet))
                             return false;
 
                         int data_length = reader.ReadInt32();
@@ -259,15 +278,23 @@ namespace SPIXI
                         if (transfer == null)
                             return false;
 
+                        // Check if the transfer is already completed
+                        if (transfer.completed)
+                            return false;
+
                         incomingPacketsLog.Add(packet);
 
                         transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
                         transfer.fileStream.Write(file_data, 0, file_data.Length);
 
+                        transfer.updateActivity(packet_number);
+
                         ulong new_packet_number = packet_number + 1;
-                        if (new_packet_number * (ulong)Config.packetDataSize > transfer.filesize + (ulong)Config.packetDataSize)
+                        if (new_packet_number * (ulong)Config.packetDataSize > transfer.fileSize + (ulong)Config.packetDataSize)
                         {
                             transfer.fileStream.Dispose();
+                            transfer.completed = true;
+                            removePacketsForFileTransfer(uid);
                             completeFileTransfer(sender, uid);
                             return true;
                         }
@@ -354,7 +381,7 @@ namespace SPIXI
                     if (transfer == null)
                         return;
 
-                    ulong totalPackets = transfer.filesize / (ulong)Config.packetDataSize;
+                    ulong totalPackets = transfer.fileSize / (ulong)Config.packetDataSize;
                     ulong fp = 100 / totalPackets * (packet_number-1);
                     friend.chat_page.updateFile(uid, fp.ToString(), false);
                 }
@@ -375,9 +402,9 @@ namespace SPIXI
                 if (transfer == null)
                     return;
 
-                transfer.filepath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.filename);
-                transfer.fileStream = File.Create(transfer.filepath);
-                transfer.fileStream.SetLength((long)transfer.filesize);
+                transfer.filePath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.fileName);
+                transfer.fileStream = File.Create(transfer.filePath);
+                transfer.fileStream.SetLength((long)transfer.fileSize);
 
                 SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.acceptFile, m.ToArray());
 

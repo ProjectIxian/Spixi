@@ -137,7 +137,7 @@ namespace SPIXI
                 }
 
                 // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
-                Device.OpenUri(new Uri(transfer.filepath));
+                Device.OpenUri(new Uri(transfer.filePath));
 
             }
             else if (current_url.Contains("ixian:chat:"))
@@ -271,7 +271,7 @@ namespace SPIXI
                 StreamProcessor.sendMessage(friend, message);
 
 
-                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.filename);
+                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
 
                 // store the message and display it
                 FriendMessage friend_message = FriendList.addMessageWithType(spixi_message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);

@@ -261,8 +261,8 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data);
-                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.filename);
+                FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data, sender);
+                string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
                 FriendList.addMessageWithType(data.id, FriendMessageType.fileHeader, sender, message_data);         
             }
             else
