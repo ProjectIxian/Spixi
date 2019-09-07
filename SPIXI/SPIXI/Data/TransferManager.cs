@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SPIXI
 {
@@ -154,11 +155,55 @@ namespace SPIXI
 
     class TransferManager
     {
+        private static Thread tm_thread = null;
+        private static bool running = false;
+
         static List<FileTransfer> outgoingTransfers = new List<FileTransfer>();
         static List<FileTransfer> incomingTransfers = new List<FileTransfer>();
 
         static List<FilePacket> incomingPacketsLog = new List<FilePacket>();
 
+        public static void start()
+        {
+            running = true;
+            // Start the thread
+            tm_thread = new Thread(onUpdate);
+            tm_thread.Name = "TransferManager_Update_Thread";
+            tm_thread.Start();
+        }
+
+        public static void onUpdate()
+        {
+            while (running)
+            {
+                lock (incomingTransfers)
+                {
+                    foreach(FileTransfer transfer in incomingTransfers)
+                    {
+                        if (transfer.completed || transfer.fileStream == null)
+                            continue;
+
+                        if (transfer.lastTimeStamp == 0)
+                            continue;
+
+                        if(Clock.getTimestamp() - transfer.lastTimeStamp > Config.packetRequestTimeout)
+                        {
+                            requestFileData(transfer.sender, transfer.uid, transfer.lastPacket + 1);
+                        }
+                    }
+
+                }
+
+                Thread.Sleep(1000);
+
+                Thread.Yield();
+            }
+        }
+
+        public static void stop()
+        {
+            running = false;
+        }
 
         public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null)
         {

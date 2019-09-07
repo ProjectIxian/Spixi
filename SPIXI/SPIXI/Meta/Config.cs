@@ -22,6 +22,7 @@ namespace SPIXI.Meta
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
+        public static readonly long packetRequestTimeout = 30; // Time in seconds to re-request packets
 
         public static readonly string version = "spixi-0.2.0"; // Spixi version
 

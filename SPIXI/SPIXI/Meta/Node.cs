@@ -76,6 +76,9 @@ namespace SPIXI.Meta
             // Start the keepalive thread
             PresenceList.startKeepAlive();
 
+            // Start the transfer manager
+            TransferManager.start();
+
             startCounter++;
 
             // Setup a timer to handle routine updates
@@ -154,6 +157,9 @@ namespace SPIXI.Meta
 
         static public void stop()
         {
+            // Stop the transfer manager
+            TransferManager.stop();
+
             // Stop the keepalive thread
             PresenceList.stopKeepAlive();
 
