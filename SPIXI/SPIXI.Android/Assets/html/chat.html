@@ -129,7 +129,9 @@
             addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
             addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
                 setTimeout(function () { updateFile(9090,"25","False"); }, 1000);   
-                setTimeout(function () { updateFile(10,"50","False"); }, 2000);  
+                setTimeout(function () { updateFile(9090,"50","False"); }, 2000);  
+                setTimeout(function () { updateFile(9090,"75","False"); }, 3000); 
+                setTimeout(function () { updateFile(9090,"100","False"); }, 4000); 
         
             setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
             setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
@@ -326,6 +328,9 @@
             var additionalClasses = "";
 
             var aEls = fileEl.getElementsByClassName("actionicon");
+            if (aEls.length == 0)
+                aEls = fileEl.getElementsByClassName("actionprogress");
+            
             if (aEls.length > 0) {
                 var aEl = aEls[0];
                 if(complete == "True")
@@ -335,8 +340,8 @@
                 }
                 else
                 {
-                    aEl.className = "actionicon";
-                    aEl.innerHTML = progress;
+                    aEl.className = "actionprogress";
+                    aEl.innerHTML = progress + "<span class='smaller'>%</span>";
                 }
             }
         }        
