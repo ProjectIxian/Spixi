@@ -1245,6 +1245,84 @@ img.emoji {
     font-size: 16pt;
 }
 
+
+
+.spixi-callbubble
+{
+    font-size: 10pt;
+    position:relative;
+    background:#dbdfe2;
+    border-radius:16px;
+    color: black;
+    
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    padding: 15px;
+    padding-top: 10px;
+    min-width: 80px;
+    width: 200px;
+    padding-bottom: 28px;   
+    
+    animation-name: chat_animation;
+    animation-duration: 0.3s;
+
+    word-wrap: break-word;
+}
+.spixi-callbubble-declined { 
+
+    background:#dfbdcf;
+}
+
+.spixi-callbubble .icon {
+    display: table-cell;
+    float: left;
+    font-size: 18pt;
+    margin-top: 8px;
+    position: relative;
+    z-index: 2;
+    color: #2893EF;
+    padding-left: 10px;
+    padding-top: 12px;
+    
+    width: 50px;
+    height: 50px;
+}
+
+.spixi-callbubble .icon-black {
+    display: table-cell;
+    float: left;
+    font-size: 18pt;
+    margin-top: 8px;
+    position: relative;
+    z-index: 2;
+    color: #000;
+    padding-left: 10px;
+    padding-top: 12px;
+    
+    width: 50px;
+    height: 50px;
+}
+
+.spixi-callbubble .title {
+    font-size: 10pt;
+    margin-left: 55px;
+}
+
+.spixi-callbubble .text {
+    margin-left: 55px;
+    font-size: 12pt;
+}
+
+.spixi-callbubble .time {
+    margin-left: 55px;
+    padding-top: 5px;
+    font-size: 7pt;
+    color: #000;
+    z-index: 4;
+    position: absolute;
+}
+
 .chatholder {
     -moz-transition: all 0.6s ease-in-out;
     -ms-transition: all 0.6s ease-in-out;

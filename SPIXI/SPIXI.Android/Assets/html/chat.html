@@ -133,6 +133,9 @@
                 setTimeout(function () { updateFile(9090,"75","False"); }, 3000); 
                 setTimeout(function () { updateFile(9090,"100","False"); }, 4000); 
         
+            setTimeout(function () { addCall(1000, "Incoming call", "Duration 15:32", "False", "11:23 AM"); }, 1000);
+            setTimeout(function () { addCall(1000, "Incoming call", "Declined", "True", "11:23 AM"); }, 2000);
+        
             setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
             setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
             setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
@@ -307,6 +310,41 @@
         
         document.getElementById("messages").appendChild(fileBubbleEl);         
         linkEl.scrollIntoView(true);
+    }
+    
+    function addCall(id, title, message, declined, time)
+    {       
+        var titleEl = document.createElement('div');
+        titleEl.className = "title";
+        titleEl.innerHTML = title;
+        
+        var textEl = document.createElement('div');
+        textEl.className = "text";
+        textEl.innerHTML = message;
+
+        var timeEl = document.createElement('div');
+        timeEl.className = "time";
+        timeEl.innerHTML = time;
+
+        var icon = document.createElement('div');
+        icon.className = "fa fa-phone icon";
+        
+        var bubbleEl = document.createElement('div');
+        bubbleEl.id = "call_" + id;
+        bubbleEl.className = "spixi-callbubble";
+        if(declined == "True")
+        {
+            bubbleEl.className = "spixi-callbubble spixi-callbubble-declined";   icon.className = "fa fa-phone-slash icon-black";       
+        }
+        
+        bubbleEl.appendChild(icon);    
+        
+        bubbleEl.appendChild(titleEl);        
+        bubbleEl.appendChild(textEl);
+        bubbleEl.appendChild(timeEl);
+
+        document.getElementById("messages").appendChild(bubbleEl);
+        bubbleEl.scrollIntoView(true);      
     }
     
     function updateFile(id,progress,complete)
