@@ -187,6 +187,10 @@ namespace SPIXI.Network
                                         PresenceList.forceSendKeepAlive = true;
                                         Logging.info("Forcing KA from networkprotocol");
                                     }
+                                }else if (endpoint.presenceAddress.type == 'C')
+                                {
+                                    Friend f = FriendList.getFriend(endpoint.presence.wallet);
+                                    StreamProcessor.sendGetMessages(f);
                                 }
 
                                 subscribeToEvents(endpoint);

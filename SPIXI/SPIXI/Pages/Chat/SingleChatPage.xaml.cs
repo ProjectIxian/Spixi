@@ -234,6 +234,7 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
+            message.id = friend_message.id;
 
             if(friend.bot)
             {
@@ -391,6 +392,21 @@ namespace SPIXI
 
             string prefix = "addMe";
             string avatar = "";//Node.localStorage.getOwnAvatarPath();
+            string address = "";
+            string nick = "";
+            if (friend.bot)
+            {
+                if (message.senderAddress != null)
+                {
+                    address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
+                }
+
+                nick = message.senderNick;
+                if (nick == "")
+                {
+                    nick = address;
+                }
+            }
             if (!message.localSender)
             {
                 prefix = "addThem";
@@ -432,11 +448,11 @@ namespace SPIXI
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
                 message.read = true;
                 return;
@@ -467,11 +483,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
 
                 return;
@@ -486,14 +502,14 @@ namespace SPIXI
                     string uid = split[0];
                     string name = split[1];
 
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), uid, avatar, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
                 }
             }
             else
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
+                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
             }
 
             if (!message.read && !message.localSender)
@@ -524,6 +540,11 @@ namespace SPIXI
         public void updateFile(string uid, string progress, bool complete)
         {
             Utils.sendUiCommand(webView, "updateFile", uid, progress, complete.ToString());
+        }
+
+        public void updateGroupChatNicks(byte[] address, string nick)
+        {
+            Utils.sendUiCommand(webView, "updateGroupChatNicks", Base58Check.Base58CheckEncoding.EncodePlain(address), nick);
         }
 
         // Executed every second

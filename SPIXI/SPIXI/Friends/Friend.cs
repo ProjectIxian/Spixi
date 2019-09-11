@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Utils;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,10 @@ namespace SPIXI
         public bool confirmed;
         public FriendMessageType type;
 
-        public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t)
+        public byte[] senderAddress;
+        public string senderNick = "";
+
+        public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
         {
             _id = id;
             message = msg;
@@ -39,9 +43,11 @@ namespace SPIXI
             read = false;
             type = t;
             confirmed = false;
+            senderAddress = sender_address;
+            senderNick = sender_nick;
         }
 
-        public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t)
+        public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
         {
             message = msg;
             timestamp = time;
@@ -49,6 +55,8 @@ namespace SPIXI
             read = false;
             type = t;
             confirmed = false;
+            senderAddress = sender_address;
+            senderNick = sender_nick;
         }
 
         public byte[] id
@@ -68,6 +76,11 @@ namespace SPIXI
         }
     }
 
+    public class BotContact
+    {
+        public string nick;
+        public byte[] avatar;
+    }
 
     public class Friend
     {
@@ -86,6 +99,8 @@ namespace SPIXI
         public bool online = false;
 
         public List<FriendMessage> messages = new List<FriendMessage>();
+
+        public Dictionary<byte[], BotContact> contacts = new Dictionary<byte[], BotContact>(new ByteArrayComparer()); // used by bot friends
 
         public SingleChatPage chat_page = null;
 
@@ -123,10 +138,16 @@ namespace SPIXI
                     _nick = reader.ReadString(); // use internal variable, to avoid writing to file
 
                     int aes_len = reader.ReadInt32();
-                    aesKey = reader.ReadBytes(aes_len);
+                    if (aes_len > 0)
+                    {
+                        aesKey = reader.ReadBytes(aes_len);
+                    }
 
                     int cc_len = reader.ReadInt32();
-                    chachaKey = reader.ReadBytes(cc_len);
+                    if (cc_len > 0)
+                    {
+                        chachaKey = reader.ReadBytes(cc_len);
+                    }
 
                     keyGeneratedTime = reader.ReadInt64();
 

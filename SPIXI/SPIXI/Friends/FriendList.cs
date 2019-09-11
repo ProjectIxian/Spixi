@@ -35,7 +35,7 @@ namespace SPIXI
         }
 
         // Set the nickname for a specific wallet address
-        public static void setNickname(byte[] wallet_address, string nick)
+        public static void setNickname(byte[] wallet_address, string nick, byte[] real_sender_address)
         {
             Friend friend = getFriend(wallet_address);
             if(friend == null)
@@ -43,57 +43,118 @@ namespace SPIXI
                 Logging.error("Received nickname for a friend that's not in the friend list.");
                 return;
             }
-
-            friend.nickname = nick;
-
-            Node.shouldRefreshContacts = true;
+            if(friend.bot && real_sender_address != null)
+            {
+                if(!friend.contacts.ContainsKey(real_sender_address))
+                {
+                    friend.contacts.Add(real_sender_address, new BotContact());
+                }
+                if (friend.contacts[real_sender_address].nick != nick)
+                {
+                    friend.contacts[real_sender_address].nick = nick;
+                    // update messages with the new nick
+                    for (int i = friend.messages.Count - 1, j = 0; i >= 0; i--, j++)
+                    {
+                        if(j > 1000)
+                        {
+                            break;
+                        }
+                        if(friend.messages[i].senderNick != "")
+                        {
+                            continue;
+                        }
+                        if(friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
+                        {
+                            friend.messages[i].senderNick = nick;
+                        }
+                    }
+                    // update UI with the new nick
+                    if (friend.chat_page != null)
+                    {
+                        friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
+                    }
+                }
+            }
+            else
+            {
+                friend.nickname = nick;
+                Node.shouldRefreshContacts = true;
+            }
         }
 
-        public static void addMessage(byte[] id, byte[] wallet_address, string message)
+        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null)
         {
-            addMessageWithType(id, FriendMessageType.standard, wallet_address, message);
+            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address);
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null)
         {
             foreach (Friend friend in friends)
             {
-                if (friend.walletAddress.SequenceEqual(wallet_address))
+                if (!friend.walletAddress.SequenceEqual(wallet_address))
                 {
-                    Node.shouldRefreshContacts = true;
+                    continue;
+                }
 
-                    if (!friend.online)
+                Node.shouldRefreshContacts = true;
+
+                if (!friend.online)
+                {
+                    using (MemoryStream mw = new MemoryStream())
                     {
-                        using (MemoryStream mw = new MemoryStream())
+                        using (BinaryWriter writer = new BinaryWriter(mw))
                         {
-                            using (BinaryWriter writer = new BinaryWriter(mw))
-                            {
-                                writer.Write(wallet_address.Length);
-                                writer.Write(wallet_address);
+                            writer.Write(wallet_address.Length);
+                            writer.Write(wallet_address);
 
-                                CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
-                            }
+                            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
                         }
                     }
-                    // TODO: message date should be fetched, not generated here
-                    FriendMessage friend_message = new FriendMessage(id, message, Clock.getTimestamp(), local_sender, type);
-                    friend.messages.Add(friend_message);
-
-                    // If a chat page is visible, insert the message directly
-                    if (friend.chat_page != null)
-                    {
-                        friend.chat_page.insertMessage(friend_message);
-                    }
-                    else
-                    {
-                        //CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
-                    }
-
-                    // Write to chat history
-                    Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
-
-                    return friend_message;
                 }
+
+                string sender_nick = "";
+                if(friend.bot)
+                {
+                    if (!local_sender)
+                    {
+                        if (friend.contacts.ContainsKey(sender_address))
+                        {
+                            sender_nick = friend.contacts[sender_address].nick;
+                        }
+                        else
+                        {
+                            StreamProcessor.requestNickname(friend, sender_address);
+                        }
+                    }
+                }else
+                {
+                    sender_nick = friend.nickname;
+                }
+
+                // TODO: message date should be fetched, not generated here
+                FriendMessage friend_message = new FriendMessage(id, message, Clock.getTimestamp(), local_sender, type, sender_address, sender_nick);
+
+                if(friend.bot && local_sender)
+                {
+                    friend_message.read = true;
+                }
+
+                friend.messages.Add(friend_message);
+
+                // If a chat page is visible, insert the message directly
+                if (friend.chat_page != null)
+                {
+                    friend.chat_page.insertMessage(friend_message);
+                }
+                else
+                {
+                    //CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
+                }
+
+                // Write to chat history
+                Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
+
+                return friend_message;
             }
 
             // No matching contact found in friendlist

@@ -196,7 +196,7 @@ namespace SPIXI
                 return false;
             }
 
-            if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), Encoding.UTF8.GetBytes(msg.getID())))
+            if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
             {
                 StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
@@ -464,10 +464,11 @@ namespace SPIXI
                 return;
             }
 
+            byte[] sender_address = null;
             if(endpoint.presence.wallet.SequenceEqual(message.recipient))
             {
                 // message from a bot group chat
-                message.realSender = message.sender;
+                sender_address = message.sender;
                 message.sender = message.recipient;
             }
 
@@ -503,7 +504,7 @@ namespace SPIXI
                 case SpixiMessageCode.chat:
                     {
                         // Add the message to the friend list
-                        FriendList.addMessage(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        FriendList.addMessage(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
                     }
                     break;
 
@@ -519,10 +520,10 @@ namespace SPIXI
                         // Set the nickname for the corresponding address
                         if (spixi_message.data != null)
                         {
-                            FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                            FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
                         }else
                         {
-                            FriendList.setNickname(message.sender, Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
+                            FriendList.setNickname(message.sender, Base58Check.Base58CheckEncoding.EncodePlain(message.sender), sender_address);
                         }
                     }
                     break;
@@ -865,10 +866,15 @@ namespace SPIXI
         }
 
         // Requests the nickname of the sender
-        public static void requestNickname(Friend friend)
+        public static void requestNickname(Friend friend, byte[] contact_address = null)
         {
+            if(contact_address == null)
+            {
+                contact_address = new byte[1];
+            }
+
             // Prepare the message and send to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 3 }, SpixiMessageCode.getNick, new byte[1]);
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 3 }, SpixiMessageCode.getNick, contact_address);
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
@@ -890,6 +896,31 @@ namespace SPIXI
         {
             // Send the message to the S2 nodes
             SpixiMessage spixi_message = new SpixiMessage(new byte[] { 0 }, SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
+
+            StreamProcessor.sendMessage(friend, message);
+        }
+
+        public static void sendGetMessages(Friend friend)
+        {
+            byte[] last_message_id = null;
+
+            if(friend.messages.Count > 0)
+            {
+                last_message_id = friend.messages[friend.messages.Count - 1].id;
+            }
+
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 5 }, SpixiMessageCode.getMessages, last_message_id);
 
 
             StreamMessage message = new StreamMessage();

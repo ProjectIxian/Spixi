@@ -246,7 +246,21 @@ namespace SPIXI.Storage
                     bool s_read = reader.ReadBoolean();
                     bool s_confirmed = reader.ReadBoolean();
 
-                    FriendMessage message = new FriendMessage(id, s_message, s_timestamp, s_local_sender, (FriendMessageType)s_type);
+                    byte[] s_sender_address = null;
+                    string s_nick = "";
+                    // try/catch wrapper can be removed after upgrade
+                    try
+                    {
+                        int s_sender_address_len = reader.ReadInt32();
+                        s_sender_address = reader.ReadBytes(s_sender_address_len);
+
+                        s_nick = reader.ReadString();
+                    }catch(Exception e)
+                    {
+
+                    }
+
+                    FriendMessage message = new FriendMessage(id, s_message, s_timestamp, s_local_sender, (FriendMessageType)s_type, s_sender_address, s_nick);
                     message.read = s_read;
                     message.confirmed = s_confirmed;
                     messages.Add(message);
@@ -303,6 +317,17 @@ namespace SPIXI.Storage
                     writer.Write(message.localSender);
                     writer.Write(message.read);
                     writer.Write(message.confirmed);
+
+                    if(message.senderAddress != null)
+                    {
+                        writer.Write(message.senderAddress.Length);
+                        writer.Write(message.senderAddress);
+                    }else
+                    {
+                        writer.Write((int)0);
+                    }
+
+                    writer.Write(message.senderNick);
                 }
 
             }

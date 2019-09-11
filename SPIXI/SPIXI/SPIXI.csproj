@@ -91,5 +91,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
   <Import Project="..\..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
 </Project>

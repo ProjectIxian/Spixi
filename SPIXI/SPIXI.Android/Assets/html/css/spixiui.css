@@ -1067,6 +1067,10 @@ img.emoji {
     border: none;
 }
 
+.spixi-bubble .nick {
+    font-weight: bold;
+}
+
 .spixi-bubble .time
 {
     padding-top: 5px;
@@ -1079,7 +1083,6 @@ img.emoji {
     text-align: right;
     right: 15px;
 }
-
 .spixi-bubble.myself .actionicon {
     display: table-cell;
     float: left;

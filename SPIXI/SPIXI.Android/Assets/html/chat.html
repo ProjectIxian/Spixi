@@ -208,7 +208,7 @@
         document.getElementById("chat_send").style.backgroundColor = "#BABABA";
     }
     
-    function addText(id, avatar, text, time, className) {
+    function addText(id, address, nick, avatar, text, time, className) {
             var textEl = document.createElement('div');
             textEl.className = "text";
             textEl.innerHTML = text;
@@ -223,6 +223,24 @@
             var bubbleEl = document.createElement('div');
             bubbleEl.id = "msg_" + id;
             bubbleEl.className = className + "";
+
+            if (nick != "") {
+                var nickEl = document.createElement('div');
+                if (nick == address) {
+                    nickEl.setAttribute("name", "a_" + address);
+                }
+                nickEl.className = "nick";
+                nickEl.innerHTML = nick;
+                nickEl.onclick = function () {
+                    if (nickEl.innerHTML == nick) {
+                        nickEl.innerHTML = address;
+                    } else {
+                        nickEl.innerHTML = nick;
+                    }
+                };
+                bubbleEl.appendChild(nickEl);
+            }
+
             bubbleEl.appendChild(textEl);
             bubbleEl.appendChild(timeEl);
 
@@ -238,7 +256,7 @@
             bubbleEl.scrollIntoView(true);
     }
 
-    function addMe(id, avatar, text, time, sent, read) {    
+    function addMe(id, address, nick, avatar, text, time, sent, read) {    
         var additionalClasses = "";
         if (sent == "True") {
             additionalClasses = " sent";
@@ -246,14 +264,14 @@
         if (read == "True") {
             additionalClasses += " read";
         }
-        addText(id, avatar, text, time, "spixi-bubble myself" + additionalClasses);
+        addText(id, address, nick, avatar, text, time, "spixi-bubble myself" + additionalClasses);
     }
 
-    function addThem(id, avatar, text, time) {
-        addText(id, avatar, text, time, "spixi-bubble");
+    function addThem(id, address, nick, avatar, text, time) {
+        addText(id, address, nick, avatar, text, time, "spixi-bubble");
     }
     
-    function addFile(id, fileid, avatar, name, time, me, sent, read) {
+    function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read) {
         var additionalClasses = "";
         if (sent == "True") {
             additionalClasses = " sent";
@@ -426,7 +444,7 @@
         }
     }
 
-    function addPaymentRequest(id, avatar, title, amount, status, statusIcon, time, localSender) {
+    function addPaymentRequest(id, address, nick, avatar, title, amount, status, statusIcon, time, localSender) {
         var message = "<div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
         message += "<div class=\"status\">Status:<div class=\"content\">" + status + "<i class=\"fas "+statusIcon+"\"></i></div></div>";
         message += "<div class=\"amount\">Amount:<div class=\"content\"><div class=\"ixiCashIcon\"></div>" + amount + "</div></div>";
@@ -438,7 +456,7 @@
             additionalClasses = " myself";
         }
 
-        addText(id, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
+        addText(id, address, nick, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
 
         /*if (amount != "0") {
             message += "<br/><div class=\"spixi-button small smallwidth center\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\">View details</div>";
@@ -497,6 +515,24 @@
             document.getElementById("status").innerHTML = "online";
         } else {
             document.getElementById("status").innerHTML = "offline";
+        }
+    }
+
+    function updateGroupChatNicks(address, nick) {
+        var nickEls = document.getElementsByName("a_" + address);
+        for (var i = 0; i < nickEls.length; i++) {
+            (function(nickEl) {
+                if (nickEl.getAttribute("name") == "a_" + nickEl.innerHTML) {
+                    nickEl.innerHTML = nick;
+                    nickEl.onclick = function () {
+                        if (nickEl.innerHTML == nick) {
+                            nickEl.innerHTML = address;
+                        } else {
+                            nickEl.innerHTML = nick;
+                        }
+                    };
+                }
+            }) (nickEls[i]);
         }
     }
 </script>

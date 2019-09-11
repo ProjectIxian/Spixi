@@ -134,6 +134,18 @@ namespace SPIXI
             }
         }
 
+        private static void connectToBotNodes()
+        {
+            lock(FriendList.friends)
+            {
+                var bot_list = FriendList.friends.FindAll(x => x.bot);
+                foreach(var bot_entry in bot_list)
+                {
+                    connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
+                }
+            }
+        }
+
         private static void reconnectClients()
         {
             Random rnd = new Random();
@@ -153,6 +165,8 @@ namespace SPIXI
                     // Scan for and connect to a new neighbor
                     connectToRandomStreamNode();
                 }
+
+                connectToBotNodes();
 
                 // Wait 5 seconds before rechecking
                 Thread.Sleep(CoreConfig.networkClientReconnectInterval);
