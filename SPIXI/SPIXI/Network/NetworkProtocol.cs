@@ -190,10 +190,16 @@ namespace SPIXI.Network
                                 }else if (endpoint.presenceAddress.type == 'C')
                                 {
                                     Friend f = FriendList.getFriend(endpoint.presence.wallet);
-                                    StreamProcessor.sendGetMessages(f);
+                                    if (f != null && f.bot)
+                                    {
+                                        StreamProcessor.sendGetMessages(f);
+                                    }
                                 }
 
-                                subscribeToEvents(endpoint);
+                                if(endpoint.presenceAddress.type == 'M')
+                                {
+                                    subscribeToEvents(endpoint);
+                                }
                             }
                         }
                         break;

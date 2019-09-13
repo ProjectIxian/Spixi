@@ -108,8 +108,10 @@ namespace SPIXI
                 List<Presence> presences = PresenceList.getPresencesByType('R');
                 if(presences.Count > 0)
                 {
+                    List<Presence> tmp_presences = presences.FindAll(x => x.addresses.Find(y => y.type == 'R' && y.nodeVersion == "xs2c-0.3.0") != null); // TODO tmp_presences can be removed after protocol is finalized
+
                     Random rnd = new Random();
-                    Presence p = presences[rnd.Next(presences.Count)];
+                    Presence p = tmp_presences[rnd.Next(tmp_presences.Count)];
                     lock(p)
                     {
                         neighbor = p.addresses.Find(x => x.type == 'R').address;
@@ -218,6 +220,11 @@ namespace SPIXI
                 lock (streamClients)
                 {
                     streamClients.Remove(client);
+                }
+                // Remove this node from the connecting clients list
+                lock (connectingClients)
+                {
+                    connectingClients.Remove(client.getFullAddress(true));
                 }
             }
         }

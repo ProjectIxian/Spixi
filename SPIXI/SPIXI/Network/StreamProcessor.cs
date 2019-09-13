@@ -741,6 +741,8 @@ namespace SPIXI
 
             friend.handshakeStatus = 3;
 
+            sendGetMessages(friend);
+
             requestNickname(friend);
 
             //sendNickname(friend);
