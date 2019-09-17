@@ -63,6 +63,11 @@ namespace SPIXI
                         {
                             continue;
                         }
+                        if(friend.messages[i].senderAddress == null || real_sender_address == null)
+                        {
+                            Logging.warn("Sender address is null");
+                            continue;
+                        }
                         if(friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
                         {
                             friend.messages[i].senderNick = nick;
@@ -71,6 +76,7 @@ namespace SPIXI
                     // update UI with the new nick
                     if (friend.chat_page != null)
                     {
+                        Logging.info("Updating group chat nicks");
                         friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
                     }
                 }

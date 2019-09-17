@@ -503,6 +503,10 @@ namespace SPIXI
             {
                 case SpixiMessageCode.chat:
                     {
+                        if(sender_address == null)
+                        {
+                            Logging.info("Sender address is null");
+                        }
                         // Add the message to the friend list
                         FriendList.addMessage(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
                     }
