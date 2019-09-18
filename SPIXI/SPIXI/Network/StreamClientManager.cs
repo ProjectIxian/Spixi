@@ -108,7 +108,7 @@ namespace SPIXI
                 List<Presence> presences = PresenceList.getPresencesByType('R');
                 if(presences.Count > 0)
                 {
-                    List<Presence> tmp_presences = presences.FindAll(x => x.addresses.Find(y => y.type == 'R' && y.nodeVersion == "xs2c-0.3.0") != null); // TODO tmp_presences can be removed after protocol is finalized
+                    List<Presence> tmp_presences = presences.FindAll(x => x.addresses.Find(y => y.type == 'R' && (y.nodeVersion == "xs2c-0.4.0-dev")) != null); // TODO tmp_presences can be removed after protocol is finalized
 
                     Random rnd = new Random();
                     Presence p = tmp_presences[rnd.Next(tmp_presences.Count)];
