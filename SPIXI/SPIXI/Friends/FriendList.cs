@@ -145,7 +145,10 @@ namespace SPIXI
                     friend_message.read = true;
                 }
 
-                friend.messages.Add(friend_message);
+                lock (friend.messages)
+                {
+                    friend.messages.Add(friend_message);
+                }
 
                 // If a chat page is visible, insert the message directly
                 if (friend.chat_page != null)
@@ -323,7 +326,10 @@ namespace SPIXI
                 foreach (Friend friend in friends)
                 {
                     // Clear messages from memory
-                    friend.messages.Clear();
+                    lock (friend.messages)
+                    {
+                        friend.messages.Clear();
+                    }
 
                     // Remove history file
                     Node.localStorage.deleteMessagesFile(friend.walletAddress);

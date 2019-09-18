@@ -364,9 +364,12 @@ namespace SPIXI
 
         public void loadMessages()
         {
-            foreach (FriendMessage message in friend.messages)
+            lock (friend.messages)
             {
-                insertMessage(message);
+                foreach (FriendMessage message in friend.messages)
+                {
+                    insertMessage(message);
+                }
             }
         }
 
