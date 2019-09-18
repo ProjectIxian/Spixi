@@ -277,7 +277,7 @@ namespace SPIXI
 
                 }
 
-                SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.fileData, m.ToArray());
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileData, m.ToArray());
 
 
                 StreamMessage message = new StreamMessage();
@@ -408,7 +408,7 @@ namespace SPIXI
 
                 }
 
-                SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.requestFileData, m.ToArray());
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFileData, m.ToArray());
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
@@ -451,7 +451,7 @@ namespace SPIXI
                 transfer.fileStream = File.Create(transfer.filePath);
                 transfer.fileStream.SetLength((long)transfer.fileSize);
 
-                SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.acceptFile, m.ToArray());
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptFile, m.ToArray());
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;

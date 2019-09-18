@@ -345,7 +345,7 @@ namespace SPIXI
 
                         Logging.info("Preparing key message");
 
-                        SpixiMessage spixi_message = new SpixiMessage(new byte[] { 2 }, SpixiMessageCode.keys, m.ToArray());
+                        SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.keys, m.ToArray());
 
                         // Send the nickname message to the S2 nodes
                         StreamMessage sm = new StreamMessage();

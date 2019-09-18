@@ -114,7 +114,7 @@ namespace SPIXI
             {
                 FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, amount, true);
 
-                SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFunds, Encoding.UTF8.GetBytes(amount));
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;
@@ -123,6 +123,7 @@ namespace SPIXI
                 message.transaction = new byte[1];
                 message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
+                message.id = friend_message.id;
 
                 StreamProcessor.sendMessage(friend, message);
 
