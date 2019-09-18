@@ -225,7 +225,7 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "clearInput");
 
             // Send the message
-            SpixiMessage spixi_message = new SpixiMessage(friend_message.id, SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.data;
@@ -259,7 +259,7 @@ namespace SPIXI
                 FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream(), filePath);
                 System.Console.WriteLine("File Transfer uid: " + transfer.uid);
 
-                SpixiMessage spixi_message = new SpixiMessage(Guid.NewGuid().ToByteArray(), SpixiMessageCode.fileHeader, transfer.getBytes());
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes());
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
@@ -275,7 +275,7 @@ namespace SPIXI
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
 
                 // store the message and display it
-                FriendMessage friend_message = FriendList.addMessageWithType(spixi_message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);
+                FriendMessage friend_message = FriendList.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);
             }
             catch (Exception ex)
             {
@@ -525,7 +525,7 @@ namespace SPIXI
                 msg_received.type = StreamMessageCode.info;
                 msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 msg_received.recipient = friend.walletAddress;
-                msg_received.data = new SpixiMessage(message.id, SpixiMessageCode.msgRead, null).getBytes();
+                msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id).getBytes();
                 msg_received.transaction = new byte[1];
                 msg_received.sigdata = new byte[1];
                 msg_received.encryptionType = StreamMessageEncryptionCode.none;

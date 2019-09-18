@@ -256,14 +256,14 @@ namespace SPIXI
         }
 
         // Called when receiving file headers from the message recipient
-        public static void handleFileHeader(byte[] sender, SpixiMessage data)
+        public static void handleFileHeader(byte[] sender, SpixiMessage data, byte[] message_id)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
                 FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data, sender);
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
-                FriendList.addMessageWithType(data.id, FriendMessageType.fileHeader, sender, message_data);         
+                FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);         
             }
             else
             {
@@ -349,17 +349,15 @@ namespace SPIXI
 
 
         // Called when receiving received confirmation from the message recipient
-        public static void handleMsgReceived(byte[] sender, SpixiMessage data)
+        public static void handleMsgReceived(byte[] sender, byte[] msg_id)
         {
             Friend friend = FriendList.getFriend(sender);
-
-            Logging.info("Received msg received confirmation for: {0}, data: {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender), Crypto.hashToString(data.id));
 
             if (friend != null)
             {
                 Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
 
-                if(data.id.SequenceEqual(new byte[] { 0 }))
+                if(msg_id.SequenceEqual(new byte[] { 0 }))
                 {
                     if (friend.handshakeStatus == 0)
                     {
@@ -369,7 +367,7 @@ namespace SPIXI
                     return;
                 }
 
-                if (data.id.SequenceEqual(new byte[] { 2 }))
+                if (msg_id.SequenceEqual(new byte[] { 2 }))
                 {
                     if (friend.handshakeStatus == 2)
                     {
@@ -379,7 +377,7 @@ namespace SPIXI
                     return;
                 }
 
-                if (data.id.SequenceEqual(new byte[] { 4 }))
+                if (msg_id.SequenceEqual(new byte[] { 4 }))
                 {
                     if (friend.handshakeStatus == 3)
                     {
@@ -389,7 +387,7 @@ namespace SPIXI
                     return;
                 }
 
-                friend.setMessageReceived(data.id);
+                friend.setMessageReceived(msg_id);
             }
             else
             {
@@ -398,12 +396,12 @@ namespace SPIXI
         }
 
         // Called when receiving read confirmation from the message recipient
-        public static void handleMsgRead(byte[] sender, SpixiMessage data)
+        public static void handleMsgRead(byte[] sender, byte[] msg_id)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                friend.setMessageRead(data.id);
+                friend.setMessageRead(msg_id);
             }
             else
             {
@@ -508,7 +506,7 @@ namespace SPIXI
                             Logging.info("Sender address is null");
                         }
                         // Add the message to the friend list
-                        FriendList.addMessage(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
+                        FriendList.addMessage(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
                     }
                     break;
 
@@ -535,7 +533,7 @@ namespace SPIXI
                 case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
-                        handleRequestAdd(spixi_message.id, message.sender, spixi_message.data);
+                        handleRequestAdd(message.id, message.sender, spixi_message.data);
                     }
                     break;
 
@@ -549,20 +547,20 @@ namespace SPIXI
                 case SpixiMessageCode.sentFunds:
                     {
                         // Friend requested funds
-                        handleSentFunds(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleSentFunds(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
                 case SpixiMessageCode.requestFunds:
                     {
                         // Friend requested funds
-                        handleRequestFunds(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleRequestFunds(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
                 case SpixiMessageCode.requestFundsResponse:
                     {
-                        handleRequestFundsResponse(spixi_message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleRequestFundsResponse(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -574,21 +572,21 @@ namespace SPIXI
 
                 case SpixiMessageCode.msgReceived:
                     {
-                        handleMsgReceived(message.sender, spixi_message);
+                        handleMsgReceived(message.sender, spixi_message.data);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.msgRead:
                     {
-                        handleMsgRead(message.sender, spixi_message);
+                        handleMsgRead(message.sender, spixi_message.data);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.fileHeader:
                     {
-                        handleFileHeader(message.sender, spixi_message);
+                        handleFileHeader(message.sender, spixi_message, message.id);
                     }
                     break;
 
@@ -639,7 +637,7 @@ namespace SPIXI
             msg_received.type = StreamMessageCode.info;
             msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg_received.recipient = message.sender;
-            msg_received.data = new SpixiMessage(spixi_message.id, SpixiMessageCode.msgReceived, null).getBytes();
+            msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id).getBytes();
             msg_received.transaction = new byte[1];
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
@@ -829,7 +827,7 @@ namespace SPIXI
 
             friend.generateKeys();
 
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 1 }, SpixiMessageCode.acceptAdd, friend.aesKey);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
@@ -839,6 +837,7 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
             message.encryptionType = StreamMessageEncryptionCode.rsa;
+            message.id = new byte[] { 1 };
 
             StreamProcessor.sendMessage(friend, message);
 
@@ -852,7 +851,7 @@ namespace SPIXI
                 friend.handshakeStatus = 3;
             }
 
-            SpixiMessage reply_spixi_message = new SpixiMessage(new byte[] { 4 }, SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
+            SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.nick, Encoding.UTF8.GetBytes(Node.localStorage.nickname));
 
             // Send the nickname message to friend
             StreamMessage reply_message = new StreamMessage();
@@ -862,8 +861,9 @@ namespace SPIXI
             reply_message.transaction = new byte[1];
             reply_message.sigdata = new byte[1];
             reply_message.data = reply_spixi_message.getBytes();
+            reply_message.id = new byte[] { 4 };
 
-            if(friend.aesKey == null || friend.chachaKey == null)
+            if (friend.aesKey == null || friend.chachaKey == null)
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
@@ -880,7 +880,7 @@ namespace SPIXI
             }
 
             // Prepare the message and send to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 3 }, SpixiMessageCode.getNick, contact_address);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getNick, contact_address);
 
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
@@ -889,6 +889,7 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
+            message.id = new byte[] { 3 };
 
             if (friend.aesKey == null || friend.chachaKey == null)
             {
@@ -901,7 +902,7 @@ namespace SPIXI
         public static void sendContactRequest(Friend friend)
         {
             // Send the message to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 0 }, SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
 
             StreamMessage message = new StreamMessage();
@@ -912,6 +913,7 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = new byte[] { 0 };
 
             StreamProcessor.sendMessage(friend, message);
         }
@@ -926,7 +928,7 @@ namespace SPIXI
             }
 
             // Send the message to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(new byte[] { 5 }, SpixiMessageCode.getMessages, last_message_id);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getMessages, last_message_id);
 
 
             StreamMessage message = new StreamMessage();
@@ -937,6 +939,7 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = new byte[] { 5 };
 
             StreamProcessor.sendMessage(friend, message);
         }

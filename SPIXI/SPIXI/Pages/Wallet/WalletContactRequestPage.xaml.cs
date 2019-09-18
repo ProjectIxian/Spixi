@@ -88,7 +88,7 @@ namespace SPIXI
                 // send decline
                 if (!requestMsg.message.StartsWith(":"))
                 {
-                    SpixiMessage spixi_message = new SpixiMessage(null, SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId));
+                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId));
 
                     requestMsg.message = "::" + requestMsg.message;
 
@@ -127,7 +127,7 @@ namespace SPIXI
 
                 NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
 
-                SpixiMessage spixi_message = new SpixiMessage(null, SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId + ":" + transaction.id));
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId + ":" + transaction.id));
 
                 requestMsg.message = ":" + transaction.id;
 
