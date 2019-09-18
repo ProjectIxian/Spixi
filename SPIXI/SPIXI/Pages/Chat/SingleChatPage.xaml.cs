@@ -239,6 +239,7 @@ namespace SPIXI
             if(friend.bot)
             {
                 message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
             }
 
             StreamProcessor.sendMessage(friend, message);
