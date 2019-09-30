@@ -144,6 +144,31 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string msg = split[1];
+                if(msg == "/draw") // TODO TODO TODO experimental test
+                {
+                    byte[][] user_addresses = new byte[][] { friend.walletAddress };
+                    CustomAppPage custom_app_page = new CustomAppPage(IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, "custom_app.html");
+                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+                    {
+                        Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
+                    });
+
+                    SpixiMessage spixi_msg = new SpixiMessage();
+                    spixi_msg.type = SpixiMessageCode.appRequest;
+                    spixi_msg.data = (new SpixiAppData(custom_app_page.sessionId, null)).getBytes();
+
+                    StreamMessage new_msg = new StreamMessage();
+                    new_msg.type = StreamMessageCode.data;
+                    new_msg.recipient = friend.walletAddress;
+                    new_msg.sender = Node.walletStorage.getPrimaryAddress();
+                    new_msg.transaction = new byte[1];
+                    new_msg.sigdata = new byte[1];
+                    new_msg.data = spixi_msg.getBytes();
+
+                    StreamProcessor.sendMessage(friend, new_msg);
+
+                    return;
+                }
                 onSend(msg);
             }else if(current_url.Contains("ixian:viewPayment:"))
             {

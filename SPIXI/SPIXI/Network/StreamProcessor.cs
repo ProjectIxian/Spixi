@@ -462,8 +462,8 @@ namespace SPIXI
                 return;
             }
 
-            byte[] sender_address = null;
-            if(endpoint.presence.wallet.SequenceEqual(message.recipient))
+            byte[] sender_address = message.sender;
+            if (endpoint.presence.wallet.SequenceEqual(message.recipient))
             {
                 // message from a bot group chat
                 sender_address = message.sender;
@@ -511,6 +511,8 @@ namespace SPIXI
                         }
                         else
                         {
+                            // no need to verify sigs, as we're communicating using secure keys
+
                             // Add the message to the friend list
                             FriendList.addMessage(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
                         }
@@ -653,6 +655,19 @@ namespace SPIXI
                     }
                     break;
 
+                case SpixiMessageCode.appData:
+                    {
+                        // app data received, find the session id of the app and forward the data to it
+                        handleAppData(message.sender, spixi_message.data);
+                    }
+                    break;
+
+                case SpixiMessageCode.appRequest:
+                    {
+                        // app request received
+                        handleAppRequest(message.sender, spixi_message.data);
+                        break;
+                    }
 
             }
 
@@ -848,6 +863,36 @@ namespace SPIXI
             }
 
             FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, txid);
+        }
+
+        private static void handleAppData(byte[] sender_address, byte[] app_data_raw)
+        {
+            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            CustomAppPage app_page = FriendList.getAppPage(app_data.sessionId);
+            if(app_page == null)
+            {
+                Logging.error("App with session id: {0} does not exist.", Crypto.hashToString(app_data.sessionId));
+                return;
+            }
+            app_page.networkDataReceive(sender_address, app_data.data);
+        }
+
+        private static void handleAppRequest(byte[] sender_address, byte[] app_data_raw)
+        {
+            SpixiAppData app_data = new SpixiAppData(app_data_raw);
+            CustomAppPage app_page = FriendList.getAppPage(app_data.sessionId);
+            if (app_page != null)
+            {
+                Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
+                return;
+            }
+            byte[][] user_addresses = new byte[][] { sender_address };
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+            {
+                CustomAppPage page = new CustomAppPage(sender_address, user_addresses, "custom_app.html");
+                page.sessionId = app_data.sessionId;
+                Xamarin.Forms.Application.Current.MainPage.Navigation.PushAsync(page, Config.defaultXamarinAnimations);
+            });
         }
 
         public static void sendAcceptAdd(Friend friend)

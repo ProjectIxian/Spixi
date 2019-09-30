@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Network;
 using System;
@@ -15,6 +16,8 @@ namespace SPIXI
         public static List<Friend> friends = new List<Friend>();
 
         private static List<byte[]> cachedHiddenMatchAddresses = new List<byte[]>();
+
+        private static Dictionary<byte[], CustomAppPage> appPages = new Dictionary<byte[], CustomAppPage>(new ByteArrayComparer());
 
         public static bool saveToStorage()
         {
@@ -448,6 +451,34 @@ namespace SPIXI
         public static void resetHiddenMatchAddressesCache()
         {
             cachedHiddenMatchAddresses = null;
+        }
+
+        public static CustomAppPage getAppPage(byte[] session_id)
+        {
+            lock(appPages)
+            {
+                if(appPages.ContainsKey(session_id))
+                {
+                    return appPages[session_id];
+                }
+                return null;
+            }
+        }
+
+        public static void addAppPage(CustomAppPage page)
+        {
+            lock(appPages)
+            {
+                appPages.Add(page.sessionId, page);
+            }
+        }
+
+        public static void removeAppPage(byte[] session_id)
+        {
+            lock (appPages)
+            {
+                appPages.Remove(session_id);
+            }
         }
     }
 }

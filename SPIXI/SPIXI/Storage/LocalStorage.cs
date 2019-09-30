@@ -127,7 +127,7 @@ namespace SPIXI.Storage
                 }
 
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot read from account file. {0}", e.Message));
             }
@@ -267,7 +267,7 @@ namespace SPIXI.Storage
                 }
 
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.error("Cannot read from chat file. {0}", e.Message);
                 // TODO TODO notify the user or something like that
@@ -393,7 +393,7 @@ namespace SPIXI.Storage
                 }
 
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot read from file. {0}", e.Message));
                 return messages;

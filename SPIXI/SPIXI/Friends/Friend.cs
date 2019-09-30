@@ -103,6 +103,7 @@ namespace SPIXI
         public Dictionary<byte[], BotContact> contacts = new Dictionary<byte[], BotContact>(new ByteArrayComparer()); // used by bot friends
 
         public SingleChatPage chat_page = null;
+        public CustomAppPage app_page = null;
 
         public bool approved = true;
 
