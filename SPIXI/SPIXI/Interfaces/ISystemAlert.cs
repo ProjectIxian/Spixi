@@ -7,5 +7,7 @@ namespace SPIXI.Interfaces
     public interface ISystemAlert
     {
         void displayAlert(string title, string message, string cancel);
+        void flash();
+
     }
 }

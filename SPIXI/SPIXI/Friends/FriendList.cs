@@ -2,12 +2,14 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Utils;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace SPIXI
 {
@@ -161,6 +163,11 @@ namespace SPIXI
                 else
                 {
                     //CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
+
+                    ISystemAlert alert = DependencyService.Get<ISystemAlert>();
+                    if (alert != null)
+                        alert.flash();
+                    
                 }
 
                 // Write to chat history

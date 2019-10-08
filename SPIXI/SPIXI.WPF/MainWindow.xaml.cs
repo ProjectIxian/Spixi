@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Windows.Shell;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WPF;
 
@@ -26,9 +26,14 @@ namespace SPIXI.WPF
     /// </summary>
     public partial class MainWindow : FormsApplicationPage
     {
+        public static MainWindow mainWindow = null;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            this.TaskbarItemInfo = new TaskbarItemInfo();
+            mainWindow = this;
 
             Forms.Init();
             LoadApplication(new SPIXI.App());
