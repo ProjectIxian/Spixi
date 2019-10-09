@@ -14,7 +14,6 @@ using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Android.Support.V4.Content;
-using Android.Support.Compat;
 using Java.IO;
 
 [assembly: Dependency(typeof(FileOperations_Android))]
