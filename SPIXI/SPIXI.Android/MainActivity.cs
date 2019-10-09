@@ -7,6 +7,7 @@ using Android.Content;
 using Plugin.LocalNotifications;
 using Android.Content.Res;
 using Xamarin.Forms;
+using Com.OneSignal;
 //using SPIXI.Notifications;
 
 namespace SPIXI.Droid
@@ -34,6 +35,9 @@ namespace SPIXI.Droid
             LoadApplication(new App());
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
+
+            OneSignal.Current.StartInit("44d96ce3-5d33-4e8b-997d-d1ad786b96a1")
+                .EndInit();
 
             prepareBackgroundService();
         }
