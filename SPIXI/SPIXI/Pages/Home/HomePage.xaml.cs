@@ -48,12 +48,16 @@ namespace SPIXI
             source.Url = string.Format("{0}html/index.html",DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
 
-
-            //CrossLocalNotifications.Current.Show("title", "body",100, DateTime.Now.AddSeconds(10));
             handleBackground();
 
             //  Navigation.PushAsync(new LockPage(), Config.defaultXamarinAnimations);
 
+            // Initialize Push Notification service
+            DependencyService.Get<IPushService>().initialize();
+
+            // Set the identifier tag
+            string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
+            DependencyService.Get<IPushService>().setTag(tag);
 
             // Setup a timer to handle UI updates
             Device.StartTimer(TimeSpan.FromSeconds(2), () =>
