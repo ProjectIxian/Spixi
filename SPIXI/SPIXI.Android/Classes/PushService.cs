@@ -20,7 +20,9 @@ public class PushService_Android : IPushService
 {
     public void initialize()
     {
-        OneSignal.Current.StartInit("44d96ce3-5d33-4e8b-997d-d1ad786b96a1").EndInit();
+        OneSignal.Current.StartInit("44d96ce3-5d33-4e8b-997d-d1ad786b96a1")
+            .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
+            .EndInit();
     }
 
     public void setTag(string tag)
