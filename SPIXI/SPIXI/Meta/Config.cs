@@ -10,6 +10,8 @@ namespace SPIXI.Meta
 
         public static bool isTestNet = false;
 
+        public static bool enablePushNotifications = false; // Push notifications are disabled for now
+
         public static string walletFile = "wallet.ixi";
 
         public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Spixi");
@@ -18,6 +20,8 @@ namespace SPIXI.Meta
 
         // Read-only values
         public static readonly string aboutUrl = "https://www.spixi.io";
+
+        public static readonly string pushServiceUrl = "http://push.local"; // Will be changed once the official push service is active
 
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 

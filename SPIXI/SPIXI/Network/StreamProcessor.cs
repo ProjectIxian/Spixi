@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -152,6 +153,13 @@ namespace SPIXI
 
         private static void addOfflineMessage(StreamMessage msg)
         {
+            if (Config.enablePushNotifications)
+            {
+                OfflinePushMessages.sendPushMessage(msg);
+                return;
+            }
+
+            // Use offline queue when notifications are disabled
             lock(offlineMessages)
             {
                 if(offlineMessages.Find(x => x.recipient.SequenceEqual(msg.recipient) && x.data.SequenceEqual(msg.data)) != null)
@@ -170,7 +178,6 @@ namespace SPIXI
         public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true)
         {
             // TODO this function has to be improved and node's wallet address has to be added
-
 
             string hostname = friend.searchForRelay();
 
@@ -463,11 +470,15 @@ namespace SPIXI
             }
 
             byte[] sender_address = message.sender;
-            if (endpoint.presence.wallet.SequenceEqual(message.recipient))
+
+            if (endpoint != null)
             {
-                // message from a bot group chat
-                sender_address = message.sender;
-                message.sender = message.recipient;
+                if (endpoint.presence.wallet.SequenceEqual(message.recipient))
+                {
+                    // message from a bot group chat
+                    sender_address = message.sender;
+                    message.sender = message.recipient;
+                }
             }
 
             Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(message.sender), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));

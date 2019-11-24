@@ -142,6 +142,9 @@ namespace SPIXI.Meta
             if (Node.walletStorage.getPrimaryAddress() == null)
                 return;
 
+            if(Config.enablePushNotifications)
+                OfflinePushMessages.fetchPushMessages();
+
             // Request wallet balance
             using (MemoryStream mw = new MemoryStream())
             {
