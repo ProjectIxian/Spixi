@@ -23,8 +23,8 @@
     <PackageReference Include="Open.NAT.Core" Version="2.1.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.4" />
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
-    <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
-    <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.0.135" />
+    <PackageReference Include="Xamarin.Forms" Version="4.4.0.991537" />
+    <PackageReference Include="Xamarin.Plugin.FilePicker" Version="2.1.34" />
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
 
