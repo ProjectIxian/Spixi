@@ -15,14 +15,14 @@ namespace SPIXI
 
         public static bool sendPushMessage(StreamMessage msg)
         {
-            string receiver = Convert.ToBase64String(msg.recipient);
+            string receiver = Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient);
             string data = HttpUtility.UrlEncode(Convert.ToBase64String(msg.getBytes()));
 
             Friend f = FriendList.getFriend(msg.recipient);
             if (f == null)
                 return false;
             
-            string pkdata = Convert.ToBase64String(f.publicKey);
+            string pkdata = HttpUtility.UrlEncode(Convert.ToBase64String(f.publicKey));
           
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
             string parameters = String.Format("tag={0}&data={1}&pk={2}", receiver, data, pkdata);
@@ -44,7 +44,7 @@ namespace SPIXI
                 string URI = String.Format("{0}/fetch.php", Config.pushServiceUrl);
                 string unique_uri = String.Format("{0}/uniqueid.php", Config.pushServiceUrl);
 
-                string receiver = Convert.ToBase64String(Node.walletStorage.getPrimaryAddress());
+                string receiver = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
         
                 WebClient uclient = new WebClient();
                 byte[] checksum = Convert.FromBase64String(uclient.DownloadString(unique_uri));
