@@ -22,10 +22,8 @@ namespace SPIXI
             if (f == null)
                 return false;
             
-            string pkdata = HttpUtility.UrlEncode(Convert.ToBase64String(f.publicKey));
-          
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
-            string parameters = String.Format("tag={0}&data={1}&pk={2}", receiver, data, pkdata);
+            string parameters = String.Format("tag={0}&data={1}", receiver, data);
 
             using (WebClient client = new WebClient())
             {

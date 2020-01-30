@@ -179,8 +179,6 @@ namespace SPIXI
         {
             // TODO this function has to be improved and node's wallet address has to be added
 
-            string hostname = friend.searchForRelay();
-
             if (friend.publicKey != null && (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null)))
             {
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
@@ -192,9 +190,6 @@ namespace SPIXI
                     friend.publicKey = pub_k;
                 }
 
-
-
-                StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
@@ -203,7 +198,9 @@ namespace SPIXI
                 return false;
             }
 
-            if(!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
+            string hostname = friend.searchForRelay();
+
+            if (!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
             {
                 StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
