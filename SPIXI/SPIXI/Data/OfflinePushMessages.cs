@@ -53,7 +53,10 @@ namespace SPIXI
                 {
                     string url = String.Format("{0}?tag={1}&sig={2}", URI, receiver, HttpUtility.UrlEncode(Convert.ToBase64String(sig)));
                     string htmlCode = client.DownloadString(url);
-                    Logging.info(htmlCode);
+                    Logging.info("fetchPushMessages: {0}", htmlCode);
+
+                    if (htmlCode == "FALSE")
+                        return false;
 
                     List<string> jsonResponse = JsonConvert.DeserializeObject<List<string>>(htmlCode);
 
