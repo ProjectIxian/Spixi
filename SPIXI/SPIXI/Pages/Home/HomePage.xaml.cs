@@ -441,9 +441,12 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "clearChats");
             Utils.sendUiCommand(webView, "clearUnreadActivity");
 
+            // Prepare a list of message helpers, to facilitate sorting and communication with the UI
+            List<FriendMessageHelper> helper_msgs = new List<FriendMessageHelper>();
+
             foreach (Friend friend in FriendList.friends)
             {
-                if (!friend.approved || friend.getUnreadMessageCount() > 0)
+                if (friend.getMessageCount() > 0)
                 {
                     string str_online = "false";
                     if (friend.online)
@@ -479,58 +482,29 @@ namespace SPIXI
                     else if (lastmsg.type == FriendMessageType.fileHeader)
                         excerpt = "File";
 
-                    Utils.sendUiCommand(webView, "addChat",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount().ToString());
-
-                    Utils.sendUiCommand(webView, "addUnreadActivity",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt);
+                    FriendMessageHelper helper_msg = new FriendMessageHelper(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount());
+                    helper_msgs.Add(helper_msg);
                 }
-
             }
 
+            // Sort the helper messages
+            List<FriendMessageHelper> sorted_msgs = helper_msgs.OrderByDescending(x => x.timestamp).ToList();
 
-            foreach (Friend friend in FriendList.friends)
+            // Add the messages visually
+            foreach(FriendMessageHelper helper_msg in sorted_msgs)
             {
-                if (friend.getMessageCount() > 0 && friend.getUnreadMessageCount() < 1)
+                if(helper_msg.unreadCount > 0)
                 {
-                    string str_online = "false";
-                    if (friend.online)
-                        str_online = "true";
+                    Utils.sendUiCommand(webView, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, Clock.getRelativeTime(helper_msg.timestamp), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
 
-                    // Generate the excerpt depending on message type
-                    FriendMessage lastmsg = friend.messages.Last();
-                    string excerpt = lastmsg.message;
-                    if (lastmsg.type == FriendMessageType.requestFunds)
-                    {
-                        if (lastmsg.localSender)
-                        {
-                            excerpt = "Payment Request Sent";
-                        }
-                        else
-                        {
-                            excerpt = "Payment Request Received";
-                        }
-                    }
-                    else if (lastmsg.type == FriendMessageType.sentFunds)
-                    {
-                        if (lastmsg.localSender)
-                        {
-                            excerpt = "Payment Sent";
-                        }
-                        else
-                        {
-                            excerpt = "Payment Received";
-                        }
-                    }
-                    else if (lastmsg.type == FriendMessageType.requestAdd)
-                        excerpt = "Contact Request";
-                    else if (lastmsg.type == FriendMessageType.fileHeader)
-                        excerpt = "File";
-
-                    Utils.sendUiCommand(webView, "addChat",
-                        Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, Clock.getRelativeTime(lastmsg.timestamp), "img/spixiavatar.png", str_online, excerpt, "0");
                 }
+
+                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, Clock.getRelativeTime(helper_msg.timestamp), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.unreadCount.ToString());
             }
+
+            // Clear the lists so they will be collected by the GC
+            helper_msgs = null;
+            sorted_msgs = null;
         }
 
         public void loadTransactions()

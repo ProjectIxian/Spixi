@@ -76,6 +76,30 @@ namespace SPIXI
         }
     }
 
+    // Helper message class used for communicating with the UI
+    public class FriendMessageHelper
+    {
+        public string walletAddress;
+        public string nickname;
+        public long timestamp;
+        public string avatar;
+        public string onlineString;
+        public string excerpt;
+        public int unreadCount;
+
+        public FriendMessageHelper(string wa, string nick, long time, string av, string online, string ex, int unread)
+        {
+            walletAddress = wa;
+            nickname = nick;
+            timestamp = time;
+            avatar = av;
+            onlineString = online;
+            excerpt = ex;
+            unreadCount = unread;
+        }
+
+    }
+
     public class BotContact
     {
         public string nick;
