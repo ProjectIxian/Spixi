@@ -995,6 +995,9 @@ img.emoji {
     color: #000000;
     font-size: 9pt;
     margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .spixi-list-item-right {
