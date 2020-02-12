@@ -17,7 +17,7 @@ namespace SPIXI
     {
         public static List<Friend> friends = new List<Friend>();
 
-        private static List<byte[]> cachedHiddenMatchAddresses = new List<byte[]>();
+        private static Cuckoo friendMatcher = new Cuckoo(128); // default size of 128, will be increased if neccessary
 
         private static Dictionary<byte[], CustomAppPage> appPages = new Dictionary<byte[], CustomAppPage>(new ByteArrayComparer());
 
@@ -193,29 +193,8 @@ namespace SPIXI
 
         public static Friend addFriend(byte[] wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
         {
-            foreach (Friend friend in friends)
-            {
-                if (friend.walletAddress.SequenceEqual(wallet_address))
-                {
-                    // Already in the list
-                    return null;
-                }
-            }
-
             Friend new_friend = new Friend(wallet_address, public_key, name, aes_key, chacha_key, key_generated_time, approved);
-
-            // Add new friend to the friendlist
-            friends.Add(new_friend);
-
-            if (approved)
-            {
-                cachedHiddenMatchAddresses = null;
-                ProtocolMessage.resubscribeEvents();
-            }
-
-            sortFriends();
-
-            return new_friend;
+            return addFriend(new_friend);
         }
 
         public static Friend addFriend(Friend new_friend)
@@ -231,7 +210,18 @@ namespace SPIXI
 
             if (new_friend.approved)
             {
-                cachedHiddenMatchAddresses = null;
+                lock (friendMatcher)
+                {
+                    if (friendMatcher.Add(new_friend.walletAddress) == Cuckoo.CuckooStatus.NotEnoughSpace)
+                    {
+                        // rebuild cuckoo filter with a larger size
+                        friendMatcher = new Cuckoo(friendMatcher.numItems * 2);
+                        foreach (Friend f in friends)
+                        {
+                            friendMatcher.Add(f.walletAddress);
+                        }
+                    }
+                }
                 ProtocolMessage.resubscribeEvents();
             }
 
@@ -257,7 +247,10 @@ namespace SPIXI
             if (!stat)
                 return stat;
 
-            cachedHiddenMatchAddresses = null;
+            lock(friendMatcher)
+            {
+                friendMatcher.Delete(friend.walletAddress);
+            }
 
             // Write changes to storage
             stat = saveToStorage();
@@ -389,33 +382,11 @@ namespace SPIXI
             return unreadCount;
         }
 
-        public static List<byte[]> getHiddenMatchAddresses()
+        public static byte[] getFriendCuckooFilter()
         {
-            if(cachedHiddenMatchAddresses != null)
+            lock (friendMatcher)
             {
-                return cachedHiddenMatchAddresses;
-            }
-
-            lock (friends)
-            {
-                if(friends.Count() == 0)
-                {
-                    return null;
-                }
-
-                AddressClient ac = new AddressClient();
-                foreach (var friend in friends)
-                {
-                    if (friend.approved)
-                    {
-                        ac.addAddress(friend.walletAddress);
-                    }
-                }
-
-                Random rnd = new Random();
-                cachedHiddenMatchAddresses = ac.generateHiddenMatchAddresses(rnd, CoreConfig.matcherBytesPerAddress);
-
-                return cachedHiddenMatchAddresses;
+                return friendMatcher.getFilterBytes();
             }
         }
 
@@ -453,11 +424,6 @@ namespace SPIXI
                     }
                 }
             }
-        }
-
-        public static void resetHiddenMatchAddressesCache()
-        {
-            cachedHiddenMatchAddresses = null;
         }
 
         public static CustomAppPage getAppPage(byte[] session_id)

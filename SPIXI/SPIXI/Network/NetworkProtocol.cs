@@ -65,25 +65,30 @@ namespace SPIXI.Network
 
             // TODO TODO TODO events can be optimized as there is no real need to subscribe them to every connected node
 
-            // Subscribe to transaction events
-            byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, IxianHandler.getWalletStorage().getPrimaryAddress());
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, IxianHandler.getWalletStorage().getPrimaryAddress());
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.balance, IxianHandler.getWalletStorage().getPrimaryAddress());
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-
-            List<byte[]> match_addresses = FriendList.getHiddenMatchAddresses();
-            if (match_addresses != null)
+            // Cuckoo for all my addresses
+            List<Address> my_addresses = IxianHandler.getWalletStorage().getMyAddresses();
+            Cuckoo filter = new Cuckoo(my_addresses.Count());
+            foreach(var a in my_addresses)
             {
-                foreach (var address in match_addresses)
-                {
-                    event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, address);
-                    endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-                }
+                filter.Add(a.address);
+            }
+            byte[] filter_bytes = filter.getFilterBytes();
+
+            byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, filter_bytes);
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, filter_bytes);
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.balance, filter_bytes);
+            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
+
+
+            byte[] friend_matcher = FriendList.getFriendCuckooFilter();
+            if (friend_matcher != null)
+            {
+                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, friend_matcher);
+                endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
             }
         }
 

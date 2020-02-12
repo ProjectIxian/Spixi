@@ -318,8 +318,6 @@ namespace SPIXI
 
         public void onAcceptFriendRequest()
         {
-            FriendList.resetHiddenMatchAddressesCache();
-
             friend.approved = true;
 
             StreamProcessor.sendAcceptAdd(friend);
