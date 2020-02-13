@@ -45,6 +45,15 @@ namespace SPIXI.Network
                 {
                     if (client.isConnected() && client.helloReceived)
                     {
+                        if (client.presenceAddress.type != 'M')
+                        {
+                            continue;
+                        }
+
+                        // Get presences
+                        client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+                        client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+
                         byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.all, new byte[0]);
                         client.sendData(ProtocolMessageCode.detachEvent, event_data);
                         subscribeToEvents(client);
@@ -55,39 +64,12 @@ namespace SPIXI.Network
 
         private static void subscribeToEvents(RemoteEndpoint endpoint)
         {
-            if (endpoint.presenceAddress.type != 'M')
-            {
-                return;
-            }
-            // Get presences
-            endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
-            endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
-
-            // TODO TODO TODO events can be optimized as there is no real need to subscribe them to every connected node
-
-            // Cuckoo for all my addresses
-            List<Address> my_addresses = IxianHandler.getWalletStorage().getMyAddresses();
-            Cuckoo filter = new Cuckoo(my_addresses.Count());
-            foreach(var a in my_addresses)
-            {
-                filter.Add(a.address);
-            }
-            byte[] filter_bytes = filter.getFilterBytes();
-
-            byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionFrom, filter_bytes);
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.transactionTo, filter_bytes);
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
-            event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.balance, filter_bytes);
-            endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
-
+            CoreProtocolMessage.subscribeToEvents(endpoint);
 
             byte[] friend_matcher = FriendList.getFriendCuckooFilter();
             if (friend_matcher != null)
             {
-                event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, friend_matcher);
+                byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.keepAlive, friend_matcher);
                 endpoint.sendData(ProtocolMessageCode.attachEvent, event_data);
             }
         }
@@ -203,6 +185,10 @@ namespace SPIXI.Network
 
                                 if(endpoint.presenceAddress.type == 'M')
                                 {
+                                    // Get random presences
+                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+
                                     subscribeToEvents(endpoint);
                                 }
                             }
