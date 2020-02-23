@@ -208,6 +208,8 @@ namespace SPIXI
             // Add new friend to the friendlist
             friends.Add(new_friend);
 
+            Node.shouldRefreshContacts = true;
+
             if (new_friend.approved)
             {
                 lock (friendMatcher)
@@ -254,6 +256,9 @@ namespace SPIXI
 
             // Write changes to storage
             stat = saveToStorage();
+
+            Node.shouldRefreshContacts = true;
+
             return stat;
         }
 
