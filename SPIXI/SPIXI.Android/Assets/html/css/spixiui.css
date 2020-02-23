@@ -310,8 +310,7 @@ img.emoji {
 }
 .spixi-descriptionbar-row-details {
     padding-right: 30px;
-    font-size:9pt;
-    max-height: 60px;
+    font-size: 9pt;
 }
 .spixi-descriptionbar.chat {
     height: 92px;
