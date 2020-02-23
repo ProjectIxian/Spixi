@@ -568,7 +568,7 @@ namespace SPIXI
                 Utils.sendUiCommand(webView, "showWarning", "1");
             }
 
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString(), Node.localStorage.nickname);
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);
 
             // Check if we should reload certain elements
             if(Node.changedSettings == true)

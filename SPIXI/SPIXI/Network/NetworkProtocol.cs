@@ -133,8 +133,6 @@ namespace SPIXI.Network
 
                                 int block_version = reader.ReadInt32();
 
-                                Node.setLastBlock(last_block_num, block_checksum, walletstate_checksum, block_version);
-
                                 // Check for legacy level
                                 ulong legacy_level = reader.ReadUInt64(); // deprecated
 
@@ -185,6 +183,8 @@ namespace SPIXI.Network
 
                                 if(endpoint.presenceAddress.type == 'M')
                                 {
+                                    Node.setNetworkBlock(last_block_num, block_checksum, block_version);
+
                                     // Get random presences
                                     endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                                     endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
@@ -259,31 +259,38 @@ namespace SPIXI.Network
                                     // Retrieve the latest balance
                                     IxiNumber balance = reader.ReadString();
 
-                                    if(address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                                    if (address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                                     {
-                                        Node.balance = balance;
-                                    }
+                                        // Retrieve the blockheight for the balance
+                                        ulong block_height = reader.ReadUInt64();
 
-                                    // Retrieve the blockheight for the balance
-                                    ulong blockheight = reader.ReadUInt64();
-                                    Node.blockHeight = blockheight;
+                                        if (block_height > Node.balance.blockHeight && (Node.balance.balance != balance || Node.balance.blockHeight == 0))
+                                        {
+                                            byte[] block_checksum = reader.ReadBytes(reader.ReadInt32());
+
+                                            Node.balance.address = address;
+                                            Node.balance.balance = balance;
+                                            Node.balance.blockHeight = block_height;
+                                            Node.balance.blockChecksum = block_checksum;
+                                            Node.balance.verified = false;
+                                        }
+                                    }
                                 }
                             }
                         }
                         break;
 
+                    case ProtocolMessageCode.newTransaction:
                     case ProtocolMessageCode.transactionData:
                         {
                             // TODO: check for errors/exceptions
                             Transaction transaction = new Transaction(data, true);
-                            TransactionCache.addTransaction(transaction);
-                        }
-                        break;
 
-                    case ProtocolMessageCode.newTransaction:
-                        {
-                            Transaction transaction = new Transaction(data, true);
-                            TransactionCache.addTransaction(transaction);
+                            PendingTransactions.increaseReceivedCount(transaction.id);
+
+                            TransactionCache.addUnconfirmedTransaction(transaction);
+
+                            Node.tiv.receivedNewTransaction(transaction);
                         }
                         break;
 
@@ -360,6 +367,19 @@ namespace SPIXI.Network
                                         Logging.info("Disconnected");
                                 }
                             }
+                        }
+                        break;
+
+                    case ProtocolMessageCode.blockHeaders:
+                        {
+                            // Forward the block headers to the TIV handler
+                            Node.tiv.receivedBlockHeaders(data, endpoint);
+                        }
+                        break;
+
+                    case ProtocolMessageCode.pitData:
+                        {
+                            Node.tiv.receivedPIT(data, endpoint);
                         }
                         break;
 

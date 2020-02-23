@@ -2,13 +2,26 @@
 using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Network;
+using SPIXI.Storage;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Timers;
 using Xamarin.Forms;
 
 namespace SPIXI.Meta
 {
+    class Balance
+    {
+        public byte[] address = null;
+        public IxiNumber balance = 0;
+        public ulong blockHeight = 0;
+        public byte[] blockChecksum = null;
+        public bool verified = false;
+    }
+
     class Node: IxianNode
     {
         // Use the SPIXI-specific wallet storage code
@@ -20,19 +33,23 @@ namespace SPIXI.Meta
         // Used to force reloading of some homescreen elements
         public static bool changedSettings = false;
 
-        // Node timer
-        private static System.Timers.Timer mainLoopTimer;
-
-        // Private data
-        static Block lastBlock = null;
-
-
-        public static IxiNumber balance = 0;      // Stores the last known balance for this node
-        public static ulong blockHeight = 0;
+        public static Balance balance = new Balance();      // Stores the last known balance for this node
 
         public static int startCounter = 0;
 
         public static bool shouldRefreshContacts = true;
+
+        public static TransactionInclusion tiv = null;
+        
+        // Private data
+
+        // Node timer
+        private static System.Timers.Timer mainLoopTimer;
+
+        private static ulong networkBlockHeight = 0;
+        private static byte[] networkBlockChecksum = null;
+        private static int networkBlockVersion = 0;
+
 
         public Node()
         {
@@ -78,6 +95,10 @@ namespace SPIXI.Meta
 
             // Start the transfer manager
             TransferManager.start();
+
+            // Start TIV
+            tiv = new TransactionInclusion();
+
 
             startCounter++;
 
@@ -144,22 +165,13 @@ namespace SPIXI.Meta
 
             if(Config.enablePushNotifications)
                 OfflinePushMessages.fetchPushMessages();
-
-            // Request wallet balance
-            using (MemoryStream mw = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(mw))
-                {
-                    writer.Write(Node.walletStorage.getPrimaryAddress().Length);
-                    writer.Write(Node.walletStorage.getPrimaryAddress());
-                    NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
-                }
-            }
-
         }
 
         static public void stop()
         {
+            // Stop TIV
+            tiv.stop();
+
             // Stop the transfer manager
             TransferManager.stop();
 
@@ -179,75 +191,128 @@ namespace SPIXI.Meta
             StreamProcessor.uninitialize();
         }
 
-        public override ulong getLastBlockHeight()
-        {
-            if (lastBlock != null)
-            {
-                return lastBlock.blockNum;
-            }
-            return 0;
-        }
-
-        public override int getLastBlockVersion()
-        {
-            if (lastBlock != null)
-            {
-                return lastBlock.version;
-            }
-            return 0;
-        }
-
         public override bool isAcceptingConnections()
         {
             // TODO TODO TODO TODO implement this properly
             return false;
         }
-
-        public static void setLastBlock(ulong block_num, byte[] checksum, byte[] ws_checksum, int version)
-        {
-            Block b = new Block();
-            b.blockNum = block_num;
-            b.blockChecksum = checksum;
-            b.walletStateChecksum = ws_checksum;
-            b.version = version;
-
-            lastBlock = b;
-
-            blockHeight = block_num;
-        }
-
-        public override Block getLastBlock()
-        {
-            return lastBlock;
-        }
+        
 
         public override void shutdown()
         {
             stop();
         }
 
+
+        static public void setNetworkBlock(ulong block_height, byte[] block_checksum, int block_version)
+        {
+            networkBlockHeight = block_height;
+            networkBlockChecksum = block_checksum;
+            networkBlockVersion = block_version;
+        }
+
+        public override void receivedTransactionInclusionVerificationResponse(string txid, bool verified)
+        {
+            // TODO implement error
+            // TODO implement blocknum
+
+            if (verified)
+            {
+                Transaction tx = TransactionCache.getUnconfirmedTransaction(txid);
+                if (tx != null)
+                {
+                    TransactionCache.addTransaction(tx);
+                }
+            }
+        }
+
+        public override void receivedBlockHeader(BlockHeader block_header, bool verified)
+        {
+            if (balance.blockChecksum != null && balance.blockChecksum.SequenceEqual(block_header.blockChecksum))
+            {
+                balance.verified = true;
+            }
+            if (block_header.blockNum >= networkBlockHeight)
+            {
+                IxianHandler.status = NodeStatus.ready;
+                setNetworkBlock(block_header.blockNum, block_header.blockChecksum, block_header.version);
+            }
+            processPendingTransactions();
+        }
+
+        public override ulong getLastBlockHeight()
+        {
+            if (tiv.getLastBlockHeader() == null)
+            {
+                return 0;
+            }
+            return tiv.getLastBlockHeader().blockNum;
+        }
+
         public override ulong getHighestKnownNetworkBlockHeight()
         {
-            if (lastBlock != null)
+            return networkBlockHeight;
+        }
+
+        public override int getLastBlockVersion()
+        {
+            if (tiv.getLastBlockHeader() == null)
             {
-                return lastBlock.blockNum;
+                return BlockVer.v6;
             }
-            return 0;
+            if (tiv.getLastBlockHeader().version < BlockVer.v6)
+            {
+                return BlockVer.v6;
+            }
+            return tiv.getLastBlockHeader().version;
         }
 
         public override bool addTransaction(Transaction tx)
         {
-            throw new NotImplementedException();
+            PendingTransactions.addPendingLocalTransaction(tx);
+            return true;
+        }
+
+        public override Block getLastBlock()
+        {
+            // TODO handle this more elegantly
+            BlockHeader bh = tiv.getLastBlockHeader();
+            return new Block()
+            {
+                blockNum = bh.blockNum,
+                blockChecksum = bh.blockChecksum,
+                lastBlockChecksum = bh.lastBlockChecksum,
+                lastSuperBlockChecksum = bh.lastSuperBlockChecksum,
+                lastSuperBlockNum = bh.lastSuperBlockNum,
+                difficulty = bh.difficulty,
+                superBlockSegments = bh.superBlockSegments,
+                timestamp = bh.timestamp,
+                transactions = bh.transactions,
+                version = bh.version,
+                walletStateChecksum = bh.walletStateChecksum,
+                signatureFreezeChecksum = bh.signatureFreezeChecksum,
+                compactedSigs = true
+            };
         }
 
         public override Wallet getWallet(byte[] id)
         {
-            throw new NotImplementedException();
+            // TODO Properly implement this for multiple addresses
+            if (balance.address != null && id.SequenceEqual(balance.address))
+            {
+                return new Wallet(balance.address, balance.balance);
+            }
+            return new Wallet(id, 0);
         }
 
         public override IxiNumber getWalletBalance(byte[] id)
         {
-            throw new NotImplementedException();
+            // TODO Properly implement this for multiple addresses
+            if (balance.address != null && id.SequenceEqual(balance.address))
+            {
+                return balance.balance;
+            }
+            return 0;
         }
 
         public override WalletStorage getWalletStorage()
@@ -258,6 +323,48 @@ namespace SPIXI.Meta
         public override void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
             ProtocolMessage.parseProtocolMessage(code, data, endpoint);
+        }
+
+        public static void processPendingTransactions()
+        {
+            // TODO TODO improve to include failed transactions
+            ulong last_block_height = IxianHandler.getLastBlockHeight();
+            lock (PendingTransactions.pendingTransactions)
+            {
+                long cur_time = Clock.getTimestamp();
+                List<object[]> tmp_pending_transactions = new List<object[]>(PendingTransactions.pendingTransactions);
+                int idx = 0;
+                foreach (var entry in tmp_pending_transactions)
+                {
+                    Transaction t = (Transaction)entry[0];
+                    long tx_time = (long)entry[1];
+                    if ((int)entry[2] > 3) // already received 3+ feedback
+                    {
+                        continue;
+                    }
+
+                    if (t.applied != 0)
+                    {
+                        PendingTransactions.pendingTransactions.RemoveAll(x => ((Transaction)x[0]).id.SequenceEqual(t.id));
+                        continue;
+                    }
+
+                    // if transaction expired, remove it from pending transactions
+                    if (last_block_height > ConsensusConfig.getRedactedWindowSize() && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
+                    {
+                        Console.WriteLine("Error processing the transaction {0}", Encoding.UTF8.GetBytes(t.id));
+                        PendingTransactions.pendingTransactions.RemoveAll(x => ((Transaction)x[0]).id.SequenceEqual(t.id));
+                        continue;
+                    }
+
+                    if (cur_time - tx_time > 40) // if the transaction is pending for over 40 seconds, resend
+                    {
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.newTransaction, t.getBytes(), null);
+                        PendingTransactions.pendingTransactions[idx][1] = cur_time;
+                    }
+                    idx++;
+                }
+            }
         }
     }
 }

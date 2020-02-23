@@ -87,15 +87,15 @@ namespace SPIXI
 
             IxiNumber total_amount = tmp_tx.amount + tmp_tx.fee;
 
-            if (Node.balance < total_amount)
+            if (Node.balance.balance < total_amount)
             {
-                displaySpixiAlert("Insufficient balance", "Your balance is insufficient for this transaction. Total cost of the transaction is " + total_amount.ToString() + ", while your balance is " + Node.balance.ToString() + ".", "OK");
+                displaySpixiAlert("Insufficient balance", "Your balance is insufficient for this transaction. Total cost of the transaction is " + total_amount.ToString() + ", while your balance is " + Node.balance.balance.ToString() + ".", "OK");
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
                 return;
             }
 
             Utils.sendUiCommand(webView, "setFees", tmp_tx.fee.ToString());
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
             Utils.sendUiCommand(webView, "setTotalAmount", tmp_tx.amount.ToString());
         }
 
@@ -147,7 +147,7 @@ namespace SPIXI
             NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
             Logging.info("Adding to cache");
 
-            // Add the unconfirmed transaction the the cache
+            // Add the unconfirmed transaction to the cache
             TransactionCache.addUnconfirmedTransaction(transaction);
             Logging.info("Showing payment details");
 

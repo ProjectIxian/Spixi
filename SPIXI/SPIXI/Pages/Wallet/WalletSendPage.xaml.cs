@@ -47,7 +47,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.ToString());
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
 
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
@@ -160,10 +160,10 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.balance > ConsensusConfig.transactionPrice * 2)
+                if (Node.balance.balance > ConsensusConfig.transactionPrice * 2)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(webView, "setAmount", (Node.balance - (ConsensusConfig.transactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(webView, "setAmount", (Node.balance.balance - (ConsensusConfig.transactionPrice * 2)).ToString());
                 }
             }
             else

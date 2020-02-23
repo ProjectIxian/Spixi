@@ -493,7 +493,7 @@ namespace SPIXI.Storage
                 }
 
                 // Read unconfirmed transactions
-                /*int num_utx = reader.ReadInt32();
+                int num_utx = reader.ReadInt32();
                 for (int i = 0; i < num_utx; i++)
                 {
                     int data_length = reader.ReadInt32();
@@ -501,7 +501,7 @@ namespace SPIXI.Storage
 
                     Transaction transaction = new Transaction(data);
                     TransactionCache.addUnconfirmedTransaction(transaction, false);
-                }*/
+                }
 
             }
             catch (Exception e)
