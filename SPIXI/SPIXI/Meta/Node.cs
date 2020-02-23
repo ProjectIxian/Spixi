@@ -96,9 +96,10 @@ namespace SPIXI.Meta
             // Start the transfer manager
             TransferManager.start();
 
-            // Start TIV
-            tiv = new TransactionInclusion();
+            
 
+            // Start TIV
+            tiv = new TransactionInclusion(Config.spixiUserFolder);
 
             startCounter++;
 
