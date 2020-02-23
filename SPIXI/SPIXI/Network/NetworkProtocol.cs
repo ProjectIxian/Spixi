@@ -272,6 +272,7 @@ namespace SPIXI.Network
                                             Node.balance.balance = balance;
                                             Node.balance.blockHeight = block_height;
                                             Node.balance.blockChecksum = block_checksum;
+                                            Node.balance.lastUpdate = Clock.getTimestamp();
                                             Node.balance.verified = false;
                                         }
                                     }

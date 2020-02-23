@@ -20,6 +20,7 @@ namespace SPIXI.Meta
         public ulong blockHeight = 0;
         public byte[] blockChecksum = null;
         public bool verified = false;
+        public long lastUpdate = 0;
     }
 
     class Node: IxianNode
@@ -166,6 +167,20 @@ namespace SPIXI.Meta
 
             if(Config.enablePushNotifications)
                 OfflinePushMessages.fetchPushMessages();
+
+            // Request initial wallet balance
+            if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
+            {
+                using (MemoryStream mw = new MemoryStream())
+                {
+                    using (BinaryWriter writer = new BinaryWriter(mw))
+                    {
+                        writer.Write(Node.walletStorage.getPrimaryAddress().Length);
+                        writer.Write(Node.walletStorage.getPrimaryAddress());
+                        NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
+                    }
+                }
+            }
         }
 
         static public void stop()
