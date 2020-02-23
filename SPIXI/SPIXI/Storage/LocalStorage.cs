@@ -499,7 +499,7 @@ namespace SPIXI.Storage
                     int data_length = reader.ReadInt32();
                     byte[] data = reader.ReadBytes(data_length);
 
-                    Transaction transaction = new Transaction(data);
+                    Transaction transaction = new Transaction(data, true);
                     TransactionCache.addUnconfirmedTransaction(transaction, false);
                 }
 
