@@ -490,6 +490,14 @@ namespace SPIXI
                 chacha_key = friend.chachaKey;
             }
 
+            if(message.type == StreamMessageCode.error)
+            {
+                PresenceList.removeAddressEntry(friend.walletAddress);
+                friend.online = false;
+                sendMessage(friend, message);
+                return;
+            }
+
             // decrypt the message if necessary
             // TODO TODO TODO add message receive queue for when the keys aren't available yet
             // TODO TODO TODO prevent encryption type downgrades
@@ -676,7 +684,6 @@ namespace SPIXI
                         handleAppRequest(message.sender, spixi_message.data);
                         break;
                     }
-
             }
 
             if (friend == null)
