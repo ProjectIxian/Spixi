@@ -313,8 +313,8 @@ img.emoji {
     font-size: 9pt;
 }
 .spixi-descriptionbar.chat {
-    height: 92px;
     background-color: #55516c;
+    word-wrap: break-word;
 }
 
 /* TabBar */
