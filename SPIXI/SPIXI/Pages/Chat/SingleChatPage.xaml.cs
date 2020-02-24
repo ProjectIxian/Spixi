@@ -320,6 +320,8 @@ namespace SPIXI
         {
             friend.approved = true;
 
+            friend.handshakePushed = false;
+
             StreamProcessor.sendAcceptAdd(friend);
         }
 

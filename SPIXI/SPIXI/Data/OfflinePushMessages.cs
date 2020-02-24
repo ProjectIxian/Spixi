@@ -18,12 +18,22 @@ namespace SPIXI
             string receiver = Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient);
             string data = HttpUtility.UrlEncode(Convert.ToBase64String(msg.getBytes()));
 
+            string pub_key = "";
+
+            if (msg.id[0] == 1)
+            {
+                pub_key = HttpUtility.UrlEncode(Convert.ToBase64String(Node.walletStorage.getPrimaryPublicKey()));
+            }
+
+
             Friend f = FriendList.getFriend(msg.recipient);
             if (f == null)
                 return false;
+
+            f.handshakePushed = true;
             
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
-            string parameters = String.Format("tag={0}&data={1}", receiver, data);
+            string parameters = String.Format("tag={0}&data={1}&pk={2}", receiver, data, pub_key);
 
             using (WebClient client = new WebClient())
             {
@@ -58,13 +68,23 @@ namespace SPIXI
                     if (htmlCode == "FALSE")
                         return false;
 
-                    List<string> jsonResponse = JsonConvert.DeserializeObject<List<string>>(htmlCode);
+                    List<string[]> jsonResponse = JsonConvert.DeserializeObject<List<string[]>>(htmlCode);
 
-                    foreach (string str in jsonResponse)
+                    foreach (string[] str in jsonResponse)
                     {
                         try
                         {
-                            byte[] data = Convert.FromBase64String(str);
+                            byte[] data = Convert.FromBase64String(str[0]);
+                            if (str[1] != "")
+                            {
+                                byte[] pk = Convert.FromBase64String(str[1]);
+                                Friend f = FriendList.getFriend(new Address(pk).address);
+                                if (f != null)
+                                {
+                                    f.publicKey = pk;
+                                }
+                                FriendList.saveToStorage();
+                            }
                             StreamProcessor.receiveData(data, null);
                         }
                         catch(Exception e)

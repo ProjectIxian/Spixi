@@ -135,6 +135,8 @@ namespace SPIXI
 
         private int _handshakeStatus = 0;
 
+        public bool handshakePushed = false;
+
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
             walletAddress = wallet;
@@ -184,7 +186,15 @@ namespace SPIXI
                     try
                     {
                         bot = reader.ReadBoolean();
-                    }catch(Exception e)
+                    }catch(Exception)
+                    {
+
+                    }
+
+                    try
+                    {
+                        handshakePushed = reader.ReadBoolean();
+                    }catch(Exception)
                     {
 
                     }
@@ -240,6 +250,8 @@ namespace SPIXI
                     writer.Write(handshakeStatus);
 
                     writer.Write(bot);
+
+                    writer.Write(handshakePushed);
                 }
                 return m.ToArray();
             }
@@ -521,6 +533,7 @@ namespace SPIXI
                 if (_handshakeStatus != value)
                 {
                     _handshakeStatus = value;
+                    handshakePushed = false;
                     FriendList.saveToStorage();
                 }
             }

@@ -113,8 +113,21 @@ namespace SPIXI
         {
             lock(FriendList.friends)
             {
-                foreach(var friend in FriendList.friends.FindAll(x => x.handshakeStatus < 4 && x.online))
+                List<Friend> friend_list = new List<Friend>();
+                if(Config.enablePushNotifications)
                 {
+                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 4);
+                }
+                else
+                {
+                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 4 && x.online);
+                }
+                foreach (var friend in friend_list)
+                {
+                    if(friend.handshakePushed)
+                    {
+                        continue;
+                    }
                     switch(friend.handshakeStatus)
                     {
                         // Add friend request has been sent but no confirmation has been received
@@ -793,7 +806,7 @@ namespace SPIXI
                 byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
                 if (pub_k == null)
                 {
-                    Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                    Logging.warn("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
                     return;
                 }
 
@@ -917,10 +930,16 @@ namespace SPIXI
                 return;
             }
 
-            friend.aesKey = null;
-            friend.chachaKey = null;
+            /*friend.aesKey = null;
+            friend.chachaKey = null;*/
 
-            friend.generateKeys();
+            if(friend.aesKey == null)
+            {
+                friend.chachaKey = null;
+                friend.generateKeys();
+            }
+
+            FriendList.saveToStorage();
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
 
