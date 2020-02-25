@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SPIXI.Interfaces;
+﻿using SPIXI.Interfaces;
 using Xamarin.Forms;
 
 
@@ -21,4 +16,8 @@ public class PushService_WPF : IPushService
 
     }
 
+    public void clearNotifications()
+    {
+
+    }
 }

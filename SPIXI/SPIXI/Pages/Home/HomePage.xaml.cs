@@ -59,6 +59,9 @@ namespace SPIXI
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
             DependencyService.Get<IPushService>().setTag(tag);
 
+            // CLear notifications
+            DependencyService.Get<IPushService>().clearNotifications();
+
             // Setup a timer to handle UI updates
             Device.StartTimer(TimeSpan.FromSeconds(2), () =>
             {
