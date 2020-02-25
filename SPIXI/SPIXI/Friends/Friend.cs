@@ -384,7 +384,7 @@ namespace SPIXI
 
                         SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.keys, m.ToArray());
 
-                        // Send the nickname message to the S2 nodes
+                        // Send the key to the recipient
                         StreamMessage sm = new StreamMessage();
                         sm.type = StreamMessageCode.info;
                         sm.recipient = walletAddress;
@@ -397,7 +397,7 @@ namespace SPIXI
 
                         sm.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-                        StreamProcessor.sendMessage(this, sm, false);
+                        StreamProcessor.sendMessage(this, sm);
                     }
                 }
                 return true;

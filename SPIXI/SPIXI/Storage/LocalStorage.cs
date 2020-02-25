@@ -356,9 +356,9 @@ namespace SPIXI.Storage
         }
 
         // Reads the offline message archive
-        public List<StreamMessage> readOfflineMessagesFile()
+        public List<OfflineMessage> readOfflineMessagesFile()
         {
-            List<StreamMessage> messages = new List<StreamMessage>();
+            List<OfflineMessage> messages = new List<OfflineMessage>();
             string messages_filename = Path.Combine(documentsPath, offlineFileName);
 
             if (File.Exists(messages_filename) == false)
@@ -388,8 +388,10 @@ namespace SPIXI.Storage
                     int data_length = reader.ReadInt32();
                     byte[] data = reader.ReadBytes(data_length);
 
-                    StreamMessage message = new StreamMessage(data);
-                    messages.Add(message);
+                    bool send_push_notification = reader.ReadBoolean();
+
+                    StreamMessage sm = new StreamMessage(data);
+                    messages.Add(new OfflineMessage() { message = sm, sendPushNotification = send_push_notification  });
                 }
 
             }
@@ -405,7 +407,7 @@ namespace SPIXI.Storage
         }
 
         // Writes the cached offline messages to a file
-        public bool writeOfflineMessagesFile(List<StreamMessage> messages)
+        public bool writeOfflineMessagesFile(List<OfflineMessage> messages)
         {
             lock (offlineLock)
             {
@@ -432,12 +434,14 @@ namespace SPIXI.Storage
                     int message_num = messages.Count;
                     writer.Write(message_num);
 
-                    foreach (StreamMessage message in messages)
+                    foreach (OfflineMessage message in messages)
                     {
-                        byte[] data = message.getBytes();
+                        byte[] data = message.message.getBytes();
                         int data_length = data.Length;
                         writer.Write(data_length);
                         writer.Write(data);
+
+                        writer.Write(message.sendPushNotification);
                     }
 
                 }

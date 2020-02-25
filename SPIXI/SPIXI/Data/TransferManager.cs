@@ -288,7 +288,7 @@ namespace SPIXI
                 message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
 
-                StreamProcessor.sendMessage(friend, message);
+                StreamProcessor.sendMessage(friend, message, false, false);
 
             }
 

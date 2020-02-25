@@ -8,20 +8,24 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
 namespace SPIXI
 {
+    class OfflineMessage
+    {
+        public StreamMessage message = null;
+        public bool sendPushNotification = false;
+    }
+    
     class StreamProcessor
     {
-        static List<StreamMessage> offlineMessages = new List<StreamMessage>(); // List that stores messages until receiving contact is online
+        static List<OfflineMessage> offlineMessages = new List<OfflineMessage>(); // List that stores messages until receiving contact is online
         private static Thread offlineMessagesThread; // Thread that checks the offline messages list for outstanding messages
         private static bool continueRunning = false;
 
-        private static Dictionary<byte[], StreamMessage> pendingMessages = new Dictionary<byte[], StreamMessage>(new ByteArrayComparer()); // List of pending messages that might need to be resent
+        private static Dictionary<byte[], OfflineMessage> pendingMessages = new Dictionary<byte[], OfflineMessage>(new ByteArrayComparer()); // List of pending messages that might need to be resent
 
         // Initialize the global stream processor
         public static void initialize()
@@ -64,25 +68,25 @@ namespace SPIXI
         // Thread for checking offline message queue
         private static void sendOfflineMessages()
         {
-            List<StreamMessage> cache = new List<StreamMessage>();
+            List<OfflineMessage> cache = new List<OfflineMessage>();
 
             bool writeToFile = false;
             lock (offlineMessages)
             {
                 // Go through each message
-                foreach (StreamMessage message in offlineMessages)
+                foreach (OfflineMessage message in offlineMessages)
                 {
                     try
                     {
                         // Extract the public key from the Presence List
-                        Friend f = FriendList.getFriend(message.recipient);
+                        Friend f = FriendList.getFriend(message.message.recipient);
                         if (f == null)
                         {
                             cache.Add(message);
                             continue;
                         }
                         // Send the message
-                        if (sendMessage(f, message, false))
+                        if (sendMessage(f, message.message, false, message.sendPushNotification))
                         {
                             // Add the message to the removal cache
                             cache.Add(message);
@@ -95,7 +99,7 @@ namespace SPIXI
                 }
 
                 // Check the removal cache for messages
-                foreach (StreamMessage message in cache)
+                foreach (OfflineMessage message in cache)
                 {
                     writeToFile = true;
                     offlineMessages.Remove(message);
@@ -170,7 +174,7 @@ namespace SPIXI
 
         private static void sendPendingMessages()
         {
-            List<StreamMessage> cache = new List<StreamMessage>();
+            List<OfflineMessage> cache = new List<OfflineMessage>();
 
             lock (pendingMessages)
             {
@@ -179,8 +183,8 @@ namespace SPIXI
                 {
                     try
                     {
-                        StreamMessage message = entry.Value;
-                        if(message.timestamp + 5 < Clock.getTimestamp())
+                        OfflineMessage message = entry.Value;
+                        if(message.message.timestamp + 5 < Clock.getTimestamp())
                         {
                             cache.Add(message);
                         }
@@ -193,15 +197,15 @@ namespace SPIXI
                 }
 
                 // Check the removal cache for messages
-                foreach (StreamMessage message in cache)
+                foreach (OfflineMessage message in cache)
                 {
-                    pendingMessages.Remove(message.id);
-                    Friend f = FriendList.getFriend(message.recipient);
+                    pendingMessages.Remove(message.message.id);
+                    Friend f = FriendList.getFriend(message.message.recipient);
                     if (f == null)
                     {
                         continue;
                     }
-                    sendMessage(f, message);
+                    sendMessage(f, message.message, true, message.sendPushNotification);
                 }
 
             }
@@ -210,7 +214,7 @@ namespace SPIXI
             cache.Clear();
         }
 
-        private static void addOfflineMessage(StreamMessage msg, bool push)
+        private static void addOfflineMessage(StreamMessage msg, bool store_to_server, bool send_push_notification)
         {
             lock(pendingMessages)
             {
@@ -220,22 +224,22 @@ namespace SPIXI
                 }
             }
 
-            if (Config.enablePushNotifications)
+            if (store_to_server)
             {
-                OfflinePushMessages.sendPushMessage(msg, push);
+                OfflinePushMessages.sendPushMessage(msg, send_push_notification);
                 return;
             }
 
-            // Use offline queue when notifications are disabled
+            // Use offline queue when notifications are disabled or when we don't have enough data yet
             lock(offlineMessages)
             {
-                if(offlineMessages.Find(x => x.recipient.SequenceEqual(msg.recipient) && x.data.SequenceEqual(msg.data)) != null)
+                if(offlineMessages.Find(x => x.message.id.SequenceEqual(msg.id)) != null)
                 {
                     Logging.info("Message already exists in the offline queue, not adding.");
                     return;
                 }
 
-                offlineMessages.Add(msg);
+                offlineMessages.Add(new OfflineMessage() { message = msg, sendPushNotification = send_push_notification });
                 //
                 Node.localStorage.writeOfflineMessagesFile(offlineMessages);
             }
@@ -248,7 +252,7 @@ namespace SPIXI
             if (friend.publicKey != null && (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null)))
             {
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
-            }else if(msg.encryptionType != StreamMessageEncryptionCode.none || !friend.online)
+            }else if(msg.encryptionType != StreamMessageEncryptionCode.none)
             {
                 if (friend.publicKey == null)
                 {
@@ -259,33 +263,32 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
-                    if (friend.bot)
-                    {
-                        push = false;
-                    }
-                    addOfflineMessage(msg, push);
+                    addOfflineMessage(msg, false, push);
                 }
                 return false;
             }
 
             lock (pendingMessages)
             {
-                pendingMessages.AddOrReplace(msg.id, msg);
+                pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push });
             }
 
             string hostname = friend.searchForRelay();
 
-            if (!StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
+            if (!friend.online || !StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
             {
-                StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
+                if (hostname != "")
+                {
+                    StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
+                }
                 Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                if (add_to_offline_messages)
+                if (add_to_offline_messages || Config.enablePushNotifications)
                 {
                     if (friend.bot)
                     {
                         push = false;
                     }
-                    addOfflineMessage(msg, push);
+                    addOfflineMessage(msg, Config.enablePushNotifications, push);
                 }
                 return false;
             }
@@ -585,9 +588,10 @@ namespace SPIXI
                 {
                     if (pendingMessages.ContainsKey(message.data))
                     {
-                        StreamMessage sm = pendingMessages[message.data];
+                        OfflineMessage om = pendingMessages[message.data];
+                        StreamMessage sm = om.message;
                         pendingMessages.Remove(sm.id);
-                        sendMessage(friend, sm);
+                        sendMessage(friend, sm, true, om.sendPushNotification);
                     }
                 }
                 return;
@@ -802,7 +806,7 @@ namespace SPIXI
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-            sendMessage(friend, msg_received, true);
+            sendMessage(friend, msg_received, true, false);
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
