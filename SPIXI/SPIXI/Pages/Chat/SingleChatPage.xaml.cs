@@ -556,7 +556,7 @@ namespace SPIXI
                 msg_received.sigdata = new byte[1];
                 msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-                StreamProcessor.sendMessage(friend, msg_received, true);
+                StreamProcessor.sendMessage(friend, msg_received, true, false);
             }
         }
 

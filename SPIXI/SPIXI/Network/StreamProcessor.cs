@@ -164,11 +164,11 @@ namespace SPIXI
             }
         }
 
-        private static void addOfflineMessage(StreamMessage msg)
+        private static void addOfflineMessage(StreamMessage msg, bool push)
         {
             if (Config.enablePushNotifications)
             {
-                OfflinePushMessages.sendPushMessage(msg);
+                OfflinePushMessages.sendPushMessage(msg, push);
                 return;
             }
 
@@ -188,7 +188,7 @@ namespace SPIXI
         }
 
         // Send an encrypted message using the S2 network
-        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true)
+        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true)
         {
             // TODO this function has to be improved and node's wallet address has to be added
 
@@ -206,7 +206,11 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
-                    addOfflineMessage(msg);
+                    if(friend.bot)
+                    {
+                        push = false;
+                    }
+                    addOfflineMessage(msg, push);
                 }
                 return false;
             }
@@ -219,7 +223,11 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
-                    addOfflineMessage(msg);
+                    if (friend.bot)
+                    {
+                        push = false;
+                    }
+                    addOfflineMessage(msg, push);
                 }
                 return false;
             }
@@ -261,9 +269,9 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                friend.handshakeStatus = 3;
-
                 friend.receiveKeys(data);
+
+                friend.handshakeStatus = 3;
             }
             else
             {
@@ -784,9 +792,9 @@ namespace SPIXI
                 friend.aesKey = aes_key;
             }
 
-            friend.handshakeStatus = 2;
-
             friend.generateKeys();
+
+            friend.handshakeStatus = 2;
 
             friend.sendKeys(2);
 

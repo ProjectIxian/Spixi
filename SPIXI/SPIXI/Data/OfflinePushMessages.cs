@@ -13,7 +13,7 @@ namespace SPIXI
     class OfflinePushMessages
     {
 
-        public static bool sendPushMessage(StreamMessage msg)
+        public static bool sendPushMessage(StreamMessage msg, bool push)
         {
             string receiver = Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient);
             string data = HttpUtility.UrlEncode(Convert.ToBase64String(msg.getBytes()));
@@ -30,10 +30,15 @@ namespace SPIXI
             if (f == null)
                 return false;
 
-            f.handshakePushed = true;
-            
+            if (f.handshakeStatus < 4)
+            {
+                f.handshakePushed = true;
+
+                FriendList.saveToStorage();
+            }
+
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
-            string parameters = String.Format("tag={0}&data={1}&pk={2}", receiver, data, pub_key);
+            string parameters = String.Format("tag={0}&data={1}&pk={2}&push={3}", receiver, data, pub_key, push);
 
             using (WebClient client = new WebClient())
             {
