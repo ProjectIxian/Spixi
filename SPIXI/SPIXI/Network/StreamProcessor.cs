@@ -246,11 +246,16 @@ namespace SPIXI
         }
 
         // Send an encrypted message using the S2 network
-        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true)
+        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true, bool add_to_pending_messages = true)
         {
             // TODO this function has to be improved and node's wallet address has to be added
-            if (friend.publicKey != null && (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null)))
+            if ((friend.publicKey != null && msg.encryptionType == StreamMessageEncryptionCode.rsa) || (friend.aesKey != null && friend.chachaKey != null))
             {
+                if(msg.encryptionType == StreamMessageEncryptionCode.none)
+                {
+                    // upgrade encryption type
+                    msg.encryptionType = StreamMessageEncryptionCode.spixi1;
+                }
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
             }else if(msg.encryptionType != StreamMessageEncryptionCode.none)
             {
@@ -268,9 +273,12 @@ namespace SPIXI
                 return false;
             }
 
-            lock (pendingMessages)
+            if (add_to_pending_messages)
             {
-                pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push });
+                lock (pendingMessages)
+                {
+                    pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push });
+                }
             }
 
             string hostname = friend.searchForRelay();
@@ -806,7 +814,7 @@ namespace SPIXI
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-            sendMessage(friend, msg_received, true, false);
+            sendMessage(friend, msg_received, true, false, false);
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically

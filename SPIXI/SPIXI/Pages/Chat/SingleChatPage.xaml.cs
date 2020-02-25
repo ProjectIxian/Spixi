@@ -164,6 +164,7 @@ namespace SPIXI
                     new_msg.transaction = new byte[1];
                     new_msg.sigdata = new byte[1];
                     new_msg.data = spixi_msg.getBytes();
+                    new_msg.encryptionType = StreamMessageEncryptionCode.none;
 
                     StreamProcessor.sendMessage(friend, new_msg);
 
@@ -554,9 +555,8 @@ namespace SPIXI
                 msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id).getBytes();
                 msg_received.transaction = new byte[1];
                 msg_received.sigdata = new byte[1];
-                msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-                StreamProcessor.sendMessage(friend, msg_received, true, false);
+                StreamProcessor.sendMessage(friend, msg_received, true, false, false);
             }
         }
 
