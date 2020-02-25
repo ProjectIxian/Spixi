@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Network;
 using System;
@@ -19,6 +20,8 @@ namespace SPIXI
         static List<StreamMessage> offlineMessages = new List<StreamMessage>(); // List that stores messages until receiving contact is online
         private static Thread offlineMessagesThread; // Thread that checks the offline messages list for outstanding messages
         private static bool continueRunning = false;
+
+        private static Dictionary<byte[], StreamMessage> pendingMessages = new Dictionary<byte[], StreamMessage>(new ByteArrayComparer()); // List of pending messages that might need to be resent
 
         // Initialize the global stream processor
         public static void initialize()
@@ -47,6 +50,7 @@ namespace SPIXI
                 {
                     sendOfflineMessages();
                     sendPendingRequests();
+                    sendPendingMessages();
                 }catch(Exception e)
                 {
                     Logging.error("Unknown exception occured in streamProcessorLoop: " + e);
@@ -164,8 +168,58 @@ namespace SPIXI
             }
         }
 
+        private static void sendPendingMessages()
+        {
+            List<StreamMessage> cache = new List<StreamMessage>();
+
+            lock (pendingMessages)
+            {
+                // Go through each message
+                foreach (var entry in pendingMessages)
+                {
+                    try
+                    {
+                        StreamMessage message = entry.Value;
+                        if(message.timestamp + 5 < Clock.getTimestamp())
+                        {
+                            cache.Add(message);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured while trying to send pending message {0}", e);
+                    }
+
+                }
+
+                // Check the removal cache for messages
+                foreach (StreamMessage message in cache)
+                {
+                    pendingMessages.Remove(message.id);
+                    Friend f = FriendList.getFriend(message.recipient);
+                    if (f == null)
+                    {
+                        continue;
+                    }
+                    sendMessage(f, message);
+                }
+
+            }
+
+            // Finally, clear the removal cache
+            cache.Clear();
+        }
+
         private static void addOfflineMessage(StreamMessage msg, bool push)
         {
+            lock(pendingMessages)
+            {
+                if(pendingMessages.ContainsKey(msg.id))
+                {
+                    pendingMessages.Remove(msg.id);
+                }
+            }
+
             if (Config.enablePushNotifications)
             {
                 OfflinePushMessages.sendPushMessage(msg, push);
@@ -191,7 +245,6 @@ namespace SPIXI
         public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true)
         {
             // TODO this function has to be improved and node's wallet address has to be added
-
             if (friend.publicKey != null && (msg.encryptionType == StreamMessageEncryptionCode.rsa || (friend.aesKey != null && friend.chachaKey != null)))
             {
                 msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey);
@@ -206,13 +259,18 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
-                    if(friend.bot)
+                    if (friend.bot)
                     {
                         push = false;
                     }
                     addOfflineMessage(msg, push);
                 }
                 return false;
+            }
+
+            lock (pendingMessages)
+            {
+                pendingMessages.AddOrReplace(msg.id, msg);
             }
 
             string hostname = friend.searchForRelay();
@@ -380,6 +438,14 @@ namespace SPIXI
 
             if (friend != null)
             {
+                lock (pendingMessages)
+                {
+                    if (pendingMessages.ContainsKey(msg_id))
+                    {
+                        pendingMessages.Remove(msg_id);
+                    }
+                }
+
                 Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
 
                 if(msg_id.SequenceEqual(new byte[] { 0 }))
@@ -515,7 +581,15 @@ namespace SPIXI
             {
                 PresenceList.removeAddressEntry(friend.walletAddress);
                 friend.online = false;
-                sendMessage(friend, message);
+                lock (pendingMessages)
+                {
+                    if (pendingMessages.ContainsKey(message.data))
+                    {
+                        StreamMessage sm = pendingMessages[message.data];
+                        pendingMessages.Remove(sm.id);
+                        sendMessage(friend, sm);
+                    }
+                }
                 return;
             }
 
