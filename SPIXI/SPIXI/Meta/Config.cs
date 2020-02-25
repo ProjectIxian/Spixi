@@ -8,9 +8,9 @@ namespace SPIXI.Meta
         // Providing pre-defined values
         // Can be read from a file later, or read from the command line
 
-        public static bool isTestNet = false;
+        public static bool isTestNet = true;
 
-        public static bool enablePushNotifications = false; // Push notifications are disabled for now
+        public static bool enablePushNotifications = true; // Push notifications are disabled for now
 
         public static string walletFile = "wallet.ixi";
 
@@ -21,7 +21,7 @@ namespace SPIXI.Meta
         // Read-only values
         public static readonly string aboutUrl = "https://www.spixi.io";
 
-        public static readonly string pushServiceUrl = "http://push.local"; // Will be changed once the official push service is active
+        public static readonly string pushServiceUrl = "https://ipn.ixian.io"; // Will be changed once the official push service is active
 
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
@@ -35,6 +35,9 @@ namespace SPIXI.Meta
 
         // App-specific settings
         public static bool storeHistory = true;
+
+        // Push notifications OneSignal AppID
+        public static string oneSignalAppId = "44d96ce3-5d33-4e8b-997d-d1ad786b96a1";
 
         private Config()
         {

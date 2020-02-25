@@ -9,7 +9,7 @@ public class PushService_Android : IPushService
 {
     public void initialize()
     {
-        OneSignal.Current.StartInit("44d96ce3-5d33-4e8b-997d-d1ad786b96a1")
+        OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
             .EndInit();
     }

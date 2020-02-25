@@ -255,7 +255,7 @@ namespace SPIXI.Storage
                         s_sender_address = reader.ReadBytes(s_sender_address_len);
 
                         s_nick = reader.ReadString();
-                    }catch(Exception e)
+                    }catch(Exception)
                     {
 
                     }
