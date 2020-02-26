@@ -28,7 +28,7 @@ namespace SPIXI.Droid.Classes
             intent.SetAction(Intent.ActionGetContent);
 
             // Get the MainActivity instance
-            MainActivity activity = Forms.Context as MainActivity;
+            MainActivity activity = MainActivity.Instance;
 
             // Start the picture-picker activity (resumes in MainActivity.cs)
             activity.StartActivityForResult(

@@ -19,8 +19,13 @@ namespace SPIXI.Droid
 
         public TaskCompletionSource<Stream> PickImageTaskCompletionSource { set; get; }
 
+        internal static MainActivity Instance { get; private set; }
+
+
         protected override void OnCreate(Bundle bundle)
         {
+            Instance = this;
+
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 

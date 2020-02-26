@@ -34,7 +34,7 @@ namespace SPIXI.Droid.Classes
                 System.IO.File.WriteAllBytes(filePath, imageData);
                 var mediaScanIntent = new Intent(Intent.ActionMediaScannerScanFile);
                 mediaScanIntent.SetData(Android.Net.Uri.FromFile(new Java.IO.File(filePath)));
-                Xamarin.Forms.Forms.Context.SendBroadcast(mediaScanIntent);
+                MainActivity.Instance.SendBroadcast(mediaScanIntent);
                 
             }
             catch (System.Exception e)
