@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Web;
 using Xamarin.Forms;
@@ -204,71 +205,74 @@ namespace SPIXI
         }
 
 
-        public void onSend(string str)
+        public async void onSend(string str)
         {
             if (str.Length < 1)
             {
                 return;
             }
 
-            // TODOSPIXI
-            /*            // Send the message to the S2 nodes
-                        byte[] recipient_address = friend.wallet_address;
-                        byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.chat, str, friend.pubkey);
-                        // CryptoManager.lib.encryptData(Encoding.UTF8.GetBytes(string_to_send), friend.pubkey);
+            await Task.Run(async () =>
+            {
+                // TODOSPIXI
+                /*            // Send the message to the S2 nodes
+                            byte[] recipient_address = friend.wallet_address;
+                            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.chat, str, friend.pubkey);
+                            // CryptoManager.lib.encryptData(Encoding.UTF8.GetBytes(string_to_send), friend.pubkey);
 
-                        // Check the relay ip
-                        string relayip = friend.getRelayIP();
-                        if (relayip == null)
-                        {
-                            Logging.warn("No relay node to send message to!");
-                            return;
-                        }
-                        if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
-                        {
-
-                            node_ip = relayip;
-                            // Connect to the contact's S2 relay first
-                            NetworkClientManager.connectToStreamNode(relayip);
-
-                            // TODO: optimize this
-                            while (NetworkClientManager.isNodeConnected(relayip) == false)
+                            // Check the relay ip
+                            string relayip = friend.getRelayIP();
+                            if (relayip == null)
+                            {
+                                Logging.warn("No relay node to send message to!");
+                                return;
+                            }
+                            if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
                             {
 
+                                node_ip = relayip;
+                                // Connect to the contact's S2 relay first
+                                NetworkClientManager.connectToStreamNode(relayip);
+
+                                // TODO: optimize this
+                                while (NetworkClientManager.isNodeConnected(relayip) == false)
+                                {
+
+                                }
                             }
-                        }
 
-                        Message message = new Message();
-                        message.recipientAddress = recipient_address;
-                        message.data = encrypted_message;
+                            Message message = new Message();
+                            message.recipientAddress = recipient_address;
+                            message.data = encrypted_message;
 
-                        StreamProcessor.sendMessage(message, node_ip);*/
+                            StreamProcessor.sendMessage(message, node_ip);*/
 
-            // store the message and display it
-            FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, str, true);
+                // store the message and display it
+                FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, str, true);
 
-            // Finally, clear the input field
-            Utils.sendUiCommand(webView, "clearInput");
+                // Finally, clear the input field
+                Utils.sendUiCommand(webView, "clearInput");
 
-            // Send the message
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
+                // Send the message
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str));
 
-            StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.data;
-            message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
-            message.data = spixi_message.getBytes();
-            message.id = friend_message.id;
+                StreamMessage message = new StreamMessage();
+                message.type = StreamMessageCode.data;
+                message.recipient = friend.walletAddress;
+                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.transaction = new byte[1];
+                message.sigdata = new byte[1];
+                message.data = spixi_message.getBytes();
+                message.id = friend_message.id;
 
-            if(friend.bot)
-            {
-                message.encryptionType = StreamMessageEncryptionCode.none;
-                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-            }
+                if (friend.bot)
+                {
+                    message.encryptionType = StreamMessageEncryptionCode.none;
+                    message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                }
 
-            StreamProcessor.sendMessage(friend, message);
+                StreamProcessor.sendMessage(friend, message);
+            });
 
         }
 
