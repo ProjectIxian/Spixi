@@ -288,7 +288,7 @@ namespace SPIXI
                 string filePath = fileData.FilePath;
 
                 FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream(), filePath);
-                System.Console.WriteLine("File Transfer uid: " + transfer.uid);
+                Logging.info("File Transfer uid: " + transfer.uid);
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes());
 
@@ -310,7 +310,7 @@ namespace SPIXI
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+                Logging.error("Exception choosing file: " + ex.ToString());
             }
         }
 

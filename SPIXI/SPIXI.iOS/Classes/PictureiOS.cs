@@ -8,6 +8,7 @@ using UIKit;
 using SPIXI.Interfaces;
 using SPIXI.iOS.Classes;
 using Xamarin.Forms;
+using IXICore.Meta;
 
 [assembly: Xamarin.Forms.Dependency(typeof(PictureiOS))]
 
@@ -23,7 +24,7 @@ namespace SPIXI.iOS.Classes
                 //var i = image as UIImage;
                 if (error != null)
                 {
-                    Console.WriteLine(error.ToString());
+                    Logging.error(error.ToString());
                 }
             });
         }

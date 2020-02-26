@@ -79,7 +79,7 @@ namespace SPIXI
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+                Logging.error("Exception choosing file: " + ex.ToString());
                 await displaySpixiAlert("Error", "Cannot select file", "OK");
             }
 

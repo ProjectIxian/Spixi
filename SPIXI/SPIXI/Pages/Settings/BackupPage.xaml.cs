@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore.Meta;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -75,7 +76,7 @@ namespace SPIXI
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine("Exception fetching wallet: " + ex.ToString());
+                Logging.error("Exception fetching wallet: " + ex.ToString());
             }
         }
     }

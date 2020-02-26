@@ -13,6 +13,7 @@ using SPIXI.Interfaces;
 using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using System.IO;
+using IXICore.Meta;
 
 [assembly: Xamarin.Forms.Dependency(typeof(PictureAndroid))]
 namespace SPIXI.Droid.Classes
@@ -38,7 +39,7 @@ namespace SPIXI.Droid.Classes
             }
             catch (System.Exception e)
             {
-                System.Console.WriteLine(e.ToString());
+                Logging.error(e.ToString());
             }
         }
     }
