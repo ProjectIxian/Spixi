@@ -637,7 +637,7 @@ namespace SPIXI
                             // no need to verify sigs, as we're communicating using secure keys
 
                             // Add the message to the friend list
-                            FriendList.addMessage(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
+                            FriendList.addMessage(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address, message.timestamp);
                         }
                     }
                     break;

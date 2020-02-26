@@ -93,12 +93,12 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null)
+        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0)
         {
-            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address);
+            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address, timestamp);
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0)
         {
             foreach (Friend friend in friends)
             {
@@ -142,8 +142,13 @@ namespace SPIXI
                     sender_nick = friend.nickname;
                 }
 
+                if(timestamp == 0)
+                {
+                    timestamp = Clock.getTimestamp();
+                }
+
                 // TODO: message date should be fetched, not generated here
-                FriendMessage friend_message = new FriendMessage(id, message, Clock.getTimestamp(), local_sender, type, sender_address, sender_nick);
+                FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
 
                 if(friend.bot && local_sender)
                 {
