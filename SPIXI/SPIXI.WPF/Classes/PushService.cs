@@ -20,4 +20,10 @@ public class PushService_WPF : IPushService
     {
 
     }
+
+    public void showLocalNotification(string title, string message)
+    {
+
+    }
+
 }

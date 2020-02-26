@@ -167,7 +167,9 @@ namespace SPIXI
                 }
                 else
                 {
-                    //CrossLocalNotifications.Current.Show(string.Format("New message from {0}",friend.nickname), message, 100, DateTime.Now.AddSeconds(1));
+                    // Send a local push notification if Spixi is not in the foreground
+                    if(App.isInForeground == false)
+                        DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message");
 
                     ISystemAlert alert = DependencyService.Get<ISystemAlert>();
                     if (alert != null)

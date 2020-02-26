@@ -8,6 +8,8 @@ namespace SPIXI
 {
     public partial class App : Application
 	{
+        public static bool isInForeground { get; set; } = false;
+
         Node node = null;
 		public App ()
 		{
@@ -81,18 +83,21 @@ namespace SPIXI
 
         protected override void OnStart ()
 		{
-			// Handle when your app starts
-		}
+            // Handle when your app starts
+            isInForeground = true;
+        }
 
 		protected override void OnSleep ()
 		{
-			// Handle when your app sleeps
-		}
+            // Handle when your app sleeps
+            isInForeground = false;
+        }
 
 		protected override void OnResume ()
 		{
-			// Handle when your app resumes
-		}
+            // Handle when your app resumes
+            isInForeground = true;
+        }
 
 	}
 }
