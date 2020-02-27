@@ -753,8 +753,7 @@ namespace SPIXI
                 case SpixiMessageCode.acceptFile:
                     {
                         handleAcceptFile(message.sender, spixi_message);
-                        // don't send confirmation back, so just return
-                        return;
+                        break;
                     }
 
                 case SpixiMessageCode.requestFileData:
