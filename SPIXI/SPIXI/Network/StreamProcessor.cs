@@ -73,6 +73,10 @@ namespace SPIXI
             bool writeToFile = false;
             lock (offlineMessages)
             {
+                if (offlineMessages.Count > 0)
+                {
+                    Logging.info("Sending {0} offline messages", offlineMessages.Count);
+                }
                 // Go through each message
                 foreach (OfflineMessage message in offlineMessages)
                 {
@@ -178,6 +182,10 @@ namespace SPIXI
 
             lock (pendingMessages)
             {
+                if (pendingMessages.Count > 0)
+                {
+                    Logging.info("Sending {0} pending messages", pendingMessages.Count);
+                }
                 // Go through each message
                 foreach (var entry in pendingMessages)
                 {
