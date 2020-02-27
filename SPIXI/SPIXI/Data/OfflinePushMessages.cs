@@ -12,6 +12,9 @@ namespace SPIXI
 {
     class OfflinePushMessages
     {
+        private static long lastUpdate = 0;
+        private static int cooldownPeriod = 60; // cooldown period in seconds
+
 
         public static bool sendPushMessage(StreamMessage msg, bool push)
         {
@@ -50,8 +53,15 @@ namespace SPIXI
             return false;
         }
 
-        public static bool fetchPushMessages()
+        public static bool fetchPushMessages(bool force = false)
         {
+            if(force == false && lastUpdate + cooldownPeriod > Clock.getTimestamp())
+            {
+                return false;
+            }
+
+            lastUpdate = Clock.getTimestamp();
+
             try
             {
                 string URI = String.Format("{0}/fetch.php", Config.pushServiceUrl);
