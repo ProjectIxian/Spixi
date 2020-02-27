@@ -327,6 +327,10 @@ namespace SPIXI
                         if (transfer.completed)
                             return false;
 
+                        // Check if this is the next packet to process
+                        if (transfer.lastPacket + 1 != packet_number)
+                            return false;
+
                         incomingPacketsLog.Add(packet);
 
                         transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
