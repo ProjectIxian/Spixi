@@ -97,10 +97,17 @@ namespace SPIXI.Meta
             // Start the transfer manager
             TransferManager.start();
 
-            
+            ulong block_height = 1;
+            byte[] block_checksum = null;
+
+            if(!walletStorage.walletExists())
+            {
+                block_height = Config.bakedBlockHeight;
+                block_checksum = Config.bakedBlockChecksum;
+            }
 
             // Start TIV
-            tiv = new TransactionInclusion(Config.spixiUserFolder);
+            tiv = new TransactionInclusion(Config.spixiUserFolder, block_height, block_checksum);
 
             startCounter++;
 

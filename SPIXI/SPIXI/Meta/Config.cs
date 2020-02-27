@@ -39,6 +39,15 @@ namespace SPIXI.Meta
         // Push notifications OneSignal AppID
         public static string oneSignalAppId = "44d96ce3-5d33-4e8b-997d-d1ad786b96a1";
 
+        // Block height at which the current version of Spixi was generated
+        // Useful for optimized block header sync
+        public static ulong bakedBlockHeight = 1;
+
+        // Block checksum (paired with bakedBlockHeight) at which the current version of Spixi was generated
+        // Useful for optimized block header sync
+        public static byte[] bakedBlockChecksum = null;
+
+
         private Config()
         {
 
