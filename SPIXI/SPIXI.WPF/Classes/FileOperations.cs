@@ -26,4 +26,9 @@ public class FileOperations_WPF : IFileOperations
 
         return Task.FromResult(true);
     }
+
+    public void open(string filepath)
+    {
+        Device.OpenUri(new Uri(filepath));
+    }
 }

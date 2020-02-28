@@ -365,7 +365,9 @@ namespace SPIXI
             {
                 FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data, sender);
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
-                FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);         
+                FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);
+                fm.transferId = transfer.uid;
+                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
             }
             else
             {

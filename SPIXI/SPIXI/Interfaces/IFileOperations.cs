@@ -8,5 +8,6 @@ namespace SPIXI.Interfaces
     public interface IFileOperations
     {
         Task share(string filepath, string title);
+        void open(string filepath);
     }
 }

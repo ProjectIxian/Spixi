@@ -21,7 +21,7 @@ namespace SPIXI
         public bool incoming = false;       // Incoming or outgoing flag
         public bool completed = false;
 
-        public string filePath = null;
+        public string filePath = "";
         public Stream fileStream = null;    
 
         public long lastTimeStamp = 0;      // Last activity timestamp in seconds
@@ -91,11 +91,9 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    if (uid != null)
-                        writer.Write(uid);
+                    writer.Write(uid);
 
-                    if (fileName != null)
-                        writer.Write(fileName);
+                    writer.Write(fileName);
 
                     writer.Write(fileSize);
 
@@ -188,7 +186,7 @@ namespace SPIXI
 
                         if(Clock.getTimestamp() - transfer.lastTimeStamp > Config.packetRequestTimeout)
                         {
-                            requestFileData(transfer.sender, transfer.uid, transfer.lastPacket + 1);
+                            requestFileData(transfer.sender, transfer.uid, transfer.lastPacket);
                         }
                     }
 
@@ -256,8 +254,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    if (uid != null)
-                        writer.Write(uid);
+                    writer.Write(uid);
 
                     writer.Write(packet_number);
 
@@ -328,7 +325,7 @@ namespace SPIXI
                             return false;
 
                         // Check if this is the next packet to process
-                        if (transfer.lastPacket + 1 != packet_number)
+                        if (transfer.lastPacket != packet_number)
                             return false;
 
                         incomingPacketsLog.Add(packet);
@@ -336,7 +333,7 @@ namespace SPIXI
                         transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
                         transfer.fileStream.Write(file_data, 0, file_data.Length);
 
-                        transfer.updateActivity(packet_number);
+                        transfer.updateActivity(packet_number + 1);
 
                         ulong new_packet_number = packet_number + 1;
                         if (new_packet_number * (ulong)Config.packetDataSize > transfer.fileSize + (ulong)Config.packetDataSize)
@@ -388,6 +385,11 @@ namespace SPIXI
             if (friend == null)
                 return;
 
+            FriendMessage fm = friend.messages.Find(x => x.transferId == uid);
+            fm.completed = true;
+
+            Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+
             if (friend.chat_page != null)
             {
                 friend.chat_page.updateFile(uid, "100", true);
@@ -405,8 +407,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    if (uid != null)
-                        writer.Write(uid);
+                    writer.Write(uid);
 
                     writer.Write(packet_number);
 
@@ -443,8 +444,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    if (uid != null)
-                        writer.Write(uid);
+                    writer.Write(uid);
                 }
 
                 FileTransfer transfer = getIncomingTransfer(uid);
@@ -454,6 +454,10 @@ namespace SPIXI
                 transfer.filePath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.fileName);
                 transfer.fileStream = File.Create(transfer.filePath);
                 transfer.fileStream.SetLength((long)transfer.fileSize);
+
+                FriendMessage fm = friend.messages.Find(x => x.transferId == uid);
+                fm.filePath = transfer.filePath;
+                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptFile, m.ToArray());
 

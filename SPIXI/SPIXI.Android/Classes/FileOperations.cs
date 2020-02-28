@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Content;
 using SPIXI.Interfaces;
-using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 using Android.Support.V4.Content;
+using SPIXI.Droid;
 using Java.IO;
+using System;
+using IXICore.Meta;
 
 [assembly: Dependency(typeof(FileOperations_Android))]
 
@@ -42,5 +34,51 @@ public class FileOperations_Android : IFileOperations
 
         return Task.FromResult(true);
     }
+
+    public void open(string filepath)
+    {
+        string mime_type = "";
+        string extension = System.IO.Path.GetExtension(filepath);
+
+        // get mimeTye
+        switch (extension.ToLower())
+        {
+            case ".txt":
+                mime_type = "text/plain";
+                break;
+            case ".doc":
+            case ".docx":
+                mime_type = "application/msword";
+                break;
+            case ".pdf":
+                mime_type = "application/pdf";
+                break;
+            case ".xls":
+            case ".xlsx":
+                mime_type = "application/vnd.ms-excel";
+                break;
+            case ".jpg":
+            case ".jpeg":
+            case ".png":
+                mime_type = "image/jpeg";
+                break;
+            default:
+                mime_type = "*/*";
+                break;
+        }
+
+        var context = MainActivity.Instance;
+        
+        File f = new File(context.FilesDir, System.IO.Path.Combine("Spixi", "Downloads", System.IO.Path.GetFileName(filepath)));
+        Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
+
+        Intent intent = new Intent(Intent.ActionView);
+        intent.SetFlags(ActivityFlags.ClearWhenTaskReset | ActivityFlags.NewTask);
+        intent.SetDataAndType(file_uri, mime_type);
+        intent.AddFlags(ActivityFlags.GrantReadUriPermission);
+
+        context.StartActivity(intent);
+    }
+
 
 }

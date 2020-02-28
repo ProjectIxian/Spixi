@@ -127,18 +127,11 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:openfile:" }, StringSplitOptions.None);
                 string id = split[1];
 
-                FileTransfer transfer = TransferManager.getIncomingTransfer(id);
-                if (transfer == null)
-                    transfer = TransferManager.getOutgoingTransfer(id);
-
-                if (transfer == null)
-                {
-                    displaySpixiAlert("Expired", "File link has expired.", "Ok");
-                    return;
-                }
+                FriendMessage fm = friend.messages.Find(x => x.transferId == id);
 
                 // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
-                Device.OpenUri(new Uri(transfer.filePath));
+                //Device.OpenUri(new Uri(transfer.filePath));
+                DependencyService.Get<IFileOperations>().open(fm.filePath);
 
             }
             else if (current_url.Contains("ixian:chat:"))
@@ -307,6 +300,9 @@ namespace SPIXI
 
                 // store the message and display it
                 FriendMessage friend_message = FriendList.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);
+
+                friend_message.transferId = transfer.uid;
+                friend_message.filePath = transfer.filePath;
             }
             catch (Exception ex)
             {
@@ -536,7 +532,12 @@ namespace SPIXI
                     string uid = split[0];
                     string name = split[1];
 
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString());
+                    string progress = "0";
+                    if(message.completed)
+                    {
+                        progress = "100";
+                    }
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), message.filePath);
                 }
             }
             else

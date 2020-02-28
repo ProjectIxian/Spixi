@@ -14,7 +14,10 @@ using System.Threading.Tasks;
 
 public class FileOperations_iOS : IFileOperations
 {
-
+    public void open(string filepath)
+    {
+        throw new NotImplementedException();
+    }
 
     public Task share(string filepath, string title)
     {

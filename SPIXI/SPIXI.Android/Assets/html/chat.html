@@ -271,7 +271,7 @@
         addText(id, address, nick, avatar, text, time, "spixi-bubble");
     }
     
-    function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read) {
+    function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, progress, complete) {
         var additionalClasses = "";
         if (sent == "True") {
             additionalClasses = " sent";
@@ -328,6 +328,10 @@
         
         document.getElementById("messages").appendChild(fileBubbleEl);         
         linkEl.scrollIntoView(true);
+        if (progress == "100")
+        {
+            updateFile(fileid, progress, complete);
+        }
     }
     
     function addCall(id, title, message, declined, time)

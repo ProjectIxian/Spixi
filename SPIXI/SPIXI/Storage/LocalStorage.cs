@@ -248,6 +248,9 @@ namespace SPIXI.Storage
 
                     byte[] s_sender_address = null;
                     string s_nick = "";
+                    string s_transfer_id = "";
+                    bool s_completed = false;
+                    string s_file_path = "";
                     // try/catch wrapper can be removed after upgrade
                     try
                     {
@@ -255,7 +258,17 @@ namespace SPIXI.Storage
                         s_sender_address = reader.ReadBytes(s_sender_address_len);
 
                         s_nick = reader.ReadString();
-                    }catch(Exception)
+
+                        if (version >= 2)
+                        {
+                            s_transfer_id = reader.ReadString();
+
+                            s_completed = reader.ReadBoolean();
+
+                            s_file_path = reader.ReadString();
+                        }
+                    }
+                    catch (Exception)
                     {
 
                     }
@@ -263,6 +276,9 @@ namespace SPIXI.Storage
                     FriendMessage message = new FriendMessage(id, s_message, s_timestamp, s_local_sender, (FriendMessageType)s_type, s_sender_address, s_nick);
                     message.read = s_read;
                     message.confirmed = s_confirmed;
+                    message.transferId = s_transfer_id;
+                    message.completed = s_completed;
+                    message.filePath = s_file_path;
                     messages.Add(message);
                 }
 
@@ -299,7 +315,7 @@ namespace SPIXI.Storage
             try
             {
                 // TODO: encrypt written data
-                System.Int32 version = 1; // Set the messages file version
+                System.Int32 version = 2; // Set the messages file version
                 writer.Write(version);
                 // Write the address used for verification
                 writer.Write(wallet);
@@ -328,6 +344,11 @@ namespace SPIXI.Storage
                     }
 
                     writer.Write(message.senderNick);
+
+                    writer.Write(message.transferId);
+                    writer.Write(message.completed);
+
+                    writer.Write(message.filePath);
                 }
 
             }

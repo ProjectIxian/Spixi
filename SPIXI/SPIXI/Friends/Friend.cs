@@ -30,6 +30,9 @@ namespace SPIXI
         public bool read;
         public bool confirmed;
         public FriendMessageType type;
+        public string transferId; // UID of file transfer if applicable
+        public bool completed; // for file transfer, indicating whether the transfer completed
+        public string filePath; // for file transfer
 
         public byte[] senderAddress;
         public string senderNick = "";
@@ -45,6 +48,9 @@ namespace SPIXI
             confirmed = false;
             senderAddress = sender_address;
             senderNick = sender_nick;
+            transferId = "";
+            completed = false;
+            filePath = "";
         }
 
         public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
@@ -57,6 +63,9 @@ namespace SPIXI
             confirmed = false;
             senderAddress = sender_address;
             senderNick = sender_nick;
+            transferId = "";
+            completed = false;
+            filePath = "";
         }
 
         public byte[] id
