@@ -114,7 +114,7 @@ namespace SPIXI.Meta
             {
                 // Temporary hack for our beta testers, remove before release
                 string tmp_path = Path.Combine(Config.spixiUserFolder, "headers");
-                BlockHeaderStorage.init(tmp_path)
+                BlockHeaderStorage.init(tmp_path);
                 BlockHeaderStorage.deleteCache();
                 BlockHeaderStorage.stop();
                 // End of hack
