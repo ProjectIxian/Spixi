@@ -107,13 +107,14 @@ namespace SPIXI.Meta
             }
 
             string headers_path = "";
-            if(Config.isTestNet)
+            if(!Config.isTestNet)
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "headers");
             }else
             {
                 // Temporary hack for our beta testers, remove before release
-                BlockHeaderStorage.path = Path.Combine(Config.spixiUserFolder, "headers"); ;
+                string tmp_path = Path.Combine(Config.spixiUserFolder, "headers");
+                BlockHeaderStorage.init(tmp_path)
                 BlockHeaderStorage.deleteCache();
                 BlockHeaderStorage.stop();
                 // End of hack
