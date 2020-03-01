@@ -165,17 +165,14 @@ namespace SPIXI
                 {
                     friend.chat_page.insertMessage(friend_message);
                 }
-                else
-                {
-                    // Send a local push notification if Spixi is not in the foreground
-                    if(App.isInForeground == false)
-                        DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message");
 
-                    ISystemAlert alert = DependencyService.Get<ISystemAlert>();
-                    if (alert != null)
-                        alert.flash();
-                    
-                }
+                // Send a local push notification if Spixi is not in the foreground
+                if(App.isInForeground == false)
+                    DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message");
+
+                ISystemAlert alert = DependencyService.Get<ISystemAlert>();
+                if (alert != null)
+                    alert.flash();
 
                 // Write to chat history
                 Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
