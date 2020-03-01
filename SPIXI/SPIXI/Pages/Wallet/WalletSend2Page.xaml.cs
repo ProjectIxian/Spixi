@@ -141,10 +141,10 @@ namespace SPIXI
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
             Logging.info("Preparing tx");
 
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getLastBlockHeight());
+            Transaction transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
             Logging.info("Broadcasting tx");
 
-            NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
+            IxianHandler.addTransaction(transaction);
             Logging.info("Adding to cache");
 
             // Add the unconfirmed transaction to the cache
