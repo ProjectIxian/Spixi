@@ -10,7 +10,7 @@ using System.Web;
 
 namespace SPIXI
 {
-    class OfflinePushMessages
+    public class OfflinePushMessages
     {
         private static long lastUpdate = 0;
         private static int cooldownPeriod = 60; // cooldown period in seconds

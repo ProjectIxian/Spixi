@@ -8,6 +8,8 @@ using AndroidApp = Android.App.Application;
 using Android.Content;
 using SPIXI.Droid;
 using Android.Graphics;
+using Com.OneSignal.Abstractions;
+using SPIXI;
 
 [assembly: Dependency(typeof(PushService_Android))]
 
@@ -28,6 +30,7 @@ public class PushService_Android : IPushService
     {
         OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
+            .HandleNotificationReceived(handleNotificationReceived)
             .EndInit();
     }
 
@@ -87,5 +90,10 @@ public class PushService_Android : IPushService
         }
 
         channelInitialized = true;
+    }
+
+    void handleNotificationReceived(OSNotification notification)
+    {
+        OfflinePushMessages.fetchPushMessages();
     }
 }
