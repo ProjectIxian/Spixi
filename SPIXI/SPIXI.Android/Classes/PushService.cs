@@ -94,6 +94,6 @@ public class PushService_Android : IPushService
 
     void handleNotificationReceived(OSNotification notification)
     {
-        OfflinePushMessages.fetchPushMessages();
+        OfflinePushMessages.fetchPushMessages(true);
     }
 }
