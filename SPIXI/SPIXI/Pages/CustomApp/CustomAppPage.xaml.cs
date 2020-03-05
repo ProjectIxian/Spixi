@@ -134,5 +134,12 @@ namespace SPIXI
         {
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

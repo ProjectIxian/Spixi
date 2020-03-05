@@ -179,5 +179,11 @@ namespace SPIXI
             Navigation.PushAsync(new WalletSentPage(transaction, false), Config.defaultXamarinAnimations);
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

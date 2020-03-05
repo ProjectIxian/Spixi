@@ -79,5 +79,12 @@ namespace SPIXI
                 Logging.error("Exception fetching wallet: " + ex.ToString());
             }
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

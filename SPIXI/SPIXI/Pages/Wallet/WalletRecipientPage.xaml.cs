@@ -82,5 +82,11 @@ namespace SPIXI
             }
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopModalAsync();
+
+            return true;
+        }
     }
 }

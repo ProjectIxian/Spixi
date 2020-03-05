@@ -228,5 +228,12 @@ namespace SPIXI
 
             loadTransactions();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

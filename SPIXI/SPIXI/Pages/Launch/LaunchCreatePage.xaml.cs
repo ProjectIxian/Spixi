@@ -156,5 +156,11 @@ namespace SPIXI
             }).Start();
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace SPIXI.iOS
 
             global::Xamarin.Forms.Forms.Init();
             global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
-            LoadApplication(new App());
+            LoadApplication(App.Instance);
 
             prepareBackgroundService();
 

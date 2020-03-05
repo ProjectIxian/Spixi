@@ -7,6 +7,9 @@ using Android.Content;
 using Plugin.LocalNotifications;
 using Android.Content.Res;
 using Xamarin.Forms;
+using System;
+using IXICore.Meta;
+using System.Threading;
 //using SPIXI.Notifications;
 
 namespace SPIXI.Droid
@@ -32,28 +35,19 @@ namespace SPIXI.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-
+            
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             ZXing.Mobile.MobileBarcodeScanner.Initialize(this.Application);
 
-            LoadApplication(new App());
+            string fa = Intent.GetStringExtra("fa");
+            if (fa != null)
+            {
+                App.startingScreen = fa;
+            }
+
+            LoadApplication(App.Instance);
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
-
-            prepareBackgroundService();
-        }
-
-        void prepareBackgroundService()
-        {
- /*           MessagingCenter.Subscribe<StartMessage>(this, "StartMessage", message => {
-                var intent = new Intent(this, typeof(BackgroundTaskService));
-                StartService(intent);
-            });
-
-            MessagingCenter.Subscribe<StopMessage>(this, "StopMessage", message => {
-                var intent = new Intent(this, typeof(BackgroundTaskService));
-                StopService(intent);
-            });*/
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)

@@ -46,7 +46,7 @@ namespace SPIXI
 
         private bool running = false;
 
-        public HomePage ()
+        private HomePage ()
 		{
 			InitializeComponent ();
             NavigationPage.SetHasBackButton(this, false);
@@ -343,6 +343,12 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
             updateScreen();
+
+            if (App.startingScreen != "")
+            {
+                HomePage.Instance.onChat(App.startingScreen, null);
+                App.startingScreen = "";
+            }
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -615,11 +621,6 @@ namespace SPIXI
             {
                 Logging.error("Exception occured in onUpdateUI: {0}", ex);
             }
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            return true;
         }
     }
 }

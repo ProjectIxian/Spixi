@@ -164,5 +164,10 @@ namespace SPIXI
 
             checkTransaction();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }

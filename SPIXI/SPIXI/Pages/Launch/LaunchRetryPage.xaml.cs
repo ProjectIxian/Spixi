@@ -91,5 +91,11 @@ namespace SPIXI
             Node.start();
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

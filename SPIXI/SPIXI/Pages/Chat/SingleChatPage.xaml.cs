@@ -623,5 +623,14 @@ namespace SPIXI
                 //webView.Eval(string.Format("showUnread({0})", lastMessageCount));
             }
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            friend.chat_page = null;
+
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+            return true;
+        }
     }
 }

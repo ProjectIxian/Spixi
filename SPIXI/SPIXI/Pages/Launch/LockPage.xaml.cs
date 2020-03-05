@@ -57,5 +57,9 @@ namespace SPIXI
             Navigation.RemovePage(this);
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }
