@@ -11,6 +11,8 @@ using Android.Graphics;
 using Com.OneSignal.Abstractions;
 using SPIXI;
 using IXICore.Meta;
+using System.Threading;
+using System;
 
 [assembly: Dependency(typeof(PushService_Android))]
 
@@ -101,18 +103,24 @@ public class PushService_Android : IPushService
 
     static void handleNotificationReceived(OSNotification notification)
     {
-        Logging.info("Handling notification received");
         OfflinePushMessages.fetchPushMessages(true);
     }
 
     static void handleNotificationOpened(OSNotificationOpenedResult inNotificationOpenedDelegate)
     {
-        Logging.info("Handling notification opened");
-        OfflinePushMessages.fetchPushMessages(true);
         if (inNotificationOpenedDelegate.notification.payload.additionalData.ContainsKey("fa"))
         {
-            Logging.info("Handling notification with fa payload");
-            HomePage.Instance.onChat((string)inNotificationOpenedDelegate.notification.payload.additionalData["fa"], null);
+            var fa = inNotificationOpenedDelegate.notification.payload.additionalData["fa"];
+            if (fa != null)
+            {
+                try
+                {
+                    HomePage.Instance.onChat(Convert.ToString(fa), null);
+                }catch(Exception e)
+                {
+                    Logging.error("Exception occured in handleNotificationOpened: {0}", e);
+                }
+            }
         }
     }
 }

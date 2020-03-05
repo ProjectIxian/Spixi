@@ -244,8 +244,10 @@ namespace SPIXI
 
             if (store_to_server)
             {
-                OfflinePushMessages.sendPushMessage(msg, send_push_notification);
-                return;
+                if (OfflinePushMessages.sendPushMessage(msg, send_push_notification))
+                {
+                    return;
+                }
             }
 
             // Use offline queue when notifications are disabled or when we don't have enough data yet

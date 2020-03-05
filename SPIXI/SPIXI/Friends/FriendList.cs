@@ -147,7 +147,6 @@ namespace SPIXI
                     timestamp = Clock.getTimestamp();
                 }
 
-                // TODO: message date should be fetched, not generated here
                 FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
 
                 if(friend.bot && local_sender)

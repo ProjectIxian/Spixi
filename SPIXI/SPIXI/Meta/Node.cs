@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using SPIXI.Interfaces;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System;
@@ -143,6 +144,13 @@ namespace SPIXI.Meta
             mainLoopTimer = new System.Timers.Timer(2500);
             mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
             mainLoopTimer.Start();
+
+            // Initialize Push Notification service
+            DependencyService.Get<IPushService>().initialize();
+
+            // Set the identifier tag
+            string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
+            DependencyService.Get<IPushService>().setTag(tag);
         }
 
 

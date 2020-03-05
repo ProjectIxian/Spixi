@@ -32,7 +32,7 @@ namespace SPIXI
 
             Friend f = FriendList.getFriend(msg.recipient);
             if (f == null)
-                return false;
+                return true; // return true to skip sending this message and remove it from the queue
 
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
             string parameters = String.Format("tag={0}&data={1}&pk={2}&push={3}&fa={4}", receiver, data, pub_key, push, sender);
