@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System.IO;
 using Xamarin.Forms;
@@ -13,15 +14,29 @@ namespace SPIXI
         Node node = null;
 		public App ()
 		{
-			InitializeComponent();
+            InitializeComponent();
 
-            // Prepare the personal folder
-            if (!Directory.Exists(Config.spixiUserFolder))
+            // CLear notifications
+            DependencyService.Get<IPushService>().clearNotifications();
+
+            // check if already started
+            if (Node.Instance == null)
             {
-                Directory.CreateDirectory(Config.spixiUserFolder);
-            }
+                // Prepare the personal folder
+                if (!Directory.Exists(Config.spixiUserFolder))
+                {
+                    Directory.CreateDirectory(Config.spixiUserFolder);
+                }
 
-            movePersonalFiles();
+                movePersonalFiles();
+
+                // Start the IXIAN DLT
+                node = new Node();
+            }else
+            {
+                // Already started before
+                node = Node.Instance;
+            }
 
             // Start logging
             Logging.start(Config.spixiUserFolder);
@@ -39,9 +54,6 @@ namespace SPIXI
                 Application.Current.Properties["uid"] = CoreConfig.device_id;
             }
 
-            // Start the IXIAN DLT
-            node = new Node();
-
             // Attempt to load a pre-existing wallet
             bool wallet_found = Node.checkForExistingWallet();
 
@@ -53,7 +65,11 @@ namespace SPIXI
             else
             {
                 // Wallet found, see if it can be decrypted
-                bool wallet_decrypted = Node.loadWallet();
+                bool wallet_decrypted = Node.walletStorage.isLoadded();
+                if (!wallet_decrypted)
+                {
+                    wallet_decrypted = Node.loadWallet();
+                }
 
                 if (wallet_decrypted == false)
                 {
@@ -62,13 +78,12 @@ namespace SPIXI
                 else
                 {
                     // Wallet found, go to main page
-                    MainPage = new NavigationPage(new SPIXI.HomePage());
+                    MainPage = new NavigationPage(HomePage.Instance);
                     //MainPage = new NavigationPage(new SPIXI.LockPage());
                     Node.start();
                 }
             }
 
-            
             NavigationPage.SetHasNavigationBar(MainPage, false);
         }
 

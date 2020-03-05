@@ -25,23 +25,32 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class HomePage : SpixiContentPage
 	{
+        private static HomePage _singletonInstance;
+
+        public static HomePage Instance
+        {
+            get
+            {
+                if (_singletonInstance == null)
+                {
+                    _singletonInstance = new HomePage();
+                }
+                return _singletonInstance;
+            }
+        }
 
         // Temporary optimizations for native->js data transfer
         private ulong lastTransactionChange = 9999;
 
         private string currentTab = "tab1";
 
+        private bool running = false;
+
         public HomePage ()
 		{
 			InitializeComponent ();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
-
-            new Thread(() =>
-            {
-                Thread.CurrentThread.IsBackground = true;
-                Node.connectToNetwork();
-            }).Start();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -59,15 +68,24 @@ namespace SPIXI
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
             DependencyService.Get<IPushService>().setTag(tag);
 
-            // CLear notifications
-            DependencyService.Get<IPushService>().clearNotifications();
-
-            // Setup a timer to handle UI updates
-            Device.StartTimer(TimeSpan.FromSeconds(2), () =>
+            if (!running)
             {
-                onUpdateUI();
-                return true; // True = Repeat again, False = Stop the timer
-            });
+                running = true;
+
+                new Thread(() =>
+                {
+                    Thread.CurrentThread.IsBackground = true;
+                    Node.connectToNetwork();
+                }).Start();
+
+                // Setup a timer to handle UI updates
+                Device.StartTimer(TimeSpan.FromSeconds(2), () =>
+                {
+                    Logging.info("HomePage.onUpdate");
+                    onUpdateUI();
+                    return running; // True = Repeat again, False = Stop the timer
+                });
+            }
         }
 
         private void prepBackground()
@@ -180,17 +198,7 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string id = split[1];
-                byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
-
-                Friend friend = FriendList.getFriend(id_bytes);
-
-                if (friend == null)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-
-                Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
+                onChat(id, e);
             }
             else if (current_url.Contains("ixian:details:"))
             {
@@ -366,6 +374,24 @@ namespace SPIXI
         public void onSettings(object sender, EventArgs e)
         {
             Navigation.PushAsync(new SettingsPage(), Config.defaultXamarinAnimations);
+        }
+
+        public void onChat(string friend_address, WebNavigatingEventArgs e)
+        {
+            byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(friend_address);
+
+            Friend friend = FriendList.getFriend(id_bytes);
+
+            if (friend == null)
+            {
+                if (e != null)
+                {
+                    e.Cancel = true;
+                }
+                return;
+            }
+
+            Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)

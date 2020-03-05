@@ -18,8 +18,17 @@ namespace SPIXI
 
         public static string primaryS2Address = "";
 
+        private static bool running = false;
+
         public static void start()
         {
+            if (running)
+            {
+                return;
+            }
+
+            running = true;
+
             streamClients = new List<NetworkClient>();
 
             // Start the reconnect thread
@@ -30,6 +39,12 @@ namespace SPIXI
 
         public static void stop()
         {
+            if (!running)
+            {
+                return;
+            }
+            running = false;
+
             autoReconnect = false;
             isolate();
 

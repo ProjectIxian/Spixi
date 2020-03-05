@@ -51,6 +51,9 @@ namespace SPIXI.Meta
         private static byte[] networkBlockChecksum = null;
         private static int networkBlockVersion = 0;
 
+        public static Node Instance = null;
+
+        private static bool running = false;
 
         public Node()
         {
@@ -72,10 +75,18 @@ namespace SPIXI.Meta
             }
 
             PeerStorage.init(Config.spixiUserFolder, peers_filename);
+
+            Instance = this;
         }
 
         static public void start()
         {
+            if (running)
+            {
+                return;
+            }
+            running = true;
+
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
@@ -124,6 +135,8 @@ namespace SPIXI.Meta
             // Start TIV
             tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
 
+            tiv.start();
+
             startCounter++;
 
             // Setup a timer to handle routine updates
@@ -168,7 +181,7 @@ namespace SPIXI.Meta
         {
             // Start the network client manager
             NetworkClientManager.start();
-            // TODOSPIXI
+
             // Start the s2 client manager
             StreamClientManager.start();
         }
@@ -176,6 +189,7 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void onUpdate(object source, ElapsedEventArgs e)
         {
+            Logging.info("Node.onUpdate");
             // Update the friendlist
             FriendList.Update();
 
@@ -207,6 +221,12 @@ namespace SPIXI.Meta
 
         static public void stop()
         {
+            if (!running)
+            {
+                return;
+            }
+            running = false;
+
             // Stop TIV
             tiv.stop();
 
@@ -217,7 +237,11 @@ namespace SPIXI.Meta
             PresenceList.stopKeepAlive();
 
             // Stop the loop timer
-            mainLoopTimer.Stop();
+            if (mainLoopTimer != null)
+            {
+                mainLoopTimer.Stop();
+                mainLoopTimer = null;
+            }
 
             // Stop the network queue
             NetworkQueue.stop();

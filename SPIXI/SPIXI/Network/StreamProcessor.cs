@@ -27,9 +27,18 @@ namespace SPIXI
 
         private static Dictionary<byte[], OfflineMessage> pendingMessages = new Dictionary<byte[], OfflineMessage>(new ByteArrayComparer()); // List of pending messages that might need to be resent
 
+        private static bool running = false;
+
         // Initialize the global stream processor
         public static void initialize()
         {
+            if (running)
+            {
+                return;
+            }
+
+            running = true;
+
             continueRunning = true;
 
             // Read the persistent offline messages
@@ -42,6 +51,7 @@ namespace SPIXI
         // Uninitialize the global stream processor
         public static void uninitialize()
         {
+            running = false;
             continueRunning = false;
         }
 

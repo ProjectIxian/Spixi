@@ -163,6 +163,11 @@ namespace SPIXI
 
         public static void start()
         {
+            if (running)
+            {
+                return;
+            }
+
             running = true;
             // Start the thread
             tm_thread = new Thread(onUpdate);
@@ -200,6 +205,11 @@ namespace SPIXI
 
         public static void stop()
         {
+            if (!running)
+            {
+                return;
+            }
+
             running = false;
         }
 

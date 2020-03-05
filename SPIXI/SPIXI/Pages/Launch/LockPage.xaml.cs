@@ -53,8 +53,7 @@ namespace SPIXI
 
         private void doUnlock(string pass)
         {
-
-            Navigation.PushAsync(new HomePage(), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(HomePage.Instance, Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
         }
 
