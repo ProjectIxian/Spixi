@@ -10,6 +10,7 @@ using SPIXI.Droid;
 using Android.Graphics;
 using Com.OneSignal.Abstractions;
 using SPIXI;
+using IXICore.Meta;
 
 [assembly: Dependency(typeof(PushService_Android))]
 
@@ -31,6 +32,7 @@ public class PushService_Android : IPushService
         OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
             .HandleNotificationReceived(handleNotificationReceived)
+            .HandleNotificationOpened(handleNotificationOpened)
             .EndInit();
     }
 
@@ -45,7 +47,7 @@ public class PushService_Android : IPushService
         notificationManager.CancelAll();
     }
 
-    public void showLocalNotification(string title, string message)
+    public void showLocalNotification(string title, string message, string data)
     {
         MainActivity activity = MainActivity.Instance;
 
@@ -63,10 +65,15 @@ public class PushService_Android : IPushService
 
         PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
 
+        Bundle extras = new Bundle();
+        extras.PutString("fa", data);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
             .SetContentIntent(pendingIntent)
             .SetContentTitle(title)
             .SetContentText(message)
+            .SetGroup("NEWMSG")
+            .AddExtras(extras)
             .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.statusicon))
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
@@ -92,8 +99,20 @@ public class PushService_Android : IPushService
         channelInitialized = true;
     }
 
-    void handleNotificationReceived(OSNotification notification)
+    static void handleNotificationReceived(OSNotification notification)
     {
+        Logging.info("Handling notification received");
         OfflinePushMessages.fetchPushMessages(true);
+    }
+
+    static void handleNotificationOpened(OSNotificationOpenedResult inNotificationOpenedDelegate)
+    {
+        Logging.info("Handling notification opened");
+        OfflinePushMessages.fetchPushMessages(true);
+        if (inNotificationOpenedDelegate.notification.payload.additionalData.ContainsKey("fa"))
+        {
+            Logging.info("Handling notification with fa payload");
+            HomePage.Instance.onChat((string)inNotificationOpenedDelegate.notification.payload.additionalData["fa"], null);
+        }
     }
 }

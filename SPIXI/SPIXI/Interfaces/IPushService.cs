@@ -6,6 +6,6 @@ namespace SPIXI.Interfaces
         void initialize();
         void setTag(string tag);
         void clearNotifications();
-        void showLocalNotification(string title, string message);
+        void showLocalNotification(string title, string message, string data);
     }
 }

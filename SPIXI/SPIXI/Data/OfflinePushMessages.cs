@@ -19,6 +19,7 @@ namespace SPIXI
         public static bool sendPushMessage(StreamMessage msg, bool push)
         {
             string receiver = Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient);
+            string sender = Base58Check.Base58CheckEncoding.EncodePlain(msg.sender);
             string data = HttpUtility.UrlEncode(Convert.ToBase64String(msg.getBytes()));
 
             string pub_key = "";
@@ -33,22 +34,23 @@ namespace SPIXI
             if (f == null)
                 return false;
 
-            if (f.handshakeStatus < 4)
-            {
-                f.handshakePushed = true;
-
-                FriendList.saveToStorage();
-            }
-
             string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
-            string parameters = String.Format("tag={0}&data={1}&pk={2}&push={3}", receiver, data, pub_key, push);
+            string parameters = String.Format("tag={0}&data={1}&pk={2}&push={3}&fa={4}", receiver, data, pub_key, push, sender);
 
             using (WebClient client = new WebClient())
             {
                 client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                 string htmlCode = client.UploadString(URI, parameters);
                 if (htmlCode.Equals("OK"))
+                {
+                    if (f.handshakeStatus < 4)
+                    {
+                        f.handshakePushed = true;
+
+                        FriendList.saveToStorage();
+                    }
                     return true;
+                }
             }
             return false;
         }
