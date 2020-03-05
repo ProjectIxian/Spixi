@@ -64,18 +64,15 @@ public class PushService_Android : IPushService
         Intent intent = new Intent(AndroidApp.Context, typeof(MainActivity));
         intent.PutExtra(TitleKey, title);
         intent.PutExtra(MessageKey, message);
+        intent.PutExtra("fa", data);
 
         PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
-
-        Bundle extras = new Bundle();
-        extras.PutString("fa", data);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
             .SetContentIntent(pendingIntent)
             .SetContentTitle(title)
             .SetContentText(message)
             .SetGroup("NEWMSG")
-            .AddExtras(extras)
             .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.statusicon))
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
