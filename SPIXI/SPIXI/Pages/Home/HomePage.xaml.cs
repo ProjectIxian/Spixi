@@ -350,7 +350,13 @@ namespace SPIXI
 
             Utils.sendUiCommand(webView, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
-            updateScreen();
+            try
+            {
+                updateScreen();
+            }catch(Exception ex)
+            {
+                Logging.error("Exception occured in updateScreen call from onLoaded: {0}", ex);
+            }
 
             if (App.startingScreen != "")
             {
