@@ -484,13 +484,10 @@ namespace SPIXI
                 {
                     Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
-                message.read = true;
-                return;
             }
 
             if (message.type == FriendMessageType.sentFunds)
             {
-                message.read = true;
                 Transaction transaction = TransactionCache.getTransaction(message.message);
                 if (transaction == null)
                     transaction = TransactionCache.getUnconfirmedTransaction(message.message);
@@ -519,8 +516,6 @@ namespace SPIXI
                 {
                     Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
-
-                return;
             }
 
 
@@ -540,7 +535,8 @@ namespace SPIXI
                     Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), message.filePath);
                 }
             }
-            else
+            
+            if(message.type == FriendMessageType.standard)
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
