@@ -156,7 +156,7 @@ namespace SPIXI
                     }
                 }
 
-                Navigation.PushAsync(new WalletSend2Page(addresses_split));
+                Navigation.PushAsync(new WalletSend2Page(addresses_split), Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
