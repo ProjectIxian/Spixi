@@ -60,10 +60,5 @@ namespace SPIXI
         {
             Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
         }
-
-        protected override bool OnBackButtonPressed()
-        {
-            return true;
-        }
     }
 }
