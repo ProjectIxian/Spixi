@@ -24,6 +24,7 @@
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
     <item name="android:navigationBarColor">#ad1457</item>
     <item name="android:windowLightNavigationBar">false</item>
+    <item name="android:windowBackground">@layout/splash_screen</item>
   </style>
 
   <style name="MainTheme.Splash" parent ="Theme.AppCompat.NoActionBar">

@@ -3,6 +3,7 @@ using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -88,9 +89,11 @@ namespace SPIXI
                     else
                     {
                         // Wallet found, go to main page
+
+                        Node.start();
+
                         MainPage = new NavigationPage(HomePage.Instance());
                         //MainPage = new NavigationPage(new SPIXI.LockPage());
-                        Node.start();
                     }
                 }
                 NavigationPage.SetHasNavigationBar(MainPage, false);

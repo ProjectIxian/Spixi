@@ -5,18 +5,12 @@ using System.Threading.Tasks;
 using System.IO;
 using Android.Content;
 using Plugin.LocalNotifications;
-using Android.Content.Res;
 using Xamarin.Forms;
-using System;
-using IXICore.Meta;
-using System.Threading;
 using SPIXI.Interfaces;
-using Com.OneSignal;
-//using SPIXI.Notifications;
 
 namespace SPIXI.Droid
 {
-    [Activity(Label = "SPIXI", Icon = "@drawable/icon", Theme = "@style/MainTheme", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
+    [Activity(Label = "SPIXI", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         // Field, property, and method for Picture Picker
