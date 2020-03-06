@@ -66,12 +66,10 @@ namespace SPIXI
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
-                FriendList.addAppPage(this);
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
-                FriendList.removeAppPage(sessionId);
+                onBack();
             }
             else if (current_url.StartsWith("ixian:data", StringComparison.Ordinal))
             {
@@ -95,6 +93,8 @@ namespace SPIXI
         {
             // Execute timer-related functionality immediately
             updateScreen();
+
+            FriendList.addAppPage(this);
         }
 
         // Executed every second
@@ -130,6 +130,12 @@ namespace SPIXI
             }
         }
 
+        private void onBack()
+        {
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            FriendList.removeAppPage(sessionId);
+        }
+
         public void networkDataReceive(byte[] sender_address, byte[] data)
         {
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
@@ -137,7 +143,7 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            onBack();
 
             return true;
         }
