@@ -66,12 +66,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:dismiss", StringComparison.Ordinal))
             {
-                if (!viewOnly)
-                {
-                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
-                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
-                }
-                Navigation.PopAsync();
+                onDismiss();
             }
             else
             {
@@ -165,8 +160,19 @@ namespace SPIXI
             checkTransaction();
         }
 
+        private void onDismiss()
+        {
+            if (!viewOnly)
+            {
+                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+            }
+            Navigation.PopAsync();
+        }
+
         protected override bool OnBackButtonPressed()
         {
+            onDismiss();
             return true;
         }
     }
