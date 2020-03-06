@@ -549,6 +549,8 @@ namespace SPIXI
 
             if (!message.read && !message.localSender)
             {
+                Node.shouldRefreshContacts = true;
+
                 message.read = true;
                 Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
 
