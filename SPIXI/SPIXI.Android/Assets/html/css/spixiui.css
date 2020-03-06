@@ -1617,14 +1617,14 @@ img.emoji {
 }
 .address_qr {
     margin: auto;
-    margin-top:10px;
-    margin-bottom:10px;
-
-    padding: 20px;
-    width: 340px;
-    height: 340px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    padding: 15px;
+    width: 230px;
+    height: 230px;
     background-color: white;
-    border-radius: 25px;
+    border-radius: 20px;
     border: 1px solid #AAA;
 }
 
