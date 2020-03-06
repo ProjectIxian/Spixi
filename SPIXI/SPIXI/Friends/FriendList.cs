@@ -93,12 +93,12 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0)
+        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
-            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address, timestamp);
+            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address, timestamp, fire_local_notification);
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
             foreach (Friend friend in friends)
             {
@@ -166,7 +166,7 @@ namespace SPIXI
                 }
 
                 // Send a local push notification if Spixi is not in the foreground
-                if(App.isInForeground == false)
+                if(fire_local_notification && App.isInForeground == false)
                     DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
 
                 ISystemAlert alert = DependencyService.Get<ISystemAlert>();

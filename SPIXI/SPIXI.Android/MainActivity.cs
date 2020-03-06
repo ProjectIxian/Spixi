@@ -10,11 +10,13 @@ using Xamarin.Forms;
 using System;
 using IXICore.Meta;
 using System.Threading;
+using SPIXI.Interfaces;
+using Com.OneSignal;
 //using SPIXI.Notifications;
 
 namespace SPIXI.Droid
 {
-    [Activity(Label = "SPIXI", Icon = "@drawable/icon", Theme = "@style/MainTheme", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "SPIXI", Icon = "@drawable/icon", Theme = "@style/MainTheme", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         // Field, property, and method for Picture Picker
@@ -42,10 +44,21 @@ namespace SPIXI.Droid
             string fa = Intent.GetStringExtra("fa");
             if (fa != null)
             {
+                Intent.RemoveExtra("fa");
                 App.startingScreen = fa;
+            }else
+            {
+                App.startingScreen = "";
             }
+            
+            // Initialize Push Notification service
+            DependencyService.Get<IPushService>().initialize();
 
-            LoadApplication(App.Instance);
+            // CLear notifications
+            DependencyService.Get<IPushService>().clearNotifications();
+
+            LoadApplication(App.Instance());
+
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
         }
@@ -84,6 +97,21 @@ namespace SPIXI.Droid
                 }
             }
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+
+            // Handle local notification tap
+            string fa = intent.GetStringExtra("fa");
+            if (fa != null)
+            {
+                HomePage.Instance().onChat(fa, null);
+            }
+
+            // CLear notifications
+            DependencyService.Get<IPushService>().clearNotifications();
         }
     }
 }

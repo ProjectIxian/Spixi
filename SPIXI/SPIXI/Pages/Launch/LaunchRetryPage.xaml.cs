@@ -85,17 +85,10 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(HomePage.Instance, Config.defaultXamarinAnimations);
+            Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
 
             Node.start();
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
-
-            return true;
         }
     }
 }

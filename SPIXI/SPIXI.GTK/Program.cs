@@ -16,7 +16,7 @@ namespace SPIXI.GTK
             Gtk.Application.Init();
             Forms.Init();
 
-            var app = App.Instance;
+            var app = App.Instance();
             var window = new FormsWindow();
             window.LoadApplication(app);
             window.SetApplicationTitle("SPIXI");

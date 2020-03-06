@@ -145,9 +145,6 @@ namespace SPIXI.Meta
             mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
             mainLoopTimer.Start();
 
-            // Initialize Push Notification service
-            DependencyService.Get<IPushService>().initialize();
-
             // Set the identifier tag
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
             DependencyService.Get<IPushService>().setTag(tag);

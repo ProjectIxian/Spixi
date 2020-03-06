@@ -29,8 +29,11 @@ public class PushService_Android : IPushService
     public const string TitleKey = "title";
     public const string MessageKey = "message";
 
+    private static PushService_Android instance = null;
+
     public void initialize()
     {
+        instance = this;
         OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
             .HandleNotificationReceived(handleNotificationReceived)
@@ -100,6 +103,7 @@ public class PushService_Android : IPushService
 
     static void handleNotificationReceived(OSNotification notification)
     {
+        OneSignal.Current.ClearAndroidOneSignalNotifications();
         OfflinePushMessages.fetchPushMessages(true);
     }
 
@@ -112,7 +116,7 @@ public class PushService_Android : IPushService
             {
                 try
                 {
-                    HomePage.Instance.onChat(Convert.ToString(fa), null);
+                    App.startingScreen = Convert.ToString(fa);
                 }catch(Exception e)
                 {
                     Logging.error("Exception occured in handleNotificationOpened: {0}", e);

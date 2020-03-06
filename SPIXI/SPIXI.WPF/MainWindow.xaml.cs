@@ -36,7 +36,7 @@ namespace SPIXI.WPF
             mainWindow = this;
 
             Forms.Init();
-            LoadApplication(SPIXI.App.Instance);
+            LoadApplication(SPIXI.App.Instance());
         }
     }
 }

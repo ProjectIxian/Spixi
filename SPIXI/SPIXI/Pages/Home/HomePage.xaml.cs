@@ -27,16 +27,21 @@ namespace SPIXI
 	{
         private static HomePage _singletonInstance;
 
-        public static HomePage Instance
+        public static HomePage Instance(bool force_new = false)
         {
-            get
+            if(force_new)
             {
-                if (_singletonInstance == null)
+                if (_singletonInstance != null)
                 {
-                    _singletonInstance = new HomePage();
+                    _singletonInstance.stop();
+                    _singletonInstance = null;
                 }
-                return _singletonInstance;
             }
+            if (_singletonInstance == null)
+            {
+                _singletonInstance = new HomePage();
+            }
+            return _singletonInstance;
         }
 
         // Temporary optimizations for native->js data transfer
@@ -56,8 +61,6 @@ namespace SPIXI
             var source = new UrlWebViewSource();
             source.Url = string.Format("{0}html/index.html",DependencyService.Get<IBaseUrl>().Get());
             webView.Source = source;
-
-            handleBackground();
 
             if (!running)
             {
@@ -79,26 +82,9 @@ namespace SPIXI
             }
         }
 
-        private void prepBackground()
+        public void stop()
         {
-            var message = new StartMessage();
-            MessagingCenter.Send(message, "StartMessage");
-        }
-
-        private void handleBackground()
-        {
-            MessagingCenter.Subscribe<TickedMessage>(this, "TickedMessage", message => {
-                Device.BeginInvokeOnMainThread(() => {
-                    // ticker.Text = message.Message;
-                    Console.WriteLine("TICKTOCK: {0}", message.Message);
-                });
-            });
-
-            MessagingCenter.Subscribe<CancelledMessage>(this, "CancelledMessage", message => {
-                Device.BeginInvokeOnMainThread(() => {
-
-                });
-            });
+            running = false;
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -331,8 +317,30 @@ namespace SPIXI
 
         }
 
+        // Workaround for Android - sometimes the order of the screens isn't correct
+        private void setAsRoot()
+        {
+            try
+            {
+                foreach (var page in Navigation.NavigationStack.ToList())
+                {
+                    if (page == this)
+                    {
+                        continue;
+                    }
+                    Navigation.RemovePage(page);
+                }
+            }
+            catch(Exception e)
+            {
+                Logging.error("Exception occured while setting HomePage as root: {0}", e);
+            }
+        }
+
         private void onLoaded()
         {
+            setAsRoot();
+
             Node.shouldRefreshContacts = true;
             lastTransactionChange = 0;
 
@@ -346,7 +354,7 @@ namespace SPIXI
 
             if (App.startingScreen != "")
             {
-                HomePage.Instance.onChat(App.startingScreen, null);
+                HomePage.Instance().onChat(App.startingScreen, null);
                 App.startingScreen = "";
             }
         }
@@ -387,8 +395,19 @@ namespace SPIXI
                 }
                 return;
             }
-
-            Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
+            bool animated = Config.defaultXamarinAnimations;
+            if(e == null)
+            {
+                animated = false;
+            }
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                if (Navigation.NavigationStack.Count > 1)
+                {
+                    await Navigation.PopToRootAsync(false);
+                }
+                await Navigation.PushAsync(new SingleChatPage(friend), animated);
+            });
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)

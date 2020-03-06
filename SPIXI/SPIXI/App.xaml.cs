@@ -3,6 +3,7 @@ using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System.IO;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace SPIXI
@@ -11,16 +12,16 @@ namespace SPIXI
 	{
         private static App _singletonInstance;
 
-        public static App Instance
+        public static App Instance(bool force_redraw = false)
         {
-            get
+            if (_singletonInstance == null)
             {
-                if (_singletonInstance == null)
-                {
-                    _singletonInstance = new App();
-                }
-                return _singletonInstance;
+                _singletonInstance = new App();
+            }else if(force_redraw)
+            {
+                _singletonInstance.redraw();
             }
+            return _singletonInstance;
         }
 
         public static bool isInForeground { get; set; } = false;
@@ -32,9 +33,6 @@ namespace SPIXI
 		private App ()
 		{
             InitializeComponent();
-
-            // CLear notifications
-            DependencyService.Get<IPushService>().clearNotifications();
 
             // check if already started
             if (Node.Instance == null)
@@ -90,20 +88,31 @@ namespace SPIXI
                     else
                     {
                         // Wallet found, go to main page
-                        MainPage = new NavigationPage(HomePage.Instance);
+                        MainPage = new NavigationPage(HomePage.Instance());
                         //MainPage = new NavigationPage(new SPIXI.LockPage());
                         Node.start();
                     }
                 }
+                NavigationPage.SetHasNavigationBar(MainPage, false);
             }
             else
             {
                 // Already started before
                 node = Node.Instance;
-                MainPage = new NavigationPage(HomePage.Instance);
             }
+        }
 
-            NavigationPage.SetHasNavigationBar(MainPage, false);
+        // Workaround for Android - sometimes the screen is empty when waking up for some Launch Modes
+        public void redraw()
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (MainPage != null && ((NavigationPage)MainPage).RootPage.GetType() == typeof(HomePage))
+                {
+                    MainPage = new NavigationPage(HomePage.Instance(true));
+                    NavigationPage.SetHasNavigationBar(MainPage, false);
+                }
+            });
         }
 
         private void movePersonalFiles()
@@ -119,19 +128,21 @@ namespace SPIXI
 		{
             // Handle when your app starts
             isInForeground = true;
+            base.OnStart();
         }
 
 		protected override void OnSleep ()
 		{
             // Handle when your app sleeps
             isInForeground = false;
+            base.OnSleep();
         }
 
-		protected override void OnResume ()
+        protected override void OnResume ()
 		{
             // Handle when your app resumes
             isInForeground = true;
+            base.OnResume();
         }
-
-	}
+    }
 }
