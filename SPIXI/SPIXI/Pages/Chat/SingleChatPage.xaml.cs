@@ -65,7 +65,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
-
+            friend.chat_page = null;
             base.OnDisappearing();
         //    this.Content = null;
         //    GC.Collect();

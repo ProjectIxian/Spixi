@@ -166,8 +166,13 @@ namespace SPIXI
                 }
 
                 // Send a local push notification if Spixi is not in the foreground
-                if(fire_local_notification && App.isInForeground == false)
-                    DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                if (fire_local_notification)
+                {
+                    if (App.isInForeground == false || friend.chat_page == null)
+                    {
+                        DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    }
+                }
 
                 ISystemAlert alert = DependencyService.Get<ISystemAlert>();
                 if (alert != null)
