@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -526,6 +527,7 @@ namespace SPIXI.Storage
 
                     Transaction transaction = new Transaction(data, true);
                     TransactionCache.addUnconfirmedTransaction(transaction, false);
+                    Node.tiv.receivedNewTransaction(transaction);
                 }
 
             }

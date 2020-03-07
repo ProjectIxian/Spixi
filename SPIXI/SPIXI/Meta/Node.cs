@@ -58,6 +58,8 @@ namespace SPIXI.Meta
 
         public Node()
         {
+            Instance = this;
+
             CoreConfig.productVersion = Config.version;
             IxianHandler.setHandler(this);
 
@@ -77,7 +79,33 @@ namespace SPIXI.Meta
 
             PeerStorage.init(Config.spixiUserFolder, peers_filename);
 
-            Instance = this;
+            ulong block_height = 1;
+            byte[] block_checksum = null;
+
+            if (!walletStorage.walletExists())
+            {
+                block_height = Config.bakedBlockHeight;
+                block_checksum = Config.bakedBlockChecksum;
+            }
+
+            string headers_path = "";
+            if (!Config.isTestNet)
+            {
+                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
+            }
+            else
+            {
+                // Temporary hack for our beta testers, remove before release
+                string tmp_path = Path.Combine(Config.spixiUserFolder, "headers");
+                BlockHeaderStorage.init(tmp_path);
+                BlockHeaderStorage.deleteCache();
+                BlockHeaderStorage.stop();
+                // End of hack
+
+                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
+            }
+            // Init TIV
+            tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
         }
 
         static public void start()
@@ -109,33 +137,7 @@ namespace SPIXI.Meta
             // Start the transfer manager
             TransferManager.start();
 
-            ulong block_height = 1;
-            byte[] block_checksum = null;
-
-            if(!walletStorage.walletExists())
-            {
-                block_height = Config.bakedBlockHeight;
-                block_checksum = Config.bakedBlockChecksum;
-            }
-
-            string headers_path = "";
-            if(!Config.isTestNet)
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
-            }else
-            {
-                // Temporary hack for our beta testers, remove before release
-                string tmp_path = Path.Combine(Config.spixiUserFolder, "headers");
-                BlockHeaderStorage.init(tmp_path);
-                BlockHeaderStorage.deleteCache();
-                BlockHeaderStorage.stop();
-                // End of hack
-
-                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
-            }
             // Start TIV
-            tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
-
             tiv.start();
 
             startCounter++;
