@@ -336,6 +336,8 @@ namespace SPIXI.Meta
 
         public override bool addTransaction(Transaction tx)
         {
+            // TODO Send to peer if directly connectable
+            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.newTransaction, tx.getBytes(), null);
             PendingTransactions.addPendingLocalTransaction(tx);
             return true;
         }
