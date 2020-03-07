@@ -142,9 +142,6 @@
     <AndroidResource Include="Resources\layout\splash_screen.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\splash.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidResource Include="Resources\drawable\statusicon.png" />
   </ItemGroup>
   <ItemGroup>

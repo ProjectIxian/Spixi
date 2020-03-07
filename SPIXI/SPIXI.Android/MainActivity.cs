@@ -85,7 +85,7 @@ namespace SPIXI.Droid
                 // prevent ZXing related crash on denied
                 if (grantResults[0] == Permission.Denied)
                 {
-                    Xamarin.Forms.Application.Current.MainPage.Navigation.PopAsync();
+                    Xamarin.Forms.Application.Current.MainPage.Navigation.PopAsync(SPIXI.Meta.Config.defaultXamarinAnimations);
                     Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Permission error", "Permission '" + permissions[0] + "' must be allowed to use this feature.", "OK");
                     return;
                 }
