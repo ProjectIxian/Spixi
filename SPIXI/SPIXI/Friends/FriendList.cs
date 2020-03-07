@@ -166,7 +166,7 @@ namespace SPIXI
                 }
 
                 // Send a local push notification if Spixi is not in the foreground
-                if (fire_local_notification)
+                if (fire_local_notification && !local_sender)
                 {
                     if (App.isInForeground == false || friend.chat_page == null)
                     {
