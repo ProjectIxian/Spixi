@@ -92,6 +92,14 @@
             Every payment sent has a certain payment fee which is deducted from the amount transferred.
         </div>
 
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            TXID
+        </div>
+
+        <div id="sent_txid" class="spixi-textsection-holder">
+            
+        </div>
+
         <div class="spixi-holder-20"></div>
         <hr class="spixi-separator-main" />
 
@@ -116,10 +124,11 @@
             document.getElementById('paymentdetail_label').innerHTML = "The amount received has been added to your balance.";
         }
 
-        function setData(amount, fee, addresses, time, confirmedText, feePercentage) {
+        function setData(amount, fee, addresses, time, confirmedText, feePercentage, txid) {
             document.getElementById('sent_amount').innerHTML = amount;
             document.getElementById('sent_fee').innerHTML = fee;
             document.getElementById("sent_fee_percent").innerHTML = feePercentage;
+            document.getElementById("sent_txid").innerHTML = txid;
 
             var address_container = document.getElementById('address_container');
             address_container.innerHTML = "";

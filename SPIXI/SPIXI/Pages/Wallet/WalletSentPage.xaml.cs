@@ -78,23 +78,6 @@ namespace SPIXI
 
         }
 
-        // Request transaction data
-        private void requestTransactionData()
-        {
-            Logging.info("Requesting transaction data for: {0}", transaction.id);
-            using (MemoryStream m = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(m))
-                {
-                    writer.Write(transaction.id);
-                    writer.Write((ulong)0);
-
-                    CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, IXICore.Network.ProtocolMessageCode.getTransaction, m.ToArray(), 0, null);
-                }
-            }
-
-        }
-
         // Retrieve the transaction from local cache storage
         private void checkTransaction()
         {
@@ -102,7 +85,6 @@ namespace SPIXI
             Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
             if (ctransaction == null || ctransaction.applied == 0)
             {
-                requestTransactionData();
                 ctransaction = transaction;
                 confirmed_text = "UNCONFIRMED";
             }
@@ -149,7 +131,7 @@ namespace SPIXI
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                addresses, time, confirmed_text, (ctransaction.fee/amount).ToString() + "%");
+                addresses, time, confirmed_text, (ctransaction.fee/amount).ToString() + "%", transaction.id);
             return;
         }
 
@@ -167,7 +149,7 @@ namespace SPIXI
                 Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
                 Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
             }
-            Navigation.PopAsync();
+            Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
         protected override bool OnBackButtonPressed()
