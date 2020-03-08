@@ -210,13 +210,13 @@
     
     function addText(id, address, nick, avatar, text, time, className) {
             var textEl = document.createElement('div');
-            textEl.className = "text";
+            textEl.className = "text selectable";
             textEl.innerHTML = text;
 
             twemoji.parse(textEl);
 
             var timeEl = document.createElement('div');
-            timeEl.className = "time";
+            timeEl.className = "time selectable";
             timeEl.innerHTML = time + " <i class=\"statusIndicator fas fa-check\"></i>";
 
 
@@ -229,7 +229,7 @@
                 if (nick == address) {
                     nickEl.setAttribute("name", "a_" + address);
                 }
-                nickEl.className = "nick";
+                nickEl.className = "nick selectable";
                 nickEl.innerHTML = nick;
                 nickEl.onclick = function () {
                     if (nickEl.innerHTML == nick) {

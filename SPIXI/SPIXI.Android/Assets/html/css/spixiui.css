@@ -1615,6 +1615,15 @@ img.emoji {
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+.selectable {
+    -webkit-touch-callout: initial; /* iOS Safari */
+    -webkit-user-select: auto; /* Safari */
+    -khtml-user-select: auto; /* Konqueror HTML */
+    -moz-user-select: all; /* Firefox */
+    -ms-user-select: element; /* Internet Explorer/Edge */
+    user-select: initial; /* Non-prefixed version, currently
+                    supported by Chrome and Opera */
+}
 .address_qr {
     margin: auto;
     margin-top: 10px;
