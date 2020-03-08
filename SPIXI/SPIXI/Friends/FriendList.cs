@@ -100,97 +100,101 @@ namespace SPIXI
 
         public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
-            foreach (Friend friend in friends)
+            Friend friend = getFriend(wallet_address);
+            if(friend == null)
             {
-                if (!friend.walletAddress.SequenceEqual(wallet_address))
-                {
-                    continue;
-                }
+                // No matching contact found in friendlist
+                // Add the contact, then issue the message again?
+                // TODO: need to fetch the stage 1 public key somehow here
+                // Ignoring such messages for now
+                //addFriend(wallet_address, "pubkey", "Unknown");
+                //addMessage(wallet_address, message);
 
-                Node.shouldRefreshContacts = true;
-
-                if (!friend.online)
-                {
-                    using (MemoryStream mw = new MemoryStream())
-                    {
-                        using (BinaryWriter writer = new BinaryWriter(mw))
-                        {
-                            writer.Write(wallet_address.Length);
-                            writer.Write(wallet_address);
-
-                            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
-                        }
-                    }
-                }
-
-                string sender_nick = "";
-                if(friend.bot)
-                {
-                    if (!local_sender)
-                    {
-                        if (friend.contacts.ContainsKey(sender_address))
-                        {
-                            sender_nick = friend.contacts[sender_address].nick;
-                        }
-                        else
-                        {
-                            StreamProcessor.requestNickname(friend, sender_address);
-                        }
-                    }
-                }else
-                {
-                    sender_nick = friend.nickname;
-                }
-
-                if(timestamp == 0)
-                {
-                    timestamp = Clock.getTimestamp();
-                }
-
-                FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
-
-                if(friend.bot && local_sender)
-                {
-                    friend_message.read = true;
-                }
-
-                lock (friend.messages)
-                {
-                    friend.messages.Add(friend_message);
-                }
-
-                // If a chat page is visible, insert the message directly
-                if (friend.chat_page != null)
-                {
-                    friend.chat_page.insertMessage(friend_message);
-                }
-
-                // Send a local push notification if Spixi is not in the foreground
-                if (fire_local_notification && !local_sender)
-                {
-                    if (App.isInForeground == false || friend.chat_page == null)
-                    {
-                        DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
-                    }
-                }
-
-                ISystemAlert alert = DependencyService.Get<ISystemAlert>();
-                if (alert != null)
-                    alert.flash();
-
-                // Write to chat history
-                Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
-
-                return friend_message;
+                Logging.warn("Received message but contact isn't in our contact list.");
+                return null;
             }
 
-            // No matching contact found in friendlist
-            // Add the contact, then issue the message again
-            // TODO: need to fetch the stage 1 public key somehow here
-            // Ignoring such messages for now
-            //addFriend(wallet_address, "pubkey", "Unknown");
-            //addMessage(wallet_address, message);
-            return null;
+            Node.shouldRefreshContacts = true;
+
+            if (!friend.online)
+            {
+                using (MemoryStream mw = new MemoryStream())
+                {
+                    using (BinaryWriter writer = new BinaryWriter(mw))
+                    {
+                        writer.Write(wallet_address.Length);
+                        writer.Write(wallet_address);
+
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                    }
+                }
+            }
+
+            string sender_nick = "";
+            if(friend.bot)
+            {
+                if (!local_sender)
+                {
+                    if (friend.contacts.ContainsKey(sender_address))
+                    {
+                        sender_nick = friend.contacts[sender_address].nick;
+                    }
+                    else
+                    {
+                        StreamProcessor.requestNickname(friend, sender_address);
+                    }
+                }
+            }else
+            {
+                sender_nick = friend.nickname;
+            }
+
+            if(timestamp == 0)
+            {
+                timestamp = Clock.getTimestamp();
+            }
+
+            FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
+
+            if(friend.bot && local_sender)
+            {
+                friend_message.read = true;
+            }
+
+            lock (friend.messages)
+            {
+                // TODO should be optimized
+                if(friend.messages.Find(x => x.id.SequenceEqual(id)) != null)
+                {
+                    Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
+                    return null;
+                }
+                friend.messages.Add(friend_message);
+            }
+
+            // If a chat page is visible, insert the message directly
+            if (friend.chat_page != null)
+            {
+                friend.chat_page.insertMessage(friend_message);
+            }
+
+            // Send a local push notification if Spixi is not in the foreground
+            if (fire_local_notification && !local_sender)
+            {
+                if (App.isInForeground == false || friend.chat_page == null)
+                {
+                    DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                }
+            }
+
+            ISystemAlert alert = DependencyService.Get<ISystemAlert>();
+            if (alert != null)
+                alert.flash();
+
+            // Write to chat history
+            Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
+
+            return friend_message;
         }
 
         // Sort the friend list alphabetically based on nickname
