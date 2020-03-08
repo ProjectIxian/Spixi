@@ -155,7 +155,6 @@ namespace SPIXI
             }
 
             FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
-
             if(friend.bot && local_sender)
             {
                 friend_message.read = true;
@@ -164,7 +163,7 @@ namespace SPIXI
             lock (friend.messages)
             {
                 // TODO should be optimized
-                if(friend.messages.Find(x => x.id.SequenceEqual(id)) != null)
+                if(id != null && friend.messages.Find(x => x.id != null && x.id.SequenceEqual(id)) != null)
                 {
                     Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
                     return null;
