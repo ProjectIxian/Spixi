@@ -68,8 +68,12 @@ public class FileOperations_Android : IFileOperations
         }
 
         var context = MainActivity.Instance;
-        
+
         File f = new File(context.FilesDir, System.IO.Path.Combine("Spixi", "Downloads", System.IO.Path.GetFileName(filepath)));
+        if (f == null || !f.Exists())
+        {
+            f = new File(filepath);
+        }
         Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
 
         Intent intent = new Intent(Intent.ActionView);

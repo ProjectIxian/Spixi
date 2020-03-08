@@ -299,6 +299,23 @@ namespace SPIXI
 
             }
 
+            if (friend.chat_page != null)
+            {
+                ulong totalPackets = transfer.fileSize / (ulong)Config.packetDataSize;
+                ulong fp = 0;
+                bool complete = false;
+                if(totalPackets == packet_number)
+                {
+                    fp = 100;
+                    complete = true;
+                }else
+                {
+                    fp = 100 / totalPackets * packet_number;
+                }
+
+                friend.chat_page.updateFile(uid, fp.ToString(), complete);
+            }
+
             return true;
         }
 

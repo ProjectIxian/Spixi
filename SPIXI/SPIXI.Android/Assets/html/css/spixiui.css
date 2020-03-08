@@ -1157,6 +1157,10 @@ img.emoji {
     text-align: center;
 }
 
+.spixi-bubble.myself .actionprogress {
+    float: left;
+}
+
 .spixi-bubble .smaller {
       font-size: 6pt;
 }

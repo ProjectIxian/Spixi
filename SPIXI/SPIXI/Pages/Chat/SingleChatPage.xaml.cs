@@ -65,10 +65,7 @@ namespace SPIXI
 
         protected override void OnDisappearing()
         {
-            friend.chat_page = null;
             base.OnDisappearing();
-        //    this.Content = null;
-        //    GC.Collect();
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -530,7 +527,7 @@ namespace SPIXI
                     {
                         progress = "100";
                     }
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), message.filePath);
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString());
                 }
             }
             
