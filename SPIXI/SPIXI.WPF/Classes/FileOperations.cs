@@ -29,6 +29,8 @@ public class FileOperations_WPF : IFileOperations
 
     public void open(string filepath)
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         Device.OpenUri(new Uri(filepath));
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }

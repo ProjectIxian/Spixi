@@ -1,12 +1,9 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Network;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
-using SPIXI.Network;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web;
 using Xamarin.Forms;
@@ -81,7 +78,7 @@ namespace SPIXI
                 ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
                 if (scanner != null && scanner.useCustomQRScanner())
                 {
-                    Utils.sendUiCommand(webView, "quickScanJS");
+                    Logging.error("Custom scanner not implemented");
                     e.Cancel = true;
                     return;
                 }
@@ -107,6 +104,15 @@ namespace SPIXI
 
         public async void quickScan()
         {
+            ICustomQRScanner scanner = DependencyService.Get<ICustomQRScanner>();
+            if (scanner != null && scanner.needsPermission())
+            {
+                if (!await scanner.requestPermission())
+                {
+                    return;
+                }
+            }
+
             var options = new ZXing.Mobile.MobileBarcodeScanningOptions();
 
             // Restrict to QR codes only
@@ -128,9 +134,7 @@ namespace SPIXI
             };
 
 
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            await Navigation.PushAsync(ScannerPage, Config.defaultXamarinAnimations);
         }
 
         public void processQRResult(string result)

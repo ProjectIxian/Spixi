@@ -80,17 +80,19 @@ namespace SPIXI.Droid
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
+            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+
             if (permissions[0] == "android.permission.CAMERA")
             {
                 // prevent ZXing related crash on denied
                 if (grantResults[0] == Permission.Denied)
                 {
                     Xamarin.Forms.Application.Current.MainPage.Navigation.PopAsync(SPIXI.Meta.Config.defaultXamarinAnimations);
-                    Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Permission error", "Permission '" + permissions[0] + "' must be allowed to use this feature.", "OK");
+                    Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Permission error", "Camera access must be allowed to use this feature.", "OK");
                     return;
                 }
+                ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             }
-            ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
         protected override void OnNewIntent(Intent intent)
