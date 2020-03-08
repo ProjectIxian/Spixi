@@ -110,7 +110,6 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:sendfile", StringComparison.Ordinal))
             {
-                //displaySpixiAlert("Send File", "\nCheck regularly for new version on www.spixi.io", "Ok");
                 onSendFile();
             }
             else if (current_url.Contains("ixian:acceptfile:"))
@@ -123,7 +122,6 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:openfile:"))
             {
-                // TODO: save the file path for later instances
                 string[] split = current_url.Split(new string[] { "ixian:openfile:" }, StringSplitOptions.None);
                 string id = split[1];
 
