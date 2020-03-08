@@ -55,7 +55,6 @@ namespace SPIXI
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            FriendList.removeAppPage(sessionId);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

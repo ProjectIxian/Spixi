@@ -650,5 +650,25 @@ namespace SPIXI
                 Logging.error("Exception occured in onUpdateUI: {0}", ex);
             }
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            lock (FriendList.friends)
+            {
+                var tmp_list = FriendList.friends.FindAll(x => x.chat_page != null || x.app_page != null);
+                foreach (var friend in tmp_list)
+                {
+                    if(friend.chat_page != null)
+                    {
+                        friend.chat_page = null;
+                    }
+                    if(friend.app_page != null)
+                    {
+                        FriendList.removeAppPage(friend.app_page.sessionId);
+                    }
+                }
+            }
+        }
     }
 }
