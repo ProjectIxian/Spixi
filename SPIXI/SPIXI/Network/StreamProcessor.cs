@@ -905,6 +905,8 @@ namespace SPIXI
 
         private static void handleAcceptAdd(byte[] sender_wallet, byte[] aes_key)
         {
+            // TODO TODO secure this function to prevent "downgrade"; possibly other handshake functions need securing
+
             // Retrieve the corresponding contact
             Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)

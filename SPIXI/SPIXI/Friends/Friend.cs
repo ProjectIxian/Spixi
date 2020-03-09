@@ -274,7 +274,7 @@ namespace SPIXI
         public int getUnreadMessageCount()
         {
             int unreadCount = 0;
-            for(int i = messages.Count - 1; i > 0; i--)
+            for(int i = messages.Count - 1; i >= 0; i--)
             {
                 if(messages[i].read == true || messages[i].localSender == true)
                 {
