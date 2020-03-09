@@ -252,11 +252,15 @@ namespace SPIXI.Storage
                     string s_transfer_id = "";
                     bool s_completed = false;
                     string s_file_path = "";
+                    ulong s_file_size = 0;
                     // try/catch wrapper can be removed after upgrade
                     try
                     {
                         int s_sender_address_len = reader.ReadInt32();
-                        s_sender_address = reader.ReadBytes(s_sender_address_len);
+                        if (s_sender_address_len > 0)
+                        {
+                            s_sender_address = reader.ReadBytes(s_sender_address_len);
+                        }
 
                         s_nick = reader.ReadString();
 
@@ -267,6 +271,10 @@ namespace SPIXI.Storage
                             s_completed = reader.ReadBoolean();
 
                             s_file_path = reader.ReadString();
+                        }
+                        if(version >= 3)
+                        {
+                            s_file_size = reader.ReadUInt64();
                         }
                     }
                     catch (Exception)
@@ -280,7 +288,34 @@ namespace SPIXI.Storage
                     message.transferId = s_transfer_id;
                     message.completed = s_completed;
                     message.filePath = s_file_path;
+                    message.fileSize = s_file_size;
                     messages.Add(message);
+
+                    string t_file_name = Path.GetFileName(message.filePath);
+                    try
+                    {
+                        if(message.type == FriendMessageType.fileHeader && message.completed == false )
+                        {
+                            if(message.localSender)
+                            {
+                                // TODO may not work on Android/iOS due to unauthorized access
+                                FileStream fs = new FileStream(message.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                                TransferManager.prepareFileTransfer(t_file_name, fs, message.filePath, message.transferId);
+                            }else
+                            {
+                                // TODO it would be better if this part was handled by acceptFile
+                                var ft = new FileTransfer();
+                                ft.fileName = t_file_name;
+                                ft.fileSize = s_file_size;
+                                ft.uid = message.transferId;
+                                TransferManager.prepareIncomingFileTransfer(ft.getBytes(), wallet_bytes);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Error occured while trying to prepare file transfer for file {0}, full path {1}: {2}", t_file_name, message.filePath, e);
+                    }
                 }
 
             }
@@ -316,7 +351,7 @@ namespace SPIXI.Storage
             try
             {
                 // TODO: encrypt written data
-                System.Int32 version = 2; // Set the messages file version
+                System.Int32 version = 3; // Set the messages file version
                 writer.Write(version);
                 // Write the address used for verification
                 writer.Write(wallet);
@@ -350,6 +385,7 @@ namespace SPIXI.Storage
                     writer.Write(message.completed);
 
                     writer.Write(message.filePath);
+                    writer.Write(message.fileSize);
                 }
 
             }

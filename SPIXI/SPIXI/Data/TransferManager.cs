@@ -213,11 +213,15 @@ namespace SPIXI
             running = false;
         }
 
-        public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null)
+        public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null, string transfer_id = "")
         {
             FileTransfer transfer = new FileTransfer(filename, stream);
             if (filepath != null)
                 transfer.filePath = filepath;
+
+            if (transfer_id != null && transfer_id != "")
+                transfer.uid = transfer_id;
+
             outgoingTransfers.Add(transfer);
             return transfer;
         }
@@ -268,7 +272,7 @@ namespace SPIXI
 
                     writer.Write(packet_number);
 
-                    Logging.info("Fetching packet #{0}", packet_number);
+                    Logging.info("Sending file packet #{0}", packet_number);
                     byte[] data = transfer.getPacketData(packet_number);
                     
                     // Write the data
@@ -365,10 +369,8 @@ namespace SPIXI
                         ulong new_packet_number = packet_number + 1;
                         if (new_packet_number * (ulong)Config.packetDataSize > transfer.fileSize + (ulong)Config.packetDataSize)
                         {
-                            transfer.fileStream.Dispose();
-                            transfer.completed = true;
-                            removePacketsForFileTransfer(uid);
                             completeFileTransfer(sender, uid);
+                            sendFileTransferCompleted(sender, uid);
                             return true;
                         }
                         requestFileData(sender, uid, new_packet_number);
@@ -412,8 +414,24 @@ namespace SPIXI
             if (friend == null)
                 return;
 
+            FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
+            if (transfer == null)
+            {
+                transfer = TransferManager.getOutgoingTransfer(uid);
+                if (transfer == null)
+                {
+                    return;
+                }
+            }
+
+            transfer.fileStream.Dispose();
+            transfer.completed = true;
+
+            removePacketsForFileTransfer(uid);
+
             FriendMessage fm = friend.messages.Find(x => x.transferId == uid);
             fm.completed = true;
+            fm.filePath = transfer.filePath;
 
             Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
 
@@ -421,6 +439,25 @@ namespace SPIXI
             {
                 friend.chat_page.updateFile(uid, "100", true);
             }
+        }
+
+        public static void sendFileTransferCompleted(byte[] sender, string uid)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend == null)
+                return;
+
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileFullyReceived, Crypto.stringToHash(uid));
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.data;
+            message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            StreamProcessor.sendMessage(friend, message, false, false, false);
         }
 
         public static void requestFileData(byte[] sender, string uid, ulong packet_number)
@@ -478,13 +515,13 @@ namespace SPIXI
                 if (transfer == null)
                     return;
 
+                Logging.info("Accepting file {0}", transfer.fileName);
+
+                transfer.lastTimeStamp = Clock.getTimestamp();
+
                 transfer.filePath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.fileName);
                 transfer.fileStream = File.Create(transfer.filePath);
                 transfer.fileStream.SetLength((long)transfer.fileSize);
-
-                FriendMessage fm = friend.messages.Find(x => x.transferId == uid);
-                fm.filePath = transfer.filePath;
-                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptFile, m.ToArray());
 

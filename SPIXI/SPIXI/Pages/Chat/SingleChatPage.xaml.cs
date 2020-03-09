@@ -298,6 +298,8 @@ namespace SPIXI
 
                 friend_message.transferId = transfer.uid;
                 friend_message.filePath = transfer.filePath;
+
+                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
             }
             catch (Exception ex)
             {

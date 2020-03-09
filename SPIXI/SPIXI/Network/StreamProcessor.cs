@@ -375,10 +375,15 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
+                // TODO it would be better if this was handled by acceptFile
                 FileTransfer transfer = TransferManager.prepareIncomingFileTransfer(data.data, sender);
+                // END OF TODO
+
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
                 FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);
                 fm.transferId = transfer.uid;
+                fm.filePath = transfer.fileName;
+                fm.fileSize = transfer.fileSize;
                 Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
             }
             else
@@ -461,6 +466,18 @@ namespace SPIXI
             {
                 Logging.error("Received file data from an unknown friend.");
             }
+        }
+
+        public static void handleFileFullyReceived(byte[] sender, SpixiMessage data)
+        {
+            Friend friend = FriendList.getFriend(sender);
+            if (friend == null)
+            {
+                Logging.error("Received file fully received from an unknown friend.");
+                return;
+            }
+
+            TransferManager.completeFileTransfer(sender, Crypto.hashToString(data.data));
         }
 
 
@@ -788,6 +805,13 @@ namespace SPIXI
                 case SpixiMessageCode.fileData:
                     {
                         handlefileData(message.sender, spixi_message);
+                        // don't send confirmation back, so just return
+                        return;
+                    }
+
+                case SpixiMessageCode.fileFullyReceived:
+                    {
+                        handleFileFullyReceived(message.sender, spixi_message);
                         // don't send confirmation back, so just return
                         return;
                     }
