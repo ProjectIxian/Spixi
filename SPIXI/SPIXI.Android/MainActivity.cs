@@ -7,6 +7,7 @@ using Android.Content;
 using Plugin.LocalNotifications;
 using Xamarin.Forms;
 using SPIXI.Interfaces;
+using Android.Views;
 
 namespace SPIXI.Droid
 {
@@ -52,6 +53,8 @@ namespace SPIXI.Droid
             DependencyService.Get<IPushService>().clearNotifications();
 
             LoadApplication(App.Instance());
+
+            this.Window.ClearFlags(WindowManagerFlags.Fullscreen);
 
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
