@@ -410,6 +410,7 @@
     function updateMessage(id, message, sent, read) {
         var msgEl = document.getElementById("msg_" + id);
         var isFile = false;
+        var isPayment = false;
         if(msgEl == null)
         {
             isFile = true;
@@ -428,6 +429,7 @@
 
             if (msgEl.className.indexOf("spixi-payment-request") > -1) {
                 additionalClasses += " spixi-payment-request";
+                isPayment = true;
             }
             
             if (isFile) {
@@ -436,7 +438,7 @@
 
             msgEl.className = "spixi-bubble myself" + additionalClasses;
             
-            if (isFile == false) {
+            if (isFile == false && isPayment == false) {
                 var textEls = msgEl.getElementsByClassName("text");
                 if (textEls.length > 0) {
                     var textEl = textEls[0];
@@ -448,12 +450,12 @@
         }
     }
 
-    function addPaymentRequest(id, address, nick, avatar, title, amount, status, statusIcon, time, localSender) {
-        var message = "<div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
+    function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender) {
+        var message = "<div id=\"tx_" + txid + "\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
         message += "<div class=\"status\">Status:<div class=\"content\">" + status + "<i class=\"fas "+statusIcon+"\"></i></div></div>";
         message += "<div class=\"amount\">Amount:<div class=\"content\"><div class=\"ixiCashIcon\"></div>" + amount + "</div></div>";
         message += "<div class=\"view\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> View</div>";
-        message += " <i class=\"statusIndicator fas fa-check\"></i>";
+        message += " <i class=\"statusIndicator fas fa-check\"></i></div>";
 
         var additionalClasses = "";
         if (localSender == "True") {
@@ -467,6 +469,18 @@
         } else {
             addText(id, "", message, time, "spixi-bubble myself spixi-payment-request");
         }*/
+    }
+
+    function updateTransactionStatus(txid, status, statusIcon) {
+        var el = document.getElementById("tx_" + txid);
+
+        if (el == null) {
+            return;
+        }
+
+        var statusEls = el.getElementsByClassName("status");
+        var statusContentEls = statusEls[0].getElementsByClassName("content");
+        statusContentEls[0].innerHTML = status + "<i class=\"fas " + statusIcon + "\"></i>";
     }
 
     function setNickname(nick) {

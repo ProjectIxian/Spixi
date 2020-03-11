@@ -447,16 +447,21 @@ namespace SPIXI
 
                 string amount = message.message;
 
+                string txid = "";
+
                 if(message.message.StartsWith("::"))
                 {
                     status = "DECLINED";
                     status_icon = "fa-exclamation-circle";
                     amount = message.message.Substring(2);
+                    txid = Crypto.hashToString(message.id);
                 }else if(message.message.StartsWith(":"))
                 {
-                    Transaction transaction = TransactionCache.getTransaction(message.message.Substring(1));
+                    txid = message.message.Substring(1);
+
+                    Transaction transaction = TransactionCache.getTransaction(txid);
                     if (transaction == null)
-                        transaction = TransactionCache.getUnconfirmedTransaction(message.message.Substring(1));
+                        transaction = TransactionCache.getUnconfirmedTransaction(txid);
 
                     amount = "?";
 
@@ -475,11 +480,11 @@ namespace SPIXI
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
             }
 
@@ -507,11 +512,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
                 }
             }
 
@@ -573,6 +578,20 @@ namespace SPIXI
         public void updateGroupChatNicks(byte[] address, string nick)
         {
             Utils.sendUiCommand(webView, "updateGroupChatNicks", Base58Check.Base58CheckEncoding.EncodePlain(address), nick);
+        }
+
+        public void updateTransactionStatus(string txid, bool verified)
+        {
+            string status = "PENDING";
+            string status_icon = "fa-clock";
+
+            if (verified)
+            {
+                status = "CONFIRMED";
+                status_icon = "fa-check-circle";
+            }
+
+            Utils.sendUiCommand(webView, "updateTransactionStatus", txid, status, status_icon);
         }
 
         // Executed every second

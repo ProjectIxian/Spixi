@@ -291,6 +291,11 @@ namespace SPIXI.Meta
                 if (tx != null)
                 {
                     TransactionCache.addTransaction(tx);
+                    Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
+                    if (p.GetType() == typeof(SingleChatPage))
+                    {
+                        ((SingleChatPage)p).updateTransactionStatus(txid, verified);
+                    }
                 }
             }
         }
