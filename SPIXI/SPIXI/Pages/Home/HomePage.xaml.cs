@@ -229,7 +229,7 @@ namespace SPIXI
             else if (current_url.Contains("ixian:tab:"))
             {
                 currentTab = current_url.Split(new string[] { "ixian:tab:" }, StringSplitOptions.None)[1];
-                if(currentTab == "tab2")
+                if(currentTab == "tab2" || currentTab == "tab4")
                 {
                     // chat tab
                     DependencyService.Get<IPushService>().clearNotifications();
