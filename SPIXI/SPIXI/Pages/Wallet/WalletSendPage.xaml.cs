@@ -143,11 +143,19 @@ namespace SPIXI
                         e.Cancel = true;
                         return;
                     }
+
                     // Add decimals if none found
                     if (amount_split.Length == 1)
                         amount = String.Format("{0}.0", amount);
 
                     IxiNumber _amount = amount;
+
+                    if(_amount == 0)
+                    {
+                        displaySpixiAlert("SPIXI", "Incorrect amount '" + amount + "' was specified.", "OK");
+                        e.Cancel = true;
+                        return;
+                    }
 
                     if (_amount < (long)0)
                     {
