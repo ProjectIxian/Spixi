@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Android.Support.V4.Content;
 using SPIXI.Droid;
 using Java.IO;
-using System;
-using IXICore.Meta;
+using Android.Webkit;
 
 [assembly: Dependency(typeof(FileOperations_Android))]
 
@@ -23,7 +22,7 @@ public class FileOperations_Android : IFileOperations
         File file = new File(filepath);
         Intent shareIntent = new Intent();
         shareIntent.SetAction(Intent.ActionSend);
-        shareIntent.SetType("application/octetstream");
+        shareIntent.SetType("application/octet-stream");
         Android.Net.Uri uriShare = FileProvider.GetUriForFile(_context, "com.ixian.provider", file);
         shareIntent.PutExtra(Intent.ExtraStream, uriShare);
 
@@ -35,46 +34,38 @@ public class FileOperations_Android : IFileOperations
         return Task.FromResult(true);
     }
 
-    public void open(string filepath)
+    public string getMimeType(Android.Net.Uri uri)
     {
-        string mime_type = "";
-        string extension = System.IO.Path.GetExtension(filepath);
-
-        // get mimeTye
-        switch (extension.ToLower())
+        string mime_type = null;
+        if (uri.Scheme.Equals(ContentResolver.SchemeContent))
         {
-            case ".txt":
-                mime_type = "text/plain";
-                break;
-            case ".doc":
-            case ".docx":
-                mime_type = "application/msword";
-                break;
-            case ".pdf":
-                mime_type = "application/pdf";
-                break;
-            case ".xls":
-            case ".xlsx":
-                mime_type = "application/vnd.ms-excel";
-                break;
-            case ".jpg":
-            case ".jpeg":
-            case ".png":
-                mime_type = "image/jpeg";
-                break;
-            default:
-                mime_type = "*/*";
-                break;
+            ContentResolver cr = MainActivity.Instance.ContentResolver;
+            mime_type = cr.GetType(uri);
         }
+        else
+        {
+            string ext = MimeTypeMap.GetFileExtensionFromUrl(uri.ToString());
+            mime_type = MimeTypeMap.Singleton.GetMimeTypeFromExtension(ext.ToLower());
+        }
+        if (mime_type == null)
+        {
+            mime_type = "*/*";
+        }
+        return mime_type;
+    }
 
+    public void open(string file_path)
+    {
         var context = MainActivity.Instance;
 
-        File f = new File(context.FilesDir, System.IO.Path.Combine("Spixi", "Downloads", System.IO.Path.GetFileName(filepath)));
+        File f = new File(context.FilesDir, System.IO.Path.Combine("Spixi", "Downloads", System.IO.Path.GetFileName(file_path)));
         if (f == null || !f.Exists())
         {
-            f = new File(filepath);
+            f = new File(file_path);
         }
         Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
+
+        string mime_type = getMimeType(file_uri);
 
         Intent intent = new Intent(Intent.ActionView);
         intent.SetFlags(ActivityFlags.ClearWhenTaskReset | ActivityFlags.NewTask);
