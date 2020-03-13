@@ -680,11 +680,17 @@
             unreadIndicator = " unread";
         }
 
+        var timeClass = "spixi-timestamp";
+        var relativeTime = getRelativeTime(timestamp);
+
+        if (getTimeDifference(timestamp) < 3600) {
+            timeClass = "spixi-timestamp spixi-rel-ts-active";
+        }
 
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>' + timestamp + '</div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
@@ -718,10 +724,17 @@
             indicator = " online";
         }
 
+        var timeClass = "spixi-timestamp";
+        var relativeTime = getRelativeTime(timestamp);
+
+        if (getTimeDifference(timestamp) < 3600) {
+            timeClass = "spixi-timestamp spixi-rel-ts-active";
+        }
+
         var chatsNode = document.getElementById("exp2-contents");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-2 spixi-list-item-right">' + timestamp + '</div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';

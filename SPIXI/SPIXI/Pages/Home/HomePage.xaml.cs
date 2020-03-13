@@ -554,11 +554,11 @@ namespace SPIXI
             {
                 if(helper_msg.unreadCount > 0)
                 {
-                    Utils.sendUiCommand(webView, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, Clock.getRelativeTime(helper_msg.timestamp), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
+                    Utils.sendUiCommand(webView, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
 
                 }
 
-                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, Clock.getRelativeTime(helper_msg.timestamp), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.unreadCount.ToString());
+                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.unreadCount.ToString());
             }
 
             // Clear the lists so they will be collected by the GC

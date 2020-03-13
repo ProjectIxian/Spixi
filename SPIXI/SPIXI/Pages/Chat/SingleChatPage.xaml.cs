@@ -442,12 +442,19 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.requestFunds)
             {
-                string status = "PENDING";
+                string status = "WAITING CONFIRMATION";
                 string status_icon = "fa-clock";
 
                 string amount = message.message;
 
                 string txid = "";
+
+                bool enableView = false;
+
+                if(!message.localSender)
+                {
+                    enableView = true;
+                }
 
                 if(message.message.StartsWith("::"))
                 {
@@ -455,8 +462,10 @@ namespace SPIXI
                     status_icon = "fa-exclamation-circle";
                     amount = message.message.Substring(2);
                     txid = Crypto.hashToString(message.id);
+                    enableView = false;
                 }else if(message.message.StartsWith(":"))
                 {
+                    status = "PENDING";
                     txid = message.message.Substring(1);
 
                     Transaction transaction = TransactionCache.getTransaction(txid);
@@ -475,16 +484,17 @@ namespace SPIXI
                             status_icon = "fa-check-circle";
                         }
                     }
+                    enableView = true;
                 }
 
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), enableView.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", enableView.ToString());
                 }
             }
 
@@ -512,11 +522,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, Clock.getRelativeTime(message.timestamp), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, Clock.getRelativeTime(message.timestamp));
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString());
                 }
             }
 
@@ -534,7 +544,7 @@ namespace SPIXI
                     {
                         progress = "100";
                     }
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, Clock.getRelativeTime(message.timestamp), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString());
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString());
                 }
             }
             
@@ -542,7 +552,7 @@ namespace SPIXI
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, Clock.getRelativeTime(message.timestamp), message.confirmed.ToString(), message.read.ToString());
+                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString());
             }
 
             if (!message.read && !message.localSender)
@@ -592,6 +602,18 @@ namespace SPIXI
             }
 
             Utils.sendUiCommand(webView, "updateTransactionStatus", txid, status, status_icon);
+        }
+
+        public void updateRequestFundsStatus(byte[] msg_id, string txid, string status)
+        {
+            string status_icon = "fa-clock";
+            bool enableView = true;
+            if(status == "DECLINED")
+            {
+                status_icon = "fa-exclamation-circle";
+                enableView = false;
+            }
+            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), txid, status, status_icon, enableView.ToString());
         }
 
         // Executed every second

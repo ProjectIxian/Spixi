@@ -83,7 +83,7 @@ namespace SPIXI
             byte[] from = Node.walletStorage.getPrimaryAddress();
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
-            Transaction tmp_tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getLastBlockHeight());
+            Transaction tmp_tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
             IxiNumber total_amount = tmp_tx.amount + tmp_tx.fee;
 

@@ -83,12 +83,12 @@ namespace SPIXI
         {
             if (requestMsg != null)
             {
-                string msgId = Crypto.hashToString(requestMsg.id);
-
                 // send decline
                 if (!requestMsg.message.StartsWith(":"))
                 {
-                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId));
+                    string msg_id = Crypto.hashToString(requestMsg.id);
+
+                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id));
 
                     requestMsg.message = "::" + requestMsg.message;
 
@@ -103,6 +103,11 @@ namespace SPIXI
                     StreamProcessor.sendMessage(friend, message);
 
                     Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+
+                    if (friend.chat_page != null)
+                    {
+                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, "", "DECLINED");
+                    }
                 }
             }
             Navigation.PopAsync(Config.defaultXamarinAnimations);
@@ -110,7 +115,7 @@ namespace SPIXI
 
         private void onSend()
         {
-            string msgId = Crypto.hashToString(requestMsg.id);
+            string msg_id = Crypto.hashToString(requestMsg.id);
 
             // send tx details to the request
             if (!requestMsg.message.StartsWith(":"))
@@ -123,11 +128,11 @@ namespace SPIXI
                 byte[] from = Node.walletStorage.getPrimaryAddress();
                 byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
-                Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getLastBlockHeight());
+                Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
                 NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
 
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msgId + ":" + transaction.id));
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.id));
 
                 requestMsg.message = ":" + transaction.id;
 
@@ -142,10 +147,14 @@ namespace SPIXI
                 StreamProcessor.sendMessage(friend, message);
 
                 Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+
+                if (friend.chat_page != null)
+                {
+                    friend.chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, "PENDING");
+                }
             }
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
-
         }
 
         protected override bool OnBackButtonPressed()

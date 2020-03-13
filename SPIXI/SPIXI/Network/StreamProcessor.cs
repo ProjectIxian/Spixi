@@ -455,7 +455,7 @@ namespace SPIXI
             }
         }
 
-        public static void handlefileData(byte[] sender, SpixiMessage data)
+        public static void handleFileData(byte[] sender, SpixiMessage data)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
@@ -804,7 +804,7 @@ namespace SPIXI
 
                 case SpixiMessageCode.fileData:
                     {
-                        handlefileData(message.sender, spixi_message);
+                        handleFileData(message.sender, spixi_message);
                         // don't send confirmation back, so just return
                         return;
                     }
@@ -981,7 +981,10 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
+            if (new IxiNumber(amount) > 0)
+            {
+                FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
+            }
         }
 
         public static void handleRequestFundsResponse(byte[] id, byte[] sender_wallet, string msg_id_tx_id)
@@ -1010,16 +1013,25 @@ namespace SPIXI
             {
                 return;
             }
-            if(tx_id != null)
+            string status = "PENDING";
+            if (tx_id != null)
             {
                 msg.message = ":" + tx_id;
-            }else
+            }
+            else
             {
+                tx_id = "";
+                status = "DECLINED";
                 msg.message = "::" + msg.message; // declined
             }
 
             // Write to chat history
             Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+
+            if (friend.chat_page != null)
+            {
+                friend.chat_page.updateRequestFundsStatus(msg_id, tx_id, status);
+            }
         }
 
         private static void handleSentFunds(byte[] id, byte[] sender_wallet, string txid)

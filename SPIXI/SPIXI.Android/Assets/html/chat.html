@@ -215,9 +215,17 @@
 
             twemoji.parse(textEl);
 
+            var timeClass = "spixi-timestamp";
+            var relativeTime = getRelativeTime(time);
+
+            if (getTimeDifference(time) < 3600) {
+                timeClass = "spixi-timestamp spixi-rel-ts-active";
+            }
+
             var timeEl = document.createElement('div');
-            timeEl.className = "time selectable";
-            timeEl.innerHTML = time + " <i class=\"statusIndicator fas fa-check\"></i>";
+            timeEl.setAttribute("data-timestamp", time);
+            timeEl.className = "time selectable " + timeClass;
+            timeEl.innerHTML = relativeTime + " <i class=\"statusIndicator fas fa-check\"></i>";
 
 
             var bubbleEl = document.createElement('div');
@@ -281,12 +289,20 @@
         }
         
         var textEl = document.createElement('div');
-        textEl.className = "text";
+        textEl.className = "text selectable";
         textEl.innerHTML = name;
 
+        var timeClass = "spixi-timestamp";
+        var relativeTime = getRelativeTime(time);
+
+        if (getTimeDifference(time) < 3600) {
+            timeClass = "spixi-timestamp spixi-rel-ts-active";
+        }
+
         var timeEl = document.createElement('div');
-        timeEl.className = "time";
-        timeEl.innerHTML = time + " <i class=\"statusIndicator fas fa-check\"></i>";
+        timeEl.setAttribute("data-timestamp", time);
+        timeEl.className = "time selectable " + timeClass;
+        timeEl.innerHTML = relativeTime + " <i class=\"statusIndicator fas fa-check\"></i>";
 
 
         var bubbleEl = document.createElement('div');
@@ -450,11 +466,15 @@
         }
     }
 
-    function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender) {
-        var message = "<div id=\"tx_" + txid + "\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
+    function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender, enableView) {
+        var message = "<div id=\"tx_" + txid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
         message += "<div class=\"status\">Status:<div class=\"content\">" + status + "<i class=\"fas "+statusIcon+"\"></i></div></div>";
         message += "<div class=\"amount\">Amount:<div class=\"content\"><div class=\"ixiCashIcon\"></div>" + amount + "</div></div>";
-        message += "<div class=\"view\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> View</div>";
+        var viewStyle = "display:none;";
+        if (enableView == "True") {
+            viewStyle = "";
+        }
+        message += "<div class=\"view\" style=\"" + viewStyle + "\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> View</div>";
         message += " <i class=\"statusIndicator fas fa-check\"></i></div>";
 
         var additionalClasses = "";
@@ -469,6 +489,29 @@
         } else {
             addText(id, "", message, time, "spixi-bubble myself spixi-payment-request");
         }*/
+    }
+
+    function updatePaymentRequestStatus(msgId, txid, status, statusIcon, enableView) {
+        var el = document.getElementById("msg_" + msgId);
+
+        if (el == null) {
+            return;
+        }
+
+        var tmpEls = el.getElementsByClassName("txid-el");
+        tmpEls[0].id = "tx_" + txid;
+
+        var statusEls = el.getElementsByClassName("status");
+        var statusContentEls = statusEls[0].getElementsByClassName("content");
+        statusContentEls[0].innerHTML = status + "<i class=\"fas " + statusIcon + "\"></i>";
+
+        var viewEls = el.getElementsByClassName("view");
+        if (enableView == "True") {
+            viewEls[0].style.display = "";
+        } else {
+            viewEls[0].style.display = "none";
+        }
+
     }
 
     function updateTransactionStatus(txid, status, statusIcon) {
