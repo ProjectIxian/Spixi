@@ -619,8 +619,6 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
-            Logging.info("Updating chat");
-
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             if (friend.online)

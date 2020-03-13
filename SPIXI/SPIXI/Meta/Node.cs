@@ -196,7 +196,6 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void onUpdate(object source, ElapsedEventArgs e)
         {
-            Logging.info("Node.onUpdate");
             // Update the friendlist
             FriendList.Update();
 

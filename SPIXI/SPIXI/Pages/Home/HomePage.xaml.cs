@@ -70,7 +70,6 @@ namespace SPIXI
                 // Setup a timer to handle UI updates
                 Device.StartTimer(TimeSpan.FromSeconds(2), () =>
                 {
-                    Logging.info("HomePage.onUpdate");
                     onUpdateUI();
                     return running; // True = Repeat again, False = Stop the timer
                 });
