@@ -607,8 +607,6 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
-            Logging.info("Updating Home");
-
             loadChats();
             loadContacts();
 
