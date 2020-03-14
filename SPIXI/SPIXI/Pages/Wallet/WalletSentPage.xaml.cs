@@ -117,13 +117,24 @@ namespace SPIXI
                 amount = 0;
 
                 Utils.sendUiCommand(webView, "setReceivedMode");
+                byte[] sender_address = new Address(ctransaction.pubKey).address;
+                Friend friend = FriendList.getFriend(sender_address);
+                if (friend != null)
+                {
+                    addresses += friend.nickname + ":|";
+                }
+                else
+                {
+                    addresses += Base58Check.Base58CheckEncoding.EncodePlain(sender_address) + ":|";
+                }
                 foreach (var entry in ctransaction.toList)
                 {
-                    if (entry.Key.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                    // TODO show this as well under sent to; also do the reverse for sent payment
+                    /*if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
                     {
                         addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
                         amount += entry.Value;
-                    }
+                    }*/
                 }
             }
 
