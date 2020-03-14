@@ -487,11 +487,11 @@ namespace SPIXI
                             status = "CONFIRMED";
                             status_icon = "fa-check-circle";
                         }
-                        else
-                        {
-                            // TODO think about how to make this more private
-                            CoreProtocolMessage.broadcastGetTransaction(txid, 0, null);
-                        }
+                    }
+                    else
+                    {
+                        // TODO think about how to make this more private
+                        CoreProtocolMessage.broadcastGetTransaction(txid, 0, null);
                     }
                     enableView = true;
                 }
