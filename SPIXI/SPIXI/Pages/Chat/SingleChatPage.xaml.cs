@@ -456,7 +456,7 @@ namespace SPIXI
                     enableView = true;
                 }
 
-                if(message.message.StartsWith("::"))
+                if (message.message.StartsWith("::"))
                 {
                     status = "DECLINED";
                     status_icon = "fa-exclamation-circle";
@@ -468,9 +468,13 @@ namespace SPIXI
                     status = "PENDING";
                     txid = message.message.Substring(1);
 
+                    bool confirmed = true;
                     Transaction transaction = TransactionCache.getTransaction(txid);
                     if (transaction == null)
+                    {
                         transaction = TransactionCache.getUnconfirmedTransaction(txid);
+                        confirmed = false;
+                    }
 
                     amount = "?";
 
@@ -478,7 +482,7 @@ namespace SPIXI
                     {
                         amount = transaction.amount.ToString();
 
-                        if (transaction.applied > 0)
+                        if (confirmed)
                         {
                             status = "CONFIRMED";
                             status_icon = "fa-check-circle";
@@ -505,9 +509,13 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.sentFunds)
             {
+                bool confirmed = true;
                 Transaction transaction = TransactionCache.getTransaction(message.message);
                 if (transaction == null)
+                {
                     transaction = TransactionCache.getUnconfirmedTransaction(message.message);
+                    confirmed = false;
+                }
 
                 string status = "PENDING";
                 string status_icon = "fa-clock";
@@ -516,7 +524,7 @@ namespace SPIXI
 
                 if (transaction != null)
                 {
-                    if (transaction.applied > 0)
+                    if (confirmed)
                     {
                         status = "CONFIRMED";
                         status_icon = "fa-check-circle";
