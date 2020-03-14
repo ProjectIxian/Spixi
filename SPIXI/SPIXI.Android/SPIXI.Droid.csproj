@@ -269,52 +269,28 @@
     <AndroidAsset Include="Assets\html\js\jquery.touchSwipe.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\js\popper.min.js" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\js\qrcode.min.js" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\js\spixi.js" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.css" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\all.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.css" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\brands.min.css" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.css" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\fontawesome.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.css" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\regular.min.css" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.css" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\solid.min.css" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.css" />
-  </ItemGroup>
-  <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\svg-with-js.min.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.css" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\html\libs\fontawesome\css\v4-shims.min.css" />
