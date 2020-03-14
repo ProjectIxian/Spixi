@@ -483,6 +483,11 @@ namespace SPIXI
                             status = "CONFIRMED";
                             status_icon = "fa-check-circle";
                         }
+                        else
+                        {
+                            // TODO think about how to make this more private
+                            CoreProtocolMessage.broadcastGetTransaction(txid, 0, null);
+                        }
                     }
                     enableView = true;
                 }
@@ -517,16 +522,20 @@ namespace SPIXI
                         status_icon = "fa-check-circle";
                     }
                     amount = transaction.amount.ToString();
+                }else
+                {
+                    // TODO think about how to make this more private
+                    CoreProtocolMessage.broadcastGetTransaction(message.message, 0, null);
                 }
 
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), "True");
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", "True");
                 }
             }
 
