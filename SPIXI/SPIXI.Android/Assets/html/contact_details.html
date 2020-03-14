@@ -28,7 +28,7 @@
 
         <!-- Toolbar Contact -->
         <div class="spixi-toolbar-contact">
-            <div id="backbtn" class="col-2 spixi-center" style="padding-top: 10px;">
+            <div id="backbtn" class="col-2" style="padding-top: 10px; padding-left: 0px;">
                 <i class="fas fa-arrow-left"></i>
             </div>
             <div class="col-10"></div>
@@ -219,7 +219,7 @@
 
             var paymentEntry = document.createElement("div");
             paymentEntry.className = "spixi-list-item";
-            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
 
             paymentsNode.appendChild(paymentEntry);
         }

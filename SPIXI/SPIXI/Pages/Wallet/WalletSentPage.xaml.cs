@@ -129,12 +129,12 @@ namespace SPIXI
                 }
                 foreach (var entry in ctransaction.toList)
                 {
-                    // TODO show this as well under sent to; also do the reverse for sent payment
-                    /*if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
+                    if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
                     {
-                        addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
+                        // TODO show this as well under sent to; also do the reverse for sent payment
+                        //addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
                         amount += entry.Value;
-                    }*/
+                    }
                 }
             }
 
@@ -142,14 +142,12 @@ namespace SPIXI
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                addresses, time, confirmed_text, (ctransaction.fee/amount).ToString() + "%", transaction.id);
+                addresses, time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.id);
             return;
         }
 
         public override void updateScreen()
         {
-            Logging.info("Updating wallet send");
-
             checkTransaction();
         }
 

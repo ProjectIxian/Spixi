@@ -213,8 +213,6 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
-            Logging.info("Updating contact details");
-
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             if (friend.online)

@@ -93,6 +93,10 @@ img.emoji {
    vertical-align: -0.5em;
 }
 
+.break-word {
+    word-wrap: break-word;
+}
+
 .spixi-center {
     text-align: center;
 }
@@ -133,6 +137,8 @@ img.emoji {
 
    /* background: #771250;*/
     color: #FFF;  
+
+    padding-left: 20px;
 }
 .spixi-toolbar.extended {
     height: 128px;
@@ -207,16 +213,15 @@ img.emoji {
     font-size: 16pt;
     color: #FFF; 
     background-color: #25193c;
+    padding: 0px 20px;
 }
 
 .spixi-toolbar-contact-name {
     margin-top: 24px;
-    margin-left: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .spixi-toolbar-contact-status {
-    margin-left: 20px;
     font-size: 9pt;
 }
 
@@ -1009,6 +1014,11 @@ img.emoji {
     border-bottom: 1px solid #d1d5d7;
 }
 
+.spixi-list-item-right .spixi-timestamp
+{
+    font-size: 8pt;
+}
+
 .spixi-list-item-action-icon {
     font-size: 14pt;
     margin-right: 15px;
@@ -1624,7 +1634,7 @@ img.emoji {
     -webkit-user-select: auto; /* Safari */
     -khtml-user-select: auto; /* Konqueror HTML */
     -moz-user-select: all; /* Firefox */
-    -ms-user-select: element; /* Internet Explorer/Edge */
+    -ms-user-select: auto; /* Internet Explorer/Edge */
     user-select: initial; /* Non-prefixed version, currently
                     supported by Chrome and Opera */
 }

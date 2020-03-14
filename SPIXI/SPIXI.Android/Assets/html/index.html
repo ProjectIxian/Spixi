@@ -16,7 +16,6 @@
 
 
     <script src="js/jquery.min.js"></script>
-    <script src="js/popper.min.js"></script>
 
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -32,7 +31,7 @@
         <div id="toolbar" class="spixi-toolbar shadow" >
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div class="col-2 spixi-center">
+                <div class="col-2">
                     <i class="fas fa-bars"></i>
                 </div>
                 <div class="col-8">
@@ -78,7 +77,7 @@
                 <div id="exp1" class="spixi-expansion">
                     <div id="exp1-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-                    <div class="spixi-expansion-text">My notifications (<span id="notification_count">0</span>)</div>
+                    <div class="spixi-expansion-text">Notifications (<span id="notification_count">0</span>)</div>
                     <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp1-contents" class="spixi-expansion-middle" style="display: block;">
@@ -650,7 +649,7 @@
 
         var paymentEntry = document.createElement("div");
         paymentEntry.className = "spixi-list-item";
-        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment ' + iconClass + '">' + icon + '</div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment ' + iconClass + '">' + icon + '</div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
         
         paymentsNode.appendChild(paymentEntry);        
     }
@@ -690,7 +689,7 @@
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
@@ -734,7 +733,7 @@
         var chatsNode = document.getElementById("exp2-contents");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-7 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';

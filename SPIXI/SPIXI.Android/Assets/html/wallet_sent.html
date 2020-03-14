@@ -41,11 +41,15 @@
         <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div class="col-12 spixi-center" id="title">
+                <div id="backbtn" class="col-2">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-8 spixi-center" id="title">
                     Payment Sent
                 </div>
+                <div class="col-2">
+                </div>
             </div>
-
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
@@ -92,11 +96,11 @@
             Every payment sent has a certain payment fee which is deducted from the amount transferred.
         </div>
 
-        <div class="spixi-textsection-holder spixi-textsection-header selectable">
+        <div class="spixi-textsection-holder spixi-textsection-header">
             TXID
         </div>
 
-        <div id="sent_txid" class="spixi-textsection-holder">
+        <div id="sent_txid" class="spixi-textsection-holder break-word selectable">
             
         </div>
 
@@ -113,6 +117,10 @@
 
 
     <script type="text/javascript">
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:dismiss";
+        }
+
         document.getElementById("sendrequest").onclick = function () {
             location.href = "ixian:dismiss";
         }
