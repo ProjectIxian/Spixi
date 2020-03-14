@@ -589,8 +589,9 @@ namespace SPIXI
 
             Utils.sendUiCommand(webView, "clearPaymentActivity");
 
-            foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
+            for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
             {
+                Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
                 string tx_type = "Payment Received";
                 IxiNumber amount = utransaction.amount;
                 if (Node.walletStorage.isMyAddress((new Address(utransaction.pubKey).address)))
