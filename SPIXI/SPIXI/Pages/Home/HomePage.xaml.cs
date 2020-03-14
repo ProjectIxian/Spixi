@@ -565,6 +565,19 @@ namespace SPIXI
             sorted_msgs = null;
         }
 
+        private IxiNumber calculateReceivedAmount(Transaction tx)
+        {
+            IxiNumber amount = 0;
+            foreach (var entry in tx.toList)
+            {
+                if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
+                {
+                    amount += entry.Value;
+                }
+            }
+            return amount;
+        }
+
         public void loadTransactions()
         {
             // Check if there are any changes
@@ -579,26 +592,41 @@ namespace SPIXI
             foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
             {
                 string tx_type = "Payment Received";
+                IxiNumber amount = utransaction.amount;
                 if (Node.walletStorage.isMyAddress((new Address(utransaction.pubKey).address)))
                 {
                     tx_type = "Payment Sent";
+                }else
+                {
+                    amount = calculateReceivedAmount(utransaction);
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString(), "false");
+                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, amount.ToString(), "false");
             }
 
-            for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
+            int max_tx_count = 0;
+            if(TransactionCache.transactions.Count > 50)
+            {
+                max_tx_count = TransactionCache.transactions.Count - 50;
+            }
+
+            for (int i = TransactionCache.transactions.Count - 1; i >= max_tx_count; i--)
             {
                 Transaction transaction = TransactionCache.transactions[i];
                 string tx_type = "Payment Received";
+                IxiNumber amount = transaction.amount;
                 if (Node.walletStorage.isMyAddress((new Address(transaction.pubKey).address)))
                 {
                     tx_type = "Payment Sent";
                 }
+                else
+                {
+                    amount = calculateReceivedAmount(transaction);
+                }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
 
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), "true");
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, amount.ToString(), "true");
             }
         }
 
