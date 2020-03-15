@@ -225,8 +225,10 @@
             var timeEl = document.createElement('div');
             timeEl.setAttribute("data-timestamp", time);
             timeEl.className = "time selectable " + timeClass;
-            timeEl.innerHTML = relativeTime + " <i class=\"statusIndicator fas fa-check\"></i>";
+            timeEl.innerHTML = relativeTime;
 
+            var statusEl = document.createElement('div');
+            statusEl.innerHTML = "<i class=\"statusIndicator fas fa-check\"></i>";
 
             var bubbleEl = document.createElement('div');
             bubbleEl.id = "msg_" + id;
@@ -251,6 +253,7 @@
 
             bubbleEl.appendChild(textEl);
             bubbleEl.appendChild(timeEl);
+            bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
 
             if (avatar != "") {
                 var avatarEl = document.createElement('img');
@@ -302,8 +305,10 @@
         var timeEl = document.createElement('div');
         timeEl.setAttribute("data-timestamp", time);
         timeEl.className = "time selectable " + timeClass;
-        timeEl.innerHTML = relativeTime + " <i class=\"statusIndicator fas fa-check\"></i>";
+        timeEl.innerHTML = relativeTime;
 
+        var statusEl = document.createElement('div');
+        statusEl.innerHTML = "<i class=\"statusIndicator fas fa-check\"></i>";
 
         var bubbleEl = document.createElement('div');
         bubbleEl.id = "file_" + fileid;
@@ -314,6 +319,7 @@
         
         bubbleEl.appendChild(textEl);
         bubbleEl.appendChild(timeEl);
+        bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
 
         if (avatar != "") {
             var avatarEl = document.createElement('img');

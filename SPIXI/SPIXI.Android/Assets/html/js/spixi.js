@@ -39,13 +39,10 @@ function getRelativeTime(unixTimestamp)
 {
     var delta = getTimeDifference(unixTimestamp);
 
-    if (delta < 15)
+    if (delta < 30)
         return "just now";
 
-    if (delta < 60)
-        return delta + " seconds ago";
-
-    if (delta < 120)
+    if (delta < 90)
         return "a minute ago";
 
     if (delta < 3600)
@@ -68,13 +65,15 @@ function startRelativeTimeUpdate(className) {
             for (var i = 0; i < els.length; i++) {
                 var el = els[i];
                 var new_ts = getRelativeTime(el.getAttribute("data-timestamp"));
-                if (new_ts == el.innerHTML) {
-                    el.className == el.className.replace(className, "");
+                var match = new_ts.match(/[0-9]+$/);
+                if (match == "") {
+                    el.innerHTML = new_ts;
                 } else {
                     el.innerHTML = new_ts;
+                    el.className == el.className.replace(className, "");
                 }
             }
         } catch (e) {
         }
-    }, 10000);
+    }, 30000);
 }

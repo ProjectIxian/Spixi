@@ -1086,6 +1086,7 @@ img.emoji {
 .spixi-bubble .time
 {
     padding-top: 5px;
+    padding-right: 15px;
     font-size: 7pt;
     color: #000;
     z-index: 4;
@@ -1178,10 +1179,13 @@ img.emoji {
 
 .spixi-bubble .statusIndicator {
     display: none;
+    margin-top: 8px;
+    font-size: 7pt;
 }
 
 .spixi-bubble.myself .statusIndicator {
     display: none;
+    float: right;
 }
 
 .spixi-bubble.sent .statusIndicator {
