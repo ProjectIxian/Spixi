@@ -274,13 +274,16 @@ namespace SPIXI
         public int getUnreadMessageCount()
         {
             int unreadCount = 0;
-            for(int i = messages.Count - 1; i >= 0; i--)
+            lock(messages)
             {
-                if(messages[i].read == true || messages[i].localSender == true)
+                for (int i = messages.Count - 1; i >= 0; i--)
                 {
-                    break;
+                    if (messages[i].read == true || messages[i].localSender == true)
+                    {
+                        break;
+                    }
+                    unreadCount++;
                 }
-                unreadCount++;
             }
             return unreadCount;
         }
