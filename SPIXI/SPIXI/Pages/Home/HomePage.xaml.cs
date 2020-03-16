@@ -465,7 +465,13 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online, friend.getUnreadMessageCount().ToString());
+                string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                if (avatar == null)
+                {
+                    avatar = "img/spixiavatar.png";
+                }
+
+                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
             }
         }
 
@@ -540,7 +546,13 @@ namespace SPIXI
                     else if (lastmsg.type == FriendMessageType.fileHeader)
                         excerpt = "File";
 
-                    FriendMessageHelper helper_msg = new FriendMessageHelper(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, "img/spixiavatar.png", str_online, excerpt, friend.getUnreadMessageCount());
+                    string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    if(avatar == null)
+                    {
+                        avatar = "img/spixiavatar.png";
+                    }
+
+                    FriendMessageHelper helper_msg = new FriendMessageHelper(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, friend.getUnreadMessageCount());
                     helper_msgs.Add(helper_msg);
                 }
             }

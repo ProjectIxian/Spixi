@@ -23,6 +23,7 @@ namespace SPIXI.Storage
         private object accountLock = new object();
         private object txCacheLock = new object();
         private object offlineLock = new object();
+        private object avatarLock = new object();
 
 
         public LocalStorage(string path)
@@ -46,6 +47,12 @@ namespace SPIXI.Storage
             if (!Directory.Exists(Path.Combine(documentsPath, "Downloads")))
             {
                 Directory.CreateDirectory(Path.Combine(documentsPath, "Downloads"));
+            }
+
+            // Prepare Avatars path
+            if (!Directory.Exists(Path.Combine(documentsPath, "Avatars")))
+            {
+                Directory.CreateDirectory(Path.Combine(documentsPath, "Avatars"));
             }
 
             // Read transactions
@@ -78,6 +85,17 @@ namespace SPIXI.Storage
             File.Delete(avatarPath);
             return true;
         }
+
+        public byte[] getOwnAvatarBytes()
+        {
+            string path = getOwnAvatarPath(false);
+            if (File.Exists(path))
+            {
+                return File.ReadAllBytes(path);
+            }
+            return null;
+        }
+
 
         // Read the account file from local storage
         public bool readAccountFile()
@@ -210,7 +228,7 @@ namespace SPIXI.Storage
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
 
             List<FriendMessage> messages = new List<FriendMessage>();
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
+            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
 
             if (File.Exists(messages_filename) == false)
             {
@@ -334,7 +352,7 @@ namespace SPIXI.Storage
         public bool writeMessagesFile(byte[] wallet_bytes, List<FriendMessage> messages)
         {
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
+            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
 
             BinaryWriter writer;
             try
@@ -402,7 +420,7 @@ namespace SPIXI.Storage
         public bool deleteMessagesFile(byte[] wallet_bytes)
         {
             string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, String.Format("Chats/{0}.ixi", wallet));
+            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
 
             if (File.Exists(messages_filename) == false)
             {
@@ -650,5 +668,44 @@ namespace SPIXI.Storage
             return Path.Combine(documentsPath, "tmp");
         }
 
+        // Write the account file to local storage
+        public bool writeAvatar(string friend_address, byte[] avatar_bytes)
+        {
+            lock (avatarLock)
+            {
+                string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+
+                File.WriteAllBytes(avatar_filename, avatar_bytes);
+            }
+            return true;
+        }
+
+        // Deletes the avatar file if it exists
+        public bool deleteAvatar(string friend_address)
+        {
+            lock (avatarLock)
+            {
+                string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+
+                if (File.Exists(avatar_filename) == false)
+                {
+                    return false;
+                }
+
+                File.Delete(avatar_filename);
+            }
+            return true;
+        }
+
+        public string getAvatarPath(string friend_address)
+        {
+            string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+
+            if (File.Exists(avatar_filename))
+            {
+                return avatar_filename;
+            }
+            return null;
+        }
     }
 }

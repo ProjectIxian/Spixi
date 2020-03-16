@@ -420,7 +420,7 @@ namespace SPIXI
             }
 
             string prefix = "addMe";
-            string avatar = "";//Node.localStorage.getOwnAvatarPath();
+            string avatar = "";
             string address = "";
             string nick = "";
             if (friend.bot)
@@ -439,7 +439,17 @@ namespace SPIXI
             if (!message.localSender)
             {
                 prefix = "addThem";
-                avatar = "img/spixiavatar.png";
+                if(message.senderAddress != null)
+                {
+                    avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress));
+                }else
+                {
+                    avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                }
+                if (avatar == null)
+                {
+                    avatar = "img/spixiavatar.png";
+                }
             }
 
             if (message.type == FriendMessageType.requestFunds)

@@ -221,6 +221,8 @@ namespace SPIXI
             {
                 File.Delete(source_file_path);
             }
+
+            FriendList.broadcastAvatarChange();
         }
 
         public void onRemoveAvatar()

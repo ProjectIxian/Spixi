@@ -4,6 +4,7 @@ using IXICore.Network;
 using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Network;
+using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -138,11 +139,11 @@ namespace SPIXI
                 List<Friend> friend_list = new List<Friend>();
                 if(Config.enablePushNotifications)
                 {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 4);
+                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5);
                 }
                 else
                 {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 4 && x.online);
+                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5 && x.online);
                 }
                 foreach (var friend in friend_list)
                 {
@@ -180,6 +181,12 @@ namespace SPIXI
                         case 3:
                             Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
                             sendNickname(friend);
+                            break;
+
+                        // Avatar confirmation hasn't been received
+                        case 4:
+                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
+                            sendAvatar(friend);
                             break;
                     }
                 }
@@ -528,6 +535,16 @@ namespace SPIXI
                     return;
                 }
 
+                if (msg_id.SequenceEqual(new byte[] { 5 }))
+                {
+                    if (friend.handshakeStatus == 4)
+                    {
+                        friend.handshakeStatus = 5;
+                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                    }
+                    return;
+                }
+
                 friend.setMessageReceived(msg_id);
             }
             else
@@ -708,6 +725,33 @@ namespace SPIXI
                     }
                     break;
 
+                case SpixiMessageCode.getAvatar:
+                    {
+                        // Send the avatar to the sender as requested
+                        handleGetAvatar(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                    }
+                    break;
+
+                case SpixiMessageCode.avatar:
+                    {
+                        // Set the avatar for the corresponding address
+                        if (!message.verifySignature(friend.publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else
+                        {
+                            if (spixi_message.data != null)
+                            {
+                                FriendList.setAvatar(message.sender, spixi_message.data, sender_address);
+                            }
+                            else
+                            {
+                                FriendList.setAvatar(message.sender, null, sender_address);
+                            }
+                        }
+                    }
+                    break;
                 case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
@@ -873,6 +917,20 @@ namespace SPIXI
             }
 
             sendNickname(friend);
+
+            return;
+        }
+
+        private static void handleGetAvatar(byte[] sender_wallet, string text)
+        {
+            Friend friend = FriendList.getFriend(sender_wallet);
+            if (friend == null)
+            {
+                Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                return;
+            }
+
+            sendAvatar(friend);
 
             return;
         }
@@ -1142,6 +1200,43 @@ namespace SPIXI
             StreamProcessor.sendMessage(friend, reply_message);
         }
 
+        public static void sendAvatar(Friend friend)
+        {
+            byte[] avatar_bytes = Node.localStorage.getOwnAvatarBytes();
+
+            if (avatar_bytes == null)
+            {
+                friend.handshakeStatus = 5;
+                return;
+            }
+
+            if (friend.handshakeStatus == 5)
+            {
+                friend.handshakeStatus = 4;
+            }
+
+            SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.avatar, avatar_bytes);
+
+            // Send the nickname message to friend
+            StreamMessage reply_message = new StreamMessage();
+            reply_message.type = StreamMessageCode.info;
+            reply_message.recipient = friend.walletAddress;
+            reply_message.sender = Node.walletStorage.getPrimaryAddress();
+            reply_message.transaction = new byte[1];
+            reply_message.sigdata = new byte[1];
+            reply_message.data = reply_spixi_message.getBytes();
+            reply_message.id = new byte[] { 5 };
+
+            /*if (friend.aesKey == null || friend.chachaKey == null)
+            {
+                reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
+            }*/
+
+            reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+
+            StreamProcessor.sendMessage(friend, reply_message);
+        }
+
         // Requests the nickname of the sender
         public static void requestNickname(Friend friend, byte[] contact_address = null)
         {
@@ -1212,7 +1307,7 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
-            message.id = new byte[] { 5 };
+            message.id = new byte[] { 10 };
 
             StreamProcessor.sendMessage(friend, message);
         }

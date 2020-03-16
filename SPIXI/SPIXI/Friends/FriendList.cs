@@ -43,14 +43,14 @@ namespace SPIXI
         public static void setNickname(byte[] wallet_address, string nick, byte[] real_sender_address)
         {
             Friend friend = getFriend(wallet_address);
-            if(friend == null)
+            if (friend == null)
             {
                 Logging.error("Received nickname for a friend that's not in the friend list.");
                 return;
             }
-            if(friend.bot && real_sender_address != null)
+            if (friend.bot && real_sender_address != null)
             {
-                if(!friend.contacts.ContainsKey(real_sender_address))
+                if (!friend.contacts.ContainsKey(real_sender_address))
                 {
                     friend.contacts.Add(real_sender_address, new BotContact());
                 }
@@ -60,20 +60,20 @@ namespace SPIXI
                     // update messages with the new nick
                     for (int i = friend.messages.Count - 1, j = 0; i >= 0; i--, j++)
                     {
-                        if(j > 1000)
+                        if (j > 1000)
                         {
                             break;
                         }
-                        if(friend.messages[i].senderNick != "")
+                        if (friend.messages[i].senderNick != "")
                         {
                             continue;
                         }
-                        if(friend.messages[i].senderAddress == null || real_sender_address == null)
+                        if (friend.messages[i].senderAddress == null || real_sender_address == null)
                         {
                             Logging.warn("Sender address is null");
                             continue;
                         }
-                        if(friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
+                        if (friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
                         {
                             friend.messages[i].senderNick = nick;
                         }
@@ -91,6 +91,65 @@ namespace SPIXI
                 friend.nickname = nick;
                 Node.shouldRefreshContacts = true;
             }
+        }
+        // Set the avatar for a specific wallet address
+        public static void setAvatar(byte[] wallet_address, byte[] avatar, byte[] real_sender_address)
+        {
+            Friend friend = getFriend(wallet_address);
+            if (friend == null)
+            {
+                Logging.error("Received nickname for a friend that's not in the friend list.");
+                return;
+            }
+            if (friend.bot && real_sender_address != null)
+            {
+                // TODO implement
+                /*if (!friend.contacts.ContainsKey(real_sender_address))
+                {
+                    friend.contacts.Add(real_sender_address, new BotContact());
+                }
+                if (friend.contacts[real_sender_address].nick != nick)
+                {
+                    friend.contacts[real_sender_address].nick = nick;
+                    // update messages with the new nick
+                    for (int i = friend.messages.Count - 1, j = 0; i >= 0; i--, j++)
+                    {
+                        if (j > 1000)
+                        {
+                            break;
+                        }
+                        if (friend.messages[i].senderNick != "")
+                        {
+                            continue;
+                        }
+                        if (friend.messages[i].senderAddress == null || real_sender_address == null)
+                        {
+                            Logging.warn("Sender address is null");
+                            continue;
+                        }
+                        if (friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
+                        {
+                            friend.messages[i].senderNick = nick;
+                        }
+                    }
+                    // update UI with the new nick
+                    if (friend.chat_page != null)
+                    {
+                        Logging.info("Updating group chat nicks");
+                        friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
+                    }
+                }*/
+            }
+            else
+            {
+                Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address), avatar);
+                Node.shouldRefreshContacts = true;
+            }
+        }
+
+        private void saveAvatar(Friend friend)
+        {
+
         }
 
         public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
@@ -255,6 +314,9 @@ namespace SPIXI
         {
             // Remove history file
             Node.localStorage.deleteMessagesFile(friend.walletAddress);
+
+            // Delete avatar
+            Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
 
             bool stat = friends.Remove(friend);
             if (!stat)
@@ -429,7 +491,6 @@ namespace SPIXI
 
         public static void broadcastNicknameChange()
         {
-            // TODO TODO use hidden address matcher
             lock (friends)
             {
                 foreach (var friend in friends)
@@ -437,6 +498,20 @@ namespace SPIXI
                     if (friend.approved)
                     {
                         StreamProcessor.sendNickname(friend);
+                    }
+                }
+            }
+        }
+
+        public static void broadcastAvatarChange()
+        {
+            lock (friends)
+            {
+                foreach (var friend in friends)
+                {
+                    if (friend.approved)
+                    {
+                        StreamProcessor.sendAvatar(friend);
                     }
                 }
             }
