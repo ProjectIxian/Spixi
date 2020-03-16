@@ -27,7 +27,7 @@
     <div id="wrap" class="container-fluid noselect">
 
         <!-- Toolbar Contact -->
-        <div class="spixi-toolbar-contact">
+        <div class="spixi-toolbar-contact" id="avatar">
             <div id="backbtn" class="col-2" style="padding-top: 10px; padding-left: 0px;">
                 <i class="fas fa-arrow-left"></i>
             </div>
@@ -35,36 +35,37 @@
 
             <div class="spixi-toolbar-contact-name" id="nickname"></div>
             <div class="spixi-toolbar-contact-status" id="status"></div>
-        </div>
-        <!-- End Toolbar Contact -->
-        <!-- OptionBar -->
-        <div class="spixi-optionbar">
-            <div class="spixi-optionbar-frame container">
-                <div class="row" id="">
-                    <div class="col-4 spixi-optionbar-tab">
-                        <a href="ixian:chat">
-                            <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
-                            <div class="spixi-optionbar-label">chat</div>
-                        </a>
-                    </div>
 
-                    <div class="col-4 spixi-optionbar-tab">
-                        <a href="ixian:send">
-                            <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
-                            <div class="spixi-optionbar-label">send</div>
-                        </a>
-                    </div>
+            <!-- OptionBar -->
+            <div class="spixi-optionbar spixi-optionbar-contact-details">
+                <div class="spixi-optionbar-frame container">
+                    <div class="row" id="">
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:chat">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
+                                <div class="spixi-optionbar-label">chat</div>
+                            </a>
+                        </div>
 
-                    <div class="col-4 spixi-optionbar-tab">
-                        <a href="ixian:request">
-                            <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
-                            <div class="spixi-optionbar-label">receive</div>
-                        </a>
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:send">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
+                                <div class="spixi-optionbar-label">send</div>
+                            </a>
+                        </div>
+
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:request">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
+                                <div class="spixi-optionbar-label">receive</div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+            <!-- End OptionBar -->
         </div>
-        <!-- End OptionBar -->
+        <!-- End Toolbar Contact -->
 
 
 
@@ -194,6 +195,16 @@
 
         function setNickname(nick) {
             document.getElementById("nickname").innerHTML = nick;
+        }
+
+        function setAvatar(avatarPath) {
+            avatarPath = avatarPath.replace(/&#92;/g, '/');
+            var avatarEl = document.getElementById("avatar");
+            avatarEl.style.backgroundImage = "url('" + avatarPath + "')";
+
+            avatarEl.style.backgroundRepeat = "no-repeat";
+            avatarEl.style.backgroundPosition = "center center";
+            avatarEl.style.backgroundSize = "cover";
         }
 
         function showIndicator(ind) {

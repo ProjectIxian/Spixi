@@ -167,12 +167,6 @@ namespace SPIXI
             Stream stream = await DependencyService.Get<IPicturePicker>().GetImageStreamAsync();
             if (stream != null)
             {
-                Image image = new Image
-                {
-                    Source = ImageSource.FromStream(() => stream),
-                    BackgroundColor = Color.Gray
-                };
-
                 var filePath = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
 
                 try

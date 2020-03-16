@@ -215,6 +215,14 @@ namespace SPIXI
         {
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
+            string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            if (avatar == null)
+            {
+                avatar = "";
+            }
+
+            Utils.sendUiCommand(webView, "setAvatar", avatar);
+
             if (friend.online)
             {
                 Utils.sendUiCommand(webView, "showIndicator", "true");
