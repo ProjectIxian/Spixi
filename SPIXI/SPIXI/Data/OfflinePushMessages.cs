@@ -85,6 +85,8 @@ namespace SPIXI
                     if (htmlCode == "FALSE")
                         return false;
 
+                    lastUpdate = 0; // If data was available, fetch it again without cooldown
+
                     List<string[]> jsonResponse = JsonConvert.DeserializeObject<List<string[]>>(htmlCode);
 
                     foreach (string[] str in jsonResponse)
