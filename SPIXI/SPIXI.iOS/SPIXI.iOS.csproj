@@ -149,9 +149,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Com.OneSignal">
-      <Version>3.5.0</Version>
+      <Version>3.7.3</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.4.0.991537" />
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.34</Version>
     </PackageReference>
