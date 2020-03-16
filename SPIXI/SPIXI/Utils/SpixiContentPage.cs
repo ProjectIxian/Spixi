@@ -31,6 +31,11 @@ namespace SPIXI
 
         }
 
+        public virtual void onResume()
+        {
+
+        }
+
     }
 }
  

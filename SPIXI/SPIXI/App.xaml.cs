@@ -148,6 +148,12 @@ namespace SPIXI
             // Handle when your app resumes
             isInForeground = true;
             base.OnResume();
+
+            if(MainPage != null && ((NavigationPage)MainPage).CurrentPage != null)
+            {
+                SpixiContentPage p = (SpixiContentPage)((NavigationPage)MainPage).CurrentPage;
+                p.onResume();
+            }
         }
     }
 }

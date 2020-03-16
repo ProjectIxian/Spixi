@@ -57,8 +57,10 @@ namespace SPIXI
 
         protected override void OnAppearing()
         {
-            if(friend != null)
+            if (friend != null)
+            {
                 friend.chat_page = this;
+            }
             base.OnAppearing();
         }
 
@@ -572,7 +574,12 @@ namespace SPIXI
                 Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString());
             }
 
-            if (!message.read && !message.localSender)
+            updateMessageReadStatus(message);
+        }
+
+        private void updateMessageReadStatus(FriendMessage message)
+        {
+            if (!message.read && !message.localSender && App.isInForeground)
             {
                 Node.shouldRefreshContacts = true;
 
@@ -589,6 +596,28 @@ namespace SPIXI
                 msg_received.sigdata = new byte[1];
 
                 StreamProcessor.sendMessage(friend, msg_received, true, false, false);
+            }
+        }
+
+        public void updateMessagesReadStatus()
+        {
+            if(friend == null)
+            {
+                return;
+            }
+            lock (friend.messages)
+            {
+                int max_msg_count = 0;
+                if (friend.messages.Count > 50)
+                {
+                    max_msg_count = friend.messages.Count - 50;
+                }
+
+                for (int i = friend.messages.Count - 1; i >= max_msg_count; i--)
+                {
+                    FriendMessage msg = friend.messages[i];
+                    updateMessageReadStatus(msg);
+                }
             }
         }
 
@@ -682,6 +711,13 @@ namespace SPIXI
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;
+        }
+
+        public override void onResume()
+        {
+            base.onResume();
+
+            updateMessagesReadStatus();
         }
     }
 }
