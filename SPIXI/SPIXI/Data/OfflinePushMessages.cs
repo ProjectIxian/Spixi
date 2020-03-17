@@ -43,7 +43,7 @@ namespace SPIXI
                 string htmlCode = client.UploadString(URI, parameters);
                 if (htmlCode.Equals("OK"))
                 {
-                    if (f.handshakeStatus < 4)
+                    if (f.handshakeStatus < 5)
                     {
                         f.handshakePushed = true;
 
