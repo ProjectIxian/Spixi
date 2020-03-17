@@ -142,6 +142,7 @@ namespace SPIXI
             }
             else
             {
+                Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address));
                 Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address), avatar);
                 Node.shouldRefreshContacts = true;
             }
@@ -509,9 +510,9 @@ namespace SPIXI
             {
                 foreach (var friend in friends)
                 {
-                    if (friend.approved)
+                    if (friend.handshakeStatus == 5)
                     {
-                        StreamProcessor.sendAvatar(friend);
+                        friend.handshakeStatus = 4;
                     }
                 }
             }
