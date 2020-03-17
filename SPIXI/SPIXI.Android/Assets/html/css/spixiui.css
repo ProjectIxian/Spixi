@@ -561,9 +561,9 @@ img.emoji {
 
     font-size: 18pt;
     background: #1692d9;
-    
+
     padding-top: 0px;
-    
+
     display: table-cell;
     vertical-align: middle;
     text-align: center;
@@ -611,6 +611,7 @@ img.emoji {
     width: 64px;
     height: 64px;
     border-radius: 64px;
+    background-size:cover;
 }
 
 /* TextField */
@@ -867,11 +868,12 @@ img.emoji {
 }
 
 .spixi-sidebar-avatar {
-    width:70px;
-    height:70px;
+    width: 70px;
+    height: 70px;
     border-radius: 70px;
     margin-top: 0px;
     margin-left: 0px;
+    background-size: cover;
 }
 .spixi-sidebar-avatar-holder {
     text-align: left;
@@ -935,20 +937,21 @@ img.emoji {
 }
 
 .spixi-list-item-avatar {
-    width:40px;
-    height:40px;
+    width: 40px;
+    height: 40px;
     border-radius: 40px;
     margin-top: 10px;
     margin-left: 0px;
+    background-size: cover;
 }
 
-#exp2-contents .spixi-list-item-avatar
-{
+#exp2-contents .spixi-list-item-avatar {
     width: 30px;
     height: 30px;
     border-radius: 20px;
     margin-top: 15px;
     margin-left: -5px;
+    background-size: cover;
 }
 
 .spixi-list-item-avatar.selected {
@@ -1121,15 +1124,15 @@ img.emoji {
     text-align: right;
 }
 
-.spixi-bubble .avatar
-{
+.spixi-bubble .avatar {
     position: absolute;
     left: -45px;
     z-index: 6;
     top: 0px;
     width: 32px;
     height: 32px;
-    border-radius: 32px;    
+    border-radius: 32px;
+    background-size: cover;
 }
 
 .spixi-bubble .actionicon {
