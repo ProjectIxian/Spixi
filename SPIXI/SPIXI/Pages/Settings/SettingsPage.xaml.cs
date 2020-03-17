@@ -164,30 +164,42 @@ namespace SPIXI
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)
         {
-            Stream stream = await DependencyService.Get<IPicturePicker>().GetImageStreamAsync();
-            if (stream != null)
+            var picker_service = DependencyService.Get<IPicturePicker>();
+
+            Stream stream = await picker_service.GetImageStreamAsync();
+
+            if (stream == null)
             {
-                var filePath = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
-
-                try
-                {
-                    FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-                    stream.CopyTo(fs);
-
-                    stream.Close();
-                    fs.Close();
-                }
-                catch (Exception ex)
-                {
-                    await displaySpixiAlert("Error", ex.ToString(), "ok");
-                    return;
-                }
-
-                Utils.sendUiCommand(webView, "loadAvatar", filePath);
-                Utils.sendUiCommand(webView, "showRemoveAvatar", "1");
-                Node.changedSettings = true;
+                return;
             }
 
+            var file_path = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
+            try
+            {
+                byte[] image_bytes = null;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    stream.Close();
+                    image_bytes = picker_service.ResizeImage(ms.ToArray(), 960, 540);
+                    if (image_bytes == null)
+                    {
+                        return;
+                    }
+                }
+
+                FileStream fs = new FileStream(file_path, FileMode.OpenOrCreate, FileAccess.Write);
+                fs.Write(image_bytes, 0, image_bytes.Length);
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
+                await displaySpixiAlert("Error", ex.ToString(), "ok");
+                return;
+            }
+
+            Utils.sendUiCommand(webView, "loadAvatar", file_path);
+            Node.changedSettings = true;
         }
 
         // Applies the avatar image once the user chooses to Save changes

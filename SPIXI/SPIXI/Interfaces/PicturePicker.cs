@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace SPIXI.Interfaces
@@ -9,5 +6,6 @@ namespace SPIXI.Interfaces
     public interface IPicturePicker
     {
         Task<Stream> GetImageStreamAsync();
+        byte[] ResizeImage(byte[] image_data, int width, int height);
     }
 }

@@ -423,28 +423,6 @@ namespace SPIXI
             });
         }
 
-        public async Task onChangeAvatarAsync(object sender, EventArgs e)
-        {
-            Stream stream = await DependencyService.Get<IPicturePicker>().GetImageStreamAsync();
-
-            if (stream != null)
-            {
-                Image image = new Image
-                {
-                    Source = ImageSource.FromStream(() => stream),
-                    BackgroundColor = Color.Gray
-                };
-
-                var filePath = Node.localStorage.getOwnAvatarPath();
-                FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-                stream.CopyTo(fs);
-                Utils.sendUiCommand(webView, "loadAvatar", filePath);
-                stream.Close();
-                fs.Close();
-            }
-
-        }
-
         // Load the contact list
         // TODO: optimize this
         public void loadContacts()
@@ -671,6 +649,7 @@ namespace SPIXI
             if(Node.changedSettings == true)
             {
                 Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+                Node.changedSettings = false;
             }
 
         }

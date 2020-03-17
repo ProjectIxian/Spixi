@@ -703,7 +703,8 @@ namespace SPIXI.Storage
 
             if (File.Exists(avatar_filename))
             {
-                return avatar_filename;
+                string ts = "?t=" + File.GetLastWriteTimeUtc(avatar_filename).Second; // Unique parameter for proper HTML based refresh
+                return avatar_filename + ts;
             }
             return null;
         }

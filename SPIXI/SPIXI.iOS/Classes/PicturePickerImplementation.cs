@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Foundation;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.iOS.Classes;
 using UIKit;
@@ -66,6 +65,70 @@ namespace SPIXI.iOS.Classes
         {
             taskCompletionSource.SetResult(null);
             imagePicker.DismissModalViewController(true);
+        }
+
+        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height)
+        {
+            UIImage original_image = ImageFromByteArray(image_data);
+
+            if(original_image == null)
+            {
+                return null;
+            }
+
+            nfloat width = original_image.Size.Width;
+            nfloat height = original_image.Size.Height;
+
+            float resized_width = new_width;
+            float resized_height = new_height;
+
+            int margin_x = 0;
+            int margin_y = 0;
+
+            if (height > width)
+            {
+                nfloat ratio = height / new_height;
+                resized_width = (int)(width / ratio);
+                margin_x = (int)((resized_width - new_width) / 2);
+            }
+            else
+            {
+                nfloat ratio = width / new_width;
+                resized_height = (int)(height / ratio);
+                margin_y = (int)((resized_height - new_height) / 2);
+            }
+
+            // TODO crop as well
+
+            UIGraphics.BeginImageContext(new SizeF(new_width, new_height));
+            original_image.Draw(new RectangleF(0, 0, new_width, new_height));
+            var resized_image = UIGraphics.GetImageFromCurrentImageContext();
+            UIGraphics.EndImageContext();
+
+            var bytes_imagen = resized_image.AsJPEG().ToArray();
+            resized_image.Dispose();
+            return bytes_imagen;
+        }
+
+        public static UIKit.UIImage ImageFromByteArray(byte[] data)
+        {
+            if (data == null)
+            {
+                return null;
+            }
+
+            UIKit.UIImage image;
+            try
+            {
+                image = new UIKit.UIImage(Foundation.NSData.FromArray(data));
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in ImageFromBytes: " + e);
+                return null;
+            }
+
+            return image;
         }
     }
 }

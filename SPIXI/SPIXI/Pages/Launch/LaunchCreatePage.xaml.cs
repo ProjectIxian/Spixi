@@ -73,43 +73,41 @@ namespace SPIXI
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)
         {
-            Stream stream = await DependencyService.Get<IPicturePicker>().GetImageStreamAsync();
+            var picker_service = DependencyService.Get<IPicturePicker>();
 
-            if (stream != null)
+            Stream stream = await picker_service.GetImageStreamAsync();
+
+            if (stream == null)
             {
-                Image image = new Image
-                {
-                    Source = ImageSource.FromStream(() => stream),
-                    BackgroundColor = Color.Gray
-                };
-
-                var filePath = Node.localStorage.getOwnAvatarPath();
-
-                //displaySpixiAlert("Alert", filePath, "OK");
-
-                FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-                stream.CopyTo(fs);
-                /*using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate, System.IO.FileAccess.Write))
-                {
-                    byte[] bytes = new byte[stream.Length];
-                    stream.Read(bytes, 0, (int)stream.Length);
-                    file.Write(bytes, 0, bytes.Length);
-                    stream.Close();
-                }*/
-                Utils.sendUiCommand(webView, "loadAvatar", filePath);
-                stream.Close();
-                fs.Close();
-
-                /*
-                var filename = System.IO.Path.Combine(Environment.GetExternalStoragePublicDirectory(Environment.DirectoryPictures).ToString(), "NewFolder");
-                filename = System.IO.Path.Combine(filename, "filename.jpg");
-                using (var fileOutputStream = new FileOutputStream(filename))
-                {
-                    await fileOutputStream.WriteAsync(reducedImage);
-                }*/
-
+                return;
             }
 
+            var file_path = Node.localStorage.getOwnAvatarPath();
+            try
+            {
+                byte[] image_bytes = null;
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    stream.Close();
+                    image_bytes = picker_service.ResizeImage(ms.ToArray(), 960, 540);
+                    if(image_bytes == null)
+                    {
+                        return;
+                    }
+                }
+
+                FileStream fs = new FileStream(file_path, FileMode.OpenOrCreate, FileAccess.Write);
+                fs.Write(image_bytes, 0, image_bytes.Length);
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
+                await displaySpixiAlert("Error", ex.ToString(), "ok");
+                return;
+            }
+
+            Utils.sendUiCommand(webView, "loadAvatar", file_path);
         }
 
         public void onCreateAccount(string nick, string pass)
