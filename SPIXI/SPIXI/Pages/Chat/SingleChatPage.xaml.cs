@@ -184,8 +184,9 @@ namespace SPIXI
 
         private void onLoad()
         {
+            DependencyService.Get<IPushService>().clearNotifications();
+
             loadMessages();
-            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             // Execute timer-related functionality immediately
             updateScreen();
