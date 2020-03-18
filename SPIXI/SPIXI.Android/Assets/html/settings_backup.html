@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+<!-- saved from url=(0016)http://localhost -->
 
 <head lang="en">
     <meta charset="utf-8">
@@ -14,82 +15,81 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-    
+
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
-    
+
 </head>
 <body>
     <div id="wrap" class="container-fluid noselect">
-        
+
         <!-- Toolbar -->
-        <div class="spixi-toolbar shadow" >
+        <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div id="backbtn"  class="col-2">
+                <div id="backbtn" class="col-2">
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
                     Backup Account
-                </div>   
+                </div>
             </div>
-            
+
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
-        
         <!-- DescriptionBar -->
         <div class="spixi-descriptionbar">
             <div class="container">
-            <div class="row spixi-descriptionbar-row">
-                <div class="col-2 spixi-center"><i class="fa fa-save"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details">Backup your account, by downloading a special file which you will be able to use to restore.</div>
-            </div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 spixi-center"><i class="fa fa-save"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">Backup your account, by downloading a special file which you will be able to use to restore.</div>
+                </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
-        
+
         <div class="spixi-textsection-holder spixi-textsection-header">
             Save backup file
         </div>
         <div class="spixi-textsection-holder">
             This BACKUP FILE and the ENCRYPTION PASSWORD associated with it will be required to restore your information in the     following cases:
         </div>
-        <hr class="spixi-separator"/>
+        <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-italic">
-        - lose this device<br/>
-        - uninstall Spixi from your device<br/>
-        - delete your Account<br/>
-        - delete your Wallet
+            - lose this device<br />
+            - uninstall Spixi from your device<br />
+            - delete your Account<br />
+            - delete your Wallet
         </div>
-        <hr class="spixi-separator"/>
-        
-        <hr class="spixi-separator-main"/>
-        
+        <hr class="spixi-separator" />
+
+        <hr class="spixi-separator-main" />
+
         <div id="sendrequest" class="spixi-button large center">
             <i class="fas fa-download"></i>&nbsp; Save backup file
         </div>
-        
+
         <div class="spixi-holder-20"></div>
 
-        
-    </div>
-    
-    
-<script type="text/javascript">
-    
-    document.getElementById("backbtn").onclick = function() {
-        location.href = "ixian:back";
-    } 
-    
-    document.getElementById("sendrequest").onclick = function() {
-        location.href = "ixian:backup";
-    } 
 
-</script>
+    </div>
+
+
+    <script type="text/javascript">
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        document.getElementById("sendrequest").onclick = function () {
+            location.href = "ixian:backup";
+        }
+
+    </script>
 
 </body>
 </html>

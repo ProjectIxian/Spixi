@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+<!-- saved from url=(0016)http://localhost -->
 
 <head lang="en">
     <meta charset="utf-8">
@@ -14,19 +15,19 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-    
+
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
-    
+
 </head>
 <body>
     <div id="wrap" class="container-fluid noselect">
-        
+
         <!-- Toolbar -->
-        <div class="spixi-toolbar shadow" >
+        <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
                 <div id="backbtn" class="col-2">
@@ -34,26 +35,25 @@
                 </div>
                 <div class="col-10">
                     Lock my Spixi
-                </div>   
+                </div>
             </div>
-            
+
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
-        
         <!-- DescriptionBar -->
         <div class="spixi-descriptionbar">
             <div class="container">
-            <div class="row spixi-descriptionbar-row">
-                <div class="col-2 spixi-center"><i class="fa fa-lock"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details">Create a Lock Password for your Spixi, to make sure you are the only one using your account on this device.</div>
-            </div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 spixi-center"><i class="fa fa-lock"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">Create a Lock Password for your Spixi, to make sure you are the only one using your account on this device.</div>
+                </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
 
         <div class="spixi-holder-20"></div>
-        
+
         <div class="spixi-textsection-holder ">
             <div class="spixi-textsection-header">Security status:</div>
         </div>
@@ -64,87 +64,86 @@
         <div class="spixi-holder-40"></div>
 
         <div id="securitycontents" style="display: none;">
-        <hr class="spixi-separator-main"/>
+            <hr class="spixi-separator-main" />
 
-        
-        <div class="spixi-textsection-holder spixi-textsection-header">
-            Create or edit your Lock Password
+
+            <div class="spixi-textsection-holder spixi-textsection-header">
+                Create or edit your Lock Password
+            </div>
+
+            <hr class="spixi-separator" />
+
+            <div class="spixi-textsection-holder">
+                Type in your <b>Current</b> Lock Password
+            </div>
+            <div class="spixi-textfield-holder ">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your Lock Password">
+            </div>
+
+            <hr class="spixi-separator" />
+
+            <div class="spixi-textsection-holder">
+                Type in your <b>NEW</b> Lock Password
+            </div>
+            <div class="spixi-textfield-holder ">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your new Lock Password">
+            </div>
+            <div class="spixi-textfield-holder smallpadding">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Retype in your new Lock Password">
+            </div>
+            <hr class="spixi-separator" />
+            <div class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> This password will be required every time you launch Spixi.</div>
+
+            <div class="spixi-holder-20"></div>
+            <div class="spixi-holder-20"></div>
+
+            <div id="sendrequest" class="spixi-button disabled padding-left">
+                Save Lock Password
+            </div>
         </div>
-        
-        <hr class="spixi-separator"/>
-        
-        <div class="spixi-textsection-holder">
-            Type in your <b>Current</b> Lock Password
-        </div>
-        <div class="spixi-textfield-holder ">
-            <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your Lock Password">
-        </div>
-        
-        <hr class="spixi-separator"/>
-        
-        <div class="spixi-textsection-holder">
-            Type in your <b>NEW</b> Lock Password
-        </div>
-        <div class="spixi-textfield-holder ">
-            <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your new Lock Password">
-        </div>
-        <div class="spixi-textfield-holder smallpadding">
-            <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Retype in your new Lock Password">
-        </div>
-        <hr class="spixi-separator"/>
-        <div class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> This password will be required every time you launch Spixi.</div>
 
         <div class="spixi-holder-20"></div>
-        <div class="spixi-holder-20"></div>
-        
-        <div id="sendrequest" class="spixi-button disabled padding-left">
-            Save Lock Password
-        </div>
-        </div>
-        
-        <div class="spixi-holder-20"></div>
-        
-        
+
+
     </div>
-    
-    
-<script type="text/javascript">
-    var switchbtn = document.getElementById("switch");
-    var securitycontents = document.getElementById("securitycontents");
 
-    document.getElementById("backbtn").onclick = function() {
-        location.href = "ixian:back";
-    } 
-    
-    switchbtn.onclick = function() {
-        if(switchbtn.classList.contains("off"))
-        {
-            securitycontents.style.display = "block";   
-            switchbtn.className = "spixi-switch";
-            document.getElementById("switchdescription").innerHTML = "LOCKED";
-            return;
+
+    <script type="text/javascript">
+        var switchbtn = document.getElementById("switch");
+        var securitycontents = document.getElementById("securitycontents");
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
         }
-        switchbtn.className = "spixi-switch off";
-        securitycontents.style.display = "none";   
-        document.getElementById("switchdescription").innerHTML = "UNLOCKED";
 
-    }
-    
-    document.getElementById("sendrequest").onclick = function() {
-        var wal = document.getElementById("addressInput").value;
-        if (isBlank(wal)) {
-            location.href = "ixian:error";
-            return;
+        switchbtn.onclick = function () {
+            if (switchbtn.classList.contains("off")) {
+                securitycontents.style.display = "block";
+                switchbtn.className = "spixi-switch";
+                document.getElementById("switchdescription").innerHTML = "LOCKED";
+                return;
+            }
+            switchbtn.className = "spixi-switch off";
+            securitycontents.style.display = "none";
+            document.getElementById("switchdescription").innerHTML = "UNLOCKED";
+
         }
-        location.href = "ixian:request:" + wal;
-    } 
 
-    function setAddress(addr) {
-        document.getElementById("addressInput").value = addr;
-    }
+        document.getElementById("sendrequest").onclick = function () {
+            var wal = document.getElementById("addressInput").value;
+            if (isBlank(wal)) {
+                location.href = "ixian:error";
+                return;
+            }
+            location.href = "ixian:request:" + wal;
+        }
+
+        function setAddress(addr) {
+            document.getElementById("addressInput").value = addr;
+        }
 
 
-</script>
+    </script>
 
 </body>
 </html>
