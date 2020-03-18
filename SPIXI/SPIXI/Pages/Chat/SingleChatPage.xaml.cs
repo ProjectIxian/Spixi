@@ -511,11 +511,11 @@ namespace SPIXI
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), enableView.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", enableView.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
             }
 
@@ -551,11 +551,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), "True");
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), "True");
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", "True");
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), "True");
                 }
             }
 
