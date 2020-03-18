@@ -1100,24 +1100,6 @@ img.emoji {
     text-align: right;
     right: 15px;
 }
-.spixi-bubble.myself .actionicon {
-    display: table-cell;
-    float: left;
-    font-size: 14pt;
-    margin-top: -25px;
-    position: relative;
-    z-index: 2;
-    color: #FFF;
-    padding-left: 10px;
-    padding-top: 12px;
-    
-    background: #7E7F94 none repeat scroll 0 0;
-    border: medium none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    text-align: left;
-}
 
 .spixi-bubble.file.myself {
     font-size: 14pt;
@@ -1136,11 +1118,7 @@ img.emoji {
 }
 
 .spixi-bubble .actionicon {
-    display: table-cell;
-    float: right;
     font-size: 14pt;
-    margin-top: -25px;
-    position: relative;
     z-index: 2;
     color: #FFF;
     padding-left: 10px;
@@ -1153,12 +1131,12 @@ img.emoji {
     height: 40px;
 }
 
+.spixi-bubble.myself .actionicon {
+    text-align: left;
+}
+
 .spixi-bubble .actionprogress {
-    display: table-cell;
-    float: right;
     font-size: 10pt;
-    margin-top: -25px;
-    position: relative;
     z-index: 2;
     color: #FFF;
     padding-left: 0px;
@@ -1176,10 +1154,35 @@ img.emoji {
     float: left;
 }
 
-.spixi-bubble .smaller {
-      font-size: 6pt;
+.spixi-bubble.file .text a
+{
+    display: table;
+    word-wrap: break-word;
 }
 
+.spixi-bubble.file .text .icon {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.spixi-bubble.file .text .text {
+    margin-right: 40px;
+    margin-left: 10px;
+    display: table-cell;
+    color: black;
+    text-decoration: none;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.spixi-bubble.file.myself .text .text{
+    margin-left: 40px;
+    margin-right: 10px;
+}
+
+.spixi-bubble .smaller {
+    font-size: 6pt;
+}
 
 .spixi-bubble .statusIndicator {
     display: none;

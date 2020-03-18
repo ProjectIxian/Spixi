@@ -286,76 +286,49 @@
     }
     
     function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, progress, complete) {
+
         var additionalClasses = "";
-        if (sent == "True") {
-            additionalClasses = " sent";
-        }
-        if (read == "True") {
-            additionalClasses += " read";
+        if (me == "True") {
+            additionalClasses = " myself";
+            if (sent == "True") {
+                additionalClasses += " sent";
+            }
+            if (read == "True") {
+                additionalClasses += " read";
+            }
         }
         
         var textEl = document.createElement('div');
         textEl.className = "text selectable";
         textEl.innerHTML = name;
-
-        var timeClass = "spixi-timestamp";
-        var relativeTime = getRelativeTime(time);
-
-        if (getTimeDifference(time) < 3600) {
-            timeClass = "spixi-timestamp spixi-rel-ts-active";
-        }
-
-        var timeEl = document.createElement('div');
-        timeEl.setAttribute("data-timestamp", time);
-        timeEl.className = "time selectable " + timeClass;
-        timeEl.innerHTML = relativeTime;
-
-        var statusEl = document.createElement('div');
-        statusEl.innerHTML = "<i class=\"statusIndicator fas fa-check\"></i>";
-
-        var bubbleEl = document.createElement('div');
-        bubbleEl.id = "file_" + fileid;
-
-        bubbleEl.className = "spixi-bubble file" + additionalClasses;
-        if(me == "True")
-            bubbleEl.className = "spixi-bubble file myself" + additionalClasses;
         
-        bubbleEl.appendChild(textEl);
-        bubbleEl.appendChild(timeEl);
-        bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
-
-        if (avatar != "") {
-
-            avatar = avatar.replace(/&#92;/g, '\\');
-
-            var avatarEl = document.createElement('img');
-            avatarEl.className = "avatar";
-            avatarEl.src = avatar;
-            bubbleEl.appendChild(avatarEl);
-        }
-        
-        var icon = document.createElement('div');
+        var icon = document.createElement('i');
         icon.className = "fa fa-arrow-down actionicon";
+
+        var iconWrap = document.createElement('div');
+        iconWrap.className = "icon";
         
-        if(me == "True")
-            icon.className = "fa fa-folder-open actionicon";
-        
-        bubbleEl.appendChild(icon);
-        
+        iconWrap.appendChild(icon);
+
         var linkEl = document.createElement('a');
-        if(me == "True")
-            linkEl.href = "ixian:openfile:"+fileid;
-        else
-            linkEl.href = "ixian:acceptfile:"+fileid;
-        
-        linkEl.appendChild(bubbleEl);
-        
-        var fileBubbleEl = document.createElement('div');
-        fileBubbleEl.id = "msgfile_" + id;
-        fileBubbleEl.appendChild(linkEl);
-        
-        document.getElementById("messages").appendChild(fileBubbleEl);         
-        linkEl.scrollIntoView(true);
+        linkEl.style.display = "block";
+        linkEl.id = "file_" + fileid;
+
+        if (me == "True") {
+            linkEl.href = "ixian:openfile:" + fileid;
+            icon.className = "fa fa-folder-open actionicon";
+            linkEl.appendChild(iconWrap);
+            linkEl.appendChild(textEl);
+        }
+        else {
+            linkEl.href = "ixian:acceptfile:" + fileid;
+            linkEl.appendChild(textEl);
+            linkEl.appendChild(iconWrap);
+        }
+
+
+        addText(id, address, nick, avatar, linkEl.outerHTML, time, "spixi-bubble file" + additionalClasses);
+
         if (progress == "100")
         {
             updateFile(fileid, progress, complete);
@@ -439,11 +412,6 @@
         var msgEl = document.getElementById("msg_" + id);
         var isFile = false;
         var isPayment = false;
-        if(msgEl == null)
-        {
-            isFile = true;
-            msgEl = document.getElementById("msgfile_" + id).firstChild.firstChild;
-        }
         
         if (msgEl != null) {
 
@@ -460,9 +428,10 @@
                 isPayment = true;
             }
             
-            if (isFile) {
+            if (msgEl.className.indexOf("file") > -1) {
                 additionalClasses += " file";
-            }            
+                isFile = true;
+            }
 
             msgEl.className = "spixi-bubble myself" + additionalClasses;
             
@@ -487,7 +456,6 @@
             viewStyle = "";
         }
         message += "<div class=\"view\" style=\"" + viewStyle + "\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> View</div>";
-        message += " <i class=\"statusIndicator fas fa-check\"></i></div>";
 
         var additionalClasses = "";
         if (localSender == "True") {
