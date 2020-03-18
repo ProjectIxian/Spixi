@@ -429,6 +429,11 @@ img.emoji {
     padding-top: 3px;
     font-size: 12pt;
 }
+.spixi-errorbar.chat
+{
+    position:fixed;
+    z-index: 10;
+}
 .spixi-errorbar-icon {
     float:left;
     margin-left: 20px;

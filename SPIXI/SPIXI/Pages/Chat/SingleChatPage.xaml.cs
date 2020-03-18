@@ -1,17 +1,15 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Network;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -24,8 +22,6 @@ namespace SPIXI
         private Friend friend = null;
 
         private int lastMessageCount = 0;
-        private bool connectedToNode = false;
-        private string node_ip = "";
 
 
         public SingleChatPage(Friend fr)
@@ -39,10 +35,7 @@ namespace SPIXI
             friend.chat_page = this;
 
             // Connect to the friend's S2 node
-            node_ip = friend.searchForRelay();
-
-            //TODOSPIXI
-            //NetworkClientManager.connectToStreamNode(node_ip);
+            friend.searchForRelay();
 
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
@@ -688,21 +681,20 @@ namespace SPIXI
             }
 
             // Show connectivity warning bar
-            if (StreamClientManager.isConnectedTo(node_ip) == null)
+            if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                if (connectedToNode == true)
+                if (!Config.enablePushNotifications && StreamClientManager.isConnectedTo(friend.searchForRelay()) == null)
                 {
-                    connectedToNode = false;
-                    Utils.sendUiCommand(webView, "showWarning", "Not connected to S2 node");
+                    Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian S2...");
+                }
+                else
+                {
+                    Utils.sendUiCommand(webView, "showWarning", "");
                 }
             }
             else
             {
-                if(connectedToNode == false)
-                {
-                    connectedToNode = true;
-                    Utils.sendUiCommand(webView, "showWarning", "");
-                }
+                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian DLT...");
             }
             
 

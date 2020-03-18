@@ -358,14 +358,20 @@ namespace SPIXI
 
         // Check if we're connected to a certain host address
         // Returns StreamClient or null if not found
-        public static NetworkClient isConnectedTo(string address)
+        public static NetworkClient isConnectedTo(string address, bool only_fully_connected = true)
         {
             lock (streamClients)
             {
                 foreach (NetworkClient client in streamClients)
                 {
                     if (client.remoteIP.Address.ToString().Equals(address, StringComparison.Ordinal))
+                    {
+                        if (only_fully_connected && (!client.isConnected() || !client.helloReceived))
+                        {
+                            break;
+                        }
                         return client;
+                    }
                 }
             }
 

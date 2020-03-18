@@ -50,6 +50,14 @@
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
+
+        <!-- ErrorBar -->
+        <div id="warning_bar" class="spixi-errorbar chat" style="display:none;">
+            <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
+            <div class="spixi-errorbar-message">Connecting to Ixian DLT...</div>
+        </div>
+        <!-- End ErrorBar-->
+
         <!-- DescriptionBar -->
         <div id="contactrequestbar" class="spixi-descriptionbar chat" style="display:none;">
             <div class="container">
@@ -575,6 +583,18 @@
                     };
                 }
             }) (nickEls[i]);
+        }
+    }
+
+    function showWarning(text) {
+        var el = document.getElementById("warning_bar");
+        if (text == "") {
+            el.style.display = 'none';
+        }
+        else {
+            el.style.display = 'block';
+            var msgEls = el.getElementsByClassName("spixi-errorbar-message");
+            msgEls[0].innerHTML = text;
         }
     }
 </script>
