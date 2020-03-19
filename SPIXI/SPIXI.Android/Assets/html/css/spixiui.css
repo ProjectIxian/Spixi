@@ -137,9 +137,8 @@ img.emoji {
 
    /* background: #771250;*/
     color: #FFF;  
-
-    padding-left: 20px;
 }
+
 .spixi-toolbar.extended {
     height: 128px;
 }
@@ -153,6 +152,38 @@ img.emoji {
 .spixi-toolbar-row {
     padding-top: 10px;
     height: 56px;
+}
+
+.spixi-toolbar-row > div:nth-child(1) {
+    position: absolute;
+    z-index: 1;
+    max-width: 50pt;
+    -webkit-box-flex: unset;
+    -ms-flex: auto;
+    flex: auto;
+    padding-left: 30px;
+}
+
+.spixi-toolbar-row > div:nth-child(2) {
+    position: absolute;
+    z-index: 0;
+    max-width: 100%;
+    -webkit-box-flex: unset;
+    -ms-flex: auto;
+    flex: auto;
+    padding-left: 50pt;
+    padding-right: 50pt;
+    left: 0px;
+    right: 0px;
+    box-sizing: border-box;
+}
+
+.spixi-toolbar-row > div:nth-child(3) {
+    position: absolute;
+    padding-right: 30px;
+    text-align: right;
+    right: -15px;
+    z-index: 1;
 }
 
 .spixi-toolbar-row.extended {
@@ -186,15 +217,24 @@ img.emoji {
     background-image: url('../img/spixitoolbarlogo.png');
     width: 122px;
     height: 40px;
-    background-size: 121px 40px;
+    background-size: 122px 40px;
     background-repeat: no-repeat;
     background-position: center;
     margin: auto;
 }
 
 .spixi-toolbar-option {
-    padding-top: 4pt;
+    box-sizing: border-box;
     font-size: 12pt;
+    border: 1px solid white;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 3px 12px;
+}
+
+.spixi-toolbar-option:hover
+{
+    background: rgba(11, 11, 11, 0.5);
 }
 
 .spixi-toolbar-chat-name {
@@ -929,6 +969,7 @@ img.emoji {
     border-bottom: 1px solid #d1d5d7;
     padding: 10px;
     box-sizing: border-box;
+    position: relative;
 }
 .spixi-list-item:hover
 {
@@ -952,10 +993,6 @@ img.emoji {
     color: #a3a4a5;
 }
 
-.spixi-list-item-row {
-    border-bottom: 1px solid #d1d5d7;
-}
-
 .spixi-list-item-avatar {
     width: 35pt;
     height: 35pt;
@@ -967,22 +1004,22 @@ img.emoji {
     border: 2px solid #c2185b;
 }
 
-.spixi-list-item-left.small {
-    margin-top: 20px;    
-    height: 40px;    
+.spixi-list-item-left {
+    display: table-cell;
+    width: 50pt;
+    vertical-align: middle;
 }
+
 .payment .spixi-list-item-left {
     font-size: 15pt;
-    margin-top: 4pt;
     text-align: right;
 }
 
-.spixi-list-item-center
-{
-    margin-top: 2pt;
-}
-.spixi-list-item-center.margin8 {
-    margin-top: 8pt;
+.spixi-list-item-center {
+    display: table-cell;
+    width: 100%;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .spixi-list-item-title {
@@ -992,6 +1029,7 @@ img.emoji {
     overflow: hidden;
 }
 .spixi-list-item-title-center {
+    display: inline-block;
     color: #000000;
     font-size: 10pt;
     width:100%;
@@ -1011,27 +1049,24 @@ img.emoji {
 }
 
 .spixi-list-item-right {
-    position: relative;
-    margin-top: 2pt;
+    position:relative;
+    display: table-cell;
     color: #000000;
     font-size: 9pt;
     text-align: right;
+    width: 50pt;
+    vertical-align: middle;
 }
 
 .spixi-list-item-right .spixi-timestamp
 {
-    position: relative;
+    display: inline-block;
     font-size: 8pt;
-    top: 50%;
-    transform: translateY(-50%);
+    vertical-align: middle;
 }
 
 .spixi-list-item-action-icon {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     font-size: 14pt;
-    position: relative;
     z-index: 2;
     color: #c2185b;
 }
@@ -1515,14 +1550,14 @@ img.emoji {
     width: 10pt;
     height: 10pt;
     background: #c2185b;
+    vertical-align: middle;
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: -15pt;
+    margin-left: -20pt;
+    margin-right: 10px;
 }
 
 .unread .spixi-chat-unread-indicator {
-    display: block;
+    display: inline-block;
 }
 
 /* Modals */

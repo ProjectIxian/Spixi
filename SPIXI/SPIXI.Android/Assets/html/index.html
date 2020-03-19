@@ -37,7 +37,7 @@
                 <div class="col-8">
                     <div class="spixi-toolbar-logo"></div>
                 </div>
-                <div class="col-2 spixi-center">
+                <div class="col-2">
                 </div>
             </div>
 
@@ -605,7 +605,7 @@
 
         var contactEntry = document.createElement("div");
         contactEntry.className = "spixi-list-item" + indicator + unreadIndicator;
-        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-8 spixi-list-item-center margin8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div></div></div></a>';
+        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div></div></div></a>';
 
         contactsNode.appendChild(contactEntry);
     }
