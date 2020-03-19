@@ -185,7 +185,7 @@ namespace SPIXI
                     tx_type = "SENT";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addRecentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString(), utransaction.id);
+                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString(), "false");
             }
 
             for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
@@ -206,7 +206,7 @@ namespace SPIXI
                     tx_type = "SENT";
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-                Utils.sendUiCommand(webView, "addRecentActivity", transaction.id, tx_type, time, transaction.amount.ToString());
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), "true");
             }
         }
 

@@ -226,12 +226,19 @@
         }
 
         // Adds a payment
-        function addRecentActivity(txid, text, timestamp, amount) {
+        function addPaymentActivity(txid, text, timestamp, amount, confirmed) {
+            var iconClass = "spixi-text-red";
+            var icon = '<i class="fa fa-circle-notch fa-spin"></i>';
+            if (confirmed == "true") {
+                iconClass = "spixi-text-green";
+                icon = '<i class="fa fa-check-circle"></i>';
+            }
+
             var paymentsNode = document.getElementById("exp2-contents");
 
             var paymentEntry = document.createElement("div");
-            paymentEntry.className = "spixi-list-item";
-            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment spixi-text-green"><i class="fa fa-check-circle"></i></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+            paymentEntry.className = "spixi-list-item payment";
+            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right">' + timestamp + '</div></div></a>';
 
             paymentsNode.appendChild(paymentEntry);
         }

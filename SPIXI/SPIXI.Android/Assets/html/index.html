@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>IXIAN</title>
+    <title>Spixi</title>
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/spixiui.css">
@@ -44,13 +44,13 @@
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
+
         <!-- ErrorBar -->
         <div id="warning_bar" class="spixi-errorbar" style="display:none">
             <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
             <div class="spixi-errorbar-message">Connecting to Ixian DLT...</div>
         </div>
         <!-- End ErrorBar-->
-
 
         <div id="tabholder" class="tab-content">
             <!-- HOME -->
@@ -85,8 +85,6 @@
                 <div class="spixi-expansion-bottom"></div>
 
 
-
-
                 <div id="exp2" class="spixi-expansion">
                     <div id="exp2-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-comment"></i></div>
@@ -99,8 +97,6 @@
                 <div class="spixi-expansion-bottom"></div>
 
 
-
-
                 <a href="javascript:onHomeMenuAction();" class="action-button">
                     <div class="spixi-button center round">
                         <i class="fas fa-plus"></i>
@@ -109,27 +105,21 @@
             </div>
 
             <!-- CHATS -->
-            <div id="chats" class="tab-pane ">
-
-
+            <div id="chats" class="tab-pane">
                 <div id="chat_no_activity" class="container">
                     <div class="spixi-list-placeholer-text">
                         You have no existing conversations.
                     </div>
                 </div>
 
-
-
-                <div id="chatlist" class="container-fluid" style="display: block;">
+                <div id="chatlist" style="display: block;">
                 </div>
-
 
                 <a href="ixian:newchat" class="action-button">
                     <div class="spixi-button center round">
                         <i class="fas fa-plus"></i>
                     </div>
                 </a>
-
             </div>
 
             <!-- WALLET -->
@@ -191,9 +181,6 @@
                     </div>
                 </div>
                 <div class="spixi-expansion-bottom"></div>
-
-
-
             </div>
 
 
@@ -205,7 +192,7 @@
                 </div>
                 <hr class="spixi-separator-full" />
 
-                <div id="contactslist" class="container-fluid">
+                <div id="contactslist">
 
                 </div>
 
@@ -332,7 +319,7 @@
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('encpass');" class="">
                     <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Encryption Password</div>
+                    <div class="spixi-sidebar-item-text">Password</div>
                 </a>
             </div>
 
@@ -348,8 +335,6 @@
         </div>
     </div>
     <!-- End left sidebar and helper -->
-
-
 
 
     <script type="text/javascript">
@@ -619,8 +604,8 @@
         var contactsNode = document.getElementById("contactslist");
 
         var contactEntry = document.createElement("div");
-        contactEntry.className = "spixi-list-item spixi-list-item-row" + indicator + unreadIndicator;
-        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 "><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-10"><div class="spixi-list-item-title-center">' + name + '</div><div class="spixi-chat-unread-indicator"></div></div></div></a>';
+        contactEntry.className = "spixi-list-item" + indicator + unreadIndicator;
+        contactEntry.innerHTML = '<a href="ixian:details:' + wal + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-8 spixi-list-item-center margin8"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div></div></div></a>';
 
         contactsNode.appendChild(contactEntry);
     }
@@ -648,8 +633,8 @@
         var paymentsNode = document.getElementById("paymentlist");
 
         var paymentEntry = document.createElement("div");
-        paymentEntry.className = "spixi-list-item";
-        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1 spixi-list-item-left payment ' + iconClass + '">' + icon + '</div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-3 spixi-list-item-right">' + timestamp + '</div></div></a>';
+        paymentEntry.className = "spixi-list-item payment";
+        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right">' + timestamp + '</div></div></a>';
 
         paymentsNode.appendChild(paymentEntry);
     }
@@ -689,7 +674,7 @@
         var chatsNode = document.getElementById("chatlist");
         var readmsg = document.createElement("a");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
+        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';
@@ -731,9 +716,10 @@
         }
 
         var chatsNode = document.getElementById("exp2-contents");
-        var readmsg = document.createElement("a");
+        var readmsg = document.createElement("div");
         readmsg.href = "ixian:chat:" + wallet;
-        readmsg.innerHTML = '<div class="spixi-list-item' + indicator + '"><div class="row"><div class="spixi-expansion-left"></div><div class="col-1"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-3 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
+        readmsg.className = "spixi-list-item " + indicator;
+        readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
 
         chatsNode.appendChild(readmsg);
         document.getElementById("chatlist").style.display = 'block';

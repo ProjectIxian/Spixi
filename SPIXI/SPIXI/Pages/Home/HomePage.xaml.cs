@@ -687,6 +687,7 @@ namespace SPIXI
                     }
                 }
             }
+            updateScreen();
         }
     }
 }

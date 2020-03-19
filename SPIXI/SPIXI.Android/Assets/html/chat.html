@@ -126,9 +126,9 @@
             location.href = "ixian:back";
         }
 
-        document.getElementById("phonebtn").onclick = function () {
+        /*document.getElementById("phonebtn").onclick = function () {
             location.href = "ixian:call";
-        }
+        }*/
 
         function test() {
             setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
@@ -308,7 +308,7 @@
             icon.className = "fa fa-arrow-down actionicon";
 
             var iconWrap = document.createElement('div');
-            iconWrap.className = "icon";
+            iconWrap.className = "icon-wrap";
 
             iconWrap.appendChild(icon);
 
@@ -370,18 +370,15 @@
         }
 
         function updateFile(id, progress, complete) {
-            var aEl = document.getElementById("file_" + id).parentElement;
-            if (aEl != null) {
-                if (complete == "True") {
-                    aEl.href = "ixian:openfile:" + id;
-                }
-                else {
-                    aEl.href = "javascript:void(0)";
-                }
-            }
-
             var fileEl = document.getElementById("file_" + id);
             if (fileEl != null) {
+                if (complete == "True") {
+                    fileEl.href = "ixian:openfile:" + id;
+                }
+                else {
+                    fileEl.href = "javascript:void(0)";
+                }
+
                 var aEls = fileEl.getElementsByClassName("actionicon");
                 if (aEls.length == 0)
                     aEls = fileEl.getElementsByClassName("actionprogress");
