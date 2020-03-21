@@ -362,6 +362,8 @@ namespace SPIXI
         // Called when receiving encryption keys from the S2 node
         public static void handleReceivedKeys(byte[] sender, byte[] data)
         {
+            // TODO TODO secure this function to prevent "downgrade"; possibly other handshake functions need securing
+
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
@@ -937,7 +939,9 @@ namespace SPIXI
 
         private static void handleRequestAdd(byte[] id, byte[] sender_wallet, byte[] pub_key)
         {
-            if(!(new Address(pub_key)).address.SequenceEqual(sender_wallet))
+            // TODO TODO secure this function to prevent "downgrade"; possibly other handshake functions need securing
+
+            if (!(new Address(pub_key)).address.SequenceEqual(sender_wallet))
             {
                 Logging.error("Received invalid pubkey in handleRequestAdd for {0}", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
                 return;
@@ -1136,19 +1140,16 @@ namespace SPIXI
 
         public static void sendAcceptAdd(Friend friend)
         {
-            if(friend.handshakeStatus > 1)
+            // TODO TODO secure this function to prevent "downgrade"; possibly other handshake functions need securing
+
+            if (friend.handshakeStatus > 1)
             {
                 return;
             }
 
-            /*friend.aesKey = null;
-            friend.chachaKey = null;*/
-
-            if(friend.aesKey == null)
-            {
-                friend.chachaKey = null;
-                friend.generateKeys();
-            }
+            friend.aesKey = null;
+            friend.chachaKey = null;
+            friend.generateKeys();
 
             FriendList.saveToStorage();
 
