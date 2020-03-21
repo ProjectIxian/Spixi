@@ -172,7 +172,6 @@ img.emoji {
     -ms-flex: auto;
     flex: auto;
     padding-left: 50pt;
-    padding-right: 50pt;
     left: 0px;
     right: 0px;
     box-sizing: border-box;
@@ -979,11 +978,6 @@ img.emoji {
     background-color: #dae2e9;
 }
 
-.address .spixi-list-item
-{
-    margin-left: 0px;
-}
-
 .address .spixi-list-item:hover,
 .address .spixi-list-item:active {
     background-color: #eef2f5;
@@ -1005,7 +999,7 @@ img.emoji {
 }
 
 .spixi-list-item-left {
-    display: table-cell;
+    display: inline-block;
     width: 50pt;
     vertical-align: middle;
 }
@@ -1016,7 +1010,7 @@ img.emoji {
 }
 
 .spixi-list-item-center {
-    display: table-cell;
+    display: inline-block;
     width: 100%;
     box-sizing: border-box;
     vertical-align: middle;
@@ -1029,11 +1023,13 @@ img.emoji {
     overflow: hidden;
 }
 .spixi-list-item-title-center {
-    display: inline-block;
     color: #000000;
     font-size: 10pt;
-    width:100%;
+    width: 100%;
     overflow: hidden;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .spixi-list-item-title-center.selected {
     font-weight: bold;
@@ -1049,8 +1045,7 @@ img.emoji {
 }
 
 .spixi-list-item-right {
-    position:relative;
-    display: table-cell;
+    display: inline-block;
     color: #000000;
     font-size: 9pt;
     text-align: right;
@@ -1060,15 +1055,25 @@ img.emoji {
 
 .spixi-list-item-right .spixi-timestamp
 {
-    display: inline-block;
+    display:block;
     font-size: 8pt;
     vertical-align: middle;
+    position: absolute;
+    width: 60pt;
+    max-width: 60pt;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
 }
 
 .spixi-list-item-action-icon {
     font-size: 14pt;
     z-index: 2;
     color: #c2185b;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
 }
 
 .spixi-list-item-noborder{
@@ -1551,13 +1556,20 @@ img.emoji {
     height: 10pt;
     background: #c2185b;
     vertical-align: middle;
-    position: relative;
-    margin-left: -20pt;
-    margin-right: 10px;
+    right: 65pt;
+    margin-right: 25px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#contactslist .spixi-chat-unread-indicator
+{
+    right: 0px;
 }
 
 .unread .spixi-chat-unread-indicator {
-    display: inline-block;
+    display: block;
 }
 
 /* Modals */

@@ -34,7 +34,7 @@
                 <div class="col-2">
                     <i class="fas fa-bars"></i>
                 </div>
-                <div class="col-8">
+                <div class="col-8" style="padding-right: 50pt;">
                     <div class="spixi-toolbar-logo"></div>
                 </div>
                 <div class="col-2">
@@ -634,7 +634,7 @@
 
         var paymentEntry = document.createElement("div");
         paymentEntry.className = "spixi-list-item payment";
-        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right">' + timestamp + '</div></div></a>';
+        paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-timestamp">' + timestamp + '</div></div></div></a>';
 
         paymentsNode.appendChild(paymentEntry);
     }
