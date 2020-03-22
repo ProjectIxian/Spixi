@@ -1198,7 +1198,7 @@ namespace SPIXI
 
             reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, reply_message);
+            StreamProcessor.sendMessage(friend, reply_message, true, false, true);
         }
 
         public static void sendAvatar(Friend friend)
@@ -1235,7 +1235,7 @@ namespace SPIXI
 
             reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, reply_message);
+            StreamProcessor.sendMessage(friend, reply_message, true, false, true);
         }
 
         // Requests the nickname of the sender

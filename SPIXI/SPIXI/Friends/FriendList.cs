@@ -242,7 +242,11 @@ namespace SPIXI
             {
                 if (App.isInForeground == false || friend.chat_page == null)
                 {
-                    DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    // don't fire notification for nickname and avatar
+                    if(!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
+                    {
+                        DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    }
                 }
             }
 
