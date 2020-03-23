@@ -115,7 +115,7 @@ namespace SPIXI
     public class BotContact
     {
         public string nick;
-        public byte[] avatar;
+        public byte[] publicKey;
     }
 
     public class Friend

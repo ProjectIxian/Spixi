@@ -622,6 +622,7 @@ namespace SPIXI
                 return;
             }
 
+            bool replaced_sender_address = false;
             byte[] sender_address = message.sender;
 
             if (endpoint != null)
@@ -631,6 +632,8 @@ namespace SPIXI
                     // message from a bot group chat
                     sender_address = message.sender;
                     message.sender = message.recipient;
+
+                    replaced_sender_address = true;
                 }
             }
 
@@ -680,13 +683,26 @@ namespace SPIXI
 
             switch(spixi_message.type)
             {
+                case SpixiMessageCode.pubKey:
+                    handlePubKey(message.sender, spixi_message.data);
+                    break;
                 case SpixiMessageCode.chat:
                     {
                         if(sender_address == null)
                         {
                             Logging.info("Sender address is null");
                         }
-                        if (friend.bot && !message.verifySignature(spixi_message.data))
+
+
+                        if (replaced_sender_address && (friend.contacts[sender_address] == null || friend.contacts[sender_address].publicKey == null))
+                        {
+                            requestPubKey(friend, sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (friend.bot && !message.verifySignature(friend.publicKey))
                         {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
@@ -710,7 +726,15 @@ namespace SPIXI
                 case SpixiMessageCode.nick:
                     {
                         // Set the nickname for the corresponding address
-                        if (!message.verifySignature(friend.publicKey))
+                        if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (replaced_sender_address && (friend.contacts[sender_address] == null || friend.contacts[sender_address].publicKey == null))
+                        {
+                            requestPubKey(friend, sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
                         {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
@@ -737,7 +761,15 @@ namespace SPIXI
                 case SpixiMessageCode.avatar:
                     {
                         // Set the avatar for the corresponding address
-                        if (!message.verifySignature(friend.publicKey))
+                        if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (replaced_sender_address && (friend.contacts[sender_address] == null || friend.contacts[sender_address].publicKey == null))
+                        {
+                            requestPubKey(friend, sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
                         {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
@@ -908,13 +940,35 @@ namespace SPIXI
             sendMessage(friend, msg_received, true, false, false);
         }
 
+        private static void handlePubKey(byte[] sender_wallet, byte[] pub_key)
+        {
+            Friend friend = FriendList.getFriend(sender_wallet);
+            if (friend == null)
+            {
+                Logging.error("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                return;
+            }
+
+            if(!friend.bot)
+            {
+                return;
+            }
+
+            byte[] address = new Address(pub_key).address;
+            if (!friend.contacts.ContainsKey(address))
+            {
+                friend.contacts.Add(address, new BotContact());
+            }
+            friend.contacts[address].publicKey = pub_key;
+        }
+
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
         private static void handleGetNick(byte[] sender_wallet, string text)
         {
             Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                Logging.error("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
                 return;
             }
 
@@ -928,7 +982,7 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                Logging.error("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
                 return;
             }
 
@@ -1236,6 +1290,28 @@ namespace SPIXI
             reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
             StreamProcessor.sendMessage(friend, reply_message, true, false, true);
+        }
+
+        // Requests the nickname of the sender
+        public static void requestPubKey(Friend friend, byte[] contact_address)
+        {
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getPubKey, contact_address);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            if (friend.aesKey == null || friend.chachaKey == null)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.rsa;
+            }
+
+            StreamProcessor.sendMessage(friend, message);
         }
 
         // Requests the nickname of the sender
