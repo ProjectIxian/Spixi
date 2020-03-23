@@ -76,27 +76,31 @@ namespace SPIXI.iOS.Classes
                 return null;
             }
 
-            nfloat width = original_image.Size.Width;
-            nfloat height = original_image.Size.Height;
+            // Calculate crop section
 
-            float resized_width = new_width;
-            float resized_height = new_height;
+            nfloat orig_width = original_image.Size.Width;
+            nfloat orig_height = original_image.Size.Height;
 
-            int margin_x = 0;
-            int margin_y = 0;
+            nfloat width_ratio = new_width / orig_width;
+            nfloat height_ratio = new_height / orig_height;
 
-            if (height > width)
-            {
-                nfloat ratio = height / new_height;
-                resized_width = (int)(width / ratio);
-                margin_x = (int)((resized_width - new_width) / 2);
-            }
-            else
-            {
-                nfloat ratio = width / new_width;
-                resized_height = (int)(height / ratio);
-                margin_y = (int)((resized_height - new_height) / 2);
-            }
+            nfloat ratio = (nfloat)Math.Max(width_ratio, height_ratio);
+
+            int resized_pre_crop_width = (int)Math.Round(orig_width * ratio);
+            int resized_pre_crop_height = (int)Math.Round(orig_height * ratio);
+
+            // full area to crop on resized image
+            int resized_crop_x = resized_pre_crop_width - new_width;
+            int resized_crop_y = resized_pre_crop_height - new_height;
+
+            int cropped_width = (int)((resized_pre_crop_width - resized_crop_x) / ratio);
+            int cropped_height = (int)((resized_pre_crop_height - resized_crop_y) / ratio);
+
+            // half of area to crop on original image
+            int crop_x = (int)(resized_crop_x / ratio / 2);
+            int crop_y = (int)(resized_crop_y / ratio / 2);
+
+            // End of calculate crop section
 
             // TODO crop as well
 

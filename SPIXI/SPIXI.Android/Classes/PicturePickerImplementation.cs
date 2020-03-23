@@ -5,6 +5,7 @@ using SPIXI.Interfaces;
 using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using Android.Graphics;
+using System;
 
 [assembly: Dependency(typeof(PicturePickerImplementation))]
 
@@ -43,34 +44,40 @@ namespace SPIXI.Droid.Classes
                 return null;
             }
 
-            float width = original_image.Width;
-            float height = original_image.Height;
+            // Calculate crop section
 
-            int resized_width = new_width;
-            int resized_height = new_height;
+            int orig_width = original_image.Width;
+            int orig_height = original_image.Height;
 
-            int margin_x = 0;
-            int margin_y = 0;
+            float width_ratio = (float)new_width / orig_width;
+            float height_ratio = (float)new_height / orig_height;
 
-            if (height > width)
-            {
-                float ratio = height / new_height;
-                resized_width = (int)(width / ratio);
-                margin_x = (resized_width - new_width) / 2;
-            }
-            else
-            {
-                float ratio = width / new_width;
-                resized_height = (int)(height / ratio);
-                margin_y = (resized_height - new_height) / 2;
-            }
+            float ratio = Math.Max(width_ratio, height_ratio);
 
-            Bitmap resized_image = Bitmap.CreateScaledBitmap(original_image, resized_width, resized_height, false);
-            Bitmap cropped_image = Bitmap.CreateBitmap(resized_image, margin_x, margin_y, new_width, new_height);
+            int resized_pre_crop_width = (int)Math.Round(orig_width * ratio);
+            int resized_pre_crop_height = (int)Math.Round(orig_height * ratio);
+
+            // full area to crop on resized image
+            int resized_crop_x = resized_pre_crop_width - new_width;
+            int resized_crop_y = resized_pre_crop_height - new_height;
+
+            int cropped_width = (int)((resized_pre_crop_width - resized_crop_x) / ratio);
+            int cropped_height = (int)((resized_pre_crop_height - resized_crop_y) / ratio);
+
+            // half of area to crop on original image
+            int crop_x = (int)(resized_crop_x / ratio / 2);
+            int crop_y = (int)(resized_crop_y / ratio / 2);
+
+            // End of calculate crop section
+
+            Bitmap cropped_image = Bitmap.CreateBitmap(original_image, crop_x, crop_y, cropped_width, cropped_height);
+            Bitmap resized_image = Bitmap.CreateScaledBitmap(cropped_image, new_width, new_height, false);
 
             using (MemoryStream ms = new MemoryStream())
             {
-                cropped_image.Compress(Bitmap.CompressFormat.Jpeg, 100, ms);
+                resized_image.Compress(Bitmap.CompressFormat.Jpeg, 100, ms);
+                resized_image.Dispose();
+                cropped_image.Dispose();
                 return ms.ToArray();
             }
         }

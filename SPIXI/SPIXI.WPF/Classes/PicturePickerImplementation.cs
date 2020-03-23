@@ -37,36 +37,43 @@ namespace SPIXI.WPF.Classes
         {
             BitmapImage original_image = new BitmapImage();
             original_image.BeginInit();
-            original_image.StreamSource = new  MemoryStream(image_data);
+            original_image.StreamSource = new MemoryStream(image_data);
             original_image.EndInit();
 
-            float width = original_image.PixelWidth;
-            float height = original_image.PixelHeight;
+            // Calculate crop section
 
-            int resized_width = new_width;
-            int resized_height = new_height;
+            int orig_width = original_image.PixelWidth;
+            int orig_height = original_image.PixelHeight;
 
-            int margin_x = 0;
-            int margin_y = 0;
+            float width_ratio = (float)new_width / orig_width;
+            float height_ratio = (float)new_height / orig_height;
 
-            if (height > width)
-            {
-                float ratio = height / new_height;
-                resized_width = (int)(width / ratio);
-                margin_x = (resized_width - new_width) / 2;
-            }
-            else
-            {
-                float ratio = width / new_width;
-                resized_height = (int)(height / ratio);
-                margin_y = (resized_height - new_height) / 2;
-            }
+            float ratio = Math.Max(width_ratio, height_ratio);
 
-            var rect = new Rect(0, 0, resized_width, resized_height);
+            int resized_pre_crop_width = (int)Math.Round(orig_width * ratio);
+            int resized_pre_crop_height = (int)Math.Round(orig_height * ratio);
+            
+            // full area to crop on resized image
+            int resized_crop_x = resized_pre_crop_width - new_width;
+            int resized_crop_y = resized_pre_crop_height - new_height;
+
+            int cropped_width = (int)((resized_pre_crop_width - resized_crop_x) / ratio);
+            int cropped_height = (int)((resized_pre_crop_height - resized_crop_y) / ratio);
+
+            // half of area to crop on original image
+            int crop_x = (int)(resized_crop_x / ratio / 2);
+            int crop_y = (int)(resized_crop_y / ratio / 2);
+
+            // End of calculate crop section
+
+            var cropped_image = new CroppedBitmap(original_image, new Int32Rect(crop_x, crop_y, cropped_width, cropped_height));
+
+            var rect = new Rect(0, 0, new_width, new_height);
 
             var group = new DrawingGroup();
             RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
-            group.Children.Add(new ImageDrawing(original_image, rect));
+            group.Children.Add(new ImageDrawing(cropped_image, rect));
+
 
             var drawing_visual = new DrawingVisual();
             using (var drawing_context = drawing_visual.RenderOpen())
