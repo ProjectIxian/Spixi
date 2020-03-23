@@ -160,29 +160,35 @@ namespace SPIXI
 
         public void onRequest(byte[] recipient_address)
         {
-            if(Address.validateChecksum(recipient_address) == false)
+            try
             {
-                displaySpixiAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
-                return;
-            }
+                if(Address.validateChecksum(recipient_address) == false)
+                {
+                    displaySpixiAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
+                    return;
+                }
 
-            if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                {
+                    displaySpixiAlert("Cannot add yourself", "The address you have entered is your own address.", "OK");
+                    return;
+                }
+
+                if (FriendList.getFriend(recipient_address) != null)
+                {
+                    displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
+                    return;
+                }
+
+                Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);
+
+                FriendList.saveToStorage();
+
+                StreamProcessor.sendContactRequest(friend);
+            }catch(Exception)
             {
-                displaySpixiAlert("Cannot add yourself", "The address you have entered is your own address.", "OK");
-                return;
+
             }
-
-            if (FriendList.getFriend(recipient_address) != null)
-            {
-                displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
-                return;
-            }
-
-            Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);
-
-            FriendList.saveToStorage();
-
-            StreamProcessor.sendContactRequest(friend);
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
