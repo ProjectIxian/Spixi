@@ -1371,9 +1371,9 @@ namespace SPIXI
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 0 };
 
-            message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey(), true, true, true, true);
+            message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, message);
+            StreamProcessor.sendMessage(friend, message, true, true, true, true);
         }
 
         public static void sendGetMessages(Friend friend)
