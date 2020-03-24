@@ -558,7 +558,7 @@ namespace SPIXI
             sorted_msgs = null;
         }
 
-        private IxiNumber calculateReceivedAmount(Transaction tx)
+        public static IxiNumber calculateReceivedAmount(Transaction tx)
         {
             IxiNumber amount = 0;
             foreach (var entry in tx.toList)

@@ -535,8 +535,15 @@ namespace SPIXI
                         status = "CONFIRMED";
                         status_icon = "fa-check-circle";
                     }
-                    amount = transaction.amount.ToString();
-                }else
+                    if(message.localSender)
+                    {
+                        amount = transaction.amount.ToString();
+                    }else
+                    {
+                        amount = HomePage.calculateReceivedAmount(transaction).ToString();
+                    }
+                }
+                else
                 {
                     // TODO think about how to make this more private
                     CoreProtocolMessage.broadcastGetTransaction(message.message, 0, null);
