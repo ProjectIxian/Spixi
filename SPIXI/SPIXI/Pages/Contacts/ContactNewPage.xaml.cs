@@ -69,9 +69,15 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:request:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:request:" }, StringSplitOptions.None);
-                byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
-                onRequest(wal);
+                try
+                {
+                    string[] split = current_url.Split(new string[] { "ixian:request:" }, StringSplitOptions.None);
+                    byte[] wal = Base58Check.Base58CheckEncoding.DecodePlain(split[1]);
+                    onRequest(wal);
+                }catch(Exception)
+                {
+                    displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
+                }
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
             {

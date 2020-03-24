@@ -280,8 +280,14 @@ namespace SPIXI
             string[] split = result.Split(new string[] { ":send" }, StringSplitOptions.None);
             if (split.Count() > 1)
             {
-                byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);
-                Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
+                try
+                {
+                    byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);
+                    Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
+                }catch(Exception)
+                {
+
+                }
                 return;
             }
 

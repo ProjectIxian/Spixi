@@ -177,13 +177,21 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:addrecipient"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
-                if(Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                try
                 {
-                    Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
-                }else
+                    string[] split = current_url.Split(new string[] { "ixian:addrecipient:" }, StringSplitOptions.None);
+                    if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                    {
+                        Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
+                    }
+                    else
+                    {
+                        displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
+                    }
+                }
+                catch (Exception)
                 {
-                    displaySpixiAlert("SPIXI", "Invalid Address.", "OK");
+                    displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
                 }
             }
             else
