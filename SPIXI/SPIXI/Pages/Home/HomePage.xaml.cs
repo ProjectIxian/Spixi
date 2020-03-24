@@ -515,7 +515,15 @@ namespace SPIXI
                         }
                     }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
-                        excerpt = "Contact Request";
+                    {
+                        if(friend.approved)
+                        {
+                            excerpt = "Contact Accepted";
+                        }else
+                        {
+                            excerpt = "Contact Request";
+                        }
+                    }
                     else if (lastmsg.type == FriendMessageType.fileHeader)
                         excerpt = "File";
 
