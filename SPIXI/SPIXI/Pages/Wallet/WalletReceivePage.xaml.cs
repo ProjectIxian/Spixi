@@ -96,6 +96,18 @@ namespace SPIXI
                 string amount = split_address[1];
                 onRequest(recipient, amount);
             }
+            else if (current_url.Contains("ixian:addrecipient"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
+                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                {
+                    Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
+                }
+                else
+                {
+                    displaySpixiAlert("SPIXI", "Invalid Address.", "OK");
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation
