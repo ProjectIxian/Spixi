@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
@@ -85,16 +86,25 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:sendrequest:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:sendrequest:" }, StringSplitOptions.None);
+                try
+                {
+                    string[] split = current_url.Split(new string[] { "ixian:sendrequest:" }, StringSplitOptions.None);
 
-                // Extract all addresses and amounts
-                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
+                    // Extract all addresses and amounts
+                    string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
 
-                string[] split_address = addresses_split[0].Split(':');
-
-                string recipient = split_address[0];
-                string amount = split_address[1];
-                onRequest(recipient, amount);
+                    foreach (var address_amount in addresses_split)
+                    {
+                        string[] split_address_amount = address_amount.Split(':');
+                        string recipient = split_address_amount[0];
+                        string amount = split_address_amount[1];
+                        onRequest(recipient, amount);
+                    }
+                }catch(Exception e)
+                {
+                    Logging.error("Exception occurent for sendrequest action: " + e);
+                    displaySpixiAlert("Spixi", "Invalid data has been specified.", "OK");
+                }
             }
             else if (current_url.Contains("ixian:addrecipient"))
             {
