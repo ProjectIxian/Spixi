@@ -120,6 +120,9 @@
     <script type="text/javascript">
         var attachMode = false;
 
+        twemoji.base = "libs/twemoji/";
+        twemoji.size = "72x72";
+
         var contactrequestbar = document.getElementById("contactrequestbar");
 
         document.getElementById("backbtn").onclick = function () {
@@ -208,6 +211,26 @@
 
         });
 
+        function shouldScroll() {
+            var el = document.getElementById("wrap");
+            if (el.scrollTop >= el.scrollHeight - el.clientHeight - 20) {
+                return true;
+            }
+            return false;
+        }
+
+        $("#chat_input").focus(function (event) {
+            if (shouldScroll()) {
+                setTimeout(function () {
+                    document.getElementById("chatholder").scrollIntoView(false);
+                    // Hack for slow devices
+                    setTimeout(function () {
+                        document.getElementById("chatholder").scrollIntoView(false);
+                    }, 500);
+                }, 100);
+            }
+        });
+
         function clearInput() {
             document.getElementById("chat_input").value = "";
             document.getElementById("chat_send").style.backgroundColor = "#BABABA";
@@ -267,9 +290,13 @@
                 bubbleEl.appendChild(avatarEl);
             }
 
+            var scroll = shouldScroll();
+
             document.getElementById("messages").appendChild(bubbleEl);
-            //window.scrollTo(0, document.body.scrollHeight);
-            bubbleEl.scrollIntoView(true);
+
+            if (scroll) {
+                document.getElementById("chatholder").scrollIntoView(false);
+            }
         }
 
         function addMe(id, address, nick, avatar, text, time, sent, read) {
@@ -365,8 +392,13 @@
             bubbleEl.appendChild(textEl);
             bubbleEl.appendChild(timeEl);
 
+            var scroll = shouldScroll();
+
             document.getElementById("messages").appendChild(bubbleEl);
-            bubbleEl.scrollIntoView(true);
+
+            if (scroll) {
+                document.getElementById("chatholder").scrollIntoView(false);
+            }
         }
 
         function updateFile(id, progress, complete) {
@@ -458,12 +490,6 @@
             }
 
             addText(id, address, nick, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
-
-            /*if (amount != "0") {
-                message += "<br/><div class=\"spixi-button small smallwidth center\" onclick=\"location.href = 'ixian:confirmrequest:" + amount + "'\">View details</div>";
-            } else {
-                addText(id, "", message, time, "spixi-bubble myself spixi-payment-request");
-            }*/
         }
 
         function updatePaymentRequestStatus(msgId, txid, status, statusIcon, enableView) {
