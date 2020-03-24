@@ -49,7 +49,7 @@ namespace SPIXI
                 // Start the IXIAN DLT
                 node = new Node();
 
-                Logging.setOptions(10, 1, true);
+                Logging.setOptions(5, 1, true);
 
                 // Start logging
                 Logging.start(Config.spixiUserFolder);
