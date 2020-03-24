@@ -1056,7 +1056,7 @@ namespace SPIXI
 
             sendNickname(friend);
 
-            FriendList.addMessage(null, friend.walletAddress, friend.nickname + " has accepted your friend request.");
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
 
         private static void handleAcceptAddBot(byte[] sender_wallet, byte[] aes_key)
@@ -1089,7 +1089,7 @@ namespace SPIXI
 
             //sendNickname(friend);
 
-            FriendList.addMessage(null, friend.walletAddress, friend.nickname + " has accepted your friend request.");
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
 
 
