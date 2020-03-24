@@ -158,6 +158,9 @@
         <div id="deletehistory" class="spixi-button small padding-left padding-top">
             Delete entire Message History
         </div>
+        <div id="deletedownloads" class="spixi-button small padding-left padding-top">
+            Delete all downloads
+        </div>
 
         <div id="deleteHistoryModal" class="spixi-modal">
             <!-- Modal content -->
@@ -183,6 +186,30 @@
             </div>
         </div>
 
+        <div id="deleteDownloadsModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    Delete all downloads
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-modal-text">
+                    Are you sure you want to delete ALL of your downloads?
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">CANCEL</div>
+
+                    <a href="ixian:deleted">
+                        <div class="spixi-modal-confirm">CONFIRM</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
         <div class="spixi-holder-40"></div>
 
     </div>
@@ -191,6 +218,7 @@
         var deleteWalletModal = document.getElementById('deleteWalletModal');
         var deleteAccountModal = document.getElementById('deleteAccountModal');
         var deleteHistoryModal = document.getElementById('deleteHistoryModal');
+        var deleteDownloadsModal = document.getElementById('deleteDownloadsModal');
 
         document.getElementById("backbtn").onclick = function () {
             location.href = "ixian:back";
@@ -214,6 +242,9 @@
         document.getElementById("deletehistory").onclick = function () {
             deleteHistoryModal.style.display = "block";
         }
+        document.getElementById("deletedownloads").onclick = function () {
+            deleteDownloadsModal.style.display = "block";
+        }
 
         // Handle modals outside tap
         window.onclick = function (event) {
@@ -226,17 +257,22 @@
             else if (event.target == deleteHistoryModal) {
                 deleteHistoryModal.style.display = "none";
             }
+            else if (event.target == deleteDownloadsModal) {
+                deleteDownloadsModal.style.display = "none";
+            }
         }
 
         document.getElementsByClassName("spixi-modal-footer")[0].onclick = function () {
             deleteAccountModal.style.display = "none";
-
         }
         document.getElementsByClassName("spixi-modal-footer")[1].onclick = function () {
             deleteWalletModal.style.display = "none";
         }
         document.getElementsByClassName("spixi-modal-footer")[2].onclick = function () {
             deleteHistoryModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[3].onclick = function () {
+            deleteDownloadsModal.style.display = "none";
         }
 
         document.getElementById("avatar").onclick = function () {

@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore.Meta;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -74,6 +75,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:deleteh", StringComparison.Ordinal))
             {
                 onDeleteHistory();
+            }
+            else if (current_url.Equals("ixian:deleted", StringComparison.Ordinal))
+            {
+                onDeleteDownloads();
             }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
@@ -160,6 +165,26 @@ namespace SPIXI
         {
             FriendList.deleteEntireHistory();
             displaySpixiAlert("Done", "Entire messages history deleted.", "OK");
+        }
+
+        public void onDeleteDownloads()
+        {
+            try
+            {
+                TransferManager.resetIncomingTransfers();
+                int file_count = 0;
+                foreach (var file in Directory.EnumerateFiles(Path.Combine(Config.spixiUserFolder, "Downloads")))
+                {
+                    File.Delete(file);
+                    file_count++;
+                }
+                displaySpixiAlert("Done", "Deleted " + file_count + " downloaded files.", "OK");
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception while deleting downloads: " + e);
+                displaySpixiAlert("Error", "An unknown error has occured.", "OK");
+            }
         }
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)
