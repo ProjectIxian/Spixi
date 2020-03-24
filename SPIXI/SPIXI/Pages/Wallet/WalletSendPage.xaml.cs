@@ -150,7 +150,7 @@ namespace SPIXI
 
                     IxiNumber _amount = amount;
 
-                    if(_amount == 0)
+                    if (_amount == 0)
                     {
                         displaySpixiAlert("SPIXI", "Incorrect amount '" + amount + "' was specified.", "OK");
                         e.Cancel = true;
@@ -173,6 +173,17 @@ namespace SPIXI
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
                     Utils.sendUiCommand(webView, "setAmount", (Node.balance.balance - (ConsensusConfig.transactionPrice * 2)).ToString());
+                }
+            }
+            else if (current_url.Contains("ixian:addrecipient"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
+                if(Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
+                {
+                    Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
+                }else
+                {
+                    displaySpixiAlert("SPIXI", "Invalid Address.", "OK");
                 }
             }
             else

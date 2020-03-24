@@ -155,7 +155,8 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
 
-                addRecipient(input.value, input.value);
+                location.href = "ixian:addrecipient:" + input.value;
+
                 input.value = "";
             }
         });
