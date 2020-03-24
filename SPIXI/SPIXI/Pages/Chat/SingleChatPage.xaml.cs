@@ -316,6 +316,8 @@ namespace SPIXI
 
             friend.handshakePushed = false;
 
+            Node.shouldRefreshContacts = true;
+
             StreamProcessor.sendAcceptAdd(friend);
         }
 
