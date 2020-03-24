@@ -239,7 +239,7 @@ namespace SPIXI
             cache.Clear();
         }
 
-        private static void addOfflineMessage(StreamMessage msg, bool store_to_server, bool send_push_notification)
+        private static void addOfflineMessage(StreamMessage msg, bool store_to_server, bool send_push_notification, bool offline_and_server)
         {
             lock(pendingMessages)
             {
@@ -253,7 +253,10 @@ namespace SPIXI
             {
                 if (OfflinePushMessages.sendPushMessage(msg, send_push_notification))
                 {
-                    return;
+                    if(!offline_and_server)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -273,7 +276,7 @@ namespace SPIXI
         }
 
         // Send an encrypted message using the S2 network
-        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true, bool add_to_pending_messages = true)
+        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true, bool add_to_pending_messages = true, bool offline_and_server = false)
         {
             // TODO this function has to be improved and node's wallet address has to be added
             if ((friend.publicKey != null && msg.encryptionType == StreamMessageEncryptionCode.rsa) || (friend.aesKey != null && friend.chachaKey != null))
@@ -295,7 +298,7 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages)
                 {
-                    addOfflineMessage(msg, false, push);
+                    addOfflineMessage(msg, false, push, false);
                 }
                 return false;
             }
@@ -319,11 +322,13 @@ namespace SPIXI
                 Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                 if (add_to_offline_messages || Config.enablePushNotifications)
                 {
+                    bool store_to_server = Config.enablePushNotifications;
                     if (friend.bot)
                     {
                         push = false;
+                        store_to_server = false;
                     }
-                    addOfflineMessage(msg, Config.enablePushNotifications, push);
+                    addOfflineMessage(msg, store_to_server, push, offline_and_server);
                 }
                 return false;
             }
@@ -1245,7 +1250,11 @@ namespace SPIXI
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 4 };
 
-            if (friend.aesKey == null || friend.chachaKey == null)
+            if(friend.bot)
+            {
+                reply_message.encryptionType = StreamMessageEncryptionCode.none;
+            }
+            else if (friend.aesKey == null || friend.chachaKey == null)
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
@@ -1282,7 +1291,11 @@ namespace SPIXI
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 5 };
 
-            /*if (friend.aesKey == null || friend.chachaKey == null)
+            if (friend.bot)
+            {
+                reply_message.encryptionType = StreamMessageEncryptionCode.none;
+            }
+            /*else if (friend.aesKey == null || friend.chachaKey == null)
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
             }*/
@@ -1358,7 +1371,7 @@ namespace SPIXI
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 0 };
 
-            message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+            message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey(), true, true, true, true);
 
             StreamProcessor.sendMessage(friend, message);
         }
