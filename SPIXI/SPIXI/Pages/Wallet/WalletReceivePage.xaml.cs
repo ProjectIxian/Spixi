@@ -3,6 +3,7 @@ using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
+using System.Linq;
 using System.Text;
 using System.Web;
 using Xamarin.Forms;
@@ -95,14 +96,55 @@ namespace SPIXI
 
                     foreach (var address_amount in addresses_split)
                     {
+                        if(address_amount == "")
+                        {
+                            continue;
+                        }
+
                         string[] split_address_amount = address_amount.Split(':');
+                        if (split_address_amount.Count() < 2)
+                            continue;
+
                         string recipient = split_address_amount[0];
                         string amount = split_address_amount[1];
+                        if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(recipient)) == false)
+                        {
+                            e.Cancel = true;
+                            displaySpixiAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                            return;
+                        }
+                        string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
+                        if (amount_split.Length > 2)
+                        {
+                            displaySpixiAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        // Add decimals if none found
+                        if (amount_split.Length == 1)
+                            amount = String.Format("{0}.0", amount);
+
+                        IxiNumber _amount = amount;
+
+                        if (_amount == 0)
+                        {
+                            displaySpixiAlert("SPIXI", "Incorrect amount '" + amount + "' was specified.", "OK");
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        if (_amount < (long)0)
+                        {
+                            displaySpixiAlert("SPIXI", "Please type a positive amount.", "OK");
+                            e.Cancel = true;
+                            return;
+                        }
                         onRequest(recipient, amount);
                     }
-                }catch(Exception e)
+                }catch(Exception ex)
                 {
-                    Logging.error("Exception occurent for sendrequest action: " + e);
+                    Logging.error("Exception occurent for sendrequest action: " + ex);
                     displaySpixiAlert("Spixi", "Invalid data has been specified.", "OK");
                 }
             }
