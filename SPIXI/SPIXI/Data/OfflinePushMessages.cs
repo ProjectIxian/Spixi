@@ -39,17 +39,23 @@ namespace SPIXI
 
             using (WebClient client = new WebClient())
             {
-                client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                string htmlCode = client.UploadString(URI, parameters);
-                if (htmlCode.Equals("OK"))
+                try
                 {
-                    if (f.handshakeStatus < 5)
+                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    string htmlCode = client.UploadString(URI, parameters);
+                    if (htmlCode.Equals("OK"))
                     {
-                        f.handshakePushed = true;
+                        if (f.handshakeStatus < 5)
+                        {
+                            f.handshakePushed = true;
 
-                        FriendList.saveToStorage();
+                            FriendList.saveToStorage();
+                        }
+                        return true;
                     }
-                    return true;
+                }catch(Exception e)
+                {
+                    Logging.error("Exception occured in sendPushMessage: " + e);
                 }
             }
             return false;
