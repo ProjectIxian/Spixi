@@ -109,7 +109,14 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:acceptfile:" }, StringSplitOptions.None);
                 string id = split[1];
 
-                onAcceptFile(id);
+                FriendMessage fm = friend.messages.Find(x => x.transferId == id);
+                if (fm != null)
+                {
+                    onAcceptFile(fm);
+                }else
+                {
+                    Logging.error("Cannot find message with transfer id: {0}", id);
+                }
                
             }
             else if (current_url.Contains("ixian:openfile:"))
@@ -303,11 +310,29 @@ namespace SPIXI
             }
         }
 
-        public void onAcceptFile(string uid)
+        public void onAcceptFile(FriendMessage message)
         {
+            if (TransferManager.getIncomingTransfer(message.transferId) != null)
+            {
+                Logging.warn("Incoming file transfer {0} already prepared.", message.transferId);
+                return;
+            }
+
             //displaySpixiAlert("File", uid, "Ok");
-            TransferManager.acceptFile(friend, uid);
-            updateFile(uid, "0", false);
+            string file_name = System.IO.Path.GetFileName(message.filePath);
+
+            var ft = new FileTransfer();
+            ft.fileName = file_name;
+            ft.fileSize = message.fileSize;
+            ft.uid = message.transferId;
+
+            ft = TransferManager.prepareIncomingFileTransfer(ft.getBytes(), friend.walletAddress);
+
+            if (ft != null)
+            {
+                TransferManager.acceptFile(friend, ft.uid);
+                updateFile(ft.uid, "0", false);
+            }
         }
 
         public void onAcceptFriendRequest()

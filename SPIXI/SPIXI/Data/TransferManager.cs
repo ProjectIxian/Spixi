@@ -196,11 +196,23 @@ namespace SPIXI
                     }
 
                 }
-
                 Thread.Sleep(1000);
-
-                Thread.Yield();
             }
+
+            // Cleanup
+            lock (outgoingTransfers)
+            {
+                foreach (var transfer in outgoingTransfers)
+                {
+                    if (transfer.fileStream != null)
+                    {
+                        transfer.fileStream.Dispose();
+                    }
+                }
+                outgoingTransfers.Clear();
+            }
+
+            resetIncomingTransfers();
         }
 
         public static void stop()
@@ -213,6 +225,23 @@ namespace SPIXI
             running = false;
         }
 
+        public static void resetIncomingTransfers()
+        {
+            lock (incomingTransfers)
+            {
+                foreach (var transfer in incomingTransfers)
+                {
+                    if (transfer.fileStream != null)
+                    {
+                        transfer.fileStream.Dispose();
+                    }
+                }
+                incomingTransfers.Clear();
+
+                incomingPacketsLog.Clear();
+            }
+        }
+
         public static FileTransfer prepareFileTransfer(string filename, Stream stream, string filepath = null, string transfer_id = "")
         {
             FileTransfer transfer = new FileTransfer(filename, stream);
@@ -221,8 +250,16 @@ namespace SPIXI
 
             if (transfer_id != null && transfer_id != "")
                 transfer.uid = transfer_id;
+            lock (outgoingTransfers)
+            {
+                if (outgoingTransfers.Find(x => x.uid.SequenceEqual(transfer.uid)) != null)
+                {
+                    Logging.warn("Outgoing file transfer {0} already prepared.", transfer.uid);
+                    return null;
+                }
 
-            outgoingTransfers.Add(transfer);
+                outgoingTransfers.Add(transfer);
+            }
             return transfer;
         }
 
@@ -231,7 +268,21 @@ namespace SPIXI
             FileTransfer transfer = new FileTransfer(data);
             transfer.incoming = true;
             transfer.sender = sender;
-            incomingTransfers.Add(transfer);
+
+            lock (incomingTransfers)
+            {
+                if (incomingTransfers.Find(x => x.uid.SequenceEqual(transfer.uid)) != null)
+                {
+                    Logging.warn("Incoming file transfer {0} already prepared.", transfer.uid);
+                    return null;
+                }
+                if (incomingTransfers.Find(x => x.fileName.SequenceEqual(transfer.fileName)) != null)
+                {
+                    Logging.warn("Incoming file transfer for filename already prepared.", transfer.fileName);
+                    return null;
+                }
+                incomingTransfers.Add(transfer);
+            }
 
             Logging.info("File Transfer Size: {0} {1}", transfer.fileName, transfer.fileSize);
 

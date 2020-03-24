@@ -319,14 +319,6 @@ namespace SPIXI.Storage
                                 // TODO may not work on Android/iOS due to unauthorized access
                                 FileStream fs = new FileStream(message.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                                 TransferManager.prepareFileTransfer(t_file_name, fs, message.filePath, message.transferId);
-                            }else
-                            {
-                                // TODO it would be better if this part was handled by acceptFile
-                                var ft = new FileTransfer();
-                                ft.fileName = t_file_name;
-                                ft.fileSize = s_file_size;
-                                ft.uid = message.transferId;
-                                TransferManager.prepareIncomingFileTransfer(ft.getBytes(), wallet_bytes);
                             }
                         }
                     }
