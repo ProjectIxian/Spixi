@@ -611,7 +611,6 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString());
             }
-
             updateMessageReadStatus(message);
         }
 
@@ -624,16 +623,19 @@ namespace SPIXI
                 message.read = true;
                 Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
 
-                // Send read confirmation
-                StreamMessage msg_received = new StreamMessage();
-                msg_received.type = StreamMessageCode.info;
-                msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-                msg_received.recipient = friend.walletAddress;
-                msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id).getBytes();
-                msg_received.transaction = new byte[1];
-                msg_received.sigdata = new byte[1];
+                if (!friend.bot)
+                {
+                    // Send read confirmation
+                    StreamMessage msg_received = new StreamMessage();
+                    msg_received.type = StreamMessageCode.info;
+                    msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                    msg_received.recipient = friend.walletAddress;
+                    msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id).getBytes();
+                    msg_received.transaction = new byte[1];
+                    msg_received.sigdata = new byte[1];
 
-                StreamProcessor.sendMessage(friend, msg_received, true, false, false);
+                    StreamProcessor.sendMessage(friend, msg_received, true, false, false);
+                }
             }
         }
 

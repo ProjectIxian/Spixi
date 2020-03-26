@@ -84,6 +84,8 @@ namespace SPIXI
                         Logging.info("Updating group chat nicks");
                         friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
                     }
+
+                    Node.localStorage.writeAccountFile();
                 }
             }
             else
@@ -191,11 +193,11 @@ namespace SPIXI
             }
 
             string sender_nick = "";
-            if(friend.bot)
+            if(friend.bot && sender_address != null)
             {
                 if (!local_sender)
                 {
-                    if (friend.contacts.ContainsKey(sender_address))
+                    if (friend.contacts.ContainsKey(sender_address) && friend.contacts[sender_address].nick != null)
                     {
                         sender_nick = friend.contacts[sender_address].nick;
                     }
