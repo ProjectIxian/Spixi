@@ -116,6 +116,46 @@ namespace SPIXI
     {
         public string nick;
         public byte[] publicKey;
+
+        public BotContact()
+        {
+
+        }
+
+        public BotContact(string nick, byte[] public_key)
+        {
+            this.nick = nick;
+            publicKey = public_key;
+        }
+
+        public BotContact(byte[] contact_bytes)
+        {
+            using (MemoryStream m = new MemoryStream(contact_bytes))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    nick = reader.ReadString();
+
+                    int pk_length = reader.ReadInt32();
+                    publicKey = reader.ReadBytes(pk_length);
+                }
+            }
+        }
+
+        public byte[] getBytes()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(nick);
+
+                    writer.Write(publicKey.Length);
+                    writer.Write(publicKey);
+                }
+                return m.ToArray();
+            }
+        }
     }
 
     public class Friend
@@ -210,6 +250,22 @@ namespace SPIXI
                     {
 
                     }
+
+                    try
+                    {
+                        int num_contacts = reader.ReadInt32();
+                        for (int i = 0; i < num_contacts; i++)
+                        {
+                            int contact_len = reader.ReadInt32();
+
+                            BotContact contact = new BotContact(reader.ReadBytes(contact_len));
+                            contacts.Add(new Address(contact.publicKey).address, contact);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
                 }
             }
         }
@@ -264,6 +320,17 @@ namespace SPIXI
                     writer.Write(bot);
 
                     writer.Write(handshakePushed);
+
+                    int num_contacts = contacts.Count();
+                    writer.Write(num_contacts);
+
+                    foreach (var contact in contacts)
+                    {
+                        byte[] contact_bytes = contact.Value.getBytes();
+
+                        writer.Write(contact_bytes.Length);
+                        writer.Write(contact_bytes);
+                    }
                 }
                 return m.ToArray();
             }
