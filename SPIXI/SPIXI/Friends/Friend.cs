@@ -310,21 +310,8 @@ namespace SPIXI
                     try
                     {
                         bot = reader.ReadBoolean();
-                    }catch(Exception)
-                    {
-
-                    }
-
-                    try
-                    {
                         handshakePushed = reader.ReadBoolean();
-                    }catch(Exception)
-                    {
 
-                    }
-
-                    try
-                    {
                         int num_contacts = reader.ReadInt32();
                         for (int i = 0; i < num_contacts; i++)
                         {
