@@ -349,7 +349,7 @@ namespace SPIXI
                     }
                     if (!store_to_server || offline_and_server)
                     {
-                        if (friend.handshakeStatus < 5)
+                        if (msg.id.Length == 1 && friend.handshakeStatus < 5)
                         {
                             friend.handshakePushed = true;
 
@@ -400,7 +400,7 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                if(friend.handshakeStatus > 3)
+                if(friend.handshakeStatus >= 3)
                 {
                     return;
                 }
@@ -712,7 +712,7 @@ namespace SPIXI
                 {
                     if (!message.decrypt(Node.walletStorage.getPrimaryPrivateKey(), aes_key, chacha_key))
                     {
-                        Logging.error("Could not decrypt message from {0}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                        Logging.error("Could not decrypt message from {0}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         return;
                     }
                 }
@@ -1057,7 +1057,7 @@ namespace SPIXI
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
                 bool reset_keys = true;
-                if(friend.handshakeStatus == 1)
+                if(friend.handshakeStatus > 0 && friend.handshakeStatus < 3)
                 {
                     reset_keys = false;
                 }
@@ -1397,7 +1397,7 @@ namespace SPIXI
                 message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
 
-            StreamProcessor.sendMessage(friend, message);
+            StreamProcessor.sendMessage(friend, message, true, false);
         }
 
         public static void sendContactRequest(Friend friend)
