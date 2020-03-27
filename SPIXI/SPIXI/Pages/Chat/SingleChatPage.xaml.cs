@@ -444,21 +444,22 @@ namespace SPIXI
             string avatar = "";
             string address = "";
             string nick = "";
-            if (friend.bot)
-            {
-                if (message.senderAddress != null)
-                {
-                    address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
-                }
-
-                nick = message.senderNick;
-                if (nick == "")
-                {
-                    nick = address;
-                }
-            }
             if (!message.localSender)
             {
+                if (friend.bot)
+                {
+                    if (message.senderAddress != null)
+                    {
+                        address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
+                    }
+
+                    nick = message.senderNick;
+                    if (nick == "")
+                    {
+                        nick = address;
+                    }
+                }
+
                 prefix = "addThem";
                 if(message.senderAddress != null)
                 {
