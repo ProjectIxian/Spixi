@@ -4,6 +4,7 @@ using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SPIXI.Storage
 {
@@ -24,12 +25,17 @@ namespace SPIXI.Storage
         private object txCacheLock = new object();
         private object offlineLock = new object();
         private object avatarLock = new object();
+        private object messagesLock = new object();
+
+        private int messagesPerFile = 1000;
 
 
-        public LocalStorage(string path)
+        public LocalStorage(string path, int messages_per_file = 1000)
         {
             // Retrieve the app-specific and platform-specific documents path
             documentsPath = path;
+
+            messagesPerFile = messages_per_file;
 
             // Prepare tmp path
             if (!Directory.Exists(Path.Combine(documentsPath, "tmp")))
@@ -115,7 +121,7 @@ namespace SPIXI.Storage
             {
                 reader = new BinaryReader(new FileStream(account_filename, FileMode.Open));
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot open account file. {0}", e.Message));
                 return false;
@@ -139,8 +145,11 @@ namespace SPIXI.Storage
 
                     Friend friend = new Friend(reader.ReadBytes(friend_len));
 
+                    // TODO TODO can be removed after v0.5
+                    deleteMessagesLegacy(friend.walletAddress);
+
                     // Read messages from chat history
-                    friend.messages = readMessagesFile(friend.walletAddress);
+                    friend.messages = readLastMessages(friend.walletAddress);
 
                     FriendList.addFriend(friend);
                 }
@@ -168,7 +177,7 @@ namespace SPIXI.Storage
                 {
                     writer = new BinaryWriter(new FileStream(account_filename, FileMode.Create));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot create account file. {0}", e.Message));
                     return false;
@@ -199,7 +208,7 @@ namespace SPIXI.Storage
                     }
 
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot write to account file. {0}", e.Message));
                 }
@@ -211,216 +220,320 @@ namespace SPIXI.Storage
         // Deletes the account file if it exists
         public bool deleteAccountFile()
         {
-            string account_filename = Path.Combine(documentsPath, accountFileName);
-
-            if (File.Exists(account_filename) == false)
+            lock (accountLock)
             {
-                return false;
-            }
+                string account_filename = Path.Combine(documentsPath, accountFileName);
 
-            File.Delete(account_filename);
-            return true;
+                if (File.Exists(account_filename) == false)
+                {
+                    return false;
+                }
+
+                File.Delete(account_filename);
+                return true;
+            }
+        }
+
+        private List<FriendMessage> readMessagesFile(string path)
+        {
+            lock (messagesLock)
+            {
+                List<FriendMessage> messages = new List<FriendMessage>();
+                string messages_path = path;
+
+                if (File.Exists(messages_path) == false)
+                {
+                    // Return an empty list of messages
+                    return messages;
+                }
+
+                BinaryReader reader;
+                try
+                {
+                    reader = new BinaryReader(new FileStream(messages_path, FileMode.Open));
+                }
+                catch (Exception e)
+                {
+                    Logging.log(LogSeverity.error, String.Format("Cannot open chat file. {0}", e.Message));
+                    return messages;
+                }
+
+                try
+                {
+                    // TODO: decrypt data and compare the address/pubkey
+                    System.Int32 version = reader.ReadInt32();
+                    string address = reader.ReadString();
+
+                    int num_messages = reader.ReadInt32();
+                    for (int i = 0; i < num_messages; i++)
+                    {
+                        int msg_len = reader.ReadInt32();
+                        FriendMessage msg = new FriendMessage(reader.ReadBytes(msg_len));
+                        messages.Add(msg);
+
+                        string t_file_name = Path.GetFileName(msg.filePath);
+                        try
+                        {
+                            if (msg.type == FriendMessageType.fileHeader && msg.completed == false)
+                            {
+                                if (msg.localSender)
+                                {
+                                    // TODO may not work on Android/iOS due to unauthorized access
+                                    FileStream fs = new FileStream(msg.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                                    TransferManager.prepareFileTransfer(t_file_name, fs, msg.filePath, msg.transferId);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.error("Error occured while trying to prepare file transfer for file {0}, full path {1}: {2}", t_file_name, msg.filePath, e);
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Cannot read from chat file. {0}", e.Message);
+                    // TODO TODO notify the user or something like that
+                }
+
+                reader.Close();
+
+                return messages;
+            }
+        }
+
+        private long getTimestampFromFileName(string filename)
+        {
+            return Int64.Parse(Path.GetFileNameWithoutExtension(filename));
         }
 
         // Reads the message archive for a given wallet
-        public List<FriendMessage> readMessagesFile(byte[] wallet_bytes)
+        public List<FriendMessage> readLastMessages(byte[] wallet_bytes, long from_time_stamp = 0, int msg_count = 100, bool reverse = true)
         {
-            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-
-            List<FriendMessage> messages = new List<FriendMessage>();
-            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
-
-            if (File.Exists(messages_filename) == false)
+            lock (messagesLock)
             {
-                // Return an empty list of messages
-                return messages;
-            }
+                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string messages_path = Path.Combine(documentsPath, "Chats", wallet);
 
-            BinaryReader reader;
-            try
-            {
-                reader = new BinaryReader(new FileStream(messages_filename, FileMode.Open));
-            }
-            catch (IOException e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot open chat file. {0}", e.Message));
-                return messages;
-            }
+                List<FriendMessage> messages = new List<FriendMessage>();
 
-            try
-            {
-                // TODO: decrypt data and compare the address/pubkey
-                System.Int32 version = reader.ReadInt32();
-                string address = reader.ReadString();
-
-                int num_messages = reader.ReadInt32();
-                for (int i = 0; i < num_messages; i++)
+                if (!Directory.Exists(messages_path))
                 {
-                    int id_len = reader.ReadInt32();
-                    byte[] id = reader.ReadBytes(id_len);
-                    int s_type = reader.ReadInt32();
-                    string s_message = reader.ReadString();
-                    long s_timestamp = reader.ReadInt64();
-                    bool s_local_sender = reader.ReadBoolean();
-                    bool s_read = reader.ReadBoolean();
-                    bool s_confirmed = reader.ReadBoolean();
+                    return messages;
+                }
+                string[] files = Directory.GetFiles(messages_path);
+                if (reverse)
+                {
+                    files = files.OrderByDescending(x => x).ToArray();
+                }else
+                {
+                    files = files.OrderBy(x => x).ToArray();
+                }
 
-                    byte[] s_sender_address = null;
-                    string s_nick = "";
-                    string s_transfer_id = "";
-                    bool s_completed = false;
-                    string s_file_path = "";
-                    ulong s_file_size = 0;
-                    // try/catch wrapper can be removed after upgrade
-                    try
+                for (int i = 0; i < files.Count(); i++)
+                {
+                    // handle from_time_stamp skip
+                    if(reverse)
                     {
-                        int s_sender_address_len = reader.ReadInt32();
-                        if (s_sender_address_len > 0)
+                        // skip to the first file to read from in reverse
+                        if (from_time_stamp != 0 && getTimestampFromFileName(files[i]) >= from_time_stamp)
                         {
-                            s_sender_address = reader.ReadBytes(s_sender_address_len);
-                        }
-
-                        s_nick = reader.ReadString();
-
-                        if (version >= 2)
-                        {
-                            s_transfer_id = reader.ReadString();
-
-                            s_completed = reader.ReadBoolean();
-
-                            s_file_path = reader.ReadString();
-                        }
-                        if(version >= 3)
-                        {
-                            s_file_size = reader.ReadUInt64();
+                            continue;
                         }
                     }
-                    catch (Exception)
+                    else
                     {
-
-                    }
-
-                    FriendMessage message = new FriendMessage(id, s_message, s_timestamp, s_local_sender, (FriendMessageType)s_type, s_sender_address, s_nick);
-                    message.read = s_read;
-                    message.confirmed = s_confirmed;
-                    message.transferId = s_transfer_id;
-                    message.completed = s_completed;
-                    message.filePath = s_file_path;
-                    message.fileSize = s_file_size;
-                    messages.Add(message);
-
-                    string t_file_name = Path.GetFileName(message.filePath);
-                    try
-                    {
-                        if(message.type == FriendMessageType.fileHeader && message.completed == false )
+                        // skip to the first file to read from
+                        if (i + 1 < files.Count() && getTimestampFromFileName(files[i + 1]) < from_time_stamp)
                         {
-                            if(message.localSender)
-                            {
-                                // TODO may not work on Android/iOS due to unauthorized access
-                                FileStream fs = new FileStream(message.filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                                TransferManager.prepareFileTransfer(t_file_name, fs, message.filePath, message.transferId);
-                            }
+                            continue;
                         }
                     }
-                    catch (Exception e)
+                    string path = files[i];
+                    var tmp_msgs = readMessagesFile(path);
+                    int msgs_to_take = msg_count - messages.Count();
+                    if (reverse)
                     {
-                        Logging.error("Error occured while trying to prepare file transfer for file {0}, full path {1}: {2}", t_file_name, message.filePath, e);
+                        int msgs_to_skip = tmp_msgs.Count() - msgs_to_take;
+                        if (msgs_to_skip < 0)
+                        {
+                            msgs_to_skip = 0;
+                        }
+                        if(from_time_stamp != 0 && messages.Count() == 0)
+                        {
+                            // Remove all messages that are newer than the from_time_stamp
+                            tmp_msgs.RemoveAll(x => x.timestamp >= from_time_stamp);
+                        }
+                        messages.InsertRange(0, tmp_msgs.Skip(msgs_to_skip).Take(msgs_to_take));
+                    }else
+                    {
+                        if (messages.Count() == 0)
+                        {
+                            // Remove all messages that are older than the from_time_stamp
+                            tmp_msgs.RemoveAll(x => x.timestamp <= from_time_stamp);
+                        }
+                        messages.AddRange(tmp_msgs.Take(msgs_to_take));
+                    }
+                    if (messages.Count() >= msg_count)
+                    {
+                        break;
                     }
                 }
 
+                return messages;
             }
-            catch (Exception e)
+        }
+
+        private string getMessagesFullPath(string wallet_address, long min_timestamp)
+        {
+            string messages_path = Path.Combine(documentsPath, "Chats", wallet_address);
+            var files = Directory.GetFiles(messages_path).OrderBy(x => x).ToArray();
+            for(int i = 0; i < files.Count(); i++)
             {
-                Logging.error("Cannot read from chat file. {0}", e.Message);
-                // TODO TODO notify the user or something like that
+                if (i + 1 < files.Count() && getTimestampFromFileName(files[i + 1]) > min_timestamp)
+                {
+                    return files[i];
+                }
+            }
+            if(files.Count() > 0)
+            {
+                return files.Last();
             }
 
-            reader.Close();
-
-            return messages;
+            return null;
         }
 
         // Writes the message archive for a given wallet
-        public bool writeMessagesFile(byte[] wallet_bytes, List<FriendMessage> messages)
+        public bool writeMessages(byte[] wallet_bytes, List<FriendMessage> messages)
         {
-            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
-
-            BinaryWriter writer;
-            try
+            List<FriendMessage> local_messages = null;
+            lock (messages)
             {
-                // Prepare the file for writing
-                writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
+                local_messages = messages.ToList();
             }
-            catch (IOException e)
+            lock (messagesLock)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot create chat file. {0}", e.Message));
-                return false;
-            }
+                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string messages_path = Path.Combine(documentsPath, "Chats", wallet);
 
-            try
-            {
-                // TODO: encrypt written data
-                System.Int32 version = 3; // Set the messages file version
-                writer.Write(version);
-                // Write the address used for verification
-                writer.Write(wallet);
-
-                int message_num = messages.Count;
-                writer.Write(message_num);
-
-                foreach(FriendMessage message in messages)
+                if (!Directory.Exists(messages_path))
                 {
-                    writer.Write(message.id.Length);
-                    writer.Write(message.id);
-                    writer.Write((int)message.type);
-                    writer.Write(message.message);
-                    writer.Write(message.timestamp);
-                    writer.Write(message.localSender);
-                    writer.Write(message.read);
-                    writer.Write(message.confirmed);
-
-                    if(message.senderAddress != null)
-                    {
-                        writer.Write(message.senderAddress.Length);
-                        writer.Write(message.senderAddress);
-                    }else
-                    {
-                        writer.Write((int)0);
-                    }
-
-                    writer.Write(message.senderNick);
-
-                    writer.Write(message.transferId);
-                    writer.Write(message.completed);
-
-                    writer.Write(message.filePath);
-                    writer.Write(message.fileSize);
+                    Directory.CreateDirectory(messages_path);
                 }
 
-            }
-            catch (IOException e)
-            {
-                Logging.error("Cannot write to chat file. {0}", e.Message);
-            }
-            writer.Close();
+                string messages_full_path = getMessagesFullPath(wallet, local_messages.First().timestamp);
+                if (messages_full_path == null)
+                {
+                    messages_full_path = Path.Combine(messages_path, local_messages.First().timestamp + ".ixi");
+                }
+                else
+                {
+                    var tmp_messages = readMessagesFile(messages_full_path);
+                    tmp_messages.RemoveAll(x => x.timestamp >= local_messages.First().timestamp);
 
-            return true;
+                    local_messages.InsertRange(0, tmp_messages);
+                }
+
+                bool first = true;
+                for (int i = 0; i < local_messages.Count;)
+                {
+                    BinaryWriter writer;
+                    if (!first)
+                    {
+                        messages_full_path = Path.Combine(messages_path, local_messages[i].timestamp + ".ixi");
+                    }
+                    first = false;
+                    try
+                    {
+                        // Prepare the file for writing
+                        writer = new BinaryWriter(new FileStream(messages_full_path, FileMode.Create));
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.log(LogSeverity.error, String.Format("Cannot create chat file. {0}", e.Message));
+                        return false;
+                    }
+
+                    try
+                    {
+                        // TODO: encrypt written data
+                        System.Int32 version = 3; // Set the messages file version
+                        writer.Write(version);
+                        // Write the address used for verification
+                        writer.Write(wallet);
+
+                        var messages_to_write = local_messages.Skip(i).Take(messagesPerFile);
+
+                        int message_num = messages_to_write.Count();
+                        writer.Write(message_num);
+
+                        foreach (FriendMessage message in messages_to_write)
+                        {
+                            byte[] msg_bytes = message.getBytes();
+                            if (msg_bytes != null)
+                            {
+                                writer.Write(msg_bytes.Length);
+                                writer.Write(msg_bytes);
+                            }
+                            else
+                            {
+                                writer.Write((int)0);
+                            }
+                            i++;
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Cannot write to chat file. {0}", e.Message);
+                    }
+                    writer.Close();
+                }
+
+                return true;
+            }
+        }
+
+        // TODO TODO can be removed after v0.5
+        private bool deleteMessagesLegacy(byte[] wallet_bytes)
+        {
+            lock (messagesLock)
+            {
+                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string chats_path = Path.Combine(documentsPath, "Chats");
+                string messages_filename = Path.Combine(chats_path, String.Format("{0}.ixi", wallet));
+
+                if (!File.Exists(messages_filename))
+                {
+                    return false;
+                }
+
+                File.Delete(messages_filename);
+
+                return true;
+            }
         }
 
         // Deletes the message archive if it exists for a given wallet
-        public bool deleteMessagesFile(byte[] wallet_bytes)
+        public bool deleteMessages(byte[] wallet_bytes)
         {
-            string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-            string messages_filename = Path.Combine(documentsPath, "Chats", String.Format("{0}.ixi", wallet));
-
-            if (File.Exists(messages_filename) == false)
+            deleteMessagesLegacy(wallet_bytes);
+            lock (messagesLock)
             {
-                return false;
-            }
+                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string chats_path = Path.Combine(documentsPath, "Chats");
+                string messages_directory = Path.Combine(chats_path, wallet);
 
-            File.Delete(messages_filename);
-            return true;
+                if (!Directory.Exists(messages_directory))
+                {
+                    return false;
+                }
+
+                Directory.Delete(messages_directory, true);
+
+                return true;
+            }
         }
 
         // Reads the offline message archive
@@ -440,7 +553,7 @@ namespace SPIXI.Storage
             {
                 reader = new BinaryReader(new FileStream(messages_filename, FileMode.Open));
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot open file. {0}", e.Message));
                 return messages;
@@ -487,7 +600,7 @@ namespace SPIXI.Storage
                     // Prepare the file for writing
                     writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
                     return false;
@@ -513,7 +626,7 @@ namespace SPIXI.Storage
                     }
 
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
                     return false;
@@ -541,7 +654,7 @@ namespace SPIXI.Storage
             {
                 reader = new BinaryReader(new FileStream(tx_filename, FileMode.Open));
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot open file. {0}", e.Message));
                 return false;
@@ -601,7 +714,7 @@ namespace SPIXI.Storage
                     // Prepare the file for writing
                     writer = new BinaryWriter(new FileStream(tx_filename, FileMode.Create));
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
                     return false;
@@ -644,7 +757,7 @@ namespace SPIXI.Storage
                     }
 
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
                     return false;

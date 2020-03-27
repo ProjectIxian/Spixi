@@ -102,7 +102,7 @@ namespace SPIXI
 
                     StreamProcessor.sendMessage(friend, message);
 
-                    Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                    Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
 
                     if (friend.chat_page != null)
                     {
@@ -146,7 +146,7 @@ namespace SPIXI
 
                 StreamProcessor.sendMessage(friend, message);
 
-                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
 
                 if (friend.chat_page != null)
                 {

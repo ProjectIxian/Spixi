@@ -257,7 +257,7 @@ namespace SPIXI
                 alert.flash();
 
             // Write to chat history
-            Node.localStorage.writeMessagesFile(wallet_address, friend.messages);
+            Node.localStorage.writeMessages(wallet_address, friend.messages);
 
             return friend_message;
         }
@@ -320,7 +320,7 @@ namespace SPIXI
         public static bool removeFriend(Friend friend)
         {
             // Remove history file
-            Node.localStorage.deleteMessagesFile(friend.walletAddress);
+            Node.localStorage.deleteMessages(friend.walletAddress);
 
             // Delete avatar
             Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
@@ -420,7 +420,7 @@ namespace SPIXI
                     }
 
                     // Remove history file
-                    Node.localStorage.deleteMessagesFile(friend.walletAddress);
+                    Node.localStorage.deleteMessages(friend.walletAddress);
                 }
             }
         }

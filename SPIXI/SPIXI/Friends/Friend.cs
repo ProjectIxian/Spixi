@@ -71,6 +71,78 @@ namespace SPIXI
             fileSize = 0;
         }
 
+        public FriendMessage(byte[] bytes)
+        {
+            using (MemoryStream m = new MemoryStream(bytes))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    int id_len = reader.ReadInt32();
+                    _id = reader.ReadBytes(id_len);
+                    type = (FriendMessageType)reader.ReadInt32();
+                    message = reader.ReadString();
+                    timestamp = reader.ReadInt64();
+                    localSender = reader.ReadBoolean();
+                    read = reader.ReadBoolean();
+                    confirmed = reader.ReadBoolean();
+
+                    int sender_address_len = reader.ReadInt32();
+                    if (sender_address_len > 0)
+                    {
+                        senderAddress = reader.ReadBytes(sender_address_len);
+                    }
+
+                    senderNick = reader.ReadString();
+
+                    transferId = reader.ReadString();
+
+                    completed = reader.ReadBoolean();
+
+                    filePath = reader.ReadString();
+                    fileSize = reader.ReadUInt64();
+                }
+            }
+
+        }
+
+        public byte[] getBytes()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(id.Length);
+                    writer.Write(id);
+                    writer.Write((int)type);
+                    writer.Write(message);
+                    writer.Write(timestamp);
+                    writer.Write(localSender);
+                    writer.Write(read);
+                    writer.Write(confirmed);
+
+                    if (senderAddress != null)
+                    {
+                        writer.Write(senderAddress.Length);
+                        writer.Write(senderAddress);
+                    }
+                    else
+                    {
+                        writer.Write((int)0);
+                    }
+
+                    writer.Write(senderNick);
+
+                    writer.Write(transferId);
+                    writer.Write(completed);
+
+                    writer.Write(filePath);
+                    writer.Write(fileSize);
+                }
+                return m.ToArray();
+            }
+        }
+
+
         public byte[] id
         {
             get
@@ -366,7 +438,7 @@ namespace SPIXI
         public bool deleteHistory()
         {
 
-            if (Node.localStorage.deleteMessagesFile(walletAddress) == false)
+            if (Node.localStorage.deleteMessages(walletAddress) == false)
                 return false;
 
             if (flushHistory() == false)
@@ -566,7 +638,7 @@ namespace SPIXI
                 if (!msg.read)
                 {
                     msg.read = true;
-                    Node.localStorage.writeMessagesFile(walletAddress, messages);
+                    Node.localStorage.writeMessages(walletAddress, messages);
                 }
 
                 if(chat_page != null)
@@ -592,7 +664,7 @@ namespace SPIXI
                 if (!msg.confirmed)
                 {
                     msg.confirmed = true;
-                    Node.localStorage.writeMessagesFile(walletAddress, messages);
+                    Node.localStorage.writeMessages(walletAddress, messages);
                 }
 
                 if (chat_page != null)

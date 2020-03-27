@@ -396,7 +396,7 @@ namespace SPIXI
                 fm.transferId = transfer.uid;
                 fm.filePath = transfer.fileName;
                 fm.fileSize = transfer.fileSize;
-                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
             }
             else
             {
@@ -1142,7 +1142,7 @@ namespace SPIXI
             }
 
             // Write to chat history
-            Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+            Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
 
             if (friend.chat_page != null)
             {

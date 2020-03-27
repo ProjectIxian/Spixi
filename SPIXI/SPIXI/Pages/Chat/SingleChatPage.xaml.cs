@@ -302,7 +302,7 @@ namespace SPIXI
                 friend_message.transferId = transfer.uid;
                 friend_message.filePath = transfer.filePath;
 
-                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
             }
             catch (Exception ex)
             {
@@ -622,7 +622,7 @@ namespace SPIXI
                 Node.shouldRefreshContacts = true;
 
                 message.read = true;
-                Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
 
                 if (!friend.bot)
                 {

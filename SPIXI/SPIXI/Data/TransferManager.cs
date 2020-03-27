@@ -484,7 +484,7 @@ namespace SPIXI
             fm.completed = true;
             fm.filePath = transfer.filePath;
 
-            Node.localStorage.writeMessagesFile(friend.walletAddress, friend.messages);
+            Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
 
             if (friend.chat_page != null)
             {
