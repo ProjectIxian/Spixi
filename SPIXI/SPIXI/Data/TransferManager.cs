@@ -508,7 +508,7 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
-            StreamProcessor.sendMessage(friend, message, false, false, false);
+            StreamProcessor.sendMessage(friend, message, true, false, true);
         }
 
         public static void requestFileData(byte[] sender, string uid, ulong packet_number)

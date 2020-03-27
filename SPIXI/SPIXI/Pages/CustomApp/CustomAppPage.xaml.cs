@@ -121,7 +121,7 @@ namespace SPIXI
                     msg.sigdata = new byte[1];
                     msg.data = spixi_msg.getBytes();
 
-                    StreamProcessor.sendMessage(f, msg, false, false);
+                    StreamProcessor.sendMessage(f, msg, false, false, false);
                 }else
                 {
                     Logging.error("Friend {0} does not exist in the friend list.", Base58Check.Base58CheckEncoding.EncodePlain(address));

@@ -343,7 +343,7 @@ namespace SPIXI
 
             Node.shouldRefreshContacts = true;
 
-            StreamProcessor.sendAcceptAdd(friend);
+            StreamProcessor.sendAcceptAdd(friend, true);
         }
 
         public void onViewPayment(string msg_id)

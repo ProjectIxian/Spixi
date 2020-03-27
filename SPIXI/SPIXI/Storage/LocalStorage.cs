@@ -570,9 +570,17 @@ namespace SPIXI.Storage
                     byte[] data = reader.ReadBytes(data_length);
 
                     bool send_push_notification = reader.ReadBoolean();
+                    bool offline_and_server = false;
+                    try
+                    {
+                        offline_and_server = reader.ReadBoolean();
+                    }catch(Exception)
+                    {
+
+                    }
 
                     StreamMessage sm = new StreamMessage(data);
-                    messages.Add(new OfflineMessage() { message = sm, sendPushNotification = send_push_notification  });
+                    messages.Add(new OfflineMessage() { message = sm, sendPushNotification = send_push_notification, offlineAndServer = offline_and_server });
                 }
 
             }
@@ -623,6 +631,7 @@ namespace SPIXI.Storage
                         writer.Write(data);
 
                         writer.Write(message.sendPushNotification);
+                        writer.Write(message.offlineAndServer);
                     }
 
                 }
