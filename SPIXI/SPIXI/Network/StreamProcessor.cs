@@ -347,6 +347,15 @@ namespace SPIXI
                             store_to_server = false;
                         }
                     }
+                    if (!store_to_server || offline_and_server)
+                    {
+                        if (friend.handshakeStatus < 5)
+                        {
+                            friend.handshakePushed = true;
+
+                            FriendList.saveToStorage();
+                        }
+                    }
                     addOfflineMessage(msg, store_to_server, push, offline_and_server);
                 }
                 return false;
@@ -391,6 +400,10 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
+                if(friend.handshakeStatus > 3)
+                {
+                    return;
+                }
                 friend.receiveKeys(data);
 
                 friend.handshakeStatus = 3;
@@ -1064,19 +1077,16 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
-                if (pub_k == null)
-                {
-                    Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
-                    return;
-                }
+                Logging.error("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                return;
+            }
 
-                friend = FriendList.addFriend(sender_wallet, pub_k, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), aes_key, null, 0);
-            }
-            else
+            if (friend.handshakeStatus > 1)
             {
-                friend.aesKey = aes_key;
+                return;
             }
+
+            friend.aesKey = aes_key;
 
             friend.generateKeys();
 
@@ -1097,19 +1107,16 @@ namespace SPIXI
             Friend friend = FriendList.getFriend(sender_wallet);
             if (friend == null)
             {
-                byte[] pub_k = FriendList.findContactPubkey(sender_wallet);
-                if (pub_k == null)
-                {
-                    Logging.warn("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
-                    return;
-                }
+                Logging.error("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet));
+                return;
+            }
 
-                friend = FriendList.addFriend(sender_wallet, pub_k, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), aes_key, null, 0);
-            }
-            else
+            if (friend.handshakeStatus > 1)
             {
-                friend.aesKey = aes_key;
+                return;
             }
+
+            friend.aesKey = aes_key;
 
             friend.bot = true;
 
