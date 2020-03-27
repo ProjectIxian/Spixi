@@ -619,7 +619,6 @@ namespace SPIXI
         public static void receiveData(byte[] bytes, RemoteEndpoint endpoint)
         {
             StreamMessage message = new StreamMessage(bytes);
-            message.originalChecksum = message.calculateChecksum();
 
             if (message.data == null)
             {
@@ -628,26 +627,27 @@ namespace SPIXI
             }
 
             bool replaced_sender_address = false;
-            byte[] sender_address = null;
+            byte[] real_sender_address = null;
+            byte[] sender_address = message.sender;
 
             if (endpoint != null)
             {
                 if (endpoint.presence.wallet.SequenceEqual(message.recipient))
                 {
                     // message from a bot group chat
-                    sender_address = message.sender;
-                    message.sender = message.recipient;
+                    real_sender_address = message.sender;
+                    sender_address = message.recipient;
 
                     replaced_sender_address = true;
                 }
             }
 
-            Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(message.sender), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
+            Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
 
             byte[] aes_key = null;
             byte[] chacha_key = null;
 
-            Friend friend = FriendList.getFriend(message.sender);
+            Friend friend = FriendList.getFriend(sender_address);
             if(friend != null)
             {
                 aes_key = friend.aesKey;
@@ -689,27 +689,27 @@ namespace SPIXI
             switch(spixi_message.type)
             {
                 case SpixiMessageCode.pubKey:
-                    handlePubKey(message.sender, spixi_message.data);
+                    handlePubKey(sender_address, spixi_message.data);
                     break;
                 case SpixiMessageCode.chat:
                     {
                         // TODO Add a pending chat list for bots, add pending messages to the chat list until pubkey is received and uncoment the code below
-                        /*if (replaced_sender_address && (!friend.contacts.ContainsKey(sender_address) || friend.contacts[sender_address].publicKey == null))
+                        /*if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
                         {
-                            requestPubKey(friend, sender_address);
+                            requestPubKey(friend, real_sender_address);
                         }
-                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                         }
                         else if (!replaced_sender_address && friend.bot && !message.verifySignature(friend.publicKey))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
                         else
                         {*/
-                            // Add the message to the friend list
-                            FriendList.addMessage(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address, message.timestamp);
+                        // Add the message to the friend list
+                            FriendList.addMessage(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
                         //}
                     }
                     break;
@@ -717,7 +717,7 @@ namespace SPIXI
                 case SpixiMessageCode.getNick:
                     {
                         // Send the nickname to the sender as requested
-                        handleGetNick(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleGetNick(sender_address, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -726,24 +726,24 @@ namespace SPIXI
                         // Set the nickname for the corresponding address
                         if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
-                        }
-                        else if (replaced_sender_address && (!friend.contacts.ContainsKey(sender_address) || friend.contacts[sender_address].publicKey == null))
-                        {
-                            requestPubKey(friend, sender_address);
-                        }
-                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
-                        {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
+                        {
+                            requestPubKey(friend, real_sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                         }
                         else
                         {
                             if (spixi_message.data != null)
                             {
-                                FriendList.setNickname(message.sender, Encoding.UTF8.GetString(spixi_message.data), sender_address);
+                                FriendList.setNickname(sender_address, Encoding.UTF8.GetString(spixi_message.data), real_sender_address);
                             }else
                             {
-                                FriendList.setNickname(message.sender, Base58Check.Base58CheckEncoding.EncodePlain(message.sender), sender_address);
+                                FriendList.setNickname(sender_address, Base58Check.Base58CheckEncoding.EncodePlain(sender_address), real_sender_address);
                             }
                         }
                     }
@@ -752,7 +752,7 @@ namespace SPIXI
                 case SpixiMessageCode.getAvatar:
                     {
                         // Send the avatar to the sender as requested
-                        handleGetAvatar(message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleGetAvatar(sender_address, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -761,25 +761,25 @@ namespace SPIXI
                         // Set the avatar for the corresponding address
                         if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
-                        }
-                        else if (replaced_sender_address && (!friend.contacts.ContainsKey(sender_address) || friend.contacts[sender_address].publicKey == null))
-                        {
-                            requestPubKey(friend, sender_address);
-                        }
-                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[sender_address].publicKey))
-                        {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
+                        {
+                            requestPubKey(friend, real_sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                         }
                         else
                         {
                             if (spixi_message.data != null)
                             {
-                                FriendList.setAvatar(message.sender, spixi_message.data, sender_address);
+                                FriendList.setAvatar(sender_address, spixi_message.data, real_sender_address);
                             }
                             else
                             {
-                                FriendList.setAvatar(message.sender, null, sender_address);
+                                FriendList.setAvatar(sender_address, null, real_sender_address);
                             }
                         }
                     }
@@ -787,13 +787,13 @@ namespace SPIXI
                 case SpixiMessageCode.requestAdd:
                     {
                         // Friend request
-                        if (!new Address(spixi_message.data).address.SequenceEqual(message.sender) || !message.verifySignature(spixi_message.data))
+                        if (!new Address(spixi_message.data).address.SequenceEqual(sender_address) || !message.verifySignature(spixi_message.data))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
                         else
                         {
-                            handleRequestAdd(message.id, message.sender, spixi_message.data);
+                            handleRequestAdd(message.id, sender_address, spixi_message.data);
                         }
                     }
                     break;
@@ -801,13 +801,19 @@ namespace SPIXI
                 case SpixiMessageCode.acceptAdd:
                     {
                         // Friend accepted request
-                        if (!message.verifySignature(friend.publicKey))
+                        byte[] pub_k = FriendList.findContactPubkey(friend.walletAddress);
+                        if (pub_k == null)
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(message.sender));
+                            Console.WriteLine("Contact {0} not found in presence list!", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                            return;
+                        }
+                        if (!message.verifySignature(pub_k))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         }
                         else
                         {
-                            handleAcceptAdd(message.sender, spixi_message.data);
+                            handleAcceptAdd(sender_address, spixi_message.data);
                         }
                     }
                     break;
@@ -815,20 +821,20 @@ namespace SPIXI
                 case SpixiMessageCode.sentFunds:
                     {
                         // Friend requested funds
-                        handleSentFunds(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleSentFunds(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
                 case SpixiMessageCode.requestFunds:
                     {
                         // Friend requested funds
-                        handleRequestFunds(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleRequestFunds(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
                 case SpixiMessageCode.requestFundsResponse:
                     {
-                        handleRequestFundsResponse(message.id, message.sender, Encoding.UTF8.GetString(spixi_message.data));
+                        handleRequestFundsResponse(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data));
                     }
                     break;
 
@@ -836,58 +842,58 @@ namespace SPIXI
                     {
                         if (!message.verifySignature(friend.publicKey))
                         {
-                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                         }
                         else
                         {
-                            handleReceivedKeys(message.sender, spixi_message.data);
+                            handleReceivedKeys(sender_address, spixi_message.data);
                         }
                     }
                     break;
 
                 case SpixiMessageCode.msgReceived:
                     {
-                        handleMsgReceived(message.sender, spixi_message.data);
+                        handleMsgReceived(sender_address, spixi_message.data);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.msgRead:
                     {
-                        handleMsgRead(message.sender, spixi_message.data);
+                        handleMsgRead(sender_address, spixi_message.data);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.fileHeader:
                     {
-                        handleFileHeader(message.sender, spixi_message, message.id);
+                        handleFileHeader(sender_address, spixi_message, message.id);
                     }
                     break;
 
                 case SpixiMessageCode.acceptFile:
                     {
-                        handleAcceptFile(message.sender, spixi_message);
+                        handleAcceptFile(sender_address, spixi_message);
                         break;
                     }
 
                 case SpixiMessageCode.requestFileData:
                     {
-                        handleRequestFileData(message.sender, spixi_message);
+                        handleRequestFileData(sender_address, spixi_message);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.fileData:
                     {
-                        handleFileData(message.sender, spixi_message);
+                        handleFileData(sender_address, spixi_message);
                         // don't send confirmation back, so just return
                         return;
                     }
 
                 case SpixiMessageCode.fileFullyReceived:
                     {
-                        handleFileFullyReceived(message.sender, spixi_message);
+                        handleFileFullyReceived(sender_address, spixi_message);
                         // don't send confirmation back, so just return
                         return;
                     }
@@ -895,28 +901,28 @@ namespace SPIXI
                 case SpixiMessageCode.acceptAddBot:
                     {
                         // Friend accepted request
-                        handleAcceptAddBot(message.sender, spixi_message.data);
+                        handleAcceptAddBot(sender_address, spixi_message.data);
                     }
                     break;
 
                 case SpixiMessageCode.appData:
                     {
                         // app data received, find the session id of the app and forward the data to it
-                        handleAppData(message.sender, spixi_message.data);
+                        handleAppData(sender_address, spixi_message.data);
                     }
                     break;
 
                 case SpixiMessageCode.appRequest:
                     {
                         // app request received
-                        handleAppRequest(message.sender, spixi_message.data);
+                        handleAppRequest(sender_address, spixi_message.data);
                         break;
                     }
             }
 
             if (friend == null)
             {
-                friend = FriendList.getFriend(message.sender);
+                friend = FriendList.getFriend(sender_address);
             }
 
             if(friend == null)
@@ -929,7 +935,7 @@ namespace SPIXI
             StreamMessage msg_received = new StreamMessage();
             msg_received.type = StreamMessageCode.info;
             msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            msg_received.recipient = message.sender;
+            msg_received.recipient = sender_address;
             msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id).getBytes();
             msg_received.transaction = new byte[1];
             msg_received.sigdata = new byte[1];
