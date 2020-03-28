@@ -231,6 +231,10 @@
             }
         });
 
+        $("#chat_input").blur(function (event) {
+            document.getElementById("wrap").focus();
+        });
+
         function clearInput() {
             document.getElementById("chat_input").value = "";
             document.getElementById("chat_send").style.backgroundColor = "#BABABA";
