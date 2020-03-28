@@ -139,6 +139,12 @@ namespace SPIXI
                         Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
+
+                    Friend friend = FriendList.addFriend(Base58Check.Base58CheckEncoding.DecodePlain("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+
+                    FriendList.saveToStorage();
+
+                    StreamProcessor.sendContactRequest(friend);
                 }
                 else
                 {

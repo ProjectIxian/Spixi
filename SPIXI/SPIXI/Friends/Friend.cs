@@ -25,7 +25,7 @@ namespace SPIXI
     {
         private byte[] _id;
         public string message;
-        public long timestamp;
+        public long timestamp; // timestamp as specified by the sender
         public bool localSender;
         public bool read;
         public bool confirmed;
@@ -37,6 +37,8 @@ namespace SPIXI
 
         public byte[] senderAddress;
         public string senderNick = "";
+
+        public long receivedTimestamp; // timestamp of when the message was received; used for storage purposes
 
         public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
         {
@@ -53,6 +55,7 @@ namespace SPIXI
             completed = false;
             filePath = "";
             fileSize = 0;
+            receivedTimestamp = Clock.getTimestamp();
         }
 
         public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
@@ -69,6 +72,7 @@ namespace SPIXI
             completed = false;
             filePath = "";
             fileSize = 0;
+            receivedTimestamp = Clock.getTimestamp();
         }
 
         public FriendMessage(byte[] bytes)
@@ -100,6 +104,8 @@ namespace SPIXI
 
                     filePath = reader.ReadString();
                     fileSize = reader.ReadUInt64();
+
+                    receivedTimestamp = reader.ReadInt64();
                 }
             }
 
@@ -137,6 +143,8 @@ namespace SPIXI
 
                     writer.Write(filePath);
                     writer.Write(fileSize);
+
+                    writer.Write(receivedTimestamp);
                 }
                 return m.ToArray();
             }
@@ -186,7 +194,7 @@ namespace SPIXI
 
     public class BotContact
     {
-        public string nick;
+        public string nick = "";
         public byte[] publicKey;
 
         public BotContact()
@@ -209,7 +217,10 @@ namespace SPIXI
                     nick = reader.ReadString();
 
                     int pk_length = reader.ReadInt32();
-                    publicKey = reader.ReadBytes(pk_length);
+                    if (pk_length > 0)
+                    {
+                        publicKey = reader.ReadBytes(pk_length);
+                    }
                 }
             }
         }
@@ -222,8 +233,14 @@ namespace SPIXI
                 {
                     writer.Write(nick);
 
-                    writer.Write(publicKey.Length);
-                    writer.Write(publicKey);
+                    if(publicKey == null)
+                    {
+                        writer.Write((int)0);
+                    }else
+                    {
+                        writer.Write(publicKey.Length);
+                        writer.Write(publicKey);
+                    }
                 }
                 return m.ToArray();
             }
@@ -260,6 +277,8 @@ namespace SPIXI
         private int _handshakeStatus = 0;
 
         public bool handshakePushed = false;
+
+        public byte[] lastReceivedMessageId = null; // Used primarily for bot purposes
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -319,6 +338,12 @@ namespace SPIXI
 
                             BotContact contact = new BotContact(reader.ReadBytes(contact_len));
                             contacts.Add(new Address(contact.publicKey).address, contact);
+                        }
+
+                        int rcv_msg_id_len = reader.ReadInt32();
+                        if (rcv_msg_id_len > 0)
+                        {
+                            lastReceivedMessageId = reader.ReadBytes(rcv_msg_id_len);
                         }
                     }
                     catch (Exception)
@@ -390,6 +415,17 @@ namespace SPIXI
                         writer.Write(contact_bytes.Length);
                         writer.Write(contact_bytes);
                     }
+
+                    if (lastReceivedMessageId != null)
+                    {
+                        writer.Write(lastReceivedMessageId.Length);
+                        writer.Write(lastReceivedMessageId);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
                 }
                 return m.ToArray();
             }

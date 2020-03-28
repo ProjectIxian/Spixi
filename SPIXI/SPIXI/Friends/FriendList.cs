@@ -195,9 +195,13 @@ namespace SPIXI
             string sender_nick = "";
             if(friend.bot && sender_address != null)
             {
+                if(IxianHandler.getWalletStorage().isMyAddress(sender_address))
+                {
+                    local_sender = true;
+                }
                 if (!local_sender)
                 {
-                    if (friend.contacts.ContainsKey(sender_address) && friend.contacts[sender_address].nick != null)
+                    if (friend.contacts.ContainsKey(sender_address) && friend.contacts[sender_address].nick != "")
                     {
                         sender_nick = friend.contacts[sender_address].nick;
                     }
@@ -217,9 +221,17 @@ namespace SPIXI
             }
 
             FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
-            if(friend.bot && local_sender)
+            if(friend.bot)
             {
-                friend_message.read = true;
+                if (local_sender)
+                {
+                    friend_message.read = true;
+                }else
+                {
+                    friend.lastReceivedMessageId = id;
+                    saveToStorage();
+                }
+
             }
 
             lock (friend.messages)

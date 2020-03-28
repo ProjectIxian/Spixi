@@ -148,8 +148,14 @@ namespace SPIXI.Storage
                     // TODO TODO can be removed after v0.5
                     deleteMessagesLegacy(friend.walletAddress);
 
-                    // Read messages from chat history
-                    friend.messages = readLastMessages(friend.walletAddress);
+                    try
+                    {
+                        // Read messages from chat history
+                        friend.messages = readLastMessages(friend.walletAddress);
+                    }catch(Exception e)
+                    {
+                        Logging.error("Error reading contact's {0} messages: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), e);
+                    }
 
                     FriendList.addFriend(friend);
                 }
@@ -363,7 +369,7 @@ namespace SPIXI.Storage
                         if(from_time_stamp != 0 && messages.Count() == 0)
                         {
                             // Remove all messages that are newer than the from_time_stamp
-                            tmp_msgs.RemoveAll(x => x.timestamp >= from_time_stamp);
+                            tmp_msgs.RemoveAll(x => x.receivedTimestamp >= from_time_stamp);
                         }
                         messages.InsertRange(0, tmp_msgs.Skip(msgs_to_skip).Take(msgs_to_take));
                     }else
@@ -371,7 +377,7 @@ namespace SPIXI.Storage
                         if (messages.Count() == 0)
                         {
                             // Remove all messages that are older than the from_time_stamp
-                            tmp_msgs.RemoveAll(x => x.timestamp <= from_time_stamp);
+                            tmp_msgs.RemoveAll(x => x.receivedTimestamp <= from_time_stamp);
                         }
                         messages.AddRange(tmp_msgs.Take(msgs_to_take));
                     }
@@ -410,7 +416,7 @@ namespace SPIXI.Storage
             List<FriendMessage> local_messages = null;
             lock (messages)
             {
-                local_messages = messages.ToList();
+                local_messages = messages.OrderBy(x => x.receivedTimestamp).ToList();
             }
             lock (messagesLock)
             {
@@ -422,15 +428,15 @@ namespace SPIXI.Storage
                     Directory.CreateDirectory(messages_path);
                 }
 
-                string messages_full_path = getMessagesFullPath(wallet, local_messages.First().timestamp);
+                string messages_full_path = getMessagesFullPath(wallet, local_messages.First().receivedTimestamp);
                 if (messages_full_path == null)
                 {
-                    messages_full_path = Path.Combine(messages_path, local_messages.First().timestamp + ".ixi");
+                    messages_full_path = Path.Combine(messages_path, local_messages.First().receivedTimestamp + ".ixi");
                 }
                 else
                 {
                     var tmp_messages = readMessagesFile(messages_full_path);
-                    tmp_messages.RemoveAll(x => x.timestamp >= local_messages.First().timestamp);
+                    tmp_messages.RemoveAll(x => x.receivedTimestamp >= local_messages.First().receivedTimestamp);
 
                     local_messages.InsertRange(0, tmp_messages);
                 }
@@ -441,7 +447,7 @@ namespace SPIXI.Storage
                     BinaryWriter writer;
                     if (!first)
                     {
-                        messages_full_path = Path.Combine(messages_path, local_messages[i].timestamp + ".ixi");
+                        messages_full_path = Path.Combine(messages_path, local_messages[i].receivedTimestamp + ".ixi");
                     }
                     first = false;
                     try

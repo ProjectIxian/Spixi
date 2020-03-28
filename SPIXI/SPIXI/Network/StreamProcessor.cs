@@ -19,6 +19,7 @@ namespace SPIXI
         public StreamMessage message = null;
         public bool sendPushNotification = false;
         public bool offlineAndServer = false;
+        public long timestamp = 0;
     }
     
     class StreamProcessor
@@ -210,7 +211,7 @@ namespace SPIXI
                     try
                     {
                         OfflineMessage message = entry.Value;
-                        if(message.message.timestamp + 5 < Clock.getTimestamp())
+                        if(message.timestamp + 5 < Clock.getTimestamp())
                         {
                             cache.Add(message);
                         }
@@ -323,7 +324,7 @@ namespace SPIXI
             {
                 lock (pendingMessages)
                 {
-                    pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push, offlineAndServer = offline_and_server });
+                    pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push, offlineAndServer = offline_and_server, timestamp = Clock.getTimestamp() });
                 }
             }
 
@@ -349,7 +350,7 @@ namespace SPIXI
                     }
                     if (!store_to_server || offline_and_server)
                     {
-                        if (msg.id.Length == 1 && friend.handshakeStatus < 5)
+                        if (msg.id.Length == 1 && msg.id[0] >= friend.handshakeStatus)
                         {
                             friend.handshakePushed = true;
 
@@ -1427,7 +1428,7 @@ namespace SPIXI
 
             if(friend.messages.Count > 0)
             {
-                last_message_id = friend.messages[friend.messages.Count - 1].id;
+                last_message_id = friend.lastReceivedMessageId;
             }
 
             // Send the message to the S2 nodes
