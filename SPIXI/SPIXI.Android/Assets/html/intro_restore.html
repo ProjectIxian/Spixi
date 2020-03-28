@@ -68,14 +68,21 @@
 
 
         <div id="overlay" class="intro-overlay" style="display: none;">
-            <div class="intro-logo-holder">
-                <img class="intro-logo" src="img/intrologo.png" />
-            </div>
+            <div class="intro-top">
+                <div class="intro-top-wrapper">
+                    <div class="intro-logo-holder">
+                        <img class="intro-logo" src="img/intrologo.png" />
+                    </div>
 
-            <div class="intro-overlay-title">Restoring Access to<br />your Spixi Account</div>
-            <div class="intro-overlay-loading"></div>
-            <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;This may take a while</div>
-            <div class="intro-overlay-ixian"></div>
+                    <div class="intro-overlay-title">Restoring Access to<br />your Spixi Account</div>
+                    <div class="intro-overlay-loading"></div>
+                    <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;This may take a while</div>
+                </div>
+            </div>
+            <div class="intro-bottom">
+                <div class="intro-overlay-ixian"></div>
+                <div class="intro-holder-70"></div>
+            </div>
         </div>
 
     </div>
@@ -110,7 +117,7 @@
                 return;
             }
 
-            document.getElementById("overlay").style.display = "block";
+            document.getElementById("overlay").style.display = "table";
 
             setTimeout(function () { restoreAccount(); }, 400);
         }

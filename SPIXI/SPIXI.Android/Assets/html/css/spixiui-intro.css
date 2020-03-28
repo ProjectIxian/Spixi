@@ -69,6 +69,31 @@ a:active {
     text-align: center;
 }
 
+.intro-main
+{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.intro-top
+{
+    display: table-row;
+    height: auto;
+}
+
+.intro-top-wrapper
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.intro-bottom
+{
+    display: table-row;
+    height: 100px;
+}
+
 /* Placeholders */
 .intro-holder-20 {
     width: 100%;
@@ -89,7 +114,6 @@ a:active {
 }
 .intro-logo-holder {
     text-align: center;
-    margin-top: 140px;
 }
 .intro-logo-holder2 {
     text-align: center;
@@ -293,7 +317,6 @@ a:active {
     background: linear-gradient(#951453, #2b0f45);
     z-index: 99;
     color: #FFFFFF;
-
 }
 .intro-overlay-title {
     width: 100%;
@@ -308,21 +331,21 @@ a:active {
     background-image: url('../img/introloading.png');
     background-size: 107px 107px;
     margin: auto;
-    margin-top: 14px;
+    margin-top: 30px;
     animation: shadow-pulse 1s infinite;
 }
 .intro-overlay-info {
-    margin-top: 50px;
+    margin-top: 40px;
     font-size: 10pt;
     text-align: center;
 }
 .intro-overlay-ixian {
-    width: 142px;
-    height: 46px;
+    width: 148px;
+    height: 39px;
     background-image: url('../img/poweredbyixian.png');
-    background-size: 142px 46px;
+    background-size: 148px 39px;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 15px;
 }
 
 
