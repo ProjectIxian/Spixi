@@ -456,6 +456,14 @@ namespace SPIXI
                     nick = message.senderNick;
                     if (nick == "")
                     {
+                        if (message.senderAddress != null && friend.contacts.ContainsKey(message.senderAddress))
+                        {
+                            nick = friend.contacts[message.senderAddress].nick;
+                        }
+                    }
+
+                    if (nick == "")
+                    {
                         nick = address;
                     }
                 }
