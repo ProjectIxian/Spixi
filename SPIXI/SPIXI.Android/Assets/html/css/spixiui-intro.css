@@ -130,12 +130,14 @@ a:active {
     margin-top: 30px;
     text-align: center;
     font-size: 13pt;
+    padding: 0px 5%;
 }
 .intro-subtitle {
     width: 100%;
     margin-top: 0px;
     text-align: center;
     font-size: 10pt;
+    padding: 0px 10%;
 }
 
 
