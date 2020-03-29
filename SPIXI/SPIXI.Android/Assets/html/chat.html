@@ -231,8 +231,17 @@
             }
         });
 
-        $("#chat_input").blur(function (event) {
-            document.getElementById("wrap").focus();
+
+        $("#chat_input").click(function (event) {
+            if (shouldScroll()) {
+                setTimeout(function () {
+                    document.getElementById("chatholder").scrollIntoView(false);
+                    // Hack for slow devices
+                    setTimeout(function () {
+                        document.getElementById("chatholder").scrollIntoView(false);
+                    }, 800);
+                }, 200);
+            }
         });
 
         function clearInput() {
