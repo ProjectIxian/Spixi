@@ -101,14 +101,15 @@
         }
 
         document.getElementById("sendrequest").onclick = function () {
-            var password = $("#password").val();
+            var oldPassword = $("#passwordOld").val();
+            var newPassword = $("#password").val();
 
             // Check that the passwords are correct
             if (checkPasswordMatch() == false) {
                 return;
             }
 
-            location.href = "ixian:changepass:" + password;
+            location.href = "ixian:changepass:--1ec4ce59e0535704d4--" + oldPassword + "--1ec4ce59e0535704d4--" + newPassword;
         }
 
         function checkPasswordMatch() {

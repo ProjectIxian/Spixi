@@ -47,9 +47,21 @@ namespace SPIXI
             {
                 displaySpixiAlert("SPIXI Account", "Please type a password.", "OK");
             }
-            else if (current_url.Equals("ixian:changepass", StringComparison.Ordinal))
+            else if (current_url.StartsWith("ixian:changepass:", StringComparison.Ordinal))
             {
-
+                string[] split_url = current_url.Split(new string[] { "--1ec4ce59e0535704d4--" }, StringSplitOptions.None);
+                string old_password = split_url[1];
+                string new_password = split_url[2];
+                if (Node.walletStorage.isValidPassword(old_password))
+                {
+                    Node.walletStorage.writeWallet(new_password);
+                    displaySpixiAlert("SPIXI Account", "Password successfully changed.", "OK");
+                    Navigation.PopAsync(Config.defaultXamarinAnimations);
+                }
+                else
+                {
+                    displaySpixiAlert("SPIXI Account", "Current password is incorrect, please try again.", "OK");
+                }
             }
             else
             {
