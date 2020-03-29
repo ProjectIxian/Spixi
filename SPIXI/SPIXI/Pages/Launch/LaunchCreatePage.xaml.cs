@@ -90,7 +90,7 @@ namespace SPIXI
                 {
                     stream.CopyTo(ms);
                     stream.Close();
-                    image_bytes = picker_service.ResizeImage(ms.ToArray(), 960, 540);
+                    image_bytes = picker_service.ResizeImage(ms.ToArray(), 960, 960);
                     if(image_bytes == null)
                     {
                         return;
