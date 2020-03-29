@@ -249,6 +249,22 @@
             document.getElementById("chat_send").style.backgroundColor = "#BABABA";
         }
 
+        document.getElementById("messages").addEventListener("click", function (e) {
+            if (e.target.className.indexOf("nick") != -1) {
+                var nickEl = e.target;
+                var nick = nickEl.getAttribute("nick");
+                var address = nickEl.getAttribute("address");
+                if (address != nick) {
+                    if (nickEl.innerHTML == nick) {
+                        nickEl.innerHTML = address;
+                    } else {
+                        nickEl.innerHTML = nick;
+                    }
+                }
+            }
+        });
+
+
         function addText(id, address, nick, avatar, text, time, className) {
             var textEl = document.createElement('div');
             textEl.className = "text selectable";
@@ -277,15 +293,10 @@
                 if (nick == address) {
                     nickEl.setAttribute("name", "a_" + address);
                 }
+                nickEl.setAttribute("nick", nick);
+                nickEl.setAttribute("address", address);
                 nickEl.className = "nick selectable";
                 nickEl.innerHTML = nick;
-                nickEl.onclick = function () {
-                    if (nickEl.innerHTML == nick) {
-                        nickEl.innerHTML = address;
-                    } else {
-                        nickEl.innerHTML = nick;
-                    }
-                };
                 bubbleEl.appendChild(nickEl);
             }
 
@@ -592,18 +603,10 @@
         function updateGroupChatNicks(address, nick) {
             var nickEls = document.getElementsByName("a_" + address);
             for (var i = 0; i < nickEls.length; i++) {
-                (function (nickEl) {
-                    if (nickEl.getAttribute("name") == "a_" + nickEl.innerHTML) {
-                        nickEl.innerHTML = nick;
-                        nickEl.onclick = function () {
-                            if (nickEl.innerHTML == nick) {
-                                nickEl.innerHTML = address;
-                            } else {
-                                nickEl.innerHTML = nick;
-                            }
-                        };
-                    }
-                })(nickEls[i]);
+                var nickEl = nickEls[i];
+                nickEl.name = "";
+                nickEl.setAttribute("nick", nick);
+                nickEl.innerHTML = nick;
             }
         }
 
