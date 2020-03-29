@@ -82,7 +82,7 @@ namespace SPIXI
                 return;
             }
 
-            var file_path = Node.localStorage.getOwnAvatarPath();
+            var file_path = Node.localStorage.getOwnAvatarPath(false);
             try
             {
                 byte[] image_bytes = null;
