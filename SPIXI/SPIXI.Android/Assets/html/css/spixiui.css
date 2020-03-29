@@ -1678,7 +1678,7 @@ img.emoji {
     -webkit-user-select: auto; /* Safari */
     -khtml-user-select: auto; /* Konqueror HTML */
     -moz-user-select: all; /* Firefox */
-    -ms-user-select: auto; /* Internet Explorer/Edge */
+    -ms-user-select: text; /* Internet Explorer/Edge */
     user-select: initial; /* Non-prefixed version, currently
                     supported by Chrome and Opera */
 }
