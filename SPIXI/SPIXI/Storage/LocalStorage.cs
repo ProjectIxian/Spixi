@@ -60,9 +60,15 @@ namespace SPIXI.Storage
             {
                 Directory.CreateDirectory(Path.Combine(documentsPath, "Avatars"));
             }
+        }
 
+        public void start()
+        {
             // Read transactions
             readTransactionCacheFile();
+
+            // Read the account file
+            readAccountFile();
         }
 
         // Returns the user's avatar path

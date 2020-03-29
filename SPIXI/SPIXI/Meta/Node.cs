@@ -106,6 +106,9 @@ namespace SPIXI.Meta
             }
             // Init TIV
             tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
+
+            // Prepare the local storage
+            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
         }
 
         static public void start()
@@ -119,11 +122,8 @@ namespace SPIXI.Meta
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
-            // Prepare the local storage
-            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
-
-            // Read the account file
-            localStorage.readAccountFile();
+            // Start local storage
+            localStorage.start();
 
             // Start the network queue
             NetworkQueue.start();
