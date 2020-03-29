@@ -41,7 +41,7 @@ namespace SPIXI.Meta
 
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
-        public static ulong bakedBlockHeight = 800000;
+        public static ulong bakedBlockHeight = 1027400;
 
         // Block checksum (paired with bakedBlockHeight) at which the current version of Spixi was generated
         // Useful for optimized block header sync
