@@ -135,7 +135,7 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string msg = split[1];
-                if(msg == "/draw") // TODO TODO TODO experimental test
+                /*if(msg == "/draw") // TODO TODO TODO experimental test
                 {
                     byte[][] user_addresses = new byte[][] { friend.walletAddress };
                     CustomAppPage custom_app_page = new CustomAppPage(IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, "custom_app.html");
@@ -160,7 +160,7 @@ namespace SPIXI
                     StreamProcessor.sendMessage(friend, new_msg);
 
                     return;
-                }
+                }*/
                 onSend(msg);
             }else if(current_url.Contains("ixian:viewPayment:"))
             {
