@@ -48,11 +48,8 @@ a:active {
 }
 
 #wrap {
-    min-height: 100%;
-    height: auto !important;
-    /* Negative indent footer by its height */
-    margin: 0 auto -0px;
-
+    padding: 0 0;
+    
     /* Prevent overscroll bounce  */
     position: absolute;
     top: 0;
@@ -60,7 +57,7 @@ a:active {
     left: 0;
     right: 0;
     overflow: auto;
-    
+        
     color: #FFF;
     background: linear-gradient(#951453, #2b0f45);
 }
