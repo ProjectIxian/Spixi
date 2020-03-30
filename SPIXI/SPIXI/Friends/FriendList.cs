@@ -207,6 +207,10 @@ namespace SPIXI
                     }
                     else
                     {
+                        if(!friend.contacts.ContainsKey(sender_address) || friend.contacts[sender_address].publicKey == null)
+                        {
+                            StreamProcessor.requestPubKey(friend, sender_address);
+                        }
                         StreamProcessor.requestNickname(friend, sender_address);
                     }
                 }

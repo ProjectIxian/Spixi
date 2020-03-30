@@ -766,6 +766,7 @@ namespace SPIXI
                             else if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
                             {
                                 requestPubKey(friend, real_sender_address);
+                                requestNickname(friend, real_sender_address);
                             }
                             else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
                             {
