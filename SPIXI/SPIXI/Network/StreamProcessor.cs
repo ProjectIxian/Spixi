@@ -28,7 +28,7 @@ namespace SPIXI
         private static Thread offlineMessagesThread; // Thread that checks the offline messages list for outstanding messages
         private static bool continueRunning = false;
 
-        private static Dictionary<byte[], OfflineMessage> pendingMessages = new Dictionary<byte[], OfflineMessage>(new ByteArrayComparer()); // List of pending messages that might need to be resent
+        private static List<OfflineMessage> pendingMessages = new List<OfflineMessage>(); // List of pending messages that might need to be resent
 
         private static bool running = false;
 
@@ -122,15 +122,14 @@ namespace SPIXI
                     offlineMessages.Remove(message);
                 }
 
-            }
+                // Finally, clear the removal cache
+                cache.Clear();
 
-            // Finally, clear the removal cache
-            cache.Clear();
-
-            // Save changes to the offline messages file
-            if (writeToFile)
-            {
-                Node.localStorage.writeOfflineMessagesFile(offlineMessages);
+                // Save changes to the offline messages file
+                if (writeToFile)
+                {
+                    Node.localStorage.writeOfflineMessagesFile(offlineMessages);
+                }
             }
         }
 
@@ -210,7 +209,7 @@ namespace SPIXI
                 {
                     try
                     {
-                        OfflineMessage message = entry.Value;
+                        OfflineMessage message = entry;
                         if(message.timestamp + 5 < Clock.getTimestamp())
                         {
                             cache.Add(message);
@@ -226,7 +225,7 @@ namespace SPIXI
                 // Check the removal cache for messages
                 foreach (OfflineMessage message in cache)
                 {
-                    pendingMessages.Remove(message.message.id);
+                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(message.message.id) && x.message.recipient.SequenceEqual(message.message.recipient));
                     Friend f = FriendList.getFriend(message.message.recipient);
                     if (f == null)
                     {
@@ -255,9 +254,9 @@ namespace SPIXI
 
             lock (pendingMessages)
             {
-                if (pendingMessages.ContainsKey(msg.id))
+                if (pendingMessages.Find(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient)) != null)
                 {
-                    pendingMessages.Remove(msg.id);
+                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
                 }
             }
 
@@ -272,7 +271,7 @@ namespace SPIXI
             // Use offline queue when notifications are disabled or when we don't have enough data yet
             lock (offlineMessages)
             {
-                if(offlineMessages.Find(x => x.message.id.SequenceEqual(msg.id)) != null)
+                if(offlineMessages.Find(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient)) != null)
                 {
                     Logging.info("Message already exists in the offline queue, not adding.");
                     return;
@@ -324,7 +323,16 @@ namespace SPIXI
             {
                 lock (pendingMessages)
                 {
-                    pendingMessages.AddOrReplace(msg.id, new OfflineMessage() { message = msg, sendPushNotification = push, offlineAndServer = offline_and_server, timestamp = Clock.getTimestamp() });
+                    int pm_index = pendingMessages.FindIndex(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
+                    OfflineMessage om = new OfflineMessage() { message = msg, sendPushNotification = push, offlineAndServer = offline_and_server, timestamp = Clock.getTimestamp() };
+                    if (pm_index != -1)
+                    {
+                        pendingMessages[pm_index] = om;
+                    }
+                    else
+                    {
+                        pendingMessages.Add(om);
+                    }
                 }
             }
 
@@ -535,9 +543,9 @@ namespace SPIXI
             {
                 lock (pendingMessages)
                 {
-                    if (pendingMessages.ContainsKey(msg_id))
+                    if (pendingMessages.Find(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender)) != null)
                     {
-                        pendingMessages.Remove(msg_id);
+                        pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender));
                     }
                 }
 
@@ -691,16 +699,17 @@ namespace SPIXI
             {
                 if (message.type == StreamMessageCode.error)
                 {
+                    // TODO Additional checks have to be added here, so that it's not possible to spoof errors (see .sender .reciver attributes in S2 as well) - it will somewhat be improved with protocol-level encryption as well
                     PresenceList.removeAddressEntry(friend.walletAddress);
                     friend.online = false;
                     lock (pendingMessages)
                     {
-                        if (pendingMessages.ContainsKey(message.data))
+                        OfflineMessage om = pendingMessages.Find(x => x.message.id.SequenceEqual(message.data) && x.message.recipient.SequenceEqual(message.sender));
+                        if (om != null)
                         {
-                            OfflineMessage om = pendingMessages[message.data];
                             StreamMessage sm = om.message;
-                            pendingMessages.Remove(sm.id);
-                            sendMessage(friend, sm, true, om.sendPushNotification);
+                            pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(message.data) && x.message.recipient.SequenceEqual(message.sender));
+                            sendMessage(friend, sm, true, om.sendPushNotification, true, om.offlineAndServer);
                         }
                     }
                     return;

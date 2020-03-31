@@ -24,7 +24,7 @@ namespace SPIXI
 
             string pub_key = "";
 
-            if (msg.id[0] == 1)
+            if (msg.id.Length == 1 && msg.id[0] == 1)
             {
                 pub_key = HttpUtility.UrlEncode(Convert.ToBase64String(Node.walletStorage.getPrimaryPublicKey()));
             }
