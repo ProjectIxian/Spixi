@@ -187,7 +187,10 @@ namespace SPIXI
                         // Avatar confirmation hasn't been received
                         case 4:
                             Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            sendAvatar(friend);
+                            if (friend.online)
+                            {
+                                sendAvatar(friend);
+                            }
                             break;
                     }
                 }
@@ -254,10 +257,7 @@ namespace SPIXI
 
             lock (pendingMessages)
             {
-                if (pendingMessages.Find(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient)) != null)
-                {
-                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
-                }
+                pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
             }
 
             if (sent_to_server)
@@ -271,13 +271,17 @@ namespace SPIXI
             // Use offline queue when notifications are disabled or when we don't have enough data yet
             lock (offlineMessages)
             {
-                if(offlineMessages.Find(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient)) != null)
+                int om_index = offlineMessages.FindIndex(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
+                OfflineMessage new_om = new OfflineMessage() { message = msg, sendPushNotification = send_push_notification, offlineAndServer = offline_and_server };
+                if (om_index != -1)
                 {
-                    Logging.info("Message already exists in the offline queue, not adding.");
-                    return;
+                    Logging.info("Message already exists in the offline queue, replacing.");
+                    offlineMessages[om_index] = new_om;
+                }else
+                {
+                    offlineMessages.Add(new_om);
                 }
 
-                offlineMessages.Add(new OfflineMessage() { message = msg, sendPushNotification = send_push_notification, offlineAndServer = offline_and_server });
                 //
                 Node.localStorage.writeOfflineMessagesFile(offlineMessages);
             }
@@ -340,22 +344,22 @@ namespace SPIXI
 
             if (!friend.online || !StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
             {
-                if (hostname != "")
+                if (hostname != "" && hostname != null)
                 {
                     StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                 }
-                Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                if (add_to_offline_messages || Config.enablePushNotifications)
+                if (store_to_server)
                 {
-                    if (store_to_server)
+                    store_to_server = Config.enablePushNotifications;
+                    if (friend.bot)
                     {
-                        store_to_server = Config.enablePushNotifications;
-                        if (friend.bot)
-                        {
-                            push = false;
-                            store_to_server = false;
-                        }
+                        push = false;
+                        store_to_server = false;
                     }
+                }
+                if (add_to_offline_messages || store_to_server)
+                {
+                    Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                     if (!store_to_server || offline_and_server)
                     {
                         if (msg.id.Length == 1 && msg.id[0] >= friend.handshakeStatus)
@@ -543,10 +547,7 @@ namespace SPIXI
             {
                 lock (pendingMessages)
                 {
-                    if (pendingMessages.Find(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender)) != null)
-                    {
-                        pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender));
-                    }
+                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender));
                 }
 
                 Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
@@ -1133,11 +1134,12 @@ namespace SPIXI
 
             friend.handshakeStatus = 3;
 
-            sendGetMessages(friend);
-
             requestNickname(friend);
 
             sendNickname(friend);
+
+            sendGetMessages(friend);
+
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
