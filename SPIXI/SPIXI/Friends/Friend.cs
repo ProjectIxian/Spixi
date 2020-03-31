@@ -82,7 +82,10 @@ namespace SPIXI
                 using (BinaryReader reader = new BinaryReader(m))
                 {
                     int id_len = reader.ReadInt32();
-                    _id = reader.ReadBytes(id_len);
+                    if (id_len > 0)
+                    {
+                        _id = reader.ReadBytes(id_len);
+                    }
                     type = (FriendMessageType)reader.ReadInt32();
                     message = reader.ReadString();
                     timestamp = reader.ReadInt64();
@@ -303,7 +306,10 @@ namespace SPIXI
                     walletAddress = reader.ReadBytes(wal_length);
 
                     int pkey_length = reader.ReadInt32();
-                    publicKey = reader.ReadBytes(pkey_length);
+                    if (pkey_length > 0)
+                    {
+                        publicKey = reader.ReadBytes(pkey_length);
+                    }
 
                     _nick = reader.ReadString(); // use internal variable, to avoid writing to file
 
@@ -601,11 +607,19 @@ namespace SPIXI
                     {
                         // Read and assign the aes password
                         int aes_length = reader.ReadInt32();
-                        byte[] aes = reader.ReadBytes(aes_length);
+                        byte[] aes = null;
+                        if (aes_length > 0)
+                        {
+                            aes = reader.ReadBytes(aes_length);
+                        }
 
                         // Read the chacha key
                         int cc_length = reader.ReadInt32();
-                        byte[] chacha = reader.ReadBytes(cc_length);
+                        byte[] chacha = null;
+                        if (cc_length > 0)
+                        {
+                            chacha = reader.ReadBytes(cc_length);
+                        }
 
                         if (aesKey == null)
                         {
