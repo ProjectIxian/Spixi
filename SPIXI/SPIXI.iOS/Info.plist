@@ -23,7 +23,7 @@
 	<key>MinimumOSVersion</key>
 	<string>10.3</string>
 	<key>CFBundleDisplayName</key>
-	<string>SPIXI</string>
+	<string>Spixi</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.ixi.spixi</string>
 	<key>CFBundleVersion</key>
@@ -59,6 +59,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 </dict>
 </plist>
