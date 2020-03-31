@@ -840,7 +840,7 @@ namespace SPIXI
                             }
                             else
                             {
-                                handleRequestAdd(message.id, sender_address, spixi_message.data);
+                                handleRequestAdd(message.id, sender_address, spixi_message.data, message.timestamp);
                             }
                         }
                         break;
@@ -860,7 +860,11 @@ namespace SPIXI
                             }
                             else
                             {
-                                handleAcceptAdd(sender_address, spixi_message.data);
+                                if (friend.lastReceivedHandshakeMessageTimestamp < message.timestamp)
+                                {
+                                    friend.lastReceivedHandshakeMessageTimestamp = message.timestamp;
+                                    handleAcceptAdd(sender_address, spixi_message.data);
+                                }
                             }
                         }
                         break;
@@ -893,7 +897,11 @@ namespace SPIXI
                             }
                             else
                             {
-                                handleReceivedKeys(sender_address, spixi_message.data);
+                                if (friend.lastReceivedHandshakeMessageTimestamp < message.timestamp)
+                                {
+                                    friend.lastReceivedHandshakeMessageTimestamp = message.timestamp;
+                                    handleReceivedKeys(sender_address, spixi_message.data);
+                                }
                             }
                         }
                         break;
@@ -1048,7 +1056,7 @@ namespace SPIXI
             return;
         }
 
-        private static void handleRequestAdd(byte[] id, byte[] sender_wallet, byte[] pub_key)
+        private static void handleRequestAdd(byte[] id, byte[] sender_wallet, byte[] pub_key, long received_timestamp)
         {
             // TODO TODO secure this function to prevent "downgrade"; possibly other handshake functions need securing
 
@@ -1062,12 +1070,18 @@ namespace SPIXI
 
             if (new_friend != null)
             {
+                new_friend.lastReceivedHandshakeMessageTimestamp = received_timestamp;
                 new_friend.handshakeStatus = 1;
                 FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, "");
                 requestNickname(new_friend);
             }else
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
+                if(friend.lastReceivedHandshakeMessageTimestamp >= received_timestamp)
+                {
+                    return;
+                }
+                friend.lastReceivedHandshakeMessageTimestamp = received_timestamp;
                 bool reset_keys = true;
                 if(friend.handshakeStatus > 0 && friend.handshakeStatus < 3)
                 {

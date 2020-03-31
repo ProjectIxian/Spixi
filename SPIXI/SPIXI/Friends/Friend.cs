@@ -283,6 +283,8 @@ namespace SPIXI
 
         public byte[] lastReceivedMessageId = null; // Used primarily for bot purposes
 
+        public long lastReceivedHandshakeMessageTimestamp = 0;
+
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
             walletAddress = wallet;
@@ -351,6 +353,8 @@ namespace SPIXI
                         {
                             lastReceivedMessageId = reader.ReadBytes(rcv_msg_id_len);
                         }
+
+                        lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
                     }
                     catch (Exception)
                     {
@@ -431,6 +435,8 @@ namespace SPIXI
                     {
                         writer.Write(0);
                     }
+
+                    writer.Write(lastReceivedHandshakeMessageTimestamp);
 
                 }
                 return m.ToArray();
