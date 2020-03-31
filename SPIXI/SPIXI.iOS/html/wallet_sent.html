@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<!-- saved from url=(0016)http://localhost -->
 
 <head lang="en">
     <meta charset="utf-8">
@@ -14,29 +15,42 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-    
+
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
-    
+
 </head>
 <body onload="onload()">
+    <div id="templates" style="display: none;">
+        <div class="address">
+            <div class="row spixi-list-item padded">
+                <div class="col-2 spixi-list-item-left spixi-list-item-noborder"><img class="spixi-list-item-avatar" src="img/spixiavatar.png" /></div>
+                <div class="col-7 spixi-list-item-center spixi-list-item-noborder">
+                    <div class="spixi-list-item-title-center wallet_from_text"></div>
+                </div>
+                <div class="col-3 spixi-list-item-right spixi-list-item-noborder time_sent"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="wrap" class="container-fluid noselect">
-        
+
         <!-- Toolbar -->
-        <div class="spixi-toolbar shadow" >
+        <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div id="backbtn" class="col-2 spixi-center">
+                <div id="backbtn" class="col-2">
                     <i class="fas fa-arrow-left"></i>
                 </div>
-                <div class="col-10" id="title">
+                <div class="col-8" id="title">
                     Payment Sent
-                </div>   
+                </div>
+                <div class="col-2">
+                </div>
             </div>
-            
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
@@ -44,91 +58,106 @@
         <div id="subtitle" class="spixi-textsection-holder spixi-textsection-header">
             Payment Sent to
         </div>
-        
-        <hr class="spixi-separator"/>
-        <div class="spixi-list-item">
-            <div class="row">
-                <div class="col-2 spixi-list-item-left spixi-list-item-noborder"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                <div class="col-7 spixi-list-item-center spixi-list-item-noborder">
-                    <div id="wallet_from_text" class="spixi-list-item-title-center"></div>
-                </div>
-                <div id="time_sent" class="col-3 spixi-list-item-right spixi-list-item-noborder"></div>
-            </div>
-        </div>   
-        <hr class="spixi-separator"/>
+
+        <hr class="spixi-separator" />
+        <div class="container" id="address_container">
+        </div>
+        <hr class="spixi-separator" />
 
         <div id="amount_label" class="spixi-textsection-holder spixi-textsection-header">
             Amount Sent
         </div>
         <div id="sent_amount" class="spixi-textsection-holder spixi-textsection-header">
             0.00000000
-        </div>        
-        <hr class="spixi-separator"/>
-        
+        </div>
+        <hr class="spixi-separator" />
+
         <div class="spixi-textsection-holder spixi-textsection-header">
             Payment Status
         </div>
         <div id="sent_status" class="spixi-textsection-holder spixi-textsection-header spixi-text-red">
             UNCONFIRMED
-        </div>        
+        </div>
         <div id="paymentdetail_label" class="spixi-textsection-holder">
             The amount you sent has been deducted from your balance.
         </div>
-        <hr class="spixi-separator"/>
+        <hr class="spixi-separator" />
 
         <div class="spixi-textsection-holder spixi-textsection-header">
             Payment fee
         </div>
-        
+
         <div id="sent_fee_percent" class="spixi-textsection-holder">
             %
-        </div>        
-        <div id="sent_fee"class="spixi-textsection-holder spixi-textsection-header">
+        </div>
+        <div id="sent_fee" class="spixi-textsection-holder spixi-textsection-header">
             0.00000000
         </div>
         <div class="spixi-textsection-holder">
             Every payment sent has a certain payment fee which is deducted from the amount transferred.
-        </div>        
-        
+        </div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            TXID
+        </div>
+
+        <div id="sent_txid" class="spixi-textsection-holder break-word selectable">
+
+        </div>
+
+        <div class="spixi-holder-20"></div>
+        <hr class="spixi-separator-main" />
+
+        <div id="sendrequest" class="spixi-button large center">
+            Dismiss
+        </div>
+
         <div class="spixi-holder-20"></div>
 
     </div>
-    
-    
-<script type="text/javascript">
-
-    document.getElementById("backbtn").onclick = function() {
-        location.href = "ixian:back";
-    } 
-    
 
 
-    function setReceivedMode()
-    {
-        document.getElementById('title').innerHTML = "Payment Received";
-        document.getElementById('subtitle').innerHTML = "Payment Received from";
-        document.getElementById('amount_label').innerHTML = "Amount Received";
-        document.getElementById('paymentdetail_label').innerHTML = "The amount received has been added to your balance.";
-    }
+    <script type="text/javascript">
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:dismiss";
+        }
 
-    function setInitialData(amount, fee, from, nick, time) {
-        document.getElementById('sent_amount').innerHTML = amount;
-        document.getElementById('sent_fee').innerHTML = fee;
-        document.getElementById('wallet_from_text').innerHTML = "<b>" + nick + "</b><br/>" + from;
-        document.getElementById('time_sent').innerHTML = time;
-    }
+        document.getElementById("sendrequest").onclick = function () {
+            location.href = "ixian:dismiss";
+        }
 
-    function setConfirmedData(amount, fee, from, nick, time) {
-        document.getElementById('sent_amount').innerHTML = amount;
-        document.getElementById('sent_fee').innerHTML = fee;
-        document.getElementById('wallet_from_text').innerHTML = "<b>" + nick + "</b><br/>" + from;
-        document.getElementById('time_sent').innerHTML = time;
-        document.getElementById('sent_status').innerHTML = "CONFIRMED";
-        document.getElementById('sent_status').className = "spixi-textsection-holder spixi-textsection-header spixi-text-green";
-    }
+        function setReceivedMode() {
+            document.getElementById('title').innerHTML = "Payment Received";
+            document.getElementById('subtitle').innerHTML = "Payment Received from";
+            document.getElementById('amount_label').innerHTML = "Amount Received";
+            document.getElementById('paymentdetail_label').innerHTML = "The amount received has been added to your balance.";
+        }
 
+        function setData(amount, fee, addresses, time, confirmedText, feePercentage, txid) {
+            document.getElementById('sent_amount').innerHTML = amount;
+            document.getElementById('sent_fee').innerHTML = fee;
+            document.getElementById("sent_fee_percent").innerHTML = feePercentage;
+            document.getElementById("sent_txid").innerHTML = txid;
 
-</script>
+            var address_container = document.getElementById('address_container');
+            address_container.innerHTML = "";
 
+            var addr_arr = addresses.split("|");
+            for (var i in addr_arr) {
+                if (addr_arr[i] == "") { continue; }
+
+                var address_html = document.getElementById("templates").getElementsByClassName("address")[0].outerHTML;
+                address_container.innerHTML += address_html;
+
+                address_container.lastElementChild.getElementsByClassName("wallet_from_text")[0].innerHTML = addr_arr[i];
+                address_container.lastElementChild.getElementsByClassName("time_sent")[0].innerHTML = time;
+            }
+
+            document.getElementById('sent_status').innerHTML = confirmedText;
+            if (confirmedText != "UNCONFIRMED") {
+                document.getElementById('sent_status').className = "spixi-textsection-holder spixi-textsection-header spixi-text-green";
+            }
+        }
+    </script>
 </body>
 </html>

@@ -48,11 +48,8 @@ a:active {
 }
 
 #wrap {
-    min-height: 100%;
-    height: auto !important;
-    /* Negative indent footer by its height */
-    margin: 0 auto -0px;
-
+    padding: 0 0;
+    
     /* Prevent overscroll bounce  */
     position: absolute;
     top: 0;
@@ -60,13 +57,38 @@ a:active {
     left: 0;
     right: 0;
     overflow: auto;
-    
+        
     color: #FFF;
     background: linear-gradient(#951453, #2b0f45);
 }
 
 .center {
     text-align: center;
+}
+
+.intro-main
+{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.intro-top
+{
+    display: table-row;
+    height: auto;
+}
+
+.intro-top-wrapper
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.intro-bottom
+{
+    display: table-row;
+    height: 100px;
 }
 
 /* Placeholders */
@@ -89,7 +111,6 @@ a:active {
 }
 .intro-logo-holder {
     text-align: center;
-    margin-top: 140px;
 }
 .intro-logo-holder2 {
     text-align: center;
@@ -106,12 +127,14 @@ a:active {
     margin-top: 30px;
     text-align: center;
     font-size: 13pt;
+    padding: 0px 5%;
 }
 .intro-subtitle {
     width: 100%;
     margin-top: 0px;
     text-align: center;
     font-size: 10pt;
+    padding: 0px 10%;
 }
 
 
@@ -213,12 +236,26 @@ a:active {
     color: #fff;
     background: #2a1b22;
 }
-
+.intro-button.small {
+    height:36px;
+    border-radius: 18px;
+    padding-top: 8px;
+    font-size: 10pt;
+    width: 160px;
+    margin-left: 20px;
+}
 .intro-button.round:hover {
     background: #73c1ee;
 }
 .intro-button.round:active {
     background: #634e8e;
+}
+
+.intro-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    margin-top: -14px;
 }
 
 .intro-backarrow {
@@ -271,7 +308,7 @@ a:active {
 }
 
 .intro-overlay {
-    position: absolute;
+    position: fixed;
     left: 0px;
     top: 0px;
     width: 100%;
@@ -279,7 +316,6 @@ a:active {
     background: linear-gradient(#951453, #2b0f45);
     z-index: 99;
     color: #FFFFFF;
-
 }
 .intro-overlay-title {
     width: 100%;
@@ -290,21 +326,34 @@ a:active {
 .intro-overlay-loading {
     width: 107px;
     height: 107px;
+    border-radius: 107px;
     background-image: url('../img/introloading.png');
     background-size: 107px 107px;
     margin: auto;
-    margin-top: 14px;
+    margin-top: 30px;
+    animation: shadow-pulse 1s infinite;
 }
 .intro-overlay-info {
-    margin-top: 50px;
+    margin-top: 40px;
     font-size: 10pt;
     text-align: center;
 }
 .intro-overlay-ixian {
-    width: 142px;
-    height: 46px;
+    width: 148px;
+    height: 39px;
     background-image: url('../img/poweredbyixian.png');
-    background-size: 142px 46px;
+    background-size: 148px 39px;
     margin: auto;
-    margin-top: 80px;
+    margin-top: 15px;
+}
+
+
+@keyframes shadow-pulse
+{
+     0% {
+          box-shadow: 0 0 0 0px rgba(160, 0, 0, 0.4);
+     }
+     100% {
+          box-shadow: 0 0 0 55px rgba(0, 0, 0, 0);
+     }
 }

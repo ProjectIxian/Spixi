@@ -27,7 +27,7 @@ public class PushService_iOS : IPushService
 
     }
 
-    public void showLocalNotification(string title, string message)
+    public void showLocalNotification(string title, string message, string data)
     {
 
     }

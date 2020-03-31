@@ -1,7 +1,8 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="X5k-f2-b5h">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="X5k-f2-b5h">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,127 +15,32 @@
                         <viewControllerLayoutGuide type="bottom" id="9ZL-r4-8FZ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="yd7-JS-zBw">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" image="Icon-60.png" translatesAutoresizingMaskIntoConstraints="NO" id="23">
-                                <rect key="frame" x="270" y="270" width="60" height="60"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="splash.png" translatesAutoresizingMaskIntoConstraints="NO" id="23">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.20392156862745098" green="0.59607843137254901" blue="0.85882352941176465" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.67823809390000001" green="0.106185846" blue="0.340421319" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="23" firstAttribute="centerY" secondItem="yd7-JS-zBw" secondAttribute="centerY" priority="1" id="39"/>
                             <constraint firstItem="23" firstAttribute="centerX" secondItem="yd7-JS-zBw" secondAttribute="centerX" priority="1" id="41"/>
+                            <constraint firstItem="23" firstAttribute="top" secondItem="Y8P-hJ-Z43" secondAttribute="bottom" id="Bay-bd-FCt"/>
+                            <constraint firstAttribute="trailing" secondItem="23" secondAttribute="trailing" id="CYm-gd-n61"/>
+                            <constraint firstItem="9ZL-r4-8FZ" firstAttribute="top" secondItem="23" secondAttribute="bottom" id="iTJ-N3-Nlx"/>
+                            <constraint firstItem="23" firstAttribute="leading" secondItem="yd7-JS-zBw" secondAttribute="leading" id="rwT-G2-qzt"/>
                         </constraints>
-                        <color key="tintColor" colorSpace="calibratedRGB" red="1" green="1" blue="1" alpha="1"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XAI-xm-WK6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="349" y="339"/>
+            <point key="canvasLocation" x="347.82608695652175" y="338.83928571428572"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Icon-60.png" width="60" height="60"/>
-        <image name="html/avatar.png" width="254" height="255"/>
-        <image name="html/avatar1.png" width="56" height="57"/>
-        <image name="html/img/accept_icon.png" width="37" height="36"/>
-        <image name="html/img/activity.png" width="70" height="60"/>
-        <image name="html/img/address.png" width="52" height="53"/>
-        <image name="html/img/Address_icon.png" width="52" height="53"/>
-        <image name="html/img/AttachFile_icon.png" width="27" height="27"/>
-        <image name="html/img/Avatar_bck.png" width="290" height="290"/>
-        <image name="html/img/Avatar_settings.png" width="130" height="130"/>
-        <image name="html/img/Back_icon.png" width="40" height="39"/>
-        <image name="html/img/backup.png" width="52" height="53"/>
-        <image name="html/img/bottomIndicator.png" width="40" height="40"/>
-        <image name="html/img/camera.png" width="54" height="42"/>
-        <image name="html/img/Chats_icon_active.png" width="73" height="54"/>
-        <image name="html/img/Chats_icon_idle.png" width="73" height="54"/>
-        <image name="html/img/ChooseContact_icon.png" width="74" height="33"/>
-        <image name="html/img/Contacts_icon_active.png" width="73" height="54"/>
-        <image name="html/img/Contacts_icon_idle.png" width="73" height="54"/>
-        <image name="html/img/Create_icon_Active.png" width="42" height="37"/>
-        <image name="html/img/Create_icon_Idle.png" width="42" height="37"/>
-        <image name="html/img/dismissNotification.png" width="45" height="44"/>
-        <image name="html/img/Done_icon.png" width="37" height="29"/>
-        <image name="html/img/Edit_icon_Active.png" width="42" height="41"/>
-        <image name="html/img/Edit_icon_Idle.png" width="42" height="41"/>
-        <image name="html/img/error.png" width="37" height="36"/>
-        <image name="html/img/FAB_Active.png" width="144" height="146"/>
-        <image name="html/img/FAB_Idle.png" width="144" height="146"/>
-        <image name="html/img/Fail_icon.png" width="76" height="76"/>
-        <image name="html/img/floatbutton.png" width="143" height="153"/>
-        <image name="html/img/Forward_icon.png" width="40" height="39"/>
-        <image name="html/img/historyDelete_icon.png" width="47" height="40"/>
-        <image name="html/img/historyDelete_icon_Black.png" width="47" height="40"/>
-        <image name="html/img/Home_icon_active.png" width="73" height="54"/>
-        <image name="html/img/Home_icon_idle.png" width="73" height="54"/>
-        <image name="html/img/ignore_icon.png" width="37" height="36"/>
-        <image name="html/img/info_about.png" width="52" height="53"/>
-        <image name="html/img/info_grey.png" width="45" height="44"/>
-        <image name="html/img/info_icon.png" width="46" height="45"/>
-        <image name="html/img/ixi.png" width="64" height="64"/>
-        <image name="html/img/Ixi_icon.png" width="41" height="49"/>
-        <image name="html/img/Lock_icon.png" width="52" height="53"/>
-        <image name="html/img/lock_red.png" width="28" height="36"/>
-        <image name="html/img/Locked_icon.png" width="60" height="60"/>
-        <image name="html/img/LockScreen_background.jpg" width="714" height="1248"/>
-        <image name="html/img/lockScreen_icon.png" width="60" height="60"/>
-        <image name="html/img/logofull.png" width="280" height="73"/>
-        <image name="html/img/More_icon.png" width="40" height="39"/>
-        <image name="html/img/nav.png" width="256" height="123"/>
-        <image name="html/img/Notifications_icon.png" width="52" height="53"/>
-        <image name="html/img/onlineIndicator.png" width="42" height="42"/>
-        <image name="html/img/Open_icon.png" width="64" height="64"/>
-        <image name="html/img/payr.png" width="60" height="60"/>
-        <image name="html/img/quickscan.png" width="131" height="133"/>
-        <image name="html/img/receive.png" width="70" height="60"/>
-        <image name="html/img/Received_icon.png" width="48" height="41"/>
-        <image name="html/img/remove_contact.png" width="45" height="44"/>
-        <image name="html/img/Request_Active.png" width="133" height="133"/>
-        <image name="html/img/Request_icon_active.png" width="62" height="51"/>
-        <image name="html/img/Request_icon_idle.png" width="62" height="51"/>
-        <image name="html/img/Request_Idle.png" width="133" height="133"/>
-        <image name="html/img/Request_white.png" width="62" height="50"/>
-        <image name="html/img/Restore.png" width="95" height="102"/>
-        <image name="html/img/Restore_icon_Active.png" width="42" height="37"/>
-        <image name="html/img/Restore_icon_Idle.png" width="42" height="37"/>
-        <image name="html/img/restore_steps.png" width="10" height="59"/>
-        <image name="html/img/ScanButton_Active.png" width="127" height="128"/>
-        <image name="html/img/ScanButton_Idle.png" width="127" height="128"/>
-        <image name="html/img/ScanButtonL_Active.png" width="169" height="169"/>
-        <image name="html/img/ScanButtonL_Idle.png" width="169" height="169"/>
-        <image name="html/img/security.png" width="52" height="53"/>
-        <image name="html/img/send.png" width="70" height="60"/>
-        <image name="html/img/Send_Active.png" width="133" height="133"/>
-        <image name="html/img/Send_icon_active.png" width="62" height="51"/>
-        <image name="html/img/Send_icon_idle.png" width="62" height="51"/>
-        <image name="html/img/Send_Idle.png" width="133" height="133"/>
-        <image name="html/img/Send_white.png" width="62" height="50"/>
-        <image name="html/img/SendIXI_icon_blue.png" width="62" height="50"/>
-        <image name="html/img/SendMessage_icon.png" width="54" height="46"/>
-        <image name="html/img/sendr.png" width="60" height="60"/>
-        <image name="html/img/Sent_icon.png" width="48" height="41"/>
-        <image name="html/img/settings.png" width="52" height="53"/>
-        <image name="html/img/Settings_icon.png" width="52" height="53"/>
-        <image name="html/img/Spixi_logo_loadin.png" width="128" height="158"/>
-        <image name="html/img/SpixiLogo_Splash.png" width="173" height="215"/>
-        <image name="html/img/StartChat_Active.png" width="133" height="133"/>
-        <image name="html/img/StartChat_Idle.png" width="133" height="133"/>
-        <image name="html/img/Success_icon.png" width="76" height="76"/>
-        <image name="html/img/tabchat.png" width="64" height="64"/>
-        <image name="html/img/tabcontacts.png" width="64" height="64"/>
-        <image name="html/img/tabhome.png" width="64" height="64"/>
-        <image name="html/img/tabwallet.png" width="64" height="64"/>
-        <image name="html/img/Wallet_icon_active.png" width="73" height="54"/>
-        <image name="html/img/Wallet_icon_idle.png" width="73" height="54"/>
-        <image name="Default-568h.png" width="320" height="568"/>
-        <image name="Default-Portrait.png" width="768" height="1004"/>
-        <image name="Default.png" width="320" height="480"/>
-        <image name="Icon-76.png" width="76" height="76"/>
-        <image name="Icon-Small-40.png" width="40" height="40"/>
-        <image name="Icon-Small.png" width="29" height="29"/>
+        <image name="splash.png" width="16" height="16"/>
     </resources>
 </document>
