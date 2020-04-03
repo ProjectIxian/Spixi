@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+
+</head>
+<body onload="ixian:onload();">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2" onclick="location.href = 'ixian:back';">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10">
+                    Downloads
+                </div>
+            </div>
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+
+        <!-- ErrorBar -->
+        <div id="warning_bar" class="spixi-errorbar" style="display:none">
+            <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
+            <div class="spixi-errorbar-message">Connecting to Ixian DLT...</div>
+        </div>
+        <!-- End ErrorBar-->
+
+        <!-- APPS -->
+        <div id="Downloads" class="tab-pane">
+            <div id="DownloadsEmpty" class="container">
+                <div class="spixi-list-placeholer-text">
+                    You have no downloaded files.
+                </div>
+            </div>
+
+            <div id="DownloadList" style="display: block;">
+            </div>
+        </div>
+        <div class="spixi-holder-64"></div>
+
+    </div>  <!-- Wrap -->
+
+    <script type="text/javascript">
+        function clearFiles() {
+            var appsNode = document.getElementById("DownloadList");
+            appsNode.innerHTML = "";
+
+            appsNode.style.display = 'none';
+            document.getElementById("DownloadsEmpty").style.display = 'block';
+        }
+
+        function addFile(name, icon, time) {
+            icon = icon.replace(/&#92;/g, '\\');
+
+            var deleteAction = "location.href='ixian:delete:" + name + "';";
+
+            var iconHtml = '<i class=\"fa fa-file\"></i>';
+            if (icon != "") {
+                '<img class="spixi-list-item-avatar" src="' + icon + '"/>';
+            }
+
+            var appEntry = document.createElement("div");
+            appEntry.className = "spixi-list-item";
+            appEntry.innerHTML = '<a href="ixian:open:' + name + '"><div class="row"><div class="col-2 spixi-list-item-left">' + iconHtml + '</div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><div onclick="' + deleteAction + '"><i class="fa fa-trash spixi-list-item-action-icon"></i></div></div></div></a>';
+
+            var appsNode = document.getElementById("DownloadList");
+            appsNode.appendChild(appEntry);
+
+            appsNode.style.display = 'block';
+            document.getElementById("DownloadsEmpty").style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>

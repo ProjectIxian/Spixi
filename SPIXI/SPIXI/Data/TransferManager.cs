@@ -161,12 +161,16 @@ namespace SPIXI
 
         static List<FilePacket> incomingPacketsLog = new List<FilePacket>();
 
+        public static string downloadsPath = "Downloads";
+
         public static void start()
         {
             if (running)
             {
                 return;
             }
+
+            downloadsPath = Path.Combine(Config.spixiUserFolder, "Downloads");
 
             running = true;
             // Start the thread
@@ -570,7 +574,7 @@ namespace SPIXI
 
                 transfer.lastTimeStamp = Clock.getTimestamp();
 
-                transfer.filePath = String.Format("{0}/Downloads/{1}", Config.spixiUserFolder, transfer.fileName);
+                transfer.filePath = Path.Combine(downloadsPath, transfer.fileName);
                 transfer.fileStream = File.Create(transfer.filePath);
                 transfer.fileStream.SetLength((long)transfer.fileSize);
 
