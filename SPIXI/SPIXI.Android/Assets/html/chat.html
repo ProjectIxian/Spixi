@@ -168,6 +168,13 @@
         }
 
         document.getElementById("ca_sendfile").onclick = function () {
+            document.getElementById("chat_input").click();
+            document.getElementById("chat_input").focus();
+            if (attachMode == true) {
+                attachMode = false;
+                hideAttach();
+            }
+
             location.href = "ixian:sendfile";
         }
 
