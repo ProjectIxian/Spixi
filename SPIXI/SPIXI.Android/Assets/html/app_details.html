@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/spixiui.css">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+
+</head>
+<body onload="ixian:onload();">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-line"></div>
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2" onclick="location.href = 'ixian:back';">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div class="col-10" id="AppName">
+                    Spixi App
+                </div>
+            </div>
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+
+        <div class="spixi-container">
+            <img id="AppIcon" class="spixi-avatar" style="float: left; margin-right: 15px;"/>
+            <div class="text" id="AppPublisher"></div>
+            <div class="text" id="AppVersion"></div>
+
+            <div class="spixi-holder-20" style="clear:both;"></div>
+
+            <div class="spixi-button" onclick="location.href='ixian:uninstall';">Uninstall</div>
+        </div>
+
+    </div>  <!-- Wrap -->
+
+    <script type="text/javascript">
+        function init(name, icon, publisher, version) {
+            icon = icon.replace(/&#92;/g, '\\');
+
+            document.getElementById("AppName").innerHTML = name;
+            document.getElementById("AppIcon").src = icon;
+            document.getElementById("AppPublisher").innerHTML = "Publisher: " + publisher;
+            document.getElementById("AppVersion").innerHTML = "Version: " + version;
+        }
+    </script>
+
+</body>
+</html>

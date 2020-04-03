@@ -1235,6 +1235,7 @@ namespace SPIXI
 
         private static void handleAppData(byte[] sender_address, byte[] app_data_raw)
         {
+            // TODO use channels and drop SpixiAppData
             SpixiAppData app_data = new SpixiAppData(app_data_raw);
             CustomAppPage app_page = FriendList.getAppPage(app_data.sessionId);
             if(app_page == null)
@@ -1245,8 +1246,28 @@ namespace SPIXI
             app_page.networkDataReceive(sender_address, app_data.data);
         }
 
+        public static void sendAppRequest(Friend friend, string app_id, byte[] session_id)
+        {
+            // TODO use channels and drop SpixiAppData
+            SpixiMessage spixi_msg = new SpixiMessage();
+            spixi_msg.type = SpixiMessageCode.appRequest;
+            spixi_msg.data = new SpixiAppData(session_id, Encoding.UTF8.GetBytes(app_id)).getBytes();
+
+            StreamMessage new_msg = new StreamMessage();
+            new_msg.type = StreamMessageCode.data;
+            new_msg.recipient = friend.walletAddress;
+            new_msg.sender = Node.walletStorage.getPrimaryAddress();
+            new_msg.transaction = new byte[1];
+            new_msg.sigdata = new byte[1];
+            new_msg.data = spixi_msg.getBytes();
+            new_msg.encryptionType = StreamMessageEncryptionCode.none;
+
+            StreamProcessor.sendMessage(friend, new_msg);
+        }
+
         private static void handleAppRequest(byte[] sender_address, byte[] app_data_raw)
         {
+            // TODO use channels and drop SpixiAppData
             SpixiAppData app_data = new SpixiAppData(app_data_raw);
             CustomAppPage app_page = FriendList.getAppPage(app_data.sessionId);
             if (app_page != null)
@@ -1254,12 +1275,27 @@ namespace SPIXI
                 Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
                 return;
             }
+            string app_id = Encoding.UTF8.GetString(app_data.data);
+            app_page = FriendList.getAppPage(sender_address, app_id);
+            if (app_page != null)
+            {
+                // TODO, maybe kill the old session and restart instead
+                Logging.warn("App with sender: {0} already exists, updating session id.", Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                app_page.sessionId = app_data.sessionId;
+                return;
+            }
             byte[][] user_addresses = new byte[][] { sender_address };
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
             {
-                CustomAppPage page = new CustomAppPage(sender_address, user_addresses, "custom_app.html");
-                page.sessionId = app_data.sessionId;
-                Xamarin.Forms.Application.Current.MainPage.Navigation.PushAsync(page, Config.defaultXamarinAnimations);
+                if (Node.customAppManager.getApp(app_id) == null)
+                {
+                    // app doesn't exist
+                    return;
+                }
+                app_page = new CustomAppPage(app_id, sender_address, user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
+                app_page.sessionId = app_data.sessionId;
+                FriendList.addAppPage(app_page);
+                Xamarin.Forms.Application.Current.MainPage.Navigation.PushAsync(app_page, Config.defaultXamarinAnimations);
             });
         }
 

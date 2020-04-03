@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Network;
 using SPIXI.Storage;
@@ -42,6 +43,8 @@ namespace SPIXI.Meta
         public static bool shouldRefreshContacts = true;
 
         public static TransactionInclusion tiv = null;
+
+        public static CustomAppManager customAppManager = null;
         
         // Private data
 
@@ -109,6 +112,8 @@ namespace SPIXI.Meta
 
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
+
+            customAppManager = new CustomAppManager(Config.spixiUserFolder);
         }
 
         static public void start()
@@ -139,6 +144,8 @@ namespace SPIXI.Meta
 
             // Start TIV
             tiv.start();
+
+            customAppManager.start();
 
             startCounter++;
 
@@ -232,6 +239,8 @@ namespace SPIXI.Meta
                 return;
             }
             running = false;
+
+            customAppManager.stop();
 
             // Stop TIV
             tiv.stop();

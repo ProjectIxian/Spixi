@@ -3,6 +3,7 @@ using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
+using System.Linq;
 using System.Text;
 using System.Web;
 using Xamarin.Forms;
@@ -13,6 +14,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CustomAppPage : SpixiContentPage
     {
+        public string appId = null;
         public byte[] sessionId = null; // App session ID
 
         private byte[] hostUserAddress = null; // address of the user that initiated the app
@@ -21,21 +23,25 @@ namespace SPIXI
         private string node_ip = "";
 
 
-        public CustomAppPage(byte[] host_user_address, byte[][] user_addresses, string app_entry_point)
+        public CustomAppPage(string app_id, byte[] host_user_address, byte[][] user_addresses, string app_entry_point)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
             sessionId = Guid.NewGuid().ToByteArray();
 
+            appId = app_id;
+
             hostUserAddress = host_user_address;
             userAddresses = user_addresses;
 
             node_ip = FriendList.getRelayHostname(host_user_address);
 
+            Logging.info("Loading " + app_entry_point);
+
             // Load the app entry point
             var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/{1}", DependencyService.Get<IBaseUrl>().Get(), app_entry_point);
+            source.Url = app_entry_point;
             webView.Source = source;
         }
 
@@ -138,6 +144,15 @@ namespace SPIXI
         public void networkDataReceive(byte[] sender_address, byte[] data)
         {
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
+        }
+
+        public bool hasUser(byte[] user)
+        {
+            if(userAddresses.Select(x => x.SequenceEqual(user)) != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         protected override bool OnBackButtonPressed()

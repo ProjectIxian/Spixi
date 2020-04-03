@@ -1749,6 +1749,12 @@ img.emoji {
     color: #b5b5b5;
 }
 
+.spixi-container
+{
+    padding: 15px;
+    box-sizing: border-box;
+}
+
 /* Color combos */
 .spixi-text-green {
     color: #5bbb0e;

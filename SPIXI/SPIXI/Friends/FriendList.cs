@@ -542,11 +542,24 @@ namespace SPIXI
 
         public static CustomAppPage getAppPage(byte[] session_id)
         {
-            lock(appPages)
+            lock (appPages)
             {
-                if(appPages.ContainsKey(session_id))
+                if (appPages.ContainsKey(session_id))
                 {
                     return appPages[session_id];
+                }
+                return null;
+            }
+        }
+
+        public static CustomAppPage getAppPage(byte[] sender_address, string app_id)
+        {
+            lock (appPages)
+            {
+                var pages = appPages.Values.Where(x => x.appId.SequenceEqual(app_id) && x.hasUser(sender_address));
+                if (pages.Any())
+                {
+                    return getAppPage(pages.First().sessionId);
                 }
                 return null;
             }
