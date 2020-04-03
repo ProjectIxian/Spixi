@@ -569,12 +569,10 @@
             document.getElementById("chat_input").click();
             document.getElementById("chat_input").focus();
             if (attachMode == true) {
-                document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon.png')";
                 attachMode = false;
                 hideAttach();
             }
             else {
-                document.getElementById("chat_attach").style = "background-image: url('./img/AttachFile_icon_active.png')";
                 attachMode = true;
                 showAttach();
             }
@@ -588,8 +586,12 @@
 
         function showAttach() {
             document.getElementById("chatbar").style.bottom = "60px";
-            document.getElementById("chatholder").style.height = "102px";
+            document.getElementById("chatholder").style.height = "120px";
             document.getElementById("chatattachbar").style.bottom = "0px";
+            
+            setTimeout(function () {
+                        document.getElementById("chatholder").scrollIntoView(false);
+            }, 400);
         }
 
         function showIndicator(ind) {
