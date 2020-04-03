@@ -237,6 +237,7 @@ img.emoji {
 }
 
 .spixi-toolbar-chat-name {
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
