@@ -146,6 +146,7 @@ namespace SPIXI
             {
                 Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address));
                 Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address), avatar);
+                Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address) + "_128", DependencyService.Get<IPicturePicker>().ResizeImage(avatar, 128, 128));
                 Node.shouldRefreshContacts = true;
             }
         }

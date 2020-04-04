@@ -795,13 +795,32 @@ namespace SPIXI.Storage
                 }
 
                 File.Delete(avatar_filename);
+
+                avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + "_128.jpg");
+
+                if (File.Exists(avatar_filename))
+                {
+                    File.Delete(avatar_filename);
+                }
             }
             return true;
         }
 
-        public string getAvatarPath(string friend_address)
+        public string getAvatarPath(string friend_address, bool thumb = true)
         {
-            string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+            string size_str = "";
+            if(thumb)
+            {
+                size_str = "_128";
+            }
+
+            string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + size_str + ".jpg");
+
+            // TODO: Legacy check, can be removed later
+            if (!File.Exists(avatar_filename))
+            {
+                avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+            }
 
             if (File.Exists(avatar_filename))
             {
