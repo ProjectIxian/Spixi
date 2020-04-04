@@ -67,6 +67,7 @@
     </AndroidSigningKeyPass>
     <AndroidSigningKeyAlias>
     </AndroidSigningKeyAlias>
+    <AndroidDexTool>dx</AndroidDexTool>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
