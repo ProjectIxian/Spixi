@@ -333,33 +333,25 @@ namespace SPIXI
 
                     _handshakeStatus = reader.ReadInt32(); // use internal variable, to avoid writing to file
 
-                    // TODO try/catch wrapper can be removed after the upgrade
-                    try
+                    bot = reader.ReadBoolean();
+                    handshakePushed = reader.ReadBoolean();
+
+                    int num_contacts = reader.ReadInt32();
+                    for (int i = 0; i < num_contacts; i++)
                     {
-                        bot = reader.ReadBoolean();
-                        handshakePushed = reader.ReadBoolean();
+                        int contact_len = reader.ReadInt32();
 
-                        int num_contacts = reader.ReadInt32();
-                        for (int i = 0; i < num_contacts; i++)
-                        {
-                            int contact_len = reader.ReadInt32();
-
-                            BotContact contact = new BotContact(reader.ReadBytes(contact_len));
-                            contacts.Add(new Address(contact.publicKey).address, contact);
-                        }
-
-                        int rcv_msg_id_len = reader.ReadInt32();
-                        if (rcv_msg_id_len > 0)
-                        {
-                            lastReceivedMessageId = reader.ReadBytes(rcv_msg_id_len);
-                        }
-
-                        lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
+                        BotContact contact = new BotContact(reader.ReadBytes(contact_len));
+                        contacts.Add(new Address(contact.publicKey).address, contact);
                     }
-                    catch (Exception)
+
+                    int rcv_msg_id_len = reader.ReadInt32();
+                    if (rcv_msg_id_len > 0)
                     {
-                        
+                        lastReceivedMessageId = reader.ReadBytes(rcv_msg_id_len);
                     }
+
+                    lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
                 }
             }
         }

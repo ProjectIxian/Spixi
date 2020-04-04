@@ -151,9 +151,6 @@ namespace SPIXI.Storage
 
                     Friend friend = new Friend(reader.ReadBytes(friend_len));
 
-                    // TODO TODO can be removed after v0.5
-                    deleteMessagesLegacy(friend.walletAddress);
-
                     try
                     {
                         // Read messages from chat history
@@ -507,30 +504,9 @@ namespace SPIXI.Storage
             }
         }
 
-        // TODO TODO can be removed after v0.5
-        private bool deleteMessagesLegacy(byte[] wallet_bytes)
-        {
-            lock (messagesLock)
-            {
-                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-                string chats_path = Path.Combine(documentsPath, "Chats");
-                string messages_filename = Path.Combine(chats_path, String.Format("{0}.ixi", wallet));
-
-                if (!File.Exists(messages_filename))
-                {
-                    return false;
-                }
-
-                File.Delete(messages_filename);
-
-                return true;
-            }
-        }
-
         // Deletes the message archive if it exists for a given wallet
         public bool deleteMessages(byte[] wallet_bytes)
         {
-            deleteMessagesLegacy(wallet_bytes);
             lock (messagesLock)
             {
                 string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
