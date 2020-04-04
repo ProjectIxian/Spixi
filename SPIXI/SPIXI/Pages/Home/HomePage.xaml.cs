@@ -52,6 +52,8 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
+            _webView = webView;
+
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
             source.Url = string.Format("{0}html/index.html",DependencyService.Get<IBaseUrl>().Get());
@@ -239,6 +241,15 @@ namespace SPIXI
                 //   prepBackground();
                 Navigation.PushAsync(new DownloadsPage(), Config.defaultXamarinAnimations);
             }
+            else if (current_url.StartsWith("ixian:appAccept:"))
+            {
+                string session_id = current_url.Substring("ixian:appAccept:".Length);
+                onAppAccept(session_id);
+            }else if(current_url.StartsWith("ixian:appReject:"))
+            {
+                string session_id = current_url.Substring("ixian:appReject:".Length);
+                onAppReject(session_id);
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -360,6 +371,7 @@ namespace SPIXI
             setAsRoot();
 
             Node.shouldRefreshContacts = true;
+            Node.refreshAppRequests = true;
             lastTransactionChange = 0;
 
             Utils.sendUiCommand(webView, "selectTab", currentTab);
@@ -686,8 +698,14 @@ namespace SPIXI
                 if (page != null && page is SpixiContentPage)
                 {
                     ((SpixiContentPage)page).updateScreen();
+                    if (Node.refreshAppRequests)
+                    {
+                        displayAppRequests();
+                        Node.refreshAppRequests = false;
+                    }
                 }
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 Logging.error("Exception occured in onUpdateUI: {0}", ex);
             }
@@ -711,7 +729,6 @@ namespace SPIXI
                     }
                 }
             }
-            updateScreen();
         }
     }
 }

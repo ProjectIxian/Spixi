@@ -77,3 +77,45 @@ function startRelativeTimeUpdate(className) {
         }
     }, 30000);
 }
+
+function addAppRequest(sessionId, sender, appName) {
+    removeAppRequest(sessionId);
+
+    var el = document.createElement("div");
+    el.id = "AppReq_" + sessionId;
+    el.className = "spixi-callbar container";
+
+    var acceptAction = "appAccept('" + sessionId + "');";
+    var rejectAction = "appReject('" + sessionId + "');";
+
+    el.innerHTML = '<div class="spixi-callbar-title">' + sender + ' wants to use ' + appName + ' with you.</div><div class="row"><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + acceptAction + '">Accept</div></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Reject</div></div></div>';
+
+    document.body.appendChild(el);
+}
+
+function removeAppRequest(sessionId) {
+    var el = document.getElementById("AppReq_" + sessionId);
+    if (el != null) {
+        el.parentElement.removeChild(el);
+    }
+}
+
+function clearAppRequests() {
+    var els = document.getElementsByClassName("spixi-callbar");
+    for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        el.parentElement.removeChild(el);
+    }
+}
+
+function appAccept(sessionId) {
+    var el = document.getElementById("AppReq_" + sessionId);
+    el.parentElement.removeChild(el);
+    location.href = 'ixian:appAccept:' + sessionId;
+}
+
+function appReject(sessionId) {
+    var el = document.getElementById("AppReq_" + sessionId);
+    el.parentElement.removeChild(el);
+    location.href = 'ixian:appReject:' + sessionId;
+}

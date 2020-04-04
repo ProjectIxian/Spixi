@@ -42,6 +42,8 @@ namespace SPIXI.Meta
 
         public static bool shouldRefreshContacts = true;
 
+        public static bool refreshAppRequests = true;
+
         public static TransactionInclusion tiv = null;
 
         public static CustomAppManager customAppManager = null;

@@ -1295,7 +1295,8 @@ namespace SPIXI
                 app_page = new CustomAppPage(app_id, sender_address, user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
                 app_page.sessionId = app_data.sessionId;
                 FriendList.addAppPage(app_page);
-                Xamarin.Forms.Application.Current.MainPage.Navigation.PushAsync(app_page, Config.defaultXamarinAnimations);
+
+                Node.refreshAppRequests = true;
             });
         }
 

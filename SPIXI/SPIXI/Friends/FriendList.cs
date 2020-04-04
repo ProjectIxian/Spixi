@@ -565,6 +565,11 @@ namespace SPIXI
             }
         }
 
+        public static Dictionary<byte[], CustomAppPage> getAppPages()
+        {
+            return appPages;
+        }
+
         public static void addAppPage(CustomAppPage page)
         {
             lock(appPages)

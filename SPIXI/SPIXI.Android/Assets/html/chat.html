@@ -99,17 +99,21 @@
         </div>
         <div id="chatattachbar">
             <div class="row ">
-                <div class="col-4 chat_attach_tab" id="ca_sendfile">
+                <div class="col-3 chat_attach_tab" id="ca_sendfile">
                     <i class="fa fa-file-alt chatattachsymbol"></i><br />
                     Send File
                 </div>
-                <div class="col-4 chat_attach_tab" id="ca_request">
+                <div class="col-3 chat_attach_tab" id="ca_request">
                     <i class="fa fa-angle-double-down chatattachsymbol"></i><br />
                     Request Payment
                 </div>
-                <div class="col-4 chat_attach_tab" id="ca_send">
+                <div class="col-3 chat_attach_tab" id="ca_send">
                     <i class="fa fa-angle-double-up chatattachsymbol"></i><br />
                     Send Payment
+                </div>
+                <div class="col-3 chat_attach_tab" id="ca_app">
+                    <i class="fa fa-code chatattachsymbol"></i><br />
+                    Use App
                 </div>
             </div>
         </div>
@@ -164,6 +168,10 @@
             location.href = "ixian:request";
         }
         document.getElementById("ca_send").onclick = function () {
+            location.href = "ixian:send";
+        }
+
+        document.getElementById("ca_app").onclick = function () {
             location.href = "ixian:send";
         }
 

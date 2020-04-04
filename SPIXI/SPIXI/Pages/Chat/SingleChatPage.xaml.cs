@@ -29,6 +29,8 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
+            _webView = webView;
+
             Title = fr.nickname;
             friend = fr;
 
@@ -135,32 +137,20 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
                 string msg = split[1];
-                /*if(msg == "/draw") // TODO TODO TODO experimental test
+                if(msg == "/draw") // TODO TODO TODO experimental test
                 {
                     byte[][] user_addresses = new byte[][] { friend.walletAddress };
-                    CustomAppPage custom_app_page = new CustomAppPage(IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, "custom_app.html");
+                    string app_id = "io.ixian.spixi.draw";
+                    CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
+                    custom_app_page.accepted = true;
                     Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
                     {
                         Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
                     });
 
-                    SpixiMessage spixi_msg = new SpixiMessage();
-                    spixi_msg.type = SpixiMessageCode.appRequest;
-                    spixi_msg.data = (new SpixiAppData(custom_app_page.sessionId, null)).getBytes();
-
-                    StreamMessage new_msg = new StreamMessage();
-                    new_msg.type = StreamMessageCode.data;
-                    new_msg.recipient = friend.walletAddress;
-                    new_msg.sender = Node.walletStorage.getPrimaryAddress();
-                    new_msg.transaction = new byte[1];
-                    new_msg.sigdata = new byte[1];
-                    new_msg.data = spixi_msg.getBytes();
-                    new_msg.encryptionType = StreamMessageEncryptionCode.none;
-
-                    StreamProcessor.sendMessage(friend, new_msg);
-
+                    StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId);
                     return;
-                }*/
+                }
                 onSend(msg);
             }else if(current_url.Contains("ixian:viewPayment:"))
             {
@@ -193,6 +183,8 @@ namespace SPIXI
 
             // Set the last message as read
             friend.setLastRead();
+
+            Node.refreshAppRequests = true;
         }
 
 

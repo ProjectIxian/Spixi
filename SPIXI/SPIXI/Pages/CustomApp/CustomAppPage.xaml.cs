@@ -17,10 +17,13 @@ namespace SPIXI
         public string appId = null;
         public byte[] sessionId = null; // App session ID
 
-        private byte[] hostUserAddress = null; // address of the user that initiated the app
+        public byte[] hostUserAddress = null; // address of the user that initiated the app
         private byte[][] userAddresses = null; // addresses of all users connected to/using the app
 
         private string node_ip = "";
+
+        public bool accepted = false;
+        public long requestReceivedTimestamp = 0;
 
 
         public CustomAppPage(string app_id, byte[] host_user_address, byte[][] user_addresses, string app_entry_point)
@@ -37,12 +40,12 @@ namespace SPIXI
 
             node_ip = FriendList.getRelayHostname(host_user_address);
 
-            Logging.info("Loading " + app_entry_point);
-
             // Load the app entry point
             var source = new UrlWebViewSource();
-            source.Url = app_entry_point;
+            source.Url = "file://" + app_entry_point;
             webView.Source = source;
+
+            requestReceivedTimestamp = Clock.getTimestamp();
         }
 
 
