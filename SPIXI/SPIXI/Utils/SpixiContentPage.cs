@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
@@ -42,6 +43,10 @@ namespace SPIXI
             {
                 foreach (CustomAppPage page in app_pages.Values)
                 {
+                    if(page.accepted)
+                    {
+                        continue;
+                    }
                     Friend f = FriendList.getFriend(page.hostUserAddress);
                     CustomApp app = Node.customAppManager.getApp(page.appId);
                     Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), f.nickname, app.name);
@@ -65,7 +70,11 @@ namespace SPIXI
 
         public virtual void updateScreen()
         {
-
+            if (Node.refreshAppRequests)
+            {
+                displayAppRequests();
+                Node.refreshAppRequests = false;
+            }
         }
 
         public virtual void onResume()
@@ -80,5 +89,4 @@ namespace SPIXI
             updateScreen();
         }
     }
-}
- 
+} 

@@ -657,6 +657,8 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
+            base.updateScreen();
+
             loadChats();
             loadContacts();
 
@@ -698,11 +700,6 @@ namespace SPIXI
                 if (page != null && page is SpixiContentPage)
                 {
                     ((SpixiContentPage)page).updateScreen();
-                    if (Node.refreshAppRequests)
-                    {
-                        displayAppRequests();
-                        Node.refreshAppRequests = false;
-                    }
                 }
             }
             catch(Exception ex)

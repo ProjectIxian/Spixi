@@ -158,6 +158,16 @@ namespace SPIXI
                 string id = split[1];
                 onViewPayment(id);
             }
+            else if (current_url.StartsWith("ixian:appAccept:"))
+            {
+                string session_id = current_url.Substring("ixian:appAccept:".Length);
+                onAppAccept(session_id);
+            }
+            else if (current_url.StartsWith("ixian:appReject:"))
+            {
+                string session_id = current_url.Substring("ixian:appReject:".Length);
+                onAppReject(session_id);
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -706,6 +716,8 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
+            base.updateScreen();
+
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             if (friend.online)
