@@ -1577,6 +1577,47 @@ img.emoji {
     display: block;
 }
 
+#AppsMenu
+{
+    z-index: 102;
+    display: none;
+    position: fixed;
+    background: white;
+    border: 1px solid black;
+    border-radius: 20px;
+    top: 40px;
+    left: 40px;
+    bottom: 40px;
+    right: 40px;
+    box-shadow: inset;
+    padding: 20pt;
+}
+
+#AppsMenu .close
+{
+    float: right;
+    font-size: 16pt;
+    color: black;
+    width: 20pt;
+    height: 20pt;
+    margin-right: -15pt;
+    margin-top: -15pt;
+}
+
+.spixi-app
+{
+    display: inline-block;
+    font-size: 12pt;
+    width: 100px;
+    height: 100px;
+}
+
+.spixi-app img
+{
+    width: 64px;
+    height: 64px;
+}
+
 /* Modals */
 .spixi-modal {
     display: none; /* Hidden by default */

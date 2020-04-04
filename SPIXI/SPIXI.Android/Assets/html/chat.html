@@ -117,7 +117,7 @@
                 </div>
             </div>
         </div>
-
+        <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
     </div>
 
 
@@ -172,7 +172,7 @@
         }
 
         document.getElementById("ca_app").onclick = function () {
-            location.href = "ixian:send";
+            document.getElementById("AppsMenu").style.display = "block";
         }
 
         document.getElementById("ca_sendfile").onclick = function () {
@@ -637,6 +637,18 @@
                 var msgEls = el.getElementsByClassName("spixi-errorbar-message");
                 msgEls[0].innerHTML = text;
             }
+        }
+
+        function addApp(id, name, icon)
+        {
+            var appsEl = document.getElementById("AppsMenu");
+
+            var el = document.createElement("div");
+            el.onclick = function() { appsEl.style.display = "none"; location.href = "ixian:app:" + id; };
+            el.className = "spixi-app";
+            el.innerHTML = "<img src='" + icon + "'/><br/>" + name;
+
+            appsEl.appendChild(el);
         }
     </script>
 </body>

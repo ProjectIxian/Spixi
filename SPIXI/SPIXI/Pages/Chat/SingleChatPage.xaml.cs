@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Network;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
+using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -108,8 +109,7 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:acceptfile:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:acceptfile:" }, StringSplitOptions.None);
-                string id = split[1];
+                string id = current_url.Substring("ixian:acceptfile:".Length);
 
                 FriendMessage fm = friend.messages.Find(x => x.transferId == id);
                 if (fm != null)
@@ -123,8 +123,7 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:openfile:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:openfile:" }, StringSplitOptions.None);
-                string id = split[1];
+                string id = current_url.Substring("ixian:openfile:".Length);
 
                 FriendMessage fm = friend.messages.Find(x => x.transferId == id);
 
@@ -135,28 +134,18 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:chat:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:chat:" }, StringSplitOptions.None);
-                string msg = split[1];
-                if(msg == "/draw") // TODO TODO TODO experimental test
-                {
-                    byte[][] user_addresses = new byte[][] { friend.walletAddress };
-                    string app_id = "io.ixian.spixi.draw";
-                    CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
-                    custom_app_page.accepted = true;
-                    Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
-                    {
-                        Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
-                    });
-
-                    StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId);
-                    return;
-                }
+                string msg = current_url.Substring("ixian:chat:".Length);
                 onSend(msg);
-            }else if(current_url.Contains("ixian:viewPayment:"))
+            }
+            else if (current_url.Contains("ixian:viewPayment:"))
             {
-                string[] split = current_url.Split(new string[] { "ixian:viewPayment:" }, StringSplitOptions.None);
-                string id = split[1];
-                onViewPayment(id);
+                string tx_id = current_url.Substring("ixian:viewPayment:".Length);
+                onViewPayment(tx_id);
+            }
+            else if (current_url.Contains("ixian:app:"))
+            {
+                string app_id = current_url.Substring("ixian:app:".Length);
+                onApp(app_id);
             }
             else if (current_url.StartsWith("ixian:appAccept:"))
             {
@@ -185,6 +174,8 @@ namespace SPIXI
         private void onLoad()
         {
             DependencyService.Get<IPushService>().clearNotifications();
+
+            loadApps();
 
             loadMessages();
 
@@ -406,9 +397,39 @@ namespace SPIXI
             Navigation.PushAsync(new WalletContactRequestPage(msg, friend, amount, date_text), Config.defaultXamarinAnimations);
         }
 
+        public void onApp(string app_id)
+        {
+            byte[][] user_addresses = new byte[][] { friend.walletAddress };
+            CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
+            custom_app_page.accepted = true;
+            Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+            {
+                Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
+            });
+
+            StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId);
+        }
+
         private void onEntryCompleted(object sender, EventArgs e)
         {
 
+        }
+
+        public void loadApps()
+        {
+            var apps = Node.customAppManager.getInstalledApps();
+            lock (apps)
+            {
+                foreach (CustomApp app in apps.Values)
+                {
+                    string icon = Node.customAppManager.getAppIconPath(app.id);
+                    if(icon == null)
+                    {
+                        icon = "";
+                    }
+                    Utils.sendUiCommand(webView, "addApp", app.id, app.name, icon);
+                }
+            }
         }
 
         public void loadMessages()
