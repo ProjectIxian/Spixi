@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIXI.Droid", "SPIXI\SPIXI.Android\SPIXI.Droid.csproj", "{AEC7336F-589C-4076-9D34-FA39EC42FF8A}"
 EndProject
@@ -17,6 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIXI.GTK", "SPIXI\SPIXI.GT
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\Ixian-Core\IXICore.projitems*{004d6286-86b5-410f-85fe-e38522c0622b}*SharedItemsImports = 5
 		..\Ixian-Core\IXICore.projitems*{80487c64-619a-4b60-97bd-ed7670bf45b3}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
