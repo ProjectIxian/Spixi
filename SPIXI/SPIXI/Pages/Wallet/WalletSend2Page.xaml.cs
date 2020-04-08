@@ -20,6 +20,7 @@ namespace SPIXI
     {
         SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
         IxiNumber totalAmount = 0;
+        Transaction transaction = null;
 
         public WalletSend2Page(string[] addresses_with_amounts)
         {
@@ -83,9 +84,9 @@ namespace SPIXI
             byte[] from = Node.walletStorage.getPrimaryAddress();
             byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
 
-            Transaction tmp_tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
-            IxiNumber total_amount = tmp_tx.amount + tmp_tx.fee;
+            IxiNumber total_amount = transaction.amount + transaction.fee;
 
             if (Node.balance.balance < total_amount)
             {
@@ -94,9 +95,9 @@ namespace SPIXI
                 return;
             }
 
-            Utils.sendUiCommand(webView, "setFees", tmp_tx.fee.ToString());
+            Utils.sendUiCommand(webView, "setFees", transaction.fee.ToString());
             Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
-            Utils.sendUiCommand(webView, "setTotalAmount", tmp_tx.amount.ToString());
+            Utils.sendUiCommand(webView, "setTotalAmount", transaction.amount.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -135,13 +136,6 @@ namespace SPIXI
             Logging.info("Preparing to send payment");
             //Navigation.PopAsync(Config.defaultXamarinAnimations);
 
-            // Create an ixian transaction and send it to the dlt network
-            IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getPrimaryAddress();
-            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
-            Logging.info("Preparing tx");
-
-            Transaction transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
             Logging.info("Broadcasting tx");
 
             IxianHandler.addTransaction(transaction);
