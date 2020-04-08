@@ -17,10 +17,11 @@ namespace SPIXI
         public string appId = null;
         public byte[] sessionId = null; // App session ID
 
+        public byte[] myRequestAddress = null; // which address the app request was sent to
+        public byte[] requestedByAddress = null; // which address sent the app request to us
+
         public byte[] hostUserAddress = null; // address of the user that initiated the app
         private byte[][] userAddresses = null; // addresses of all users connected to/using the app
-
-        private string node_ip = "";
 
         public bool accepted = false;
         public long requestReceivedTimestamp = 0;
@@ -37,8 +38,6 @@ namespace SPIXI
 
             hostUserAddress = host_user_address;
             userAddresses = user_addresses;
-
-            node_ip = FriendList.getRelayHostname(host_user_address);
 
             // Load the app entry point
             var source = new UrlWebViewSource();
@@ -101,8 +100,6 @@ namespace SPIXI
         {
             // Execute timer-related functionality immediately
             updateScreen();
-
-            FriendList.addAppPage(this);
         }
 
         // Executed every second
@@ -118,19 +115,7 @@ namespace SPIXI
                 Friend f = FriendList.getFriend(address);
                 if(f != null)
                 {
-                    SpixiMessage spixi_msg = new SpixiMessage();
-                    spixi_msg.type = SpixiMessageCode.appData;
-                    spixi_msg.data = (new SpixiAppData(sessionId, UTF8Encoding.UTF8.GetBytes(data))).getBytes();
-
-                    StreamMessage msg = new StreamMessage();
-                    msg.type = StreamMessageCode.data;
-                    msg.recipient = f.walletAddress;
-                    msg.sender = Node.walletStorage.getPrimaryAddress();
-                    msg.transaction = new byte[1];
-                    msg.sigdata = new byte[1];
-                    msg.data = spixi_msg.getBytes();
-
-                    StreamProcessor.sendMessage(f, msg, false, false, false);
+                    StreamProcessor.sendAppData(f, sessionId, UTF8Encoding.UTF8.GetBytes(data));
                 }else
                 {
                     Logging.error("Friend {0} does not exist in the friend list.", Base58Check.Base58CheckEncoding.EncodePlain(address));
@@ -141,12 +126,27 @@ namespace SPIXI
         private void onBack()
         {
             Navigation.PopAsync(Config.defaultXamarinAnimations);
-            FriendList.removeAppPage(sessionId);
+            Node.customAppManager.removeAppPage(sessionId);
         }
 
         public void networkDataReceive(byte[] sender_address, byte[] data)
         {
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
+        }
+
+        public void appRequestAcceptReceived(byte[] sender_address, byte[] data)
+        {
+            Utils.sendUiCommand(webView, "onRequestAccept", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
+        }
+
+        public void appRequestRejectReceived(byte[] sender_address, byte[] data)
+        {
+            Utils.sendUiCommand(webView, "onRequestReject", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
+        }
+
+        public void appEndSessionReceived(byte[] sender_address, byte[] data)
+        {
+            Utils.sendUiCommand(webView, "onAppEndSession", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
         }
 
         public bool hasUser(byte[] user)

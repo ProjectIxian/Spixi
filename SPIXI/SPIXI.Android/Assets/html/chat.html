@@ -43,8 +43,8 @@
                     <div id="title" class="spixi-toolbar-chat-name"></div>
                     <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
-                <div id="phonebtn" class="col-2 spixi-center" style="padding-top: 10px;">
-                    <!-- <i class="fas fa-phone"></i> -->
+                <div class="col-2 spixi-center" style="padding-top: 10px;">
+                    <a href="ixian:call"><i class="fas fa-phone"></i></a>
                 </div>
             </div>
 
@@ -132,10 +132,6 @@
         document.getElementById("backbtn").onclick = function () {
             location.href = "ixian:back";
         }
-
-        /*document.getElementById("phonebtn").onclick = function () {
-            location.href = "ixian:call";
-        }*/
 
         function test() {
             setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");

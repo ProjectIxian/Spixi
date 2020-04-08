@@ -52,13 +52,13 @@
     <AndroidExplicitCrunch>true</AndroidExplicitCrunch>
     <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
     <AndroidUseAapt2>true</AndroidUseAapt2>
-    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidPackageFormat>apk</AndroidPackageFormat>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <AndroidLinkTool>proguard</AndroidLinkTool>
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <AndroidKeyStore>false</AndroidKeyStore>
+    <AndroidKeyStore>true</AndroidKeyStore>
     <AndroidSigningKeyStore>
     </AndroidSigningKeyStore>
     <AndroidSigningStorePass>
@@ -103,6 +103,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AudioPlayerAndroid.cs" />
+    <Compile Include="Classes\AudioRecorderAndroid.cs" />
     <Compile Include="Classes\BaseUrl.cs" />
     <Compile Include="Classes\BouncyCastleAndroid.cs" />
     <Compile Include="Classes\CustomQRScanner.cs" />

@@ -7,6 +7,7 @@ using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
+using SPIXI.VoIP;
 using System;
 using System.Linq;
 using System.Text;
@@ -100,7 +101,14 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:call", StringComparison.Ordinal))
             {
-                displaySpixiAlert("Voice Call", "Coming soon.\nCheck regularly for new version on www.spixi.io", "Ok");
+                if (VoIPManager.isInitiated())
+                {
+                    VoIPManager.hangupCall(null);
+                }
+                else
+                {
+                    VoIPManager.initiateCall(friend);
+                }
 
             }
             else if (current_url.Equals("ixian:sendfile", StringComparison.Ordinal))
@@ -157,6 +165,11 @@ namespace SPIXI
                 string session_id = current_url.Substring("ixian:appReject:".Length);
                 onAppReject(session_id);
             }
+            else if (current_url.StartsWith("ixian:hangUp:"))
+            {
+                string session_id = current_url.Substring("ixian:hangUp:".Length);
+                VoIPManager.hangupCall(UTF8Encoding.UTF8.GetBytes(session_id));
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -196,7 +209,7 @@ namespace SPIXI
                 return;
             }
 
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 // TODOSPIXI
                 /*            // Send the message to the S2 nodes
@@ -402,6 +415,8 @@ namespace SPIXI
             byte[][] user_addresses = new byte[][] { friend.walletAddress };
             CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
             custom_app_page.accepted = true;
+            Node.customAppManager.addAppPage(custom_app_page);
+
             Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
             {
                 Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);

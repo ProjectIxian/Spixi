@@ -78,7 +78,7 @@ function startRelativeTimeUpdate(className) {
     }, 30000);
 }
 
-function addAppRequest(sessionId, sender, appName) {
+function addAppRequest(sessionId, text) {
     removeAppRequest(sessionId);
 
     var el = document.createElement("div");
@@ -88,7 +88,7 @@ function addAppRequest(sessionId, sender, appName) {
     var acceptAction = "appAccept('" + sessionId + "');";
     var rejectAction = "appReject('" + sessionId + "');";
 
-    el.innerHTML = '<div class="spixi-callbar-title">' + sender + ' wants to use ' + appName + ' with you.</div><div class="row"><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + acceptAction + '">Accept</div></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Reject</div></div></div>';
+    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="row"><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + acceptAction + '">Accept</div></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Reject</div></div></div>';
 
     document.body.appendChild(el);
 }
@@ -118,4 +118,34 @@ function appReject(sessionId) {
     var el = document.getElementById("AppReq_" + sessionId);
     el.parentElement.removeChild(el);
     location.href = 'ixian:appReject:' + sessionId;
+}
+
+function displayCallBar(sessionId, text)
+{
+    var el = document.getElementById("CallBar");
+    if(el == null)
+    {
+        el = document.createElement("div");
+        document.body.appendChild(el);
+    }else
+    {
+        el.style.display = "block";
+	}
+    el.id = "CallBar";
+    el.className = "spixi-callbar container";
+
+    var rejectAction = "hangUp('" + sessionId + "');";
+
+    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="row"><div class="col-6"></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Hang Up</div></div></div>';
+}
+
+function hangUp(sessionId)
+{
+    hideCallBar();
+    location.href = 'ixian:hangUp:' + sessionId;
+}
+
+function hideCallBar()
+{
+    document.getElementById("CallBar").style.display = "none";
 }

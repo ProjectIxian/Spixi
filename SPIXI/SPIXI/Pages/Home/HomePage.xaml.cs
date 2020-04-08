@@ -4,10 +4,12 @@ using IXICore.Network;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
+using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -245,10 +247,15 @@ namespace SPIXI
             {
                 string session_id = current_url.Substring("ixian:appAccept:".Length);
                 onAppAccept(session_id);
-            }else if(current_url.StartsWith("ixian:appReject:"))
+            }
+            else if (current_url.StartsWith("ixian:appReject:"))
             {
                 string session_id = current_url.Substring("ixian:appReject:".Length);
                 onAppReject(session_id);
+            }else if(current_url.StartsWith("ixian:hangUp:"))
+            {
+                string session_id = current_url.Substring("ixian:hangUp:".Length);
+                VoIPManager.hangupCall(UTF8Encoding.UTF8.GetBytes(session_id));
             }
             else
             {
@@ -696,7 +703,7 @@ namespace SPIXI
                 {
                     return;
                 }
-                Page page = Navigation.NavigationStack[Navigation.NavigationStack.Count - 1];
+                Page page = Navigation.NavigationStack.Last();
                 if (page != null && page is SpixiContentPage)
                 {
                     ((SpixiContentPage)page).updateScreen();
@@ -713,16 +720,12 @@ namespace SPIXI
             base.OnAppearing();
             lock (FriendList.friends)
             {
-                var tmp_list = FriendList.friends.FindAll(x => x.chat_page != null || x.app_page != null);
+                var tmp_list = FriendList.friends.FindAll(x => x.chat_page != null);
                 foreach (var friend in tmp_list)
                 {
                     if(friend.chat_page != null)
                     {
                         friend.chat_page = null;
-                    }
-                    if(friend.app_page != null)
-                    {
-                        FriendList.removeAppPage(friend.app_page.sessionId);
                     }
                 }
             }

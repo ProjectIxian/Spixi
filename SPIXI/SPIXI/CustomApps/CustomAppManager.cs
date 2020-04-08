@@ -1,8 +1,10 @@
 ﻿using IXICore.Meta;
+using IXICore.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 
 namespace SPIXI.CustomApps
@@ -13,6 +15,8 @@ namespace SPIXI.CustomApps
         string tmpPath = "Tmp";
 
         Dictionary<string, CustomApp> appList = new Dictionary<string, CustomApp>();
+
+        private Dictionary<byte[], CustomAppPage> appPages = new Dictionary<byte[], CustomAppPage>(new ByteArrayComparer());
 
         bool started = false;
 
@@ -226,5 +230,74 @@ namespace SPIXI.CustomApps
         }
 
 
+
+        public CustomAppPage getAppPage(byte[] session_id)
+        {
+            lock (appPages)
+            {
+                if (appPages.ContainsKey(session_id))
+                {
+                    return appPages[session_id];
+                }
+                return null;
+            }
+        }
+
+        public CustomAppPage getAppPage(byte[] sender_address, string app_id)
+        {
+            lock (appPages)
+            {
+                var pages = appPages.Values.Where(x => x.appId.SequenceEqual(app_id) && x.hasUser(sender_address));
+                if (pages.Any())
+                {
+                    return getAppPage(pages.First().sessionId);
+                }
+                return null;
+            }
+        }
+
+        public Dictionary<byte[], CustomAppPage> getAppPages()
+        {
+            return appPages;
+        }
+
+        public void addAppPage(CustomAppPage page)
+        {
+            lock (appPages)
+            {
+                appPages.Add(page.sessionId, page);
+            }
+        }
+
+        public bool removeAppPage(byte[] session_id)
+        {
+            lock (appPages)
+            {
+                return appPages.Remove(session_id);
+            }
+        }
+
+        public CustomAppPage acceptAppRequest(byte[] session_id)
+        {
+            CustomAppPage app_page = getAppPage(session_id);
+            if (app_page != null)
+            {
+                app_page.accepted = true;
+                StreamProcessor.sendAppRequestAccept(FriendList.getFriend(app_page.requestedByAddress), session_id);
+            }
+            return app_page;
+        }
+
+        public void rejectAppRequest(byte[] session_id)
+        {
+            CustomAppPage app_page = getAppPage(session_id);
+            if (app_page != null)
+            {
+                if (removeAppPage(session_id))
+                {
+                    StreamProcessor.sendAppRequestReject(FriendList.getFriend(app_page.requestedByAddress), session_id);
+                }
+            }
+        }
     }
 }

@@ -19,8 +19,6 @@ namespace SPIXI
 
         private static Cuckoo friendMatcher = new Cuckoo(128); // default size of 128, will be increased if neccessary
 
-        private static Dictionary<byte[], CustomAppPage> appPages = new Dictionary<byte[], CustomAppPage>(new ByteArrayComparer());
-
         public static bool saveToStorage()
         {
             return Node.localStorage.writeAccountFile();
@@ -538,52 +536,6 @@ namespace SPIXI
                         friend.handshakeStatus = 4;
                     }
                 }
-            }
-        }
-
-        public static CustomAppPage getAppPage(byte[] session_id)
-        {
-            lock (appPages)
-            {
-                if (appPages.ContainsKey(session_id))
-                {
-                    return appPages[session_id];
-                }
-                return null;
-            }
-        }
-
-        public static CustomAppPage getAppPage(byte[] sender_address, string app_id)
-        {
-            lock (appPages)
-            {
-                var pages = appPages.Values.Where(x => x.appId.SequenceEqual(app_id) && x.hasUser(sender_address));
-                if (pages.Any())
-                {
-                    return getAppPage(pages.First().sessionId);
-                }
-                return null;
-            }
-        }
-
-        public static Dictionary<byte[], CustomAppPage> getAppPages()
-        {
-            return appPages;
-        }
-
-        public static void addAppPage(CustomAppPage page)
-        {
-            lock(appPages)
-            {
-                appPages.Add(page.sessionId, page);
-            }
-        }
-
-        public static void removeAppPage(byte[] session_id)
-        {
-            lock (appPages)
-            {
-                appPages.Remove(session_id);
             }
         }
     }
