@@ -13,6 +13,6 @@ namespace SPIXI.VoIP
 
         bool isRunning();
 
-        Task<int> writeAsync(byte[] audio_data, int offset_in_bytes, int size_in_bytes);
+        int write(byte[] audio_data, int offset_in_bytes, int size_in_bytes);
     }
 }

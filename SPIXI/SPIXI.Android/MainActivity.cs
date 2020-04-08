@@ -8,12 +8,16 @@ using Plugin.LocalNotifications;
 using Xamarin.Forms;
 using SPIXI.Interfaces;
 using Android.Views;
+using Android.Support.V4.App;
+using Android;
 
 namespace SPIXI.Droid
 {
     [Activity(Label = "SPIXI", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        int recordAudioPermissionRequest = 1;
+
         // Field, property, and method for Picture Picker
         public static readonly int PickImageId = 1000;
 
@@ -58,6 +62,9 @@ namespace SPIXI.Droid
 
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
+
+
+            RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, recordAudioPermissionRequest);
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -95,6 +102,12 @@ namespace SPIXI.Droid
                     return;
                 }
                 ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            }else if(permissions[0] == "android.permission.RECORD_AUDIO")
+            {
+                if (grantResults[0] == Permission.Denied)
+                {
+                    // TODO TODO do something here
+                }
             }
         }
 

@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 public class AudioRecorderWPF : IAudioRecorder
 {
-    private Action<byte[], int, int> OnSoundDataReceived;
+    private Action<byte[]> OnSoundDataReceived;
 
     bool stopRecording = false;
     bool running = false;
@@ -34,11 +34,11 @@ public class AudioRecorderWPF : IAudioRecorder
 
         // TODO Init recorder
 
-        Thread recordingThread = new Thread(readLoopAsync);
+        Thread recordingThread = new Thread(readLoop);
         recordingThread.Start();
     }
 
-    void readLoopAsync()
+    void readLoop()
     {
         byte[] buffer = new byte[8192];
         while (!stopRecording)
@@ -76,7 +76,7 @@ public class AudioRecorderWPF : IAudioRecorder
         return running;
     }
 
-    public void setOnSoundDataReceived(Action<byte[], int, int> on_sound_data_received)
+    public void setOnSoundDataReceived(Action<byte[]> on_sound_data_received)
     {
         OnSoundDataReceived = on_sound_data_received;
     }

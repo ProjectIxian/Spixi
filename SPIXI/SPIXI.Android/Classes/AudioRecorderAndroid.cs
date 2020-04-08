@@ -3,13 +3,14 @@ using IXICore.Meta;
 using SPIXI.VoIP;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioRecorderAndroid))]
 
 public class AudioRecorderAndroid : IAudioRecorder
 {
-    private Action<byte[], int, int> OnSoundDataReceived;
+    private Action<byte[]> OnSoundDataReceived;
 
     private AudioRecord audioRecorder = null;
 
@@ -33,13 +34,13 @@ public class AudioRecorderAndroid : IAudioRecorder
         stopRecording = false;
         running = true;
 
-        bufferSize = AudioTrack.GetMinBufferSize(11025, ChannelOut.Mono, Encoding.Pcm16bit) * 10;
+        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, Encoding.Pcm16bit) * 10;
 
         audioRecorder = new AudioRecord(
             // Hardware source of recording.
             AudioSource.Mic,
             // Frequency
-            11025,
+            44100,
             // Mono or stereo
             ChannelIn.Mono,
             // Audio encoding
@@ -63,7 +64,14 @@ public class AudioRecorderAndroid : IAudioRecorder
             try
             {
                 int num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
-                OnSoundDataReceived(buffer, 0, num_bytes);
+
+                byte[] data_to_send = new byte[num_bytes];
+                Array.Copy(buffer, data_to_send, num_bytes);
+
+                Task.Run(() =>
+                {
+                    OnSoundDataReceived(data_to_send);
+                });
             }
             catch (Exception e)
             {
@@ -93,7 +101,7 @@ public class AudioRecorderAndroid : IAudioRecorder
         return running;
     }
 
-    public void setOnSoundDataReceived(Action<byte[], int, int> on_sound_data_received)
+    public void setOnSoundDataReceived(Action<byte[]> on_sound_data_received)
     {
         OnSoundDataReceived = on_sound_data_received;
     }

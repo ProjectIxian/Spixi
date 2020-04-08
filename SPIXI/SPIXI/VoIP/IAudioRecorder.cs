@@ -7,7 +7,7 @@ namespace SPIXI.VoIP
 {
     public interface IAudioRecorder : IDisposable
     {
-        void setOnSoundDataReceived(Action<byte[], int, int> on_sound_data_received);
+        void setOnSoundDataReceived(Action<byte[]> on_sound_data_received);
 
         void start();
 

@@ -62,10 +62,8 @@ namespace SPIXI.VoIP
 
             audioRecorder = DependencyService.Get<IAudioRecorder>(DependencyFetchTarget.NewInstance);
             audioRecorder.start();
-            audioRecorder.setOnSoundDataReceived((data, offset, length) => {
-                byte[] data_to_send = new byte[length];
-                Array.Copy(data, offset, data_to_send, 0, length);
-                StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data_to_send);
+            audioRecorder.setOnSoundDataReceived((data) => {
+                StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data);
             });
         }
 
@@ -124,8 +122,8 @@ namespace SPIXI.VoIP
             {
                 return;
             }
-            endVoIPSession();
             StreamProcessor.sendAppRequestReject(currentCallContact, session_id);
+            endVoIPSession();
         }
 
         public static void onRejectedCall(byte[] session_id)
@@ -134,8 +132,8 @@ namespace SPIXI.VoIP
             {
                 return;
             }
-            endVoIPSession();
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
+            endVoIPSession();
         }
 
         public static void hangupCall(byte[] session_id)
@@ -144,9 +142,9 @@ namespace SPIXI.VoIP
             {
                 session_id = currentCallSessionId;
             }
-            endVoIPSession();
             StreamProcessor.sendAppEndSession(currentCallContact, session_id);
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
+            endVoIPSession();
         }
 
         public static void onHangupCall(byte[] session_id)
@@ -155,8 +153,8 @@ namespace SPIXI.VoIP
             {
                 return;
             }
-            endVoIPSession();
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
+            endVoIPSession();
         }
 
         public static void onData(byte[] session_id, byte[] data)
@@ -167,7 +165,7 @@ namespace SPIXI.VoIP
             }
             if (audioPlayer != null)
             {
-                audioPlayer.writeAsync(data, 0, data.Length);
+                audioPlayer.write(data, 0, data.Length);
             }
         }
 
