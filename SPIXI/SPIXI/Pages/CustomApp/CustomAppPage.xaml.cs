@@ -115,6 +115,7 @@ namespace SPIXI
                 Friend f = FriendList.getFriend(address);
                 if(f != null)
                 {
+                    // TODO TODO TODO probably a different encoding should be used for data
                     StreamProcessor.sendAppData(f, sessionId, UTF8Encoding.UTF8.GetBytes(data));
                 }else
                 {
@@ -131,21 +132,25 @@ namespace SPIXI
 
         public void networkDataReceive(byte[] sender_address, byte[] data)
         {
+            // TODO TODO TODO probably a different encoding should be used for data
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appRequestAcceptReceived(byte[] sender_address, byte[] data)
         {
+            // TODO TODO TODO probably a different encoding should be used for data
             Utils.sendUiCommand(webView, "onRequestAccept", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appRequestRejectReceived(byte[] sender_address, byte[] data)
         {
+            // TODO TODO TODO probably a different encoding should be used for data
             Utils.sendUiCommand(webView, "onRequestReject", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appEndSessionReceived(byte[] sender_address, byte[] data)
         {
+            // TODO TODO TODO probably a different encoding should be used for data
             Utils.sendUiCommand(webView, "onAppEndSession", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
         }
 

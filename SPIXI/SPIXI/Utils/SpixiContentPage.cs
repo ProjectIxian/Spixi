@@ -39,7 +39,7 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "displayCallBar", UTF8Encoding.UTF8.GetString(session_id), text);
+            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text);
         }
 
         public void hideCallBar()

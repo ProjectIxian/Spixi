@@ -686,7 +686,7 @@ namespace SPIXI
                 }
             }
 
-            Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
+            //Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
 
             byte[] aes_key = null;
             byte[] chacha_key = null;
@@ -966,8 +966,8 @@ namespace SPIXI
                         {
                             // app data received, find the session id of the app and forward the data to it
                             handleAppData(sender_address, spixi_message.data);
+                            return;
                         }
-                        break;
 
                     case SpixiMessageCode.appRequest:
                         {
