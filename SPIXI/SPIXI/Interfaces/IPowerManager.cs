@@ -6,7 +6,7 @@ namespace SPIXI.Interfaces
 {
     public interface IPowerManager
     {
-        bool AquireLock();
-        bool ReleaseLock();
+        bool AquireLock(string lock_type = "screenDim");
+        bool ReleaseLock(string lock_type = "screenDim");
     }
 }

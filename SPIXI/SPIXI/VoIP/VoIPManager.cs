@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SPIXI.Interfaces;
+using System;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -57,6 +58,9 @@ namespace SPIXI.VoIP
 
         private static void startVoIPSession()
         {
+            DependencyService.Get<IPowerManager>().AquireLock("partial");
+            DependencyService.Get<IPowerManager>().AquireLock("wifi");
+
             audioPlayer = DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
             audioPlayer.start();
 
@@ -69,6 +73,9 @@ namespace SPIXI.VoIP
 
         private static void endVoIPSession()
         {
+            DependencyService.Get<IPowerManager>().ReleaseLock("partial");
+            DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
+
             if (audioPlayer != null)
             {
                 audioPlayer.Dispose();

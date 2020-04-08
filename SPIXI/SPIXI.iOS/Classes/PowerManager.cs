@@ -14,13 +14,13 @@ using Xamarin.Forms;
 
 public class PowerManager_iOS : IPowerManager
 {
-    public bool AquireLock()
+    public bool AquireLock(string lock_type = "screenDim")
     {
    //     UIApplication.SharedApplication.IdleTimerDisabled = true;
         return true;
     }
 
-    public bool ReleaseLock()
+    public bool ReleaseLock(string lock_type = "screenDim")
     {
     //    UIApplication.SharedApplication.IdleTimerDisabled = false;
         return true;
