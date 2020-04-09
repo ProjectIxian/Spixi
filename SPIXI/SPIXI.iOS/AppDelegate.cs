@@ -8,6 +8,7 @@ using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
 using SPIXI;
+using SPIXI.Interfaces;
 //using SPIXI.Notifications;
 
 namespace SPIXI.iOS
@@ -50,6 +51,10 @@ namespace SPIXI.iOS
 
             global::Xamarin.Forms.Forms.Init();
             global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+
+            // Initialize Push Notification service
+            DependencyService.Get<IPushService>().initialize();
+
             LoadApplication(App.Instance());
 
             prepareBackgroundService();
