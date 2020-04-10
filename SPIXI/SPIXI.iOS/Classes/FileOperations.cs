@@ -9,14 +9,33 @@ using SPIXI.Interfaces;
 using Xamarin.Forms.Platform.iOS;
 using Xamarin.Forms;
 using System.Threading.Tasks;
+using IXICore.Meta;
+using System.IO;
 
 [assembly: Dependency(typeof(FileOperations_iOS))]
+
+public class FileInteractionDelegate : UIDocumentInteractionControllerDelegate
+{
+    UIViewController parent;
+
+    public FileInteractionDelegate(UIViewController controller)
+    {
+        parent = controller;
+    }
+
+    public override UIViewController ViewControllerForPreview(UIDocumentInteractionController controller)
+    {
+        return parent;
+    }
+}
 
 public class FileOperations_iOS : IFileOperations
 {
     public void open(string filepath)
     {
-        throw new NotImplementedException();
+        var previewController = UIDocumentInteractionController.FromUrl(NSUrl.FromFilename(filepath));
+        previewController.Delegate = new FileInteractionDelegate(GetVisibleViewController());
+        previewController.PresentPreview(true);
     }
 
     public Task share(string filepath, string title)
