@@ -167,6 +167,8 @@
     <BundleResource Include="Resources\splash.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="html\" />
+    <BundleResource Include="$(SolutionDir)\SPIXI\SPIXI\Assets\**\*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </BundleResource>
   </ItemGroup>
 </Project>
