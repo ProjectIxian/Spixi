@@ -6,21 +6,13 @@
 /* Fonts */
 @font-face {
     font-family: 'robotoregular';
-    src: url('../fonts/Roboto-Regular-webfont.eot');
-    src: url('../fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Roboto-Regular-webfont.woff') format('woff'),
-         url('../fonts/Roboto-Regular-webfont.ttf') format('truetype'),
-         url('../fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'robotobold';
-    src: url('../fonts/Roboto-Bold-webfont.eot');
-    src: url('../fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Roboto-Bold-webfont.woff') format('woff'),
-         url('../fonts/Roboto-Bold-webfont.ttf') format('truetype'),
-         url('../fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -51,6 +43,8 @@ a:active {
     padding: 0 0;
     
     /* Prevent overscroll bounce  */
+    -webkit-overflow-scrolling: touch;
+
     position: absolute;
     top: 0;
     bottom: 0;

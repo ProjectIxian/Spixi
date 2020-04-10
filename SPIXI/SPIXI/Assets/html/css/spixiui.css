@@ -34,21 +34,13 @@
 /* Fonts */
 @font-face {
     font-family: 'robotoregular';
-    src: url('../fonts/Roboto-Regular-webfont.eot');
-    src: url('../fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Roboto-Regular-webfont.woff') format('woff'),
-         url('../fonts/Roboto-Regular-webfont.ttf') format('truetype'),
-         url('../fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'robotobold';
-    src: url('../fonts/Roboto-Bold-webfont.eot');
-    src: url('../fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../fonts/Roboto-Bold-webfont.woff') format('woff'),
-         url('../fonts/Roboto-Bold-webfont.ttf') format('truetype'),
-         url('../fonts/Roboto-Bold-webfont.svg#robotobold') format('svg');
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -57,8 +49,6 @@
 /* General */
 body {
     font-family: 'robotoregular', sans-serif;
-    /* Prevent overscroll bounce  */
-    -webkit-overflow-scrolling: touch;
 }
 
 a:hover {
@@ -87,8 +77,8 @@ a:active {
 }
 
 img.emoji {
-    width: 2em;
-    height: 2em;
+    max-width: 20pt;
+    max-height: 20pt;
     object-fit: contain;
     margin: 0 .05em 0 .1em;
     vertical-align: -0.5em;
@@ -97,17 +87,22 @@ img.emoji {
 .lsx-emojipicker-appender {
     width: 220px;
     left: -58px;
-    top: -20px;
+    bottom: 25px;
+    position: absolute !important;
 }
 
 .lsx-emojipicker-emoji span img.emoji {
-    width: 25px;
-    height: 25px;
-    object-fit: contain;
+    max-width: 25px;
+    max-height: 25px;
 }
 
-ul.lsx-emojipicker-tabs {
-    padding: 0px !important;
+.lsx-emojipicker-tabs {
+    padding:0px !important;
+}
+
+.lsx-emojipicker-tabs img.emoji {
+    width: 22px;
+    height: 22px;
 }
 
 .lsx-emojipicker-container::after {
@@ -1536,6 +1531,7 @@ ul.lsx-emojipicker-tabs {
 #chat_emoji {
     display: table-cell;
     width: 35px;
+    position: relative;
 
     font-size: 18pt;
     text-align: left;
