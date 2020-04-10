@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>IXIAN</title>
+    <script src="libs/twemoji/twemoji.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/lsxemojipicker/jquery.lsxemojipicker.css">
+
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/spixiui.css">
@@ -15,18 +18,13 @@
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
 
-    <script src="libs/twemoji/twemoji.min.js"></script>
-
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/spixi.js"></script>
 
-
-
     <script src="libs/lsxemojipicker/jquery.lsxemojipicker.min.js"></script>
-
 </head>
 <body onload="onload()">
     <div id="wrap" class="container-fluid noselect">
@@ -567,7 +565,7 @@
         }
 
         $('#chat_emoji').lsxEmojiPicker({
-            twemoji: false,
+            twemoji: true,
             onSelect: function (emoji) {
                 console.log(emoji);
                 document.getElementById("chat_input").value += emoji.value + " ";

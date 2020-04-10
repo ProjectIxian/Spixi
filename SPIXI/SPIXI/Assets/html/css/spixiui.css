@@ -56,7 +56,9 @@
 
 /* General */
 body {
-    font-family:'robotoregular', sans-serif;
+    font-family: 'robotoregular', sans-serif;
+    /* Prevent overscroll bounce  */
+    -webkit-overflow-scrolling: touch;
 }
 
 a:hover {
@@ -68,14 +70,12 @@ a:active {
 }
 
 #wrap {
-  /*  min-height: 100%;
-    height: auto !important;*/
-    /* Negative indent footer by its height */
-    /*margin: 0 auto -0px;*/
-    
+   
     padding: 0 0;
     
     /* Prevent overscroll bounce  */
+    -webkit-overflow-scrolling: touch;
+
     position: absolute;
     top: 0;
     bottom: 0;
@@ -87,10 +87,31 @@ a:active {
 }
 
 img.emoji {
-   height: 2em;
-   width: 2em;
-   margin: 0 .05em 0 .1em;
-   vertical-align: -0.5em;
+    width: 2em;
+    height: 2em;
+    object-fit: contain;
+    margin: 0 .05em 0 .1em;
+    vertical-align: -0.5em;
+}
+
+.lsx-emojipicker-appender {
+    width: 220px;
+    left: -58px;
+    top: -20px;
+}
+
+.lsx-emojipicker-emoji span img.emoji {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+
+ul.lsx-emojipicker-tabs {
+    padding: 0px !important;
+}
+
+.lsx-emojipicker-container::after {
+    left: 35px;
 }
 
 .break-word {
