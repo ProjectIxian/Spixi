@@ -78,13 +78,13 @@ namespace SPIXI.iOS.Classes
 
             // Calculate crop section
 
-            nfloat orig_width = original_image.Size.Width;
-            nfloat orig_height = original_image.Size.Height;
+            float orig_width = (float)original_image.Size.Width;
+            float orig_height = (float)original_image.Size.Height;
 
-            nfloat width_ratio = new_width / orig_width;
-            nfloat height_ratio = new_height / orig_height;
+            float width_ratio = new_width / orig_width;
+            float height_ratio = new_height / orig_height;
 
-            nfloat ratio = (nfloat)Math.Max(width_ratio, height_ratio);
+            float ratio = (float)Math.Max(width_ratio, height_ratio);
 
             int resized_pre_crop_width = (int)Math.Round(orig_width * ratio);
             int resized_pre_crop_height = (int)Math.Round(orig_height * ratio);
@@ -101,16 +101,26 @@ namespace SPIXI.iOS.Classes
             int crop_y = (int)(resized_crop_y / ratio / 2);
 
             // End of calculate crop section
-
-            // TODO crop as well
+          
+            UIGraphics.BeginImageContext(new SizeF(cropped_width, cropped_height));
+            var context = UIGraphics.GetCurrentContext();
+            var clippedRect = new RectangleF(0, 0, cropped_width, cropped_height);
+            context.ClipToRect(clippedRect);
+            var imgSize = original_image.Size;
+            var drawRect = new RectangleF(-crop_x, -crop_y, (float)imgSize.Width, (float)imgSize.Height);
+            original_image.Draw(drawRect);
+            var cropped_image = UIGraphics.GetImageFromCurrentImageContext();
+            UIGraphics.EndImageContext();
 
             UIGraphics.BeginImageContext(new SizeF(new_width, new_height));
-            original_image.Draw(new RectangleF(0, 0, new_width, new_height));
+            cropped_image.Draw(new RectangleF(0, 0, new_width, new_height));
             var resized_image = UIGraphics.GetImageFromCurrentImageContext();
             UIGraphics.EndImageContext();
 
             var bytes_imagen = resized_image.AsJPEG().ToArray();
             resized_image.Dispose();
+            cropped_image.Dispose();
+
             return bytes_imagen;
         }
 
