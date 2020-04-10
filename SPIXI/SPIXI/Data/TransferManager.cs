@@ -422,7 +422,7 @@ namespace SPIXI
                         transfer.updateActivity(packet_number + 1);
 
                         ulong new_packet_number = packet_number + 1;
-                        if (new_packet_number * (ulong)Config.packetDataSize > transfer.fileSize + (ulong)Config.packetDataSize)
+                        if (new_packet_number * (ulong)Config.packetDataSize >= transfer.fileSize)
                         {
                             completeFileTransfer(sender, uid);
                             sendFileTransferCompleted(sender, uid);
