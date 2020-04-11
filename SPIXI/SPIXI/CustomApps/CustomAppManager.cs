@@ -22,7 +22,7 @@ namespace SPIXI.CustomApps
 
         public CustomAppManager(string base_app_path)
         {
-            appsPath = Path.Combine(base_app_path, "Apps");
+            appsPath = Path.Combine(base_app_path, "html", "Apps");
             if(!Directory.Exists(appsPath))
             {
                 Directory.CreateDirectory(appsPath);

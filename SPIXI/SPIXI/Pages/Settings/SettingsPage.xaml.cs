@@ -198,7 +198,7 @@ namespace SPIXI
                 return;
             }
 
-            var file_path = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
+            var file_path = Path.Combine(Node.localStorage.avatarsPath, "avatar-tmp.jpg");
             try
             {
                 byte[] image_bytes = null;
@@ -231,7 +231,7 @@ namespace SPIXI
         public void applyAvatar()
         {
             var file_path = Node.localStorage.getOwnAvatarPath(false);
-            var source_file_path = Path.Combine(Node.localStorage.getTmpPath(), "avatar-tmp.jpg");
+            var source_file_path = Path.Combine(Node.localStorage.avatarsPath, "avatar-tmp.jpg");
 
             // Check if the source file exists before proceeding
             if (!File.Exists(source_file_path))

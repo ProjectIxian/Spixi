@@ -14,7 +14,9 @@ namespace SPIXI.Storage
         public string nickname = "";
 
         // storage paths
-        private string documentsPath = "";
+        public string documentsPath { get; private set; }
+        public string avatarsPath { get; private set; }
+        public string tmpPath { get; private set; }
 
         private string accountFileName = "account.ixi";
         private string txCacheFileName = "txcache.ixi";
@@ -34,13 +36,21 @@ namespace SPIXI.Storage
         {
             // Retrieve the app-specific and platform-specific documents path
             documentsPath = path;
+            avatarsPath = Path.Combine(path, "html", "Avatars");
+            tmpPath = Path.Combine(path, "tmp");
 
             messagesPerFile = messages_per_file;
 
-            // Prepare tmp path
-            if (!Directory.Exists(Path.Combine(documentsPath, "tmp")))
+            // Prepare html path
+            if (!Directory.Exists(Path.Combine(path, "html")))
             {
-                Directory.CreateDirectory(Path.Combine(documentsPath, "tmp"));
+                Directory.CreateDirectory(Path.Combine(path, "html"));
+            }
+
+            // Prepare tmp path
+            if (!Directory.Exists(tmpPath))
+            {
+                Directory.CreateDirectory(tmpPath);
             }
 
             // Prepare Chats path
@@ -55,10 +65,16 @@ namespace SPIXI.Storage
                 Directory.CreateDirectory(Path.Combine(documentsPath, "Downloads"));
             }
 
-            // Prepare Avatars path
-            if (!Directory.Exists(Path.Combine(documentsPath, "Avatars")))
+            // TODO Legacy, can be removed after release
+            if(Directory.Exists(Path.Combine(path, "Avatars")))
             {
-                Directory.CreateDirectory(Path.Combine(documentsPath, "Avatars"));
+                Directory.Move(Path.Combine(path, "Avatars"), avatarsPath);
+            }
+
+            // Prepare Avatars path
+            if (!Directory.Exists(avatarsPath))
+            {
+                Directory.CreateDirectory(avatarsPath);
             }
         }
 
@@ -74,7 +90,7 @@ namespace SPIXI.Storage
         // Returns the user's avatar path
         public string getOwnAvatarPath(bool override_with_default = true)
         {
-            var avatarPath = Path.Combine(documentsPath, "avatar.jpg");
+            var avatarPath = Path.Combine(avatarsPath, "avatar.jpg");
 
             // Check if the file exists
             if (File.Exists(avatarPath) == false && override_with_default)
@@ -89,7 +105,7 @@ namespace SPIXI.Storage
         // Delete the user's avatar
         public bool deleteOwnAvatar()
         {
-            string avatarPath = Path.Combine(documentsPath, "avatar.jpg");
+            string avatarPath = Path.Combine(avatarsPath, "avatar.jpg");
             if (File.Exists(avatarPath) == false)
             {
                 return false;
@@ -765,17 +781,12 @@ namespace SPIXI.Storage
             return true;
         }
 
-        public string getTmpPath()
-        {
-            return Path.Combine(documentsPath, "tmp");
-        }
-
         // Write the account file to local storage
         public bool writeAvatar(string friend_address, byte[] avatar_bytes)
         {
             lock (avatarLock)
             {
-                string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+                string avatar_filename = Path.Combine(avatarsPath, friend_address + ".jpg");
 
                 File.WriteAllBytes(avatar_filename, avatar_bytes);
             }
@@ -787,7 +798,7 @@ namespace SPIXI.Storage
         {
             lock (avatarLock)
             {
-                string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+                string avatar_filename = Path.Combine(avatarsPath, friend_address + ".jpg");
 
                 if (File.Exists(avatar_filename) == false)
                 {
@@ -796,7 +807,7 @@ namespace SPIXI.Storage
 
                 File.Delete(avatar_filename);
 
-                avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + "_128.jpg");
+                avatar_filename = Path.Combine(avatarsPath, friend_address + "_128.jpg");
 
                 if (File.Exists(avatar_filename))
                 {
@@ -814,12 +825,12 @@ namespace SPIXI.Storage
                 size_str = "_128";
             }
 
-            string avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + size_str + ".jpg");
+            string avatar_filename = Path.Combine(avatarsPath, friend_address + size_str + ".jpg");
 
             // TODO: Legacy check, can be removed later
             if (!File.Exists(avatar_filename))
             {
-                avatar_filename = Path.Combine(documentsPath, "Avatars", friend_address + ".jpg");
+                avatar_filename = Path.Combine(avatarsPath, friend_address + ".jpg");
             }
 
             if (File.Exists(avatar_filename))

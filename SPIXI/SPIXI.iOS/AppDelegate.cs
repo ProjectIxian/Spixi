@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Foundation;
 using SPIXI.iOS.Services;
 using UIKit;
 using UserNotifications;
 using Xamarin.Forms;
-using SPIXI;
 using SPIXI.Interfaces;
+using SPIXI.Meta;
+using System.IO;
 //using SPIXI.Notifications;
 
 namespace SPIXI.iOS
@@ -55,6 +53,8 @@ namespace SPIXI.iOS
             // Initialize Push Notification service
             DependencyService.Get<IPushService>().initialize();
 
+            prepareStorage();
+
             LoadApplication(App.Instance());
 
             prepareBackgroundService();
@@ -76,12 +76,63 @@ namespace SPIXI.iOS
             */
         }
 
+        private void prepareStorage()
+        {
+            string source_html = Path.Combine(NSBundle.MainBundle.BundlePath, "html");
+            string dest_html = Path.Combine(Config.spixiUserFolder, "html");
+
+            if (!Directory.Exists(dest_html))
+            {
+                Directory.CreateDirectory(dest_html);
+            }
+
+            prepareSymbolicLinks(new DirectoryInfo(source_html), new DirectoryInfo(dest_html));
+        }
+
+
         public override void PerformFetch(UIApplication application, Action<UIBackgroundFetchResult> completionHandler)
         {
             // Check for new data, and display it
   
             // Inform system of fetch results
             completionHandler(UIBackgroundFetchResult.NewData);
+        }
+
+        // Cleans up and links contents of the source directory to target directory.
+        private static void prepareSymbolicLinks(DirectoryInfo source, DirectoryInfo target)
+        {
+            var fm = new NSFileManager();
+            fm.ChangeCurrentDirectory(target.FullName);
+
+            NSError ns_error = new NSError();
+
+            foreach (DirectoryInfo dir in source.GetDirectories())
+            {
+                var tmp_path = Path.Combine(target.FullName, dir.Name);
+                if (Directory.Exists(tmp_path))
+                {
+                    Directory.Delete(tmp_path, true);
+                }
+                if (File.Exists(tmp_path))
+                {
+                    File.Delete(tmp_path);
+                }
+                fm.CreateSymbolicLink(dir.Name, dir.FullName, out ns_error);
+            }
+
+            foreach (FileInfo file in source.GetFiles())
+            {
+                var tmp_path = Path.Combine(target.FullName, file.Name);
+                if (Directory.Exists(tmp_path))
+                {
+                    Directory.Delete(tmp_path, true);
+                }
+                if (File.Exists(tmp_path))
+                {
+                    File.Delete(tmp_path);
+                }
+                fm.CreateSymbolicLink(file.Name, file.FullName, out ns_error);
+            }
         }
     }
 }
