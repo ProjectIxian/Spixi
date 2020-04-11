@@ -10,10 +10,12 @@ using SPIXI.Interfaces;
 using Android.Views;
 using Android.Support.V4.App;
 using Android;
+using System;
+using IXICore.Meta;
 
 namespace SPIXI.Droid
 {
-    [Activity(Label = "SPIXI", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
+    [Activity(Label = "SPIXI", Icon = "@mipmap/ic_launcher", RoundIcon = "@mipmap/ic_round_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         int recordAudioPermissionRequest = 1;
@@ -63,8 +65,16 @@ namespace SPIXI.Droid
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
 
-
-            RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, recordAudioPermissionRequest);
+            try
+            {
+                if (ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.RecordAudio))
+                {
+                    RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, recordAudioPermissionRequest);
+                }
+            }catch(Exception e)
+            {
+                Logging.error("Exception occured while requesting permissions for audio recording: " + e);
+            }
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
