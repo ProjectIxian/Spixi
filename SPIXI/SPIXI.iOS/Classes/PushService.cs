@@ -37,13 +37,16 @@ public class PushService_iOS : IPushService
 
     public void showLocalNotification(string title, string message, string data)
     {
-        var notification = new UILocalNotification();
-        notification.FireDate = NSDate.FromTimeIntervalSinceNow(1);
-        notification.AlertAction = title;
-        notification.AlertBody = message;
-        notification.ApplicationIconBadgeNumber = 1;
-        notification.SoundName = UILocalNotification.DefaultSoundName;
-        UIApplication.SharedApplication.ScheduleLocalNotification(notification);
+        Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+        {
+            var notification = new UILocalNotification();
+            notification.FireDate = NSDate.FromTimeIntervalSinceNow(1);
+            notification.AlertAction = title;
+            notification.AlertBody = message;
+            notification.ApplicationIconBadgeNumber = 1;
+            notification.SoundName = UILocalNotification.DefaultSoundName;
+            UIApplication.SharedApplication.ScheduleLocalNotification(notification);
+        });
     }
 
 
