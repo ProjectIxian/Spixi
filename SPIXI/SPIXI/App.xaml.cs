@@ -149,7 +149,7 @@ namespace SPIXI
             isInForeground = true;
             base.OnResume();
 
-            if(MainPage != null && ((NavigationPage)MainPage).CurrentPage != null)
+            if(MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
             {
                 SpixiContentPage p = (SpixiContentPage)((NavigationPage)MainPage).CurrentPage;
                 p.onResume();
