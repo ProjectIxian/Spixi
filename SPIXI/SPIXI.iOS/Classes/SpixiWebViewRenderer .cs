@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Foundation;
-using UIKit;
-using SPIXI.iOS.Classes;
+﻿using SPIXI.iOS.Classes;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -18,21 +11,16 @@ namespace SPIXI.iOS.Classes
         {
             base.OnElementChanged(e);
 
-            var config = new WebKit.WKWebViewConfiguration();
-            config.DataDetectorTypes = WebKit.WKDataDetectorTypes.None;
-            
             var view = NativeView as WebKit.WKWebView;
-            view = new WebKit.WKWebView(view.Frame, config);
-
+            
             if (view != null)
             {
+                view.Configuration.DataDetectorTypes = WebKit.WKDataDetectorTypes.None;
                 view.ScrollView.ScrollEnabled = true;
                 view.ScrollView.Bounces = false;
                 //view.SetNeedsLayout();
                 //view.ScrollView.ContentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.Never;
             }
         }
-
-
     }
 }
