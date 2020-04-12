@@ -34,6 +34,10 @@
 	<string>SPIXI</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera Usage is needed for scanning QR codes</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>Location access is needed for push notifications when app is in background</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>Location access is needed for push notifications when app is in use</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
