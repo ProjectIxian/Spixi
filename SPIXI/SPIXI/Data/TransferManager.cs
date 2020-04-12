@@ -388,7 +388,7 @@ namespace SPIXI
                     complete = true;
                 }else
                 {
-                    fp = 100 / totalPackets * packet_number;
+                    fp = packet_number * 100 / totalPackets;
                 }
 
                 friend.chat_page.updateFile(uid, fp.ToString(), complete);
@@ -588,7 +588,7 @@ namespace SPIXI
                         return;
 
                     ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
-                    ulong fp = 100 / totalPackets * (packet_number-1);
+                    ulong fp = (packet_number - 1) * 100 / totalPackets;
                     friend.chat_page.updateFile(uid, fp.ToString(), false);
                 }
             }
