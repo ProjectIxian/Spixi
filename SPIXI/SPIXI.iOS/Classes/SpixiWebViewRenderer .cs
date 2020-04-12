@@ -1,4 +1,5 @@
 ﻿using SPIXI.iOS.Classes;
+using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
@@ -16,10 +17,8 @@ namespace SPIXI.iOS.Classes
             if (view != null)
             {
                 view.Configuration.DataDetectorTypes = WebKit.WKDataDetectorTypes.None;
-                view.ScrollView.ScrollEnabled = true;
+                view.ScrollView.ScrollEnabled = false;
                 view.ScrollView.Bounces = false;
-                //view.SetNeedsLayout();
-                //view.ScrollView.ContentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentBehavior.Never;
             }
         }
     }
