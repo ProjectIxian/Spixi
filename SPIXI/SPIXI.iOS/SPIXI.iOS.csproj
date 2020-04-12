@@ -52,7 +52,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <MtouchLink>Full</MtouchLink>
+    <MtouchLink>SdkOnly</MtouchLink>
     <MtouchInterpreter>-all</MtouchInterpreter>
     <MtouchExtraArgs>--registrar:static --optimize=experimental-xforms-product-type</MtouchExtraArgs>
   </PropertyGroup>
@@ -69,6 +69,7 @@
     <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;SPIXI_BUILD</DefineConstants>
     <OptimizePNGs>true</OptimizePNGs>
     <CodesignProvision>io.ixian.spixi App Store</CodesignProvision>
+    <MtouchExtraArgs>--optimize=experimental-xforms-product-type</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -96,6 +97,7 @@
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <DefineConstants>__IOS__;__MOBILE__;__UNIFIED__;SPIXI_BUILD</DefineConstants>
+    <MtouchExtraArgs>--optimize=experimental-xforms-product-type</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
     <AppExtensionDebugBundleId />
