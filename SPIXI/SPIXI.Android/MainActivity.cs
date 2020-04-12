@@ -23,7 +23,7 @@ namespace SPIXI.Droid
         // Field, property, and method for Picture Picker
         public static readonly int PickImageId = 1000;
 
-        public TaskCompletionSource<Stream> PickImageTaskCompletionSource { set; get; }
+        public TaskCompletionSource<SpixiImageData> PickImageTaskCompletionSource { set; get; }
 
         internal static MainActivity Instance { get; private set; }
 
@@ -86,10 +86,11 @@ namespace SPIXI.Droid
                 if ((resultCode == Result.Ok) && (intent != null))
                 {
                     Android.Net.Uri uri = intent.Data;
-                    Stream stream = ContentResolver.OpenInputStream(uri);
+
+                    SpixiImageData spixi_img_data = new SpixiImageData() { name = Path.GetFileName(uri.Path), path = uri.Path, stream = ContentResolver.OpenInputStream(uri)};
 
                     // Set the Stream as the completion of the Task
-                    PickImageTaskCompletionSource.SetResult(stream);
+                    PickImageTaskCompletionSource.SetResult(spixi_img_data);
                 }
                 else
                 {

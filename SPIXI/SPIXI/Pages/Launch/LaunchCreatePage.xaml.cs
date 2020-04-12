@@ -75,7 +75,8 @@ namespace SPIXI
         {
             var picker_service = DependencyService.Get<IPicturePicker>();
 
-            Stream stream = await picker_service.GetImageStreamAsync();
+            SpixiImageData spixi_img_data = await picker_service.PickImageAsync();
+            Stream stream = spixi_img_data.stream;
 
             if (stream == null)
             {

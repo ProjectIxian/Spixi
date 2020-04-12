@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Foundation;
 using IXICore.Meta;
+using MobileCoreServices;
 using SPIXI.Interfaces;
 using SPIXI.iOS.Classes;
 using UIKit;
@@ -15,10 +16,10 @@ namespace SPIXI.iOS.Classes
 {
     public class PicturePickerImplementation : IPicturePicker
     {
-        TaskCompletionSource<Stream> taskCompletionSource;
+        TaskCompletionSource<SpixiImageData> taskCompletionSource;
         UIImagePickerController imagePicker;
 
-        public Task<Stream> GetImageStreamAsync()
+        public Task<SpixiImageData> PickImageAsync()
         {
             // Create and define UIImagePickerController
             imagePicker = new UIImagePickerController
@@ -37,7 +38,7 @@ namespace SPIXI.iOS.Classes
             viewController.PresentModalViewController(imagePicker, true);
 
             // Return Task object
-            taskCompletionSource = new TaskCompletionSource<Stream>();
+            taskCompletionSource = new TaskCompletionSource<SpixiImageData>();
             return taskCompletionSource.Task;
         }
 
@@ -49,10 +50,11 @@ namespace SPIXI.iOS.Classes
             {
                 // Convert UIImage to .NET Stream object
                 NSData data = image.AsJPEG(1);
-                Stream stream = data.AsStream();
+
+                SpixiImageData spixi_img_data = new SpixiImageData() { name = Path.GetFileName(args.ImageUrl.AbsoluteString), path = "", stream = data.AsStream() };
 
                 // Set the Stream as the completion of the Task
-                taskCompletionSource.SetResult(stream);
+                taskCompletionSource.SetResult(spixi_img_data);
             }
             else
             {

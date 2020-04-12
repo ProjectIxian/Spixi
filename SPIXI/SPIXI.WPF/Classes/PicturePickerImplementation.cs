@@ -17,20 +17,20 @@ namespace SPIXI.WPF.Classes
 {
     public class PicturePickerImplementation : IPicturePicker
     {
-        public Task<Stream> GetImageStreamAsync()
+        public Task<SpixiImageData> PickImageAsync()
         {
             OpenFileDialog file_dialog = new OpenFileDialog();
             file_dialog.Filter = "Image Files (*.jpeg, *.jpg, *.png)|*.jpeg;*.jpg;*.png";
             file_dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            Stream s = null;
+            SpixiImageData spixi_img_data = null;
             if (file_dialog.ShowDialog() == true)
             {
-                s = File.OpenRead(file_dialog.FileName);
+                spixi_img_data = new SpixiImageData() { name = Path.GetFileName(file_dialog.FileName), path = file_dialog.FileName, stream = File.OpenRead(file_dialog.FileName) };
             }
 
             // Return Task object
-            return Task.FromResult(s);
+            return Task.FromResult(spixi_img_data);
         }
 
         public byte[] ResizeImage(byte[] image_data, int new_width, int new_height)

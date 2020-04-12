@@ -9,6 +9,7 @@ using SPIXI.Meta;
 using SPIXI.Storage;
 using SPIXI.VoIP;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -278,72 +279,42 @@ namespace SPIXI
 
         public async Task onSendFile()
         {
-            // Special case for iOS platform
-            if(Device.RuntimePlatform == Device.iOS)
-            {
-                var picker_service = DependencyService.Get<IPicturePicker>();
-
-                Stream stream = await picker_service.GetImageStreamAsync();
-
-                if (stream == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    string fileName = "Media File";
-                    string filePath = null;
-
-                    FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, stream, filePath);
-                    Logging.info("File Transfer uid: " + transfer.uid);
-
-                    SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes());
-
-                    StreamMessage message = new StreamMessage();
-                    message.type = StreamMessageCode.data;
-                    message.recipient = friend.walletAddress;
-                    message.sender = Node.walletStorage.getPrimaryAddress();
-                    message.transaction = new byte[1];
-                    message.sigdata = new byte[1];
-                    message.data = spixi_message.getBytes();
-
-                    StreamProcessor.sendMessage(friend, message);
-
-
-                    string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
-
-                    // store the message and display it
-                    FriendMessage friend_message = FriendList.addMessageWithType(message.id, FriendMessageType.fileHeader, friend.walletAddress, message_data, true);
-
-                    friend_message.transferId = transfer.uid;
-                    friend_message.filePath = transfer.filePath;
-
-                    Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
-
-
-                }
-                catch (Exception ex)
-                {
-                    await displaySpixiAlert("Error", ex.ToString(), "ok");
-                    return;
-                }
-
-                // That's it for iOS for now
-                return;
-            }
-
             // Show file picker and send the file
             try
             {
-                FileData fileData = await CrossFilePicker.Current.PickFile();
-                if (fileData == null)
-                    return; // User canceled file picking
+                Stream stream = null;
+                string fileName = null;
+                string filePath = null;
 
-                string fileName = fileData.FileName;
-                string filePath = fileData.FilePath;
+                // Special case for iOS platform
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    var picker_service = DependencyService.Get<IPicturePicker>();
 
-                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, fileData.GetStream(), filePath);
+                    SpixiImageData spixi_img_data = await picker_service.PickImageAsync();
+                    stream = spixi_img_data.stream;
+
+                    if (stream == null)
+                    {
+                        return;
+                    }
+
+                    fileName = spixi_img_data.name;
+                    filePath = spixi_img_data.path;
+                }
+                else
+                {
+                    FileData fileData = await CrossFilePicker.Current.PickFile();
+                    if (fileData == null)
+                        return; // User canceled file picking
+
+                    stream = fileData.GetStream();
+
+                    fileName = fileData.FileName;
+                    filePath = fileData.FilePath;
+                }
+
+                FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, stream, filePath);
                 Logging.info("File Transfer uid: " + transfer.uid);
 
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.fileHeader, transfer.getBytes());

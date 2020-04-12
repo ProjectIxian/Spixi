@@ -13,7 +13,7 @@ namespace SPIXI.Droid.Classes
 {
     public class PicturePickerImplementation : IPicturePicker
     {
-        public Task<Stream> GetImageStreamAsync()
+        public Task<SpixiImageData> PickImageAsync()
         {
             // Define the Intent for getting images
             Intent intent = new Intent();
@@ -29,7 +29,7 @@ namespace SPIXI.Droid.Classes
                 MainActivity.PickImageId);
 
             // Save the TaskCompletionSource object as a MainActivity property
-            activity.PickImageTaskCompletionSource = new TaskCompletionSource<Stream>();
+            activity.PickImageTaskCompletionSource = new TaskCompletionSource<SpixiImageData>();
 
             // Return Task object
             return activity.PickImageTaskCompletionSource.Task;
