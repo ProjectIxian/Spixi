@@ -17,6 +17,7 @@ namespace SPIXI
         public ulong fileSize = 0;
         public byte[] preview = null;       // Additional preview data
         public byte[] sender = null;        // Additional sender address field
+        public int packetSize = Config.packetDataSize;
 
         public bool incoming = false;       // Incoming or outgoing flag
         public bool completed = false;
@@ -76,6 +77,14 @@ namespace SPIXI
                         int data_length = reader.ReadInt32();
                         if (data_length > 0)
                             preview = reader.ReadBytes(data_length);
+
+                        // TODO try catch wrapper can be removed after release
+                        try { 
+                            packetSize = reader.ReadInt32();
+                        }catch(Exception)
+                        {
+
+                        }
                     }
                 }
             }
@@ -108,6 +117,7 @@ namespace SPIXI
                         writer.Write(0);
                     }
 
+                    writer.Write(packetSize);
                 }
                 return m.ToArray();
             }
@@ -115,13 +125,22 @@ namespace SPIXI
 
         public byte[] getPacketData(ulong packet_num)
         {
-            byte[] data = new byte[Config.packetDataSize];
 
-            if ((ulong)Config.packetDataSize * packet_num > fileSize + (ulong)Config.packetDataSize)
-                return data;
+            if ((ulong)Config.packetDataSize * packet_num >= fileSize)
+                return null;
+
+            ulong bytes_to_send_length = fileSize - ((ulong)Config.packetDataSize * packet_num);
+
+            int packet_size = Config.packetDataSize;
+            if(bytes_to_send_length < (ulong)packet_size)
+            {
+                packet_size = (int)bytes_to_send_length;
+            }
+
+            byte[] data = new byte[packet_size];
 
             fileStream.Seek((int)packet_num * Config.packetDataSize, SeekOrigin.Begin);
-            fileStream.Read(data, 0, Config.packetDataSize);
+            fileStream.Read(data, 0, packet_size);
 
             return data;
         }
@@ -360,7 +379,7 @@ namespace SPIXI
 
             if (friend.chat_page != null)
             {
-                ulong totalPackets = transfer.fileSize / (ulong)Config.packetDataSize;
+                ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
                 ulong fp = 0;
                 bool complete = false;
                 if(totalPackets == packet_number)
@@ -406,29 +425,47 @@ namespace SPIXI
                         if (transfer == null)
                             return false;
 
-                        // Check if the transfer is already completed
-                        if (transfer.completed)
-                            return false;
+                        lock(transfer)
+                        {    
 
-                        // Check if this is the next packet to process
-                        if (transfer.lastPacket != packet_number)
-                            return false;
+                            // Check if the transfer is already completed
+                            if (transfer.completed)
+                                return false;
 
-                        incomingPacketsLog.Add(packet);
+                            // Check if this is the next packet to process
+                            if (transfer.lastPacket != packet_number)
+                                return false;
 
-                        transfer.fileStream.Seek(Config.packetDataSize * (int)packet_number, SeekOrigin.Begin);
-                        transfer.fileStream.Write(file_data, 0, file_data.Length);
+                            if ((uint)transfer.packetSize * packet_number >= transfer.fileSize)
+                            {
+                                return false;
+                            }
 
-                        transfer.updateActivity(packet_number + 1);
 
-                        ulong new_packet_number = packet_number + 1;
-                        if (new_packet_number * (ulong)Config.packetDataSize >= transfer.fileSize)
-                        {
-                            completeFileTransfer(sender, uid);
-                            sendFileTransferCompleted(sender, uid);
-                            return true;
+                            long bytes_to_write_length = (long)(transfer.fileSize - ((uint)transfer.packetSize * packet_number));
+
+                            int packet_size = transfer.packetSize;
+                            if (bytes_to_write_length < packet_size)
+                            {
+                                packet_size = (int)bytes_to_write_length;
+                            }
+
+                            incomingPacketsLog.Add(packet);
+
+                            transfer.fileStream.Seek(transfer.packetSize * (int)packet_number, SeekOrigin.Begin);
+                            transfer.fileStream.Write(file_data, 0, packet_size);
+
+                            transfer.updateActivity(packet_number + 1);
+
+                            ulong new_packet_number = packet_number + 1;
+                            if (new_packet_number * (ulong)transfer.packetSize >= transfer.fileSize)
+                            {
+                                completeFileTransfer(sender, uid);
+                                sendFileTransferCompleted(sender, uid);
+                                return true;
+                            }
+                            requestFileData(sender, uid, new_packet_number);
                         }
-                        requestFileData(sender, uid, new_packet_number);
                     }
                 }
             }
@@ -550,7 +587,7 @@ namespace SPIXI
                     if (transfer == null)
                         return;
 
-                    ulong totalPackets = transfer.fileSize / (ulong)Config.packetDataSize;
+                    ulong totalPackets = transfer.fileSize / (ulong)transfer.packetSize;
                     ulong fp = 100 / totalPackets * (packet_number-1);
                     friend.chat_page.updateFile(uid, fp.ToString(), false);
                 }
