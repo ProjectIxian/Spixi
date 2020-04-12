@@ -33,4 +33,4 @@ using Android.App;
 [assembly: UsesPermission(Android.Manifest.Permission.Internet)]
 [assembly: UsesPermission(Android.Manifest.Permission.WriteExternalStorage)]
 
-[assembly: Application(Icon = "@mipmap/ic_launcher")]
+[assembly: Application(Icon = "@mipmap/ic_launcher", RoundIcon = "@mipmap/ic_round_launcher")]
