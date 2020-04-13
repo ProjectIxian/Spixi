@@ -8,6 +8,7 @@ using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -258,7 +259,15 @@ namespace SPIXI
                 VoIPManager.hangupCall(Crypto.stringToHash(session_id));
             }else if(current_url.StartsWith("ixian:viewLog"))
             {
-                DependencyService.Get<IFileOperations>().open(Path.Combine(Config.spixiUserFolder, "ixian.log"));
+                if(File.Exists(Path.Combine(Config.spixiUserFolder, "spixi.log.zip")))
+                {
+                    File.Delete(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"));
+                }
+                using (ZipArchive archive = ZipFile.Open(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), ZipArchiveMode.Create))
+                {
+                    archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "ixian.log"), "ixian.log");
+                }
+                DependencyService.Get<IFileOperations>().share(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), "Share Spixi Log File");
             }
             else
             {
