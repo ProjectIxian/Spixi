@@ -12,6 +12,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -27,17 +28,17 @@
 	<key>CFBundleIdentifier</key>
 	<string>io.ixian.spixi</string>
 	<key>CFBundleVersion</key>
-	<string>0.4.0.2</string>
+	<string>0.4.2.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>SPIXI</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera Usage is needed for scanning QR codes</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>Location access is needed for push notifications when app is in background</string>
-  <key>NSLocationWhenInUseUsageDescription</key>
-  <string>Location access is needed for push notifications when app is in use</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location access is needed for push notifications when app is in background</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is needed for push notifications when app is in use</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
@@ -45,6 +46,6 @@
 	<key>XSAppIconAssets</key>
 	<string>Media.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.4.0</string>
+	<string>0.4.2</string>
 </dict>
 </plist>
