@@ -6,6 +6,8 @@ using Android.Support.V4.Content;
 using SPIXI.Droid;
 using Java.IO;
 using Android.Webkit;
+using IXICore.Meta;
+using System;
 
 [assembly: Dependency(typeof(FileOperations_Android))]
 
@@ -27,8 +29,7 @@ public class FileOperations_Android : IFileOperations
         shareIntent.PutExtra(Intent.ExtraStream, uriShare);
 
         var chooserIntent = Intent.CreateChooser(shareIntent, title ?? string.Empty);
-        chooserIntent.SetFlags(ActivityFlags.ClearTop);
-        chooserIntent.SetFlags(ActivityFlags.NewTask);
+        chooserIntent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.NewTask);
         _context.StartActivity(chooserIntent);
 
         return Task.FromResult(true);
@@ -71,16 +72,21 @@ public class FileOperations_Android : IFileOperations
             return;
         }
 
-        Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
+        try
+        {
+            Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
 
-        string mime_type = getMimeType(file_uri);
+            string mime_type = getMimeType(file_uri);
 
-        Intent intent = new Intent(Intent.ActionView);
-        intent.SetFlags(ActivityFlags.ClearWhenTaskReset | ActivityFlags.NewTask);
-        intent.SetDataAndType(file_uri, mime_type);
-        intent.AddFlags(ActivityFlags.GrantReadUriPermission);
+            Intent intent = new Intent(Intent.ActionView);
+            intent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.ClearWhenTaskReset | ActivityFlags.NewTask | ActivityFlags.GrantReadUriPermission);
+            intent.SetDataAndType(file_uri, mime_type);
 
-        context.StartActivity(intent);
+            context.StartActivity(Intent.CreateChooser(intent, "Open file with"));
+        }catch(Exception e)
+        {
+            Logging.error("Exception occured while trying to open file " + e);
+        }
     }
 
 
