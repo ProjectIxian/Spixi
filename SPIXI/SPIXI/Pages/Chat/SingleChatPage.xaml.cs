@@ -141,8 +141,10 @@ namespace SPIXI
 
                 // Open file in default app. May not work, check https://forums.xamarin.com/discussion/103042/how-to-open-pdf-or-txt-file-in-default-app-on-xamarin-forms
                 //Device.OpenUri(new Uri(transfer.filePath));
-                DependencyService.Get<IFileOperations>().open(fm.filePath);
-
+                if (File.Exists(fm.filePath))
+                {
+                    DependencyService.Get<IFileOperations>().open(fm.filePath);
+                }
             }
             else if (current_url.Contains("ixian:chat:"))
             {
