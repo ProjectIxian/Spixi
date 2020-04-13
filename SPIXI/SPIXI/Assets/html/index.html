@@ -28,10 +28,10 @@
     <div id="wrap" class="container-fluid noselect">
 
         <!-- Toolbar Main-->
-        <div id="toolbar" class="spixi-toolbar shadow">
+        <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
             <div class="row spixi-toolbar-row">
-                <div class="col-2">
+                <div class="col-2" id="MainMenu">
                     <i class="fas fa-bars"></i>
                 </div>
                 <div class="col-8" style="padding-right: 50pt;">
@@ -421,7 +421,7 @@
 
 
     // Toolbar
-    document.getElementById("toolbar").onclick = function() {
+    document.getElementById("MainMenu").onclick = function() {
         onMainMenuAction();
     }
 
