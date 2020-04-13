@@ -57,12 +57,20 @@ public class FileOperations_Android : IFileOperations
     public void open(string file_path)
     {
         var context = MainActivity.Instance;
-
-        File f = new File(context.FilesDir, System.IO.Path.Combine("Spixi", "Downloads", System.IO.Path.GetFileName(file_path)));
-        if (f == null || !f.Exists())
+        File f;
+        if(file_path.StartsWith(context.FilesDir.AbsolutePath))
+        {
+            f = new File(context.FilesDir, file_path.Substring(context.FilesDir.AbsolutePath.Length));
+        }else
         {
             f = new File(file_path);
         }
+
+        if(f == null || !f.Exists())
+        {
+            return;
+        }
+
         Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
 
         string mime_type = getMimeType(file_uri);
