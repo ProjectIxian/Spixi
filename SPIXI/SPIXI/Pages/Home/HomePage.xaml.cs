@@ -256,6 +256,9 @@ namespace SPIXI
             {
                 string session_id = current_url.Substring("ixian:hangUp:".Length);
                 VoIPManager.hangupCall(Crypto.stringToHash(session_id));
+            }else if(current_url.StartsWith("ixian:viewLog"))
+            {
+                DependencyService.Get<IFileOperations>().open(Path.Combine(Config.spixiUserFolder, "ixian.log"));
             }
             else
             {
