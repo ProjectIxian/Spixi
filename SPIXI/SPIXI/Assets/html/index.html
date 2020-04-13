@@ -35,7 +35,7 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 <div class="col-8" style="padding-right: 50pt;">
-                    <div class="spixi-toolbar-logo"></div>
+                    <div class="spixi-toolbar-logo" onclick="countLogoClick();"></div>
                 </div>
                 <div class="col-2">
                 </div>
@@ -301,7 +301,7 @@
                     <div class="spixi-sidebar-item-text">Apps</div>
                 </a>
             </div>
-
+        
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('downloads');" class="">
                     <i class="fa fa-download spixi-sidebar-item-icon"></i>
@@ -344,10 +344,10 @@
                 </a>
             </div>
 
-            <div class="spixi-sidebar-item">
+            <div class="spixi-sidebar-item" id="SendLogMenuItem" style="display: none;">
                 <a href="javascript:selectMenuOption('viewLog');" class="">
                     <i class="fa fa-info spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">View Log</div>
+                    <div class="spixi-sidebar-item-text">Send Log</div>
                 </a>
             </div>
 
@@ -853,6 +853,17 @@ triggerOnTouchEnd:true,
         addChat("102", "Three", "2 days ago", "img/spixiavatar.png", false, "Unread 2message");
 
     }
+        var logoClicked = 0;
+
+        function countLogoClick()
+        {
+            logoClicked++;
+            if(logoClicked > 10)
+            {
+                document.getElementById("SendLogMenuItem").style.display = "block";
+                alert("Developer mode activated");
+            }
+        }
     </script>
 
 </body>
