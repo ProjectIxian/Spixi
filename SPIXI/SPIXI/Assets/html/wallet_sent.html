@@ -133,25 +133,23 @@
             document.getElementById('paymentdetail_label').innerHTML = "The amount received has been added to your balance.";
         }
 
-        function setData(amount, fee, addresses, time, confirmedText, feePercentage, txid) {
+        function addSender(address, time)
+        {
+            var address_container = document.getElementById('address_container');
+            address_container.innerHTML = "";
+
+            var address_html = document.getElementById("templates").getElementsByClassName("address")[0].outerHTML;
+            address_container.innerHTML += address_html;
+
+            address_container.lastElementChild.getElementsByClassName("wallet_from_text")[0].innerHTML = address;
+            address_container.lastElementChild.getElementsByClassName("time_sent")[0].innerHTML = time;
+        }
+
+        function setData(amount, fee, time, confirmedText, feePercentage, txid) {
             document.getElementById('sent_amount').innerHTML = amount;
             document.getElementById('sent_fee').innerHTML = fee;
             document.getElementById("sent_fee_percent").innerHTML = feePercentage;
             document.getElementById("sent_txid").innerHTML = txid;
-
-            var address_container = document.getElementById('address_container');
-            address_container.innerHTML = "";
-
-            var addr_arr = addresses.split("|");
-            for (var i in addr_arr) {
-                if (addr_arr[i] == "") { continue; }
-
-                var address_html = document.getElementById("templates").getElementsByClassName("address")[0].outerHTML;
-                address_container.innerHTML += address_html;
-
-                address_container.lastElementChild.getElementsByClassName("wallet_from_text")[0].innerHTML = addr_arr[i];
-                address_container.lastElementChild.getElementsByClassName("time_sent")[0].innerHTML = time;
-            }
 
             document.getElementById('sent_status').innerHTML = confirmedText;
             if (confirmedText != "UNCONFIRMED") {

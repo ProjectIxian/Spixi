@@ -91,7 +91,9 @@ namespace SPIXI
 
             IxiNumber amount = ctransaction.amount;
 
-            string addresses = "";
+            // Convert unix timestamp
+            string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
+
             byte[] addr = new Address(ctransaction.pubKey).address;
             if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
             {
@@ -102,11 +104,11 @@ namespace SPIXI
                     Friend friend = FriendList.getFriend(entry.Key);
                     if (friend != null)
                     {
-                        addresses += friend.nickname + ": " + entry.Value.ToString() + "|";
+                        Utils.sendUiCommand(webView, "addSender", friend.nickname + ": " + entry.Value.ToString(), time);
                     }
                     else
                     {
-                        addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
+                        Utils.sendUiCommand(webView, "addSender", Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString(), time);
                     }
                 }
             }
@@ -121,11 +123,11 @@ namespace SPIXI
                 Friend friend = FriendList.getFriend(sender_address);
                 if (friend != null)
                 {
-                    addresses += friend.nickname + ":|";
+                    Utils.sendUiCommand(webView, "addSender", friend.nickname, time);
                 }
                 else
                 {
-                    addresses += Base58Check.Base58CheckEncoding.EncodePlain(sender_address) + ":|";
+                    Utils.sendUiCommand(webView, "addSender", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), time);
                 }
                 foreach (var entry in ctransaction.toList)
                 {
@@ -138,11 +140,8 @@ namespace SPIXI
                 }
             }
 
-            // Convert unix timestamp
-            string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
-
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                addresses, time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.id);
+                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.id);
             return;
         }
 
