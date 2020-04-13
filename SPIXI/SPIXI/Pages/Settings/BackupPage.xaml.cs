@@ -72,11 +72,11 @@ namespace SPIXI
             {
                 string docpath = Config.spixiUserFolder;
                 string filepath = Path.Combine(docpath, Config.walletFile);
-                await DependencyService.Get<IFileOperations>().share(filepath, "spixi.wal");
+                await DependencyService.Get<IFileOperations>().share(filepath, "Backup Spixi Account");
             }
             catch (Exception ex)
             {
-                Logging.error("Exception fetching wallet: " + ex.ToString());
+                Logging.error("Exception backing up wallet: " + ex.ToString());
             }
         }
 
