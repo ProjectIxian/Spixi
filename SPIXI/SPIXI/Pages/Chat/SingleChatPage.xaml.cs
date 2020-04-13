@@ -499,7 +499,11 @@ namespace SPIXI
 
                     // Call webview methods on the main UI thread only
                     Utils.sendUiCommand(webView, "showContactRequest", "1");
-                    message.read = true;
+                    if (!message.read)
+                    {
+                        message.read = true;
+                        Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                    }
                     return;
                 }
             }
