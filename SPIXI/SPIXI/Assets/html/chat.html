@@ -5,9 +5,9 @@
 <head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
 
-    <title>IXIAN</title>
+    <title>Spixi</title>
     <script src="libs/twemoji/twemoji.min.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/lsxemojipicker/jquery.lsxemojipicker.css">
 
@@ -40,9 +40,9 @@
                     <div id="title" class="spixi-toolbar-chat-name"></div>
                     <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
-                <div class="col-2 spixi-center" style="padding-top: 10px;">
-                    <a href="ixian:call"><i class="fas fa-phone"></i></a>
-                </div>
+                <!--<div class="col-2 spixi-center" style="padding-top: 10px;">
+        <a href="ixian:call"><i class="fas fa-phone"></i></a>
+    </div>-->
             </div>
 
         </div>
@@ -96,22 +96,22 @@
         </div>
         <div id="chatattachbar">
             <div class="row ">
-                <div class="col-3 chat_attach_tab" id="ca_sendfile">
+                <div class="col-4 chat_attach_tab" id="ca_sendfile">
                     <i class="fa fa-file-alt chatattachsymbol"></i><br />
                     Send File
                 </div>
-                <div class="col-3 chat_attach_tab" id="ca_request">
+                <div class="col-4 chat_attach_tab" id="ca_request">
                     <i class="fa fa-angle-double-down chatattachsymbol"></i><br />
                     Request Payment
                 </div>
-                <div class="col-3 chat_attach_tab" id="ca_send">
+                <div class="col-4 chat_attach_tab" id="ca_send">
                     <i class="fa fa-angle-double-up chatattachsymbol"></i><br />
                     Send Payment
                 </div>
-                <div class="col-3 chat_attach_tab" id="ca_app">
-                    <i class="fa fa-code chatattachsymbol"></i><br />
-                    Use App
-                </div>
+                <!--<div class="col-3 chat_attach_tab" id="ca_app">
+        <i class="fa fa-code chatattachsymbol"></i><br />
+        Use App
+    </div>-->
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
@@ -164,9 +164,9 @@
             location.href = "ixian:send";
         }
 
-        document.getElementById("ca_app").onclick = function () {
+        /*document.getElementById("ca_app").onclick = function () {
             document.getElementById("AppsMenu").style.display = "block";
-        }
+        }*/
 
         document.getElementById("ca_sendfile").onclick = function () {
             document.getElementById("chat_input").click();

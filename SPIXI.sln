@@ -90,6 +90,7 @@ Global
 		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|Any CPU.ActiveCfg = Release|iPhone
 		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|iPhone.ActiveCfg = Release|iPhone
 		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|iPhone.Build.0 = Release|iPhone
+		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|iPhone.Deploy.0 = Release|iPhone
 		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{E113D2C0-6445-4CE6-A535-55513BCAC96F}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
 		{004D6286-86B5-410F-85FE-E38522C0622B}.Ad-Hoc|Any CPU.ActiveCfg = Debug|Any CPU
