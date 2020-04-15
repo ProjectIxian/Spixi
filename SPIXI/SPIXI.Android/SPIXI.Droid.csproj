@@ -60,10 +60,14 @@
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidLinkMode>None</AndroidLinkMode>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore></AndroidSigningKeyStore>
-    <AndroidSigningStorePass></AndroidSigningStorePass>
-    <AndroidSigningKeyPass></AndroidSigningKeyPass>
-    <AndroidSigningKeyAlias></AndroidSigningKeyAlias>
+    <AndroidSigningKeyStore>
+    </AndroidSigningKeyStore>
+    <AndroidSigningStorePass>
+    </AndroidSigningStorePass>
+    <AndroidSigningKeyPass>
+    </AndroidSigningKeyPass>
+    <AndroidSigningKeyAlias>
+    </AndroidSigningKeyAlias>
     <AndroidDexTool>dx</AndroidDexTool>
   </PropertyGroup>
   <ItemGroup>
@@ -75,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Com.OneSignal">
-      <Version>3.7.3</Version>
+      <Version>3.8.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Compat">
       <Version>28.0.0.3</Version>
@@ -83,7 +87,7 @@
     <PackageReference Include="Xamarin.Android.Support.CustomTabs">
       <Version>28.0.0.3</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.396" />
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.617" />
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="28.0.0.3" />
     <PackageReference Include="Xamarin.Android.Support.v4" Version="28.0.0.3" />
