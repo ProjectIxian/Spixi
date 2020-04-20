@@ -1,6 +1,9 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore.Meta;
+using SPIXI.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Xamarin.Forms;
 
 namespace SPIXI.VoIP
@@ -12,6 +15,7 @@ namespace SPIXI.VoIP
         public static Friend currentCallContact { get; private set; }
         public static bool currentCallAccepted { get; private set; }
         public static bool currentCallCalleeAccepted { get; private set; }
+        public static string currentCallCodec { get; private set; }
 
         static IAudioPlayer audioPlayer = null;
         static IAudioRecorder audioRecorder = null;
@@ -37,22 +41,46 @@ namespace SPIXI.VoIP
             currentCallContact = friend;
             currentCallCalleeAccepted = false;
             currentCallAccepted = true;
-            StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId);
+            currentCallCodec = null;
+
+            string codecs = String.Join("|", DependencyService.Get<ISpixiCodecs>().getSupportedAudioCodecs());
+
+            StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Calling " + friend.nickname + "...");
         }
 
-        public static void onReceivedCall(Friend friend, byte[] session_id)
+        public static void onReceivedCall(Friend friend, byte[] session_id, byte[] data)
         {
-            if (currentCallSessionId == null)
-            {
-                currentCallSessionId = session_id;
-                currentCallContact = friend;
-                currentCallCalleeAccepted = true;
-                currentCallAccepted = false;
-            }
-            else
+            if (currentCallSessionId != null)
             {
                 StreamProcessor.sendAppRequestReject(friend, session_id);
+                return;
+            }
+
+            currentCallSessionId = session_id;
+            currentCallContact = friend;
+            currentCallCalleeAccepted = true;
+            currentCallAccepted = false;
+            currentCallCodec = null;
+
+            var codec_service = DependencyService.Get<ISpixiCodecs>();
+
+            string codecs_str = Encoding.UTF8.GetString(data);
+
+            string[] codecs = codecs_str.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var codec in codecs)
+            {
+                if (codec_service.isCodecSupported(codec))
+                {
+                    currentCallCodec = codec;
+                    break;
+                }
+            }
+            if (currentCallCodec == null)
+            {
+                Logging.error("Unsupported audio codecs: " + codecs_str);
+                endVoIPSession();
+                return;
             }
         }
 
@@ -90,6 +118,7 @@ namespace SPIXI.VoIP
             currentCallContact = null;
             currentCallCalleeAccepted = false;
             currentCallAccepted = false;
+            currentCallCodec = null;
         }
 
         public static void acceptCall(byte[] session_id)
@@ -98,12 +127,14 @@ namespace SPIXI.VoIP
             {
                 return;
             }
+
             if (currentCallAccepted)
             {
                 return;
             }
+
             currentCallAccepted = true;
-            StreamProcessor.sendAppRequestAccept(currentCallContact, session_id);
+            StreamProcessor.sendAppRequestAccept(currentCallContact, session_id, Encoding.UTF8.GetBytes(currentCallCodec));
             startVoIPSession();
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In-call with " + currentCallContact.nickname + ".");
         }
@@ -114,10 +145,13 @@ namespace SPIXI.VoIP
             {
                 return;
             }
+
             if(currentCallCalleeAccepted)
             {
                 return;
             }
+
+            currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In-call with " + currentCallContact.nickname + ".");

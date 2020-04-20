@@ -1270,12 +1270,12 @@ namespace SPIXI
             app_page.networkDataReceive(sender_address, app_data.data);
         }
 
-        public static void sendAppRequest(Friend friend, string app_id, byte[] session_id)
+        public static void sendAppRequest(Friend friend, string app_id, byte[] session_id, byte[] data)
         {
             // TODO use channels and drop SpixiAppData
             SpixiMessage spixi_msg = new SpixiMessage();
             spixi_msg.type = SpixiMessageCode.appRequest;
-            spixi_msg.data = new SpixiAppData(session_id, Encoding.UTF8.GetBytes(app_id)).getBytes();
+            spixi_msg.data = new SpixiAppData(session_id, data, app_id).getBytes();
 
             StreamMessage new_msg = new StreamMessage();
             new_msg.type = StreamMessageCode.data;
