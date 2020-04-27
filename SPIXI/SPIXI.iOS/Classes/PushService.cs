@@ -1,10 +1,6 @@
 ﻿using SPIXI.Interfaces;
 using Xamarin.Forms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Foundation;
 using UIKit;
 using Com.OneSignal;
@@ -23,6 +19,7 @@ public class PushService_iOS : IPushService
             .HandleNotificationReceived(handleNotificationReceived)
             .HandleNotificationOpened(handleNotificationOpened)
             .EndInit();
+        OneSignal.Current.SetLocationShared(false);
     }
 
     public void setTag(string tag)

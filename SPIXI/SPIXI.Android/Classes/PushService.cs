@@ -11,7 +11,6 @@ using Android.Graphics;
 using Com.OneSignal.Abstractions;
 using SPIXI;
 using IXICore.Meta;
-using System.Threading;
 using System;
 
 [assembly: Dependency(typeof(PushService_Android))]
@@ -29,16 +28,14 @@ public class PushService_Android : IPushService
     public const string TitleKey = "title";
     public const string MessageKey = "message";
 
-    private static PushService_Android instance = null;
-
     public void initialize()
     {
-        instance = this;
         OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
             .HandleNotificationReceived(handleNotificationReceived)
             .HandleNotificationOpened(handleNotificationOpened)
             .EndInit();
+        OneSignal.Current.SetLocationShared(false);
     }
 
     public void setTag(string tag)
