@@ -1,12 +1,8 @@
 ﻿using Android.Media;
 using IXICore.Meta;
-using SPIXI;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayerAndroid))]
@@ -38,6 +34,7 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         lock (pendingFrames)
         {
             pendingFrames.Clear();
+            availableBuffers.Clear();
         }
 
         Encoding encoding = Encoding.Pcm16bit;
@@ -81,7 +78,7 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
                 audioDecoder = MediaCodec.CreateDecoderByType(MediaFormat.MimetypeAudioAmrWb);
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
-                format.SetInteger(MediaFormat.KeyBitRate, 6600);
+                format.SetInteger(MediaFormat.KeyBitRate, 8850);
                 break;
 
             case "ilbc":
@@ -99,22 +96,21 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
     public int write(byte[] audio_data, int offset_in_bytes, int size_in_bytes)
     {
-        if (audioPlayer != null)
+        if (audioPlayer != null && running)
         {
             lock (pendingFrames)
             {
-                Console.WriteLine("Received encoded bytes: " + audio_data.Length);
-
-                if(pendingFrames.Count > 50)
+                if(pendingFrames.Count > 5)
                 {
                     pendingFrames.RemoveAt(0);
                 }
 
                 pendingFrames.Add(audio_data);
 
-                if (availableBuffers.Count > 0)
+                while (availableBuffers.Count > 0 && pendingFrames.Count > 0)
                 {
-                    OnInputBufferAvailable(null, availableBuffers[0]);
+                    decode(availableBuffers[0], pendingFrames[0]);
+                    pendingFrames.RemoveAt(0);
                     availableBuffers.RemoveAt(0);
                 }
 
@@ -124,19 +120,14 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         return 0;
     }
 
-    public void pause()
-    {
-        if (audioPlayer == null)
-        {
-            audioPlayer.Pause();
-        }
-    }
-
     public void stop()
     {
+        running = false;
+
         lock (pendingFrames)
         {
             pendingFrames.Clear();
+            availableBuffers.Clear();
         }
 
         if (audioPlayer != null)
@@ -154,8 +145,6 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
             audioDecoder.Dispose();
             audioDecoder = null;
         }
-        
-        running = false;
     }
 
     public new void Dispose()
@@ -174,32 +163,20 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         Logging.error("Error occured in AudioPlayerAndroid callback: " + e);
     }
 
-    public override void OnInputBufferAvailable(MediaCodec codec, int index)
+    private void decode(int buffer_index, byte[] data)
     {
-        byte[] data = null;
-        lock (pendingFrames)
+        if(!running)
         {
-            if (pendingFrames.Count == 0)
-            {
-                availableBuffers.Add(index);
-                return;
-            }
-
-            data = pendingFrames[0];
-            pendingFrames.RemoveAt(0);
+            return;
         }
-
-        int bytes_processed = 0;
         try
         {
-            var ib = audioDecoder.GetInputBuffer(index);
+            var ib = audioDecoder.GetInputBuffer(buffer_index);
             ib.Clear();
 
             ib.Put(data);
 
-            audioDecoder.QueueInputBuffer(index, 0, data.Length, 0, 0);
-
-            bytes_processed += data.Length;
+            audioDecoder.QueueInputBuffer(buffer_index, 0, data.Length, 0, 0);
         }
         catch (Exception e)
         {
@@ -207,27 +184,36 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         }
     }
 
+    public override void OnInputBufferAvailable(MediaCodec codec, int index)
+    {
+        if (!running)
+        {
+            return;
+        }
+        lock (pendingFrames)
+        {
+            availableBuffers.Add(index);
+        }
+    }
+
     public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
     {
+        if (!running)
+        {
+            return;
+        }
         var ob = audioDecoder.GetOutputBuffer(index);
 
         ob.Position(info.Offset);
         ob.Limit(info.Offset + info.Size);
 
-        byte[] encoded_data = new byte[info.Size];
-        ob.Get(encoded_data);
+        byte[] decoded_data = new byte[info.Size];
+        ob.Get(decoded_data);
 
-        Console.WriteLine("Decoded bytes: " + encoded_data.Length);
-
-        if (audioPlayer.Write(encoded_data, 0, encoded_data.Length) == 0)
+        if (audioPlayer.Write(decoded_data, 0, decoded_data.Length) == 0)
         {
             // TODO drop frames
-            return;
         }
-
-        // TODO implement frame skipping for audioPlayer - this will probably be handled by the custom codec wrapper
-        //((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(VoIPManager.currentCallSessionId, "pos: " + audioPlayer.PlaybackHeadPosition + " uc: " + audioPlayer.UnderrunCount);
-        audioPlayer.Write(encoded_data, 0, encoded_data.Length);
 
         audioDecoder.ReleaseOutputBuffer(index, false);
     }

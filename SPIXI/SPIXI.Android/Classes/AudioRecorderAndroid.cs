@@ -2,7 +2,6 @@
 using IXICore.Meta;
 using SPIXI.VoIP;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -18,6 +17,10 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
     bool running = false;
 
     byte[] buffer = null;
+
+
+    byte[] outputBuffer = null;
+    int outputBufferFrameCount = 0;
 
 
     public AudioRecorderAndroid()
@@ -52,7 +55,7 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
                 audioEncoder = MediaCodec.CreateEncoderByType(MediaFormat.MimetypeAudioAmrWb);
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
-                format.SetInteger(MediaFormat.KeyBitRate, 6600);
+                format.SetInteger(MediaFormat.KeyBitRate, 8850);
                 break;
 
             case "ilbc":
@@ -89,6 +92,8 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
     private void cleanUp()
     {
+        running = false;
+
         if (audioEncoder != null)
         {
             audioEncoder.Stop();
@@ -106,8 +111,14 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         }
 
         buffer = null;
-
-        running = false;
+        if (outputBuffer != null)
+        {
+            lock (outputBuffer)
+            {
+                outputBuffer = null;
+                outputBufferFrameCount = 0;
+            }
+        }
     }
 
     public void stop()
@@ -138,12 +149,19 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
     public override void OnInputBufferAvailable(MediaCodec codec, int index)
     {
+        if(!running)
+        {
+            return;
+        }
         try
         {
             int num_bytes = 0;
             if (audioRecorder != null)
             {
-                num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
+                num_bytes = audioRecorder.Read(buffer, 0, buffer.Length, 0);
+            }else
+            {
+                return;
             }
 
             var ib = audioEncoder.GetInputBuffer(index);
@@ -161,22 +179,44 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
     public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
     {
+        if (!running)
+        {
+            return;
+        }
         var ob = audioEncoder.GetOutputBuffer(index);
 
         ob.Position(info.Offset);
         ob.Limit(info.Offset + info.Size);
 
-        byte[] encoded_data = new byte[info.Size];
-        ob.Get(encoded_data);
 
-        Console.WriteLine("Sending encoded bytes: " + encoded_data.Length);
-
-        Task.Run(() =>
+        if (outputBuffer == null)
         {
-            OnSoundDataReceived(encoded_data);
-        });
+            outputBuffer = new byte[info.Size * 10];
+            outputBufferFrameCount = 0;
+        }
 
-        audioEncoder.ReleaseOutputBuffer(index, false);
+        byte[] data_to_send = null;
+
+        lock (outputBuffer)
+        {
+            ob.Get(outputBuffer, outputBufferFrameCount * info.Size, info.Size);
+            audioEncoder.ReleaseOutputBuffer(index, false);
+
+            outputBufferFrameCount++;
+
+            if (outputBufferFrameCount == 10)
+            {
+                data_to_send = (byte[])outputBuffer.Clone();
+                outputBufferFrameCount = 0;
+            }
+        }
+        if (data_to_send != null)
+        {
+            Task.Run(() =>
+            {
+                OnSoundDataReceived(data_to_send);
+            });
+        }
     }
 
     public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)
