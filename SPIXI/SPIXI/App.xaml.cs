@@ -11,6 +11,9 @@ namespace SPIXI
 {
     public partial class App : Application
 	{
+
+        public static bool proximityNear = false;
+
         private static App _singletonInstance;
 
         public static App Instance(bool force_redraw = false)

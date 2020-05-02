@@ -8,17 +8,14 @@ using Plugin.LocalNotifications;
 using Xamarin.Forms;
 using SPIXI.Interfaces;
 using Android.Views;
-using Android.Support.V4.App;
-using Android;
-using System;
-using IXICore.Meta;
+using SPIXI.Droid.Classes;
 
 namespace SPIXI.Droid
 {
     [Activity(Label = "SPIXI", Icon = "@mipmap/ic_launcher", RoundIcon = "@mipmap/ic_round_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        int recordAudioPermissionRequest = 1;
+        private ProximitySensor proximitySensor = null;
 
         // Field, property, and method for Picture Picker
         public static readonly int PickImageId = 1000;
@@ -58,23 +55,14 @@ namespace SPIXI.Droid
             // CLear notifications
             DependencyService.Get<IPushService>().clearNotifications();
 
+            proximitySensor = new ProximitySensor();
+
             LoadApplication(App.Instance());
 
             this.Window.ClearFlags(WindowManagerFlags.Fullscreen);
 
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
-
-            try
-            {
-                if (ActivityCompat.ShouldShowRequestPermissionRationale(this, Manifest.Permission.RecordAudio))
-                {
-                    RequestPermissions(new string[] { Manifest.Permission.RecordAudio }, recordAudioPermissionRequest);
-                }
-            }catch(Exception e)
-            {
-                Logging.error("Exception occured while requesting permissions for audio recording: " + e);
-            }
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -135,6 +123,24 @@ namespace SPIXI.Droid
 
             // CLear notifications
             DependencyService.Get<IPushService>().clearNotifications();
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            if (proximitySensor != null)
+            {
+                proximitySensor.OnPause();
+            }
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+            if (proximitySensor != null)
+            {
+                proximitySensor.OnResume();
+            }
         }
     }
 }

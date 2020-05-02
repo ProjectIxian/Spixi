@@ -173,8 +173,11 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:hangUp:"))
             {
-                string session_id = current_url.Substring("ixian:hangUp:".Length);
-                VoIPManager.hangupCall(Crypto.stringToHash(session_id));
+                if (!App.proximityNear)
+                {
+                    string session_id = current_url.Substring("ixian:hangUp:".Length);
+                    VoIPManager.hangupCall(Crypto.stringToHash(session_id));
+                }
             }
             else
             {

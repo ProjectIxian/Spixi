@@ -37,6 +37,8 @@ namespace SPIXI.VoIP
                 return;
             }
 
+            DependencyService.Get<ISpixiPermissions>().requestAudioRecordingPermissions();
+
             currentCallSessionId = Guid.NewGuid().ToByteArray();
             currentCallContact = friend;
             currentCallCalleeAccepted = false;
@@ -140,6 +142,8 @@ namespace SPIXI.VoIP
             {
                 return;
             }
+
+            DependencyService.Get<ISpixiPermissions>().requestAudioRecordingPermissions();
 
             currentCallAccepted = true;
             StreamProcessor.sendAppRequestAccept(currentCallContact, session_id, Encoding.UTF8.GetBytes(currentCallCodec));

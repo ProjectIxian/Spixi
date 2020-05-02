@@ -105,6 +105,7 @@
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\PushService.cs" />
     <Compile Include="Classes\SpixiCodecInfo.cs" />
+    <Compile Include="Classes\SpixiPermissions.cs" />
     <Compile Include="Classes\SpixiWebViewRenderer.cs" />
     <Compile Include="Classes\SystemAlert.cs" />
     <Compile Include="MainWindow.xaml.cs">
