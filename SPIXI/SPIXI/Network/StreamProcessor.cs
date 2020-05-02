@@ -1385,8 +1385,8 @@ namespace SPIXI
                 Logging.error("App with session id: {0} already exists.", Crypto.hashToString(app_data.sessionId));
                 return;
             }
-            
-            string app_id = Encoding.UTF8.GetString(app_data.data);
+
+            string app_id = app_data.appId;
 
             app_page = am.getAppPage(sender_address, app_id);
             if (app_page != null)
@@ -1405,7 +1405,7 @@ namespace SPIXI
                 {
                     if (app_id == "spixi.voip")
                     {
-                        VoIPManager.onReceivedCall(friend, app_data.sessionId);
+                        VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data);
                         Node.refreshAppRequests = true;
                         return;
                     }else

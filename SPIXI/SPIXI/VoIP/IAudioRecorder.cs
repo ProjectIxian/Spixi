@@ -9,7 +9,7 @@ namespace SPIXI.VoIP
     {
         void setOnSoundDataReceived(Action<byte[]> on_sound_data_received);
 
-        void start();
+        void start(string codec);
 
         void stop();
 

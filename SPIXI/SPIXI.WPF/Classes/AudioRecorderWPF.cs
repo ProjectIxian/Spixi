@@ -22,7 +22,7 @@ public class AudioRecorderWPF : IAudioRecorder
 
     }
 
-    public void start()
+    public void start(string codec)
     {
         if (running)
         {

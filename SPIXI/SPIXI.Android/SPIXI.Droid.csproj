@@ -33,8 +33,9 @@
     <BundleAssemblies>false</BundleAssemblies>
     <AndroidSupportedAbis />
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
-    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+    <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <AndroidDexTool>dx</AndroidDexTool>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -114,6 +115,7 @@
     <Compile Include="Classes\PicturePickerImplementation.cs" />
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\PushService.cs" />
+    <Compile Include="Classes\SpixiCodecInfo.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\SpixiWebviewRenderer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

@@ -1,19 +1,21 @@
-﻿using System.Collections.Generic;
-using SPIXI.Droid.Classes;
-using SPIXI.VoIP;
+﻿using SPIXI.VoIP;
+using SPIXI.WPF.Classes;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(SpixiCodecs))]
-namespace SPIXI.Droid.Classes
+[assembly: Dependency(typeof(SpixiCodecInfo))]
+namespace SPIXI.WPF.Classes
 {
-    class SpixiCodecs : ISpixiCodecs
+    class SpixiCodecInfo : ISpixiCodecInfo
     {
+        string[] codecMap = new string[] { "amrwb", "amrnb" };
+
         public List<string> getSupportedAudioCodecs()
         {
             // TODO implement
             var cl = new List<string>();
-            cl.Add("AMR-NB");
-            cl.Add("PCM");
+            cl.Add("amrwb");
+            cl.Add("amrnb");
             return cl;
         }
 
@@ -22,9 +24,9 @@ namespace SPIXI.Droid.Classes
             // TODO implement
             switch (codec_name)
             {
-                case "AMR-NB":
+                case "amrwb":
                     return true;
-                case "PCM":
+                case "amrnb":
                     return true;
             }
             return false;

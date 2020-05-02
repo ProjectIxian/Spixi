@@ -7,7 +7,7 @@ namespace SPIXI.VoIP
 {
     public interface IAudioPlayer : IDisposable
     {
-        void start();
+        void start(string codec);
 
         void stop();
 

@@ -28,7 +28,7 @@ public class AudioPlayeriOS : IAudioPlayer
 
     }
 
-    public void start()
+    public void start(string codec)
     {
         if (running)
         {

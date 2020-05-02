@@ -454,7 +454,7 @@ namespace SPIXI
                 Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
             });
 
-            StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId);
+            StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
         }
 
         private void onEntryCompleted(object sender, EventArgs e)

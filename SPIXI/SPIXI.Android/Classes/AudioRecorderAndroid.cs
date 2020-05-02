@@ -8,33 +8,68 @@ using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioRecorderAndroid))]
 
-public class AudioRecorderAndroid : IAudioRecorder
+public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 {
     private Action<byte[]> OnSoundDataReceived;
 
     private AudioRecord audioRecorder = null;
+    private MediaCodec audioEncoder = null;
 
-    bool stopRecording = false;
     bool running = false;
 
-    int bufferSize = 8192;
+    byte[] buffer = null;
+
 
     public AudioRecorderAndroid()
     {
 
     }
 
-    public void start()
+    public void start(string codec)
     {
-        if(running)
+        if (running)
         {
             Logging.warn("Audio recorder is already running.");
             return;
         }
-        stopRecording = false;
         running = true;
 
-        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, Encoding.Pcm16bit) * 10;
+        Encoding encoding = Encoding.Pcm16bit;
+
+        MediaFormat format = new MediaFormat();
+
+        switch (codec)
+        {
+            case "amrnb":
+            case "amrwb":
+                audioEncoder = MediaCodec.CreateEncoderByType(MediaFormat.MimetypeAudioAmrNb);
+                format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrNb);
+                format.SetInteger(MediaFormat.KeySampleRate, 8000);
+                format.SetInteger(MediaFormat.KeyBitRate, 7950);
+                break;
+
+            case "amrwb1":
+                audioEncoder = MediaCodec.CreateEncoderByType(MediaFormat.MimetypeAudioAmrWb);
+                format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
+                format.SetInteger(MediaFormat.KeySampleRate, 16000);
+                format.SetInteger(MediaFormat.KeyBitRate, 6600);
+                break;
+
+            case "ilbc":
+                break;
+
+            default:
+                throw new Exception("Unknown recorder codec selected " + codec);
+        }
+
+        int buffer_size = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding);
+        buffer = new byte[buffer_size];
+
+        format.SetInteger(MediaFormat.KeyChannelCount, 1);
+        format.SetInteger(MediaFormat.KeyMaxInputSize, buffer_size);
+        audioEncoder.SetCallback(this);
+        audioEncoder.Configure(format, null, null, MediaCodecConfigFlags.Encode);
+        audioEncoder.Start();
 
         audioRecorder = new AudioRecord(
             // Hardware source of recording.
@@ -44,55 +79,45 @@ public class AudioRecorderAndroid : IAudioRecorder
             // Mono or stereo
             ChannelIn.Mono,
             // Audio encoding
-            Encoding.Pcm16bit,
+            encoding,
             // Length of the audio clip.
-            bufferSize
+            buffer_size
         );
 
-
-        audioRecorder.StartRecording();
-
-        Thread recordingThread = new Thread(readLoop);
-        recordingThread.Start();
+        audioRecorder.StartRecording(); 
     }
 
-    void readLoop()
+    private void cleanUp()
     {
-        byte[] buffer = new byte[bufferSize];
-        while (!stopRecording)
+        if (audioEncoder != null)
         {
-            try
-            {
-                int num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
-
-                byte[] data_to_send = new byte[num_bytes];
-                Array.Copy(buffer, data_to_send, num_bytes);
-
-                Task.Run(() =>
-                {
-                    OnSoundDataReceived(data_to_send);
-                });
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception occured while recording audio stream: " + e);
-                break;
-            }
-            Thread.Sleep(10);
+            audioEncoder.Stop();
+            audioEncoder.Release();
+            audioEncoder.Dispose();
+            audioEncoder = null;
         }
-        audioRecorder.Stop();
-        audioRecorder.Release();
-        audioRecorder.Dispose();
-        audioRecorder = null;
+
+        if (audioRecorder != null)
+        {
+            audioRecorder.Stop();
+            audioRecorder.Release();
+            audioRecorder.Dispose();
+            audioRecorder = null;
+        }
+
+        buffer = null;
+
         running = false;
     }
+
     public void stop()
     {
-        stopRecording = true;
+        cleanUp();
     }
 
-    public void Dispose()
+    public new void Dispose()
     {
+        base.Dispose();
         stop();
     }
 
@@ -104,5 +129,57 @@ public class AudioRecorderAndroid : IAudioRecorder
     public void setOnSoundDataReceived(Action<byte[]> on_sound_data_received)
     {
         OnSoundDataReceived = on_sound_data_received;
+    }
+
+    public override void OnError(MediaCodec codec, MediaCodec.CodecException e)
+    {
+        Logging.error("Error occured in AudioRecorderAndroid callback: " + e);
+    }
+
+    public override void OnInputBufferAvailable(MediaCodec codec, int index)
+    {
+        try
+        {
+            int num_bytes = 0;
+            if (audioRecorder != null)
+            {
+                num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
+            }
+
+            var ib = audioEncoder.GetInputBuffer(index);
+            ib.Clear();
+
+            ib.Put(buffer);
+
+            audioEncoder.QueueInputBuffer(index, 0, num_bytes, 0, 0);
+        }
+        catch (Exception e)
+        {
+            Logging.error("Exception occured while recording audio stream: " + e);
+        }
+    }
+
+    public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
+    {
+        var ob = audioEncoder.GetOutputBuffer(index);
+
+        ob.Position(info.Offset);
+        ob.Limit(info.Offset + info.Size);
+
+        byte[] encoded_data = new byte[info.Size];
+        ob.Get(encoded_data);
+
+        Console.WriteLine("Sending encoded bytes: " + encoded_data.Length);
+
+        Task.Run(() =>
+        {
+            OnSoundDataReceived(encoded_data);
+        });
+
+        audioEncoder.ReleaseOutputBuffer(index, false);
+    }
+
+    public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)
+    {
     }
 }

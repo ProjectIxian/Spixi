@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SPIXI.VoIP
 {
-    public interface ISpixiCodecs
+    public interface ISpixiCodecInfo
     {
         List<string> getSupportedAudioCodecs();
 

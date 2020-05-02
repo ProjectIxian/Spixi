@@ -43,7 +43,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = true;
             currentCallCodec = null;
 
-            string codecs = String.Join("|", DependencyService.Get<ISpixiCodecs>().getSupportedAudioCodecs());
+            string codecs = String.Join("|", DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs());
 
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Calling " + friend.nickname + "...");
@@ -63,7 +63,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = false;
             currentCallCodec = null;
 
-            var codec_service = DependencyService.Get<ISpixiCodecs>();
+            var codec_service = DependencyService.Get<ISpixiCodecInfo>();
 
             string codecs_str = Encoding.UTF8.GetString(data);
 
@@ -86,17 +86,25 @@ namespace SPIXI.VoIP
 
         private static void startVoIPSession()
         {
-            DependencyService.Get<IPowerManager>().AquireLock("partial");
-            DependencyService.Get<IPowerManager>().AquireLock("wifi");
+            try
+            {
+                DependencyService.Get<IPowerManager>().AquireLock("partial");
+                DependencyService.Get<IPowerManager>().AquireLock("wifi");
 
-            audioPlayer = DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
-            audioPlayer.start();
+                audioPlayer = DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
+                audioPlayer.start(currentCallCodec);
 
-            audioRecorder = DependencyService.Get<IAudioRecorder>(DependencyFetchTarget.NewInstance);
-            audioRecorder.start();
-            audioRecorder.setOnSoundDataReceived((data) => {
-                StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data);
-            });
+                audioRecorder = DependencyService.Get<IAudioRecorder>(DependencyFetchTarget.NewInstance);
+                audioRecorder.start(currentCallCodec);
+                audioRecorder.setOnSoundDataReceived((data) =>
+                {
+                    StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data);
+                });
+            }catch(Exception e)
+            {
+                Logging.error("Exception occured while starting VoIP session: " + e);
+                endVoIPSession();
+            }
         }
 
         private static void endVoIPSession()

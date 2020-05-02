@@ -22,7 +22,7 @@ public class AudioRecorderiOS : IAudioRecorder
 
     }
 
-    public void start()
+    public void start(string codec)
     {
         if (running)
         {
