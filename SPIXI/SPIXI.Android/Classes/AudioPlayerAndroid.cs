@@ -17,6 +17,8 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
     List<byte[]> pendingFrames = new List<byte[]>();
     List<int> availableBuffers = new List<int>();
 
+    int bufferSize = 0;
+
     public AudioPlayerAndroid()
     {
     }
@@ -37,6 +39,12 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
             availableBuffers.Clear();
         }
 
+        initPlayer();
+        initDecoder(codec);
+    }
+
+    private void initPlayer()
+    {
         Encoding encoding = Encoding.Pcm16bit;
 
         // Prepare player
@@ -53,42 +61,43 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
                                         .SetEncoding(encoding)
                                         .Build();
 
-        int buffer_size = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding);
-        Console.WriteLine("Playback buffer size is " + buffer_size);
+        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding);
+        Console.WriteLine("Playback buffer size is " + bufferSize);
 
-        audioPlayer = new AudioTrack(aa, af, buffer_size, AudioTrackMode.Stream, 0);
+        audioPlayer = new AudioTrack(aa, af, bufferSize * 5, AudioTrackMode.Stream, 0);
 
         audioPlayer.SetVolume(0.8f);
 
         audioPlayer.Play();
 
+
+    }
+
+    private void initDecoder(string codec)
+    {
         MediaFormat format = new MediaFormat();
 
         switch (codec)
         {
             case "amrnb":
-            case "amrwb":
                 audioDecoder = MediaCodec.CreateDecoderByType(MediaFormat.MimetypeAudioAmrNb);
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrNb);
                 format.SetInteger(MediaFormat.KeySampleRate, 8000);
                 format.SetInteger(MediaFormat.KeyBitRate, 7950);
                 break;
 
-            case "amrwb1":
+            case "amrwb":
                 audioDecoder = MediaCodec.CreateDecoderByType(MediaFormat.MimetypeAudioAmrWb);
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
-                format.SetInteger(MediaFormat.KeyBitRate, 8850);
-                break;
-
-            case "ilbc":
+                format.SetInteger(MediaFormat.KeyBitRate, 18250);
                 break;
 
             default:
                 throw new Exception("Unknown playback codec selected " + codec);
         }
         format.SetInteger(MediaFormat.KeyChannelCount, 1);
-        format.SetInteger(MediaFormat.KeyMaxInputSize, buffer_size);
+        format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
         audioDecoder.SetCallback(this);
         audioDecoder.Configure(format, null, null, MediaCodecConfigFlags.None);
         audioDecoder.Start();
@@ -132,25 +141,42 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
         if (audioPlayer != null)
         {
-            audioPlayer.Stop();
-            audioPlayer.Release();
+            try
+            {
+                audioPlayer.Stop();
+                audioPlayer.Release();
+            }
+            catch (Exception)
+            {
+
+            }
+
             audioPlayer.Dispose();
             audioPlayer = null;
         }
 
         if(audioDecoder != null)
         {
-            audioDecoder.Stop();
-            audioDecoder.Release();
+            try
+            {
+                audioDecoder.Stop();
+                audioDecoder.Release();
+            }
+            catch (Exception)
+            {
+
+            }
             audioDecoder.Dispose();
             audioDecoder = null;
         }
+
+        bufferSize = 0;
     }
 
     public new void Dispose()
     {
-        base.Dispose();
         stop();
+        base.Dispose();
     }
 
     public bool isRunning()
@@ -202,20 +228,27 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         {
             return;
         }
-        var ob = audioDecoder.GetOutputBuffer(index);
-
-        ob.Position(info.Offset);
-        ob.Limit(info.Offset + info.Size);
-
-        byte[] decoded_data = new byte[info.Size];
-        ob.Get(decoded_data);
-
-        if (audioPlayer.Write(decoded_data, 0, decoded_data.Length) == 0)
+        try
         {
-            // TODO drop frames
-        }
+            var ob = audioDecoder.GetOutputBuffer(index);
 
-        audioDecoder.ReleaseOutputBuffer(index, false);
+            ob.Position(info.Offset);
+            ob.Limit(info.Offset + info.Size);
+
+            byte[] decoded_data = new byte[info.Size];
+            ob.Get(decoded_data);
+
+            if (audioPlayer.Write(decoded_data, 0, decoded_data.Length) == 0)
+            {
+                // TODO drop frames
+            }
+
+            audioDecoder.ReleaseOutputBuffer(index, false);
+        }
+        catch (Exception e)
+        {
+            Logging.error("Exception occured while playing audio stream: " + e);
+        }
     }
 
     public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)

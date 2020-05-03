@@ -141,7 +141,6 @@ function displayCallBar(sessionId, text)
 
 function hangUp(sessionId)
 {
-    hideCallBar();
     location.href = 'ixian:hangUp:' + sessionId;
 }
 
