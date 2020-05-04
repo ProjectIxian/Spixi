@@ -563,16 +563,23 @@ namespace SPIXI
                     }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                     {
-                        if(friend.approved)
+                        if (friend.approved)
                         {
                             excerpt = "Contact Accepted";
-                        }else
+                        }
+                        else
                         {
                             excerpt = "Contact Request";
                         }
                     }
                     else if (lastmsg.type == FriendMessageType.fileHeader)
+                    {
                         excerpt = "File";
+                    }
+                    else if (lastmsg.localSender)
+                    {
+                        excerpt = "You: " + excerpt;
+                    }
 
                     string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                     if(avatar == null)
