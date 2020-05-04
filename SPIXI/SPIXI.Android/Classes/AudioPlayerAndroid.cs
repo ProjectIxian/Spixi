@@ -1,5 +1,7 @@
-﻿using Android.Media;
+﻿using Android.Content;
+using Android.Media;
 using IXICore.Meta;
+using SPIXI.Droid;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
@@ -66,7 +68,9 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
         audioPlayer = new AudioTrack(aa, af, bufferSize * 5, AudioTrackMode.Stream, 0);
 
-        audioPlayer.SetVolume(0.8f);
+        // TODO implement dynamic volume control
+        AudioManager am = (AudioManager) MainActivity.Instance.GetSystemService(Context.AudioService);
+        audioPlayer.SetVolume(am.GetStreamVolume(Stream.VoiceCall));
 
         audioPlayer.Play();
 
