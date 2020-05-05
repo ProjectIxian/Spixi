@@ -448,7 +448,19 @@ namespace SPIXI
                 // Go through each friend and check for the pubkey in the PL
                 foreach (Friend friend in friends)
                 {
-                    if (PresenceList.getPresenceByAddress(friend.walletAddress) != null)
+                    Presence presence = null;
+
+                    try
+                    {
+                        presence = PresenceList.getPresenceByAddress(friend.walletAddress);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Presence Error {0}", e.Message);
+                        presence = null;
+                    }
+
+                    if (presence != null)
                     {
                         if(friend.online == false)
                         {
