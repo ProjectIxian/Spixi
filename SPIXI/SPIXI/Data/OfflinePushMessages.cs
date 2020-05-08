@@ -45,12 +45,6 @@ namespace SPIXI
                     string htmlCode = client.UploadString(URI, parameters);
                     if (htmlCode.Equals("OK"))
                     {
-                        if (msg.id.Length == 1 && msg.id[0] >= f.handshakeStatus)
-                        {
-                            f.handshakePushed = true;
-
-                            FriendList.saveToStorage();
-                        }
                         return true;
                     }
                 }catch(Exception e)

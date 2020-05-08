@@ -12,12 +12,14 @@ namespace SPIXI.Network
         public StreamMessage streamMessage = null;
         public bool sendToServer = false;
         public bool sendPushNotification = false;
+        public bool removeAfterSending = false;
 
-        public PendingMessage(StreamMessage stream_message, bool send_to_server, bool send_push_notification)
+        public PendingMessage(StreamMessage stream_message, bool send_to_server, bool send_push_notification, bool remove_after_sending)
         {
             streamMessage = stream_message;
             sendToServer = send_to_server;
             sendPushNotification = send_push_notification;
+            removeAfterSending = remove_after_sending;
         }
 
         public PendingMessage(string file_path)
@@ -40,11 +42,18 @@ namespace SPIXI.Network
 
                         sendToServer = reader.ReadBoolean();
                         sendPushNotification = reader.ReadBoolean();
+                        try
+                        {
+                            removeAfterSending = reader.ReadBoolean();
+                        }catch(Exception)
+                        {
+                            removeAfterSending = true;
+                        }
                     }
                     catch (Exception e)
                     {
                         Logging.error("Cannot create pending message from bytes: {0}", e);
-                        throw;
+                        throw e;
                     }
                 }
             }
@@ -62,6 +71,7 @@ namespace SPIXI.Network
 
                     writer.Write(sendToServer);
                     writer.Write(sendPushNotification);
+                    writer.Write(removeAfterSending);
                 }
                 return m.ToArray();
             }

@@ -45,9 +45,9 @@ namespace SPIXI
         }
 
         // Send an encrypted message using the S2 network
-        public static void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages = true, bool send_to_server = true, bool send_push_notification = true)
+        public static void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages = true, bool send_to_server = true, bool send_push_notification = true, bool remove_after_sending = false)
         {
-            pendingMessageProcessor.sendMessage(friend, msg, add_to_pending_messages, send_to_server, send_push_notification);
+            pendingMessageProcessor.sendMessage(friend, msg, add_to_pending_messages, send_to_server, send_push_notification, remove_after_sending);
         }
 
 
@@ -652,7 +652,7 @@ namespace SPIXI
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-            sendMessage(friend, msg_received, true, true, false);
+            sendMessage(friend, msg_received, true, true, false, true);
         }
 
         private static void handlePubKey(byte[] sender_wallet, byte[] pub_key)

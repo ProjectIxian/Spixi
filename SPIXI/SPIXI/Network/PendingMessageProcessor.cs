@@ -56,8 +56,15 @@ namespace SPIXI.Network
                         var file_arr = Directory.GetFiles(dir_path).OrderBy(x => x);
                         foreach (string file_path in file_arr)
                         {
-                            PendingMessage pm = new PendingMessage(file_path);
-                            if (pr.messageQueue.Find(x => x.id.SequenceEqual(pm.streamMessage.id)) == null)
+                            PendingMessage pm = null;
+                            try
+                            {
+                                pm = new PendingMessage(file_path);
+                            }catch(Exception)
+                            {
+                                pm = null;
+                            }
+                            if (pm != null && pr.messageQueue.Find(x => x.id.SequenceEqual(pm.streamMessage.id)) == null)
                             {
                                 pr.messageQueue.Add(new PendingMessageHeader { id = pm.streamMessage.id, filePath = file_path, sendToServer = pm.sendToServer });
                             }
@@ -95,13 +102,14 @@ namespace SPIXI.Network
         {
             lock(pendingRecipients)
             {
-                List<PendingRecipient> recipients_to_remove = new List<PendingRecipient>();
-                foreach(PendingRecipient recipient in pendingRecipients)
+                List<PendingRecipient> tmp_pending_recipients = new List<PendingRecipient>(pendingRecipients);
+                foreach(PendingRecipient recipient in tmp_pending_recipients)
                 {
                     Friend friend = FriendList.getFriend(recipient.address);
                     if (friend == null)
                     {
-                        recipients_to_remove.Add(recipient);
+                        Directory.Delete(Path.Combine(storagePath, Base58Check.Base58CheckEncoding.EncodePlain(recipient.address)), true);
+                        pendingRecipients.Remove(recipient);
                         continue;
                     }
                     List<PendingMessageHeader> message_headers = null;
@@ -114,7 +122,8 @@ namespace SPIXI.Network
                     }
                     if(message_headers != null && message_headers.Count > 0)
                     {
-                        foreach(var message_header in message_headers)
+                        List<PendingMessageHeader> tmp_msg_headers = new List<PendingMessageHeader>(message_headers);
+                        foreach(var message_header in tmp_msg_headers)
                         {
                             bool sent = processMessage(friend, message_header.filePath);
                             if(message_header.sendToServer && !sent)
@@ -124,20 +133,14 @@ namespace SPIXI.Network
                         }
                     }
                 }
-
-                foreach(PendingRecipient recipient in recipients_to_remove)
-                {
-                    Directory.Delete(Path.Combine(storagePath, Base58Check.Base58CheckEncoding.EncodePlain(recipient.address)), true);
-                    pendingRecipients.Remove(recipient);
-                }
             }
         }
 
-        public void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages, bool send_to_server, bool send_push_notification)
+        public void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages, bool send_to_server, bool send_push_notification, bool remove_after_sending = false)
         {
             lock (pendingRecipients)
             {
-                PendingMessage pm = new PendingMessage(msg, send_to_server, send_push_notification);
+                PendingMessage pm = new PendingMessage(msg, send_to_server, send_push_notification, remove_after_sending);
                 PendingMessageHeader tmp_msg_header = getPendingMessageHeader(friend, msg.id);
                 if (tmp_msg_header != null)
                 {
@@ -232,6 +235,10 @@ namespace SPIXI.Network
                 {
                     StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                     sent = StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id);
+                    if(sent && pending_message.removeAfterSending)
+                    {
+                        removeMessage(friend, pending_message.streamMessage.id);
+                    }
                 }
             }
 
@@ -259,6 +266,10 @@ namespace SPIXI.Network
                         if (tmp_msg_header != null)
                         {
                             tmp_msg_header.sendToServer = false;
+                        }
+                        if (pending_message.removeAfterSending)
+                        {
+                            removeMessage(friend, pending_message.streamMessage.id);
                         }
                         return true;
                     }
