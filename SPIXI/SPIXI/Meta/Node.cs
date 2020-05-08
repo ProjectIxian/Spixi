@@ -136,7 +136,7 @@ namespace SPIXI.Meta
             NetworkQueue.start();
 
             // Prepare the stream processor
-            StreamProcessor.initialize();
+            StreamProcessor.initialize(Config.spixiUserFolder);
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();

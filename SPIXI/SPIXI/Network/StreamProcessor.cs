@@ -1,11 +1,9 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using IXICore.Utils;
 using SPIXI.CustomApps;
 using SPIXI.Meta;
 using SPIXI.Network;
-using SPIXI.Storage;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
@@ -15,27 +13,15 @@ using System.Text;
 using System.Threading;
 
 namespace SPIXI
-{
-    class OfflineMessage
-    {
-        public StreamMessage message = null;
-        public bool sendPushNotification = false;
-        public bool offlineAndServer = false;
-        public long timestamp = 0;
-    }
-    
+{    
     class StreamProcessor
     {
-        static List<OfflineMessage> offlineMessages = new List<OfflineMessage>(); // List that stores messages until receiving contact is online
-        private static Thread offlineMessagesThread; // Thread that checks the offline messages list for outstanding messages
-        private static bool continueRunning = false;
-
-        private static List<OfflineMessage> pendingMessages = new List<OfflineMessage>(); // List of pending messages that might need to be resent
-
         private static bool running = false;
 
+        private static PendingMessageProcessor pendingMessageProcessor = null;
+
         // Initialize the global stream processor
-        public static void initialize()
+        public static void initialize(string root_storage_path)
         {
             if (running)
             {
@@ -44,366 +30,24 @@ namespace SPIXI
 
             running = true;
 
-            continueRunning = true;
-
-            // Read the persistent offline messages
-            offlineMessages = Node.localStorage.readOfflineMessagesFile();
-
-            offlineMessagesThread = new Thread(streamProcessorLoop);
-            offlineMessagesThread.Start();
+            pendingMessageProcessor = new PendingMessageProcessor(root_storage_path);
         }
 
         // Uninitialize the global stream processor
         public static void uninitialize()
         {
             running = false;
-            continueRunning = false;
-        }
-
-        private static void streamProcessorLoop()
-        {
-            // Only check for offline messages when the loop is active
-            while (continueRunning)
+            if (pendingMessageProcessor != null)
             {
-                try
-                {
-                    sendOfflineMessages();
-                    sendPendingRequests();
-                    sendPendingMessages();
-                }catch(Exception e)
-                {
-                    Logging.error("Unknown exception occured in streamProcessorLoop: " + e);
-                }
-
-                // Wait 5 seconds before next round
-                Thread.Sleep(5000);
-            }
-        }
-
-        // Thread for checking offline message queue
-        private static void sendOfflineMessages()
-        {
-            List<OfflineMessage> cache = new List<OfflineMessage>();
-
-            bool writeToFile = false;
-            lock (offlineMessages)
-            {
-                if (offlineMessages.Count > 0)
-                {
-                    Logging.info("Sending {0} offline messages", offlineMessages.Count);
-                }
-                // Go through each message
-                foreach (OfflineMessage message in offlineMessages)
-                {
-                    try
-                    {
-                        // Extract the public key from the Presence List
-                        Friend f = FriendList.getFriend(message.message.recipient);
-                        if (f == null)
-                        {
-                            cache.Add(message);
-                            continue;
-                        }
-                        // Send the message
-                        if (sendMessage(f, message.message, false, message.sendPushNotification, true, false, false))
-                        {
-                            // Add the message to the removal cache
-                            cache.Add(message);
-                        }
-                    }catch(Exception e)
-                    {
-                        Logging.error("Exception occured while trying to send offline message {0}", e);
-                    }
-
-                }
-
-                // Check the removal cache for messages
-                foreach (OfflineMessage message in cache)
-                {
-                    writeToFile = true;
-                    offlineMessages.Remove(message);
-                }
-
-                // Finally, clear the removal cache
-                cache.Clear();
-
-                // Save changes to the offline messages file
-                if (writeToFile)
-                {
-                    Node.localStorage.writeOfflineMessagesFile(offlineMessages);
-                }
-            }
-        }
-
-        private static void sendPendingRequests()
-        {
-            lock(FriendList.friends)
-            {
-                List<Friend> friend_list = new List<Friend>();
-                if(Config.enablePushNotifications)
-                {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5);
-                }
-                else
-                {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5 && x.online);
-                }
-                foreach (var friend in friend_list)
-                {
-                    if(friend.handshakePushed)
-                    {
-                        continue;
-                    }
-                    switch(friend.handshakeStatus)
-                    {
-                        // Add friend request has been sent but no confirmation has been received
-                        case 0:
-                            if(friend.approved)
-                            {
-                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                                sendContactRequest(friend);
-                            }
-                            break;
-
-                        // Request has been accepted but no confirmation received, resend acceptance
-                        case 1:
-                            if(friend.approved && friend.aesKey != null)
-                            {
-                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                                sendAcceptAdd(friend, false);
-                            }
-                            break;
-
-                        // Acceptance has been received and the second encryption key was sent but no confirmation received, resend second key
-                        case 2:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            friend.sendKeys(2);
-                            break;
-
-                        // Nickname confirmation hasn't been received
-                        case 3:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            sendNickname(friend);
-                            break;
-
-                        // Avatar confirmation hasn't been received
-                        case 4:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            if (friend.online)
-                            {
-                                sendAvatar(friend);
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-
-        private static void sendPendingMessages()
-        {
-            List<OfflineMessage> cache = new List<OfflineMessage>();
-
-            lock (pendingMessages)
-            {
-                if (pendingMessages.Count > 0)
-                {
-                    Logging.info("Sending {0} pending messages", pendingMessages.Count);
-                }
-                // Go through each message
-                foreach (var entry in pendingMessages)
-                {
-                    try
-                    {
-                        OfflineMessage message = entry;
-                        if(message.timestamp + 5 < Clock.getTimestamp())
-                        {
-                            cache.Add(message);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.error("Exception occured while trying to send pending message {0}", e);
-                    }
-
-                }
-
-                // Check the removal cache for messages
-                foreach (OfflineMessage message in cache)
-                {
-                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(message.message.id) && x.message.recipient.SequenceEqual(message.message.recipient));
-                    Friend f = FriendList.getFriend(message.message.recipient);
-                    if (f == null)
-                    {
-                        continue;
-                    }
-                    sendMessage(f, message.message, true, message.sendPushNotification, true, message.offlineAndServer, true);
-                }
-
-            }
-
-            // Finally, clear the removal cache
-            cache.Clear();
-        }
-
-        private static void addOfflineMessage(StreamMessage msg, bool store_to_server, bool send_push_notification, bool offline_and_server)
-        {
-            bool sent_to_server = false;
-
-            if (store_to_server)
-            {
-                if (OfflinePushMessages.sendPushMessage(msg, send_push_notification))
-                {
-                    sent_to_server = true;
-                }
-            }
-
-            lock (pendingMessages)
-            {
-                pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
-            }
-
-            if (sent_to_server)
-            {
-                if (!offline_and_server)
-                {
-                    return;
-                }
-            }
-
-            // Use offline queue when notifications are disabled or when we don't have enough data yet
-            lock (offlineMessages)
-            {
-                int om_index = offlineMessages.FindIndex(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
-                OfflineMessage new_om = new OfflineMessage() { message = msg, sendPushNotification = send_push_notification, offlineAndServer = offline_and_server };
-                if (om_index != -1)
-                {
-                    Logging.info("Message already exists in the offline queue, replacing.");
-                    offlineMessages[om_index] = new_om;
-                }else
-                {
-                    offlineMessages.Add(new_om);
-                }
-
-                //
-                Node.localStorage.writeOfflineMessagesFile(offlineMessages);
+                pendingMessageProcessor.stop();
+                pendingMessageProcessor = null;
             }
         }
 
         // Send an encrypted message using the S2 network
-        public static bool sendMessage(Friend friend, StreamMessage msg, bool add_to_offline_messages = true, bool push = true, bool add_to_pending_messages = true, bool offline_and_server = false, bool store_to_server = true)
+        public static void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages = true, bool send_to_server = true, bool send_push_notification = true)
         {
-            // TODO this function has to be improved and node's wallet address has to be added
-            if ((friend.publicKey != null && msg.encryptionType == StreamMessageEncryptionCode.rsa) || (msg.encryptionType != StreamMessageEncryptionCode.rsa && friend.aesKey != null && friend.chachaKey != null))
-            {
-                if(msg.encryptionType == StreamMessageEncryptionCode.none)
-                {
-                    // upgrade encryption type
-                    msg.encryptionType = StreamMessageEncryptionCode.spixi1;
-                }
-                if(!msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey))
-                {
-                    if (add_to_offline_messages)
-                    {
-                        addOfflineMessage(msg, false, push, offline_and_server);
-                    }
-                    return false;
-                }
-            }
-            else if(msg.encryptionType != StreamMessageEncryptionCode.none)
-            {
-                if (friend.publicKey == null)
-                {
-                    byte[] pub_k = FriendList.findContactPubkey(friend.walletAddress);
-                    friend.publicKey = pub_k;
-                }
-
-                Logging.warn("Could not send message to {0}, due to missing encryption keys, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                if (add_to_offline_messages)
-                {
-                    addOfflineMessage(msg, false, push, offline_and_server);
-                }
-                return false;
-            }
-
-            if (add_to_pending_messages)
-            {
-                lock (pendingMessages)
-                {
-                    int pm_index = pendingMessages.FindIndex(x => x.message.id.SequenceEqual(msg.id) && x.message.recipient.SequenceEqual(msg.recipient));
-                    OfflineMessage om = new OfflineMessage() { message = msg, sendPushNotification = push, offlineAndServer = offline_and_server, timestamp = Clock.getTimestamp() };
-                    if (pm_index != -1)
-                    {
-                        pendingMessages[pm_index] = om;
-                    }
-                    else
-                    {
-                        pendingMessages.Add(om);
-                    }
-                }
-            }
-
-            string hostname = friend.searchForRelay();
-
-            if (!friend.online || !StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id))
-            {
-                if (hostname != "" && hostname != null)
-                {
-                    StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
-                }
-                if (store_to_server)
-                {
-                    store_to_server = Config.enablePushNotifications;
-                    if (friend.bot)
-                    {
-                        push = false;
-                        store_to_server = false;
-                    }
-                }
-                if (add_to_offline_messages || store_to_server)
-                {
-                    Logging.warn("Could not send message to {0}, adding to offline queue!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                    if (!store_to_server || offline_and_server)
-                    {
-                        if (msg.id.Length == 1 && msg.id[0] >= friend.handshakeStatus)
-                        {
-                            friend.handshakePushed = true;
-
-                            FriendList.saveToStorage();
-                        }
-                    }
-                    addOfflineMessage(msg, store_to_server, push, offline_and_server);
-                }
-                return false;
-            }
-
-            return true;
-
-            /*         string pub_k = FriendList.findContactPubkey(msg.recipientAddress);
-                     if (pub_k.Length < 1)
-                     {
-                         Console.WriteLine("Contact {0} not found, adding to offline queue!", msg.recipientAddress);
-                         addOfflineMessage(msg);
-                         return;
-                     }
-
-
-                     // Create a new IXIAN transaction
-                     //  byte[] checksum = Crypto.sha256(encrypted_message);
-                     Transaction transaction = new Transaction(0, msg.recipientAddress, Node.walletStorage.address);
-                     //  transaction.data = Encoding.UTF8.GetString(checksum);
-                     msg.transactionID = transaction.id;
-                     //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.newTransaction, transaction.getBytes());
-
-                     // Add message to the queue
-                     messages.Add(msg);
-
-                     // Request a new keypair from the S2 Node
-                     if(hostname == null)
-                         ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()));
-                     else
-                     {
-                         NetworkClientManager.sendData(ProtocolMessageCode.s2generateKeys, Encoding.UTF8.GetBytes(msg.getID()), hostname);
-                     }*/
+            pendingMessageProcessor.sendMessage(friend, msg, add_to_pending_messages, send_to_server, send_push_notification);
         }
 
 
@@ -547,10 +191,7 @@ namespace SPIXI
 
             if (friend != null)
             {
-                lock (pendingMessages)
-                {
-                    pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(msg_id) && x.message.recipient.SequenceEqual(sender));
-                }
+                pendingMessageProcessor.removeMessage(friend, msg_id);
 
                 Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
 
@@ -609,6 +250,7 @@ namespace SPIXI
             if (friend != null)
             {
                 friend.setMessageRead(msg_id);
+                pendingMessageProcessor.removeMessage(friend, msg_id);
             }
             else
             {
@@ -705,16 +347,7 @@ namespace SPIXI
                     // TODO Additional checks have to be added here, so that it's not possible to spoof errors (see .sender .reciver attributes in S2 as well) - it will somewhat be improved with protocol-level encryption as well
                     PresenceList.removeAddressEntry(friend.walletAddress);
                     friend.online = false;
-                    lock (pendingMessages)
-                    {
-                        OfflineMessage om = pendingMessages.Find(x => x.message.id.SequenceEqual(message.data) && x.message.recipient.SequenceEqual(message.sender));
-                        if (om != null)
-                        {
-                            StreamMessage sm = om.message;
-                            pendingMessages.RemoveAll(x => x.message.id.SequenceEqual(message.data) && x.message.recipient.SequenceEqual(message.sender));
-                            sendMessage(friend, sm, true, om.sendPushNotification, true, om.offlineAndServer);
-                        }
-                    }
+                    // TODO TODO current friend's keepalive has to be permanently discarded - i.e. save the timestamp
                     return;
                 }
 
@@ -1019,7 +652,7 @@ namespace SPIXI
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-            sendMessage(friend, msg_received, true, false, false);
+            sendMessage(friend, msg_received, true, true, false);
         }
 
         private static void handlePubKey(byte[] sender_wallet, byte[] pub_key)
@@ -1285,7 +918,7 @@ namespace SPIXI
             new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
-            StreamProcessor.sendMessage(friend, new_msg);
+            sendMessage(friend, new_msg);
         }
 
         public static void sendAppRequestAccept(Friend friend, byte[] session_id, byte[] data = null)
@@ -1303,7 +936,7 @@ namespace SPIXI
             new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
-            StreamProcessor.sendMessage(friend, new_msg, true, false, true, true, false);
+            sendMessage(friend, new_msg);
         }
 
         public static void sendAppRequestReject(Friend friend, byte[] session_id, byte[] data = null)
@@ -1321,7 +954,7 @@ namespace SPIXI
             new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
-            StreamProcessor.sendMessage(friend, new_msg, true, false, true, true, false);
+            sendMessage(friend, new_msg);
         }
 
         public static void sendAppData(Friend friend, byte[] session_id, byte[] data)
@@ -1339,7 +972,7 @@ namespace SPIXI
             msg.sigdata = new byte[1];
             msg.data = spixi_msg.getBytes();
 
-            StreamProcessor.sendMessage(friend, msg, false, false, false, false, false);
+            sendMessage(friend, msg, false, false, false);
         }
 
         public static void sendAppEndSession(Friend friend, byte[] session_id, byte[] data = null)
@@ -1357,7 +990,7 @@ namespace SPIXI
             msg.sigdata = new byte[1];
             msg.data = spixi_msg.getBytes();
 
-            StreamProcessor.sendMessage(friend, msg, true, false, true, true, false);
+            sendMessage(friend, msg, true, true, false);
         }
 
         private static void handleAppRequest(byte[] sender_address, byte[] recipient_address, byte[] app_data_raw)
@@ -1524,7 +1157,7 @@ namespace SPIXI
 
             message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, message);
+            sendMessage(friend, message);
 
             ProtocolMessage.resubscribeEvents();
         }
@@ -1559,7 +1192,7 @@ namespace SPIXI
 
             reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, reply_message, true, false, true, true);
+            sendMessage(friend, reply_message, true, true, false);
         }
 
         public static void sendAvatar(Friend friend)
@@ -1596,14 +1229,10 @@ namespace SPIXI
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.none;
             }
-            /*else if (friend.aesKey == null || friend.chachaKey == null)
-            {
-                reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
-            }*/
 
             reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, reply_message, true, false, true, true, false);
+            sendMessage(friend, reply_message, true, true, false);
         }
 
         // Requests the nickname of the sender
@@ -1625,7 +1254,7 @@ namespace SPIXI
                 message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
 
-            StreamProcessor.sendMessage(friend, message);
+            sendMessage(friend, message);
         }
 
         // Requests the nickname of the sender
@@ -1653,7 +1282,7 @@ namespace SPIXI
                 message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
 
-            StreamProcessor.sendMessage(friend, message, true, false);
+            sendMessage(friend, message, true, true, false);
         }
 
         public static void sendContactRequest(Friend friend)
@@ -1674,7 +1303,7 @@ namespace SPIXI
 
             message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-            StreamProcessor.sendMessage(friend, message, true, true, true, true);
+            sendMessage(friend, message);
         }
 
         public static void sendGetMessages(Friend friend)
@@ -1700,7 +1329,7 @@ namespace SPIXI
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 10 };
 
-            StreamProcessor.sendMessage(friend, message);
+            sendMessage(friend, message);
         }
     }
 }

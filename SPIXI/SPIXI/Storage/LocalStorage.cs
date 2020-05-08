@@ -8,6 +8,15 @@ using System.Linq;
 
 namespace SPIXI.Storage
 {
+    // TODO TODO remove legacy OfflineMessage class after v0.4.3/v0.4.5 release
+    public class OfflineMessage
+    {
+        public StreamMessage message = null;
+        public bool sendPushNotification = false;
+        public bool offlineAndServer = false;
+        public long timestamp = 0;
+    }
+    
     // Used for storing and retrieving local data for SPIXI
     class LocalStorage
     {
@@ -25,7 +34,6 @@ namespace SPIXI.Storage
         // locks, for thread concurrency
         private object accountLock = new object();
         private object txCacheLock = new object();
-        private object offlineLock = new object();
         private object avatarLock = new object();
         private object messagesLock = new object();
 
@@ -540,7 +548,23 @@ namespace SPIXI.Storage
             }
         }
 
+        // TODO remove after v0.4.3/v0.4.5 release
+        public void deleteOfflineMessagesFile()
+        {
+            string messages_filename = Path.Combine(documentsPath, offlineFileName);
+
+            if (!File.Exists(messages_filename))
+            {
+                // Return an empty list of messages
+                return;
+            }
+
+            File.Delete(messages_filename);
+        }
+
+
         // Reads the offline message archive
+        // TODO remove after v0.4.3/v0.4.5 release
         public List<OfflineMessage> readOfflineMessagesFile()
         {
             List<OfflineMessage> messages = new List<OfflineMessage>();
@@ -598,58 +622,6 @@ namespace SPIXI.Storage
 
             return messages;
         }
-
-        // Writes the cached offline messages to a file
-        public bool writeOfflineMessagesFile(List<OfflineMessage> messages)
-        {
-            lock (offlineLock)
-            {
-                string messages_filename = Path.Combine(documentsPath, offlineFileName);
-
-                BinaryWriter writer;
-                try
-                {
-                    // Prepare the file for writing
-                    writer = new BinaryWriter(new FileStream(messages_filename, FileMode.Create));
-                }
-                catch (Exception e)
-                {
-                    Logging.log(LogSeverity.error, String.Format("Cannot create file. {0}", e.Message));
-                    return false;
-                }
-
-                try
-                {
-                    // TODO: encrypt written data
-                    System.Int32 version = 1; // Set the messages file version
-                    writer.Write(version);
-
-                    int message_num = messages.Count;
-                    writer.Write(message_num);
-
-                    foreach (OfflineMessage message in messages)
-                    {
-                        byte[] data = message.message.getBytes();
-                        int data_length = data.Length;
-                        writer.Write(data_length);
-                        writer.Write(data);
-
-                        writer.Write(message.sendPushNotification);
-                        writer.Write(message.offlineAndServer);
-                    }
-
-                }
-                catch (Exception e)
-                {
-                    Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
-                    return false;
-                }
-                writer.Close();
-            }
-
-            return true;
-        }
-
 
         // Reads the message archive for a given wallet
         public bool readTransactionCacheFile()

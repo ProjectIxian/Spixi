@@ -720,7 +720,7 @@ namespace SPIXI
                     msg_received.transaction = new byte[1];
                     msg_received.sigdata = new byte[1];
 
-                    StreamProcessor.sendMessage(friend, msg_received, true, false, false);
+                    StreamProcessor.sendMessage(friend, msg_received, true, true, false);
                 }
             }
         }
