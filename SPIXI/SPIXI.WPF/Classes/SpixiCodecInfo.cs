@@ -8,14 +8,13 @@ namespace SPIXI.WPF.Classes
 {
     class SpixiCodecInfo : ISpixiCodecInfo
     {
-        string[] codecMap = new string[] { "amrwb", "amrnb" };
+        string[] codecMap = new string[] { "amrwb", "amrnb", "opus" };
 
         public List<string> getSupportedAudioCodecs()
         {
             // TODO implement
             var cl = new List<string>();
-            cl.Add("amrwb");
-            cl.Add("amrnb");
+            //cl.Add("opus");
             return cl;
         }
 
@@ -24,9 +23,7 @@ namespace SPIXI.WPF.Classes
             // TODO implement
             switch (codec_name)
             {
-                case "amrwb":
-                    return true;
-                case "amrnb":
+                case "opus":
                     return true;
             }
             return false;

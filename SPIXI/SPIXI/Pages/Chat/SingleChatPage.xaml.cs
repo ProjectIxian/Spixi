@@ -199,10 +199,10 @@ namespace SPIXI
 
             loadApps();
 
-            loadMessages();
-
             // Execute timer-related functionality immediately
             updateScreen();
+
+            loadMessages();
 
             // Set the last message as read
             friend.setLastRead();
@@ -792,6 +792,11 @@ namespace SPIXI
         public override void updateScreen()
         {
             base.updateScreen();
+
+            if(DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0)
+            {
+                Utils.sendUiCommand(webView, "showCallButton", "");
+            }
 
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 

@@ -40,9 +40,9 @@
                     <div id="title" class="spixi-toolbar-chat-name"></div>
                     <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
-                <!--<div class="col-2 spixi-center" style="padding-top: 10px;">
-        <a href="ixian:call"><i class="fas fa-phone"></i></a>
-    </div>-->
+                <div class="col-2 spixi-center" style="padding-top: 10px;">
+                    <a href="ixian:call" id="CallButton" style="display:none;"><i class="fas fa-phone"></i></a>
+                </div>
             </div>
 
         </div>
@@ -642,6 +642,11 @@
             el.innerHTML = "<img src='" + icon + "'/><br/>" + name;
 
             appsEl.appendChild(el);
+        }
+
+        function showCallButton()
+        {
+            document.getElementById("CallButton").style.display = "block";
         }
     </script>
 </body>

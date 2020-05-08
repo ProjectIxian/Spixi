@@ -11,10 +11,16 @@ namespace SPIXI.Droid.Classes
 {
     class SpixiCodecInfo : ISpixiCodecInfo
     {
-        string[] codecMap = new string[] { "amrwb", "amrnb" };
+        string[] codecMap = new string[] { "amrwb", "amrnb", "opus" };
+        List<string> cachedCodecs = null;
 
         public List<string> getSupportedAudioCodecs()
         {
+            if(cachedCodecs != null)
+            {
+                return cachedCodecs;
+            }
+
             var mcl = new MediaCodecList(MediaCodecListKind.AllCodecs);
             var codec_infos = mcl.GetCodecInfos().ToList();
 
@@ -29,16 +35,17 @@ namespace SPIXI.Droid.Classes
                     cl.Add(codec_in_map);
                 }
             }
-            //cl.Add("ilbc");
+            cachedCodecs = cl;
+            //cl.Add("opus");
             return cl;
         }
 
         public bool isCodecSupported(string codec_name)
         {
-            /*if (codec_name == "ilbc")
+            if (codec_name == "opus")
             {
                 return true;
-            }*/
+            }
 
             var mcl = new MediaCodecList(MediaCodecListKind.AllCodecs);
             var codec_infos = mcl.GetCodecInfos().ToList();
