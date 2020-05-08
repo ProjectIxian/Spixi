@@ -42,13 +42,7 @@ namespace SPIXI.Network
 
                         sendToServer = reader.ReadBoolean();
                         sendPushNotification = reader.ReadBoolean();
-                        try
-                        {
-                            removeAfterSending = reader.ReadBoolean();
-                        }catch(Exception)
-                        {
-                            removeAfterSending = true;
-                        }
+                        removeAfterSending = reader.ReadBoolean();
                     }
                     catch (Exception e)
                     {
