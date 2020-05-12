@@ -15,6 +15,9 @@ namespace SPIXI
         private static long lastUpdate = 0;
         private static int cooldownPeriod = 60; // cooldown period in seconds
 
+        private static string pushNotificationAuthKey = null;
+
+        private static long nonce = Clock.getTimestamp();
 
         public static bool sendPushMessage(StreamMessage msg, bool push)
         {
@@ -64,26 +67,43 @@ namespace SPIXI
 
             lastUpdate = Clock.getTimestamp();
 
+            if (pushNotificationAuthKey == null)
+            {
+                if (!registerWithPushNotificationServer())
+                {
+                    return false;
+                }
+            }
+
             try
             {
-                string URI = String.Format("{0}/fetch.php", Config.pushServiceUrl);
-                string unique_uri = String.Format("{0}/uniqueid.php", Config.pushServiceUrl);
-
                 string receiver = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
-        
-                WebClient uclient = new WebClient();
-                byte[] checksum = Convert.FromBase64String(uclient.DownloadString(unique_uri));
 
-                byte[] sig = CryptoManager.lib.getSignature(checksum, Node.walletStorage.getPrimaryPrivateKey());
+                nonce++;
+
+                byte[] sig = Crypto.sha512(UTF8Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
 
                 using (WebClient client = new WebClient())
                 {
-                    string url = String.Format("{0}?tag={1}&sig={2}", URI, receiver, HttpUtility.UrlEncode(Convert.ToBase64String(sig)));
+                    string url = String.Format("{0}/fetch.php?tag={1}&nonce={2}&sig={3}", Config.pushServiceUrl, receiver, nonce, Crypto.hashToString(sig));
                     string htmlCode = client.DownloadString(url);
                     Logging.info("fetchPushMessages: {0}", htmlCode);
 
-                    if (htmlCode == "FALSE")
+                    if (htmlCode.StartsWith("ERROR"))
+                    {
+                        if(htmlCode.StartsWith("ERROR: Nonce too low "))
+                        {
+                            nonce = Int32.Parse(htmlCode.Substring("ERROR: Nonce too low ".Length));
+                        }
                         return false;
+                    }
+
+                    if (htmlCode == "UNREGISTERED")
+                    {
+                        pushNotificationAuthKey = null;
+                        registerWithPushNotificationServer();
+                        return false;
+                    }
 
                     lastUpdate = 0; // If data was available, fetch it again without cooldown
 
@@ -93,22 +113,37 @@ namespace SPIXI
                     {
                         try
                         {
-                            byte[] data = Convert.FromBase64String(str[0]);
-                            if (str[1] != "")
+                            byte[] data = Convert.FromBase64String(str[1]);
+                            if (str[2] != "")
                             {
-                                byte[] pk = Convert.FromBase64String(str[1]);
+                                byte[] pk = Convert.FromBase64String(str[2]);
                                 Friend f = FriendList.getFriend(new Address(pk).address);
-                                if (f != null)
+                                if (f != null && f.publicKey == null)
                                 {
                                     f.publicKey = pk;
+                                    FriendList.saveToStorage();
                                 }
-                                FriendList.saveToStorage();
                             }
                             StreamProcessor.receiveData(data, null);
                         }
                         catch(Exception e)
                         {
-                            Logging.error(string.Format("Exception occured in fetchPushMessages while parsing the json response. {0}", e));
+                            Logging.error("Exception occured in fetchPushMessages while parsing the json response: {0}", e);
+                        }
+
+                        try
+                        {
+                            nonce++;
+                            sig = Crypto.sha512(UTF8Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
+
+                            string id = str[0];
+                            url = String.Format("{0}/remove.php?id={1}&nonce={2}&sig={3}", Config.pushServiceUrl, id, nonce, Crypto.hashToString(sig));
+                            htmlCode = client.DownloadString(url);
+                            Logging.info(htmlCode);
+                        }
+                        catch (Exception e)
+                        {
+                            Logging.error("Exception occured in fetchPushMessages while removing the message from server: {0}", e);
                         }
                     }
 
@@ -116,7 +151,49 @@ namespace SPIXI
             }
             catch (Exception e)
             {
-                Logging.error(string.Format("Exception occured in fetchPushMessages. {0}", e));
+                Logging.error("Exception occured in fetchPushMessages: {0}", e);
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool registerWithPushNotificationServer()
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    nonce++;
+
+                    byte[] sig = CryptoManager.lib.getSignature(UTF8Encoding.UTF8.GetBytes(nonce.ToString()), Node.walletStorage.getPrimaryPrivateKey());
+
+                    string url = String.Format("{0}/register.php", Config.pushServiceUrl);
+                    string parameters = String.Format("pk={0}&nonce={1}&sig={2}", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryPublicKey()), nonce, Crypto.hashToString(sig));
+
+                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    string htmlCode = client.UploadString(url, parameters);
+
+                    if (htmlCode.StartsWith("ERROR"))
+                    {
+                        if (htmlCode.StartsWith("ERROR: Nonce too low "))
+                        {
+                            nonce = Int32.Parse(htmlCode.Substring("ERROR: Nonce too low ".Length));
+                        }
+                        return false;
+                    }
+
+                    List<string> jsonResponse = JsonConvert.DeserializeObject<List<string>>(htmlCode);
+
+                    if(jsonResponse[0] != "")
+                    {
+                        pushNotificationAuthKey = jsonResponse[0];
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in registerWithPushNotificationServer: {0}", e);
                 return false;
             }
 
