@@ -1,4 +1,4 @@
-﻿
+﻿using IXICore;
 using System.IO;
 
 namespace SPIXI.Meta
@@ -21,7 +21,7 @@ namespace SPIXI.Meta
         // Read-only values
         public static readonly string aboutUrl = "https://www.spixi.io";
 
-        public static readonly string pushServiceUrl = "https://ipn.ixian.io"; // Will be changed once the official push service is active
+        public static readonly string pushServiceUrl = "https://ipn.ixian.io/v1";
 
         public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
 
@@ -41,16 +41,10 @@ namespace SPIXI.Meta
 
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
-        public static ulong bakedBlockHeight = 1027400;
+        public static ulong bakedBlockHeight = 1117064;
 
         // Block checksum (paired with bakedBlockHeight) at which the current version of Spixi was generated
         // Useful for optimized block header sync
-        public static byte[] bakedBlockChecksum = null;
-
-
-        private Config()
-        {
-
-        }
+        public static byte[] bakedBlockChecksum = Crypto.stringToHash("eba79772cddafa5aa3c51278771bcbb7105f285f8ba8b90bdf22b4d0c9b85e61ca1440aa7d29fd95252da228");
     }
 }
