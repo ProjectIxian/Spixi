@@ -105,9 +105,12 @@ namespace SPIXI
                         return false;
                     }
 
-                    lastUpdate = 0; // If data was available, fetch it again without cooldown
-
                     List<string[]> jsonResponse = JsonConvert.DeserializeObject<List<string[]>>(htmlCode);
+
+                    if(jsonResponse != null && jsonResponse.Count > 0)
+                    {
+                        lastUpdate = 0; // If data was available, fetch it again without cooldown
+                    }
 
                     foreach (string[] str in jsonResponse)
                     {
