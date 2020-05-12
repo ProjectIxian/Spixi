@@ -235,6 +235,12 @@ namespace SPIXI
                     return;
                 }
 
+                if (msg_id.SequenceEqual(new byte[] { 10 }))
+                {
+                    // ignore, bot related
+                    return;
+                }
+
                 friend.setMessageReceived(msg_id);
             }
             else
