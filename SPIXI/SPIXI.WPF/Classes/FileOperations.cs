@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using SPIXI.Interfaces;
@@ -15,8 +13,8 @@ public class FileOperations_WPF : IFileOperations
     public Task share(string filepath, string title)
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog();
-        saveFileDialog.Filter = "Ixian Wallet (*.wal)|*.wal";
-        saveFileDialog.FileName = "wallet";
+        //saveFileDialog.Filter = "Ixian Wallet (*.wal)|*.wal";
+        saveFileDialog.FileName = Path.GetFileName(filepath);
         saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
         if (saveFileDialog.ShowDialog() == true)

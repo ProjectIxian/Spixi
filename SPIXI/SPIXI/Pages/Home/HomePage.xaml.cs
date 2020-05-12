@@ -259,14 +259,28 @@ namespace SPIXI
                 VoIPManager.hangupCall(Crypto.stringToHash(session_id));
             }else if(current_url.StartsWith("ixian:viewLog"))
             {
-                if(File.Exists(Path.Combine(Config.spixiUserFolder, "spixi.log.zip")))
+                if (File.Exists(Path.Combine(Config.spixiUserFolder, "spixi.log.zip")))
                 {
                     File.Delete(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"));
                 }
+
+                if (File.Exists(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp")))
+                {
+                    File.Delete(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp"));
+                }
+
+                File.Copy(Path.Combine(Config.spixiUserFolder, "ixian.log"), Path.Combine(Config.spixiUserFolder, "ixian.log.tmp"));
+
                 using (ZipArchive archive = ZipFile.Open(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), ZipArchiveMode.Create))
                 {
-                    archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "ixian.log"), "ixian.log");
+                    archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp"), "ixian.log");
                 }
+
+                if (File.Exists(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp")))
+                {
+                    File.Delete(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp"));
+                }
+
                 DependencyService.Get<IFileOperations>().share(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), "Share Spixi Log File");
             }
             else
