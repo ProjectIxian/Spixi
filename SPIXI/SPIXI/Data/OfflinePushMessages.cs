@@ -87,7 +87,6 @@ namespace SPIXI
                 {
                     string url = String.Format("{0}/fetch.php?tag={1}&nonce={2}&sig={3}", Config.pushServiceUrl, receiver, nonce, Crypto.hashToString(sig));
                     string htmlCode = client.DownloadString(url);
-                    Logging.info("fetchPushMessages: {0}", htmlCode);
 
                     if (htmlCode.StartsWith("ERROR"))
                     {
@@ -142,7 +141,6 @@ namespace SPIXI
                             string id = str[0];
                             url = String.Format("{0}/remove.php?id={1}&nonce={2}&sig={3}", Config.pushServiceUrl, id, nonce, Crypto.hashToString(sig));
                             htmlCode = client.DownloadString(url);
-                            Logging.info(htmlCode);
                         }
                         catch (Exception e)
                         {
