@@ -543,9 +543,9 @@ namespace SPIXI
             {
                 foreach (var friend in friends)
                 {
-                    if (friend.handshakeStatus == 5)
+                    if (friend.handshakeStatus >= 4)
                     {
-                        friend.handshakeStatus = 4;
+                        StreamProcessor.sendAvatar(friend);
                     }
                 }
             }
