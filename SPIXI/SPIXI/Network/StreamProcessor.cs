@@ -66,6 +66,10 @@ namespace SPIXI
                 friend.receiveKeys(data);
 
                 friend.handshakeStatus = 3;
+
+                sendNickname(friend);
+
+                sendAvatar(friend);
             }
             else
             {
@@ -778,9 +782,9 @@ namespace SPIXI
 
             friend.sendKeys(2);
 
-            requestNickname(friend);
-
             sendNickname(friend);
+
+            sendAvatar(friend);
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
         }
