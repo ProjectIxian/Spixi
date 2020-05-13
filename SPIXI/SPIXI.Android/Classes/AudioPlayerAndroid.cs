@@ -21,6 +21,8 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
     int bufferSize = 0;
 
+    int delay = 10;
+
     public AudioPlayerAndroid()
     {
     }
@@ -34,6 +36,8 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         }
 
         running = true;
+
+        delay = 10;
 
         lock (pendingFrames)
         {
@@ -113,12 +117,18 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         {
             lock (pendingFrames)
             {
-                if(pendingFrames.Count > 5)
+                if(pendingFrames.Count > 20)
                 {
                     pendingFrames.RemoveAt(0);
                 }
 
                 pendingFrames.Add(audio_data);
+
+                if (delay > 0)
+                {
+                    delay--;
+                    return audio_data.Length;
+                }
 
                 while (availableBuffers.Count > 0 && pendingFrames.Count > 0)
                 {

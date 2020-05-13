@@ -213,7 +213,7 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
             if (outputBuffer == null)
             {
-                outputBuffer = new byte[info.Size * 20];
+                outputBuffer = new byte[info.Size * 3];
                 outputBufferFrameCount = 0;
             }
 
@@ -226,7 +226,7 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
                 outputBufferFrameCount++;
 
-                if (outputBufferFrameCount == 20)
+                if (outputBufferFrameCount == 3)
                 {
                     data_to_send = (byte[])outputBuffer.Clone();
                     outputBufferFrameCount = 0;
