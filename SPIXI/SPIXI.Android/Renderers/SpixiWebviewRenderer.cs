@@ -1,25 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.Webkit;
-using System.Threading.Tasks;
-using Android.Graphics;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using IXICore.Meta;
+using Android.Util;
+using Android.Views.InputMethods;
 
 [assembly: ExportRenderer(typeof(Xamarin.Forms.WebView), typeof(SPIXI.Droid.Renderers.SpixiWebviewRenderer))]
 
 namespace SPIXI.Droid.Renderers
 {
+    public class SpixiWebView : Android.Webkit.WebView
+    {
+        public SpixiWebView(Context context) : base(context)
+        {
+        }
+
+        public SpixiWebView(Context context, IAttributeSet attrs) : base(context, attrs)
+        {
+        }
+
+        public SpixiWebView(Context context, IAttributeSet attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
+        {
+        }
+
+        [Obsolete]
+        public SpixiWebView(Context context, IAttributeSet attrs, int defStyleAttr, bool privateBrowsing) : base(context, attrs, defStyleAttr, privateBrowsing)
+        {
+        }
+
+        public SpixiWebView(Context context, IAttributeSet attrs, int defStyleAttr, int defStyleRes) : base(context, attrs, defStyleAttr, defStyleRes)
+        {
+        }
+
+        protected SpixiWebView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+        {
+        }
+
+        public override IInputConnection OnCreateInputConnection(EditorInfo outAttrs)
+        {
+            var ic = base.OnCreateInputConnection(outAttrs);
+            outAttrs.ImeOptions = outAttrs.ImeOptions | Android.Views.InputMethods.ImeFlags.NoPersonalizedLearning;
+            return ic;
+        }
+    }
+
+
     // Implemented our own SPIXI webview android renderer to handle known issues in Xamarin Forms 3.3
     // Partially based on  https://github.com/xamarin/Xamarin.Forms/pull/3780/commits/29735675a674a5c972459aa3a7fe88b10772ea55
     // More information about the issue https://github.com/xamarin/Xamarin.Forms/issues/3778
@@ -29,6 +57,11 @@ namespace SPIXI.Droid.Renderers
         public SpixiWebviewRenderer(Context context) : base(context)
         {
 
+        }
+
+        protected override Android.Webkit.WebView CreateNativeControl()
+        {
+            return new SpixiWebView(Context);
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.WebView> e)
