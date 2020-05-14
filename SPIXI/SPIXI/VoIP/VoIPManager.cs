@@ -55,7 +55,10 @@ namespace SPIXI.VoIP
         {
             if (currentCallSessionId != null)
             {
-                StreamProcessor.sendAppRequestReject(friend, session_id);
+                if (!currentCallSessionId.SequenceEqual(session_id))
+                {
+                    StreamProcessor.sendAppRequestReject(friend, session_id);
+                }
                 return;
             }
 
