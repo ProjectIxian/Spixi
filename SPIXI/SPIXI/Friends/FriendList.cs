@@ -543,7 +543,7 @@ namespace SPIXI
             {
                 foreach (var friend in friends)
                 {
-                    if (friend.handshakeStatus >= 4)
+                    if (friend.handshakeStatus >= 3)
                     {
                         StreamProcessor.sendAvatar(friend);
                     }

@@ -40,9 +40,6 @@ namespace SPIXI
 
             friend.chat_page = this;
 
-            // Connect to the friend's S2 node
-            friend.searchForRelay();
-
             // Load the platform specific home page url
             var source = new UrlWebViewSource();
             source.Url = string.Format("{0}html/chat.html", DependencyService.Get<IBaseUrl>().Get());

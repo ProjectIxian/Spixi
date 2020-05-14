@@ -112,6 +112,7 @@ namespace SPIXI.Network
                         pendingRecipients.Remove(recipient);
                         continue;
                     }
+                    friend.searchForRelay(); // TODO cuckoo filter should be used instead, need to check the performance when PL is big
                     List<PendingMessageHeader> message_headers = null;
                     if (!friend.online)
                     {
@@ -228,9 +229,9 @@ namespace SPIXI.Network
             }
 
             bool sent = false;
+            string hostname = friend.searchForRelay(); // TODO cuckoo filter should be used instead, need to check the performance when PL is big
             if (friend.online)
             {
-                string hostname = friend.searchForRelay();
                 if (hostname != "" && hostname != null)
                 {
                     StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
@@ -334,70 +335,6 @@ namespace SPIXI.Network
                 }
 
                 Thread.Sleep(5000);
-            }
-        }
-
-        private void sendPendingRequests()
-        {
-            lock (FriendList.friends)
-            {
-                List<Friend> friend_list = new List<Friend>();
-                if (Config.enablePushNotifications)
-                {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5);
-                }
-                else
-                {
-                    friend_list = FriendList.friends.FindAll(x => x.handshakeStatus < 5 && x.online);
-                }
-                foreach (var friend in friend_list)
-                {
-                    if (friend.handshakePushed)
-                    {
-                        continue;
-                    }
-                    switch (friend.handshakeStatus)
-                    {
-                        // Add friend request has been sent but no confirmation has been received
-                        case 0:
-                            if (friend.approved)
-                            {
-                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                                StreamProcessor.sendContactRequest(friend);
-                            }
-                            break;
-
-                        // Request has been accepted but no confirmation received, resend acceptance
-                        case 1:
-                            if (friend.approved && friend.aesKey != null)
-                            {
-                                Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                                StreamProcessor.sendAcceptAdd(friend, false);
-                            }
-                            break;
-
-                        // Acceptance has been received and the second encryption key was sent but no confirmation received, resend second key
-                        case 2:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            friend.sendKeys(2);
-                            break;
-
-                        // Nickname confirmation hasn't been received
-                        case 3:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            StreamProcessor.sendNickname(friend);
-                            break;
-
-                        // Avatar confirmation hasn't been received
-                        case 4:
-                            Logging.info("Sending pending request for: {0}, status: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.handshakeStatus);
-                            if (friend.online)
-                            {
-                                StreamProcessor.sendAvatar(friend);
-                            }
-                            break;
-                    }
-                }
             }
         }
     }
