@@ -649,7 +649,7 @@ namespace SPIXI
 
             string hostname = FriendList.getRelayHostname(walletAddress);
 
-            if (hostname != null)
+            if (hostname != null && hostname != "")
             {
                 // Store the last relay ip and wallet for this friend
                 relayIP = hostname;

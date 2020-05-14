@@ -394,8 +394,6 @@ namespace SPIXI
                 return null;
             }
 
-            byte[] wallet = presence.wallet;
-
             lock (presence)
             {
                 // Go through each presence address searching for C nodes
@@ -404,13 +402,11 @@ namespace SPIXI
                     // Only check Client nodes
                     if (addr.type == 'C')
                     {
-                        // We have a potential candidate here, store it
-                        hostname = addr.address;
-
-                        string[] hostname_split = hostname.Split(':');
+                        string[] hostname_split = addr.address.Split(':');
 
                         if (hostname_split.Count() == 2 && NetworkUtils.validateIP(hostname_split[0]))
                         {
+                            hostname = addr.address;
                             break;
                         }
                     }

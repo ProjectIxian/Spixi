@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Xamarin.Forms;
@@ -193,6 +194,16 @@ namespace SPIXI
         private void onLoad()
         {
             DependencyService.Get<IPushService>().clearNotifications();
+
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                if (DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0)
+                {
+                    Utils.sendUiCommand(webView, "showCallButton", "");
+                }
+            }).Start();
+
 
             loadApps();
 
@@ -790,11 +801,6 @@ namespace SPIXI
         {
             base.updateScreen();
 
-            if(DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0)
-            {
-                Utils.sendUiCommand(webView, "showCallButton", "");
-            }
-
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
             if (friend.online)
@@ -809,7 +815,7 @@ namespace SPIXI
             // Show connectivity warning bar
             if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                if (!Config.enablePushNotifications && StreamClientManager.isConnectedTo(friend.searchForRelay()) == null)
+                if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
                 {
                     Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian S2...");
                 }
