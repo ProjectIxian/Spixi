@@ -61,6 +61,9 @@ namespace SPIXI
                 {
                     return;
                 }
+
+                Logging.info("In received keys");
+
                 friend.receiveKeys(data);
 
                 friend.handshakeStatus = 3;
@@ -736,6 +739,8 @@ namespace SPIXI
                 return;
             }
 
+            Logging.info("In handle request add");
+
             Friend new_friend = FriendList.addFriend(sender_wallet, pub_key, Base58Check.Base58CheckEncoding.EncodePlain(sender_wallet), null, null, 0, false);
 
             if (new_friend != null)
@@ -781,6 +786,8 @@ namespace SPIXI
             {
                 return;
             }
+
+            Logging.info("In handle accept add");
 
             friend.aesKey = aes_key;
 
@@ -1152,6 +1159,8 @@ namespace SPIXI
                 return;
             }
 
+            Logging.info("Sending accept add");
+
             if (reset_keys)
             {
                 friend.aesKey = null;
@@ -1283,6 +1292,10 @@ namespace SPIXI
             {
                 message.id = new byte[] { 3 };
             }
+            else
+            {
+                message.id = contact_address;
+            }
 
             if (friend.aesKey == null || friend.chachaKey == null)
             {
@@ -1313,6 +1326,9 @@ namespace SPIXI
             if (!friend.bot)
             {
                 message.id = new byte[] { 4 };
+            }else
+            {
+                message.id = contact_address;
             }
 
             if (friend.aesKey == null || friend.chachaKey == null)
@@ -1325,6 +1341,9 @@ namespace SPIXI
 
         public static void sendContactRequest(Friend friend)
         {
+            Logging.info("Sending contact request");
+
+
             // Send the message to the S2 nodes
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestAdd, IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
