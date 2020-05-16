@@ -73,6 +73,7 @@ public class PushService_Android : IPushService
             .SetContentTitle(title)
             .SetContentText(message)
             .SetGroup("NEWMSG")
+            .SetPriority(2)
             .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.statusicon))
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
@@ -90,7 +91,9 @@ public class PushService_Android : IPushService
             var channelNameJava = new Java.Lang.String(channelName);
             var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
             {
-                Description = channelDescription
+                Description = channelDescription,
+                Group = "NEWMSG",
+                Importance = NotificationImportance.High
             };
             manager.CreateNotificationChannel(channel);
         }
