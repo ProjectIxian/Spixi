@@ -32,40 +32,41 @@
         </div>
 
 
-        <!-- DescriptionBar -->
-        <div class="intro-descriptionbar">
-            <div class="row spixi-descriptionbar-row">
-                <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-save"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details">
-                    <div>Restore access to your Spixi Account</div>
-                    <div>You need the Backup File and the Encryption Password to restore your existing Spixi account on this device.</div>
+        <div style="margin: 0 auto; max-width: 300pt;">
+            <!-- DescriptionBar -->
+            <div class="intro-descriptionbar">
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-save"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">
+                        <div>Restore access to your Spixi Account</div>
+                        <div>You need the Backup File and the Encryption Password to restore your existing Spixi account on this device.</div>
+                    </div>
                 </div>
             </div>
+            <!-- End DescriptionBar -->
+            <hr class="intro-separator" />
+            <div class="intro-textfield-holder">
+                <input type="text" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="Enter your Encryption Password">
+            </div>
+            <hr class="intro-separator" />
+
+            <div id="selectbtn" class="intro-button small disabled">
+                Select Backup File
+            </div>
+            <div class="intro-holder-20"></div>
+
+            <div class="intro-text left">Set the Backup File that is associated with the Encryption Password</div>
+            <hr class="intro-separator" />
+
+
+            <div class="intro-holder-70"></div>
+
+            <div id="restorebtn" class="intro-button center disabled">
+                RESTORE
+            </div>
+
+            <div class="intro-holder-20"></div>
         </div>
-        <!-- End DescriptionBar -->
-        <hr class="intro-separator" />
-        <div class="intro-textfield-holder">
-            <input type="text" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="Enter your Encryption Password">
-        </div>
-        <hr class="intro-separator" />
-
-        <div id="selectbtn" class="intro-button small disabled">
-            Select Backup File
-        </div>
-        <div class="intro-holder-20"></div>
-
-        <div class="intro-text left">Set the Backup File that is associated with the Encryption Password</div>
-        <hr class="intro-separator" />
-
-
-        <div class="intro-holder-70"></div>
-
-        <div id="restorebtn" class="intro-button center disabled">
-            RESTORE
-        </div>
-
-        <div class="intro-holder-20"></div>
-
 
         <div id="overlay" class="intro-overlay" style="display: none;">
             <div class="intro-top">

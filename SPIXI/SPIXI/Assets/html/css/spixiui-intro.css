@@ -340,6 +340,11 @@ a:active {
     margin-top: 15px;
 }
 
+#step1, #step2
+{
+    margin: 0 auto;
+    max-width: 300pt;
+}
 
 @keyframes shadow-pulse
 {
