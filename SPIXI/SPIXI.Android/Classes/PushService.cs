@@ -73,7 +73,7 @@ public class PushService_Android : IPushService
             .SetContentTitle(title)
             .SetContentText(message)
             .SetGroup("NEWMSG")
-            .SetPriority(2)
+            .SetPriority(1)
             .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.statusicon))
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
