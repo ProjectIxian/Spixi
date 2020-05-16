@@ -266,6 +266,8 @@ namespace SPIXI
 
         public bool online = false;
 
+        public bool forcePush = false; // on error - for bypassing trying to resend to the same S2 and sending directly to push server
+
         public List<FriendMessage> messages = new List<FriendMessage>();
 
         public Dictionary<byte[], BotContact> contacts = new Dictionary<byte[], BotContact>(new ByteArrayComparer()); // used by bot friends

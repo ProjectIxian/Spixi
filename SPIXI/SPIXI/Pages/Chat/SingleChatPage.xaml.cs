@@ -193,19 +193,19 @@ namespace SPIXI
 
         private void onLoad()
         {
-            DependencyService.Get<IPushService>().clearNotifications();
-
             new Thread(() =>
             {
                 Thread.CurrentThread.IsBackground = true;
+
+                DependencyService.Get<IPushService>().clearNotifications();
+
                 if (DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0)
                 {
                     Utils.sendUiCommand(webView, "showCallButton", "");
                 }
+
+                loadApps();
             }).Start();
-
-
-            loadApps();
 
             // Execute timer-related functionality immediately
             updateScreen();
@@ -826,7 +826,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian DLT...");
+                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian Network...");
             }
             
 
@@ -851,6 +851,11 @@ namespace SPIXI
         public override void onResume()
         {
             base.onResume();
+
+            if(FriendList.getUnreadMessageCount() == 0)
+            {
+                DependencyService.Get<IPushService>().clearNotifications();
+            }
 
             updateMessagesReadStatus();
         }

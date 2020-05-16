@@ -124,13 +124,19 @@ namespace SPIXI.Network
                     if(message_headers != null && message_headers.Count > 0)
                     {
                         List<PendingMessageHeader> tmp_msg_headers = new List<PendingMessageHeader>(message_headers);
+                        bool failed_sending = false;
                         foreach(var message_header in tmp_msg_headers)
                         {
                             bool sent = processMessage(friend, message_header.filePath);
                             if(message_header.sendToServer && !sent)
                             {
+                                failed_sending = true;
                                 break;
                             }
+                        }
+                        if(!failed_sending)
+                        {
+                            friend.forcePush = false;
                         }
                     }
                 }
@@ -243,7 +249,7 @@ namespace SPIXI.Network
                 }
             }
 
-            if (!friend.online || !sent)
+            if (friend.forcePush || !friend.online || !sent)
             {
                 if (send_to_server)
                 {

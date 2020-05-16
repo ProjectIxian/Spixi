@@ -49,8 +49,10 @@ public class PushService_iOS : IPushService
 
     static void handleNotificationReceived(OSNotification notification)
     {
-        OneSignal.Current.ClearAndroidOneSignalNotifications();
-        OfflinePushMessages.fetchPushMessages(true);
+        if (OfflinePushMessages.fetchPushMessages(true))
+        {
+            OneSignal.Current.ClearAndroidOneSignalNotifications();
+        }
     }
 
     static void handleNotificationOpened(OSNotificationOpenedResult inNotificationOpenedDelegate)

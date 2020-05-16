@@ -732,7 +732,7 @@ namespace SPIXI
         {
             try
             {
-                if (!webView.IsEnabled)
+                if (!webView.IsEnabled || !App.isInForeground)
                 {
                     return;
                 }

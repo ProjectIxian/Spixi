@@ -368,6 +368,7 @@ namespace SPIXI
                     // TODO Additional checks have to be added here, so that it's not possible to spoof errors (see .sender .reciver attributes in S2 as well) - it will somewhat be improved with protocol-level encryption as well
                     PresenceList.removeAddressEntry(friend.walletAddress);
                     friend.online = false;
+                    friend.forcePush = true;
                     // TODO TODO current friend's keepalive has to be permanently discarded - i.e. save the timestamp
                     return;
                 }
