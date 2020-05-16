@@ -41,19 +41,16 @@ a:active {
 
 #wrap {
     padding: 0 0;
-    
     /* Prevent overscroll bounce  */
     -webkit-overflow-scrolling: touch;
-
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     overflow: auto;
-        
     color: #FFF;
-    background: linear-gradient(#951453, #2b0f45);
+    background: linear-gradient(#291046, #ad1457);
 }
 
 .center {
@@ -122,6 +119,7 @@ a:active {
     text-align: center;
     font-size: 13pt;
     padding: 0px 5%;
+    font-family: robotobold, sans-serif;
 }
 .intro-subtitle {
     width: 100%;
@@ -173,37 +171,38 @@ a:active {
 /* Buttons */
 .intro-button {
     
-    width: 200px;
-    height: 46px;
-    
-    padding-top: 10px;
+    width: 160pt;
+    padding: 8pt;
+
     text-align: center;
     font-size: 12pt;
-    font-weight: 400;
+    font-family:'robotobold', sans-serif;
+
     
     color: #ad1457;
-    background: #FFF;
-    border-radius: 50px;
-    box-shadow:0px 8px 19px #555;
+    background: #fefcfd;
+    border-radius: 360px;
+    box-shadow:11px 18px 21px 0px rgba(1, 1, 1, 0.18);
 }
 .intro-button:hover {
-    background: #ebc5d5;
+    background: #ffcbe5;
+    box-shadow: 0px 0px;
 }
 .intro-button:active {
+    background: #4e385b;
     color: #fff;
-    background: #543c83;
     box-shadow: 0px 0px;
 }
 .intro-button.ghost {
-    background-color: #ad1457;
+    background-color: transparent;
     color: #f7f7f7;
     border: 2px solid #fff;
 }
 .intro-button.ghost:hover {
-    background-color: #c14c7f;
+    background: rgba(255, 255, 255, 0.24);
 }
 .intro-button.ghost:active {
-    background-color: #901352;
+    background:  rgba(50, 15, 68, 0.24);
     box-shadow: 0px 0px;
 }
 .intro-button.center {
