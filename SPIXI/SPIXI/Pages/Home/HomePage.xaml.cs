@@ -709,11 +709,11 @@ namespace SPIXI
             // Check the ixian dlt
             if (NetworkClientManager.getConnectedClients(true).Count() > 0)
             {
-                Utils.sendUiCommand(webView, "showWarning", "0");
+                Utils.sendUiCommand(webView, "showWarning", "");
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", "1");
+                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian Network...");
             }
 
             Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);

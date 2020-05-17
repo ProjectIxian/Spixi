@@ -199,7 +199,7 @@ namespace SPIXI
 
                 DependencyService.Get<IPushService>().clearNotifications();
 
-                if (DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0)
+                if (DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0 && !friend.bot)
                 {
                     Utils.sendUiCommand(webView, "showCallButton", "");
                 }

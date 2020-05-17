@@ -33,13 +33,13 @@ namespace SPIXI
             return DisplayAlert(title, message, cancel);
         }
 
-        public void displayCallBar(byte[] session_id, string text)
+        public void displayCallBar(byte[] session_id, string text, bool display_time)
         {
             if (_webView == null)
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text);
+            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text, "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>", display_time.ToString());
         }
 
         public void hideCallBar()
@@ -70,13 +70,15 @@ namespace SPIXI
                     Friend f = FriendList.getFriend(page.hostUserAddress);
                     CustomApp app = Node.customAppManager.getApp(page.appId);
                     string text = f.nickname + " wants to use " + app.name + " with you.";
-                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text);
+                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text, "Accept", "Reject");
                 }
                 if(VoIPManager.isInitiated() && !VoIPManager.currentCallAccepted)
                 {
                     Friend f = VoIPManager.currentCallContact;
-                    string text = f.nickname + " is calling you.";
-                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text);
+                    string text = "Incoming Call - " + f.nickname;
+                    string accept_html = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
+                    string reject_html = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
+                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);
                 }
             }
         }

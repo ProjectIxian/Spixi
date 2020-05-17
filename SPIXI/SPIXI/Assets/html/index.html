@@ -48,7 +48,7 @@
         <!-- ErrorBar -->
         <div id="warning_bar" class="spixi-errorbar" style="display:none">
             <div class="spixi-errorbar-icon"><i class="fa fa-info-circle"></i></div>
-            <div class="spixi-errorbar-message">Connecting to Ixian DLT...</div>
+            <div class="spixi-errorbar-message"></div>
         </div>
         <!-- End ErrorBar-->
 
@@ -540,16 +540,6 @@
     function selectMenuOption(link) {
         onMainMenuClose();
         location.href = "ixian:" + link;
-    }
-
-    function showWarning(value)
-    {
-        if (value == 0) {
-            document.getElementById("warning_bar").style.display = 'none';
-        }
-        else {
-            document.getElementById("warning_bar").style.display = 'block';
-        }
     }
 
     function loadAvatar(avatar_path) {

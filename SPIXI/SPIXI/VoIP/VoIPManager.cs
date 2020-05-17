@@ -48,7 +48,7 @@ namespace SPIXI.VoIP
             string codecs = String.Join("|", DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs());
 
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Calling " + friend.nickname + "...");
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", false);
         }
 
         public static void onReceivedCall(Friend friend, byte[] session_id, byte[] data)
@@ -151,7 +151,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = true;
             StreamProcessor.sendAppRequestAccept(currentCallContact, session_id, Encoding.UTF8.GetBytes(currentCallCodec));
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In-call with " + currentCallContact.nickname + ".");
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, true);
         }
 
         public static void onAcceptedCall(byte[] session_id, byte[] data)
@@ -169,7 +169,7 @@ namespace SPIXI.VoIP
             currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In-call with " + currentCallContact.nickname + ".");
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, true);
         }
 
         public static void rejectCall(byte[] session_id)

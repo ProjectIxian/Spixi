@@ -10,6 +10,15 @@ function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 
+function unescapeParameter(str)
+{
+    return str.replace(/&gt;/g, ">")
+            .replace(/&lt;/g, "<")
+            .replace(/&#92;/g, "\\")
+            .replace(/&#39;/g, "'")
+            .replace(/&#34;/g, "\"");
+}
+
 function quickScanJS() {
     let scanner = new Instascan.Scanner({});
     scanner.addListener('scan', function (content) {
@@ -62,6 +71,11 @@ function startRelativeTimeUpdate(className) {
     relativeTimeUpdateinterval = setInterval(function () {
         try {
             var els = document.getElementsByClassName(className);
+            if(els.length == 0)
+            {
+                clearInterval(relativeTimeUpdateinterval);
+                relativeTimeUpdateinterval = null;
+			}
             for (var i = 0; i < els.length; i++) {
                 var el = els[i];
                 var new_ts = getRelativeTime(el.getAttribute("data-timestamp"));
@@ -78,7 +92,34 @@ function startRelativeTimeUpdate(className) {
     }, 30000);
 }
 
-function addAppRequest(sessionId, text) {
+var callTimeUpdateinterval = null;
+
+function startCallTimeUpdate(className)
+{
+    if (callTimeUpdateinterval != null) {
+        return;
+    }
+
+    callTimeUpdateinterval = setInterval(function () {
+        try {
+            var els = document.getElementsByClassName(className);
+            for (var i = 0; i < els.length; i++) {
+                var el = els[i];
+                var totalTime = Math.floor((Date.now() - el.getAttribute("data-start-timestamp")) / 1000);
+                var mins = Math.floor(totalTime / 60);
+                var secs = Math.floor(totalTime % 60);
+                if(secs < 10)
+                {
+                    secs = "0" + secs;
+				}
+                el.innerHTML = mins + ":" + secs;
+            }
+        } catch (e) {
+        }
+    }, 1500);
+}
+
+function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
     removeAppRequest(sessionId);
 
     var el = document.createElement("div");
@@ -88,7 +129,10 @@ function addAppRequest(sessionId, text) {
     var acceptAction = "appAccept('" + sessionId + "');";
     var rejectAction = "appReject('" + sessionId + "');";
 
-    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="row"><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + acceptAction + '">Accept</div></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Reject</div></div></div>';
+    acceptHtml = unescapeParameter(acceptHtml);
+    rejectHtml = unescapeParameter(rejectHtml);
+
+    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6"><div onclick="' + acceptAction + '" style="display:inline-block;">' + acceptHtml + '</div></div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + rejectHtml + '</div></div></div>';
 
     document.body.appendChild(el);
 }
@@ -120,7 +164,7 @@ function appReject(sessionId) {
     location.href = 'ixian:appReject:' + sessionId;
 }
 
-function displayCallBar(sessionId, text)
+function displayCallBar(sessionId, text, hangUpHtml, displayTime)
 {
     var el = document.getElementById("CallBar");
     if(el == null)
@@ -136,7 +180,19 @@ function displayCallBar(sessionId, text)
 
     var rejectAction = "hangUp('" + sessionId + "');";
 
-    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="row"><div class="col-6"></div><div class="col-6"><div class="spixi-button small smallwidth center" onclick="' + rejectAction + '">Hang Up</div></div></div>';
+    hangUpHtml = unescapeParameter(hangUpHtml);
+
+    var timeHtml = "";
+    if(displayTime == "True")
+    {
+        timeHtml = '<div class="spixi-callbar-duration" data-start-timestamp="' + Date.now() + '"></div>';
+	}
+
+    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6">' + timeHtml + '</div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + hangUpHtml + '</div></div></div>';
+    if(displayTime == "True")
+    {
+        startCallTimeUpdate("spixi-callbar-duration");
+    }
 }
 
 function hangUp(sessionId)
@@ -147,4 +203,20 @@ function hangUp(sessionId)
 function hideCallBar()
 {
     document.getElementById("CallBar").style.display = "none";
+}
+
+function showWarning(text) {
+    var el = document.getElementById("warning_bar");
+    if(el == null)
+    {
+         return;
+	}
+    if (text == "") {
+        el.style.display = 'none';
+    }
+    else {
+        el.style.display = 'block';
+        var msgEls = el.getElementsByClassName("spixi-errorbar-message");
+        msgEls[0].innerHTML = text;
+    }
 }
