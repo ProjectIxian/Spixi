@@ -93,21 +93,14 @@ namespace SPIXI.Meta
                 block_checksum = Config.bakedBlockChecksum;
             }
 
-            string headers_path = "";
-            if (!Config.isTestNet)
+            string headers_path;
+            if (Config.isTestNet)
             {
-                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
+                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
             }
             else
             {
-                // Temporary hack for our beta testers, remove before release
-                string tmp_path = Path.Combine(Config.spixiUserFolder, "headers");
-                BlockHeaderStorage.init(tmp_path);
-                BlockHeaderStorage.deleteCache();
-                BlockHeaderStorage.stop();
-                // End of hack
-
-                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
+                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
             }
             // Init TIV
             tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
