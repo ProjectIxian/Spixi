@@ -76,8 +76,15 @@ namespace SPIXI
                 {
                     if(VoIPManager.currentCallAccepted)
                     {
-                        displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, true);
-                    }else
+                        if(VoIPManager.currentCallCalleeAccepted)
+                        {
+                            displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, true);
+                        }else
+                        {
+                            displayCallBar(VoIPManager.currentCallSessionId, "Dialing " + VoIPManager.currentCallContact.nickname + "...", false);
+                        }
+                    }
+                    else
                     {
                         Friend f = VoIPManager.currentCallContact;
                         string text = "Incoming Call - " + f.nickname;
