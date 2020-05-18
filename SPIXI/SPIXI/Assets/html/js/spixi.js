@@ -124,7 +124,7 @@ function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
 
     var el = document.createElement("div");
     el.id = "AppReq_" + sessionId;
-    el.className = "spixi-callbar container";
+    el.className = "spixi-callbar";
 
     var acceptAction = "appAccept('" + sessionId + "');";
     var rejectAction = "appReject('" + sessionId + "');";
@@ -176,7 +176,7 @@ function displayCallBar(sessionId, text, hangUpHtml, displayTime)
         el.style.display = "block";
 	}
     el.id = "CallBar";
-    el.className = "spixi-callbar container";
+    el.className = "spixi-callbar";
 
     var rejectAction = "hangUp('" + sessionId + "');";
 

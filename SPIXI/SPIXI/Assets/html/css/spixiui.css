@@ -521,17 +521,14 @@ img.emoji {
     color: white;
     font-family: 'robotobold', sans-serif;
     font-size: 18pt;
-    margin-top: 16px;
-    margin-left: 26px;
+    margin: 16px auto 0px auto;
 }
 
 .spixi-callbar-separator {
     width: 90%;
     height: 2px;
 
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 5px;
+    margin: 20px auto 10px auto;
     background-color: #5b5569;
 }
 
@@ -539,6 +536,8 @@ img.emoji {
 {
     width: 90%;
     font-size: 18pt;
+    margin: 0 auto;
+    padding-bottom: 10px;
 }
 
 .spixi-callbar-duration
