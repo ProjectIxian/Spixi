@@ -87,6 +87,12 @@ namespace SPIXI.Storage
                 // Add new transaction to local storage
                 transactions.Add(transaction);
 
+                // TODO improve this when/if needed
+                // keep only last 1000 transactions
+                if (transactions.Count > 1000)
+                {
+                    transactions.RemoveAt(0);
+                }
             }
             // Write to file
             if(writeToFile)
@@ -123,9 +129,16 @@ namespace SPIXI.Storage
 
                 // Add new transaction to local storage
                 unconfirmedTransactions.Add(transaction);
+
+                // TODO improve this when/if needed
+                // keep only last 1000 transactions
+                if (unconfirmedTransactions.Count > 1000)
+                {
+                    transactions.RemoveAt(0);
+                }
             }
             // Write to file
-            if(writeToFile)
+            if (writeToFile)
                 Node.localStorage.writeTransactionCacheFile();
 
             lastChange++;

@@ -647,9 +647,10 @@ namespace SPIXI.Storage
 
             TransactionCache.clearAllTransactions();
 
+            System.Int32 version = 0;
             try
             {
-                System.Int32 version = reader.ReadInt32();
+                version = reader.ReadInt32();
 
                 // Read confirmed transactions first
                 int num_tx = reader.ReadInt32();
@@ -683,6 +684,11 @@ namespace SPIXI.Storage
 
             reader.Close();
 
+            if(version < 2)
+            {
+                writeTransactionCacheFile();
+            }
+
             return true;
         }
 
@@ -708,7 +714,7 @@ namespace SPIXI.Storage
                 try
                 {
                     // TODO: encrypt written data
-                    System.Int32 version = 1; // Set the tx cache file version
+                    System.Int32 version = 2; // Set the tx cache file version
                     writer.Write(version);
 
                     // Write confirmed transaction
