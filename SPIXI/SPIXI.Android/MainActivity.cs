@@ -120,9 +120,6 @@ namespace SPIXI.Droid
             {
                 HomePage.Instance().onChat(fa, null);
             }
-
-            // CLear notifications
-            DependencyService.Get<IPushService>().clearNotifications();
         }
 
         protected override void OnPause()

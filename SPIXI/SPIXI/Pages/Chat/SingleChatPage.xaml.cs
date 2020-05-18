@@ -197,8 +197,6 @@ namespace SPIXI
             {
                 Thread.CurrentThread.IsBackground = true;
 
-                DependencyService.Get<IPushService>().clearNotifications();
-
                 if (DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs().Count > 0 && !friend.bot)
                 {
                     Utils.sendUiCommand(webView, "showCallButton", "");
@@ -211,6 +209,11 @@ namespace SPIXI
             updateScreen();
 
             loadMessages();
+
+            if (FriendList.getUnreadMessageCount() == 0)
+            {
+                DependencyService.Get<IPushService>().clearNotifications();
+            }
 
             // Set the last message as read
             friend.setLastRead();
