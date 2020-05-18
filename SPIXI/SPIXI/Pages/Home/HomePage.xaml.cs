@@ -262,6 +262,8 @@ namespace SPIXI
                 }
             }else if(current_url.StartsWith("ixian:viewLog"))
             {
+                // TODO perhaps move this whole functionality to Logging class and delete spixi.log.zip on start if exists
+
                 if (File.Exists(Path.Combine(Config.spixiUserFolder, "spixi.log.zip")))
                 {
                     File.Delete(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"));
@@ -277,6 +279,10 @@ namespace SPIXI
                 using (ZipArchive archive = ZipFile.Open(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), ZipArchiveMode.Create))
                 {
                     archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp"), "ixian.log");
+                    if(File.Exists(Path.Combine(Config.spixiUserFolder, "ixian.0.log")))
+                    {
+                        archive.CreateEntryFromFile(Path.Combine(Config.spixiUserFolder, "ixian.0.log"), "ixian.0.log");
+                    }
                 }
 
                 if (File.Exists(Path.Combine(Config.spixiUserFolder, "ixian.log.tmp")))
