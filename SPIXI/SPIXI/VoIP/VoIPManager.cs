@@ -111,7 +111,9 @@ namespace SPIXI.VoIP
                 {
                     StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data);
                 });
-            }catch(Exception e)
+                startLastPacketReceivedCheck();
+            }
+            catch(Exception e)
             {
                 Logging.error("Exception occured while starting VoIP session: " + e);
                 endVoIPSession();
@@ -253,7 +255,7 @@ namespace SPIXI.VoIP
             return false;
         }
 
-        public static void startLastPacketReceivedCheck()
+        private static void startLastPacketReceivedCheck()
         {
             lastPacketReceivedTime = Clock.getTimestamp();
             if(lastPacketReceivedCheckThread != null)
