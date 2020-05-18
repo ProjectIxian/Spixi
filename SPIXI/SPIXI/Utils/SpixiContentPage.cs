@@ -72,13 +72,19 @@ namespace SPIXI
                     string text = f.nickname + " wants to use " + app.name + " with you.";
                     Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text, "Accept", "Reject");
                 }
-                if(VoIPManager.isInitiated() && !VoIPManager.currentCallAccepted)
+                if(VoIPManager.isInitiated())
                 {
-                    Friend f = VoIPManager.currentCallContact;
-                    string text = "Incoming Call - " + f.nickname;
-                    string accept_html = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
-                    string reject_html = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
-                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);
+                    if(VoIPManager.currentCallAccepted)
+                    {
+                        displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, true);
+                    }else
+                    {
+                        Friend f = VoIPManager.currentCallContact;
+                        string text = "Incoming Call - " + f.nickname;
+                        string accept_html = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
+                        string reject_html = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
+                        Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);
+                    }
                 }
             }
         }

@@ -49,6 +49,9 @@ namespace SPIXI.VoIP
 
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", false);
+
+            DependencyService.Get<IPowerManager>().AquireLock("partial");
+            DependencyService.Get<IPowerManager>().AquireLock("wifi");
         }
 
         public static void onReceivedCall(Friend friend, byte[] session_id, byte[] data)
@@ -87,15 +90,14 @@ namespace SPIXI.VoIP
                 endVoIPSession();
                 return;
             }
+            DependencyService.Get<IPowerManager>().AquireLock("partial");
+            DependencyService.Get<IPowerManager>().AquireLock("wifi");
         }
 
         private static void startVoIPSession()
         {
             try
             {
-                DependencyService.Get<IPowerManager>().AquireLock("partial");
-                DependencyService.Get<IPowerManager>().AquireLock("wifi");
-
                 audioPlayer = DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
                 audioPlayer.start(currentCallCodec);
 
@@ -114,24 +116,30 @@ namespace SPIXI.VoIP
 
         private static void endVoIPSession()
         {
+            try
+            {
+                if (audioPlayer != null)
+                {
+                    audioPlayer.Dispose();
+                    audioPlayer = null;
+                }
+                if (audioRecorder != null)
+                {
+                    audioRecorder.Dispose();
+                    audioRecorder = null;
+                }
+                currentCallSessionId = null;
+                currentCallContact = null;
+                currentCallCalleeAccepted = false;
+                currentCallAccepted = false;
+                currentCallCodec = null;
+            }catch(Exception e)
+            {
+                Logging.error("Exception occured in endVoIPSession(): " + e);
+            }
+
             DependencyService.Get<IPowerManager>().ReleaseLock("partial");
             DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
-
-            if (audioPlayer != null)
-            {
-                audioPlayer.Dispose();
-                audioPlayer = null;
-            }
-            if (audioRecorder != null)
-            {
-                audioRecorder.Dispose();
-                audioRecorder = null;
-            }
-            currentCallSessionId = null;
-            currentCallContact = null;
-            currentCallCalleeAccepted = false;
-            currentCallAccepted = false;
-            currentCallCodec = null;
         }
 
         public static void acceptCall(byte[] session_id)

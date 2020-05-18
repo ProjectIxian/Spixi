@@ -965,7 +965,7 @@ namespace SPIXI
             new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
-            sendMessage(friend, new_msg);
+            sendMessage(friend, new_msg, true, false, false);
         }
 
         public static void sendAppRequestReject(Friend friend, byte[] session_id, byte[] data = null)
