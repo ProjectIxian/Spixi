@@ -183,13 +183,13 @@ function displayCallBar(sessionId, text, hangUpHtml, displayTime)
     hangUpHtml = unescapeParameter(hangUpHtml);
 
     var timeHtml = "";
-    if(displayTime == "True")
+    if(displayTime != "0")
     {
-        timeHtml = '<div class="spixi-callbar-duration" data-start-timestamp="' + Date.now() + '"></div>';
+        timeHtml = '<div class="spixi-callbar-duration" data-start-timestamp="' + (displayTime * 1000) + '"></div>';
 	}
 
     el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6">' + timeHtml + '</div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + hangUpHtml + '</div></div></div>';
-    if(displayTime == "True")
+    if(displayTime != "0")
     {
         startCallTimeUpdate("spixi-callbar-duration");
     }

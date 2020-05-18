@@ -18,6 +18,7 @@ namespace SPIXI.VoIP
         public static bool currentCallAccepted { get; private set; }
         public static bool currentCallCalleeAccepted { get; private set; }
         public static string currentCallCodec { get; private set; }
+        public static long currentCallStartedTime { get; private set; }
 
         static IAudioPlayer audioPlayer = null;
         static IAudioRecorder audioRecorder = null;
@@ -52,7 +53,7 @@ namespace SPIXI.VoIP
             string codecs = String.Join("|", DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs());
 
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", false);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", 0);
 
             DependencyService.Get<IPowerManager>().AquireLock("partial");
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
@@ -111,6 +112,7 @@ namespace SPIXI.VoIP
                 {
                     StreamProcessor.sendAppData(currentCallContact, currentCallSessionId, data);
                 });
+                currentCallStartedTime = Clock.getTimestamp();
                 startLastPacketReceivedCheck();
             }
             catch(Exception e)
@@ -129,29 +131,57 @@ namespace SPIXI.VoIP
                     audioPlayer.Dispose();
                     audioPlayer = null;
                 }
+            }
+            catch (Exception e)
+            {
+                audioPlayer = null;
+                Logging.error("Exception occured in endVoIPSession 1: " + e);
+            }
+
+            try
+            {
                 if (audioRecorder != null)
                 {
                     audioRecorder.Dispose();
                     audioRecorder = null;
                 }
-                currentCallSessionId = null;
-                currentCallContact = null;
-                currentCallCalleeAccepted = false;
-                currentCallAccepted = false;
-                currentCallCodec = null;
-                if (lastPacketReceivedCheckThread != null)
-                {
-                    lastPacketReceivedCheckThread.Abort();
-                    lastPacketReceivedCheckThread = null;
-                }
             }
             catch (Exception e)
             {
-                Logging.error("Exception occured in endVoIPSession(): " + e);
+                audioRecorder = null;
+                Logging.error("Exception occured in endVoIPSession 2: " + e);
             }
 
-            DependencyService.Get<IPowerManager>().ReleaseLock("partial");
-            DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
+            currentCallSessionId = null;
+            currentCallContact = null;
+            currentCallCalleeAccepted = false;
+            currentCallAccepted = false;
+            currentCallCodec = null;
+            currentCallStartedTime = 0;
+            lastPacketReceivedTime = 0;
+            if (lastPacketReceivedCheckThread != null)
+            {
+                try
+                {
+                    lastPacketReceivedCheckThread.Abort();
+                }
+                catch (Exception)
+                {
+                }
+                lastPacketReceivedCheckThread = null;
+            }
+
+            try
+            {
+                DependencyService.Get<IPowerManager>().ReleaseLock("partial");
+                DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in endVoIPSession 3: " + e);
+            }
+
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
         }
 
         public static void acceptCall(byte[] session_id)
@@ -171,7 +201,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = true;
             StreamProcessor.sendAppRequestAccept(currentCallContact, session_id, Encoding.UTF8.GetBytes(currentCallCodec));
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, true);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, currentCallStartedTime);
         }
 
         public static void onAcceptedCall(byte[] session_id, byte[] data)
@@ -189,7 +219,7 @@ namespace SPIXI.VoIP
             currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, true);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, currentCallStartedTime);
         }
 
         public static void rejectCall(byte[] session_id)
@@ -241,8 +271,8 @@ namespace SPIXI.VoIP
             }
             if (audioPlayer != null)
             {
-                lastPacketReceivedTime = Clock.getTimestamp();
                 audioPlayer.write(data, 0, data.Length);
+                lastPacketReceivedTime = Clock.getTimestamp();
             }
         }
 
@@ -260,7 +290,12 @@ namespace SPIXI.VoIP
             lastPacketReceivedTime = Clock.getTimestamp();
             if(lastPacketReceivedCheckThread != null)
             {
-                lastPacketReceivedCheckThread.Abort();
+                try
+                {
+                    lastPacketReceivedCheckThread.Abort();
+                }catch(Exception)
+                { 
+                }
                 lastPacketReceivedCheckThread = null;
             }
             lastPacketReceivedCheckThread = new Thread(lastPacketReceivedCheck);
@@ -270,10 +305,11 @@ namespace SPIXI.VoIP
 
         private static void lastPacketReceivedCheck()
         {
-            while(lastPacketReceivedTime + 10 > Clock.getTimestamp())
+            while(currentCallStartedTime != 0 && lastPacketReceivedTime + 10 > Clock.getTimestamp())
             {
                 Thread.Sleep(1000);
             }
+            lastPacketReceivedCheckThread = null;
             endVoIPSession();
         }
     }

@@ -33,13 +33,13 @@ namespace SPIXI
             return DisplayAlert(title, message, cancel);
         }
 
-        public void displayCallBar(byte[] session_id, string text, bool display_time)
+        public void displayCallBar(byte[] session_id, string text, long call_started_time)
         {
             if (_webView == null)
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text, "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>", display_time.ToString());
+            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text, "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>", call_started_time.ToString());
         }
 
         public void hideCallBar()
@@ -78,10 +78,10 @@ namespace SPIXI
                     {
                         if(VoIPManager.currentCallCalleeAccepted)
                         {
-                            displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, true);
+                            displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, VoIPManager.currentCallStartedTime);
                         }else
                         {
-                            displayCallBar(VoIPManager.currentCallSessionId, "Dialing " + VoIPManager.currentCallContact.nickname + "...", false);
+                            displayCallBar(VoIPManager.currentCallSessionId, "Dialing " + VoIPManager.currentCallContact.nickname + "...", 0);
                         }
                     }
                     else
