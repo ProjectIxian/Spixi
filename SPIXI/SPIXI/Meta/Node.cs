@@ -87,8 +87,14 @@ namespace SPIXI.Meta
             ulong block_height = 1;
             byte[] block_checksum = null;
 
-            if (!CoreConfig.isTestNet)
+            string headers_path;
+            if (Config.isTestNet)
             {
+                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
+            }
+            else
+            {
+                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
                 if (!walletStorage.walletExists())
                 {
                     block_height = Config.bakedBlockHeight;
@@ -99,16 +105,6 @@ namespace SPIXI.Meta
                     block_height = Config.bakedRecoveryBlockHeight;
                     block_checksum = Config.bakedRecoveryBlockChecksum;
                 }
-            }
-
-            string headers_path;
-            if (Config.isTestNet)
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
-            }
-            else
-            {
-                headers_path = Path.Combine(Config.spixiUserFolder, "headers");
             }
             // Init TIV
             tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
