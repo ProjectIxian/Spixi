@@ -1,9 +1,11 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Xamarin.Forms;
 
 namespace SPIXI.VoIP
@@ -20,6 +22,8 @@ namespace SPIXI.VoIP
         static IAudioPlayer audioPlayer = null;
         static IAudioRecorder audioRecorder = null;
 
+        static long lastPacketReceivedTime = 0;
+        static Thread lastPacketReceivedCheckThread = null;
 
         public static bool isInitiated()
         {
@@ -133,7 +137,13 @@ namespace SPIXI.VoIP
                 currentCallCalleeAccepted = false;
                 currentCallAccepted = false;
                 currentCallCodec = null;
-            }catch(Exception e)
+                if (lastPacketReceivedCheckThread != null)
+                {
+                    lastPacketReceivedCheckThread.Abort();
+                    lastPacketReceivedCheckThread = null;
+                }
+            }
+            catch (Exception e)
             {
                 Logging.error("Exception occured in endVoIPSession(): " + e);
             }
@@ -229,6 +239,7 @@ namespace SPIXI.VoIP
             }
             if (audioPlayer != null)
             {
+                lastPacketReceivedTime = Clock.getTimestamp();
                 audioPlayer.write(data, 0, data.Length);
             }
         }
@@ -240,6 +251,28 @@ namespace SPIXI.VoIP
                 return true;
             }
             return false;
+        }
+
+        public static void startLastPacketReceivedCheck()
+        {
+            lastPacketReceivedTime = Clock.getTimestamp();
+            if(lastPacketReceivedCheckThread != null)
+            {
+                lastPacketReceivedCheckThread.Abort();
+                lastPacketReceivedCheckThread = null;
+            }
+            lastPacketReceivedCheckThread = new Thread(lastPacketReceivedCheck);
+            lastPacketReceivedCheckThread.IsBackground = true;
+            lastPacketReceivedCheckThread.Start();
+        }
+
+        private static void lastPacketReceivedCheck()
+        {
+            while(lastPacketReceivedTime + 10 > Clock.getTimestamp())
+            {
+                Thread.Sleep(1000);
+            }
+            endVoIPSession();
         }
     }
 }
