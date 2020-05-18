@@ -89,10 +89,13 @@ namespace SPIXI
 
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
                 FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);
-                fm.transferId = transfer.uid;
-                fm.filePath = transfer.fileName;
-                fm.fileSize = transfer.fileSize;
-                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                if (fm != null)
+                {
+                    fm.transferId = transfer.uid;
+                    fm.filePath = transfer.fileName;
+                    fm.fileSize = transfer.fileSize;
+                    Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                }
             }
             else
             {
