@@ -41,10 +41,17 @@ namespace SPIXI.Meta
 
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
-        public static ulong bakedBlockHeight = 1117064;
+        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 1000, the correct value is 999)
+        public static ulong bakedBlockHeight = 1132999;
 
-        // Block checksum (paired with bakedBlockHeight) at which the current version of Spixi was generated
+        // Block checksum (paired with bakedBlockHeight) of bakedBlockHeight
         // Useful for optimized block header sync
-        public static byte[] bakedBlockChecksum = Crypto.stringToHash("eba79772cddafa5aa3c51278771bcbb7105f285f8ba8b90bdf22b4d0c9b85e61ca1440aa7d29fd95252da228");
+        public static byte[] bakedBlockChecksum = Crypto.stringToHash("cfb531a4d9131dd61caedf8052b9d481c73fa9894c0d949f56db1e2deba2e53b9dadd2d6de5a025d847e838e");
+
+
+        // Temporary variables for bh sync recovery
+        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 1000, the correct value is 999)
+        public static ulong bakedRecoveryBlockHeight = 999999;
+        public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("fa9d2126ecb78648b45e8d4bc382503c27563e7815bfaf6d32ef4b95bdd4041b7a631fc559fa007fb6af7e74");
     }
 }

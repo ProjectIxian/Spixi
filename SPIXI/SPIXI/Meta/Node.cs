@@ -87,10 +87,18 @@ namespace SPIXI.Meta
             ulong block_height = 1;
             byte[] block_checksum = null;
 
-            if (!walletStorage.walletExists())
+            if (!CoreConfig.isTestNet)
             {
-                block_height = Config.bakedBlockHeight;
-                block_checksum = Config.bakedBlockChecksum;
+                if (!walletStorage.walletExists())
+                {
+                    block_height = Config.bakedBlockHeight;
+                    block_checksum = Config.bakedBlockChecksum;
+                }
+                else
+                {
+                    block_height = Config.bakedRecoveryBlockHeight;
+                    block_checksum = Config.bakedRecoveryBlockChecksum;
+                }
             }
 
             string headers_path;
