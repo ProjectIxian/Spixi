@@ -38,6 +38,9 @@ namespace SPIXI
 		{
             InitializeComponent();
 
+            // Fix for issue https://github.com/xamarin/Xamarin.Forms/issues/10712#issuecomment-629394090
+            Device.SetFlags(new string[] { "anything" });
+            
             // check if already started
             if (Node.Instance == null)
             {
