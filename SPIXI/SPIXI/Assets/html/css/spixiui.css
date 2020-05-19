@@ -188,6 +188,7 @@ img.emoji {
     -ms-flex: auto;
     flex: auto;
     padding-left: 50pt;
+    padding-right: 50pt;
     left: 0px;
     right: 0px;
     box-sizing: border-box;
@@ -196,13 +197,13 @@ img.emoji {
 .spixi-toolbar-row > div:nth-child(3) {
     position: absolute;
     z-index: 1;
+    max-width: 50pt;
     -webkit-box-flex: unset;
     -ms-flex: auto;
     flex: auto;
     padding-right: 30px;
     text-align: right;
     right: 0px;
-    background-image: linear-gradient(#951453, #c2185b);
 }
 
 .spixi-toolbar-row.extended {
