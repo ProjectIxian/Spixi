@@ -31,7 +31,6 @@ namespace SPIXI.CustomApps
                     continue;
                 }
 
-                Logging.info("Processing config parameter '" + key + "' = '" + value + "'");
                 int caVersion = 0;
                 switch(key)
                 {

@@ -44,7 +44,6 @@ namespace SPIXI.Network
                 {
                     try
                     {
-                        Logging.info("Loading messages for " + Path.GetFileName(dir_path));
                         Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(Path.GetFileName(dir_path)));
                         if (friend == null)
                         {
