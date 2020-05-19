@@ -160,8 +160,7 @@ namespace SPIXI
                 SpixiContentPage p = (SpixiContentPage)((NavigationPage)MainPage).CurrentPage;
                 p.onResume();
             }
-
-            OfflinePushMessages.fetchPushMessages(true);
+            OfflinePushMessages.lastUpdate = 0;
         }
     }
 }

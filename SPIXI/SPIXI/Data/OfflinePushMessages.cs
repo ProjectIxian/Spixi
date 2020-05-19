@@ -12,7 +12,7 @@ namespace SPIXI
 {
     public class OfflinePushMessages
     {
-        private static long lastUpdate = 0;
+        public static long lastUpdate = 0;
         private static int cooldownPeriod = 60; // cooldown period in seconds
 
         private static string pushNotificationAuthKey = null;
