@@ -5,6 +5,7 @@ using IXICore.Utils;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -754,7 +755,7 @@ namespace SPIXI
             lock (messages)
             {
                 var fm = messages.Find(x => x.id.SequenceEqual(session_id));
-                if (call_accepted == true)
+                if (call_accepted == true && messages.Last() != fm)
                 {
                     fm.message = call_duration.ToString();
                     FriendList.addMessageWithType(null, FriendMessageType.voiceCallEnd, walletAddress, fm.message, local_sender, null, 0, false);
@@ -762,7 +763,15 @@ namespace SPIXI
                 else
                 {
                     fm.type = FriendMessageType.voiceCallEnd;
+                    if (call_accepted)
+                    {
+                        fm.message = call_duration.ToString();
+                    }
                     Node.localStorage.writeMessages(walletAddress, messages);
+                    if (chat_page != null)
+                    {
+                        chat_page.insertMessage(fm);
+                    }
                 }
             }
         }

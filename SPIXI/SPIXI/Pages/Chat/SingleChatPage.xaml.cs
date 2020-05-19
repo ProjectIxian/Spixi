@@ -723,7 +723,7 @@ namespace SPIXI
                 bool declined = false;
                 if(message.message == "")
                 {
-                    if(!VoIPManager.hasSession(message.id))
+                    if(message.type == FriendMessageType.voiceCallEnd || !VoIPManager.hasSession(message.id))
                     {
                         declined = true;
                         if (message.localSender)
@@ -735,8 +735,7 @@ namespace SPIXI
                             text = "Missed call";
                         }
                     }
-                }else
-                if(message.type == FriendMessageType.voiceCallEnd)
+                }else if(message.type == FriendMessageType.voiceCallEnd)
                 {
                     text = text +" ended (" + message.message + ")";
                 }

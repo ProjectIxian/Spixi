@@ -422,6 +422,12 @@
             textEl.className = "text selectable";
             textEl.innerHTML = message;
 
+            var timeClass = "spixi-timestamp";
+            var relativeTime = getRelativeTime(time);
+            if (getTimeDifference(time) < 3600) {
+                timeClass = "spixi-timestamp spixi-rel-ts-active";
+            }
+
             var timeEl = document.createElement('div');
             timeEl.setAttribute("data-timestamp", time);
             timeEl.className = "time selectable " + timeClass;
@@ -430,11 +436,22 @@
             var icon = document.createElement('div');
             icon.className = "fa fa-phone icon";
 
-            var bubbleEl = document.createElement('div');
+            var bubbleEl = document.getElementById("call_" + id);
+            var append = false;
+            if(bubbleEl == null)
+            {
+                bubbleEl = document.createElement('div');
+                append = true;
+            }else
+            {
+                bubbleEl.innerHTML = "";
+            }
+
             bubbleEl.id = "call_" + id;
             bubbleEl.className = "spixi-callbubble";
             if (declined == "True") {
-                bubbleEl.className = "spixi-callbubble spixi-callbubble-declined"; icon.className = "fa fa-phone-slash icon";
+                bubbleEl.className = "spixi-callbubble spixi-callbubble-declined";
+                icon.className = "fa fa-phone-slash icon";
             }
 
             bubbleEl.appendChild(icon);
@@ -448,8 +465,10 @@
 
 
             var scroll = shouldScroll();
-
-            document.getElementById("messages").appendChild(bubbleEl);
+            if(append)
+            {
+                document.getElementById("messages").appendChild(bubbleEl);
+            }
 
             if (scroll) {
                 document.getElementById("chatholder").scrollIntoView(false);

@@ -598,8 +598,12 @@ namespace SPIXI
                     else if (lastmsg.type == FriendMessageType.fileHeader)
                     {
                         excerpt = "File";
+                    }else if(lastmsg.type == FriendMessageType.voiceCall || lastmsg.type == FriendMessageType.voiceCallEnd)
+                    {
+                        excerpt = "Voice Call";
                     }
-                    else if (lastmsg.localSender)
+                    
+                    if (lastmsg.localSender)
                     {
                         excerpt = "You: " + excerpt;
                     }
