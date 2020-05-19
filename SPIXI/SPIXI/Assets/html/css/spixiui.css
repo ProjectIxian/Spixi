@@ -1363,78 +1363,53 @@ img.emoji {
 
 .spixi-callbubble
 {
+    display: table;
     font-size: 10pt;
     position:relative;
     background:#dbdfe2;
-    border-radius:16px;
+    border-radius:32px;
     color: black;
     
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 20px;
-    padding: 15px;
-    padding-top: 10px;
+    padding: 15px 30px;
     min-width: 80px;
-    width: 200px;
-    padding-bottom: 28px;   
     
     animation-name: chat_animation;
     animation-duration: 0.3s;
 
     word-wrap: break-word;
 }
-.spixi-callbubble-declined { 
-
-    background:#dfbdcf;
-}
 
 .spixi-callbubble .icon {
     display: table-cell;
-    float: left;
+    vertical-align: middle;
     font-size: 18pt;
-    margin-top: 8px;
     position: relative;
     z-index: 2;
-    color: #2893EF;
-    padding-left: 10px;
-    padding-top: 12px;
-    
-    width: 50px;
-    height: 50px;
+    color: #2fd63b;
 }
 
-.spixi-callbubble .icon-black {
+.spixi-callbubble-declined .icon {
+    color: #de0a61;
+}
+
+.spixi-call-data {
     display: table-cell;
-    float: left;
-    font-size: 18pt;
-    margin-top: 8px;
-    position: relative;
-    z-index: 2;
-    color: #000;
-    padding-left: 10px;
-    padding-top: 12px;
-    
-    width: 50px;
-    height: 50px;
-}
-
-.spixi-callbubble .title {
-    font-size: 10pt;
-    margin-left: 55px;
+    padding-left: 20px;
 }
 
 .spixi-callbubble .text {
-    margin-left: 55px;
     font-size: 12pt;
+    font-family: 'robotobold', sans-serif;
+    color: #363636;
 }
 
 .spixi-callbubble .time {
-    margin-left: 55px;
-    padding-top: 5px;
-    font-size: 7pt;
-    color: #000;
+    font-size: 10pt;
+    color: #363636;
     z-index: 4;
-    position: absolute;
+    font-family: 'robotoregular', sans-serif;
 }
 
 .chatholder {

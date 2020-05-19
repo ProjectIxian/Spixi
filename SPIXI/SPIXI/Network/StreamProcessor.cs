@@ -1069,6 +1069,8 @@ namespace SPIXI
                     {
                         VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data);
                         Node.refreshAppRequests = true;
+
+                        FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, "");
                         return;
                     }else
                     {
@@ -1077,6 +1079,8 @@ namespace SPIXI
                         return;
                     }
                 }
+                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, app.id);
+
                 app_page = new CustomAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
                 app_page.myRequestAddress = recipient_address;
                 app_page.requestedByAddress = sender_address;

@@ -23,7 +23,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/spixi.js"></script>
 </head>
-<body onload="onChatScreenLoad()">
+<body onload="onChatScreenLoad();">
     <div id="wrap" class="container-fluid noselect">
 
         <!-- Toolbar Chat -->
@@ -417,19 +417,16 @@
             }
         }
 
-        function addCall(id, title, message, declined, time) {
-            var titleEl = document.createElement('div');
-            titleEl.className = "title";
-            titleEl.innerHTML = title;
-
+        function addCall(id, message, declined, time) {
             var textEl = document.createElement('div');
-            textEl.className = "text";
+            textEl.className = "text selectable";
             textEl.innerHTML = message;
 
             var timeEl = document.createElement('div');
-            timeEl.className = "time";
-            timeEl.innerHTML = time;
-
+            timeEl.setAttribute("data-timestamp", time);
+            timeEl.className = "time selectable " + timeClass;
+            timeEl.innerHTML = relativeTime;
+        
             var icon = document.createElement('div');
             icon.className = "fa fa-phone icon";
 
@@ -437,14 +434,18 @@
             bubbleEl.id = "call_" + id;
             bubbleEl.className = "spixi-callbubble";
             if (declined == "True") {
-                bubbleEl.className = "spixi-callbubble spixi-callbubble-declined"; icon.className = "fa fa-phone-slash icon-black";
+                bubbleEl.className = "spixi-callbubble spixi-callbubble-declined"; icon.className = "fa fa-phone-slash icon";
             }
 
             bubbleEl.appendChild(icon);
 
-            bubbleEl.appendChild(titleEl);
-            bubbleEl.appendChild(textEl);
-            bubbleEl.appendChild(timeEl);
+            var dataEl = document.createElement('div');
+            dataEl.className = "spixi-call-data";
+            dataEl.appendChild(textEl);
+            dataEl.appendChild(timeEl);
+
+            bubbleEl.appendChild(dataEl);
+
 
             var scroll = shouldScroll();
 

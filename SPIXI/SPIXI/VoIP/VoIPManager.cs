@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace SPIXI.VoIP
         static long lastPacketReceivedTime = 0;
         static Thread lastPacketReceivedCheckThread = null;
 
+        static bool currentCallInitiator = false;
+
         public static bool isInitiated()
         {
             if(currentCallSessionId != null)
@@ -49,9 +52,11 @@ namespace SPIXI.VoIP
             currentCallCalleeAccepted = false;
             currentCallAccepted = true;
             currentCallCodec = null;
+            currentCallInitiator = true;
 
             string codecs = String.Join("|", DependencyService.Get<ISpixiCodecInfo>().getSupportedAudioCodecs());
 
+            FriendList.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCall, friend.walletAddress, "", true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", 0);
 
@@ -75,6 +80,7 @@ namespace SPIXI.VoIP
             currentCallCalleeAccepted = true;
             currentCallAccepted = false;
             currentCallCodec = null;
+            currentCallInitiator = false;
 
             var codec_service = DependencyService.Get<ISpixiCodecInfo>();
 
@@ -152,6 +158,8 @@ namespace SPIXI.VoIP
                 Logging.error("Exception occured in endVoIPSession 2: " + e);
             }
 
+            currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, Clock.getTimestamp() - currentCallStartedTime, currentCallInitiator);
+
             currentCallSessionId = null;
             currentCallContact = null;
             currentCallCalleeAccepted = false;
@@ -180,7 +188,6 @@ namespace SPIXI.VoIP
             {
                 Logging.error("Exception occured in endVoIPSession 3: " + e);
             }
-
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
         }
 

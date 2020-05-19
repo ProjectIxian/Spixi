@@ -17,7 +17,11 @@ namespace SPIXI
         requestAdd,
         requestFunds,
         sentFunds,
-        fileHeader
+        fileHeader,
+        voiceCall,
+        voiceCallEnd,
+        appSession,
+        appSessionEnd
     }
 
 
@@ -741,6 +745,24 @@ namespace SPIXI
                 {
                     _nick = value;
                     FriendList.saveToStorage();
+                }
+            }
+        }
+
+        public void endCall(byte[] session_id, bool call_accepted, long call_duration, bool local_sender)
+        {
+            lock (messages)
+            {
+                var fm = messages.Find(x => x.id.SequenceEqual(session_id));
+                if (call_accepted == true)
+                {
+                    fm.message = call_duration.ToString();
+                    FriendList.addMessageWithType(null, FriendMessageType.voiceCallEnd, walletAddress, fm.message, local_sender, null, 0, false);
+                }
+                else
+                {
+                    fm.type = FriendMessageType.voiceCallEnd;
+                    Node.localStorage.writeMessages(walletAddress, messages);
                 }
             }
         }

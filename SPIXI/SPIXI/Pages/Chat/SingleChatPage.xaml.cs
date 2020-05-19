@@ -468,6 +468,7 @@ namespace SPIXI
                 Navigation.PushAsync(custom_app_page, Config.defaultXamarinAnimations);
             });
 
+            FriendList.addMessageWithType(custom_app_page.sessionId, FriendMessageType.appSession, friend.walletAddress, app_id, true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
         }
 
@@ -708,6 +709,40 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString());
             }
+
+            if(message.type == FriendMessageType.voiceCall || message.type == FriendMessageType.voiceCallEnd)
+            {
+                string text;
+                if(message.localSender)
+                {
+                    text = "Outgoing call";
+                }else
+                {
+                    text = "Incoming call";
+                }
+                bool declined = false;
+                if(message.message == "")
+                {
+                    if(!VoIPManager.hasSession(message.id))
+                    {
+                        declined = true;
+                        if (message.localSender)
+                        {
+                            text = "No answer";
+                        }
+                        else
+                        {
+                            text = "Missed call";
+                        }
+                    }
+                }else
+                if(message.type == FriendMessageType.voiceCallEnd)
+                {
+                    text = text +" ended (" + message.message + ")";
+                }
+                Utils.sendUiCommand(webView, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
+            }
+
             updateMessageReadStatus(message);
         }
 
