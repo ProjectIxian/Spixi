@@ -88,6 +88,9 @@ public class PushService_Android : IPushService
 
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
+            NotificationChannelGroup group = new NotificationChannelGroup("NEWMSG", "New Message");
+            manager.CreateNotificationChannelGroup(group);
+            
             var channelNameJava = new Java.Lang.String(channelName);
             var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
             {
