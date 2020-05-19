@@ -60,6 +60,8 @@ namespace SPIXI
                 // Start logging
                 Logging.start(Config.spixiUserFolder);
 
+                Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
+
                 // Load or generate a device ID.
                 if (Application.Current.Properties.ContainsKey("uid"))
                 {
