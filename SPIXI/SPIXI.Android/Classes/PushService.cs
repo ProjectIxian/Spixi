@@ -88,14 +88,15 @@ public class PushService_Android : IPushService
 
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            NotificationChannelGroup group = new NotificationChannelGroup("NEWMSG", "New Message");
-            manager.CreateNotificationChannelGroup(group);
-            
+            // TODO setting group here clears all notifications when calling OneSignal.Current.ClearAndroidOneSignalNotifications();
+            //NotificationChannelGroup group = new NotificationChannelGroup("NEWMSG", "New Message");
+            //manager.CreateNotificationChannelGroup(group);
+
             var channelNameJava = new Java.Lang.String(channelName);
             var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
             {
                 Description = channelDescription,
-                Group = "NEWMSG",
+                //Group = "NEWMSG", // TODO setting group here clears all notifications when calling OneSignal.Current.ClearAndroidOneSignalNotifications();
                 Importance = NotificationImportance.High
             };
             manager.CreateNotificationChannel(channel);
