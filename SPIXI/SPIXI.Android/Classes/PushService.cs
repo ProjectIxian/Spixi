@@ -51,9 +51,6 @@ public class PushService_Android : IPushService
 
     public void showLocalNotification(string title, string message, string data)
     {
-        MainActivity activity = MainActivity.Instance;
-
-
         if (!channelInitialized)
         {
             CreateNotificationChannel();
@@ -72,11 +69,16 @@ public class PushService_Android : IPushService
             .SetContentIntent(pendingIntent)
             .SetContentTitle(title)
             .SetContentText(message)
-            .SetGroup("NEWMSG")
             .SetPriority(1)
             .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.statusicon))
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.KitkatWatch)
+        {
+            builder.SetGroup("NEWMSGL");
+        }
+
 
         var notification = builder.Build();
         manager.Notify(messageId, notification);
@@ -88,15 +90,14 @@ public class PushService_Android : IPushService
 
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
-            // TODO setting group here clears all notifications when calling OneSignal.Current.ClearAndroidOneSignalNotifications();
-            //NotificationChannelGroup group = new NotificationChannelGroup("NEWMSG", "New Message");
-            //manager.CreateNotificationChannelGroup(group);
+            NotificationChannelGroup group = new NotificationChannelGroup("NEWMSGL", "New Message");
+            manager.CreateNotificationChannelGroup(group);
 
             var channelNameJava = new Java.Lang.String(channelName);
             var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
             {
                 Description = channelDescription,
-                //Group = "NEWMSG", // TODO setting group here clears all notifications when calling OneSignal.Current.ClearAndroidOneSignalNotifications();
+                Group = "NEWMSGL",
                 Importance = NotificationImportance.High
             };
             manager.CreateNotificationChannel(channel);
