@@ -737,7 +737,10 @@ namespace SPIXI
                     }
                 }else if(message.type == FriendMessageType.voiceCallEnd)
                 {
-                    text = text +" ended (" + message.message + ")";
+                    long seconds = Int32.Parse(message.message);
+                    long minutes = seconds / 60;
+                    seconds = seconds % 60;
+                    text = text + string.Format(" ended ({0}:{1})", minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
                 }
                 Utils.sendUiCommand(webView, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
