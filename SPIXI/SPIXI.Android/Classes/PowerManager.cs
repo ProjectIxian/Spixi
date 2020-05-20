@@ -36,11 +36,18 @@ public class PowerManager_Android : IPowerManager
                     wakeLocks.Add(lock_type, pm_lock);
                     return true;
                 case "proximityScreenOff":
-                    pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
-                    pm_lock = pm.NewWakeLock(WakeLockFlags.ProximityScreenOff, "Spixi");
-                    pm_lock.Acquire();
-                    wakeLocks.Add(lock_type, pm_lock);
-                    return true;
+                    if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Lollipop)
+                    {
+                        pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
+                        if (pm.IsWakeLockLevelSupported((int)WakeLockFlags.ProximityScreenOff))
+                        {
+                            pm_lock = pm.NewWakeLock(WakeLockFlags.ProximityScreenOff, "Spixi");
+                            pm_lock.Acquire();
+                            wakeLocks.Add(lock_type, pm_lock);
+                            return true;
+                        }
+                    }
+                    break;
                 case "wifi":
                     WifiManager wm = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
                     var wm_lock = wm.CreateWifiLock(Android.Net.WifiMode.FullHighPerf, "Spixi");
