@@ -64,7 +64,7 @@ namespace SPIXI.VoIP
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
         }
 
-        public static void onReceivedCall(Friend friend, byte[] session_id, byte[] data)
+        public static bool onReceivedCall(Friend friend, byte[] session_id, byte[] data)
         {
             if (currentCallSessionId != null)
             {
@@ -72,7 +72,7 @@ namespace SPIXI.VoIP
                 {
                     StreamProcessor.sendAppRequestReject(friend, session_id);
                 }
-                return;
+                return false;
             }
 
             currentCallSessionId = session_id;
@@ -99,10 +99,11 @@ namespace SPIXI.VoIP
             {
                 Logging.error("Unsupported audio codecs: " + codecs_str);
                 endVoIPSession();
-                return;
+                return false;
             }
             DependencyService.Get<IPowerManager>().AquireLock("partial");
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
+            return true;
         }
 
         private static void startVoIPSession()

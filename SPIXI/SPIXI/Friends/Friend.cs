@@ -775,5 +775,16 @@ namespace SPIXI
                 }
             }
         }
+
+        public bool hasMessage(byte[] message_id)
+        {
+            var fm = messages.Find(x => x.id.SequenceEqual(message_id));
+            if(fm == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

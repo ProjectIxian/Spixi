@@ -1067,10 +1067,14 @@ namespace SPIXI
                 {
                     if (app_id == "spixi.voip")
                     {
-                        VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data);
-                        Node.refreshAppRequests = true;
-
-                        FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, "");
+                        if (!friend.hasMessage(app_data.sessionId))
+                        {
+                            if (VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data))
+                            {
+                                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, "");
+                            }
+                            Node.refreshAppRequests = true;
+                        }
                         return;
                     }else
                     {
@@ -1079,15 +1083,16 @@ namespace SPIXI
                         return;
                     }
                 }
-                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, app.id);
+                if (FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, app.id) != null)
+                {
+                    app_page = new CustomAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
+                    app_page.myRequestAddress = recipient_address;
+                    app_page.requestedByAddress = sender_address;
+                    app_page.sessionId = app_data.sessionId;
+                    am.addAppPage(app_page);
 
-                app_page = new CustomAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
-                app_page.myRequestAddress = recipient_address;
-                app_page.requestedByAddress = sender_address;
-                app_page.sessionId = app_data.sessionId;
-                am.addAppPage(app_page);
-
-                Node.refreshAppRequests = true;
+                    Node.refreshAppRequests = true;
+                }
             });
         }
 
@@ -1099,6 +1104,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(app_data.sessionId))
             {
                 VoIPManager.onAcceptedCall(app_data.sessionId, app_data.data);
+                Node.refreshAppRequests = true;
                 return;
             }
 
@@ -1112,6 +1118,8 @@ namespace SPIXI
             page.accepted = true;
 
             page.appRequestAcceptReceived(sender_address, app_data.data);
+
+            Node.refreshAppRequests = true;
         }
 
         public static void handleAppRequestReject(byte[] sender_address, byte[] app_data_raw)
@@ -1123,6 +1131,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(session_id))
             {
                 VoIPManager.onRejectedCall(session_id);
+                Node.refreshAppRequests = true;
                 return;
             }
 
@@ -1134,6 +1143,8 @@ namespace SPIXI
             }
 
             page.appRequestRejectReceived(sender_address, app_data.data);
+
+            Node.refreshAppRequests = true;
         }
 
         public static void handleAppEndSession(byte[] sender_address, byte[] app_data_raw)
@@ -1145,6 +1156,7 @@ namespace SPIXI
             if (VoIPManager.hasSession(session_id))
             {
                 VoIPManager.onHangupCall(session_id);
+                Node.refreshAppRequests = true;
                 return;
             }
 
@@ -1156,6 +1168,7 @@ namespace SPIXI
             }
 
             page.appEndSessionReceived(sender_address, app_data.data);
+            Node.refreshAppRequests = true;
         }
 
         public static void sendAcceptAdd(Friend friend, bool reset_keys)
