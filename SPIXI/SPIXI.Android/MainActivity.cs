@@ -57,12 +57,12 @@ namespace SPIXI.Droid
 
             proximitySensor = new ProximitySensor();
 
+            IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
             LoadApplication(App.Instance());
 
             this.Window.ClearFlags(WindowManagerFlags.Fullscreen);
 
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.statusicon;
-            IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)

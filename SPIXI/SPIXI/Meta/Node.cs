@@ -70,9 +70,6 @@ namespace SPIXI.Meta
 
             CoreConfig.isTestNet = Config.isTestNet;
 
-            // Initialize the crypto manager
-            CryptoManager.initLib();
-
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
