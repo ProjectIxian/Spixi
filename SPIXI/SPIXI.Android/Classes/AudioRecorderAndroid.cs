@@ -2,6 +2,8 @@
 using IXICore.Meta;
 using SPIXI.VoIP;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -20,9 +22,10 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
     byte[] buffer = null;
 
 
-    byte[] outputBuffer = null;
-    int outputBufferFrameCount = 0;
+    List<int> availableBuffers = new List<int>();
+    List<byte[]> outputBuffers = new List<byte[]>();
 
+    Thread recordThread = null;
 
     public AudioRecorderAndroid()
     {
@@ -40,6 +43,9 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
         initRecorder();
         initEncoder(codec);
+
+        recordThread = new Thread(recordLoop);
+        recordThread.Start();
     }
 
     private void initRecorder()
@@ -59,7 +65,7 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
             // Audio encoding
             encoding,
             // Length of the audio clip.
-            bufferSize * 2
+            bufferSize * 5
         );
 
         audioRecorder.StartRecording();
@@ -131,13 +137,13 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
         buffer = null;
         bufferSize = 0;
-        if (outputBuffer != null)
+        lock(outputBuffers)
         {
-            lock (outputBuffer)
-            {
-                outputBuffer = null;
-                outputBufferFrameCount = 0;
-            }
+            outputBuffers.Clear();
+        }
+        lock(availableBuffers)
+        {
+            availableBuffers.Clear();
         }
     }
 
@@ -167,33 +173,96 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         Logging.error("Error occured in AudioRecorderAndroid callback: " + e);
     }
 
+    private void recordLoop()
+    {
+        while (running)
+        {
+            Thread.Sleep(10);
+
+            try
+            {
+                int num_bytes = 0;
+                if (audioRecorder != null)
+                {
+                    num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
+                }
+                else
+                {
+                    stop();
+                }
+                encodeAndSend(num_bytes);
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured while recording audio stream: " + e);
+            }
+        }
+        recordThread = null;
+    }
+
+    public void encodeAndSend(int num_bytes)
+    {
+        if (num_bytes > 0)
+        {
+            int buffer_index = -1;
+
+            lock (availableBuffers)
+            {
+                if (availableBuffers.Count > 0)
+                {
+                    buffer_index = availableBuffers[0];
+                    availableBuffers.RemoveAt(0);
+                }
+            }
+
+            if (buffer_index > -1)
+            {
+                var ib = audioEncoder.GetInputBuffer(buffer_index);
+                ib.Clear();
+
+                ib.Put(buffer);
+
+                audioEncoder.QueueInputBuffer(buffer_index, 0, num_bytes, 0, 0);
+            }
+        }
+
+        byte[] data_to_send = null;
+        lock (outputBuffers)
+        {
+            int total_size = 0;
+            foreach (var buf in outputBuffers)
+            {
+                total_size += buf.Length;
+            }
+
+            if (total_size >= 400)
+            {
+                data_to_send = new byte[total_size];
+                int data_written = 0;
+                foreach (var buf in outputBuffers)
+                {
+                    Array.Copy(buf, 0, data_to_send, data_written, buf.Length);
+                    data_written += buf.Length;
+                }
+                outputBuffers.Clear();
+            }
+        }
+        if (data_to_send != null)
+        {
+            OnSoundDataReceived(data_to_send);
+        }
+
+    }
+
     public override void OnInputBufferAvailable(MediaCodec codec, int index)
     {
         if(!running)
         {
             return;
         }
-        try
+        lock(availableBuffers)
         {
-            int num_bytes = 0;
-            if (audioRecorder != null)
-            {
-                num_bytes = audioRecorder.Read(buffer, 0, buffer.Length, 0);
-            }else
-            {
-                return;
-            }
-
-            var ib = audioEncoder.GetInputBuffer(index);
-            ib.Clear();
-
-            ib.Put(buffer);
-
-            audioEncoder.QueueInputBuffer(index, 0, num_bytes, 0, 0);
-        }
-        catch (Exception e)
-        {
-            Logging.error("Exception occured while recording audio stream: " + e);
+            availableBuffers.Add(index);
         }
     }
 
@@ -210,34 +279,13 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
             ob.Position(info.Offset);
             ob.Limit(info.Offset + info.Size);
 
+            byte[] buffer = new byte[info.Size];
+            ob.Get(buffer, 0, info.Size);
+            audioEncoder.ReleaseOutputBuffer(index, false);
 
-            if (outputBuffer == null)
+            lock (outputBuffers)
             {
-                outputBuffer = new byte[info.Size * 3];
-                outputBufferFrameCount = 0;
-            }
-
-            byte[] data_to_send = null;
-
-            lock (outputBuffer)
-            {
-                ob.Get(outputBuffer, outputBufferFrameCount * info.Size, info.Size);
-                audioEncoder.ReleaseOutputBuffer(index, false);
-
-                outputBufferFrameCount++;
-
-                if (outputBufferFrameCount == 3)
-                {
-                    data_to_send = (byte[])outputBuffer.Clone();
-                    outputBufferFrameCount = 0;
-                }
-            }
-            if (data_to_send != null)
-            {
-                Task.Run(() =>
-                {
-                    OnSoundDataReceived(data_to_send);
-                });
+                outputBuffers.Add(buffer);
             }
         }
         catch (Exception e)

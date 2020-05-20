@@ -5,6 +5,7 @@ using SPIXI.Droid;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayerAndroid))]
@@ -21,7 +22,9 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
     int bufferSize = 0;
 
-    int delay = 10;
+    int delay = 5;
+
+    Thread playThread = null;
 
     public AudioPlayerAndroid()
     {
@@ -37,7 +40,7 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
         running = true;
 
-        delay = 10;
+        delay = 5;
 
         lock (pendingFrames)
         {
@@ -47,6 +50,9 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
         initPlayer();
         initDecoder(codec);
+
+        playThread = new Thread(playLoop);
+        playThread.Start();
     }
 
     private void initPlayer()
@@ -67,10 +73,9 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
                                         .SetEncoding(encoding)
                                         .Build();
 
-        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding);
-        Console.WriteLine("Playback buffer size is " + bufferSize);
+        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding) * 10;
 
-        audioPlayer = new AudioTrack(aa, af, bufferSize * 5, AudioTrackMode.Stream, 0);
+        audioPlayer = new AudioTrack(aa, af, bufferSize, AudioTrackMode.Stream, 0);
 
         // TODO implement dynamic volume control
         AudioManager am = (AudioManager) MainActivity.Instance.GetSystemService(Context.AudioService);
@@ -111,13 +116,42 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         audioDecoder.Start();
     }
 
+    private void playLoop()
+    {
+        while(running)
+        {
+            Thread.Sleep(10);
+            if (delay > 0)
+            {
+                continue;
+            }
+            int buffer_index = -1;
+            byte[] frame = null;
+            lock (pendingFrames)
+            {
+                if (availableBuffers.Count > 0 && pendingFrames.Count > 0)
+                {
+                    buffer_index = availableBuffers[0];
+                    frame = pendingFrames[0];
+                    pendingFrames.RemoveAt(0);
+                    availableBuffers.RemoveAt(0);
+                }
+            }
+            if (buffer_index > -1)
+            {
+                decode(buffer_index, frame);
+            }
+        }
+        playThread = null;
+    }
+
     public int write(byte[] audio_data, int offset_in_bytes, int size_in_bytes)
     {
         if (audioPlayer != null && running)
         {
             lock (pendingFrames)
             {
-                if(pendingFrames.Count > 20)
+                if(pendingFrames.Count > 10)
                 {
                     pendingFrames.RemoveAt(0);
                 }
@@ -127,16 +161,7 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
                 if (delay > 0)
                 {
                     delay--;
-                    return audio_data.Length;
                 }
-
-                while (availableBuffers.Count > 0 && pendingFrames.Count > 0)
-                {
-                    decode(availableBuffers[0], pendingFrames[0]);
-                    pendingFrames.RemoveAt(0);
-                    availableBuffers.RemoveAt(0);
-                }
-
                 return audio_data.Length;
             }
         }
