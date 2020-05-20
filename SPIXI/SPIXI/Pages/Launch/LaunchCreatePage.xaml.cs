@@ -119,7 +119,8 @@ namespace SPIXI
                 Thread.CurrentThread.IsBackground = true;
 
                 // Aquire the wake lock
-                bool wake_lock = DependencyService.Get<IPowerManager>().AquireLock();
+                bool wake_lock_sd = DependencyService.Get<IPowerManager>().AquireLock("screenDim");
+                bool wake_lock_p = DependencyService.Get<IPowerManager>().AquireLock("partial");
 
                 if (Node.generateWallet(pass))
                 {
@@ -133,8 +134,10 @@ namespace SPIXI
                     Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
 
                     // Release the wake lock
-                    if (wake_lock)
-                        DependencyService.Get<IPowerManager>().ReleaseLock();
+                    if (wake_lock_sd)
+                        DependencyService.Get<IPowerManager>().ReleaseLock("screenDim");
+                    if (wake_lock_p)
+                        DependencyService.Get<IPowerManager>().ReleaseLock("partial");
 
                     Device.BeginInvokeOnMainThread(() => {
                         Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
@@ -150,8 +153,10 @@ namespace SPIXI
                 else
                 {
                     // Release the wake lock
-                    if (wake_lock)
-                        DependencyService.Get<IPowerManager>().ReleaseLock();
+                    if (wake_lock_sd)
+                        DependencyService.Get<IPowerManager>().ReleaseLock("screenDim");
+                    if (wake_lock_p)
+                        DependencyService.Get<IPowerManager>().ReleaseLock("partial");
 
                     Device.BeginInvokeOnMainThread(() => {
                         displaySpixiAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");

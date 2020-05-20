@@ -62,6 +62,7 @@ namespace SPIXI.VoIP
 
             DependencyService.Get<IPowerManager>().AquireLock("partial");
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
+            DependencyService.Get<IPowerManager>().AquireLock("proximityScreenOff");
         }
 
         public static bool onReceivedCall(Friend friend, byte[] session_id, byte[] data)
@@ -103,6 +104,7 @@ namespace SPIXI.VoIP
             }
             DependencyService.Get<IPowerManager>().AquireLock("partial");
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
+            DependencyService.Get<IPowerManager>().AquireLock("proximityScreenOff");
             return true;
         }
 
@@ -184,6 +186,7 @@ namespace SPIXI.VoIP
             {
                 DependencyService.Get<IPowerManager>().ReleaseLock("partial");
                 DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
+                DependencyService.Get<IPowerManager>().ReleaseLock("proximityScreenOff");
             }
             catch (Exception e)
             {

@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using System.Collections.Generic;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using SPIXI.Interfaces;
-using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using Android.Net.Wifi;
 
@@ -24,50 +15,57 @@ public class PowerManager_Android : IPowerManager
 
     public bool AquireLock(string lock_type = "screenDim")
     {
-        switch(lock_type)
+        lock (wakeLocks)
         {
-            case "screenDim":
-                if (wakeLocks.ContainsKey(lock_type))
-                {
-                    return false;
-                }
-                PowerManager pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
-                var pm_lock = pm.NewWakeLock(WakeLockFlags.ScreenDim, "Spixi");
-                pm_lock.Acquire();
-                wakeLocks.Add(lock_type, pm_lock);
-                return true;
-            case "partial":
-                if (wakeLocks.ContainsKey(lock_type))
-                {
-                    return false;
-                }
-                pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
-                pm_lock = pm.NewWakeLock(WakeLockFlags.ScreenDim, "Spixi");
-                pm_lock.Acquire();
-                wakeLocks.Add(lock_type, pm_lock);
-                return true;
-            case "wifi":
-                if (wakeLocks.ContainsKey(lock_type))
-                {
-                    return false;
-                }
-                WifiManager wm = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
-                var wm_lock = wm.CreateWifiLock(Android.Net.WifiMode.FullHighPerf, "Spixi");
-                wm_lock.Acquire();
-                wakeLocks.Add(lock_type, wm_lock);
-                return true;
+            if (wakeLocks.ContainsKey(lock_type))
+            {
+                return false;
+            }
+            switch (lock_type)
+            {
+                case "screenDim":
+                    PowerManager pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
+                    var pm_lock = pm.NewWakeLock(WakeLockFlags.ScreenDim, "Spixi");
+                    pm_lock.Acquire();
+                    wakeLocks.Add(lock_type, pm_lock);
+                    return true;
+                case "partial":
+                    pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
+                    pm_lock = pm.NewWakeLock(WakeLockFlags.Partial, "Spixi");
+                    pm_lock.Acquire();
+                    wakeLocks.Add(lock_type, pm_lock);
+                    return true;
+                case "proximityScreenOff":
+                    pm = (PowerManager)Android.App.Application.Context.GetSystemService(Context.PowerService);
+                    pm_lock = pm.NewWakeLock(WakeLockFlags.ProximityScreenOff, "Spixi");
+                    pm_lock.Acquire();
+                    wakeLocks.Add(lock_type, pm_lock);
+                    return true;
+                case "wifi":
+                    WifiManager wm = (WifiManager)Android.App.Application.Context.GetSystemService(Context.WifiService);
+                    var wm_lock = wm.CreateWifiLock(Android.Net.WifiMode.FullHighPerf, "Spixi");
+                    wm_lock.Acquire();
+                    wakeLocks.Add(lock_type, wm_lock);
+                    return true;
+            }
+            return false;
         }
-        return false;
     }
 
     public bool ReleaseLock(string lock_type = "screenDim")
     {
-        if (wakeLocks.ContainsKey(lock_type))
+        lock (wakeLocks)
         {
-            switch(lock_type)
+            if (!wakeLocks.ContainsKey(lock_type))
+            {
+                return false;
+            }
+
+            switch (lock_type)
             {
                 case "screenDim":
                 case "partial":
+                case "proximityScreenOff":
                     PowerManager.WakeLock pm_lock = (PowerManager.WakeLock)wakeLocks[lock_type];
                     pm_lock.Release();
                     break;
@@ -79,7 +77,5 @@ public class PowerManager_Android : IPowerManager
             wakeLocks.Remove(lock_type);
             return true;
         }
-
-        return false;
     }
 }
