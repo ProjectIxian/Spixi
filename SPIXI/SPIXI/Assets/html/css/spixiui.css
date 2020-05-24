@@ -250,6 +250,8 @@ img.emoji {
     border-radius: 10px;
     display: inline-block;
     padding: 3px 12px;
+    position:absolute;
+	right:10px;
 }
 
 .spixi-toolbar-option:hover
