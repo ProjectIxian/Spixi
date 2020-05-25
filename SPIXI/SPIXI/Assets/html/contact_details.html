@@ -44,21 +44,21 @@
                         <div class="col-4 spixi-optionbar-tab">
                             <a href="ixian:chat">
                                 <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
-                                <div class="spixi-optionbar-label">chat</div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-chat}</div>
                             </a>
                         </div>
 
                         <div class="col-4 spixi-optionbar-tab">
                             <a href="ixian:send">
                                 <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
-                                <div class="spixi-optionbar-label">send</div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-send}</div>
                             </a>
                         </div>
 
                         <div class="col-4 spixi-optionbar-tab">
                             <a href="ixian:request">
                                 <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
-                                <div class="spixi-optionbar-label">receive</div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-receive}</div>
                             </a>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
         <div id="exp1" class="spixi-expansion">
             <div id="exp1-left" class="spixi-expansion-left"></div>
             <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-            <div class="spixi-expansion-text">Notifications (<span id="notification_count">0</span>)</div>
+            <div class="spixi-expansion-text">*SL{contact-details-notifications} (<span id="notification_count">0</span>)</div>
             <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
         </div>
         <div id="exp1-contents" class="spixi-expansion-middle" style="display: none;">
@@ -87,7 +87,7 @@
         <div id="exp2" class="spixi-expansion">
             <div id="exp2-left" class="spixi-expansion-left"></div>
             <div class="spixi-expansion-icon"><i class="fa fa-history"></i></div>
-            <div class="spixi-expansion-text">History</div>
+            <div class="spixi-expansion-text">*SL{contact-details-history}</div>
             <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-caret-down"></i></div>
         </div>
         <div id="exp2-contents" class="spixi-expansion-middle" style="display: none;">
@@ -99,24 +99,24 @@
         <div class="spixi-holder-20"></div>
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Spixi Account and Wallet address
+            *SL{contact-details-account-address}
         </div>
         <hr class="spixi-separator" />
 
         <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
             <div class="address_qr" id="qrcode"></div>
 
-            <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; Address copied to clipboard</div>
+            <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
 
             <hr class="spixi-separator" />
 
-            <div id="wal1" class="spixi-text-address">Retrieving</div>
-            <div id="wal2" class="spixi-text-address">SPIXI</div>
-            <div id="wal3" class="spixi-text-address">address...</div>
+            <div id="wal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
+            <div id="wal2" class="spixi-text-address">*SL{contact-details-address-2}</div>
+            <div id="wal3" class="spixi-text-address">*SL{contact-details-address-3}</div>
             <div id="wal4" class="spixi-text-address"></div>
 
             <hr class="spixi-separator" />
-            <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> tap to copy to clipboard</div>
+            <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
             <div class="spixi-holder-20"></div>
 
         </div>
@@ -128,12 +128,12 @@
             <div class="row">
                 <div class="col-6">
                     <div class="spixi-button center small smallwidth" onclick="location.href = 'ixian:remove';">
-                        Remove Contact
+                        *SL{contact-details-removecontact}
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="spixi-button center small smallwidth" onclick="location.href = 'ixian:removehistory';">
-                        Delete History
+                        *SL{contact-details-deletehistory}
                     </div>
                 </div>
             </div>

@@ -1,8 +1,275 @@
 language = English (US)
 
+; Address Screen
+address-title = My Spixi Wallet
+address-description = Your Spixi address is tied to your Spixi Account.<br />It is your primary ID, with which you can interact with other users.
+address-copied = Address copied to clipboard
+address-gen-1 = Generating
+address-gen-1b = Preparing
+address-gen-2 = your SPIXI
+address-gen-2b = SPIXI
+address-gen-3 = address
+address-gen-4 = ...
+address-tooltip = tap to copy to clipboard
+
+; App Details Screen
+app-details-title = Spixi App
+app-details-uninstall = Uninstall
+
+; New App Screen
+app-new-title = New App
+app-new-description = Add a new Spixi App by pasting its URL. The app will be downloaded and installed.
+app-new-install = Install
+
+; Apps Screen
+apps-title = Spixi Apps
+apps-empty = You have no existing applications installed.
+
+; Chat Screen
+chat-sent-contact-request = has sent a CONTACT REQUEST
+chat-accept = Accept
+chat-ignore = Ignore
+chat-type-placeholder = Type your message...
+chat-send-file = Send File
+chat-request-payment = Request Payment
+chat-send-payment = Send Payment
+chat-status = Status
+chat-amount = Amount
+chat-view = View
+
+; Contact Details Screen
+contact-details-chat = chat
+contact-details-send = send
+contact-details-receive = receive
+contact-details-notifications = Notifications
+contact-details-history = History
+contact-details-account-address = Spixi Account and Wallet address
+contact-details-address-1 = Retrieving
+contact-details-address-2 = SPIXI
+contact-details-address-3 = address...
+contact-details-removecontact = Remove
+contact-details-deletehistory = Delete History
+
+; New Contact Screen
+contact-new-title = New Contact
+contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
+contact-new-placeholder = Paste / type address
+contact-new-send-request = Send Contact Request
+
+; Downloads Screen
+downloads-title = Downloads
+downloads-empty = You have no downloaded files.
+
+; Index Screen
+index-balance = My IxiCash Balance
+index-balance-info = * Tap and hold to hide
+index-balance-info2 = * Tap and hold to show
+index-notifications = Notifications
+index-unread-chats = Unread chats
+index-no-conversations = You have no existing conversations.
+index-send = send
+index-activity = activity
+index-receive = receive
+index-recent-activity = Recent Activity
+index-contacts-placeholder = Search contacts
+index-tab-home = home
+index-tab-chats = chats
+index-tab-wallet = wallet
+index-tab-contacts = contacts
+index-new-title = NEW
+index-new-contact = Contact
+index-new-chat = Chat
+index-new-send = Send Ixi
+index-new-request = Request Ixi
+index-new-cancel = CANCEL
+index-side-title = Spixi User
+index-side-myaddress = My Spixi Address
+index-side-apps = Apps
+index-side-downloads = Downloads
+index-side-settings = Settings
+index-side-security = Security
+index-side-backup = Backup
+index-side-password = Password
+index-side-about = About
+index-side-sendlog = Send Log
+index-devmode = Developer mode activated
+
 ; Intro Screen
 intro-title = Welcome to Spixi,
 intro-subtitle = the decentralized and secure Chat, Wallet and more
 intro-text = Please create or restore your<br/>Spixi Account to proceed
 intro-create-account = New Account
 intro-restore-account = Restore your Account
+
+; Intro New Screen
+intro-new-description-1 = Create New Spixi Account
+intro-new-description-2 = Enter your displayed Name and Image
+intro-new-name-placeholder = Your Displayed Name
+intro-new-change-image = Tap to change your displayed image
+intro-new-next = NEXT
+intro-new-step-1 = Step 1 of 2
+intro-new-step-2 = Step 2 of 2
+intro-new-description-3 = Create your Encryption Password
+intro-new-description-4 = To finish setting up your Spixi Account<br />please enter your Encryption Password.
+intro-new-password = Enter Password
+intro-new-finish = FINISH
+intro-new-create-title = Creating your<br />Spixi Account...
+intro-new-create-description = This may take a while
+intro-new-password10 = Password needs to have at least 10 characters
+intro-new-passwordconf = Enter password confirmation
+intro-new-passwordnomatch = Passwords do not match
+intro-new-passwordmatch = Passwords match
+
+; Intro Restore Screen
+intro-restore-description-1 = Restore access to your Spixi Account
+intro-restore-description-2 = You need the Backup File and the Encryption Password to restore your existing Spixi account on this device.
+intro-restore-password = Enter your Encryption Password
+intro-restore-selectfile = Select Backup File
+intro-restore-backupdescription = Set the Backup File that is associated with the Encryption Password
+intro-restore-action = RESTORE
+intro-restore-title = Restoring Access to<br />your Spixi Account
+intro-restore-info = This may take a while
+
+; Intro Retry Screen
+intro-retry-description-1 = Re-enter your Encryption Password
+intro-retry-description-2 = It seems that there is a problem accessing your account. Please re-enter your password to proceed.
+intro-retry-placeholder = Re-enter your Encryption Password
+intro-retry-proceed = PROCEED
+intro-retry-title = Restoring Access to<br />your wallet
+intro-retry-info = This may take a while
+
+; Lock Screen
+lock-description = Spixi is LOCKED
+lock-placeholder = Enter your LOCK PASSWORD
+lock-error = Incorrect Password
+lock-unlock = UNLOCK
+
+; Settings Screen
+settings-title = Settings
+settings-save = SAVE
+settings-cancel = CANCEL
+settings-confirm = CONFIRM
+settings-description = Edit your Spixi Account information and manage the data stored on this device.
+settings-account-information = Account Information
+settings-account-description = This is how you appear to other Spixi users.<br />You can change your displayed name and image.
+settings-account-image = Edit displayed image
+settings-account-deleteinfo = You can delete this account and all of the content associated with it from this device. To continue using Spixi you will have to create a new account.
+settings-account-delete = Delete my Account
+settings-deletea-title = Delete my ACCOUNT
+settings-deletea-text = Are you sure you want to delete your ACCOUNT?
+settings-wallet-settings = Wallet Settings
+settings-wallet-description = Your wallet is associated with your Spixi account. To delete your wallet and all history on this device tap delete below.
+settings-wallet-delete = Delete my Wallet
+settings-deletew-title = Delete my WALLET
+settings-deletew-text = Are you sure you want to delete your WALLET?
+settings-history = Message History
+settings-history-description = Your wallet is associated with your Spixi account. To delete all your history on this device tap delete below.
+settings-history-delete = Delete entire Message History
+settings-downloads-delete = Delete all downloads
+settings-deleteh-title = Delete messages history
+settings-deleteh-text = Are you sure you want to delete your ENTIRE messages history?
+settings-deleted-title = Delete all downloads
+settings-deleted-text = Are you sure you want to delete ALL of your downloads?
+
+; Settings Backup Screen
+settings-backup-title = Backup Account
+settings-backup-description = Backup your account, by downloading a special file which you will be able to use to restore.
+settings-backup-save = Save backup file
+settings-backup-notice = This BACKUP FILE and the ENCRYPTION PASSWORD associated with it will be required to restore your information in the     following cases:
+settings-backup-notice2 = - lose this device<br />- uninstall Spixi from your device<br />- delete your Account<br />- delete your Wallet
+
+; Settings Encryption Screen
+settings-encryption-title = Password
+settings-encryption-description = Encryption password is the most important password for your account and wallet. You will need to enter it every time you start Spixi or if you need to restore your account.
+settings-encryption-edit = Edit your Encryption Password
+settings-encryption-type = Type in your <b>Current</b> Password
+settings-encryption-placeholder = Type in your Encryption Password
+settings-encryption-typenew = Type in your <b>NEW</b> Password
+settings-encryption-placeholdernew = Type in your new Encryption Password
+settings-encryption-placeholderretype = Retype in your new Encryption Password
+settings-encryption-change = Change Password
+settings-encryption-password10 = Password needs to have at least 10 characters
+settings-encryption-passwordconf = Enter password confirmation
+settings-encryption-passwordnomatch = Passwords do not match
+settings-encryption-passwordmatch = Passwords match
+
+; Settings Lock Screen
+settings-lock-title = Lock my Spixi
+settings-lock-description = Create a Lock Password for your Spixi, to make sure you are the only one using your account on this device.
+settings-lock-status = Security status:
+settings-lock-unlocked = UNLOCKED
+settings-lock-locked = LOCKED
+settings-lock-passwordinfo = Create or edit your Lock Password
+settings-lock-password = Type in your <b>Current</b> Lock Password
+settings-lock-password-new = Type in your <b>NEW</b> Lock Password
+settings-lock-placeholder-1 = Type in your Lock Password
+settings-lock-placeholder-2 = Type in your new Lock Password
+settings-lock-placeholder-3 = Retype in your new Lock Password
+settings-lock-info = This password will be required every time you launch Spixi.
+settings-lock-save = Save Lock Password
+
+; Wallet Contact Request Screen
+wallet-contact-request-title = Payment Request
+wallet-contact-request-subtitle = Payment Requested From:
+wallet-contact-request-amount = Requested Amount
+wallet-contact-request-info = User has requested a payment for the following amount
+wallet-contact-request-respond = Respond to Payment Request
+wallet-contact-request-respondinfo = Respond by either declining the payment request or proceed topayment screen to Pay the requested amount.
+wallet-contact-request-decline = DECLINE
+wallet-contact-request-proceed = PROCEED TO PAY
+
+; Wallet Recipient Screen
+wallet-recipient-title = Select Recipient
+wallet-recipient-empty = 0 Recipients selected
+wallet-recipient-add = Add Recipient/-s
+wallet-recipient-selected = Recipients selected
+
+; Wallet Request Screen
+wallet-request-title = Request Payment
+wallet-request-subtitle = Request Specific Amount
+wallet-request-amount-placeholder = Type an amount
+wallet-request-address = Current Address
+wallet-request-send-info = Send as Request to Recipients:
+wallet-request-add = Add additional users/addresses to send this request for the same amount.
+wallet-request-placeholder = Paste/type address
+wallet-request-send = Send Request
+
+; Wallet Send Screen
+wallet-send-title = Send Payment
+wallet-send-add = Add Recipient/-s
+wallet-send-placeholder = Paste/type address
+wallet-send-more = You can add additional recipients for this transaction.
+wallet-send-recipients = Recipient/-s
+wallet-send-norecipients = No recipients selected
+wallet-send-next = Next
+wallet-send-max = Send maximum amount
+
+; Wallet Send 2 Screen
+wallet-send2-title = Confirm Payment
+wallet-send2-policy = Transaction fee policy
+wallet-send2-info = Every payment sent has a certain payment fee which is deducted from the amount you transferred.
+wallet-send2-feeinfo = Set your transaction fee for this transaction. Choose from pre-set NORMAL or HIGH. You can set a custom transaction fee per KB.
+wallet-send2-normal = Normal
+wallet-send2-high = High
+wallet-send2-custom = Custom
+wallet-send2-placeholder = Enter transaction fee
+wallet-send2-amount = Amount to send
+wallet-send2-fee = Total transaction fee
+wallet-send2-total = Total amount to be paid from balance
+wallet-send2-send = Send Payment
+
+; Wallet Sent Screen
+wallet-sent-title = Payment Sent
+wallet-sent-subtitle = Payment Sent to
+wallet-sent-amount = Amount Sent
+wallet-sent-status = Payment Status
+wallet-sent-unconfirmed = UNCONFIRMED
+wallet-sent-details = The amount you sent has been deducted from your balance.
+wallet-sent-fee = Payment fee
+wallet-sent-feeinfo = Every payment sent has a certain payment fee which is deducted from the amount transferred.
+wallet-sent-txid = TXID
+wallet-sent-dismiss = Dismiss
+wallet-sentrecv-title = Payment Received
+wallet-sentrecv-subtitle = Payment Received from
+wallet-sentrecv-amount = Amount Received
+wallet-sentrecv-details = The amount received has been added to your balance.

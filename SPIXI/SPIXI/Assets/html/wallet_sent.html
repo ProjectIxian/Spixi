@@ -46,7 +46,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-8" id="title">
-                    Payment Sent
+                    *SL{wallet-sent-title}
                 </div>
                 <div class="col-2">
                 </div>
@@ -56,7 +56,7 @@
         <!-- End Toolbar -->
 
         <div id="subtitle" class="spixi-textsection-holder spixi-textsection-header">
-            Payment Sent to
+            *SL{wallet-sent-subtitle}
         </div>
 
         <hr class="spixi-separator" />
@@ -65,7 +65,7 @@
         <hr class="spixi-separator" />
 
         <div id="amount_label" class="spixi-textsection-holder spixi-textsection-header">
-            Amount Sent
+            *SL{wallet-sent-amount}
         </div>
         <div id="sent_amount" class="spixi-textsection-holder spixi-textsection-header">
             0.00000000
@@ -73,18 +73,18 @@
         <hr class="spixi-separator" />
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Payment Status
+            *SL{wallet-sent-status}
         </div>
         <div id="sent_status" class="spixi-textsection-holder spixi-textsection-header spixi-text-red">
-            UNCONFIRMED
+            *SL{wallet-sent-unconfirmed}
         </div>
         <div id="paymentdetail_label" class="spixi-textsection-holder">
-            The amount you sent has been deducted from your balance.
+            *SL{wallet-sent-details}
         </div>
         <hr class="spixi-separator" />
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Payment fee
+            *SL{wallet-sent-fee}
         </div>
 
         <div id="sent_fee_percent" class="spixi-textsection-holder">
@@ -94,11 +94,11 @@
             0.00000000
         </div>
         <div class="spixi-textsection-holder">
-            Every payment sent has a certain payment fee which is deducted from the amount transferred.
+            *SL{wallet-sent-feeinfo}
         </div>
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            TXID
+            *SL{wallet-sent-txid}
         </div>
 
         <div id="sent_txid" class="spixi-textsection-holder break-word selectable">
@@ -109,7 +109,7 @@
         <hr class="spixi-separator-main" />
 
         <div id="sendrequest" class="spixi-button large center">
-            Dismiss
+            *SL{wallet-sent-dismiss}
         </div>
 
         <div class="spixi-holder-20"></div>
@@ -127,10 +127,10 @@
         }
 
         function setReceivedMode() {
-            document.getElementById('title').innerHTML = "Payment Received";
-            document.getElementById('subtitle').innerHTML = "Payment Received from";
-            document.getElementById('amount_label').innerHTML = "Amount Received";
-            document.getElementById('paymentdetail_label').innerHTML = "The amount received has been added to your balance.";
+            document.getElementById('title').innerHTML = "*SL{wallet-sentrecv-title}";
+            document.getElementById('subtitle').innerHTML = "*SL{wallet-sentrecv-subtitle}";
+            document.getElementById('amount_label').innerHTML = "*SL{wallet-sentrecv-amount}";
+            document.getElementById('paymentdetail_label').innerHTML = "*SL{wallet-sentrecv-details}";
         }
 
         function addSender(address, time)

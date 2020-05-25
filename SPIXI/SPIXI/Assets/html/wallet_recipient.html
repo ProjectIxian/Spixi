@@ -34,7 +34,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    Select Recipient
+                    *SL{wallet-recipient-title}
                 </div>
             </div>
 
@@ -54,12 +54,12 @@
         <hr class="spixi-separator-main" />
 
         <div id="recipientslabel" class="spixi-textsection-holder">
-            0 Recipients selected
+            *SL{wallet-recipient-empty}
         </div>
         <hr class="spixi-separator" />
 
         <div id="sendrequest" class="spixi-button small center padding-top disabled">
-            Add Recipient/-s
+            *SL{wallet-recipient-add}            
         </div>
 
         <div class="spixi-holder-20"></div>
@@ -187,7 +187,7 @@
             var label = document.getElementById("recipientslabel");
             var rLen = recipients.length;
 
-            label.innerHTML = rLen + " Recipients selected";
+            label.innerHTML = rLen + " *SL{wallet-recipient-selected}";
 
             if (rLen > 0)
                 document.getElementById("sendrequest").className = "spixi-button small center padding-top";

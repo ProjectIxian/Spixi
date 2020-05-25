@@ -34,10 +34,10 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-6">
-                    Settings
+                    *SL{settings-title}
                 </div>
                 <div id="savebtn" class="col-4">
-                    <div class="spixi-toolbar-option">SAVE</div>
+                    <div class="spixi-toolbar-option">*SL{settings-save}</div>
                 </div>
             </div>
 
@@ -49,21 +49,21 @@
             <div class="container">
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 spixi-center"><i class="fa fa-cog"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">Edit your Spixi Account information and manage the data stored on this device.</div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{settings-description}</div>
                 </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Account Information
+            *SL{settings-account-information}
         </div>
         <div class="spixi-textsection-holder">
-            This is how you appear to other Spixi users.<br />You can change your displayed name and image.
+            *SL{settings-account-description}
         </div>
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-textsection-header2">
-            Edit displayed image
+            *SL{settings-account-image}
         </div>
 
         <div id="avatar" class="spixi-button round padding-left padding-top" style="display: block;">
@@ -73,7 +73,7 @@
 
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-textsection-header2">
-            Edit displayed name
+            *SL{settings-account-image}
         </div>
         <div class="spixi-textfield-holder">
             <input type="text" class="spixi-textfield" id="nicknameInput" onkeyup="" placeholder="Type in your display name">
@@ -82,30 +82,30 @@
 
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder">
-            You can delete this account and all of the content associated with it from this device. To continue using Spixi you will have to create a new account.
+            *SL{settings-account-deleteinfo}
         </div>
         <div id="deleteaccount" class="spixi-button small smallwidth padding-left padding-top">
-            Delete my Account
+            *SL{settings-account-delete}
         </div>
 
         <div id="deleteAccountModal" class="spixi-modal">
             <!-- Modal content -->
             <div class="modal-content">
                 <div class="spixi-modal-header warn">
-                    Delete my ACCOUNT
+                    *SL{settings-deletea-title}
                 </div>
                 <hr class="spixi-separator noheightmargins fullwidth" />
 
                 <div class="spixi-modal-text">
-                    Are you sure you want to delete your ACCOUNT?
+                    *SL{settings-deletea-text}
                 </div>
 
                 <hr class="spixi-separator noheightmargins fullwidth" />
                 <div class="spixi-modal-footer">
-                    <div class="spixi-modal-close">CANCEL</div>
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
 
                     <a href="ixian:deletea">
-                        <div class="spixi-modal-confirm">CONFIRM</div>
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
                     </a>
                 </div>
 
@@ -116,32 +116,32 @@
 
         <hr class="spixi-separator-main" />
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Wallet Settings
+            *SL{settings-wallet-settings}
         </div>
         <div class="spixi-textsection-holder">
-            Your wallet is associated with your Spixi account. To delete your wallet and all history on this device tap delete below.
+            *SL{settings-wallet-description}
         </div>
         <div id="deletewallet" class="spixi-button small smallwidth padding-left padding-top">
-            Delete my Wallet
+            *SL{settings-wallet-delete}
         </div>
 
         <div id="deleteWalletModal" class="spixi-modal">
             <!-- Modal content -->
             <div class="modal-content">
                 <div class="spixi-modal-header warn">
-                    Delete my WALLET
+                    *SL{settings-deletew-title}
                 </div>
                 <hr class="spixi-separator noheightmargins fullwidth" />
 
                 <div class="spixi-modal-text">
-                    Are you sure you want to delete your WALLET?
+                    *SL{settings-deletew-text}
                 </div>
 
                 <hr class="spixi-separator noheightmargins fullwidth" />
                 <div class="spixi-modal-footer">
-                    <div class="spixi-modal-close">CANCEL</div>
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
                     <a href="ixian:delete">
-                        <div class="spixi-modal-confirm">CONFIRM</div>
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
                     </a>
                 </div>
 
@@ -150,36 +150,36 @@
 
         <hr class="spixi-separator-main" />
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Message History
+            *SL{settings-history}
         </div>
         <div class="spixi-textsection-holder">
-            Your wallet is associated with your Spixi account. To delete all your history on this device tap delete below.
+            *SL{settings-history-description}
         </div>
         <div id="deletehistory" class="spixi-button small padding-left padding-top">
-            Delete entire Message History
+            *SL{settings-history-delete}
         </div>
         <div id="deletedownloads" class="spixi-button small padding-left padding-top">
-            Delete all downloads
+            *SL{settings-downloads-delete}
         </div>
 
         <div id="deleteHistoryModal" class="spixi-modal">
             <!-- Modal content -->
             <div class="modal-content">
                 <div class="spixi-modal-header warn">
-                    Delete messages history
+                    *SL{settings-deleteh-title}
                 </div>
                 <hr class="spixi-separator noheightmargins fullwidth" />
 
                 <div class="spixi-modal-text">
-                    Are you sure you want to delete your ENTIRE messages history?
+                    *SL{settings-deleteh-text}
                 </div>
 
                 <hr class="spixi-separator noheightmargins fullwidth" />
                 <div class="spixi-modal-footer">
-                    <div class="spixi-modal-close">CANCEL</div>
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
 
                     <a href="ixian:deleteh">
-                        <div class="spixi-modal-confirm">CONFIRM</div>
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
                     </a>
                 </div>
 
@@ -190,20 +190,20 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <div class="spixi-modal-header warn">
-                    Delete all downloads
+                    *SL{settings-deleted-title}
                 </div>
                 <hr class="spixi-separator noheightmargins fullwidth" />
 
                 <div class="spixi-modal-text">
-                    Are you sure you want to delete ALL of your downloads?
+                    *SL{settings-deleted-text}
                 </div>
 
                 <hr class="spixi-separator noheightmargins fullwidth" />
                 <div class="spixi-modal-footer">
-                    <div class="spixi-modal-close">CANCEL</div>
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
 
                     <a href="ixian:deleted">
-                        <div class="spixi-modal-confirm">CONFIRM</div>
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
                     </a>
                 </div>
 

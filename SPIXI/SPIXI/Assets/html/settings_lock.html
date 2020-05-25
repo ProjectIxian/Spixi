@@ -34,7 +34,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    Lock my Spixi
+                    *SL{settings-lock-title}
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
             <div class="container">
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 spixi-center"><i class="fa fa-lock"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">Create a Lock Password for your Spixi, to make sure you are the only one using your account on this device.</div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{settings-lock-description}</div>
                 </div>
             </div>
         </div>
@@ -55,10 +55,10 @@
         <div class="spixi-holder-20"></div>
 
         <div class="spixi-textsection-holder ">
-            <div class="spixi-textsection-header">Security status:</div>
+            <div class="spixi-textsection-header">*SL{settings-lock-status}</div>
         </div>
 
-        <div id="switchdescription" class="spixi-switch-description">UNLOCKED</div>
+        <div id="switchdescription" class="spixi-switch-description">*SL{settings-lock-unlocked}</div>
         <div id="switch" class="spixi-switch off"></div>
 
         <div class="spixi-holder-40"></div>
@@ -68,37 +68,37 @@
 
 
             <div class="spixi-textsection-holder spixi-textsection-header">
-                Create or edit your Lock Password
+                *SL{settings-lock-passwordinfo}
             </div>
 
             <hr class="spixi-separator" />
 
             <div class="spixi-textsection-holder">
-                Type in your <b>Current</b> Lock Password
+                *SL{settings-lock-password}
             </div>
             <div class="spixi-textfield-holder ">
-                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your Lock Password">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-1}">
             </div>
 
             <hr class="spixi-separator" />
 
             <div class="spixi-textsection-holder">
-                Type in your <b>NEW</b> Lock Password
+                *SL{settings-lock-password-new}
             </div>
             <div class="spixi-textfield-holder ">
-                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Type in your new Lock Password">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-2}">
             </div>
             <div class="spixi-textfield-holder smallpadding">
-                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Retype in your new Lock Password">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-3}">
             </div>
             <hr class="spixi-separator" />
-            <div class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> This password will be required every time you launch Spixi.</div>
+            <div class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> *SL{settings-lock-info}</div>
 
             <div class="spixi-holder-20"></div>
             <div class="spixi-holder-20"></div>
 
             <div id="sendrequest" class="spixi-button disabled padding-left">
-                Save Lock Password
+                *SL{settings-lock-save}
             </div>
         </div>
 
@@ -120,12 +120,12 @@
             if (switchbtn.classList.contains("off")) {
                 securitycontents.style.display = "block";
                 switchbtn.className = "spixi-switch";
-                document.getElementById("switchdescription").innerHTML = "LOCKED";
+                document.getElementById("switchdescription").innerHTML = "*SL{settings-lock-locked}";
                 return;
             }
             switchbtn.className = "spixi-switch off";
             securitycontents.style.display = "none";
-            document.getElementById("switchdescription").innerHTML = "UNLOCKED";
+            document.getElementById("switchdescription").innerHTML = "*SL{settings-lock-unlocked}";
 
         }
 

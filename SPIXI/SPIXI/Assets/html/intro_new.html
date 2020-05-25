@@ -37,8 +37,8 @@
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-user-circle"></i></div>
                     <div class="col-10 spixi-descriptionbar-row-details">
-                        <div>Create New Spixi Account</div>
-                        <div>Enter your displayed Name and Image</div>
+                        <div>*SL{intro-new-description-1}</div>
+                        <div>*SL{intro-new-description-2}</div>
                     </div>
                 </div>
             </div>
@@ -47,11 +47,11 @@
             <hr class="intro-separator" />
 
             <div class="intro-textfield-holder">
-                <input type="text" class="intro-textfield" id="nicknameInput" onkeyup="onCheckStep1()" placeholder="Your Displayed Name">
+                <input type="text" class="intro-textfield" id="nicknameInput" onkeyup="onCheckStep1()" placeholder="*SL{intro-new-name-placeholder}">
             </div>
             <hr class="intro-separator" />
 
-            <div class="intro-text left">Tap to change your displayed image</div>
+            <div class="intro-text left">*SL{intro-new-change-image}</div>
 
             <div id="avatar" class="intro-button left round">
                 <i id="avatar_icon" class="fas fa-image"></i>
@@ -63,14 +63,14 @@
             <div class="intro-holder-70"></div>
 
             <div id="firstnext" class="intro-button center disabled">
-                NEXT
+                *SL{intro-new-next}
             </div>
 
             <div class="intro-stepper-holder">
                 <div class="intro-stepper active"></div>
                 <div class="intro-stepper right"></div>
             </div>
-            <div class="intro-stepper-text">Step 1 of 2</div>
+            <div class="intro-stepper-text">*SL{intro-new-step-1}</div>
 
             <div class="intro-holder-20"></div>
         </div>
@@ -82,8 +82,8 @@
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-fingerprint"></i></div>
                     <div class="col-10 spixi-descriptionbar-row-details">
-                        <div>Create your Encryption Password</div>
-                        <div>To finish setting up your Spixi Account<br />please enter your Encryption Password.</div>
+                        <div>*SL{intro-new-description-3}</div>
+                        <div>*SL{intro-new-description-4}</div>
                     </div>
                 </div>
             </div>
@@ -99,19 +99,19 @@
             <hr class="intro-separator" />
 
             <div class="intro-passworddetails">
-                <div id="passwordInfoText"><i class="fa fa-info-circle"></i> Enter Password</div>
+                <div id="passwordInfoText"><i class="fa fa-info-circle"></i> *SL{intro-new-password}</div>
             </div>
 
             <div class="intro-holder-70"></div>
 
             <div id="secondnext" class="intro-button center disabled">
-                FINISH
+                *SL{intro-new-finish}
             </div>
             <div class="intro-stepper-holder">
                 <div class="intro-stepper"></div>
                 <div class="intro-stepper right active"></div>
             </div>
-            <div class="intro-stepper-text">Step 2 of 2</div>
+            <div class="intro-stepper-text">*SL{intro-new-step-2}</div>
 
             <div class="intro-holder-20"></div>
 
@@ -127,9 +127,9 @@
                         <img class="intro-logo" src="img/intrologo.png" />
                     </div>
 
-                    <div class="intro-overlay-title">Creating your<br />Spixi Account...</div>
+                    <div class="intro-overlay-title">*SL{intro-new-create-title}</div>
                     <div class="intro-overlay-loading"></div>
-                    <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;This may take a while</div>
+                    <div class="intro-overlay-info"><i class="fa fa-info-circle"></i> &nbsp;*SL{intro-new-create-description}</div>
                 </div>
             </div>
             <div class="intro-bottom">
@@ -183,22 +183,22 @@
             secondnext.className = "intro-button center disabled";
 
             if (password.length < 10) {
-                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Password needs to have at least 10 characters");
+                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> *SL{intro-new-password10}");
                 return false;
             }
 
             if (confirmPassword.length < 1) {
-                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Enter password confirmation");
+                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> *SL{intro-new-passwordconf}");
 
                 return false;
             }
 
             if (password != confirmPassword) {
-                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Passwords do not match");
+                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> *SL{intro-new-passwordnomatch}");
                 return false;
             }
             else {
-                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> Passwords match");
+                $("#passwordInfoText").html("<i class=\"fa fa-info-circle\"></i> *SL{intro-new-passwordmatch}");
                 secondnext.className = "intro-button center";
 
                 return true;

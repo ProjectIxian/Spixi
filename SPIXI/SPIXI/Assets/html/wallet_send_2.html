@@ -35,7 +35,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    Confirm Payment
+                    *SL{wallet-send2-title}
                 </div>
             </div>
         </div>
@@ -43,21 +43,22 @@
         <!-- End Toolbar -->
         <!-- BalanceBar -->
         <div id="status_balance" class="spixi-balancebar">
-            <div class="spixi-balancebar-label">My IxiCash Balance</div>
+            <div class="spixi-balancebar-label">*SL{index-balance}</div>
             <div class="spixi-balancebar-balance" id="activity_balance_number">0</div>
             <div class="spixi-balancebar-line"></div>
             <div class="spixi-balancebar-info" id="activity_balance_info">&nbsp;</div>
         </div>
         <!-- End BalanceBar -->
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Transaction fee policy
+            *SL{wallet-send2-policy}
         </div>
         <div class="spixi-textsection-holder">
-            Every payment sent has a certain payment fee which is deducted from the amount you transferred.
+            *SL{wallet-send2-info}
+            
         </div>
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder">
-            Set your transaction fee for this transaction. Choose from pre-set NORMAL or HIGH. You can set a custom transaction fee per KB.
+            *SL{wallet-send2-feeinfo}
         </div>
 
 
@@ -67,37 +68,37 @@
 
         <div id="popbutton" class="spixi-popbutton">
             <div class="spixi-popbutton-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
-            <div id="popbuttonactiveitem" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; Normal</div>
+            <div id="popbuttonactiveitem" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-normal}</div>
             <div id="popbuttonoptions" style="display: none;">
-                <a href="javascript:selectFee(0);"><div id="fee0" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; Normal</div></a>
-                <a href="javascript:selectFee(1);"><div id="fee1" class="spixi-popbutton-item">High</div></a>
-                <a href="javascript:selectFee(2);"><div id="fee2" class="spixi-popbutton-item">Custom</div></a>
+                <a href="javascript:selectFee(0);"><div id="fee0" class="spixi-popbutton-item selected"><i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-normal}</div></a>
+                <a href="javascript:selectFee(1);"><div id="fee1" class="spixi-popbutton-item">*SL{wallet-send2-high}</div></a>
+                <a href="javascript:selectFee(2);"><div id="fee2" class="spixi-popbutton-item">*SL{wallet-send2-custom}</div></a>
             </div>
         </div>
 
         <div id="feeInputHolder" class="spixi-textfield-holder" style="display: none;">
-            <input type="text" class="spixi-textfield" id="feeInput" onkeyup="" placeholder="Enter transaction fee">
+            <input type="text" class="spixi-textfield" id="feeInput" onkeyup="" placeholder="*SL{wallet-send2-placeholder}">
             <span class="spixi-textfield-holder-text">/KB</span>
         </div>
 
         <hr class="spixi-separator-main" />
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Amount to send
+            *SL{wallet-send2-amount}
         </div>
         <div id="totalamount" class="spixi-textsection-holder">
             0
         </div>
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Total transaction fee
+            *SL{wallet-send2-fee}            
         </div>
         <div id="fees" class="spixi-textsection-holder">
             0
         </div>
 
-        <div class="spixi-textsection-holder spixi-textsection-header">
-            Total amount to be paid from balance
+        <div class="spixi-textsection-holder spixi-textsection-header">            
+            *SL{wallet-send2-total} 
         </div>
         <div id="totalamountwithfees" class="spixi-textsection-holder spixi-text-red">
             0
@@ -107,7 +108,7 @@
         <hr class="spixi-separator-main" />
 
         <div id="sendrequest" class="spixi-button large center">
-            <i class="fa fa-check"></i>&nbsp; Send Payment
+            <i class="fa fa-check"></i>&nbsp; *SL{wallet-send2-send} 
         </div>
 
         <div class="spixi-holder-20"></div>
@@ -167,20 +168,20 @@
             feeinputholder.style = "display:none";
 
             if (feeidx == 1) {
-                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; High';
+                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-high}';
                 document.getElementById("fee1").className = "spixi-popbutton-item selected";
-                document.getElementById("fee1").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; High';
+                document.getElementById("fee1").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-high}';
             }
             else if (feeidx == 2) {
-                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Custom';
+                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-custom}';
                 document.getElementById("fee2").className = "spixi-popbutton-item selected";
-                document.getElementById("fee2").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Custom';
+                document.getElementById("fee2").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-custom}';
                 feeinputholder.style = "display:block";
             }
             else {
-                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Normal';
+                document.getElementById("popbuttonactiveitem").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-normal}';
                 document.getElementById("fee0").className = "spixi-popbutton-item selected";
-                document.getElementById("fee0").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; Normal';
+                document.getElementById("fee0").innerHTML = '<i class="fa fa-check"></i>&nbsp; &nbsp; *SL{wallet-send2-normal}';
             }
 
             document.getElementById("popbuttonactiveitem").style = "display:block";

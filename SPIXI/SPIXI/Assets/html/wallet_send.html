@@ -35,7 +35,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    Send Payment
+                    *SL{wallet-send-title}
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
         <!-- End Toolbar -->
         <!-- BalanceBar -->
         <div id="status_balance" class="spixi-balancebar">
-            <div class="spixi-balancebar-label">My IxiCash Balance</div>
+            <div class="spixi-balancebar-label">*SL{index-balance}</div>
             <div class="spixi-balancebar-balance" id="activity_balance_number">0</div>
             <div class="spixi-balancebar-line"></div>
             <div class="spixi-balancebar-info" id="activity_balance_info">&nbsp;</div>
@@ -58,61 +58,37 @@
         </div>
         <!-- End BalanceBar -->
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Add Recipient/-s
+            *SL{wallet-send-add}
         </div>
         <div class="spixi-textfield-holder smallpadding">
-            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="Paste/type address">
+            <input type="text" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{wallet-send-placeholder}">
             <a href="ixian:pick"> <span class="fa fa-address-book spixi-textfield-holder-icon"></span></a>
         </div>
         <div class="spixi-holder-20"></div>
         <div class="spixi-textsection-holder">
-            You can add additional recipients for this transaction.
+            *SL{wallet-send-more}           
         </div>
         <hr class="spixi-separator-main" />
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Recipient/-s
+            *SL{wallet-send-recipients}             
         </div>
         <hr class="spixi-separator-full" />
 
         <div id="norecipients" style="display: none;">
             <div class="spixi-list-placeholer-text">
-                No recipients selected
+                *SL{wallet-send-norecipients}                 
             </div>
         </div>
 
         <div id="recipients" class="container">
-            <!--
-                <div>
-                    <div class="spixi-list-item" style="">
-                        <div class="row">
-                            <div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div>
-                            <div class="col-8 spixi-list-item-center">
-                                <div class="spixi-list-item-title-center">Andrew</div>
-                            </div>
-                            <div class="col-2 spixi-list-item-right">
-                            <a href="">
-                            <i class="fa fa-minus-circle spixi-list-item-action-icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="spixi-holder-20"></div>
-                    <div class="spixi-textsection-holder">
-                        Amount to send to recipient
-                    </div>
-                    <div class="spixi-textfield-holder">
-                        <input type="text" class="spixi-textfield" id="password" onkeyup="" placeholder="0.00000000">
-                    </div>
-                    <hr class="spixi-separator-full"/>
-                </div>
-            -->
+
         </div>
 
         <div class="spixi-holder-20"></div>
         <hr class="spixi-separator-main" />
 
         <div id="sendrequest" class="spixi-button large center disabled">
-            Next
+            *SL{wallet-send-next}
         </div>
 
         <div class="spixi-holder-20"></div>
@@ -189,7 +165,7 @@
             contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient(\'' + addr + '\')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield amount-input" oninput="validate()" placeholder="0.00000000"></div>';
 
             if (document.getElementsByClassName("amount-input").length == 0) {
-                contactEntry.innerHTML += '<a class="max-amount" style="display:block; text-align:center;" href="ixian:getMaxAmount();">Send maximum amount</a>';
+                contactEntry.innerHTML += '<a class="max-amount" style="display:block; text-align:center;" href="ixian:getMaxAmount();">*SL{wallet-send-max}</a>';
             }
 
             contactEntry.innerHTML += '<hr class="spixi-separator-full"/>';

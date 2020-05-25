@@ -57,10 +57,10 @@
             <div id="home" class="tab-pane in active">
                 <!-- BalanceBar -->
                 <div id="status_balance" class="spixi-balancebar">
-                    <div class="spixi-balancebar-label">My IxiCash Balance</div>
+                    <div class="spixi-balancebar-label">*SL{index-balance}</div>
                     <div class="spixi-balancebar-balance" id="activity_balance_number"></div>
                     <div class="spixi-balancebar-line"></div>
-                    <div class="spixi-balancebar-info" id="activity_balance_info">* Tap and hold to hide</div>
+                    <div class="spixi-balancebar-info" id="activity_balance_info">*SL{index-balance-info}</div>
 
                     <a href="ixian:quickscan">
                         <div class="spixi-balancebar-quickscan">
@@ -76,7 +76,7 @@
                 <div id="exp1" class="spixi-expansion">
                     <div id="exp1-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-                    <div class="spixi-expansion-text">Notifications (<span id="notification_count">0</span>)</div>
+                    <div class="spixi-expansion-text">*SL{index-notifications} (<span id="notification_count">0</span>)</div>
                     <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp1-contents" class="spixi-expansion-middle" style="display: block;">
@@ -88,7 +88,7 @@
                 <div id="exp2" class="spixi-expansion">
                     <div id="exp2-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-comment"></i></div>
-                    <div class="spixi-expansion-text">Unread chats (<span id="unread_count">0</span>)</div>
+                    <div class="spixi-expansion-text">*SL{index-unread-chats} (<span id="unread_count">0</span>)</div>
                     <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp2-contents" class="spixi-expansion-middle" style="display: block;">
@@ -108,7 +108,7 @@
             <div id="chats" class="tab-pane">
                 <div id="chat_no_activity" class="container">
                     <div class="spixi-list-placeholer-text">
-                        You have no existing conversations.
+                        *SL{index-no-conversations}
                     </div>
                 </div>
 
@@ -126,10 +126,10 @@
             <div id="wallet" class="tab-pane ">
                 <!-- BalanceBar -->
                 <div id="wallet_balance" class="spixi-balancebar">
-                    <div class="spixi-balancebar-label">My IxiCash Balance</div>
+                    <div class="spixi-balancebar-label">*SL{index-balance}</div>
                     <div class="spixi-balancebar-balance" id="wallet_balance_number"></div>
                     <div class="spixi-balancebar-line"></div>
-                    <div class="spixi-balancebar-info" id="wallet_balance_info">* Tap and hold to hide</div>
+                    <div class="spixi-balancebar-info" id="wallet_balance_info">*SL{index-balance-info}</div>
 
                     <a href="ixian:quickscan">
                         <div class="spixi-balancebar-quickscan">
@@ -147,21 +147,21 @@
                             <div class="col-4 spixi-optionbar-tab">
                                 <a href="ixian:sendixi">
                                     <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
-                                    <div class="spixi-optionbar-label">send</div>
+                                    <div class="spixi-optionbar-label">*SL{index-send}</div>
                                 </a>
                             </div>
 
                             <div class="col-4 spixi-optionbar-tab">
                                 <a href="ixian:activity">
                                     <div class="spixi-optionbar-tab-icon"><i class="fa fa-chart-line"></i></div>
-                                    <div class="spixi-optionbar-label">activity</div>
+                                    <div class="spixi-optionbar-label">*SL{index-activity}</div>
                                 </a>
                             </div>
 
                             <div class="col-4 spixi-optionbar-tab">
                                 <a href="ixian:receiveixi">
                                     <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
-                                    <div class="spixi-optionbar-label">receive</div>
+                                    <div class="spixi-optionbar-label">*SL{index-receive}</div>
                                 </a>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                 <div id="exp3" class="spixi-expansion">
                     <div id="exp3-left" class="spixi-expansion-left active"></div>
                     <div class="spixi-expansion-icon"><i class="fa fa-history"></i></div>
-                    <div class="spixi-expansion-text">Recent Activity</div>
+                    <div class="spixi-expansion-text">*SL{index-recent-activity}</div>
                     <div class="spixi-expansion-right"><i id="exp3-icon" class="fa fa-minus"></i></div>
                 </div>
                 <div id="exp3-contents" class="spixi-expansion-middle" style="display: block;">
@@ -187,7 +187,7 @@
             <!-- CONTACTS -->
             <div id="contacts" class="tab-pane ">
                 <div class="spixi-textfield-holder">
-                    <input type="text" class="spixi-textfield" id="contactInput" onkeyup="contactSearch()" placeholder="Search contacts">
+                    <input type="text" class="spixi-textfield" id="contactInput" onkeyup="contactSearch()" placeholder="*SL{index-contacts-placeholder}">
                     <span class="fa fa-search spixi-textfield-holder-icon"></span>
                 </div>
                 <hr class="spixi-separator-full" />
@@ -216,28 +216,28 @@
                 <li id="tab1" class="col-3 spixi-tab active">
                     <a data-toggle="tab" href="#home" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-home"></i></div>
-                        home
+                        *SL{index-tab-home}
                         <div class="tab_placeholder"></div>
                     </a>
                 </li>
                 <li id="tab2" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-comment"></i><div class="spixi-footer-chat-unread-indicator"></div></div>
-                        chats
+                        *SL{index-tab-chats}
                         <div class="tab_placeholder"></div>
                     </a>
                 </li>
                 <li id="tab3" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
-                        wallet
+                        *SL{index-tab-wallet}
                         <div class="tab_placeholder"></div>
                     </a>
                 </li>
                 <li id="tab4" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#contacts" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-address-book"></i></div>
-                        contacts
+                        *SL{index-tab-contacts}
                         <div class="tab_placeholder"></div>
                     </a>
                 </li>
@@ -251,17 +251,17 @@
         <!-- Modal content -->
         <div class="modal-content">
             <div class="spixi-modal-header">
-                NEW
+                *SL{index-new-title}
             </div>
             <hr class="spixi-separator noheightmargins" />
-            <a href="javascript:selectFABOption('newcontact');"><div class="spixi-modal-item">Contact</div></a>
-            <a href="javascript:selectFABOption('newchat');"><div class="spixi-modal-item">Chat</div></a>
-            <a href="javascript:selectFABOption('sendixi');"><div class="spixi-modal-item">Send Ixi</div></a>
-            <a href="javascript:selectFABOption('receiveixi');"><div class="spixi-modal-item">Request Ixi</div></a>
+            <a href="javascript:selectFABOption('newcontact');"><div class="spixi-modal-item">*SL{index-new-contact}</div></a>
+            <a href="javascript:selectFABOption('newchat');"><div class="spixi-modal-item">*SL{index-new-chat}</div></a>
+            <a href="javascript:selectFABOption('sendixi');"><div class="spixi-modal-item">*SL{index-new-send}</div></a>
+            <a href="javascript:selectFABOption('receiveixi');"><div class="spixi-modal-item">*SL{index-new-request}</div></a>
             <hr class="spixi-separator noheightmargins fullwidth" />
             <div class="spixi-modal-footer">
                 <a href="javascript:onHomeMenuClose();">
-                    <div class="spixi-modal-close">CANCEL</div>
+                    <div class="spixi-modal-close">*SL{index-new-cancel}</div>
                 </a>
             </div>
 
@@ -284,70 +284,70 @@
                 <div id="avatar" class="spixi-sidebar-avatar-holder">
                     <img id="avatar_image" class="spixi-sidebar-avatar" src="img/spixiavatar.png" />
                 </div>
-                <p id="menu_nickname" class="spixi-sidebar-title">Spixi User</p>
+                <p id="menu_nickname" class="spixi-sidebar-title">*SL{index-side-title}</p>
             </div>
 
 
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('address');" class="">
                     <i class="fa fa-wallet spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">My Spixi Address</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-myaddress}</div>
                 </a>
             </div>
 
             <!--<div class="spixi-sidebar-item">
         <a href="javascript:selectMenuOption('apps');" class="">
             <i class="fa fa-code spixi-sidebar-item-icon"></i>
-            <div class="spixi-sidebar-item-text">Apps</div>
+            <div class="spixi-sidebar-item-text">*SL{index-side-apps}</div>
         </a>
     </div>-->
 
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('downloads');" class="">
                     <i class="fa fa-download spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Downloads</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-downloads}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('settings');" class="">
                     <i class="fa fa-cog spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Settings</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-settings}</div>
                 </a>
             </div>
             <!-- Security Lock is not available in this version
     <div class="spixi-sidebar-item">
         <a href="javascript:selectMenuOption('lock');" class="">
             <i class="fa fa-lock spixi-sidebar-item-icon"></i>
-            <div class="spixi-sidebar-item-text">Security</div>
+            <div class="spixi-sidebar-item-text">*SL{index-side-security}</div>
         </a>
     </div>
     -->
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('backup');" class="">
                     <i class="fa fa-save spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Backup</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-backup}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('encpass');" class="">
                     <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Password</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-password}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
                 <a href="javascript:selectMenuOption('about');" class="">
                     <i class="fa fa-info spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">About</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-about}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item" id="SendLogMenuItem" style="display: none;">
                 <a href="javascript:selectMenuOption('viewLog');" class="">
                     <i class="fa fa-info spixi-sidebar-item-icon"></i>
-                    <div class="spixi-sidebar-item-text">Send Log</div>
+                    <div class="spixi-sidebar-item-text">*SL{index-side-sendlog}</div>
                 </a>
             </div>
 
@@ -518,16 +518,16 @@
         {
             balDiv.innerHTML = balance;
             document.getElementById('wallet_balance_number').innerHTML = balance;
-            document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to hide";
-            document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to hide";
+            document.getElementById('activity_balance_info').innerHTML = "*SL{index-balance-info}";
+            document.getElementById('wallet_balance_info').innerHTML = "*SL{index-balance-info}";
 
         }
         else
         {
             balDiv.innerHTML = "&nbsp;";
             document.getElementById('wallet_balance_number').innerHTML = "&nbsp;";
-            document.getElementById('activity_balance_info').innerHTML = "* Tap and hold to show";
-            document.getElementById('wallet_balance_info').innerHTML = "* Tap and hold to show";
+            document.getElementById('activity_balance_info').innerHTML = "*SL{index-balance-info2}";
+            document.getElementById('wallet_balance_info').innerHTML = "*SL{index-balance-info2}";
 
         }
     }
@@ -851,7 +851,7 @@ triggerOnTouchEnd:true,
             if(logoClicked > 10)
             {
                 document.getElementById("SendLogMenuItem").style.display = "block";
-                alert("Developer mode activated");
+                alert("*SL{index-devmode}");
             }
         }
     </script>

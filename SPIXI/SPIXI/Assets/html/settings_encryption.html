@@ -34,7 +34,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    Password
+                    *SL{settings-encryption-title}
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
             <div class="container">
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 spixi-center"><i class="fa fa-fingerprint"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">Encryption password is the most important password for your account and wallet. You will need to enter it every time you start Spixi or if you need to restore your account.</div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{settings-encryption-description}</div>
                 </div>
             </div>
         </div>
@@ -55,38 +55,38 @@
         <div class="spixi-holder-20"></div>
 
         <div class="spixi-textsection-holder spixi-textsection-header">
-            Edit your Encryption Password
+            *SL{settings-encryption-edit}
         </div>
 
         <hr class="spixi-separator" />
 
         <div class="spixi-textsection-holder">
-            Type in your <b>Current</b> Password
+            *SL{settings-encryption-type}
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="passwordOld" onkeyup="checkPasswordMatch()" placeholder="Type in your Encryption Password">
+            <input type="password" class="spixi-textfield" id="passwordOld" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholder}">
         </div>
 
         <hr class="spixi-separator" />
 
         <div class="spixi-textsection-holder">
-            Type in your <b>NEW</b> Password
+            *SL{settings-encryption-typenew}
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="password" onkeyup="checkPasswordMatch()" placeholder="Type in your new Encryption Password">
+            <input type="password" class="spixi-textfield" id="password" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholdernew}">
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="passwordConfirm" onkeyup="checkPasswordMatch()" placeholder="Retype in your new Encryption Password">
+            <input type="password" class="spixi-textfield" id="passwordConfirm" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholderretype}">
         </div>
         <hr class="spixi-separator" />
-        <div id="passwordInfoText" class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> Password needs to have at least 10 characters</div>
+        <div id="passwordInfoText" class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> *SL{settings-encryption-password10}</div>
 
         <div class="spixi-holder-20"></div>
         <div class="spixi-holder-20"></div>
         <hr class="spixi-separator-main" />
 
         <div id="sendrequest" class="spixi-button large center disabled">
-            <i class="fas fa-fingerprint"></i>&nbsp; Change Password
+            <i class="fas fa-fingerprint"></i>&nbsp; *SL{settings-encryption-change}
         </div>
         <div class="spixi-holder-20"></div>
 
@@ -119,22 +119,22 @@
             sendrequest.className = "spixi-button large center disabled";
 
             if (password.length < 10) {
-                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Password needs to have at least 10 characters");
+                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> *SL{settings-encryption-password10}");
                 return false;
             }
 
             if (confirmPassword.length < 1) {
-                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Enter password confirmation");
+                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> *SL{settings-encryption-passwordconf}");
 
                 return false;
             }
 
             if (password != confirmPassword) {
-                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Passwords do not match");
+                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> *SL{settings-encryption-passwordnomatch}");
                 return false;
             }
             else {
-                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> Passwords match");
+                $("#passwordInfoText").html("<i class=\"spixi-text-address fa fa-info-circle\"></i> *SL{settings-encryption-passwordmatch}");
 
                 var passwordOld = $("#passwordOld").val();
                 if (passwordOld.length < 10)

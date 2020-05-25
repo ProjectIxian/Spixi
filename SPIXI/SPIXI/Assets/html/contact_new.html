@@ -34,7 +34,7 @@
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-10">
-                    New Contact
+                    *SL{contact-new-title}
                 </div>
             </div>
 
@@ -46,20 +46,20 @@
             <div class="container">
                 <div class="row spixi-descriptionbar-row">
                     <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.</div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{contact-new-description}</div>
                 </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
 
         <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="addressInput" oninput="checkAddress()" placeholder="Paste / type address">
+            <input type="text" class="spixi-textfield" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}">
         </div>
 
         <hr class="spixi-separator-main" />
 
         <div id="sendrequest" class="spixi-button large center disabled">
-            <i class="fas fa-check"></i>&nbsp; Send Contact Request
+            <i class="fas fa-check"></i>&nbsp; *SL{contact-new-send-request}
         </div>
 
         <a href="ixian:quickscan" class="action-button">
