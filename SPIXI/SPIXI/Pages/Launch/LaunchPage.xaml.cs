@@ -1,7 +1,9 @@
 ﻿using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
+using System.IO;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,9 +19,12 @@ namespace SPIXI
             NavigationPage.SetHasNavigationBar(this, false);
 
             // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/intro.html", DependencyService.Get<IBaseUrl>().Get());
-            Logging.info(source.Url);
+            //var source = new UrlWebViewSource();
+            //source.Url = string.Format("{0}html/intro.html", DependencyService.Get<IBaseUrl>().Get());
+            var source = new HtmlWebViewSource();
+            source.BaseUrl = string.Format("{0}html/", DependencyService.Get<IBaseUrl>().Get());
+            source.Html = SpixiLocalization.getLocalizedHtml(Path.Combine("html", "intro.html"), source.BaseUrl);
+            Logging.info(source.BaseUrl);
             webView.Source = source;
 
         }

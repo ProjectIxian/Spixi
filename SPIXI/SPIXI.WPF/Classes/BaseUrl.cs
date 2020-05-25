@@ -13,6 +13,6 @@ public class BaseUrl_WPF : IBaseUrl
 {
     public string Get()
     {
-        return "pack://siteoforigin:,,,/";
+        return "file://" + System.AppDomain.CurrentDomain.BaseDirectory; //"pack://siteoforigin:,,,/";
     }
 }
