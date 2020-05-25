@@ -18,15 +18,7 @@ namespace SPIXI
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // Load the platform specific home page url
-            //var source = new UrlWebViewSource();
-            //source.Url = string.Format("{0}html/intro.html", DependencyService.Get<IBaseUrl>().Get());
-            var source = new HtmlWebViewSource();
-            source.BaseUrl = string.Format("{0}html/", DependencyService.Get<IBaseUrl>().Get());
-            source.Html = SpixiLocalization.getLocalizedHtml(Path.Combine("html", "intro.html"), source.BaseUrl);
-            Logging.info(source.BaseUrl);
-            webView.Source = source;
-
+            loadPage(webView, "intro.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

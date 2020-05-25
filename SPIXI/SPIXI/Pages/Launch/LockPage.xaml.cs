@@ -15,10 +15,7 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/lock.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "lock.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

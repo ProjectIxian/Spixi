@@ -2,8 +2,10 @@
 using IXICore.Meta;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -15,6 +17,22 @@ namespace SPIXI
         public bool CancelsTouchesInView = true;
 
         protected WebView _webView = null;
+
+        public void loadPage(WebView web_view, string html_file_name)
+        {
+            string localized_file_name = "ll_" + html_file_name;
+
+            string base_path = string.Format("{0}html", DependencyService.Get<IBaseUrl>().Get());
+
+            string localized_file_path = Path.Combine(base_path, localized_file_name);
+
+            SpixiLocalization.localizeHtml(Path.Combine(base_path, html_file_name), localized_file_path);
+
+            _webView = web_view;
+            var source = new UrlWebViewSource();
+            source.Url = localized_file_path;
+            _webView.Source = source;
+        }
 
         public virtual void recalculateLayout()
         {

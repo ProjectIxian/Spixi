@@ -56,16 +56,7 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
-            _webView = webView;
-
-            // Load the platform specific home page url
-            //var source = new UrlWebViewSource();
-            //source.Url = string.Format("{0}html/index.html",DependencyService.Get<IBaseUrl>().Get());
-            var source = new HtmlWebViewSource();
-            source.BaseUrl = string.Format("{0}html/", DependencyService.Get<IBaseUrl>().Get());
-            source.Html = SpixiLocalization.getLocalizedHtml(Path.Combine("html", "index.html"), source.BaseUrl);
-            Logging.info(source.BaseUrl);
-            webView.Source = source;
+            loadPage(webView, "index.html");
 
             if (!running)
             {

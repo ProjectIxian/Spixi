@@ -34,17 +34,12 @@ namespace SPIXI
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            _webView = webView;
-
             Title = fr.nickname;
             friend = fr;
 
             friend.chat_page = this;
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/chat.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "chat.html");
         }
 
         public override void recalculateLayout()

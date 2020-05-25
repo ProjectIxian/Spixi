@@ -22,10 +22,7 @@ namespace SPIXI
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/wallet_send.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "wallet_send.html");
         }
 
         public WalletSendPage(byte[] wal)
@@ -35,10 +32,7 @@ namespace SPIXI
 
             recipient = wal.ToArray();
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/wallet_send.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "wallet_send.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

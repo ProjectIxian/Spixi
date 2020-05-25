@@ -70,22 +70,22 @@ namespace SPIXI.Lang
             return language;
         }
 
-        public static string getLocalizedHtml(string html_file_name, string base_url)
+        public static void localizeHtml(string html_file_path, string localized_file_path)
         {
-            if(!File.Exists(html_file_name))
+            if(!File.Exists(html_file_path))
             {
-                Logging.error("HTML File doesn't exist: " + html_file_name);
-                return null;
+                Logging.error("HTML File doesn't exist: " + html_file_path);
+                return;
             }
-            string html = "";
-            StreamReader sr = File.OpenText(html_file_name);
+            StreamReader sr = File.OpenText(html_file_path);
+            StreamWriter sw = File.CreateText(localized_file_path);
 
             while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine().Trim();
-                if(line.StartsWith("<head"))
+                if(line == "")
                 {
-                    line += "<base href=\"" + base_url + "\">";
+                    continue;
                 }
                 while (line.Contains("*SL{"))
                 {
@@ -99,13 +99,15 @@ namespace SPIXI.Lang
                     }
                     line = line.Replace("*SL{" + key + "}", value);
                 }
-                html += line +"\n";
+                sw.WriteLine(line);
             }
 
             sr.Close();
             sr.Dispose();
 
-            return html;
+            sw.Flush();
+            sw.Close();
+            sw.Dispose();
         }
     }
 }

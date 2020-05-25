@@ -22,10 +22,7 @@ namespace SPIXI
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/contact_new.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "contact_new.html");
         }
 
         public ContactNewPage(string wal_id)

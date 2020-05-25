@@ -19,10 +19,7 @@ namespace SPIXI
 
             NavigationPage.SetHasNavigationBar(this, false);
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/apps.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "apps.html");
         }
 
         public override void recalculateLayout()

@@ -29,13 +29,7 @@ namespace SPIXI
 
             transaction = tx;
 
-            // Retrieve transaction network status
-            //requestTransactionData();
-
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/wallet_sent.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "wallet_sent.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

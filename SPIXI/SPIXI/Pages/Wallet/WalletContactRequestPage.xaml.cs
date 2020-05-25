@@ -33,10 +33,7 @@ namespace SPIXI
                 requestMsg = request_msg;
             }
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/wallet_contact_request.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "wallet_contact_request.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

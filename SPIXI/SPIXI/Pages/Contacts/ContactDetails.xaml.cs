@@ -25,10 +25,7 @@ namespace SPIXI
             friend = lfriend;
             customChatBtn = customChatButton;
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/contact_details.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "contact_details.html");
 
             // TODOSPIXI
             /*
