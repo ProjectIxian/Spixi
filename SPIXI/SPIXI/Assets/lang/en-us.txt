@@ -1,0 +1,8 @@
+language = English (US)
+
+; Intro Screen
+intro-title = Welcome to Spixi,
+intro-subtitle = the decentralized and secure Chat, Wallet and more
+intro-text = Please create or restore your<br/>Spixi Account to proceed
+intro-create-account = New Account
+intro-restore-account = Restore your Account
