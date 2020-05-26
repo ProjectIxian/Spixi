@@ -49,6 +49,8 @@ chat-call-incoming = Incoming call
 chat-call-no-answer = No answer
 chat-call-missed = Missed call
 chat-call-ended = Ended
+chat-online = Online
+chat-offline = Offline
 
 ; Contact Details Screen
 contact-details-chat = chat

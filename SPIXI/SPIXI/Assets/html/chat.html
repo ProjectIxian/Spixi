@@ -315,13 +315,10 @@
             }
         });
 
-
         function addText(id, address, nick, avatar, text, time, className) {
             var textEl = document.createElement('div');
             textEl.className = "text selectable";
-            textEl.innerHTML = text;
-
-            twemoji.parse(textEl);
+            textEl.innerHTML = twemoji.parse(text);
 
             var timeClass = "spixi-timestamp";
             var relativeTime = getRelativeTime(time);
@@ -659,9 +656,9 @@
 
         function showIndicator(ind) {
             if (ind == "true") {
-                document.getElementById("status").innerHTML = "online";
+                document.getElementById("status").innerHTML = "*SL{chat-online}";
             } else {
-                document.getElementById("status").innerHTML = "offline";
+                document.getElementById("status").innerHTML = "*SL{chat-offline}";
             }
         }
 
