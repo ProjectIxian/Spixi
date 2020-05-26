@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.CustomApps;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Network;
 using SPIXI.VoIP;
@@ -881,7 +882,7 @@ namespace SPIXI
             {
                 return;
             }
-            string status = "PENDING";
+            string status = SpixiLocalization._SL("chat-payment-status-pending");
             if (tx_id != null)
             {
                 msg.message = ":" + tx_id;
@@ -889,7 +890,7 @@ namespace SPIXI
             else
             {
                 tx_id = "";
-                status = "DECLINED";
+                status = SpixiLocalization._SL("chat-payment-status-declined");
                 msg.message = "::" + msg.message; // declined
             }
 

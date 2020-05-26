@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
@@ -103,7 +104,7 @@ namespace SPIXI
 
                     if (friend.chat_page != null)
                     {
-                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, "", "DECLINED");
+                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, "", SpixiLocalization._SL("chat-payment-status-declined"));
                     }
                 }
             }
@@ -147,7 +148,7 @@ namespace SPIXI
 
                 if (friend.chat_page != null)
                 {
-                    friend.chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, "PENDING");
+                    friend.chat_page.updateRequestFundsStatus(requestMsg.id, transaction.id, SpixiLocalization._SL("chat-payment-status-pending"));
                 }
             }
 

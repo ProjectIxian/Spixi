@@ -562,46 +562,47 @@ namespace SPIXI
                     {
                         if (lastmsg.localSender)
                         {
-                            excerpt = "Payment Request Sent";
+                            excerpt = SpixiLocalization._SL("index-excerpt-payment-request-sent");
                         }
                         else
                         {
-                            excerpt = "Payment Request Received";
+                            excerpt = SpixiLocalization._SL("index-excerpt-payment-request-received");
                         }
                     }
                     else if (lastmsg.type == FriendMessageType.sentFunds)
                     {
                         if (lastmsg.localSender)
                         {
-                            excerpt = "Payment Sent";
+                            excerpt = SpixiLocalization._SL("index-excerpt-payment-sent");
                         }
                         else
                         {
-                            excerpt = "Payment Received";
+                            excerpt = SpixiLocalization._SL("index-excerpt-payment-received");
                         }
                     }
                     else if (lastmsg.type == FriendMessageType.requestAdd)
                     {
                         if (friend.approved)
                         {
-                            excerpt = "Contact Accepted";
+                            excerpt = SpixiLocalization._SL("index-excerpt-contact-accepted");
                         }
                         else
                         {
-                            excerpt = "Contact Request";
+                            excerpt = SpixiLocalization._SL("index-excerpt-contact-request");
                         }
                     }
                     else if (lastmsg.type == FriendMessageType.fileHeader)
                     {
-                        excerpt = "File";
-                    }else if(lastmsg.type == FriendMessageType.voiceCall || lastmsg.type == FriendMessageType.voiceCallEnd)
+                        excerpt = SpixiLocalization._SL("index-excerpt-file");
+                    }
+                    else if(lastmsg.type == FriendMessageType.voiceCall || lastmsg.type == FriendMessageType.voiceCallEnd)
                     {
-                        excerpt = "Voice Call";
+                        excerpt = SpixiLocalization._SL("index-excerpt-voice-call");
                     }
                     
                     if (lastmsg.localSender)
                     {
-                        excerpt = "You: " + excerpt;
+                        excerpt = SpixiLocalization._SL("index-excerpt-self") + ": " + excerpt;
                     }
 
                     string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
@@ -662,12 +663,13 @@ namespace SPIXI
             for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
             {
                 Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
-                string tx_type = "Payment Received";
+                string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = utransaction.amount;
                 if (Node.walletStorage.isMyAddress((new Address(utransaction.pubKey).address)))
                 {
-                    tx_type = "Payment Sent";
-                }else
+                    tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
+                }
+                else
                 {
                     amount = calculateReceivedAmount(utransaction);
                 }
@@ -684,11 +686,11 @@ namespace SPIXI
             for (int i = TransactionCache.transactions.Count - 1; i >= max_tx_count; i--)
             {
                 Transaction transaction = TransactionCache.transactions[i];
-                string tx_type = "Payment Received";
+                string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = transaction.amount;
                 if (Node.walletStorage.isMyAddress((new Address(transaction.pubKey).address)))
                 {
-                    tx_type = "Payment Sent";
+                    tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
                 }
                 else
                 {
@@ -722,7 +724,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian Network...");
+                Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
             }
 
             Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);

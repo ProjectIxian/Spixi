@@ -36,6 +36,19 @@ chat-send-payment = Send Payment
 chat-status = Status
 chat-amount = Amount
 chat-view = View
+chat-payment-request-sent = Payment request SENT
+chat-payment-request-received = Payment request RECEIVED
+chat-payment-sent = Payment SENT
+chat-payment-received = Payment RECEIVED
+chat-payment-status-waiting-confirmation = WAITING CONFIRMATION
+chat-payment-status-declined = DECLINED
+chat-payment-status-pending = PENDING
+chat-payment-status-confirmed = CONFIRMED
+chat-call-outgoing = Outgoing call
+chat-call-incoming = Incoming call
+chat-call-no-answer = No answer
+chat-call-missed = Missed call
+chat-call-ended = Ended
 
 ; Contact Details Screen
 contact-details-chat = chat
@@ -93,6 +106,15 @@ index-side-password = Password
 index-side-about = About
 index-side-sendlog = Send Log
 index-devmode = Developer mode activated
+index-excerpt-payment-request-sent = Payment Request Sent
+index-excerpt-payment-request-received = Payment Request Received
+index-excerpt-payment-sent = Payment Sent
+index-excerpt-payment-received = Payment Received
+index-excerpt-contact-accepted = Contact Accepted
+index-excerpt-contact-request = Contact Request
+index-excerpt-file = File
+index-excerpt-voice-call = Voice Call
+index-excerpt-self = You
 
 ; Intro Screen
 intro-title = Welcome to Spixi,
@@ -152,7 +174,9 @@ settings-confirm = CONFIRM
 settings-description = Edit your Spixi Account information and manage the data stored on this device.
 settings-account-information = Account Information
 settings-account-description = This is how you appear to other Spixi users.<br />You can change your displayed name and image.
-settings-account-image = Edit displayed image
+settings-account-image-edit = Edit displayed image
+settings-account-nick-edit = Edut displayed name
+settings-account-nick-placeholder = Type in your display name
 settings-account-deleteinfo = You can delete this account and all of the content associated with it from this device. To continue using Spixi you will have to create a new account.
 settings-account-delete = Delete my Account
 settings-deletea-title = Delete my ACCOUNT
@@ -220,6 +244,7 @@ wallet-contact-request-proceed = PROCEED TO PAY
 
 ; Wallet Recipient Screen
 wallet-recipient-title = Select Recipient
+wallet-recipient-search-placeholder = Search contacts
 wallet-recipient-empty = 0 Recipients selected
 wallet-recipient-add = Add Recipient/-s
 wallet-recipient-selected = Recipients selected
@@ -273,3 +298,15 @@ wallet-sentrecv-title = Payment Received
 wallet-sentrecv-subtitle = Payment Received from
 wallet-sentrecv-amount = Amount Received
 wallet-sentrecv-details = The amount received has been added to your balance.
+
+; Global
+global-connecting-s2 = Connecting to Ixian S2...
+global-connecting-dlt = Connecting to Ixian Network...
+global-received = RECEIVED
+global-sent = SENT
+global-app-accept = Accept
+global-app-reject = Reject
+global-app-wants-to-use = {0} wants to use {1} with you.
+global-call-in-call = In Call
+global-call-dialing = Dialing
+global-call-incoming = Incoming Call

@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
@@ -176,10 +177,10 @@ namespace SPIXI
                         continue;
                 }
 
-                string tx_type = "RECEIVED";
+                string tx_type = SpixiLocalization._SL("global-received");
                 if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
-                    tx_type = "SENT";
+                    tx_type = SpixiLocalization._SL("global-sent");
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
                 Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString(), "false");
@@ -197,10 +198,10 @@ namespace SPIXI
                         continue;
                 }
 
-                string tx_type = "RECEIVED";
+                string tx_type = SpixiLocalization._SL("global-received");
                 if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
-                    tx_type = "SENT";
+                    tx_type = SpixiLocalization._SL("global-sent");
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
                 Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), "true");

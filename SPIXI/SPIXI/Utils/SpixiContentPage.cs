@@ -87,8 +87,8 @@ namespace SPIXI
                     }
                     Friend f = FriendList.getFriend(page.hostUserAddress);
                     CustomApp app = Node.customAppManager.getApp(page.appId);
-                    string text = f.nickname + " wants to use " + app.name + " with you.";
-                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text, "Accept", "Reject");
+                    string text = string.Format(SpixiLocalization._SL("global-app-wants-to-use"), f.nickname, app.name);
+                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));
                 }
                 if(VoIPManager.isInitiated())
                 {
@@ -96,16 +96,16 @@ namespace SPIXI
                     {
                         if(VoIPManager.currentCallCalleeAccepted)
                         {
-                            displayCallBar(VoIPManager.currentCallSessionId, "In Call - " + VoIPManager.currentCallContact.nickname, VoIPManager.currentCallStartedTime);
+                            displayCallBar(VoIPManager.currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + VoIPManager.currentCallContact.nickname, VoIPManager.currentCallStartedTime);
                         }else
                         {
-                            displayCallBar(VoIPManager.currentCallSessionId, "Dialing " + VoIPManager.currentCallContact.nickname + "...", 0);
+                            displayCallBar(VoIPManager.currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + VoIPManager.currentCallContact.nickname + "...", 0);
                         }
                     }
                     else
                     {
                         Friend f = VoIPManager.currentCallContact;
-                        string text = "Incoming Call - " + f.nickname;
+                        string text = SpixiLocalization._SL("global-call-incoming") + " - " + f.nickname;
                         string accept_html = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
                         string reject_html = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
                         Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);

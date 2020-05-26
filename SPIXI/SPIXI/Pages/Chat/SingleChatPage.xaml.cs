@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using SPIXI.Lang;
 
 namespace SPIXI
 {
@@ -578,7 +579,7 @@ namespace SPIXI
 
             if (message.type == FriendMessageType.requestFunds)
             {
-                string status = "WAITING CONFIRMATION";
+                string status = SpixiLocalization._SL("chat-payment-status-waiting-confirmation");
                 string status_icon = "fa-clock";
 
                 string amount = message.message;
@@ -594,14 +595,14 @@ namespace SPIXI
 
                 if (message.message.StartsWith("::"))
                 {
-                    status = "DECLINED";
+                    status = SpixiLocalization._SL("chat-payment-status-declined");
                     status_icon = "fa-exclamation-circle";
                     amount = message.message.Substring(2);
                     txid = Crypto.hashToString(message.id);
                     enableView = false;
                 }else if(message.message.StartsWith(":"))
                 {
-                    status = "PENDING";
+                    status = SpixiLocalization._SL("chat-payment-status-pending");
                     txid = message.message.Substring(1);
 
                     bool confirmed = true;
@@ -620,7 +621,7 @@ namespace SPIXI
 
                         if (confirmed)
                         {
-                            status = "CONFIRMED";
+                            status = SpixiLocalization._SL("chat-payment-status-confirmed");
                             status_icon = "fa-check-circle";
                         }
                     }
@@ -635,11 +636,11 @@ namespace SPIXI
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, "Payment request RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
             }
 
@@ -653,7 +654,7 @@ namespace SPIXI
                     confirmed = false;
                 }
 
-                string status = "PENDING";
+                string status = SpixiLocalization._SL("chat-payment-status-pending");
                 string status_icon = "fa-clock";
 
                 string amount = "?";
@@ -662,7 +663,7 @@ namespace SPIXI
                 {
                     if (confirmed)
                     {
-                        status = "CONFIRMED";
+                        status = SpixiLocalization._SL("chat-payment-status-confirmed");
                         status_icon = "fa-check-circle";
                     }
                     if(message.localSender)
@@ -682,11 +683,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment SENT", amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), "True");
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), "True");
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, "Payment RECEIVED", amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), "True");
+                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), "True");
                 }
             }
 
@@ -720,10 +721,10 @@ namespace SPIXI
                 string text;
                 if(message.localSender)
                 {
-                    text = "Outgoing call";
+                    text = SpixiLocalization._SL("chat-call-outgoing");
                 }else
                 {
-                    text = "Incoming call";
+                    text = SpixiLocalization._SL("chat-call-incoming");
                 }
                 bool declined = false;
                 if(message.message == "")
@@ -733,11 +734,11 @@ namespace SPIXI
                         declined = true;
                         if (message.localSender)
                         {
-                            text = "No answer";
+                            text = SpixiLocalization._SL("chat-call-no-answer");
                         }
                         else
                         {
-                            text = "Missed call";
+                            text = SpixiLocalization._SL("chat-call-missed");
                         }
                     }
                 }else if(message.type == FriendMessageType.voiceCallEnd)
@@ -745,7 +746,7 @@ namespace SPIXI
                     long seconds = Int32.Parse(message.message);
                     long minutes = seconds / 60;
                     seconds = seconds % 60;
-                    text = text + string.Format(" ended ({0}:{1})", minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
+                    text = text + string.Format(" {0} ({1}:{2})", SpixiLocalization._SL("chat-call-outgoing"), minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
                 }
                 Utils.sendUiCommand(webView, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
@@ -817,12 +818,12 @@ namespace SPIXI
 
         public void updateTransactionStatus(string txid, bool verified)
         {
-            string status = "PENDING";
+            string status = SpixiLocalization._SL("chat-payment-status-pending");
             string status_icon = "fa-clock";
 
             if (verified)
             {
-                status = "CONFIRMED";
+                status = SpixiLocalization._SL("chat-payment-status-confirmed");
                 status_icon = "fa-check-circle";
             }
 
@@ -833,7 +834,7 @@ namespace SPIXI
         {
             string status_icon = "fa-clock";
             bool enableView = true;
-            if(status == "DECLINED")
+            if(status == SpixiLocalization._SL("chat-payment-status-declined"))
             {
                 status_icon = "fa-exclamation-circle";
                 enableView = false;
@@ -862,7 +863,7 @@ namespace SPIXI
             {
                 if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
                 {
-                    Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian S2...");
+                    Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
                 }
                 else
                 {
@@ -871,7 +872,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", "Connecting to Ixian Network...");
+                Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
             }
             
 
