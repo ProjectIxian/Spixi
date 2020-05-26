@@ -10,6 +10,7 @@
     <title>Spixi</title>
     <script defer src="libs/twemoji/twemoji.min.js"></script>
     <link defer rel="stylesheet" type="text/css" href="libs/lsxemojipicker/jquery.lsxemojipicker.css">
+    <script defer src="libs/lsxemojipicker/jquery.lsxemojipicker.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
@@ -122,30 +123,22 @@
 
         function onChatScreenLoad()
         {
+            document.getElementById("chat_input").focus();
             twemoji.base = "libs/twemoji/";
             twemoji.size = "72x72";
             onload();
-            if(!document.getElementById("lsxEmojiPickerScript"))
-            {
-                setTimeout(function(){
-                        var script = document.createElement('script');
-                        script.id = "lsxEmojiPickerScript";
-                        script.onload = function () {
-                            script.onload = null;
-                            $('#chat_emoji').lsxEmojiPicker({
-                                twemoji: true,
-                                onSelect: function (emoji) {
-                                    console.log(emoji);
-                                    document.getElementById("chat_input").innerHTML += emoji.value + " ";
-                                    document.getElementById("chat_input").focus();
-                                }
-                            });
-                        };
-                        script.src = "libs/lsxemojipicker/jquery.lsxemojipicker.min.js";
+        }
 
-                        document.head.appendChild(script);
-                    }, 100);
-            }
+        function onChatScreenLoaded()
+        {
+            $('#chat_emoji').lsxEmojiPicker({
+                twemoji: true,
+                onSelect: function (emoji) {
+                    document.getElementById("chat_input").innerHTML += emoji.value + " ";
+                    document.getElementById("chat_input").focus();
+                }
+            });
+            document.getElementById("chat_input").focus();
         }
 
         document.getElementById("backbtn").onclick = function () {
@@ -318,7 +311,8 @@
         function addText(id, address, nick, avatar, text, time, className) {
             var textEl = document.createElement('div');
             textEl.className = "text selectable";
-            textEl.innerHTML = twemoji.parse(text);
+            textEl.innerHTML = text;
+            twemoji.parse(textEl);
 
             var timeClass = "spixi-timestamp";
             var relativeTime = getRelativeTime(time);

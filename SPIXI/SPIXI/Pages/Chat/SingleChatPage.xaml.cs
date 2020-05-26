@@ -206,6 +206,8 @@ namespace SPIXI
 
             loadMessages();
 
+            Utils.sendUiCommand(webView, "onChatScreenLoaded");
+
             if (FriendList.getUnreadMessageCount() == 0)
             {
                 DependencyService.Get<IPushService>().clearNotifications();
