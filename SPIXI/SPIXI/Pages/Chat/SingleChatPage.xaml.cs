@@ -493,8 +493,18 @@ namespace SPIXI
         {
             lock (friend.messages)
             {
+                int skip_messages = 0;
+                if(friend.messages.Count > 100)
+                {
+                    skip_messages = friend.messages.Count() - 100;
+                }
                 foreach (FriendMessage message in friend.messages)
                 {
+                    if(skip_messages > 0)
+                    {
+                        skip_messages--;
+                        continue;
+                    }
                     insertMessage(message);
                 }
             }
