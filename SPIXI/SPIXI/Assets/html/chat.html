@@ -87,7 +87,7 @@
                     <i class="fa fa-smile-wink"></i>
                 </div>
 
-                <input type="text" id="chat_input" onkeyup="" placeholder="*SL{chat-type-placeholder}" />
+                <div contenteditable="true" type="text" id="chat_input" onkeyup="" placeholder="*SL{chat-type-placeholder}"></div>
                 <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa fa-paper-plane"></i></div></div>
             </div>
         </div>
@@ -136,7 +136,7 @@
                                 twemoji: true,
                                 onSelect: function (emoji) {
                                     console.log(emoji);
-                                    document.getElementById("chat_input").value += emoji.value + " ";
+                                    document.getElementById("chat_input").innerHTML += emoji.value + " ";
                                     document.getElementById("chat_input").focus();
                                 }
                             });
@@ -222,18 +222,39 @@
         document.getElementById("chat_send").onclick = function () {
             document.getElementById("chat_input").click();
             document.getElementById("chat_input").focus();
-            var chat_text = document.getElementById("chat_input").value;
+            var chat_text = document.getElementById("chat_input").innerHTML;
 
             if (chat_text.length > 0)
                 location.href = "ixian:chat:" + encodeURIComponent(chat_text);
         }
 
+        var shiftPressed = false;
+
+        $("#chat_input").keydown(function (event) {
+            if(event.keyCode === 16)
+            {
+                shiftPressed = true;
+            }
+        });
+
+        $("#chat_input").keypress(function (event) {
+            if(event.keyCode === 13)
+            {
+                document.getElementById("chat_input").innerHTML += "<br/>";
+                return false;
+            }
+        });
+
         $("#chat_input").keyup(function (event) {
-            if (event.keyCode === 13) {
+            if(event.keyCode === 16)
+            {
+                shiftPressed = false;
+            }
+            if (event.keyCode === 13 && !shiftPressed) {
                 $("#chat_send").click();
             }
 
-            var chat_text = document.getElementById("chat_input").value;
+            var chat_text = document.getElementById("chat_input").innerHTML;
             if (chat_text.length > 0)
                 document.getElementById("chat_send").style.backgroundColor = "#C1185B";
             else
@@ -275,7 +296,7 @@
         });
 
         function clearInput() {
-            document.getElementById("chat_input").value = "";
+            document.getElementById("chat_input").innerHTML = "";
             document.getElementById("chat_send").style.backgroundColor = "#BABABA";
         }
 
