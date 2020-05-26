@@ -35,14 +35,20 @@ namespace SPIXI.Droid.Classes
 
         public void OnPause()
         {
-            // Be sure to unregister the sensor when the activity pauses.
-            sensorManager.UnregisterListener(this);
+            if (sensorManager != null && proximity != null)
+            {
+                // Be sure to unregister the sensor when the activity pauses.
+                sensorManager.UnregisterListener(this);
+            }
         }
 
         public void OnResume()
         {
-            // Register a listener for the sensor.
-            sensorManager.RegisterListener(this, proximity, SensorDelay.Normal);
+            if (sensorManager != null && proximity != null)
+            {
+                // Register a listener for the sensor.
+                sensorManager.RegisterListener(this, proximity, SensorDelay.Normal);
+            }
         }
     }
 }
