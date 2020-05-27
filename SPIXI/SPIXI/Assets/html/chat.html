@@ -326,7 +326,7 @@
         });
 
         function addText(id, address, nick, avatar, text, time, className) {
-            text = text.replace(/\n/g, "<br/>");
+            text = text.replace(/\n/g, "<br>");
 
             var textEl = document.createElement('div');
             textEl.className = "text selectable";
@@ -535,6 +535,8 @@
         }
 
         function updateMessage(id, message, sent, read) {
+            message = message.replace(/\n/g, "<br>");
+
             var msgEl = document.getElementById("msg_" + id);
             var isFile = false;
             var isPayment = false;
