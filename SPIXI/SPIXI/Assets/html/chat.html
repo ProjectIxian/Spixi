@@ -227,6 +227,12 @@
             chatInput.focus();
             var chat_text = chatInput.innerText;
 
+            if(chat_text.length > 1000)
+            {
+                alert("*SL{chat-text-too-long}");
+                return false;
+            }
+
             if (chat_text.length > 0)
                 location.href = "ixian:chat:" + encodeURIComponent(chat_text);
         }

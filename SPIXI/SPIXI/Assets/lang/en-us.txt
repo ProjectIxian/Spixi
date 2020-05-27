@@ -51,6 +51,7 @@ chat-call-missed = Missed call
 chat-call-ended = Ended
 chat-online = Online
 chat-offline = Offline
+chat-text-too-long = Text too long.
 
 ; Contact Details Screen
 contact-details-chat = chat
