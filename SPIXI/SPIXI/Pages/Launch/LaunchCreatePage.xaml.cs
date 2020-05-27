@@ -1,4 +1,5 @@
 ﻿using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -49,7 +50,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI Account", "Please type your nickname.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("intro-new-emptynick-title"), SpixiLocalization._SL("intro-new-emptynick-text"), SpixiLocalization._SL("global -dialog-ok"));
             }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
@@ -101,7 +102,7 @@ namespace SPIXI
             }
             catch (Exception ex)
             {
-                await displaySpixiAlert("Error", ex.ToString(), "ok");
+                await displaySpixiAlert(SpixiLocalization._SL("intro-new-avatarerror-title"), ex.ToString(), SpixiLocalization._SL("global-dialog-ok"));
                 return;
             }
 
@@ -156,7 +157,7 @@ namespace SPIXI
                         DependencyService.Get<IPowerManager>().ReleaseLock("partial");
 
                     Device.BeginInvokeOnMainThread(() => {
-                        displaySpixiAlert("Error", "Cannot generate new wallet. Please try again.", "Ok");
+                        displaySpixiAlert(SpixiLocalization._SL("intro-new-walleterror-title"), SpixiLocalization._SL("intro-new-walleterror-text"), SpixiLocalization._SL("global-dialog-ok"));
                     });
                     return;
                 }

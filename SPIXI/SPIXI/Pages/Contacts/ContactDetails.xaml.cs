@@ -150,7 +150,7 @@ namespace SPIXI
         {
             if (FriendList.removeFriend(friend) == true)
             {
-                displaySpixiAlert("Removed", "Contact removed from list.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
 
@@ -159,7 +159,7 @@ namespace SPIXI
             // Remove history file
             if(friend.deleteHistory())
             {
-                displaySpixiAlert("Deleted", "Message history deleted.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("contact-details-deletedhistory-title"), SpixiLocalization._SL("contact-details-deletedhistory-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
 

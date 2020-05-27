@@ -1,4 +1,5 @@
 ﻿using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Web;
@@ -42,7 +43,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI Account", "Please type a password.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-encryption-invalidpassword-title"), SpixiLocalization._SL("settings-encryption-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.StartsWith("ixian:changepass:", StringComparison.Ordinal))
             {
@@ -52,12 +53,12 @@ namespace SPIXI
                 if (Node.walletStorage.isValidPassword(old_password))
                 {
                     Node.walletStorage.writeWallet(new_password);
-                    displaySpixiAlert("SPIXI Account", "Password successfully changed.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("settings-encryption-passwordchanged-title"), SpixiLocalization._SL("settings-encryption-passwordchanged-text"), SpixiLocalization._SL("global-dialog-ok"));
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
                 }
                 else
                 {
-                    displaySpixiAlert("SPIXI Account", "Current password is incorrect, please try again.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("settings-encryption-invalidpassword-title"), SpixiLocalization._SL("settings-encryption-invalidpassword-current-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             else

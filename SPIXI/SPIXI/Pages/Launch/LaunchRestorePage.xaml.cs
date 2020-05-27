@@ -2,6 +2,7 @@
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -78,12 +79,12 @@ namespace SPIXI
             catch (Exception ex)
             {
                 Logging.error("Exception choosing file: " + ex.ToString());
-                await displaySpixiAlert("Error", "Cannot select file", "OK");
+                await displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-selecterror-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
 
-            if(_data == null)
+            if (_data == null)
             {
-                await displaySpixiAlert("Error", "Cannot read file", "OK");
+                await displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-readerror-text"), SpixiLocalization._SL("global-dialog-ok"));
                 return;
             }
 
@@ -96,7 +97,7 @@ namespace SPIXI
             catch (Exception ex)
             {
                 Console.WriteLine("Exception caught in process: {0}", ex);
-                await displaySpixiAlert("Error", "Cannot prepare wallet file", "OK");
+                await displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-writeerror-text"), SpixiLocalization._SL("global-dialog-ok"));
                 return;
             }
 
@@ -113,7 +114,7 @@ namespace SPIXI
 
             if (wallet_decrypted == false)
             {
-                displaySpixiAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
                 // Remove overlay
                 Utils.sendUiCommand(webView, "removeLoadingOverlay");
                 return;

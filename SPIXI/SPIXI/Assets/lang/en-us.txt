@@ -63,13 +63,21 @@ contact-details-address-1 = Retrieving
 contact-details-address-2 = SPIXI
 contact-details-address-3 = address...
 contact-details-removecontact = Remove
+contact-details-removedcontact-title = Removed
+contact-details-removedcontact-text = Contact removed from list.
 contact-details-deletehistory = Delete History
+contact-details-deletedhistory-title = Deleted
+contact-details-deletedhistory-text = Message history deleted.
 
 ; New Contact Screen
 contact-new-title = New Contact
 contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
 contact-new-placeholder = Paste / type address
 contact-new-send-request = Send Contact Request
+contact-new-invalid-address-title = Invalid address
+contact-new-invalid-address-text = Please enter a valid wallet address.
+contact-new-invalid-address-self-text = The address you have entered is your own address.
+contact-new-invalid-address-exists-text = This contact is already in your contacts list.
 
 ; Downloads Screen
 downloads-title = Downloads
@@ -143,6 +151,11 @@ intro-new-password10 = Password needs to have at least 10 characters
 intro-new-passwordconf = Enter password confirmation
 intro-new-passwordnomatch = Passwords do not match
 intro-new-passwordmatch = Passwords match
+intro-new-emptynick-title = Invalid nickname
+intro-new-emptynick-text = Please enter your nickname.
+intro-new-avatarerror-title = Avatar error
+intro-new-walleterror-title = Error
+intro-new-walleterror-text = Cannot generate wallet. Please try again.
 
 ; Intro Restore Screen
 intro-restore-description-1 = Restore access to your Spixi Account
@@ -153,6 +166,12 @@ intro-restore-backupdescription = Set the Backup File that is associated with th
 intro-restore-action = RESTORE
 intro-restore-title = Restoring Access to<br />your Spixi Account
 intro-restore-info = This may take a while
+intro-restore-file-error-title = File Error
+intro-restore-file-selecterror-text = Error occured while selecting restore file.
+intro-restore-file-readerror-text = Error occured while reading wallet file.
+intro-restore-file-writeerror-text = Error occured while saving wallet.
+intro-restore-file-invalidpassword-tite = Invalid password
+intro-restore-file-invalidpassword-text = Cannot decrypt wallet, please try again.
 
 ; Intro Retry Screen
 intro-retry-description-1 = Re-enter your Encryption Password
@@ -161,6 +180,8 @@ intro-retry-placeholder = Re-enter your Encryption Password
 intro-retry-proceed = PROCEED
 intro-retry-title = Restoring Access to<br />your wallet
 intro-retry-info = This may take a while
+intro-retry-invalidpassword-title = Invalid Password
+intro-retry-invalidpassword-text = Cannot decrypt wallet, please try again.
 
 ; Lock Screen
 lock-description = Spixi is LOCKED
@@ -203,6 +224,8 @@ settings-backup-description = Backup your account, by downloading a special file
 settings-backup-save = Save backup file
 settings-backup-notice = This BACKUP FILE and the ENCRYPTION PASSWORD associated with it will be required to restore your information in the     following cases:
 settings-backup-notice2 = - lose this device<br />- uninstall Spixi from your device<br />- delete your Account<br />- delete your Wallet
+settings-backup-invalidpassword-title = Invalid password
+settings-backup-invalidpassword-text = Please enter a valid password.
 
 ; Settings Encryption Screen
 settings-encryption-title = Password
@@ -218,6 +241,11 @@ settings-encryption-password10 = Password needs to have at least 10 characters
 settings-encryption-passwordconf = Enter password confirmation
 settings-encryption-passwordnomatch = Passwords do not match
 settings-encryption-passwordmatch = Passwords match
+settings-encryption-invalidpassword-title = Invalid password
+settings-encryption-invalidpassword-text = Please enter a valid password.
+settings-encryption-passwordchanged-title = Encryption password
+settings-encryption-passwordchanged-text = Password successfully changed.
+settings-encryption-invalidpassword-current-text = Current password is incorrect, please try again..
 
 ; Settings Lock Screen
 settings-lock-title = Lock my Spixi
@@ -312,3 +340,6 @@ global-app-wants-to-use = {0} wants to use {1} with you.
 global-call-in-call = In Call
 global-call-dialing = Dialing
 global-call-incoming = Incoming Call
+
+global-dialog-error = Error
+global-dialog-ok = OK

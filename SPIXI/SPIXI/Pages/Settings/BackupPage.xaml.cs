@@ -1,5 +1,6 @@
 ﻿using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -45,7 +46,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI Account", "Please type a password.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-backup-invalidpassword-title"), SpixiLocalization._SL("settings-backup-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {

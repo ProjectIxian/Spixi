@@ -1,4 +1,5 @@
 ﻿using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Linq;
@@ -66,7 +67,7 @@ namespace SPIXI
 
             if (wallet_decrypted == false)
             {
-                displaySpixiAlert("Error", "Cannot decrypt wallet. Please try again.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("intro-retry-invalidpassword-title"), SpixiLocalization._SL("intro-retry-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
 
                 // If too many wrong attempts, throw the user to the launch screen, allowing creation or restoration of wallet
                 attempts++;

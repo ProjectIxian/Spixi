@@ -117,10 +117,6 @@ namespace SPIXI
             {
                 newChat();
             }
-            else if (current_url.Equals("ixian:test", StringComparison.Ordinal))
-            {
-                displaySpixiAlert("Test", current_url, "Ok");
-            }
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new ContactNewPage(), Config.defaultXamarinAnimations);

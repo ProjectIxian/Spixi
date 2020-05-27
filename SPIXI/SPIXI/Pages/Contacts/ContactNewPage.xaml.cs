@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI Account", "Please type a wallet address.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.Contains("ixian:request:"))
             {
@@ -73,7 +74,7 @@ namespace SPIXI
                     onRequest(wal);
                 }catch(Exception)
                 {
-                    displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
@@ -167,19 +168,19 @@ namespace SPIXI
             {
                 if(Address.validateChecksum(recipient_address) == false)
                 {
-                    displaySpixiAlert("Invalid checksum", "Please make sure you typed the address correctly.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
                 if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
-                    displaySpixiAlert("Cannot add yourself", "The address you have entered is your own address.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
                 if (FriendList.getFriend(recipient_address) != null)
                 {
-                    displaySpixiAlert("Already exists", "This contact is already in your contacts list.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-exists-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
