@@ -87,8 +87,9 @@
                 <div id="chat_emoji">
                     <i class="fa fa-smile-wink"></i>
                 </div>
-
-                <div contenteditable="true" type="text" id="chat_input" onkeyup="" placeholder="*SL{chat-type-placeholder}"></div>
+                <div class="chatbar-input-wrapper">
+                    <span contenteditable="true" id="chat_input" placeholder="*SL{chat-type-placeholder}"></span>
+                </div>
                 <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa fa-paper-plane"></i></div></div>
             </div>
         </div>
@@ -134,8 +135,15 @@
             $('#chat_emoji').lsxEmojiPicker({
                 twemoji: true,
                 onSelect: function (emoji) {
-                    document.getElementById("chat_input").innerHTML += emoji.value + " ";
-                    document.getElementById("chat_input").focus();
+                    var chatInput = document.getElementById("chat_input");
+                    if(chatInput.innerHTML == "<br>")
+                    {
+                        chatInput.innerHTML = emoji.value + " ";
+                    }else
+                    {
+                        chatInput.innerHTML += emoji.value + " ";
+                    }
+                    chatInput.focus();
                 }
             });
             document.getElementById("chat_input").focus();
@@ -184,8 +192,9 @@
         }*/
 
         document.getElementById("ca_sendfile").onclick = function () {
-            document.getElementById("chat_input").click();
-            document.getElementById("chat_input").focus();
+            var chatInput = document.getElementById("chat_input");
+            chatInput.click();
+            chatInput.focus();
             if (attachMode == true) {
                 attachMode = false;
                 hideAttach();
@@ -213,9 +222,10 @@
         }
 
         document.getElementById("chat_send").onclick = function () {
-            document.getElementById("chat_input").click();
-            document.getElementById("chat_input").focus();
-            var chat_text = document.getElementById("chat_input").innerHTML;
+            var chatInput = document.getElementById("chat_input");
+            chatInput.click();
+            chatInput.focus();
+            var chat_text = chatInput.innerText;
 
             if (chat_text.length > 0)
                 location.href = "ixian:chat:" + encodeURIComponent(chat_text);
@@ -233,8 +243,10 @@
         $("#chat_input").keypress(function (event) {
             if(event.keyCode === 13)
             {
-                document.getElementById("chat_input").innerHTML += "<br/>";
-                return false;
+                if(!shiftPressed)
+                {
+                    return false;
+                }
             }
         });
 
@@ -252,7 +264,6 @@
                 document.getElementById("chat_send").style.backgroundColor = "#C1185B";
             else
                 document.getElementById("chat_send").style.backgroundColor = "#BABABA";
-
         });
 
         function shouldScroll() {
@@ -309,6 +320,8 @@
         });
 
         function addText(id, address, nick, avatar, text, time, className) {
+            text = text.replace(/\n/g, "<br/>");
+
             var textEl = document.createElement('div');
             textEl.className = "text selectable";
             textEl.innerHTML = text;
@@ -620,8 +633,6 @@
 
         // Handle 'attach' bar, allowing to send and request IXI
         document.getElementById("chat_attach").onclick = function () {
-            document.getElementById("chat_input").click();
-            document.getElementById("chat_input").focus();
             if (attachMode == true) {
                 attachMode = false;
                 hideAttach();
