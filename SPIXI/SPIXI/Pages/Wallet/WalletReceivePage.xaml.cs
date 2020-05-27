@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI", "Please type an amount.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.Contains("ixian:sendrequest:"))
             {
@@ -104,13 +105,13 @@ namespace SPIXI
                         if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(recipient)) == false)
                         {
                             e.Cancel = true;
-                            displaySpixiAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                            displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                             return;
                         }
                         string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
                         if (amount_split.Length > 2)
                         {
-                            displaySpixiAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                            displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amountdecimal-text"), SpixiLocalization._SL("global-dialog-ok"));
                             e.Cancel = true;
                             return;
                         }
@@ -123,14 +124,14 @@ namespace SPIXI
 
                         if (_amount == 0)
                         {
-                            displaySpixiAlert("SPIXI", "Incorrect amount '" + amount + "' was specified.", "OK");
+                            displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
                             e.Cancel = true;
                             return;
                         }
 
                         if (_amount < (long)0)
                         {
-                            displaySpixiAlert("SPIXI", "Please type a positive amount.", "OK");
+                            displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
                             e.Cancel = true;
                             return;
                         }
@@ -139,7 +140,7 @@ namespace SPIXI
                 }catch(Exception ex)
                 {
                     Logging.error("Exception occurent for sendrequest action: " + ex);
-                    displaySpixiAlert("Spixi", "Invalid data has been specified.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("wallet-request-error-title"), SpixiLocalization._SL("wallet-request-error-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             else if (current_url.Contains("ixian:addrecipient"))
@@ -153,12 +154,12 @@ namespace SPIXI
                     }
                     else
                     {
-                        displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
+                        displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     }
                 }
                 catch (Exception)
                 {
-                    displaySpixiAlert("Spixi", "Invalid address has been specified.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             else

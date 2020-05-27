@@ -63,7 +63,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.Contains("ixian:request:"))
             {
@@ -74,7 +74,7 @@ namespace SPIXI
                     onRequest(wal);
                 }catch(Exception)
                 {
-                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                 }
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
@@ -168,19 +168,19 @@ namespace SPIXI
             {
                 if(Address.validateChecksum(recipient_address) == false)
                 {
-                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
                 if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
                 {
-                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
                 if (FriendList.getFriend(recipient_address) != null)
                 {
-                    displaySpixiAlert(SpixiLocalization._SL("contact-new-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-exists-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-exists-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 

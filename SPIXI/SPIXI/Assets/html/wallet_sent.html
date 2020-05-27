@@ -152,7 +152,7 @@
             document.getElementById("sent_txid").innerHTML = txid;
 
             document.getElementById('sent_status').innerHTML = confirmedText;
-            if (confirmedText != "UNCONFIRMED") {
+            if (confirmedText != "*SL(wallet-sent-unconfirmed)") {
                 document.getElementById('sent_status').className = "spixi-textsection-holder spixi-textsection-header spixi-text-green";
             }
         }

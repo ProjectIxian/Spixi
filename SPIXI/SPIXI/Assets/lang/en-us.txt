@@ -74,8 +74,6 @@ contact-new-title = New Contact
 contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
 contact-new-placeholder = Paste / type address
 contact-new-send-request = Send Contact Request
-contact-new-invalid-address-title = Invalid address
-contact-new-invalid-address-text = Please enter a valid wallet address.
 contact-new-invalid-address-self-text = The address you have entered is your own address.
 contact-new-invalid-address-exists-text = This contact is already in your contacts list.
 
@@ -204,19 +202,31 @@ settings-account-deleteinfo = You can delete this account and all of the content
 settings-account-delete = Delete my Account
 settings-deletea-title = Delete my ACCOUNT
 settings-deletea-text = Are you sure you want to delete your ACCOUNT?
+settings-deleteda-title = Deleted
+settings-deleteda-text = Account has been deleted.
 settings-wallet-settings = Wallet Settings
 settings-wallet-description = Your wallet is associated with your Spixi account. To delete your wallet and all history on this device tap delete below.
 settings-wallet-delete = Delete my Wallet
 settings-deletew-title = Delete my WALLET
 settings-deletew-text = Are you sure you want to delete your WALLET?
+settings-deletew-error-title = Error
+settings-deletew-error-text = Cannot delete wallet file.
 settings-history = Message History
 settings-history-description = Your wallet is associated with your Spixi account. To delete all your history on this device tap delete below.
 settings-history-delete = Delete entire Message History
 settings-downloads-delete = Delete all downloads
 settings-deleteh-title = Delete messages history
 settings-deleteh-text = Are you sure you want to delete your ENTIRE messages history?
+settings-deletedh-title = Deleted
+settings-deletedh-text = Message history has been deleted.
 settings-deleted-title = Delete all downloads
 settings-deleted-text = Are you sure you want to delete ALL of your downloads?
+settings-deletedd-title = Deleted
+settings-deletedd-text = Deleted {0} downloaded files.
+settings-deleted-error-title = Error
+settings-deleted-error-text = Unknown error has occured.
+settings-emptynick-title = Invalid nickname
+settings-emptynick-text = Please enter your nickname.
 
 ; Settings Backup Screen
 settings-backup-title = Backup Account
@@ -288,6 +298,8 @@ wallet-request-send-info = Send as Request to Recipients:
 wallet-request-add = Add additional users/addresses to send this request for the same amount.
 wallet-request-placeholder = Paste/type address
 wallet-request-send = Send Request
+wallet-request-error-title = Error
+wallet-request-error-text = Please enter valid information into the input fields.
 
 ; Wallet Send Screen
 wallet-send-title = Send Payment
@@ -318,6 +330,7 @@ wallet-sent-title = Payment Sent
 wallet-sent-subtitle = Payment Sent to
 wallet-sent-amount = Amount Sent
 wallet-sent-status = Payment Status
+wallet-sent-confirmed = CONFIRMED
 wallet-sent-unconfirmed = UNCONFIRMED
 wallet-sent-details = The amount you sent has been deducted from your balance.
 wallet-sent-fee = Payment fee
@@ -328,6 +341,13 @@ wallet-sentrecv-title = Payment Received
 wallet-sentrecv-subtitle = Payment Received from
 wallet-sentrecv-amount = Amount Received
 wallet-sentrecv-details = The amount received has been added to your balance.
+
+; Global wallet errors
+wallet-error-amount-title = Invalid amount
+wallet-error-amount-text = Please type in a valid amount.
+wallet-error-amountdecimal-text = Please type in the correct decimal amount.
+wallet-error-balance-title = Insufficient balance
+wallet-error-balance-text = Your balance is too low for this transaction. Total cost of the transaction is {0}, while your balance is {1}.
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
@@ -343,3 +363,6 @@ global-call-incoming = Incoming Call
 
 global-dialog-error = Error
 global-dialog-ok = OK
+
+global-invalid-address-title = Invalid address
+global-invalid-address-text = Please enter a valid wallet address.

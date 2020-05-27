@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Utils;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
@@ -44,13 +45,13 @@ namespace SPIXI
                 byte[] _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
                 if (Address.validateChecksum(_address) == false)
                 {
-                    displaySpixiAlert("Invalid address checksum", "Please make sure you typed the address correctly.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
                 string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
                 if (amount_split.Length > 2)
                 {
-                    displaySpixiAlert("SPIXI", "Please type a correct decimal amount.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amountdecimal-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
@@ -58,7 +59,7 @@ namespace SPIXI
 
                 if (_amount < (long)0)
                 {
-                    displaySpixiAlert("SPIXI", "Please type a positive amount.", "OK");
+                    displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
@@ -86,7 +87,7 @@ namespace SPIXI
 
             if (Node.balance.balance < total_amount)
             {
-                displaySpixiAlert("Insufficient balance", "Your balance is insufficient for this transaction. Total cost of the transaction is " + total_amount.ToString() + ", while your balance is " + Node.balance.balance.ToString() + ".", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), string.Format(SpixiLocalization._SL("wallet-error-balance-text"), total_amount.ToString(), Node.balance.balance.ToString()), SpixiLocalization._SL("global-dialog-ok"));
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
                 return;
             }

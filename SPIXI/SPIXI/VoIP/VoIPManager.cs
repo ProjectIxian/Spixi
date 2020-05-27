@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace SPIXI.VoIP
 
             FriendList.addMessageWithType(currentCallSessionId, FriendMessageType.voiceCall, friend.walletAddress, "", true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "Dialing " + friend.nickname + "...", 0);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + friend.nickname + "...", 0);
 
             DependencyService.Get<IPowerManager>().AquireLock("partial");
             DependencyService.Get<IPowerManager>().AquireLock("wifi");
@@ -212,7 +213,7 @@ namespace SPIXI.VoIP
             currentCallAccepted = true;
             StreamProcessor.sendAppRequestAccept(currentCallContact, session_id, Encoding.UTF8.GetBytes(currentCallCodec));
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, currentCallStartedTime);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + currentCallContact.nickname, currentCallStartedTime);
         }
 
         public static void onAcceptedCall(byte[] session_id, byte[] data)
@@ -230,7 +231,7 @@ namespace SPIXI.VoIP
             currentCallCodec = Encoding.UTF8.GetString(data);
             currentCallCalleeAccepted = true;
             startVoIPSession();
-            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, "In Call - " + currentCallContact.nickname, currentCallStartedTime);
+            ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-in-call") + " - " + currentCallContact.nickname, currentCallStartedTime);
         }
 
         public static void rejectCall(byte[] session_id)

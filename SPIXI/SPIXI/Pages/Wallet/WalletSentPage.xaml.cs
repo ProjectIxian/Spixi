@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
@@ -75,12 +76,12 @@ namespace SPIXI
         // Retrieve the transaction from local cache storage
         private void checkTransaction()
         {
-            string confirmed_text = "CONFIRMED";
+            string confirmed_text = SpixiLocalization._SL("wallet-sent-confirmed");
             Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
             if (ctransaction == null || ctransaction.applied == 0)
             {
                 ctransaction = transaction;
-                confirmed_text = "UNCONFIRMED";
+                confirmed_text = SpixiLocalization._SL("wallet-sent-unconfirmed");
             }
 
             IxiNumber amount = ctransaction.amount;

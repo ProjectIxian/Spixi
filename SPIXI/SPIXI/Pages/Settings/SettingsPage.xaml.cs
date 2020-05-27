@@ -1,5 +1,6 @@
 ﻿using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -59,7 +60,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
-                displaySpixiAlert("SPIXI Account", "Please type your nickname.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-emptynick-title"), SpixiLocalization._SL("settings-emptynick-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             else if (current_url.Equals("ixian:delete", StringComparison.Ordinal))
             {
@@ -144,7 +145,7 @@ namespace SPIXI
             }
             else
             {
-                displaySpixiAlert("Error", "Cannot delete wallet file.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-deletew-error-title"), SpixiLocalization._SL("settings-deletew-error-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
 
         }
@@ -155,13 +156,13 @@ namespace SPIXI
             FriendList.deleteEntireHistory();
             FriendList.clear();
 
-            displaySpixiAlert("Done", "This account is now empty.", "OK");
+            displaySpixiAlert(SpixiLocalization._SL("settings-deleteda-title"), SpixiLocalization._SL("settings-deleteda-text"), SpixiLocalization._SL("global-dialog-ok"));
         }
 
         public void onDeleteHistory()
         {
             FriendList.deleteEntireHistory();
-            displaySpixiAlert("Done", "Entire messages history deleted.", "OK");
+            displaySpixiAlert(SpixiLocalization._SL("settings-deletedh-title"), SpixiLocalization._SL("settings-deletedh-text"), SpixiLocalization._SL("global-dialog-ok"));
         }
 
         public void onDeleteDownloads()
@@ -175,12 +176,12 @@ namespace SPIXI
                     File.Delete(file);
                     file_count++;
                 }
-                displaySpixiAlert("Done", "Deleted " + file_count + " downloaded files.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-deletedd-title"), string.Format(SpixiLocalization._SL("settings-deletedd-text"), file_count), SpixiLocalization._SL("global-dialog-ok"));
             }
             catch (Exception e)
             {
                 Logging.error("Exception while deleting downloads: " + e);
-                displaySpixiAlert("Error", "An unknown error has occured.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("settings-deleted-error-title"), SpixiLocalization._SL("settings-deleted-error-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
 
@@ -217,7 +218,7 @@ namespace SPIXI
             }
             catch (Exception ex)
             {
-                await displaySpixiAlert("Error", ex.ToString(), "ok");
+                await displaySpixiAlert(SpixiLocalization._SL("intro-new-avatarerror-title"), ex.ToString(), SpixiLocalization._SL("global-dialog-ok"));
                 return;
             }
 
