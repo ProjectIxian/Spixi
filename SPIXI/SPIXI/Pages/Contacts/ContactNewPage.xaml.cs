@@ -33,10 +33,7 @@ namespace SPIXI
 
             wallet_to_add = wal_id;
 
-            // Load the platform specific home page url
-            var source = new UrlWebViewSource();
-            source.Url = string.Format("{0}html/contact_new.html", DependencyService.Get<IBaseUrl>().Get());
-            webView.Source = source;
+            loadPage(webView, "contact_new.html");
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
