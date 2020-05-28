@@ -169,7 +169,7 @@ intro-restore-file-error-title = File Error
 intro-restore-file-selecterror-text = Error occured while selecting restore file.
 intro-restore-file-readerror-text = Error occured while reading wallet file.
 intro-restore-file-writeerror-text = Error occured while saving wallet.
-intro-restore-file-invalidpassword-tite = Invalid password
+intro-restore-file-invalidpassword-title = Invalid password
 intro-restore-file-invalidpassword-text = Cannot decrypt wallet, please try again.
 
 ; Intro Retry Screen
@@ -367,3 +367,5 @@ global-dialog-ok = OK
 
 global-invalid-address-title = Invalid address
 global-invalid-address-text = Please enter a valid wallet address.
+
+global-friend-request-accepted = {0} has accepted your friend request.
