@@ -47,6 +47,8 @@ namespace SPIXI
                 if (split.Count() < 1)
                 {
                     e.Cancel = true;
+                    Utils.sendUiCommand(webView, "removeLoadingOverlay");
+                    displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
@@ -79,7 +81,10 @@ namespace SPIXI
             catch (Exception ex)
             {
                 Logging.error("Exception choosing file: " + ex.ToString());
-                await displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-selecterror-text"), SpixiLocalization._SL("global-dialog-ok"));
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-selecterror-text"), SpixiLocalization._SL("global-dialog-ok"));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                return;
             }
 
             if (_data == null)
@@ -89,7 +94,7 @@ namespace SPIXI
             }
 
             string docpath = Config.spixiUserFolder;
-            string filepath = Path.Combine(docpath, Config.walletFile);
+            string filepath = Path.Combine(docpath, Config.walletFile + ".tmp");
             try
             {
                 File.WriteAllBytes(filepath, _data);
@@ -97,7 +102,9 @@ namespace SPIXI
             catch (Exception ex)
             {
                 Console.WriteLine("Exception caught in process: {0}", ex);
-                await displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-writeerror-text"), SpixiLocalization._SL("global-dialog-ok"));
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-writeerror-text"), SpixiLocalization._SL("global-dialog-ok"));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 return;
             }
 
@@ -110,14 +117,17 @@ namespace SPIXI
             Application.Current.Properties["walletpass"] = pass;
             Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
 
-            bool wallet_decrypted = Node.loadWallet();
-
-            if (wallet_decrypted == false)
+            string filepath = Path.Combine(Config.spixiUserFolder, Config.walletFile);
+            if (!Node.walletStorage.verifyWallet(filepath + ".tmp", pass))
             {
                 displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
                 // Remove overlay
                 Utils.sendUiCommand(webView, "removeLoadingOverlay");
                 return;
+            }else
+            {
+                File.Move(filepath + ".tmp", filepath);
+                Node.loadWallet();
             }
 
             Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
