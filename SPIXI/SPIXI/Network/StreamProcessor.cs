@@ -429,7 +429,7 @@ namespace SPIXI
                     case SpixiMessageCode.nick:
                         {
                             // Set the nickname for the corresponding address
-                            if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
+                            if (!replaced_sender_address && friend.publicKey != null && !message.verifySignature(friend.publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
@@ -466,7 +466,7 @@ namespace SPIXI
                     case SpixiMessageCode.avatar:
                         {
                             // Set the avatar for the corresponding address
-                            if (!replaced_sender_address && !message.verifySignature(friend.publicKey))
+                            if (!replaced_sender_address && friend.publicKey != null && !message.verifySignature(friend.publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
@@ -1285,7 +1285,9 @@ namespace SPIXI
             message.data = spixi_message.getBytes();
             if (friend.bot)
             {
-                message.id = contact_address;
+                message.id = new byte[contact_address.Length + 1];
+                message.id[0] = 0;
+                Array.Copy(contact_address, 0, message.id, 1, contact_address.Length);
             }
 
             if (friend.aesKey == null || friend.chachaKey == null)
@@ -1320,7 +1322,9 @@ namespace SPIXI
             }
             else
             {
-                message.id = contact_address;
+                message.id = new byte[contact_address.Length + 1];
+                message.id[0] = 1;
+                Array.Copy(contact_address, 0, message.id, 1, contact_address.Length);
             }
 
             if (friend.aesKey == null || friend.chachaKey == null)
@@ -1354,7 +1358,9 @@ namespace SPIXI
                 message.id = new byte[] { 4 };
             }else
             {
-                message.id = contact_address;
+                message.id = new byte[contact_address.Length + 1];
+                message.id[0] = 2;
+                Array.Copy(contact_address, 0, message.id, 1, contact_address.Length);
             }
 
             if (friend.aesKey == null || friend.chachaKey == null)
