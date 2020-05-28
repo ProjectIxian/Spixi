@@ -100,7 +100,7 @@ namespace SPIXI.VoIP
             if (currentCallCodec == null)
             {
                 Logging.error("Unsupported audio codecs: " + codecs_str);
-                endVoIPSession();
+                rejectCall(session_id);
                 return false;
             }
             DependencyService.Get<IPowerManager>().AquireLock("partial");
@@ -128,7 +128,7 @@ namespace SPIXI.VoIP
             catch(Exception e)
             {
                 Logging.error("Exception occured while starting VoIP session: " + e);
-                endVoIPSession();
+                hangupCall(currentCallSessionId);
             }
         }
 
@@ -162,7 +162,10 @@ namespace SPIXI.VoIP
                 Logging.error("Exception occured in endVoIPSession 2: " + e);
             }
 
-            currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, Clock.getTimestamp() - currentCallStartedTime, currentCallInitiator);
+            if (currentCallContact != null)
+            {
+                currentCallContact.endCall(currentCallSessionId, currentCallAccepted && currentCallCalleeAccepted, Clock.getTimestamp() - currentCallStartedTime, currentCallInitiator);
+            }
 
             currentCallSessionId = null;
             currentCallContact = null;
@@ -322,7 +325,7 @@ namespace SPIXI.VoIP
                 Thread.Sleep(1000);
             }
             lastPacketReceivedCheckThread = null;
-            endVoIPSession();
+            hangupCall(currentCallSessionId);
         }
     }
 }
