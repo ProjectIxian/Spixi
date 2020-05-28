@@ -46,7 +46,7 @@
             <!-- End DescriptionBar -->
             <hr class="intro-separator" />
             <div class="intro-textfield-holder">
-                <input type="text" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="*SL{intro-restore-password}">
+                <input type="password" class="intro-textfield" id="password" onkeyup="checkPassword()" placeholder="*SL{intro-restore-password}">
             </div>
             <hr class="intro-separator" />
 
@@ -125,9 +125,6 @@
 
         function restoreAccount() {
             var pass = $("#password").val();
-            if (pass.length < 1)
-                return;
-
             location.href = "ixian:restore:" + pass;
         }
 
