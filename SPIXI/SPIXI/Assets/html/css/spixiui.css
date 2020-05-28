@@ -1483,10 +1483,12 @@ img.emoji {
     display: table-cell;
     padding: 0px 10px 0px 3px;
     vertical-align: middle;
+    width: auto;
 }
 
 #chat_input {
     width: 100%;
+    max-width: 100%;
     max-height: 60px;
     margin-top: 0px;
     border: 0px;
@@ -1495,10 +1497,11 @@ img.emoji {
     font-size: 16px;
     outline: none;
     vertical-align: middle;
-    word-break: break-all;
+    -ms-word-break: break-all;
     word-wrap: break-word;
-    overflow-wrap: break-word;
+    word-break: break-word;
     overflow: auto;
+    overflow-wrap: break-word;
 }
 
 #chatattachbar {
