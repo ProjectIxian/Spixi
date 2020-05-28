@@ -1042,6 +1042,12 @@ namespace SPIXI
             // TODO use channels and drop SpixiAppData
             SpixiAppData app_data = new SpixiAppData(app_data_raw);
             
+            if(app_data.sessionId == null)
+            {
+                Logging.error("App session id is null.");
+                return;
+            }
+
             CustomAppPage app_page = am.getAppPage(app_data.sessionId);
             if (app_page != null)
             {

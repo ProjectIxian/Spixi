@@ -752,6 +752,10 @@ namespace SPIXI
 
         public void endCall(byte[] session_id, bool call_accepted, long call_duration, bool local_sender)
         {
+            if(session_id == null)
+            {
+                return;
+            }
             lock (messages)
             {
                 var fm = messages.Find(x => x.id.SequenceEqual(session_id));
