@@ -9,7 +9,6 @@ namespace SPIXI.iOS.Classes
     {
         public void requestAudioRecordingPermissions()
         {
-            throw new System.NotImplementedException();
         }
     }
 }

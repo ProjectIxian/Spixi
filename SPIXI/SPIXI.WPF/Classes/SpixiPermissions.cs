@@ -9,7 +9,6 @@ namespace SPIXI.WPF.Classes
     {
         public void requestAudioRecordingPermissions()
         {
-            throw new System.NotImplementedException();
         }
     }
 }
