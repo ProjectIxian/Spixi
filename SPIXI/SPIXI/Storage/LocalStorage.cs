@@ -623,6 +623,22 @@ namespace SPIXI.Storage
             return messages;
         }
 
+        public bool deleteTransactionCacheFile()
+        {
+            lock (txCacheLock)
+            {
+                string tx_filename = Path.Combine(documentsPath, txCacheFileName);
+
+                if (File.Exists(tx_filename) == false)
+                {
+                    return false;
+                }
+
+                File.Delete(tx_filename);
+                return true;
+            }
+        }
+
         // Reads the message archive for a given wallet
         public bool readTransactionCacheFile()
         {

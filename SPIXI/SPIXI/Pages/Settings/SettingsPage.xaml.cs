@@ -1,7 +1,9 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using SPIXI.Storage;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -129,11 +131,12 @@ namespace SPIXI
                 // Also delete the account
                 onDeleteAccount();
 
+                Node.localStorage.deleteTransactionCacheFile();
+                TransactionCache.clearAllTransactions();
+                // TODO clear transactions from tiv
+
                 // Stop network activity
                 Node.stop();
-
-                // Start network activity
-                Node.start();
 
                 // Show the launch page
                 Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
