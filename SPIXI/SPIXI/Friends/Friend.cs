@@ -755,6 +755,11 @@ namespace SPIXI
             lock (messages)
             {
                 var fm = messages.Find(x => x.id.SequenceEqual(session_id));
+                if(fm == null)
+                {
+                    Logging.warn("Cannot end call, no message with session ID exists.");
+                    return;
+                }
                 if (call_accepted == true && messages.Last() != fm)
                 {
                     fm.message = call_duration.ToString();
