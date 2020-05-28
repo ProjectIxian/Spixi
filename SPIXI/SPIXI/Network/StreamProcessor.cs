@@ -806,7 +806,7 @@ namespace SPIXI
 
             sendAvatar(friend);
 
-            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
         private static void handleAcceptAddBot(byte[] sender_wallet, byte[] aes_key)
@@ -837,7 +837,7 @@ namespace SPIXI
             sendGetMessages(friend);
 
 
-            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, friend.nickname + " has accepted your friend request.");
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
 
@@ -1283,13 +1283,17 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
+            if (friend.bot)
+            {
+                message.id = contact_address;
+            }
 
             if (friend.aesKey == null || friend.chachaKey == null)
             {
                 message.encryptionType = StreamMessageEncryptionCode.rsa;
             }
 
-            sendMessage(friend, message);
+            sendMessage(friend, message, true, true, false);
         }
 
         // Requests the nickname of the sender
