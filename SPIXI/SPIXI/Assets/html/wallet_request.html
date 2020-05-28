@@ -115,9 +115,8 @@
             if (event.keyCode === 13) {
                 event.preventDefault();
 
+                var input = document.getElementById("addressInput");
                 location.href = "ixian:addrecipient:" + input.value;
-
-                input.value = "";
             }
         });
 
