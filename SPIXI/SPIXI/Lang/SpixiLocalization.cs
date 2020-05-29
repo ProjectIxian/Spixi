@@ -11,11 +11,14 @@ namespace SPIXI.Lang
 {
     public static class SpixiLocalization
     {
+        private static bool loaded = false;
         private static string language = "en-us";
         private static Dictionary<string, string> localizedStrings = new Dictionary<string, string>();
 
         public static bool loadLanguage(string lang)
         {
+            loaded = false;
+
             string lang_file_name = Path.Combine("lang", lang + ".txt");
             if (!File.Exists(lang_file_name))
             {
@@ -23,8 +26,7 @@ namespace SPIXI.Lang
                 return false;
             }
 
-            language = lang;
-            localizedStrings.Clear();
+            Dictionary<string, string> localized_strings = new Dictionary<string, string>();
 
             StreamReader sr = File.OpenText(lang_file_name);
             string last_key = "";
@@ -36,20 +38,35 @@ namespace SPIXI.Lang
                 {
                     continue;
                 }
-                last_key = line.Substring(0, line.IndexOf("=")).Trim();
-                string value = line.Substring(line.IndexOf("=") + 1).Trim();
-                localizedStrings.Add(last_key, value);
+
+                int sep_index = line.IndexOf("=");
+                if(sep_index == -1)
+                {
+                    return false;
+                }
+
+                last_key = line.Substring(0, sep_index).Trim();
+                string value = line.Substring(sep_index + 1).Trim();
+                if(last_key == "" || value == "")
+                {
+                    return false;
+                }
+                localized_strings.Add(last_key, value);
             }
 
             sr.Close();
             sr.Dispose();
 
-            return false;
+            loaded = true;
+            localizedStrings = localized_strings;
+            language = lang;
+
+            return true;
         }
 
         public static string getLocalizedString(string key)
         {
-            if(localizedStrings.Count == 0)
+            if(!loaded)
             {
                 loadLanguage(language);
             }
