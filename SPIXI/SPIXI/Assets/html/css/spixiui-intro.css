@@ -82,6 +82,28 @@ a:active {
     height: 100px;
 }
 
+/* Misc */
+.noselect {
+    /* pointer-events: none; // for Android */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.selectable {
+    -webkit-touch-callout: initial; /* iOS Safari */
+    -webkit-user-select: auto; /* Safari */
+    -khtml-user-select: auto; /* Konqueror HTML */
+    -moz-user-select: all; /* Firefox */
+    -ms-user-select: text; /* Internet Explorer/Edge */
+    user-select: initial; /* Non-prefixed version, currently
+                    supported by Chrome and Opera */
+}
+
 /* Placeholders */
 .intro-holder-20 {
     width: 100%;
@@ -136,13 +158,13 @@ a:active {
     width: 85%;
 }
 
-.intro-text {
+.intro-text,
+.intro-language-text {
     font-size: 10pt;
 }
 .intro-text.left {
     margin-left: 24px;
 }
-
 
 .intro-textfield {
     width: 100%;
@@ -245,24 +267,44 @@ a:active {
     background: #634e8e;
 }
 
-.intro-button select{
-    text-align: center;
-    font-size: 12pt;
-    font-family: 'robotobold', sans-serif;
-    color: #ad1457;
-    background: #fefcfd;
-    border-radius: 360px;
-    width:100%;
-    border:0px;
+
+.language-selector
+{
+    position: relative;
+    text-align: left;
+    color: black;
+    padding-left: 14pt;
+    padding-right: 14pt;
 }
 
-.intro-button:hover select {
+.language-selector .fa-sort-down
+{
+    float: right;
+}
+
+.language-selector ul {
+    display: none;
+    position: absolute;
+    overflow: auto;
     background: #ffcbe5;
+    border-radius: 20px;
+    list-style: none;
+    padding: 0px;
+    width: 100%;
+    margin: 0px;
+    margin-top: 15px;
+    margin-left: -14pt;
+    box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
 }
 
-.intro-button:active select {
-    background: #4e385b;
-    color: #fff;
+.language-selector ul li
+{
+    padding: 8pt 14pt;
+}
+
+.language-selector ul li:hover
+{
+    background: white;
 }
 
 .intro-avatar {

@@ -130,6 +130,7 @@ index-excerpt-self = You
 ; Intro Screen
 intro-title = Welcome to Spixi,
 intro-subtitle = the decentralized and secure Chat, Wallet and more
+intro-language-text = Please select a language
 intro-text = Please create or restore your<br/>Spixi Account to proceed
 intro-create-account = New Account
 intro-restore-account = Restore your Account
@@ -198,6 +199,7 @@ settings-confirm = CONFIRM
 settings-description = Edit your Spixi Account information and manage the data stored on this device.
 settings-account-information = Account Information
 settings-account-description = This is how you appear to other Spixi users.<br />You can change your displayed name and image.
+settings-account-language-edit = Language
 settings-account-image-edit = Edit displayed image
 settings-account-nick-edit = Edut displayed name
 settings-account-nick-placeholder = Type in your display name

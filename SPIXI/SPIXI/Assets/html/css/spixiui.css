@@ -769,6 +769,42 @@ img.emoji {
     color: #D5016E;
 }
 
+
+.language-selector {
+    position: relative;
+    text-align: left;
+    color: black;
+    padding: 8pt 14pt;
+}
+
+.language-selector .fa-sort-down {
+    float: right;
+}
+
+.language-selector ul {
+    display: none;
+    position: absolute;
+    overflow: auto;
+    background: #ffcbe5;
+    border-radius: 20px;
+    list-style: none;
+    padding: 0px;
+    width: 100%;
+    margin: 0px;
+    margin-top: 15px;
+    margin-left: -14pt;
+    box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+}
+
+.language-selector ul li {
+    padding: 8pt 14pt;
+}
+
+.language-selector ul li:hover {
+    background: white;
+}
+
+
 /* Switch */
 .spixi-switch {
     width: 55px;

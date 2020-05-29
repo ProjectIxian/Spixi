@@ -63,6 +63,22 @@
         </div>
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-language-edit}
+        </div>
+        <div class="spixi-textfield-holder">
+            <div class="spixi-textfield language-selector" onmousedown="document.getElementById('LanguageDropDown').style.display='block';">
+                <span class="fa fa-sort-down"></span>
+                <div id="SelectedLanguage">*SL{language}</div>
+                <ul id="LanguageDropDown">
+                    <li onmouseup="changeLanguage(this);" lang-data="en-us">English</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="sl-si">Slovenščina</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="de-de">Deutsch</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="spixi-separator" />
+        <div class="spixi-textsection-holder spixi-textsection-header2">
             *SL{settings-account-image-edit}
         </div>
 
@@ -300,6 +316,18 @@
             }
         }
 
+        function setLanguage(lang)
+        {
+            document.getElementById("SelectedLanguage").innerHTML = lang;
+        }
+
+        function changeLanguage(langEl)
+        {
+            document.getElementById('LanguageDropDown').style.display='none';
+            setLanguage(langEl.innerHTML);
+            location.href = "ixian:language:" + langEl.getAttribute("lang-data");
+            return false;
+        }
     </script>
 </body>
 </html>
