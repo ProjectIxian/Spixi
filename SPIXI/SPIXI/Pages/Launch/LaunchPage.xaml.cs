@@ -41,7 +41,11 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:language:", StringComparison.Ordinal))
             {
                 string lang = current_url.Substring("ixian:language:".Length);
-                SpixiLocalization.loadLanguage(lang);
+                if(SpixiLocalization.loadLanguage(lang))
+                {
+                    Application.Current.Properties["language"] = lang;
+                    Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+                }
                 loadPage(webView, "intro.html");
             }
             else

@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
@@ -60,10 +61,6 @@ namespace SPIXI
                 AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
                 TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
-                movePersonalFiles();
-
-                node = new Node();
-
                 // Load or generate a device ID.
                 if (Application.Current.Properties.ContainsKey("uid"))
                 {
@@ -76,6 +73,19 @@ namespace SPIXI
                     // Generate and save the device ID
                     Application.Current.Properties["uid"] = CoreConfig.device_id;
                 }
+
+                if(Application.Current.Properties.ContainsKey("language"))
+                {
+                    if(!SpixiLocalization.loadLanguage(Application.Current.Properties["language"] as string))
+                    {
+                        Application.Current.Properties["language"] = SpixiLocalization.getCurrentLanguage();
+                        Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+                    }
+                }
+
+                movePersonalFiles();
+
+                node = new Node();
 
                 // Attempt to load a pre-existing wallet
                 bool wallet_found = Node.checkForExistingWallet();

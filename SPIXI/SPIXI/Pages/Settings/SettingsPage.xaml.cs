@@ -16,6 +16,8 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : SpixiContentPage
     {
+        string selectedLanguage = null;
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -58,7 +60,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                OnBackButtonPressed();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -100,6 +102,18 @@ namespace SPIXI
             {
                 onRemoveAvatar();
             }
+            else if (current_url.StartsWith("ixian:language:", StringComparison.Ordinal))
+            {
+                string lang = current_url.Substring("ixian:language:".Length);
+                if(SpixiLocalization.loadLanguage(lang))
+                {
+                    selectedLanguage = lang;
+                    loadPage(webView, "settings.html");
+                }else
+                {
+                    selectedLanguage = null;
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -112,6 +126,16 @@ namespace SPIXI
 
         public void onSaveSettings(string nick)
         {
+            if (selectedLanguage != null)
+            {
+                Application.Current.Properties["language"] = selectedLanguage;
+                Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+            }
+            else
+            {
+                resetLanguage();
+            }
+
             if (Node.localStorage.nickname != nick)
             {
                 Node.localStorage.nickname = nick;
@@ -122,6 +146,16 @@ namespace SPIXI
             applyAvatar();
 
             Navigation.PopAsync(Config.defaultXamarinAnimations);
+        }
+
+        private void resetLanguage()
+        {
+            string lang = "en-us";
+            if (Application.Current.Properties.ContainsKey("language"))
+            {
+                lang = Application.Current.Properties["language"] as string;
+            }
+            SpixiLocalization.loadLanguage(lang);
         }
 
         public void onDeleteWallet(object sender, EventArgs e)
@@ -270,6 +304,8 @@ namespace SPIXI
 
         protected override bool OnBackButtonPressed()
         {
+            resetLanguage();
+
             Navigation.PopAsync(Config.defaultXamarinAnimations);
 
             return true;

@@ -50,6 +50,8 @@ namespace SPIXI
 
         private bool running = false;
 
+        private bool fromSettings = false;
+
         private HomePage ()
 		{
 			InitializeComponent ();
@@ -454,6 +456,7 @@ namespace SPIXI
 
         public void onSettings(object sender, EventArgs e)
         {
+            fromSettings = true;
             Navigation.PushAsync(new SettingsPage(), Config.defaultXamarinAnimations);
         }
 
@@ -763,6 +766,11 @@ namespace SPIXI
 
         protected override void OnAppearing()
         {
+            if(fromSettings)
+            {
+                fromSettings = false;
+                loadPage(webView, "index.html");
+            }
             base.OnAppearing();
             lock (FriendList.friends)
             {
