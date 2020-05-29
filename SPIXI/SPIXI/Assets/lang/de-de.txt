@@ -1,0 +1,2 @@
+﻿language-code = de-de
+language = Deutsch
