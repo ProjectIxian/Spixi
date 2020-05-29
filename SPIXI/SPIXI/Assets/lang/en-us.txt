@@ -1,3 +1,4 @@
+﻿language-code = en-us
 language = English (US)
 
 ; Address Screen
@@ -113,6 +114,7 @@ index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
 index-side-about = About
+index-side-howtouse = How to use Spixi
 index-side-sendlog = Send Log
 index-devmode = Developer mode activated
 index-excerpt-payment-request-sent = Payment Request Sent

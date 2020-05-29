@@ -156,6 +156,12 @@ namespace SPIXI
                 Device.OpenUri(new Uri(Config.aboutUrl));
 #pragma warning restore CS0618 // Type or member is obsolete
             }
+            else if (current_url.Equals("ixian:guide", StringComparison.Ordinal))
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                Device.OpenUri(new Uri(Config.guideUrl));
+#pragma warning restore CS0618 // Type or member is obsolete
+            }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new BackupPage(), Config.defaultXamarinAnimations);

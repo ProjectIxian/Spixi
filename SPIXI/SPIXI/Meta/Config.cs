@@ -20,6 +20,7 @@ namespace SPIXI.Meta
 
         // Read-only values
         public static readonly string aboutUrl = "https://www.spixi.io";
+        public static readonly string guideUrl = "https://www.spixi.io/guide.html";
 
         public static readonly string pushServiceUrl = "https://ipn.ixian.io/v1";
 
