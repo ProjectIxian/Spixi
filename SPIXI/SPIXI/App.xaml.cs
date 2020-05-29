@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,17 +51,18 @@ namespace SPIXI
                     Directory.CreateDirectory(Config.spixiUserFolder);
                 }
 
+                // Init logging
+                Logging.setOptions(5, 1, true);
+                Logging.start(Config.spixiUserFolder);
+                Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
+
+                // Init fatal exception handlers
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+                TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+
                 movePersonalFiles();
 
-                // Start the IXIAN DLT
                 node = new Node();
-
-                Logging.setOptions(5, 1, true);
-
-                // Start logging
-                Logging.start(Config.spixiUserFolder);
-
-                Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
 
                 // Load or generate a device ID.
                 if (Application.Current.Properties.ContainsKey("uid"))
@@ -163,6 +165,33 @@ namespace SPIXI
                 p.onResume();
             }
             OfflinePushMessages.lastUpdate = 0;
+        }
+
+        private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)
+        {
+            try
+            {
+                Logging.error(unobservedTaskExceptionEventArgs.Exception.ToString());
+                Logging.flush();
+            }
+            catch
+            {
+
+            }
+        }
+
+        private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+        {
+            try
+            {
+                var e = unhandledExceptionEventArgs.ExceptionObject as Exception;
+                Logging.error(e.ToString());
+                Logging.flush();
+            }
+            catch
+            {
+
+            }
         }
     }
 }
