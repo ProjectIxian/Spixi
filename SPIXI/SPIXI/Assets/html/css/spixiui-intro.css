@@ -245,6 +245,26 @@ a:active {
     background: #634e8e;
 }
 
+.intro-button select{
+    text-align: center;
+    font-size: 12pt;
+    font-family: 'robotobold', sans-serif;
+    color: #ad1457;
+    background: #fefcfd;
+    border-radius: 360px;
+    width:100%;
+    border:0px;
+}
+
+.intro-button:hover select {
+    background: #ffcbe5;
+}
+
+.intro-button:active select {
+    background: #4e385b;
+    color: #fff;
+}
+
 .intro-avatar {
     width: 64px;
     height: 64px;

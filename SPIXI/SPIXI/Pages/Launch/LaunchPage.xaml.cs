@@ -38,6 +38,12 @@ namespace SPIXI
             {
                 Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
             }
+            else if (current_url.StartsWith("ixian:language:", StringComparison.Ordinal))
+            {
+                string lang = current_url.Substring("ixian:language:".Length);
+                SpixiLocalization.loadLanguage(lang);
+                loadPage(webView, "intro.html");
+            }
             else
             {
                 // Otherwise it's just normal navigation

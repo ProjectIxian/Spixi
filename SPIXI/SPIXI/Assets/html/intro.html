@@ -21,7 +21,7 @@
     <script src="js/spixi.js"></script>
 
 </head>
-<body>
+<body onload="setLanguage('*SL{language-code}');">
     <div id="wrap" class="noselect intro-main">
 
         <div class="intro-top">
@@ -39,6 +39,15 @@
             <hr class="intro-separator" />
 
             <div class="intro-text center">*SL{intro-text}</div>
+
+            <div class="intro-holder-20"></div>
+
+            <div class="intro-button center">
+                <select id="language" onchange="changeLanguage(this);">
+                    <option value="en-us">English</option>
+                    <option value="sl-si">Slovenščina</option>
+                </select>
+            </div>
 
             <div class="intro-holder-20"></div>
 
@@ -64,6 +73,16 @@
 
         document.getElementById("restore").onclick = function () {
             location.href = "ixian:restore";
+        }
+
+        function setLanguage(lang)
+        {
+            document.getElementById("language").value = lang;
+        }
+
+        function changeLanguage(selectEl)
+        {
+            location.href = "ixian:language:" + selectEl.value;
         }
 
     </script>
