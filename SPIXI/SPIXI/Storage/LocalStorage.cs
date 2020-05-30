@@ -7,16 +7,7 @@ using System.IO;
 using System.Linq;
 
 namespace SPIXI.Storage
-{
-    // TODO TODO remove legacy OfflineMessage class after v0.4.3/v0.4.5 release
-    public class OfflineMessage
-    {
-        public StreamMessage message = null;
-        public bool sendPushNotification = false;
-        public bool offlineAndServer = false;
-        public long timestamp = 0;
-    }
-    
+{  
     // Used for storing and retrieving local data for SPIXI
     class LocalStorage
     {
@@ -29,7 +20,6 @@ namespace SPIXI.Storage
 
         private string accountFileName = "account.ixi";
         private string txCacheFileName = "txcache.ixi";
-        private string offlineFileName = "offline.ixi";
 
         // locks, for thread concurrency
         private object accountLock = new object();
@@ -71,12 +61,6 @@ namespace SPIXI.Storage
             if (!Directory.Exists(Path.Combine(documentsPath, "Downloads")))
             {
                 Directory.CreateDirectory(Path.Combine(documentsPath, "Downloads"));
-            }
-
-            // TODO Legacy, can be removed after release
-            if(Directory.Exists(Path.Combine(path, "Avatars")))
-            {
-                Directory.Move(Path.Combine(path, "Avatars"), avatarsPath);
             }
 
             // Prepare Avatars path
@@ -548,81 +532,6 @@ namespace SPIXI.Storage
             }
         }
 
-        // TODO remove after v0.4.3/v0.4.5 release
-        public void deleteOfflineMessagesFile()
-        {
-            string messages_filename = Path.Combine(documentsPath, offlineFileName);
-
-            if (!File.Exists(messages_filename))
-            {
-                // Return an empty list of messages
-                return;
-            }
-
-            File.Delete(messages_filename);
-        }
-
-
-        // Reads the offline message archive
-        // TODO remove after v0.4.3/v0.4.5 release
-        public List<OfflineMessage> readOfflineMessagesFile()
-        {
-            List<OfflineMessage> messages = new List<OfflineMessage>();
-            string messages_filename = Path.Combine(documentsPath, offlineFileName);
-
-            if (File.Exists(messages_filename) == false)
-            {
-                // Return an empty list of messages
-                return messages;
-            }
-
-            BinaryReader reader;
-            try
-            {
-                reader = new BinaryReader(new FileStream(messages_filename, FileMode.Open));
-            }
-            catch (Exception e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot open file. {0}", e.Message));
-                return messages;
-            }
-
-            try
-            {
-                System.Int32 version = reader.ReadInt32();
-
-                int num_messages = reader.ReadInt32();
-                for (int i = 0; i < num_messages; i++)
-                {
-                    int data_length = reader.ReadInt32();
-                    byte[] data = reader.ReadBytes(data_length);
-
-                    bool send_push_notification = reader.ReadBoolean();
-                    bool offline_and_server = false;
-                    try
-                    {
-                        offline_and_server = reader.ReadBoolean();
-                    }catch(Exception)
-                    {
-
-                    }
-
-                    StreamMessage sm = new StreamMessage(data);
-                    messages.Add(new OfflineMessage() { message = sm, sendPushNotification = send_push_notification, offlineAndServer = offline_and_server });
-                }
-
-            }
-            catch (Exception e)
-            {
-                Logging.log(LogSeverity.error, String.Format("Cannot read from file. {0}", e.Message));
-                return messages;
-            }
-
-            reader.Close();
-
-            return messages;
-        }
-
         public bool deleteTransactionCacheFile()
         {
             lock (txCacheLock)
@@ -820,12 +729,6 @@ namespace SPIXI.Storage
             }
 
             string avatar_filename = Path.Combine(avatarsPath, friend_address + size_str + ".jpg");
-
-            // TODO: Legacy check, can be removed later
-            if (!File.Exists(avatar_filename))
-            {
-                avatar_filename = Path.Combine(avatarsPath, friend_address + ".jpg");
-            }
 
             if (File.Exists(avatar_filename))
             {

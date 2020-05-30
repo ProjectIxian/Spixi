@@ -2,7 +2,6 @@
 using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.Meta;
-using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,8 +25,6 @@ namespace SPIXI.Network
             {
                 Directory.CreateDirectory(storagePath);
             }
-
-            loadLegacy();
 
             running = true;
 
@@ -84,17 +81,6 @@ namespace SPIXI.Network
         {
             running = false;
             pendingMessagesThread = null;
-        }
-
-        public void loadLegacy()
-        {
-            List<OfflineMessage> msgs = Node.localStorage.readOfflineMessagesFile();
-            foreach(var msg in msgs)
-            {
-                Friend friend = FriendList.getFriend(msg.message.recipient);
-                sendMessage(friend, msg.message, true, msg.offlineAndServer, msg.sendPushNotification);
-            }
-            Node.localStorage.deleteOfflineMessagesFile();
         }
 
         public void processPendingMessages()

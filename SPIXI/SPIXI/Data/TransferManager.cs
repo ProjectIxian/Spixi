@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace SPIXI
@@ -78,13 +77,7 @@ namespace SPIXI
                         if (data_length > 0)
                             preview = reader.ReadBytes(data_length);
 
-                        // TODO try catch wrapper can be removed after release
-                        try { 
-                            packetSize = reader.ReadInt32();
-                        }catch(Exception)
-                        {
-
-                        }
+                        packetSize = reader.ReadInt32();
                     }
                 }
             }
