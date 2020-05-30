@@ -104,11 +104,12 @@ namespace SPIXI.Droid.Renderers
                 {
                     base.OnPageStarted(view, url, favicon);
                 }
-            }
-            */
+            }*/
+            
 
             // Hackish solution to the Xamarin ERR_UNKNOWN_URL_SCHEME issue plaguing the latest releases
             // TODO: find a better way to handle the Navigating event without triggering a page load
+            [Obsolete]
             public override bool ShouldOverrideUrlLoading(global::Android.Webkit.WebView view, string url)
             {
                 var args = new WebNavigatingEventArgs(WebNavigationEvent.NewPage, new UrlWebViewSource { Url = url }, url);

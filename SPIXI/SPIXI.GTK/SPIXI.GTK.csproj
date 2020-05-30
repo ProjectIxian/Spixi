@@ -72,7 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\PlatformUtils.cs" />
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\SpixiWebViewRenderer.cs" />
     <Compile Include="Program.cs" />

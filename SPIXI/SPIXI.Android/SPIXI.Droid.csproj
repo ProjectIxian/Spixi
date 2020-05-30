@@ -108,7 +108,7 @@
   <ItemGroup>
     <Compile Include="Classes\AudioPlayerAndroid.cs" />
     <Compile Include="Classes\AudioRecorderAndroid.cs" />
-    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\PlatformUtils.cs" />
     <Compile Include="Classes\BouncyCastleAndroid.cs" />
     <Compile Include="Classes\CustomQRScanner.cs" />
     <Compile Include="Classes\FileOperations.cs" />

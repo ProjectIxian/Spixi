@@ -7,6 +7,7 @@ using Xamarin.Forms;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System.IO;
+using Xamarin.Forms.PlatformConfiguration;
 //using SPIXI.Notifications;
 
 namespace SPIXI.iOS
@@ -54,7 +55,7 @@ namespace SPIXI.iOS
             DependencyService.Get<IPushService>().initialize();
 
             prepareStorage();
-
+            
             LoadApplication(App.Instance());
 
             prepareBackgroundService();

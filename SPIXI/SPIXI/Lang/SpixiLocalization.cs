@@ -19,8 +19,8 @@ namespace SPIXI.Lang
         {
             loaded = false;
 
-            string lang_file_name = Path.Combine("lang", lang + ".txt");
-            if (!File.Exists(lang_file_name))
+            Stream file_stream = DependencyService.Get<IPlatformUtils>().getAsset(Path.Combine("lang", lang + ".txt"));
+            if (file_stream == null)
             {
                 Logging.error("Unknown language " + lang);
                 return false;
@@ -28,7 +28,7 @@ namespace SPIXI.Lang
 
             Dictionary<string, string> localized_strings = new Dictionary<string, string>();
 
-            StreamReader sr = File.OpenText(lang_file_name);
+            StreamReader sr = new StreamReader(file_stream);
             string last_key = "";
 
             while(!sr.EndOfStream)
@@ -56,6 +56,9 @@ namespace SPIXI.Lang
 
             sr.Close();
             sr.Dispose();
+
+            file_stream.Close();
+            file_stream.Dispose();
 
             loaded = true;
             localizedStrings = localized_strings;
@@ -125,6 +128,38 @@ namespace SPIXI.Lang
             sw.Flush();
             sw.Close();
             sw.Dispose();
+        }
+
+        public static string localizeHtml(Stream stream)
+        {
+            StreamReader sr = new StreamReader(stream);
+            string lines = "";
+            while (!sr.EndOfStream)
+            {
+                string line = sr.ReadLine().Trim();
+                if (line == "")
+                {
+                    continue;
+                }
+                while (line.Contains("*SL{"))
+                {
+                    string key = line.Substring(line.IndexOf("*SL{") + 4);
+                    key = key.Substring(0, key.IndexOf("}"));
+                    string value = _SL(key);
+                    if (value == null)
+                    {
+                        Logging.error("Unknown localization key; " + key);
+                        value = "";
+                    }
+                    line = line.Replace("*SL{" + key + "}", value);
+                }
+                lines += line + "\n";
+            }
+
+            sr.Close();
+            sr.Dispose();
+
+            return lines;
         }
     }
 }

@@ -5,6 +5,7 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,18 +21,30 @@ namespace SPIXI
 
         public void loadPage(WebView web_view, string html_file_name)
         {
-            string localized_file_name = "ll_" + html_file_name;
-
-            string base_path = string.Format("{0}html", DependencyService.Get<IBaseUrl>().Get());
-
-            string localized_file_path = Path.Combine(base_path, localized_file_name);
-
-            SpixiLocalization.localizeHtml(Path.Combine(base_path, html_file_name), localized_file_path);
 
             _webView = web_view;
-            var source = new UrlWebViewSource();
-            source.Url = localized_file_path;
-            _webView.Source = source;
+
+            var platform_utils = DependencyService.Get<IPlatformUtils>();
+
+            if (Device.RuntimePlatform == Device.Android)
+            {
+                var source = new HtmlWebViewSource();
+                Stream stream = platform_utils.getAsset(Path.Combine("html", html_file_name));
+                source.BaseUrl = platform_utils.getAssetsBaseUrl() + "html/";
+                source.Html = SpixiLocalization.localizeHtml(stream);
+                stream.Close();
+                stream.Dispose();
+                _webView.Source = source;
+            }
+            else
+            {
+                string assets_file_path = Path.Combine(platform_utils.getAssetsPath(), "html", html_file_name);
+                string localized_file_path = Path.Combine(platform_utils.getHtmlPath(), "ll_" + html_file_name);
+                SpixiLocalization.localizeHtml(assets_file_path, localized_file_path);
+                var source = new UrlWebViewSource();
+                source.Url = platform_utils.getHtmlBaseUrl() + "ll_" + html_file_name;
+                _webView.Source = source;
+            }
         }
 
         public virtual void recalculateLayout()

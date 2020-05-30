@@ -105,7 +105,7 @@
   <ItemGroup>
     <Compile Include="Classes\AudioPlayeriOS.cs" />
     <Compile Include="Classes\AudioRecorderiOS.cs" />
-    <Compile Include="Classes\BaseUrl.cs" />
+    <Compile Include="Classes\PlatformUtils.cs" />
     <Compile Include="Classes\FileOperations.cs" />
     <Compile Include="Classes\PictureiOS.cs" />
     <Compile Include="Classes\PicturePickerImplementation.cs" />

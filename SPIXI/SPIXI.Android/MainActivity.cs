@@ -9,6 +9,8 @@ using Xamarin.Forms;
 using SPIXI.Interfaces;
 using Android.Views;
 using SPIXI.Droid.Classes;
+using Android.Systems;
+using Android.Content.Res;
 
 namespace SPIXI.Droid
 {
@@ -24,14 +26,13 @@ namespace SPIXI.Droid
 
         internal static MainActivity Instance { get; private set; }
 
-
         protected override void OnCreate(Bundle bundle)
         {
             Instance = this;
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-
+            
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
