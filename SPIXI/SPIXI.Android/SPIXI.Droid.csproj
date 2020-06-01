@@ -121,6 +121,8 @@
     <Compile Include="Classes\PushService.cs" />
     <Compile Include="Classes\SpixiCodecInfo.cs" />
     <Compile Include="Classes\SpixiPermissions.cs" />
+    <Compile Include="Codecs\HwDecoder.cs" />
+    <Compile Include="Codecs\HwEncoder.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Renderers\SpixiWebviewRenderer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

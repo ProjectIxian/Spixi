@@ -1,20 +1,20 @@
 ﻿using Android.Media;
 using IXICore.Meta;
+using SPIXI.Droid.Codecs;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioRecorderAndroid))]
 
-public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
+public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 {
     private Action<byte[]> OnSoundDataReceived;
 
     private AudioRecord audioRecorder = null;
-    private MediaCodec audioEncoder = null;
+    private IAudioEncoder audioEncoder = null;
 
     bool running = false;
 
@@ -22,7 +22,6 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
     byte[] buffer = null;
 
 
-    List<int> availableBuffers = new List<int>();
     List<byte[]> outputBuffers = new List<byte[]>();
 
     Thread recordThread = null;
@@ -40,6 +39,11 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
             return;
         }
         running = true;
+
+        lock (outputBuffers)
+        {
+            outputBuffers.Clear();
+        }
 
         initRecorder();
         initEncoder(codec);
@@ -73,33 +77,56 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
     private void initEncoder(string codec)
     {
-        MediaFormat format = new MediaFormat();
-
         switch (codec)
         {
             case "amrnb":
-                audioEncoder = MediaCodec.CreateEncoderByType(MediaFormat.MimetypeAudioAmrNb);
+            case "amrwb":
+                initHwEncoder(codec);
+                break;
+
+            case "opus":
+                initOpusEncoder();
+                break;
+
+            default:
+                throw new Exception("Unknown recorder codec selected " + codec);
+        }
+    }
+
+    private void initHwEncoder(string codec)
+    {
+        MediaFormat format = new MediaFormat();
+
+        string mime_type = null;
+
+        switch(codec)
+        {
+            case "amrnb":
+                mime_type = MediaFormat.MimetypeAudioAmrNb;
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrNb);
                 format.SetInteger(MediaFormat.KeySampleRate, 8000);
                 format.SetInteger(MediaFormat.KeyBitRate, 7950);
                 break;
 
             case "amrwb":
-                audioEncoder = MediaCodec.CreateEncoderByType(MediaFormat.MimetypeAudioAmrWb);
+                mime_type = MediaFormat.MimetypeAudioAmrWb;
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
                 format.SetInteger(MediaFormat.KeyBitRate, 18250);
                 break;
-
-            default:
-                throw new Exception("Unknown recorder codec selected " + codec);
         }
 
-        format.SetInteger(MediaFormat.KeyChannelCount, 1);
-        format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
-        audioEncoder.SetCallback(this);
-        audioEncoder.Configure(format, null, null, MediaCodecConfigFlags.Encode);
-        audioEncoder.Start();
+        if (mime_type != null)
+        {
+            format.SetInteger(MediaFormat.KeyChannelCount, 1);
+            format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
+            audioEncoder = new HwEncoder(mime_type, format, this);
+        }
+    }
+
+    private void initOpusEncoder()
+    {
+        audioEncoder = new OpusCodec(48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP);
     }
 
     private void cleanUp()
@@ -122,15 +149,7 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
 
         if (audioEncoder != null)
         {
-            try
-            {
-                audioEncoder.Stop();
-                audioEncoder.Release();
-            }
-            catch (Exception)
-            {
-
-            }
+            audioEncoder.stop();
             audioEncoder.Dispose();
             audioEncoder = null;
         }
@@ -141,10 +160,6 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         {
             outputBuffers.Clear();
         }
-        lock(availableBuffers)
-        {
-            availableBuffers.Clear();
-        }
     }
 
     public void stop()
@@ -152,10 +167,9 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         cleanUp();
     }
 
-    public new void Dispose()
+    public void Dispose()
     {
         stop();
-        base.Dispose();
     }
 
     public bool isRunning()
@@ -166,11 +180,6 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
     public void setOnSoundDataReceived(Action<byte[]> on_sound_data_received)
     {
         OnSoundDataReceived = on_sound_data_received;
-    }
-
-    public override void OnError(MediaCodec codec, MediaCodec.CodecException e)
-    {
-        Logging.error("Error occured in AudioRecorderAndroid callback: " + e);
     }
 
     private void recordLoop()
@@ -190,7 +199,8 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
                 {
                     stop();
                 }
-                encodeAndSend(num_bytes);
+                encode(num_bytes);
+                sendAvailableData();
             }
             catch (Exception e)
             {
@@ -200,32 +210,20 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         recordThread = null;
     }
 
-    public void encodeAndSend(int num_bytes)
+    private void encode(int num_bytes)
     {
         if (num_bytes > 0)
         {
-            int buffer_index = -1;
-
-            lock (availableBuffers)
+            byte[] encoded_bytes = audioEncoder.encode(buffer, 0, num_bytes);
+            if(encoded_bytes != null)
             {
-                if (availableBuffers.Count > 0)
-                {
-                    buffer_index = availableBuffers[0];
-                    availableBuffers.RemoveAt(0);
-                }
-            }
-
-            if (buffer_index > -1)
-            {
-                var ib = audioEncoder.GetInputBuffer(buffer_index);
-                ib.Clear();
-
-                ib.Put(buffer);
-
-                audioEncoder.QueueInputBuffer(buffer_index, 0, num_bytes, 0, 0);
+                outputBuffers.Add(encoded_bytes);
             }
         }
+    }
 
+    private void sendAvailableData()
+    {
         byte[] data_to_send = null;
         lock (outputBuffers)
         {
@@ -251,50 +249,13 @@ public class AudioRecorderAndroid : MediaCodec.Callback, IAudioRecorder
         {
             OnSoundDataReceived(data_to_send);
         }
-
     }
 
-    public override void OnInputBufferAvailable(MediaCodec codec, int index)
+    public void onEncodedData(byte[] data)
     {
-        if(!running)
+        lock (outputBuffers)
         {
-            return;
+            outputBuffers.Add(buffer);
         }
-        lock(availableBuffers)
-        {
-            availableBuffers.Add(index);
-        }
-    }
-
-    public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
-    {
-        if (!running)
-        {
-            return;
-        }
-        try
-        {
-            var ob = audioEncoder.GetOutputBuffer(index);
-
-            ob.Position(info.Offset);
-            ob.Limit(info.Offset + info.Size);
-
-            byte[] buffer = new byte[info.Size];
-            ob.Get(buffer, 0, info.Size);
-            audioEncoder.ReleaseOutputBuffer(index, false);
-
-            lock (outputBuffers)
-            {
-                outputBuffers.Add(buffer);
-            }
-        }
-        catch (Exception e)
-        {
-            Logging.error("Exception occured while recording audio stream: " + e);
-        }
-    }
-
-    public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)
-    {
     }
 }

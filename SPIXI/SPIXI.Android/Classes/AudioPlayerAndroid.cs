@@ -2,6 +2,7 @@
 using Android.Media;
 using IXICore.Meta;
 using SPIXI.Droid;
+using SPIXI.Droid.Codecs;
 using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayerAndroid))]
 
-public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
+public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 {
     private AudioTrack audioPlayer = null;
-    private MediaCodec audioDecoder = null;
+    private IAudioDecoder audioDecoder = null;
 
     private bool running = false;
 
@@ -88,32 +89,56 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
     private void initDecoder(string codec)
     {
+        switch (codec)
+        {
+            case "amrnb":
+            case "amrwb":
+                initHwDecoder(codec);
+                break;
+
+            case "opus":
+                initOpusDecoder();
+                break;
+
+            default:
+                throw new Exception("Unknown recorder codec selected " + codec);
+        }
+    }
+
+    private void initHwDecoder(string codec)
+    {
         MediaFormat format = new MediaFormat();
+
+        string mime_type = null;
 
         switch (codec)
         {
             case "amrnb":
-                audioDecoder = MediaCodec.CreateDecoderByType(MediaFormat.MimetypeAudioAmrNb);
+                mime_type = MediaFormat.MimetypeAudioAmrNb;
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrNb);
                 format.SetInteger(MediaFormat.KeySampleRate, 8000);
                 format.SetInteger(MediaFormat.KeyBitRate, 7950);
                 break;
 
             case "amrwb":
-                audioDecoder = MediaCodec.CreateDecoderByType(MediaFormat.MimetypeAudioAmrWb);
+                mime_type = MediaFormat.MimetypeAudioAmrWb;
                 format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
                 format.SetInteger(MediaFormat.KeyBitRate, 18250);
                 break;
-
-            default:
-                throw new Exception("Unknown playback codec selected " + codec);
         }
-        format.SetInteger(MediaFormat.KeyChannelCount, 1);
-        format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
-        audioDecoder.SetCallback(this);
-        audioDecoder.Configure(format, null, null, MediaCodecConfigFlags.None);
-        audioDecoder.Start();
+
+        if (mime_type != null)
+        {
+            format.SetInteger(MediaFormat.KeyChannelCount, 1);
+            format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
+            audioDecoder = new HwDecoder(mime_type, format, this);
+        }
+    }
+
+    private void initOpusDecoder()
+    {
+        audioDecoder = new OpusCodec(48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP);
     }
 
     private void playLoop()
@@ -196,15 +221,7 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
 
         if(audioDecoder != null)
         {
-            try
-            {
-                audioDecoder.Stop();
-                audioDecoder.Release();
-            }
-            catch (Exception)
-            {
-
-            }
+            audioDecoder.stop();
             audioDecoder.Dispose();
             audioDecoder = null;
         }
@@ -212,10 +229,9 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         bufferSize = 0;
     }
 
-    public new void Dispose()
+    public void Dispose()
     {
         stop();
-        base.Dispose();
     }
 
     public bool isRunning()
@@ -223,74 +239,20 @@ public class AudioPlayerAndroid : MediaCodec.Callback, IAudioPlayer
         return running;
     }
 
-    public override void OnError(MediaCodec codec, MediaCodec.CodecException e)
-    {
-        Logging.error("Error occured in AudioPlayerAndroid callback: " + e);
-    }
-
     private void decode(int buffer_index, byte[] data)
     {
-        if(!running)
+        byte[] decoded_bytes = audioDecoder.decode(data, 0, data.Length);
+        if(decoded_bytes != null)
         {
-            return;
-        }
-        try
-        {
-            var ib = audioDecoder.GetInputBuffer(buffer_index);
-            ib.Clear();
-
-            ib.Put(data);
-
-            audioDecoder.QueueInputBuffer(buffer_index, 0, data.Length, 0, 0);
-        }
-        catch (Exception e)
-        {
-            Logging.error("Exception occured in audio decoder: " + e);
+            onDecodedData(decoded_bytes);
         }
     }
 
-    public override void OnInputBufferAvailable(MediaCodec codec, int index)
+    public void onDecodedData(byte[] data)
     {
-        if (!running)
+        if (audioPlayer.Write(data, 0, data.Length) == 0)
         {
-            return;
+            // TODO drop frames
         }
-        lock (pendingFrames)
-        {
-            availableBuffers.Add(index);
-        }
-    }
-
-    public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
-    {
-        if (!running)
-        {
-            return;
-        }
-        try
-        {
-            var ob = audioDecoder.GetOutputBuffer(index);
-
-            ob.Position(info.Offset);
-            ob.Limit(info.Offset + info.Size);
-
-            byte[] decoded_data = new byte[info.Size];
-            ob.Get(decoded_data);
-
-            if (audioPlayer.Write(decoded_data, 0, decoded_data.Length) == 0)
-            {
-                // TODO drop frames
-            }
-
-            audioDecoder.ReleaseOutputBuffer(index, false);
-        }
-        catch (Exception e)
-        {
-            Logging.error("Exception occured while playing audio stream: " + e);
-        }
-    }
-
-    public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)
-    {
     }
 }

@@ -11,7 +11,7 @@ namespace SPIXI.Droid.Classes
 {
     class SpixiCodecInfo : ISpixiCodecInfo
     {
-        string[] codecMap = new string[] { "amrwb", "amrnb", "opus" };
+        string[] codecMap = new string[] { "amrwb", "amrnb" };
         List<string> cachedCodecs = null;
 
         public List<string> getSupportedAudioCodecs()
@@ -26,6 +26,7 @@ namespace SPIXI.Droid.Classes
 
 
             var cl = new List<string>();
+            cl.Add("opus");
 
             foreach (var codec_in_map in codecMap)
             {
@@ -36,7 +37,6 @@ namespace SPIXI.Droid.Classes
                 }
             }
             cachedCodecs = cl;
-            //cl.Add("opus");
             return cl;
         }
 
