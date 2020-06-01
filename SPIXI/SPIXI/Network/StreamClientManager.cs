@@ -30,6 +30,7 @@ namespace SPIXI
             running = true;
 
             streamClients = new List<NetworkClient>();
+            connectingClients = new List<string>();
 
             // Start the reconnect thread
             reconnectThread = new Thread(reconnectClients);
