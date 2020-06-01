@@ -289,70 +289,70 @@
 
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('address');" class="">
+                <a href="javascript:selectMenuOption('address');">
                     <i class="fa fa-wallet spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-myaddress}</div>
                 </a>
             </div>
 
             <!--<div class="spixi-sidebar-item">
-        <a href="javascript:selectMenuOption('apps');" class="">
+        <a href="javascript:selectMenuOption('apps');">
             <i class="fa fa-code spixi-sidebar-item-icon"></i>
             <div class="spixi-sidebar-item-text">*SL{index-side-apps}</div>
         </a>
     </div>-->
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('downloads');" class="">
+                <a href="javascript:selectMenuOption('downloads');">
                     <i class="fa fa-download spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-downloads}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('settings');" class="">
+                <a href="javascript:selectMenuOption('settings');">
                     <i class="fa fa-cog spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-settings}</div>
                 </a>
             </div>
             <!-- Security Lock is not available in this version
     <div class="spixi-sidebar-item">
-        <a href="javascript:selectMenuOption('lock');" class="">
+        <a href="javascript:selectMenuOption('lock');">
             <i class="fa fa-lock spixi-sidebar-item-icon"></i>
             <div class="spixi-sidebar-item-text">*SL{index-side-security}</div>
         </a>
     </div>
     -->
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('backup');" class="">
+                <a href="javascript:selectMenuOption('backup');">
                     <i class="fa fa-save spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-backup}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('encpass');" class="">
+                <a href="javascript:selectMenuOption('encpass');">
                     <i class="fa fa-fingerprint spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-password}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('guide');" class="">
+                <a href="javascript:selectMenuOption('guide');">
                     <i class="fa fa-lightbulb spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-howtouse}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item" id="SendLogMenuItem" style="display: none;">
-                <a href="javascript:selectMenuOption('viewLog');" class="">
+                <a href="javascript:selectMenuOption('viewLog');">
                     <i class="fa fa-clipboard-check spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-sendlog}</div>
                 </a>
             </div>
 
             <div class="spixi-sidebar-item">
-                <a href="javascript:selectMenuOption('about');" class="">
+                <a href="javascript:selectMenuOption('about');">
                     <i class="fa fa-info spixi-sidebar-item-icon"></i>
                     <div class="spixi-sidebar-item-text">*SL{index-side-about}</div>
                 </a>
@@ -765,58 +765,60 @@
 
 
 
-// Handle sidebar swiping
-$("#leftSidebarHelper").swipe( {
-swipeStatus:function(event, phase, direction, distance)
-{
-    var str = "";
-    if(direction == "right")
-    {
-        leftSidebar.style.display = "block";
-        document.getElementById('leftSidebarHelper').style.display = "none";
-
-        var transformStyle = 'translateX(0px)';
-        leftSidebar.style.webkitTransform = transformStyle;
-        leftSidebar.style.MozTransform = transformStyle;
-        leftSidebar.style.msTransform = transformStyle;
-        leftSidebar.style.transform = transformStyle;
-    }
-},
-threshold:10,
-});
-
-$("#leftSidebar").swipe( {
-swipeStatus:function(event, phase, direction, distance)
-{
-    if(direction == "left")
-    {
-        if (phase=="move")
+    // Handle sidebar swiping
+    $("#leftSidebarHelper").swipe( {
+        swipeStatus:function(event, phase, direction, distance)
         {
-            var transformStyle = 'translateX(-'+distance+'px)';
-            leftSidebar.style.webkitTransform = transformStyle;
-            leftSidebar.style.MozTransform = transformStyle;
-            leftSidebar.style.msTransform = transformStyle;
-            leftSidebar.style.transform = transformStyle;
-        }
-
-        if (phase == "end" || phase == "cancel")
-        {
-            if(distance > 100)
+            var str = "";
+            if(direction == "right")
             {
-                leftSidebar.style.display = "none";
-                document.getElementById('leftSidebarHelper').style.display = "block";
+                leftSidebar.style.display = "block";
+                document.getElementById('leftSidebarHelper').style.display = "none";
+
+                var transformStyle = 'translateX(0px)';
+                leftSidebar.style.webkitTransform = transformStyle;
+                leftSidebar.style.MozTransform = transformStyle;
+                leftSidebar.style.msTransform = transformStyle;
+                leftSidebar.style.transform = transformStyle;
             }
-            var transformStyle = 'translateX(0px)';
-            leftSidebar.style.webkitTransform = transformStyle;
-            leftSidebar.style.MozTransform = transformStyle;
-            leftSidebar.style.msTransform = transformStyle;
-            leftSidebar.style.transform = transformStyle;
-        }
-    }
-},
-triggerOnTouchEnd:true,
-    threshold:100
-});
+        },
+        threshold:10
+    });
+
+    $("#leftSidebar").swipe( {
+        swipeStatus:function(event, phase, direction, distance)
+        {
+            if(direction == "left")
+            {
+                if (phase=="move")
+                {
+                    var transformStyle = 'translateX(-'+distance+'px)';
+                    leftSidebar.style.webkitTransform = transformStyle;
+                    leftSidebar.style.MozTransform = transformStyle;
+                    leftSidebar.style.msTransform = transformStyle;
+                    leftSidebar.style.transform = transformStyle;
+                }
+
+                if (phase == "end" || phase == "cancel")
+                {
+                    if(distance > 100)
+                    {
+                        leftSidebar.style.display = "none";
+                        document.getElementById('leftSidebarHelper').style.display = "block";
+                    }
+                    var transformStyle = 'translateX(0px)';
+                    leftSidebar.style.webkitTransform = transformStyle;
+                    leftSidebar.style.MozTransform = transformStyle;
+                    leftSidebar.style.msTransform = transformStyle;
+                    leftSidebar.style.transform = transformStyle;
+                }
+            }
+        },
+        triggerOnTouchEnd:true,
+        threshold:100,
+        allowPageScroll:"vertical"
+    });
+
 
 
     function selectTab(tab) {
@@ -824,32 +826,6 @@ triggerOnTouchEnd:true,
     }
 
 
-    function test()
-    {
-        //showWarning(0);
-        setBalance("120.910,45000011", "Spixi");
-
-        clearContacts();
-        addContact("000","TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme","img/spixiavatar.png", false);
-        addContact("000","Abc","img/spixiavatar.png", "true", 1);
-        addContact("000","ZAbc","img/spixiavatar.png", "true");
-        addContact("000","XAbc","img/spixiavatar.png", false, 5);
-        addContact("000","CAbc","img/spixiavatar.png", true);
-        addContact("000","VAbc","img/spixiavatar.png", false);
-        addContact("000","BAbc","img/spixiavatar.png", false);
-        addContact("000","NAbc","img/spixiavatar.png", false);
-        addContact("000","MAbc","img/spixiavatar.png", false);
-
-        addPaymentActivity('111','Payment Received', 'NOW', '1234.44441111');
-        addPaymentActivity('112','Payment Received', '1h ago', '23.00000000');
-        addPaymentActivity('113','Payment Sent', '1h ago', '43.34246721');
-        addPaymentActivity('114','Payment Received', '2h ago', '65.00000000');
-
-        addChat("100", "One", "2hrs ago", "img/spixiavatar.png", "true", "Unread message", 1);
-        addChat("101", "Two", "3hrs ago", "img/spixiavatar.png", false, "Unread 1message", 1);
-        addChat("102", "Three", "2 days ago", "img/spixiavatar.png", false, "Unread 2message");
-
-    }
         var logoClicked = 0;
 
         function countLogoClick()
@@ -862,6 +838,5 @@ triggerOnTouchEnd:true,
             }
         }
     </script>
-
 </body>
 </html>

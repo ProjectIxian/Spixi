@@ -950,21 +950,20 @@ img.emoji {
     position: fixed; /* Stay in place */
     z-index: 5000; /* Sit on top */
     left: 0;
+    right: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
+    bottom: 0;
 }
 .spixi-sidebar-content {
-    position: relative;
-    background-color: #1f1f27;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
-    height: 100%;
     width: 75%;
+    height: 100%;
+    overflow: auto;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
+    background-color: #1f1f27;
     -webkit-animation-name: animateleft;
     -webkit-animation-duration: 0.4s;
     animation-name: animateleft;
     animation-duration: 0.4s;
-    overflow: auto; /* Enable scroll if needed */
 }
 
 .spixi-sidebar-header {
@@ -1851,10 +1850,11 @@ img.emoji {
 
 .spixi-version {
     width: 100%;
-    bottom: 0px;
     text-align: center;
     color: #b5b5b5;
     padding-top: 14px;
+    padding-bottom: 5px;
+    font-size: 9pt;
 }
 
 .spixi-container
