@@ -136,6 +136,9 @@
     <PackageReference Include="Com.OneSignal">
       <Version>3.8.2</Version>
     </PackageReference>
+    <PackageReference Include="Concentus">
+      <Version>1.1.7</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="4.6.0.800" />
     <PackageReference Include="Xamarin.Plugin.FilePicker">
       <Version>2.1.34</Version>
