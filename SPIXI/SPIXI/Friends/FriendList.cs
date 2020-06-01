@@ -149,11 +149,6 @@ namespace SPIXI
             }
         }
 
-        private void saveAvatar(Friend friend)
-        {
-
-        }
-
         public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
             addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address, timestamp, fire_local_notification);
@@ -224,19 +219,6 @@ namespace SPIXI
             }
 
             FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
-            if(friend.bot)
-            {
-                if (local_sender)
-                {
-                    friend_message.read = true;
-                }else
-                {
-                    friend.lastReceivedMessageId = id;
-                    saveToStorage();
-                }
-
-            }
-
             lock (friend.messages)
             {
                 // TODO should be optimized
@@ -246,6 +228,20 @@ namespace SPIXI
                     return null;
                 }
                 friend.messages.Add(friend_message);
+            }
+
+            if (friend.bot)
+            {
+                if (local_sender)
+                {
+                    friend_message.read = true;
+                }
+                else
+                {
+                    friend.lastReceivedMessageId = id;
+                    saveToStorage();
+                }
+
             }
 
             // If a chat page is visible, insert the message directly
