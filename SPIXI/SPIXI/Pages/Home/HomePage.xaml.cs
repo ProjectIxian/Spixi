@@ -67,7 +67,16 @@ namespace SPIXI
                 new Thread(() =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    Node.connectToNetwork();
+                    try
+                    {
+                        Node.start();
+                        Logging.info("Started node");
+                        Node.connectToNetwork();
+                    }catch(Exception e)
+                    {
+                        Logging.error("Fatal error has occured: " + e);
+                        DisplayAlert("Fatal exception", "Fatal exception has occured, please send the log files to the developers." + e.Message, "OK");
+                    }
                 }).Start();
 
                 // Setup a timer to handle UI updates
@@ -432,7 +441,7 @@ namespace SPIXI
 
             if (App.startingScreen != "")
             {
-                HomePage.Instance().onChat(App.startingScreen, null);
+                onChat(App.startingScreen, null);
                 App.startingScreen = "";
             }
         }

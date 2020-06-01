@@ -26,10 +26,11 @@ namespace SPIXI
             {
                 return;
             }
-
+            Logging.error("Initializing stream processor");
             running = true;
 
             pendingMessageProcessor = new PendingMessageProcessor(root_storage_path);
+            pendingMessageProcessor.start();
         }
 
         // Uninitialize the global stream processor
@@ -1425,6 +1426,11 @@ namespace SPIXI
             message.id = new byte[] { 10 };
 
             sendMessage(friend, message);
+        }
+
+        public static void deletePendingMessages()
+        {
+            pendingMessageProcessor.deleteAll();
         }
     }
 }

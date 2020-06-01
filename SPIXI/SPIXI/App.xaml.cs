@@ -112,8 +112,6 @@ namespace SPIXI
                     {
                         // Wallet found, go to main page
 
-                        Node.start();
-
                         MainPage = new NavigationPage(HomePage.Instance());
                         //MainPage = new NavigationPage(new SPIXI.LockPage());
                     }

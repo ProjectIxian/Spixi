@@ -63,12 +63,16 @@ namespace SPIXI.Meta
 
         public Node()
         {
+            Logging.info("Initing node constructor");
+
             Instance = this;
 
             CoreConfig.productVersion = Config.version;
             IxianHandler.setHandler(this);
 
             CoreConfig.isTestNet = Config.isTestNet;
+
+            Logging.info("Initing wallet storage");
 
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
@@ -79,7 +83,38 @@ namespace SPIXI.Meta
                 peers_filename = "testnet-peers.ixi";
             }
 
+            Logging.info("Initing peer storage");
+
             PeerStorage.init(Config.spixiUserFolder, peers_filename);
+
+            Logging.info("Initing TIV");
+
+            // Init TIV
+            tiv = new TransactionInclusion();
+
+            Logging.info("Initing local storage");
+
+            // Prepare the local storage
+            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
+
+            Logging.info("Starting local storage");
+            // Start local storage
+            localStorage.start();
+
+            Logging.info("Initing custom app manager");
+
+            customAppManager = new CustomAppManager(Config.spixiUserFolder);
+        }
+
+        static public void start()
+        {
+            Logging.info("Starting node");
+
+            if (running)
+            {
+                return;
+            }
+            running = true;
 
             ulong block_height = 1;
             byte[] block_checksum = null;
@@ -103,53 +138,43 @@ namespace SPIXI.Meta
                     block_checksum = Config.bakedRecoveryBlockChecksum;
                 }
             }
-            // Init TIV
-            tiv = new TransactionInclusion(headers_path, block_height, block_checksum);
 
-            // Prepare the local storage
-            localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
+            Logging.info("Starting TIV");
+            // Start TIV
+            tiv.start(headers_path, block_height, block_checksum);
 
-            customAppManager = new CustomAppManager(Config.spixiUserFolder);
-        }
-
-        static public void start()
-        {
-            if (running)
-            {
-                return;
-            }
-            running = true;
-
+            Logging.info("Starting presences");
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
-            // Start local storage
-            localStorage.start();
-
+            Logging.info("Starting network");
             // Start the network queue
             NetworkQueue.start();
 
+            Logging.info("Starting stream processor");
             // Prepare the stream processor
             StreamProcessor.initialize(Config.spixiUserFolder);
 
+            Logging.info("Starting keep alive");
             // Start the keepalive thread
             PresenceList.startKeepAlive();
 
+            Logging.info("Starting transfer manager");
             // Start the transfer manager
             TransferManager.start();
 
-            // Start TIV
-            tiv.start();
-
+            Logging.info("Starting custom apps");
             customAppManager.start();
 
             startCounter++;
 
+            Logging.info("Starting main loop timer");
             // Setup a timer to handle routine updates
             mainLoopTimer = new System.Timers.Timer(2500);
             mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
             mainLoopTimer.Start();
 
+            Logging.info("Starting identifier tag");
             // Set the identifier tag
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
             DependencyService.Get<IPushService>().setTag(tag);
