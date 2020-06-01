@@ -604,6 +604,7 @@ namespace SPIXI.Storage
             catch (Exception e)
             {
                 Logging.log(LogSeverity.error, String.Format("Cannot read from file. {0}", e.Message));
+                reader.Close();
                 return false;
             }
 
@@ -676,6 +677,7 @@ namespace SPIXI.Storage
                 catch (Exception e)
                 {
                     Logging.log(LogSeverity.error, String.Format("Cannot write to file. {0}", e.Message));
+                    writer.Close();
                     return false;
                 }
                 writer.Close();
