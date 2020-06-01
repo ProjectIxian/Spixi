@@ -13,7 +13,7 @@ namespace SPIXI.Network
     class PendingMessageProcessor
     {
         Thread pendingMessagesThread; // Thread that checks the offline messages list for outstanding messages
-        bool running = true;
+        bool running = false;
 
         List<PendingRecipient> pendingRecipients = new List<PendingRecipient>();
 
@@ -21,15 +21,6 @@ namespace SPIXI.Network
         public PendingMessageProcessor(string root_storage_path)
         {
             storagePath = Path.Combine(root_storage_path, storagePath);
-            if(!Directory.Exists(storagePath))
-            {
-                Directory.CreateDirectory(storagePath);
-            }
-
-            running = true;
-
-            pendingMessagesThread = new Thread(messageProcessorLoop);
-            pendingMessagesThread.Start();
         }
 
         private void loadMessageQueue()
@@ -56,7 +47,8 @@ namespace SPIXI.Network
                             try
                             {
                                 pm = new PendingMessage(file_path);
-                            }catch(Exception)
+                            }
+                            catch (Exception)
                             {
                                 pm = null;
                             }
@@ -69,12 +61,31 @@ namespace SPIXI.Network
                                 File.Delete(file_path);
                             }
                         }
-                    }catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Logging.error("Unknown exception occured in loadMessageQueue: " + e);
                     }
                 }
             }
+        }
+
+        public void start()
+        {
+            if(running)
+            {
+                return;
+            }
+            running = true;
+
+            if (!Directory.Exists(storagePath))
+            {
+                Directory.CreateDirectory(storagePath);
+            }
+
+            pendingMessagesThread = new Thread(messageProcessorLoop);
+            pendingMessagesThread.Start();
+
         }
 
         public void stop()
@@ -85,10 +96,10 @@ namespace SPIXI.Network
 
         public void processPendingMessages()
         {
-            lock(pendingRecipients)
+            lock (pendingRecipients)
             {
                 List<PendingRecipient> tmp_pending_recipients = new List<PendingRecipient>(pendingRecipients);
-                foreach(PendingRecipient recipient in tmp_pending_recipients)
+                foreach (PendingRecipient recipient in tmp_pending_recipients)
                 {
                     Friend friend = FriendList.getFriend(recipient.address);
                     if (friend == null)
@@ -102,24 +113,25 @@ namespace SPIXI.Network
                     if (!friend.online)
                     {
                         message_headers = recipient.messageQueue.FindAll(x => x.sendToServer);
-                    }else
+                    }
+                    else
                     {
                         message_headers = recipient.messageQueue;
                     }
-                    if(message_headers != null && message_headers.Count > 0)
+                    if (message_headers != null && message_headers.Count > 0)
                     {
                         List<PendingMessageHeader> tmp_msg_headers = new List<PendingMessageHeader>(message_headers);
                         bool failed_sending = false;
-                        foreach(var message_header in tmp_msg_headers)
+                        foreach (var message_header in tmp_msg_headers)
                         {
                             bool sent = processMessage(friend, message_header.filePath);
-                            if(message_header.sendToServer && !sent)
+                            if (message_header.sendToServer && !sent)
                             {
                                 failed_sending = true;
                                 break;
                             }
                         }
-                        if(!failed_sending)
+                        if (!failed_sending)
                         {
                             friend.forcePush = false;
                         }
@@ -139,7 +151,7 @@ namespace SPIXI.Network
                     pm.filePath = tmp_msg_header.filePath;
                 }
                 PendingRecipient tmp_recipient = pendingRecipients.Find(x => x.address.SequenceEqual(msg.recipient));
-                if(tmp_recipient == null)
+                if (tmp_recipient == null)
                 {
                     tmp_recipient = new PendingRecipient(msg.recipient);
                     pendingRecipients.Add(tmp_recipient);
@@ -227,7 +239,7 @@ namespace SPIXI.Network
                 {
                     StreamClientManager.connectTo(hostname, null); // TODO replace null with node address
                     sent = StreamClientManager.sendToClient(hostname, ProtocolMessageCode.s2data, msg.getBytes(), msg.id);
-                    if(sent && pending_message.removeAfterSending)
+                    if (sent && pending_message.removeAfterSending)
                     {
                         removeMessage(friend, pending_message.streamMessage.id);
                     }
@@ -326,6 +338,15 @@ namespace SPIXI.Network
                 }
 
                 Thread.Sleep(5000);
+            }
+        }
+
+        public void deleteAll()
+        {
+            lock (pendingRecipients)
+            {
+                pendingRecipients.Clear();
+                Directory.Delete(storagePath, true);
             }
         }
     }
