@@ -138,7 +138,7 @@ namespace SPIXI
                         DependencyService.Get<IPowerManager>().ReleaseLock("partial");
 
                     Device.BeginInvokeOnMainThread(() => {
-                        Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
+                        Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
                         Navigation.RemovePage(this);
                     });
 

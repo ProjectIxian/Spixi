@@ -83,10 +83,8 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
-
-            Node.start();
         }
     }
 }

@@ -3,6 +3,7 @@ using IXICore.Meta;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
+using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.IO;
@@ -162,15 +163,17 @@ namespace SPIXI
         {
             if (Node.walletStorage.deleteWallet())
             {
+                Node.walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
+
                 // Also delete the account
                 onDeleteAccount();
 
-                Node.localStorage.deleteTransactionCacheFile();
-                TransactionCache.clearAllTransactions();
-                // TODO clear transactions from tiv
-
                 // Stop network activity
                 Node.stop();
+
+                Node.localStorage.deleteTransactionCacheFile();
+                TransactionCache.clearAllTransactions();
+                Node.tiv.clearCache();
 
                 // Show the launch page
                 Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
@@ -189,7 +192,10 @@ namespace SPIXI
 
         public void onDeleteAccount()
         {
+            Node.localStorage.deleteAllAvatars();
             Node.localStorage.deleteAccountFile();
+            Node.localStorage.deleteAllDownloads();
+            StreamProcessor.deletePendingMessages();
             FriendList.deleteEntireHistory();
             FriendList.clear();
 

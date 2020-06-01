@@ -720,6 +720,12 @@ namespace SPIXI.Storage
             return true;
         }
 
+        public void deleteAllAvatars()
+        {
+            Directory.Delete(avatarsPath, true);
+            Directory.CreateDirectory(avatarsPath);
+        }
+
         public string getAvatarPath(string friend_address, bool thumb = true)
         {
             string size_str = "";
@@ -736,6 +742,13 @@ namespace SPIXI.Storage
                 return avatar_filename + ts;
             }
             return null;
+        }
+
+        public void deleteAllDownloads()
+        {
+            string downloadsPath = Path.Combine(documentsPath, "Downloads");
+            Directory.Delete(downloadsPath, true);
+            Directory.CreateDirectory(downloadsPath);
         }
     }
 }

@@ -130,10 +130,8 @@ namespace SPIXI
                 Node.loadWallet();
             }
 
-            Navigation.PushAsync(HomePage.Instance(), Config.defaultXamarinAnimations);
+            Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
-
-            Node.start();
         }
 
         protected override bool OnBackButtonPressed()
