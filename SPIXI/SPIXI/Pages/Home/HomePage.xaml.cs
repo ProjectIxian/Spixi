@@ -70,7 +70,6 @@ namespace SPIXI
                     try
                     {
                         Node.start();
-                        Logging.info("Started node");
                         Node.connectToNetwork();
                     }catch(Exception e)
                     {

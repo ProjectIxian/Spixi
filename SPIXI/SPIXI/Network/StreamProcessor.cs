@@ -26,7 +26,6 @@ namespace SPIXI
             {
                 return;
             }
-            Logging.error("Initializing stream processor");
             running = true;
 
             pendingMessageProcessor = new PendingMessageProcessor(root_storage_path);
