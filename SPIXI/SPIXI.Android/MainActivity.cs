@@ -50,12 +50,6 @@ namespace SPIXI.Droid
                 App.startingScreen = "";
             }
             
-            // Initialize Push Notification service
-            DependencyService.Get<IPushService>().initialize();
-
-            // CLear notifications
-            DependencyService.Get<IPushService>().clearNotifications();
-
             proximitySensor = new ProximitySensor();
 
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());

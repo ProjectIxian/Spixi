@@ -72,8 +72,6 @@ namespace SPIXI.Meta
 
             CoreConfig.isTestNet = Config.isTestNet;
 
-            Logging.info("Initing wallet storage");
-
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
@@ -83,11 +81,7 @@ namespace SPIXI.Meta
                 peers_filename = "testnet-peers.ixi";
             }
 
-            Logging.info("Initing peer storage");
-
             PeerStorage.init(Config.spixiUserFolder, peers_filename);
-
-            Logging.info("Initing TIV");
 
             // Init TIV
             tiv = new TransactionInclusion();
@@ -97,23 +91,22 @@ namespace SPIXI.Meta
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
-            Logging.info("Starting local storage");
             // Start local storage
             localStorage.start();
 
-            Logging.info("Initing custom app manager");
-
             customAppManager = new CustomAppManager(Config.spixiUserFolder);
+
+            Logging.info("Node init done");
         }
 
         static public void start()
         {
-            Logging.info("Starting node");
-
             if (running)
             {
                 return;
             }
+            Logging.info("Starting node");
+
             running = true;
 
             ulong block_height = 1;
@@ -139,45 +132,41 @@ namespace SPIXI.Meta
                 }
             }
 
-            Logging.info("Starting TIV");
             // Start TIV
             tiv.start(headers_path, block_height, block_checksum);
 
-            Logging.info("Starting presences");
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 
-            Logging.info("Starting network");
             // Start the network queue
             NetworkQueue.start();
 
-            Logging.info("Starting stream processor");
             // Prepare the stream processor
             StreamProcessor.initialize(Config.spixiUserFolder);
 
-            Logging.info("Starting keep alive");
             // Start the keepalive thread
             PresenceList.startKeepAlive();
 
-            Logging.info("Starting transfer manager");
             // Start the transfer manager
             TransferManager.start();
 
-            Logging.info("Starting custom apps");
             customAppManager.start();
 
             startCounter++;
 
-            Logging.info("Starting main loop timer");
             // Setup a timer to handle routine updates
             mainLoopTimer = new System.Timers.Timer(2500);
             mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
             mainLoopTimer.Start();
 
-            Logging.info("Starting identifier tag");
-            // Set the identifier tag
+            // Init push service
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
-            DependencyService.Get<IPushService>().setTag(tag);
+            var push_service = DependencyService.Get<IPushService>();            
+            push_service.setTag(tag);
+            push_service.initialize();
+            push_service.clearNotifications();
+
+            Logging.info("Node started");
         }
 
 

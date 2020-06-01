@@ -51,9 +51,6 @@ namespace SPIXI.iOS
             global::Xamarin.Forms.Forms.Init();
             global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
-            // Initialize Push Notification service
-            DependencyService.Get<IPushService>().initialize();
-
             prepareStorage();
             
             LoadApplication(App.Instance());
