@@ -952,12 +952,13 @@ img.emoji {
     left: 0;
     right: 0;
     top: 0;
-    bottom: 0;
+    bottom: 28px;
 }
 .spixi-sidebar-content {
     width: 75%;
     height: 100%;
     overflow: auto;
+    box-sizing: border-box;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
     background-color: #1f1f27;
     -webkit-animation-name: animateleft;
@@ -1029,6 +1030,20 @@ img.emoji {
     text-align: center;
 }
 
+.spixi-version {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    height: 28px;
+    overflow: hidden;
+    padding: 5px 0px;
+    width: 75%;
+    text-align: center;
+    color: #b5b5b5;
+    font-size: 9pt;
+    background-color: #1f1f27;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
+}
 
 /* ListItems */
 .spixi-list-item {
@@ -1846,15 +1861,6 @@ img.emoji {
     font-weight: bold;
     color: #1693da;
     margin-left: 20px;
-}
-
-.spixi-version {
-    width: 100%;
-    text-align: center;
-    color: #b5b5b5;
-    padding-top: 14px;
-    padding-bottom: 5px;
-    font-size: 9pt;
 }
 
 .spixi-container
