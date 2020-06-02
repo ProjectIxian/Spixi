@@ -15,12 +15,20 @@ address-tooltip = tap to copy to clipboard
 
 ; App Details Screen
 app-details-title = Spixi App
+app-details-publisher = Publisher:
+app-details-version = Version:
 app-details-uninstall = Uninstall
+app-details-dialog-title = Spixi App Manager
+app-details-dialog-removed-text = Application was successfully removed.
+app-details-dialog-removefailed-text = Error occured while removing the application.
 
 ; New App Screen
 app-new-title = New App
 app-new-description = Add a new Spixi App by pasting its URL. The app will be downloaded and installed.
 app-new-install = Install
+app-new-dialog-title = Spixi App Manager
+app-new-dialog-installed-text = Application '{0}' was successfully installed.
+app-new-dialog-installfailed-text = Error occured while installing application.
 
 ; Apps Screen
 apps-title = Spixi Apps
@@ -125,7 +133,7 @@ index-excerpt-contact-accepted = Contact Accepted
 index-excerpt-contact-request = Contact Request
 index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
-index-excerpt-self = You
+index-excerpt-self = You:
 
 ; Intro Screen
 intro-title = Welcome to Spixi,
@@ -237,7 +245,7 @@ settings-emptynick-text = Please enter your nickname.
 settings-backup-title = Backup Account
 settings-backup-description = Backup your account, by downloading a special file which you will be able to use to restore.
 settings-backup-save = Save backup file
-settings-backup-notice = This BACKUP FILE and the ENCRYPTION PASSWORD associated with it will be required to restore your information in the     following cases:
+settings-backup-notice = This BACKUP FILE and the ENCRYPTION PASSWORD associated with it will be required to restore your information in the following cases:
 settings-backup-notice2 = - lose this device<br />- uninstall Spixi from your device<br />- delete your Account<br />- delete your Wallet
 settings-backup-invalidpassword-title = Invalid password
 settings-backup-invalidpassword-text = Please enter a valid password.

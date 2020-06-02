@@ -615,7 +615,7 @@ namespace SPIXI
                     
                     if (lastmsg.localSender)
                     {
-                        excerpt = SpixiLocalization._SL("index-excerpt-self") + ": " + excerpt;
+                        excerpt = SpixiLocalization._SL("index-excerpt-self") + " " + excerpt;
                     }
 
                     string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));

@@ -1,9 +1,7 @@
 ﻿using SPIXI.CustomApps;
-using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
-using System.Linq;
-using System.Text;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -93,10 +91,10 @@ namespace SPIXI
         {
             if(Node.customAppManager.remove(appId))
             {
-                displaySpixiAlert("Spixi App Manager", "Application was successfully removed.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removed-text"), SpixiLocalization._SL("global-dialog-ok"));
             }else
             {
-                displaySpixiAlert("Spixi App Manager", "An error occured while removing the application.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("app-details-dialog-title"), SpixiLocalization._SL("app-details-dialog-removefailed-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }

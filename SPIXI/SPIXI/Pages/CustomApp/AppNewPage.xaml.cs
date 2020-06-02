@@ -1,4 +1,5 @@
 ﻿using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Linq;
@@ -86,12 +87,12 @@ namespace SPIXI
             string app_name = Node.customAppManager.install(path);
             if (app_name != null)
             {
-                displaySpixiAlert("Spixi App Manager", "Application '" + app_name + "' successfully installed.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), string.Format(SpixiLocalization._SL("app-new-dialog-installed-text"), app_name), SpixiLocalization._SL("global-dialog-ok"));
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else
             {
-                displaySpixiAlert("Spixi App Manager", "Error occured while installing application.", "OK");
+                displaySpixiAlert(SpixiLocalization._SL("app-new-dialog-title"), SpixiLocalization._SL("app-new-dialog-installfailed-text"), SpixiLocalization._SL("global-dialog-ok"));
             }
         }
 
