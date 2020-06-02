@@ -27,19 +27,19 @@ The Ixian GitHub project is divided into seven main parts:
 
 ## About Spixi
 
-Spixi is a multiplatform, decentralized and privacy-oriented chat application that brings together users from different platforms. Because Spixi operates on top of Ixian S2 and DLT networks, it includes a set distinctive features:
+Spixi is a multiplatform, decentralized and privacy-oriented chat application that brings together users from different platforms. Because Spixi operates on top of Ixian S2 and DLT networks, it includes a set of distinctive features:
 
 * Decentralized architecture ensures practically no downtime. Backend is based on the Ixian DLT and Ixian S2 streaming network to provide ultimate decentralization and security.
-* Cryptographically secure, which means that messages may only be read by the intended recipient.
+* Cryptographically secure (dual end-to-end encryption), which means that only the intended recipient can read messages.
 * Multi-platform (PC, iOS, Android, others)
 * Ixian DLT integration, which enables cryptocurrency wallet features right in the IM client.
-* Messages are not stored in any one country or central location. There is no legal or corporate entity that possesses all of the messages, so no entity can meaningfully demand or obtain “decryption keys”.
+* Messages are not stored in any one country or central location. There is no legal or corporate entity that possesses all of the messages, so no entity can meaningfully demand or obtain decryption keys.
 
 ## Development branches
 
 There are two main development branches:
-* **master**: This branch is used to build the binaries for the official Ixian DLT network. It should change slowly and be quite well-tested. This is also the default branch for anyone who wishes to build their Ixian software from source.
-* **development**: This is the main development branch and the source for testnet binaries. The branch might not always be kept bug-free, if an extensive new feature is being worked on. If you are simply looking to build a current binary yourself, please use one of the release tags which will be associated with the master branch.
+* **master**: This branch is used to build the binaries for the official Ixian DLT network. It should change slowly and be quite well tested. This is also the default branch for anyone who wishes to build their Ixian software from source.
+* **development**: This is the main development branch and the source for testnet binaries. The branch might not always be kept bug-free, if an extensive new feature is being worked on. If you are simply looking to build a current binary yourself, please use one of the release tags, which will be associated with the master branch.
 
 ## Documentation
 
@@ -51,9 +51,9 @@ If you feel like you can contribute to the project, or have questions or comment
 
 ## Pull requests
 
-If you would like to send an improvement or bugfix to this repository, but without permanently joining the team, follow these approximate steps:
+If you would like to send an improvement or a bug fix to this repository, but without permanently joining the team, follow these approximate steps:
 
 1. Fork this repository
-2. Create a branch (preferably with a name that describes the change)
+2. Create a branch from **development** branch (preferably with a name that describes the change)
 3. Create commits (the commit messages should contain some information on what and why was changed)
-4. Create a pull request to this repository for review and inclusion.
+4. Create a pull request to this repository's **development** branch for review and inclusion
