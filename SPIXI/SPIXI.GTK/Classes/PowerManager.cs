@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using SPIXI.Interfaces;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(PowerManager_WPF))]
-public class PowerManager_WPF : IPowerManager
+[assembly: Dependency(typeof(PowerManager_GTK))]
+public class PowerManager_GTK : IPowerManager
 {
-    public bool AquireLock()
+    public bool AquireLock(string lock_type = "screenDim")
     {
         return true;
     }
 
-    public bool ReleaseLock()
+    public bool ReleaseLock(string lock_type = "screenDim")
     {
         return true;
     }
