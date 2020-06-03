@@ -286,7 +286,7 @@ namespace SPIXI.VoIP
             }
             if (audioPlayer != null)
             {
-                audioPlayer.write(data, 0, data.Length);
+                audioPlayer.write(data);
                 lastPacketReceivedTime = Clock.getTimestamp();
             }
         }

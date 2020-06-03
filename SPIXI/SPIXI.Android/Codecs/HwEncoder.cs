@@ -34,6 +34,12 @@ namespace SPIXI.Droid.Codecs
                 return;
             }
             running = true;
+
+            lock (availableBuffers)
+            {
+                availableBuffers.Clear();
+            }
+
             audioEncoder = MediaCodec.CreateEncoderByType(encoderMimeType);
             audioEncoder.SetCallback(this);
             audioEncoder.Configure(mediaFormat, null, null, MediaCodecConfigFlags.Encode);

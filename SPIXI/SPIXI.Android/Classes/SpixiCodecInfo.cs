@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Android.Media;
-using IXICore.Meta;
 using SPIXI.Droid.Classes;
 using SPIXI.VoIP;
 using Xamarin.Forms;
@@ -26,7 +25,7 @@ namespace SPIXI.Droid.Classes
 
 
             var cl = new List<string>();
-            cl.Add("opus");
+            //cl.Add("opus");
 
             foreach (var codec_in_map in codecMap)
             {

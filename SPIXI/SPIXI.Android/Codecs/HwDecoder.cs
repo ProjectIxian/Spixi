@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using Android.Media;
 using IXICore.Meta;
 using SPIXI.VoIP;
@@ -13,39 +15,71 @@ namespace SPIXI.Droid.Codecs
     class HwDecoder : MediaCodec.Callback, IAudioDecoder
     {
         MediaCodec audioDecoder = null;
-        string encoderMimeType = null;
+        string decoderMimeType = null;
         MediaFormat mediaFormat = null;
         IAudioDecoderCallback decodedDataCallback = null;
 
+        List<byte[]> pendingFrames = new List<byte[]>();
+        List<int> availableBuffers = new List<int>();
+
         bool running = false;
+
+        int delay = 5;
+
+        Thread decodeThread = null;
 
         public HwDecoder(string mime_type, MediaFormat format, IAudioDecoderCallback decoded_data_callback)
         {
-            encoderMimeType = mime_type;
+            decoderMimeType = mime_type;
             mediaFormat = format;
             decodedDataCallback = decoded_data_callback;
         }
 
-        public byte[] decode(byte[] data, int offset, int size)
+        public void start()
+        {
+            if (running)
+            {
+                return;
+            }
+            running = true;
+            delay = 5;
+
+            lock (pendingFrames)
+            {
+                pendingFrames.Clear();
+                availableBuffers.Clear();
+            }
+
+            audioDecoder = MediaCodec.CreateDecoderByType(decoderMimeType);
+            audioDecoder.SetCallback(this);
+            audioDecoder.Configure(mediaFormat, null, null, MediaCodecConfigFlags.None);
+            audioDecoder.Start();
+
+            decodeThread = new Thread(decodeLoop);
+            decodeThread.Start();
+        }
+
+        public byte[] decode(byte[] data)
         {
             if (!running)
             {
                 return null;
             }
-            try
+            lock (pendingFrames)
             {
-                /*var ib = audioDecoder.GetInputBuffer(buffer_index);
-                ib.Clear();
+                if (pendingFrames.Count > 10)
+                {
+                    pendingFrames.RemoveAt(0);
+                }
 
-                ib.Put(data);
+                pendingFrames.Add(data);
 
-                audioDecoder.QueueInputBuffer(buffer_index, 0, data.Length, 0, 0);*/
+                if (delay > 0)
+                {
+                    delay--;
+                }
+                return null;
             }
-            catch (Exception e)
-            {
-                Logging.error("Exception occured in audio decoder: " + e);
-            }
-            return null;
         }
 
         public override void OnError(MediaCodec codec, MediaCodec.CodecException e)
@@ -59,10 +93,10 @@ namespace SPIXI.Droid.Codecs
             {
                 return;
             }
-            /*lock (pendingFrames)
+            lock (pendingFrames)
             {
                 availableBuffers.Add(index);
-            }*/
+            }
         }
 
         public override void OnOutputBufferAvailable(MediaCodec codec, int index, MediaCodec.BufferInfo info)
@@ -95,19 +129,6 @@ namespace SPIXI.Droid.Codecs
         {
         }
 
-        public void start()
-        {
-            if (running)
-            {
-                return;
-            }
-            running = true;
-            audioDecoder = MediaCodec.CreateEncoderByType(encoderMimeType);
-            audioDecoder.SetCallback(this);
-            audioDecoder.Configure(mediaFormat, null, null, MediaCodecConfigFlags.None);
-            audioDecoder.Start();
-        }
-
         public void stop()
         {
             if (!running)
@@ -115,6 +136,13 @@ namespace SPIXI.Droid.Codecs
                 return;
             }
             running = false;
+
+            lock (pendingFrames)
+            {
+                pendingFrames.Clear();
+                availableBuffers.Clear();
+            }
+
             if (audioDecoder != null)
             {
                 try
@@ -136,5 +164,57 @@ namespace SPIXI.Droid.Codecs
             stop();
             base.Dispose();
         }
+
+        private void doDecode(int buffer_index, byte[] data)
+        {
+            if (!running)
+            {
+                return;
+            }
+            try
+            {
+                var ib = audioDecoder.GetInputBuffer(buffer_index);
+                ib.Clear();
+
+                ib.Put(data);
+
+                audioDecoder.QueueInputBuffer(buffer_index, 0, data.Length, 0, 0);
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured in audio decoder: " + e);
+            }
+            return;
+        }
+
+        private void decodeLoop()
+        {
+            while (running)
+            {
+                Thread.Sleep(10);
+                if (delay > 0)
+                {
+                    continue;
+                }
+                int buffer_index = -1;
+                byte[] frame = null;
+                lock (pendingFrames)
+                {
+                    if (availableBuffers.Count > 0 && pendingFrames.Count > 0)
+                    {
+                        buffer_index = availableBuffers[0];
+                        frame = pendingFrames[0];
+                        pendingFrames.RemoveAt(0);
+                        availableBuffers.RemoveAt(0);
+                    }
+                }
+                if (buffer_index > -1)
+                {
+                    doDecode(buffer_index, frame);
+                }
+            }
+            decodeThread = null;
+        }
+
     }
 }

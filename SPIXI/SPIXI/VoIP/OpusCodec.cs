@@ -23,7 +23,7 @@ namespace SPIXI.VoIP
             opusApplication = application;
         }
 
-        public byte[] decode(byte[] data, int offset, int size)
+        public byte[] decode(byte[] data)
         {
             if (!running)
             {
@@ -33,7 +33,7 @@ namespace SPIXI.VoIP
             int frame_size = 960;
             short[] output_buffer = new short[frame_size];
 
-            frame_size = decoder.Decode(data, 0, size, output_buffer, 0, frame_size, false);
+            frame_size = decoder.Decode(data, 0, data.Length, output_buffer, 0, frame_size, false);
 
             byte[] bytes = new byte[frame_size * 2];
             Array.Copy(output_buffer, 0, bytes, 0, frame_size);

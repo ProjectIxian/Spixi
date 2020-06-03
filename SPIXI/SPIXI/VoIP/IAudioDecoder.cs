@@ -8,6 +8,6 @@ namespace SPIXI.VoIP
     {
         void start();
         void stop();
-        byte[] decode(byte[] data, int offset, int size);
+        byte[] decode(byte[] data);
     }
 }

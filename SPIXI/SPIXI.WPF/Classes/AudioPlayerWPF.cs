@@ -41,7 +41,7 @@ public class AudioPlayerWPF : IAudioPlayer
         // TODO Init player
     }
 
-    public int write(byte[] audio_data, int offset_in_bytes, int size_in_bytes)
+    public int write(byte[] audio_data)
     {
         //return await audioPlayer.WriteAsync(audio_data, offset_in_bytes, size_in_bytes);
         return 0;

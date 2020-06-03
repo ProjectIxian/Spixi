@@ -103,14 +103,12 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         {
             case "amrnb":
                 mime_type = MediaFormat.MimetypeAudioAmrNb;
-                format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrNb);
                 format.SetInteger(MediaFormat.KeySampleRate, 8000);
                 format.SetInteger(MediaFormat.KeyBitRate, 7950);
                 break;
 
             case "amrwb":
                 mime_type = MediaFormat.MimetypeAudioAmrWb;
-                format.SetString(MediaFormat.KeyMime, MediaFormat.MimetypeAudioAmrWb);
                 format.SetInteger(MediaFormat.KeySampleRate, 16000);
                 format.SetInteger(MediaFormat.KeyBitRate, 18250);
                 break;
@@ -118,15 +116,18 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
         if (mime_type != null)
         {
+            format.SetString(MediaFormat.KeyMime, mime_type);
             format.SetInteger(MediaFormat.KeyChannelCount, 1);
             format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
             audioEncoder = new HwEncoder(mime_type, format, this);
+            audioEncoder.start();
         }
     }
 
     private void initOpusEncoder()
     {
         audioEncoder = new OpusCodec(48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP);
+        audioEncoder.start();
     }
 
     private void cleanUp()
@@ -255,7 +256,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
     {
         lock (outputBuffers)
         {
-            outputBuffers.Add(buffer);
+            outputBuffers.Add(data);
         }
     }
 }
