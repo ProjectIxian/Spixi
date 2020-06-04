@@ -7,11 +7,6 @@ using SPIXI.VoIP;
 
 namespace SPIXI.Droid.Codecs
 {
-    public interface IAudioDecoderCallback
-    {
-        void onDecodedData(byte[] data);
-    }
-
     class HwDecoder : MediaCodec.Callback, IAudioDecoder
     {
         MediaCodec audioDecoder = null;

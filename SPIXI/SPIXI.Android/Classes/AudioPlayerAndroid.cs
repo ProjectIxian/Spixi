@@ -5,8 +5,6 @@ using SPIXI.Droid;
 using SPIXI.Droid.Codecs;
 using SPIXI.VoIP;
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayerAndroid))]
@@ -120,12 +118,16 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusCodec(48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP);
+        audioDecoder = new OpusCodec(bufferSize, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
         audioDecoder.start();
     }
 
     public int write(byte[] audio_data)
     {
+        if (!running)
+        {
+            return 0;
+        }
         if (audioPlayer != null && running)
         {
             decode(audio_data);
@@ -136,6 +138,11 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     public void stop()
     {
+        if (!running)
+        {
+            return;
+        }
+
         running = false;
 
         if (audioPlayer != null)
@@ -176,6 +183,10 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     private void decode(byte[] data)
     {
+        if (!running)
+        {
+            return;
+        }
         byte[] decoded_bytes = audioDecoder.decode(data);
         if(decoded_bytes != null)
         {
@@ -185,6 +196,10 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     public void onDecodedData(byte[] data)
     {
+        if (!running)
+        {
+            return;
+        }
         if (audioPlayer.Write(data, 0, data.Length) == 0)
         {
             // TODO drop frames

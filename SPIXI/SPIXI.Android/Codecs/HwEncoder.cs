@@ -6,11 +6,6 @@ using SPIXI.VoIP;
 
 namespace SPIXI.Droid.Codecs
 {
-    public interface IAudioEncoderCallback
-    {
-        void onEncodedData(byte[] data);
-    }
-
     class HwEncoder : MediaCodec.Callback, IAudioEncoder
     {
         MediaCodec audioEncoder = null;

@@ -2,6 +2,11 @@
 
 namespace SPIXI.VoIP
 {
+    public interface IAudioEncoderCallback
+    {
+        void onEncodedData(byte[] data);
+    }
+
     public interface IAudioEncoder : IDisposable
     {
         void start();

@@ -126,12 +126,16 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusCodec(48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP);
+        audioEncoder = new OpusCodec(bufferSize, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, null);
         audioEncoder.start();
     }
 
-    private void cleanUp()
+    public void stop()
     {
+        if (!running)
+        {
+            return;
+        }
         running = false;
 
         if (audioRecorder != null)
@@ -140,7 +144,8 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             {
                 audioRecorder.Stop();
                 audioRecorder.Release();
-            }catch(Exception)
+            }
+            catch (Exception)
             {
 
             }
@@ -157,15 +162,10 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
         buffer = null;
         bufferSize = 0;
-        lock(outputBuffers)
+        lock (outputBuffers)
         {
             outputBuffers.Clear();
         }
-    }
-
-    public void stop()
-    {
-        cleanUp();
     }
 
     public void Dispose()
@@ -213,18 +213,26 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void encode(int num_bytes)
     {
+        if (!running)
+        {
+            return;
+        }
         if (num_bytes > 0)
         {
             byte[] encoded_bytes = audioEncoder.encode(buffer, 0, num_bytes);
             if(encoded_bytes != null)
             {
-                outputBuffers.Add(encoded_bytes);
+                onEncodedData(encoded_bytes);
             }
         }
     }
 
     private void sendAvailableData()
     {
+        if (!running)
+        {
+            return;
+        }
         byte[] data_to_send = null;
         lock (outputBuffers)
         {
@@ -254,6 +262,10 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     public void onEncodedData(byte[] data)
     {
+        if (!running)
+        {
+            return;
+        }
         lock (outputBuffers)
         {
             outputBuffers.Add(data);
