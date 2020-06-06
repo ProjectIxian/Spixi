@@ -20,7 +20,7 @@ app-details-version = Version:
 app-details-uninstall = Uninstall
 app-details-dialog-title = Spixi App Manager
 app-details-dialog-removed-text = Application was successfully removed.
-app-details-dialog-removefailed-text = Error occured while removing the application.
+app-details-dialog-removefailed-text = Error occurred while removing the application.
 
 ; New App Screen
 app-new-title = New App
@@ -28,7 +28,7 @@ app-new-description = Add a new Spixi App by pasting its URL. The app will be do
 app-new-install = Install
 app-new-dialog-title = Spixi App Manager
 app-new-dialog-installed-text = Application '{0}' was successfully installed.
-app-new-dialog-installfailed-text = Error occured while installing application.
+app-new-dialog-installfailed-text = Error occurred while installing application.
 
 ; Apps Screen
 apps-title = Spixi Apps
@@ -110,8 +110,8 @@ index-tab-contacts = contacts
 index-new-title = NEW
 index-new-contact = Contact
 index-new-chat = Chat
-index-new-send = Send Ixi
-index-new-request = Request Ixi
+index-new-send = Send IXI
+index-new-request = Request IXI
 index-new-cancel = CANCEL
 index-side-title = Spixi User
 index-side-myaddress = My Spixi Address
@@ -177,9 +177,9 @@ intro-restore-action = RESTORE
 intro-restore-title = Restoring Access to<br />your Spixi Account
 intro-restore-info = This may take a while
 intro-restore-file-error-title = File Error
-intro-restore-file-selecterror-text = Error occured while selecting restore file.
-intro-restore-file-readerror-text = Error occured while reading wallet file.
-intro-restore-file-writeerror-text = Error occured while saving wallet.
+intro-restore-file-selecterror-text = Error occurred while selecting restore file.
+intro-restore-file-readerror-text = Error occurred while reading wallet file.
+intro-restore-file-writeerror-text = Error occurred while saving wallet.
 intro-restore-file-invalidpassword-title = Invalid password
 intro-restore-file-invalidpassword-text = Cannot decrypt wallet, please try again.
 
@@ -237,7 +237,7 @@ settings-deleted-text = Are you sure you want to delete ALL of your downloads?
 settings-deletedd-title = Deleted
 settings-deletedd-text = Deleted {0} downloaded files.
 settings-deleted-error-title = Error
-settings-deleted-error-text = Unknown error has occured.
+settings-deleted-error-text = Unknown error has occurred.
 settings-emptynick-title = Invalid nickname
 settings-emptynick-text = Please enter your nickname.
 
@@ -361,6 +361,24 @@ wallet-error-amount-text = Please type in a valid amount.
 wallet-error-amountdecimal-text = Please type in the correct decimal amount.
 wallet-error-balance-title = Insufficient balance
 wallet-error-balance-text = Your balance is too low for this transaction. Total cost of the transaction is {0}, while your balance is {1}.
+
+; Onboarding Meet Spixi
+onboarding-screen1-title = Meet Spixi!
+onboarding-screen1-text = A blockchain based decentralized messenger with an integrated cryptocurrency wallet.
+
+; Onboarding Your Address
+onboarding-screen2-title = Your Address
+onboarding-screen2-text = Your Spixi Address is your only ID. Use it to interact with others on Spixi. You can find yours in the menu.
+
+; Onboarding Connect with your friends
+onboarding-screen3-title = Connect with your friends
+onboarding-screen3-text = You can add a friend on Spixi by scanning their QR code, or by entering their address. Tap on the Action Button and select “New Contact”.
+
+; Onboarding send and receive payments
+onboarding-screen4-title = Send and Receive Payments
+onboarding-screen4-text = Use the integrated wallet to quickly send and receive IxiCash payments. You can do this in your wallet or in chat as easy as sending a message!
+onboarding-skip = SKIP
+onboarding-finish = FINISH
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
