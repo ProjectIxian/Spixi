@@ -21,9 +21,9 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
 
     Thread recordThread = null;
 
-    int sampleRate = 48000;
-    int bitRate = 16;
-    int channels = 1;
+    int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
+    int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+    int channels = SPIXI.Meta.Config.VoIP_channels;
 
     public AudioRecorderWPF()
     {
@@ -44,8 +44,8 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
             outputBuffers.Clear();
         }
 
-        initRecorder();
         initEncoder(codec);
+        initRecorder();
 
         recordThread = new Thread(recordLoop);
         recordThread.Start();
@@ -53,15 +53,19 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
 
     private void initRecorder()
     {
-        var audioRecorder = new WaveIn(WaveCallbackInfo.FunctionCallback());
+        audioRecorder = new WaveIn(WaveCallbackInfo.FunctionCallback());
         audioRecorder.WaveFormat = new WaveFormat(sampleRate, bitRate, channels);
-        audioRecorder.DataAvailable += (obj, wave_event) => {
-            encode(wave_event.Buffer, 0, wave_event.BytesRecorded);
-        };
-        audioRecorder.BufferMilliseconds = 20;
-        audioRecorder.NumberOfBuffers = 4;
+        audioRecorder.DataAvailable += onDataAvailable;
+
+        audioRecorder.BufferMilliseconds = 100;
+        audioRecorder.NumberOfBuffers = 3;
         audioRecorder.DeviceNumber = 0;
         audioRecorder.StartRecording();
+    }
+
+    private void onDataAvailable(object obj, WaveInEventArgs wave_event)
+    {
+        encode(wave_event.Buffer, 0, wave_event.BytesRecorded);
     }
 
     private void initEncoder(string codec)
@@ -79,8 +83,7 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        int buffer_size = 1000;
-        audioEncoder = new OpusCodec(buffer_size, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, null);
+        audioEncoder = new OpusEncoder(48000, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
         audioEncoder.start();
     }
 
@@ -160,10 +163,16 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
         }
         if (size > 0)
         {
-            byte[] encoded_bytes = audioEncoder.encode(buffer, offset, size);
-            if (encoded_bytes != null)
+            try
             {
-                onEncodedData(encoded_bytes);
+                byte[] encoded_bytes = audioEncoder.encode(buffer, offset, size);
+                if (encoded_bytes != null)
+                {
+                    onEncodedData(encoded_bytes);
+                }
+            }catch(Exception e)
+            {
+                Logging.error("Exception occured in encode loop: " + e);
             }
         }
     }

@@ -54,5 +54,10 @@ namespace SPIXI.Meta
         // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 1000, the correct value is 999)
         public static ulong bakedRecoveryBlockHeight = 999999;
         public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("fa9d2126ecb78648b45e8d4bc382503c27563e7815bfaf6d32ef4b95bdd4041b7a631fc559fa007fb6af7e74");
+
+        // VoIP settings, don't change
+        public static readonly int VoIP_sampleRate = 48000;
+        public static readonly int VoIP_bitRate = 16;
+        public static readonly int VoIP_channels = 1;
     }
 }

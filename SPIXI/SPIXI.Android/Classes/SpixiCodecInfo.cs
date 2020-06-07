@@ -25,7 +25,7 @@ namespace SPIXI.Droid.Classes
 
 
             var cl = new List<string>();
-            //cl.Add("opus");
+            cl.Add("opus");
 
             foreach (var codec_in_map in codecMap)
             {

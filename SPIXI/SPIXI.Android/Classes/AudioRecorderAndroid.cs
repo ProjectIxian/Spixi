@@ -26,6 +26,10 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     Thread recordThread = null;
 
+    int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
+    int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+    int channels = SPIXI.Meta.Config.VoIP_channels;
+
     public AudioRecorderAndroid()
     {
 
@@ -56,14 +60,14 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
     {
         Encoding encoding = Encoding.Pcm16bit;
 
-        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding);
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding);
         buffer = new byte[bufferSize];
 
         audioRecorder = new AudioRecord(
             // Hardware source of recording.
             AudioSource.Mic,
             // Frequency
-            44100,
+            sampleRate,
             // Mono or stereo
             ChannelIn.Mono,
             // Audio encoding
@@ -126,7 +130,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusCodec(bufferSize, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, null);
+        audioEncoder = new OpusEncoder(48000, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
         audioEncoder.start();
     }
 

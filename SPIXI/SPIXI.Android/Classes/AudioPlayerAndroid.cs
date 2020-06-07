@@ -18,6 +18,10 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     int bufferSize = 0;
 
+    int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
+    int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+    int channels = SPIXI.Meta.Config.VoIP_channels;
+
     public AudioPlayerAndroid()
     {
     }
@@ -32,8 +36,8 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
         running = true;
 
-        initPlayer();
         initDecoder(codec);
+        initPlayer();
     }
 
     private void initPlayer()
@@ -49,12 +53,12 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
                                                 .Build();
 
         AudioFormat af = new AudioFormat.Builder()
-                                        .SetSampleRate(44100)
+                                        .SetSampleRate(sampleRate)
                                         .SetChannelMask(ChannelOut.Mono)
                                         .SetEncoding(encoding)
                                         .Build();
 
-        bufferSize = AudioTrack.GetMinBufferSize(44100, ChannelOut.Mono, encoding) * 10;
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding) * 10;
 
         audioPlayer = new AudioTrack(aa, af, bufferSize, AudioTrackMode.Stream, 0);
 
@@ -118,7 +122,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusCodec(bufferSize, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
+        audioDecoder = new OpusDecoder(48000, 24000, 1, this);
         audioDecoder.start();
     }
 

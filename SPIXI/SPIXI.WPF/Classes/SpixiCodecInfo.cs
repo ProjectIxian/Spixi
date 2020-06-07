@@ -12,7 +12,6 @@ namespace SPIXI.WPF.Classes
 
         public List<string> getSupportedAudioCodecs()
         {
-            // TODO implement
             var cl = new List<string>();
             cl.Add("opus");
             return cl;
@@ -20,7 +19,6 @@ namespace SPIXI.WPF.Classes
 
         public bool isCodecSupported(string codec_name)
         {
-            // TODO implement
             switch (codec_name)
             {
                 case "opus":

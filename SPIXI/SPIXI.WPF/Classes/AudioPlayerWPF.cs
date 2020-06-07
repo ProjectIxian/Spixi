@@ -17,9 +17,9 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
     private BufferedWaveProvider provider = null;
 
-    int sampleRate = 48000;
-    int bitRate = 16;
-    int channels = 1;
+    int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
+    int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
+    int channels = SPIXI.Meta.Config.VoIP_channels;
 
     public AudioPlayerWPF()
     {
@@ -42,24 +42,10 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
     private void initPlayer()
     {
         provider = new BufferedWaveProvider(new WaveFormat(sampleRate, bitRate, channels));
+        provider.BufferLength = sampleRate * channels * 10;
         audioPlayer = new WaveOut(WaveCallbackInfo.FunctionCallback());
         audioPlayer.Init(provider);
         audioPlayer.Play();
-
-        var audioRecorder = new WaveIn(WaveCallbackInfo.FunctionCallback());
-        audioRecorder.WaveFormat = new WaveFormat(sampleRate, bitRate, channels);
-        audioRecorder.DataAvailable += (obj, wave_event) => {
-            decode(((OpusCodec)audioDecoder).encode(wave_event.Buffer, 0, wave_event.BytesRecorded));
-            //provider.AddSamples(wave_event.Buffer, 0, wave_event.BytesRecorded);
-        };
-        audioRecorder.BufferMilliseconds = 20;
-        audioRecorder.NumberOfBuffers = 4;
-        audioRecorder.DeviceNumber = 0;
-        audioRecorder.StartRecording();
-        while (1 == 1)
-        {
-            Thread.Sleep(10);
-        }
     }
 
     private void initDecoder(string codec)
@@ -77,8 +63,7 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        int buffer_size = 1000;
-        audioDecoder = new OpusCodec(buffer_size, 48000, 12000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
+        audioDecoder = new OpusDecoder(48000, 24000, 1, this);
         audioDecoder.start();
     }
 
@@ -158,6 +143,13 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
     public void onDecodedData(byte[] data)
     {
-        provider.AddSamples(data, 0, data.Length);
+        if (!running)
+        {
+            return;
+        }
+        if (provider != null)
+        {
+            provider.AddSamples(data, 0, data.Length);
+        }
     }
 }
