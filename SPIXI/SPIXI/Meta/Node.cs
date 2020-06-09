@@ -302,19 +302,22 @@ namespace SPIXI.Meta
         {
             // TODO implement error
             // TODO implement blocknum
-
-            if (verified)
+            Transaction tx = TransactionCache.getUnconfirmedTransaction(txid);
+            if(tx == null)
             {
-                Transaction tx = TransactionCache.getUnconfirmedTransaction(txid);
-                if (tx != null)
-                {
-                    TransactionCache.addTransaction(tx);
-                    Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
-                    if (p.GetType() == typeof(SingleChatPage))
-                    {
-                        ((SingleChatPage)p).updateTransactionStatus(txid, verified);
-                    }
-                }
+                return;
+            }
+
+            if (!verified)
+            {
+                tx.applied = 0;
+            }
+
+            TransactionCache.addTransaction(tx);
+            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
+            if (p.GetType() == typeof(SingleChatPage))
+            {
+                ((SingleChatPage)p).updateTransactionStatus(txid, verified);
             }
         }
 

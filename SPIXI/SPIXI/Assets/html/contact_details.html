@@ -232,6 +232,10 @@
             if (confirmed == "true") {
                 iconClass = "spixi-text-green";
                 icon = '<i class="fa fa-check-circle"></i>';
+            }else if(confirmed == "error")
+            {
+                iconClass = "spixi-text-red";
+                icon = '<i class="fa fa-exclamation-circle"></i>';
             }
 
             var paymentsNode = document.getElementById("exp2-contents");

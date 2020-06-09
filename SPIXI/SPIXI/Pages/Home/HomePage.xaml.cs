@@ -711,8 +711,13 @@ namespace SPIXI
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
+                string confirmed = "true";
+                if(transaction.applied == 0)
+                {
+                    confirmed = "error";
+                }
 
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, amount.ToString(), "true");
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, amount.ToString(), confirmed);
             }
         }
 

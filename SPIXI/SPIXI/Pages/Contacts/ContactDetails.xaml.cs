@@ -204,7 +204,14 @@ namespace SPIXI
                     tx_type = SpixiLocalization._SL("global-sent");
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), "true");
+
+                string confirmed = "true";
+                if (transaction.applied == 0)
+                {
+                    confirmed = "error";
+                }
+
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), confirmed);
             }
         }
 
