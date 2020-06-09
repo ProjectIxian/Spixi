@@ -4,6 +4,7 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -80,6 +81,14 @@ namespace SPIXI
                     {
                         Application.Current.Properties["language"] = SpixiLocalization.getCurrentLanguage();
                         Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+                    }
+                }else
+                {
+                    string lang = CultureInfo.CurrentCulture.Name.ToLower();
+                    if (SpixiLocalization.loadLanguage(lang))
+                    {
+                        Xamarin.Forms.Application.Current.Properties["language"] = SpixiLocalization.getCurrentLanguage();
+                        Xamarin.Forms.Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
                     }
                 }
 
