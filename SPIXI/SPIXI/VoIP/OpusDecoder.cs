@@ -1,5 +1,5 @@
 ﻿using Concentus.Enums;
-using Concentus.Structs;
+using IXICore.Meta;
 using System;
 
 namespace SPIXI.VoIP
@@ -10,19 +10,17 @@ namespace SPIXI.VoIP
         bool running = false;
 
         int samples;
-        int bitRate;
         int channels;
 
         int frameSize;
 
         IAudioDecoderCallback decodedDataCallback = null;
 
-        public OpusDecoder(int samples, int bit_rate, int channels, IAudioDecoderCallback decoder_callback)
+        public OpusDecoder(int samples, int channels, IAudioDecoderCallback decoder_callback)
         {
             this.samples = samples;
-            bitRate = bit_rate;
             this.channels = channels;
-            frameSize = bitRate * 20 / 1000;
+            frameSize = samples * 20 / 1000;
             decodedDataCallback = decoder_callback;
         }
 
@@ -45,10 +43,10 @@ namespace SPIXI.VoIP
             }
 
             short[] output_buffer = new short[frameSize * 2 * 10];
-            for(int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size)
+            for(int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
             {
-                packet_size = BitConverter.ToInt16(data, offset) + 2;
-                int decoded_size = decoder.Decode(data, offset + 2, data.Length - (offset + 2), output_buffer, 0, frameSize * 100, false);
+                packet_size = BitConverter.ToInt16(data, offset);
+                int decoded_size = decoder.Decode(data, offset + 2, packet_size, output_buffer, 0, output_buffer.Length, false);
                 decodedDataCallback.onDecodedData(shortsToBytes(output_buffer, 0, decoded_size));
             }
 

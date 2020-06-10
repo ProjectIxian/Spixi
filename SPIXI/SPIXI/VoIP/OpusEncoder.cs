@@ -1,9 +1,7 @@
 ﻿using Concentus.Enums;
 using Concentus.Structs;
 using IXICore.Meta;
-using Org.BouncyCastle.Bcpg;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace SPIXI.VoIP
@@ -33,7 +31,7 @@ namespace SPIXI.VoIP
             bitRate = bit_rate;
             this.channels = channels;
             opusApplication = application;
-            frameSize = bitRate * 20 / 1000;
+            frameSize = samples * 20 / 1000;
             encodedDataCallback = encoder_callback;
         }
 
@@ -58,7 +56,11 @@ namespace SPIXI.VoIP
 
             lock(inputBuffer)
             {
-                if(size > data.Length - inputBufferPos)
+                if(size > inputBuffer.Length - inputBufferPos)
+                {
+                    size = inputBuffer.Length - inputBufferPos;
+                }
+                if(size == 0)
                 {
                     return null;
                 }
@@ -79,7 +81,7 @@ namespace SPIXI.VoIP
 
             inputBuffer = new byte[frameSize * 2 * 100];
             inputBufferPos = 0;
-
+            
             encoder = Concentus.Structs.OpusEncoder.Create(samples, channels, opusApplication);
             encoder.Bitrate = bitRate;
 
@@ -114,9 +116,8 @@ namespace SPIXI.VoIP
             byte[] output_buffer = new byte[1275];
             int byte_frame_size = frameSize * 2;
             short[] shorts = bytesToShorts(data, offset, byte_frame_size);
-
             int packet_size = encoder.Encode(shorts, 0, frameSize, output_buffer, 0, output_buffer.Length);
-            
+
             byte[] trimmed_buffer = new byte[packet_size + 2];
 
             byte[] packet_size_bytes = BitConverter.GetBytes((short)packet_size);            
