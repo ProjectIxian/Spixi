@@ -61,9 +61,7 @@ namespace SPIXI.VoIP
             StreamProcessor.sendAppRequest(friend, "spixi.voip", currentCallSessionId, Encoding.UTF8.GetBytes(codecs));
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + friend.nickname + "...", 0);
 
-            DependencyService.Get<IPowerManager>().AquireLock("partial");
-            DependencyService.Get<IPowerManager>().AquireLock("wifi");
-            DependencyService.Get<IPowerManager>().AquireLock("proximityScreenOff");
+            aquirePowerLocks();
         }
 
         public static bool onReceivedCall(Friend friend, byte[] session_id, byte[] data)
@@ -103,10 +101,26 @@ namespace SPIXI.VoIP
                 rejectCall(session_id);
                 return false;
             }
-            DependencyService.Get<IPowerManager>().AquireLock("partial");
-            DependencyService.Get<IPowerManager>().AquireLock("wifi");
-            DependencyService.Get<IPowerManager>().AquireLock("proximityScreenOff");
+            aquirePowerLocks();
             return true;
+        }
+
+        private static void aquirePowerLocks()
+        {
+            IPowerManager pm = DependencyService.Get<IPowerManager>();
+            pm.AquireLock("screenDim");
+            pm.AquireLock("partial");
+            pm.AquireLock("wifi");
+            pm.AquireLock("proximityScreenOff");
+        }
+
+        private static void releasePowerLocks()
+        {
+            IPowerManager pm = DependencyService.Get<IPowerManager>();
+            pm.ReleaseLock("screenDim");
+            pm.ReleaseLock("partial");
+            pm.ReleaseLock("wifi");
+            pm.ReleaseLock("proximityScreenOff");
         }
 
         private static void startVoIPSession()
@@ -188,9 +202,7 @@ namespace SPIXI.VoIP
 
             try
             {
-                DependencyService.Get<IPowerManager>().ReleaseLock("partial");
-                DependencyService.Get<IPowerManager>().ReleaseLock("wifi");
-                DependencyService.Get<IPowerManager>().ReleaseLock("proximityScreenOff");
+                releasePowerLocks();
             }
             catch (Exception e)
             {
