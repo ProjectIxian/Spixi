@@ -42,21 +42,21 @@ namespace SPIXI.Meta
 
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
-        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 1000, the correct value is 999)
-        public static ulong bakedBlockHeight = 1132999;
+        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
+        public static ulong bakedBlockHeight = 1178999;
 
         // Block checksum (paired with bakedBlockHeight) of bakedBlockHeight
         // Useful for optimized block header sync
-        public static byte[] bakedBlockChecksum = Crypto.stringToHash("cfb531a4d9131dd61caedf8052b9d481c73fa9894c0d949f56db1e2deba2e53b9dadd2d6de5a025d847e838e");
+        public static byte[] bakedBlockChecksum = Crypto.stringToHash("ea09b12a653338fb9f49a1cada5cb82cfd6a01dcce8a84000f88e76a96a0f6ae184fdf6a18e33d0cfb3b4dab");
 
 
         // Temporary variables for bh sync recovery
-        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 1000, the correct value is 999)
+        // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
         public static ulong bakedRecoveryBlockHeight = 999999;
         public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("fa9d2126ecb78648b45e8d4bc382503c27563e7815bfaf6d32ef4b95bdd4041b7a631fc559fa007fb6af7e74");
 
         // VoIP settings, don't change
-        public static readonly int VoIP_sampleRate = 48000;
+        public static readonly int VoIP_sampleRate = 16000;
         public static readonly int VoIP_bitRate = 16;
         public static readonly int VoIP_channels = 1;
     }
