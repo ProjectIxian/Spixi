@@ -33,22 +33,22 @@
 
 /* Fonts */
 @font-face {
-    font-family: 'robotoregular';
+    font-family: 'roboto';
     src: url('../fonts/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: 'robotobold';
+    font-family: 'roboto';
     src: url('../fonts/Roboto-Bold.ttf') format('truetype');
-    font-weight: normal;
+    font-weight: bold;
     font-style: normal;
 }
 
 
 /* General */
-body {
-    font-family: 'robotoregular', sans-serif;
+body, html, * {
+    font-family: 'roboto', sans-serif;
 }
 
 a:hover {
@@ -522,7 +522,7 @@ img.emoji {
 .spixi-callbar-title {
     width: 90%;
     color: white;
-    font-family: 'robotobold', sans-serif;
+    font-weight: bold;
     font-size: 18pt;
     margin: 16px auto 0px auto;
 }
@@ -1455,7 +1455,7 @@ img.emoji {
 
 .spixi-callbubble .text {
     font-size: 12pt;
-    font-family: 'robotobold', sans-serif;
+    font-weight: bold;
     color: #363636;
 }
 
@@ -1463,7 +1463,6 @@ img.emoji {
     font-size: 10pt;
     color: #363636;
     z-index: 4;
-    font-family: 'robotoregular', sans-serif;
 }
 
 .chatholder {
