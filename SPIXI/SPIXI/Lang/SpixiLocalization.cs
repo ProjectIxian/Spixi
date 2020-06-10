@@ -3,15 +3,18 @@ using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
 using Xamarin.Forms;
 
 namespace SPIXI.Lang
 {
     public static class SpixiLocalization
     {
+        private static List<string> languages = new List<string> {
+            "en-us",
+            "de-de",
+            "sl-si"
+        };
+
         private static bool loaded = false;
         private static string language = "en-us";
         private static Dictionary<string, string> localizedStrings = new Dictionary<string, string>();
@@ -23,22 +26,28 @@ namespace SPIXI.Lang
             Stream file_stream = null;
             try
             {
-                string lang_file_path = Path.Combine("lang", lang + ".txt");
-                if (!File.Exists(lang_file_path))
+                string lang_file_path = "";
+                if (languages.Contains(lang))
+                {
+                    lang_file_path = Path.Combine("lang", lang + ".txt");
+                }
+                else
                 {
                     string lang_part = lang.Substring(0, lang.IndexOf('-'));
-                    lang_file_path = Directory.GetFiles("lang", lang_part + "-*.txt").First();
+                    string found_lang_part = languages.Find(x => x.StartsWith(lang_part));
+                    if (found_lang_part != null)
+                    {
+                        lang_file_path = Path.Combine("lang", found_lang_part + ".txt");
+                    }
                 }
                 if(lang_file_path != "")
                 {
-                    if (File.Exists(lang_file_path))
-                    {
-                        file_stream = DependencyService.Get<IPlatformUtils>().getAsset(lang_file_path);
-                    }
+                    file_stream = DependencyService.Get<IPlatformUtils>().getAsset(lang_file_path);
                 }
             }
             catch(Exception)
             {
+                file_stream = null;
             }
             if (file_stream == null)
             {
