@@ -68,7 +68,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
         audioRecorder = new AudioRecord(
             // Hardware source of recording.
-            AudioSource.Mic,
+            AudioSource.VoiceCommunication,
             // Frequency
             sampleRate,
             // Mono or stereo
