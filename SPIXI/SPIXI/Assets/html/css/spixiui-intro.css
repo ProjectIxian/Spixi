@@ -5,22 +5,23 @@
 
 /* Fonts */
 @font-face {
-    font-family: 'robotoregular';
+    font-family: 'roboto';
     src: url('../fonts/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
-    font-family: 'robotobold';
+    font-family: 'roboto';
     src: url('../fonts/Roboto-Bold.ttf') format('truetype');
-    font-weight: normal;
+    font-weight: bold;
     font-style: normal;
 }
 
 
 /* General */
-body {
-    font-family:'robotoregular', sans-serif;
+body, html, * {
+    font-family: 'roboto', sans-serif;
 }
 
 a:hover {
@@ -141,7 +142,7 @@ a:active {
     text-align: center;
     font-size: 13pt;
     padding: 0px 5%;
-    font-family: robotobold, sans-serif;
+    font-weight: bold;
 }
 .intro-subtitle {
     width: 100%;
@@ -198,7 +199,7 @@ a:active {
 
     text-align: center;
     font-size: 12pt;
-    font-family:'robotobold', sans-serif;
+    font-weight: bold;
 
     
     color: #ad1457;
