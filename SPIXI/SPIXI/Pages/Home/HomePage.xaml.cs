@@ -74,7 +74,7 @@ namespace SPIXI
                     }catch(Exception e)
                     {
                         Logging.error("Fatal error has occured: " + e);
-                        DisplayAlert("Fatal exception", "Fatal exception has occured, please send the log files to the developers." + e.Message, "OK");
+                        displaySpixiAlert("Fatal exception", "Fatal exception has occured, please send the log files to the developers." + e.Message, "OK");
                     }
                 }).Start();
 

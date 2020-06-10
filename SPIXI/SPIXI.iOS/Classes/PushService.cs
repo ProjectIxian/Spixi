@@ -14,12 +14,12 @@ public class PushService_iOS : IPushService
 {
     public void initialize()
     {
+        OneSignal.Current.SetLocationShared(false);
         OneSignal.Current.StartInit(SPIXI.Meta.Config.oneSignalAppId)
             .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
             .HandleNotificationReceived(handleNotificationReceived)
             .HandleNotificationOpened(handleNotificationOpened)
             .EndInit();
-        OneSignal.Current.SetLocationShared(false);
     }
 
     public void setTag(string tag)
@@ -29,7 +29,10 @@ public class PushService_iOS : IPushService
 
     public void clearNotifications()
     {
-        UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
+        Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+        {
+            UIApplication.SharedApplication.ApplicationIconBadgeNumber = 0;
+        });
     }
 
     public void showLocalNotification(string title, string message, string data)
