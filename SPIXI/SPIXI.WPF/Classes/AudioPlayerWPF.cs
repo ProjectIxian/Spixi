@@ -42,7 +42,7 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
     private void initPlayer()
     {
         provider = new BufferedWaveProvider(new WaveFormat(sampleRate, bitRate, channels));
-        provider.BufferLength = sampleRate * channels * 10;
+        provider.BufferLength = sampleRate * channels * 40 * 50 / 1000;
         audioPlayer = new WaveOut(WaveCallbackInfo.FunctionCallback());
         audioPlayer.Init(provider);
         audioPlayer.Play();

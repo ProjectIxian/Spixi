@@ -57,8 +57,8 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
         audioRecorder.WaveFormat = new WaveFormat(sampleRate, bitRate, channels);
         audioRecorder.DataAvailable += onDataAvailable;
 
-        audioRecorder.BufferMilliseconds = 100;
-        audioRecorder.NumberOfBuffers = 3;
+        audioRecorder.BufferMilliseconds = 40;
+        audioRecorder.NumberOfBuffers = 4;
         audioRecorder.DeviceNumber = 0;
         audioRecorder.StartRecording();
     }
