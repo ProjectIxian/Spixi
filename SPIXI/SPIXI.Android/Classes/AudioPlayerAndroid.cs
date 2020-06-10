@@ -49,7 +49,6 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
         // Prepare player
         AudioAttributes aa = new AudioAttributes.Builder()
                                                 .SetContentType(AudioContentType.Speech)
-                                                .SetLegacyStreamType(Stream.VoiceCall)
                                                 .SetFlags(AudioFlags.LowLatency)
                                                 .SetUsage(AudioUsageKind.VoiceCommunication)
                                                 .Build();
@@ -62,13 +61,9 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
         audioPlayer = new AudioTrack(aa, af, bufferSize, AudioTrackMode.Stream, 0);
 
-        // TODO implement dynamic volume control
-        AudioManager am = (AudioManager) MainActivity.Instance.GetSystemService(Context.AudioService);
-        audioPlayer.SetVolume(am.GetStreamVolume(Stream.VoiceCall));
+        MainActivity.Instance.VolumeControlStream = Stream.VoiceCall;
 
         audioPlayer.Play();
-
-
     }
 
     private void initDecoder(string codec)
@@ -150,6 +145,8 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
         }
 
         running = false;
+
+        MainActivity.Instance.VolumeControlStream = Stream.NotificationDefault;
 
         if (audioPlayer != null)
         {
