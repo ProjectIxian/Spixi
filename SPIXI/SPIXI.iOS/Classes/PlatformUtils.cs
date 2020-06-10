@@ -13,17 +13,17 @@ namespace SPIXI.iOS.Classes
     {
         public Stream getAsset(string path)
         {
-            return new FileStream(path, FileMode.Open);
+            return new FileStream(Path.Combine(getAssetsPath(), path), FileMode.Open, FileAccess.Read);
         }
 
         public string getAssetsBaseUrl()
         {
-            return Path.Combine(NSBundle.MainBundle.BundlePath, "Resources") + "/";
+            return NSBundle.MainBundle.BundlePath + "/";
         }
 
         public string getAssetsPath()
         {
-            return Path.Combine(NSBundle.MainBundle.BundlePath, "Resources");
+            return NSBundle.MainBundle.BundlePath;
         }
 
         public string getHtmlBaseUrl()
