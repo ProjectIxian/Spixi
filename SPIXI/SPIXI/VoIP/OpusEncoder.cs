@@ -31,7 +31,7 @@ namespace SPIXI.VoIP
             bitRate = bit_rate;
             this.channels = channels;
             opusApplication = application;
-            frameSize = samples * 20 / 1000;
+            frameSize = samples * 40 / 1000;
             encodedDataCallback = encoder_callback;
         }
 

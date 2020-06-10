@@ -20,7 +20,7 @@ namespace SPIXI.VoIP
         {
             this.samples = samples;
             this.channels = channels;
-            frameSize = samples * 20 / 1000;
+            frameSize = samples * 40 / 1000;
             decodedDataCallback = decoder_callback;
         }
 

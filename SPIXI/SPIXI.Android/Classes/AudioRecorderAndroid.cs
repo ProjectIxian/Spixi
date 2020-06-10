@@ -138,7 +138,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusEncoder(sampleRate, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
+        audioEncoder = new OpusEncoder(sampleRate, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_RESTRICTED_LOWDELAY, this);
         audioEncoder.start();
     }
 
