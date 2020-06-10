@@ -36,13 +36,15 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
         running = true;
 
-        initDecoder(codec);
         initPlayer();
+        initDecoder(codec);
     }
 
     private void initPlayer()
     {
         Encoding encoding = Encoding.Pcm16bit;
+
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit) * 10;
 
         // Prepare player
         AudioAttributes aa = new AudioAttributes.Builder()
@@ -57,8 +59,6 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
                                         .SetChannelMask(ChannelOut.Mono)
                                         .SetEncoding(encoding)
                                         .Build();
-
-        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding) * 10;
 
         audioPlayer = new AudioTrack(aa, af, bufferSize, AudioTrackMode.Stream, 0);
 
@@ -115,6 +115,8 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
             format.SetString(MediaFormat.KeyMime, mime_type);
             format.SetInteger(MediaFormat.KeyChannelCount, 1);
             format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
+            format.SetInteger(MediaFormat.KeyLatency, 1);
+            format.SetInteger(MediaFormat.KeyPriority, 0);
             audioDecoder = new HwDecoder(mime_type, format, this);
             audioDecoder.start();
         }
@@ -122,7 +124,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(48000, 24000, 1, this);
+        audioDecoder = new OpusDecoder(sampleRate, 1, this);
         audioDecoder.start();
     }
 

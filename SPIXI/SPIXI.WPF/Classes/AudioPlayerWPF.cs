@@ -35,8 +35,8 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
         running = true;
 
-        initDecoder(codec);
         initPlayer();
+        initDecoder(codec);
     }
 
     private void initPlayer()
@@ -63,7 +63,7 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(48000, 24000, 1, this);
+        audioDecoder = new OpusDecoder(sampleRate, 1, this);
         audioDecoder.start();
     }
 

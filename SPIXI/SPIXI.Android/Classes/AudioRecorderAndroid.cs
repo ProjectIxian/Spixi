@@ -1,4 +1,5 @@
 ﻿using Android.Media;
+using Android.Media.Audiofx;
 using IXICore.Meta;
 using SPIXI.Droid.Codecs;
 using SPIXI.VoIP;
@@ -15,6 +16,8 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private AudioRecord audioRecorder = null;
     private IAudioEncoder audioEncoder = null;
+    private AcousticEchoCanceler echoCanceller = null;
+    private NoiseSuppressor noiseSuppressor = null;
 
     bool running = false;
 
@@ -49,8 +52,9 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             outputBuffers.Clear();
         }
 
-        initRecorder();
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit);
         initEncoder(codec);
+        initRecorder();
 
         recordThread = new Thread(recordLoop);
         recordThread.Start();
@@ -60,7 +64,6 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
     {
         Encoding encoding = Encoding.Pcm16bit;
 
-        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding);
         buffer = new byte[bufferSize];
 
         audioRecorder = new AudioRecord(
@@ -77,6 +80,9 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         );
 
         audioRecorder.StartRecording();
+
+        echoCanceller = AcousticEchoCanceler.Create(audioRecorder.AudioSessionId);
+        noiseSuppressor = NoiseSuppressor.Create(audioRecorder.AudioSessionId);
     }
 
     private void initEncoder(string codec)
@@ -123,6 +129,8 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             format.SetString(MediaFormat.KeyMime, mime_type);
             format.SetInteger(MediaFormat.KeyChannelCount, 1);
             format.SetInteger(MediaFormat.KeyMaxInputSize, bufferSize);
+            format.SetInteger(MediaFormat.KeyLatency, 1);
+            format.SetInteger(MediaFormat.KeyPriority, 0);
             audioEncoder = new HwEncoder(mime_type, format, this);
             audioEncoder.start();
         }
@@ -130,7 +138,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusEncoder(48000, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
+        audioEncoder = new OpusEncoder(sampleRate, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
         audioEncoder.start();
     }
 
@@ -141,6 +149,34 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             return;
         }
         running = false;
+
+        if (echoCanceller != null)
+        {
+            try
+            {
+                echoCanceller.Release();
+                echoCanceller.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
+            echoCanceller = null;
+        }
+
+        if (noiseSuppressor != null)
+        {
+            try
+            {
+                noiseSuppressor.Release();
+                noiseSuppressor.Dispose();
+            }
+            catch (Exception)
+            {
+
+            }
+            noiseSuppressor = null;
+        }
 
         if (audioRecorder != null)
         {
