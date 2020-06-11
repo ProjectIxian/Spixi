@@ -54,14 +54,20 @@ namespace SPIXI
 
         public Task displaySpixiAlert(string title, string message, string cancel)
         {
-            ISystemAlert alert = DependencyService.Get<ISystemAlert>();
-            if (alert != null)
+            try { 
+                ISystemAlert alert = DependencyService.Get<ISystemAlert>();
+                if (alert != null)
+                {
+                    alert.displayAlert(title, message, cancel);
+                    return null;
+                }
+            
+                return DisplayAlert(title, message, cancel);
+            }catch(Exception e)
             {
-                alert.displayAlert(title, message, cancel);
-                return null;
+                Logging.error("Exception occured in displaySpixiAlert: " + e);
             }
-
-            return DisplayAlert(title, message, cancel);
+            return null;
         }
 
         public void displayCallBar(byte[] session_id, string text, long call_started_time)
