@@ -370,8 +370,12 @@
                 avatar = avatar.replace(/&#92;/g, '\\');
 
                 var avatarEl = document.createElement('img');
-                avatarEl.className = "avatar";
+                avatarEl.className = "avatar selectable";
                 avatarEl.src = avatar;
+                if(nick == "")
+                {
+                    avatarEl.alt = address;
+                }
                 bubbleEl.appendChild(avatarEl);
             }
 

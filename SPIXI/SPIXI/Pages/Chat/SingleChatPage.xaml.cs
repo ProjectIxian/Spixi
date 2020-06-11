@@ -539,7 +539,11 @@ namespace SPIXI
 
             string prefix = "addMe";
             string avatar = "";
-            string address = "";
+            string address = friend.nickname;
+            if(address == "")
+            {
+                address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
+            }
             string nick = "";
             if (!message.localSender)
             {
