@@ -1552,6 +1552,8 @@ img.emoji {
     word-break: break-word;
     overflow: auto;
     overflow-wrap: break-word;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 #chatattachbar {
