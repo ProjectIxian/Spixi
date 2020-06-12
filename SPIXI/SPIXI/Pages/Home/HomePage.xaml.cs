@@ -11,9 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -57,6 +55,13 @@ namespace SPIXI
 			InitializeComponent ();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
+
+            string onboarding_complete = "false";
+            if (Application.Current.Properties.ContainsKey("onboardingComplete"))
+            {
+                onboarding_complete = "true";
+            }
+            SpixiLocalization.addCustomString("OnboardingComplete", onboarding_complete);
 
             loadPage(webView, "index.html");
 
@@ -299,6 +304,10 @@ namespace SPIXI
                 }
 
                 DependencyService.Get<IFileOperations>().share(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), "Share Spixi Log File");
+            }else if(current_url.StartsWith("ixian:onboardingComplete"))
+            {
+                Application.Current.Properties["onboardingComplete"] = true;
+                Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
             }
             else
             {

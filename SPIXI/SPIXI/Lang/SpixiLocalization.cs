@@ -3,6 +3,7 @@ using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace SPIXI.Lang
@@ -18,6 +19,7 @@ namespace SPIXI.Lang
         private static bool loaded = false;
         private static string language = "en-us";
         private static Dictionary<string, string> localizedStrings = new Dictionary<string, string>();
+        private static Dictionary<string, string> customStrings = new Dictionary<string, string>();
 
         public static bool loadLanguage(string lang)
         {
@@ -55,7 +57,7 @@ namespace SPIXI.Lang
                 return false;
             }
 
-            Dictionary<string, string> localized_strings = new Dictionary<string, string>();
+            Dictionary<string, string> localized_strings = new Dictionary<string, string>(customStrings);
 
             StreamReader sr = new StreamReader(file_stream);
             string last_key = "";
@@ -94,6 +96,12 @@ namespace SPIXI.Lang
             language = lang;
 
             return true;
+        }
+
+        public static void addCustomString(string key, string value)
+        {
+            customStrings.AddOrReplace(key, value);
+            localizedStrings.AddOrReplace(key, value);
         }
 
         public static string getLocalizedString(string key)
