@@ -16,13 +16,37 @@ public class PowerManager_iOS : IPowerManager
 {
     public bool AquireLock(string lock_type = "screenDim")
     {
-   //     UIApplication.SharedApplication.IdleTimerDisabled = true;
-        return true;
+        switch (lock_type)
+        {
+            case "screenDim":
+                UIApplication.SharedApplication.IdleTimerDisabled = true;
+                return true;
+            case "partial":
+                return true;
+            case "proximityScreenOff":
+                UIDevice.CurrentDevice.ProximityMonitoringEnabled = true;
+                break;
+            case "wifi":
+                return true;
+        }
+        return false;
     }
 
     public bool ReleaseLock(string lock_type = "screenDim")
     {
-    //    UIApplication.SharedApplication.IdleTimerDisabled = false;
-        return true;
+        switch (lock_type)
+        {
+            case "screenDim":
+                UIApplication.SharedApplication.IdleTimerDisabled = false;
+                return true;
+            case "partial":
+                return true;
+            case "proximityScreenOff":
+                UIDevice.CurrentDevice.ProximityMonitoringEnabled = false;
+                break;
+            case "wifi":
+                return true;
+        }
+        return false;
     }
 }
