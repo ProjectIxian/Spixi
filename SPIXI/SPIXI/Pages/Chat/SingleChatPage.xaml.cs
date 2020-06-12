@@ -752,7 +752,7 @@ namespace SPIXI
                     long seconds = Int32.Parse(message.message);
                     long minutes = seconds / 60;
                     seconds = seconds % 60;
-                    text = string.Format(" {0} ({1}:{2})", SpixiLocalization._SL("chat-call-outgoing"), minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
+                    text = string.Format("{0} ({1}:{2})", text, minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
                 }
                 Utils.sendUiCommand(webView, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
