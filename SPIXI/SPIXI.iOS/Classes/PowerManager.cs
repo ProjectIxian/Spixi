@@ -25,7 +25,7 @@ public class PowerManager_iOS : IPowerManager
                 return true;
             case "proximityScreenOff":
                 UIDevice.CurrentDevice.ProximityMonitoringEnabled = true;
-                break;
+                return true;
             case "wifi":
                 return true;
         }
@@ -43,7 +43,7 @@ public class PowerManager_iOS : IPowerManager
                 return true;
             case "proximityScreenOff":
                 UIDevice.CurrentDevice.ProximityMonitoringEnabled = false;
-                break;
+                return true;
             case "wifi":
                 return true;
         }
