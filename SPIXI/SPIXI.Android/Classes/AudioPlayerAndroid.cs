@@ -80,7 +80,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
                 break;
 
             default:
-                throw new Exception("Unknown recorder codec selected " + codec);
+                throw new Exception("Unknown player codec selected " + codec);
         }
     }
 
