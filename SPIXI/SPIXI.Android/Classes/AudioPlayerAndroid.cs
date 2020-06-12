@@ -208,4 +208,9 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
             // TODO drop frames
         }
     }
+
+    public void setVolume(float volume)
+    {
+        // do nothing
+    }
 }

@@ -342,5 +342,13 @@ namespace SPIXI.VoIP
             lastPacketReceivedCheckThread = null;
             hangupCall(currentCallSessionId);
         }
+
+        public static void setVolume(float volume)
+        {
+            if(audioPlayer != null)
+            {
+                audioPlayer.setVolume(volume);
+            }
+        }
     }
 }

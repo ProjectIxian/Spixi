@@ -3,12 +3,11 @@ using Foundation;
 using SPIXI.iOS.Services;
 using UIKit;
 using UserNotifications;
-using Xamarin.Forms;
-using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System.IO;
-using Xamarin.Forms.PlatformConfiguration;
-//using SPIXI.Notifications;
+using MediaPlayer;
+using SPIXI.VoIP;
+using AVFoundation;
 
 namespace SPIXI.iOS
 {
@@ -52,12 +51,19 @@ namespace SPIXI.iOS
             global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
 
             prepareStorage();
-            
+
+            NSNotificationCenter.DefaultCenter.AddObserver(MPMusicPlayerController.VolumeDidChangeNotification, onVolumeChanged);
+                
             LoadApplication(App.Instance());
 
             prepareBackgroundService();
 
             return base.FinishedLaunching(app, options);
+        }
+
+        void onVolumeChanged(NSNotification notification)
+        {
+            VoIPManager.setVolume(AVAudioSession.SharedInstance().OutputVolume);
         }
 
         void prepareBackgroundService()

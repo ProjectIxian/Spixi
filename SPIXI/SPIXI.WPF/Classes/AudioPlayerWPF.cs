@@ -152,4 +152,9 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
             provider.AddSamples(data, 0, data.Length);
         }
     }
+
+    public void setVolume(float volume)
+    {
+        throw new NotImplementedException();
+    }
 }

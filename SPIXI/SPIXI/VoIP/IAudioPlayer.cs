@@ -14,5 +14,7 @@ namespace SPIXI.VoIP
         bool isRunning();
 
         int write(byte[] audio_data);
+
+        void setVolume(float volume);
     }
 }

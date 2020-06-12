@@ -54,11 +54,11 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
         AVAudioSession.SharedInstance().SetActive(true);
 
         audioPlayer = new AVAudioPlayerNode();
+        setVolume(AVAudioSession.SharedInstance().OutputVolume);
         inputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
         outputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMFloat32, sampleRate, (uint)channels, false);
 
         audioConverter = new AVAudioConverter(inputAudioFormat, outputAudioFormat);
-
         audioEngine.AttachNode(audioPlayer);
         audioEngine.Connect(audioPlayer, audioEngine.MainMixerNode, outputAudioFormat);
         audioEngine.Prepare();
@@ -219,6 +219,14 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
             buffer.Dispose();
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+    }
+
+    public void setVolume(float volume)
+    {
+        if (audioPlayer != null)
+        {
+            audioPlayer.Volume = volume;
         }
     }
 }
