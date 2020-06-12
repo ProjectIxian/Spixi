@@ -57,13 +57,21 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
     private void initRecorder()
     {
         audioRecorder = new AVAudioEngine();
-        NSError error = null;
-        AVAudioSession.SharedInstance().SetPreferredSampleRate(sampleRate, out error);
-        AVAudioFormat recording_format = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, true);
-        uint buffer_size = (uint)(40 * 4 * channels * sampleRate / 1000);
+        NSError error = new NSError();
+        if (!AVAudioSession.SharedInstance().SetPreferredSampleRate(sampleRate, out error))
+        {
+            throw new Exception("Error setting preffered sample rate for recorder: " + error);
+        }
+        AVAudioSession.SharedInstance().SetCategory(AVAudioSessionCategory.PlayAndRecord, AVAudioSessionCategoryOptions.InterruptSpokenAudioAndMixWithOthers);
+        AVAudioSession.SharedInstance().SetActive(true);
+        AVAudioFormat recording_format = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
+        uint buffer_size = (uint)CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 1000;
         audioRecorder.InputNode.InstallTapOnBus(0, buffer_size, recording_format, onDataAvailable);
         audioRecorder.Prepare();
-        audioRecorder.StartAndReturnError(out error);
+        if(!audioRecorder.StartAndReturnError(out error))
+        {
+            throw new Exception("Error starting recording audio engine: " + error);
+        }
     }
 
     private void onDataAvailable(AVAudioPcmBuffer buffer, AVAudioTime when)
@@ -71,7 +79,7 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
         AudioBuffer audioBuffer = buffer.AudioBufferList[0];
         byte[] data = new byte[audioBuffer.DataByteSize];
         Marshal.Copy(audioBuffer.Data, data, 0, audioBuffer.DataByteSize);
-        
+
         encode(data, 0, data.Length);
     }
 
@@ -102,11 +110,14 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
         }
         running = false;
 
+        AVAudioSession.SharedInstance().SetActive(false);
+
         if (audioRecorder != null)
         {
             try
             {
                 audioRecorder.Stop();
+                audioRecorder.Reset();
             }
             catch (Exception)
             {

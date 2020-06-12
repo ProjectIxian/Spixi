@@ -8,13 +8,12 @@ namespace SPIXI.iOS.Classes
 {
     class SpixiCodecInfo : ISpixiCodecInfo
     {
-        string[] codecMap = new string[] { "amrwb", "amrnb", "opus" };
+        string[] codecMap = new string[] { "amrwb", "amrnb" };
 
         public List<string> getSupportedAudioCodecs()
         {
-            // TODO implement
             var cl = new List<string>();
-            //cl.Add("opus");
+            cl.Add("opus");
             return cl;
         }
 
