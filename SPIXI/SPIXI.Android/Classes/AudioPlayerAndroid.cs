@@ -44,7 +44,14 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
     {
         Encoding encoding = Encoding.Pcm16bit;
 
-        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit) * 10;
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit);
+        Logging.info("Min. buffer size " + bufferSize);
+        int new_buffer_size = CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 200;
+        if (bufferSize < new_buffer_size)
+        {
+            bufferSize = (int)(Math.Ceiling((decimal)new_buffer_size / bufferSize) * bufferSize);
+        }
+        Logging.info("Final buffer size " + bufferSize);
 
         // Prepare player
         AudioAttributes aa = new AudioAttributes.Builder()
@@ -203,10 +210,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
         {
             return;
         }
-        if (audioPlayer.Write(data, 0, data.Length) == 0)
-        {
-            // TODO drop frames
-        }
+        audioPlayer.Write(data, 0, data.Length);
     }
 
     public void setVolume(float volume)
