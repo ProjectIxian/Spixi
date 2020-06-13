@@ -34,7 +34,7 @@ function setOnboardingContents(title, text, section)
 {
 	var imgSection = document.getElementsByClassName("onboarding-image-section")[0];
 	var imgName = "onboarding" + section + ".png";
-	imgSection.innerHTML = "<img src='img/ldpi/" + imgName + "' srcset='img/ldpi/" + imgName + " 167w,img/mdpi/" + imgName + " 267w,img/hdpi/" + imgName + " 407w,img/xdpi/" + imgName + " 613w,img/xxdpi/" + imgName + " 764w,' sizes='100vw'/>";
+	imgSection.innerHTML = "<img src='img/ldpi/" + imgName + "' srcset='img/ldpi/" + imgName + " 192w,img/mdpi/" + imgName + " 302w,img/hdpi/" + imgName + " 451w,img/xhdpi/" + imgName + " 684w,img/xxhdpi/" + imgName + " 912w' sizes='90vw'/>";
 
 	var textSection = document.getElementsByClassName("onboarding-text-section")[0];
 	textSection.innerHTML = "<div class='onboarding-title'>" + title + "</div>";
