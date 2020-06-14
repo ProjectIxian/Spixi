@@ -1707,14 +1707,15 @@ img.emoji {
     overflow: auto;
 }
 
-.onboarding-wrap
-{
+.onboarding-wrap {
     margin: 0 auto;
     max-width: 800px;
     display: table;
     padding: 0 20pt;
     box-sizing: border-box;
     height: 100%;
+    border: 0px;
+    border-spacing: 0px;
 }
 
 .onboarding-image-section {
@@ -1722,6 +1723,7 @@ img.emoji {
     vertical-align: middle;
     padding: 0 20pt;
     box-sizing: border-box;
+    position: relative;
 }
 
 .onboarding-image-section img {
@@ -1745,8 +1747,10 @@ img.emoji {
 .onboarding-nav-section-wrap {
     width: 100%;
     position: fixed;
-    bottom: 20px;
-    vertical-align: middle;
+    height: 41pt;
+    left: 0px;
+    bottom:0px;
+    vertical-align: top;
 }
 
 .onboarding-nav-section {
@@ -1773,11 +1777,12 @@ img.emoji {
 
 .onboarding-pager {
     display: table-row;
-    line-height: 56pt;
     text-align: center;
     left: 0px;
-    min-height: 46pt;
-    height: 46pt;
+    line-height: 26pt;
+    min-height: 41pt;
+    max-height: 41pt;
+    height: 41pt;
     font-size: 6pt;
     color: #C14C7F;
 }
@@ -1785,12 +1790,21 @@ img.emoji {
 .onboarding-pager .fa-circle
 {
     margin: 4pt;
+    margin-bottom: 15pt;
 }
 
 .onboarding-pager .fa-circle.sel {
     color: #FFC0DC;
 }
 
+.onboarding-skip
+{
+    color: white;
+    font-weight: bold;
+    font-size: 12pt;
+    position: absolute;
+    right: 0px;
+}
 
 /* Modals */
 .spixi-modal {
