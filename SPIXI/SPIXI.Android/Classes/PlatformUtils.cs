@@ -1,6 +1,7 @@
-﻿using SPIXI.Droid;
+﻿using Android.Content;
+using Android.Media;
+using SPIXI.Droid;
 using SPIXI.Interfaces;
-using System.IO;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(PlatformUtils))]
@@ -8,7 +9,10 @@ using Xamarin.Forms;
 
 public class PlatformUtils : IPlatformUtils
 {
-    public Stream getAsset(string path)
+    Ringtone ringtone = null;
+    ToneGenerator toneGenerator = null;
+
+    public System.IO.Stream getAsset(string path)
     {
         return MainActivity.Instance.Assets.Open(path);
     }
@@ -31,5 +35,67 @@ public class PlatformUtils : IPlatformUtils
     public string getHtmlPath()
     {
         return SPIXI.Meta.Config.spixiUserFolder + "/html";
+    }
+
+    public void startRinging()
+    {
+        if(ringtone != null)
+        {
+            return;
+        }
+
+        ringtone = RingtoneManager.GetRingtone(MainActivity.Instance, RingtoneManager.GetDefaultUri(RingtoneType.Ringtone));
+        ringtone.Looping = true;
+        ringtone.Play();
+    }
+
+    public void stopRinging()
+    {
+        if (ringtone == null)
+        {
+            return;
+        }
+
+        ringtone.Stop();
+        ringtone.Dispose();
+        ringtone = null;
+    }
+
+    public void startDialtone(DialtoneType type)
+    {
+        stopDialtone();
+        Tone tone_type;
+        int duration = -1;
+        switch(type)
+        {
+            case DialtoneType.busy:
+                tone_type = Tone.SupBusy;
+                duration = 5000;
+                break;
+            case DialtoneType.dialing:
+                tone_type = Tone.SupRingtone;
+                duration = 60000;
+                break;
+            case DialtoneType.error:
+                tone_type = Tone.SupError;
+                duration = 5000;
+                break;
+            default:
+                return;
+        }
+        AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
+        toneGenerator = new ToneGenerator(Stream.VoiceCall, am.GetStreamVolume(Stream.VoiceCall));
+        toneGenerator.StartTone(tone_type, duration);
+    }
+
+    public void stopDialtone()
+    {
+        if (toneGenerator != null)
+        {
+            toneGenerator.StopTone();
+            toneGenerator.Release();
+            toneGenerator.Dispose();
+            toneGenerator = null;
+        }
     }
 }

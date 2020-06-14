@@ -31,4 +31,20 @@ public class PlatformUtils : IPlatformUtils
     {
         return Path.Combine(getAssetsPath(), "html");
     }
+
+    public void startRinging()
+    {
+    }
+
+    public void stopRinging()
+    {
+    }
+
+    public void startDialtone(DialtoneType type)
+    {
+    }
+
+    public void stopDialtone()
+    {
+    }
 }

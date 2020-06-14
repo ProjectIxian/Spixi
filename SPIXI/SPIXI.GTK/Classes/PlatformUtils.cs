@@ -31,4 +31,24 @@ public class PlatformUtils : IPlatformUtils
     {
         throw new NotImplementedException();
     }
+
+    public void startRinging()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void stopRinging()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void startDialtone(DialtoneType type)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void stopDialtone()
+    {
+        throw new NotImplementedException();
+    }
 }

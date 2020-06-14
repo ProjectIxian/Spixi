@@ -35,5 +35,21 @@ namespace SPIXI.iOS.Classes
         {
             return Config.spixiUserFolder + "/html";
         }
+
+        public void startRinging()
+        {
+        }
+
+        public void stopRinging()
+        {
+        }
+
+        public void startDialtone(DialtoneType type)
+        {
+        }
+
+        public void stopDialtone()
+        {
+        }
     }
 }

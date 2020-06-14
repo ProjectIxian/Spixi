@@ -62,6 +62,7 @@ namespace SPIXI.VoIP
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).displayCallBar(currentCallSessionId, SpixiLocalization._SL("global-call-dialing") + " " + friend.nickname + "...", 0);
 
             aquirePowerLocks();
+            DependencyService.Get<IPlatformUtils>().startDialtone(DialtoneType.dialing);
         }
 
         public static bool onReceivedCall(Friend friend, byte[] session_id, byte[] data)
@@ -102,6 +103,7 @@ namespace SPIXI.VoIP
                 return false;
             }
             aquirePowerLocks();
+            DependencyService.Get<IPlatformUtils>().startRinging();
             return true;
         }
 
@@ -125,6 +127,8 @@ namespace SPIXI.VoIP
 
         private static void startVoIPSession()
         {
+            DependencyService.Get<IPlatformUtils>().stopDialtone();
+            DependencyService.Get<IPlatformUtils>().stopRinging();
             try
             {
                 audioPlayer = DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
@@ -148,6 +152,8 @@ namespace SPIXI.VoIP
 
         private static void endVoIPSession()
         {
+            DependencyService.Get<IPlatformUtils>().stopRinging();
+
             try
             {
                 if (audioPlayer != null)
@@ -268,15 +274,24 @@ namespace SPIXI.VoIP
             {
                 return;
             }
+            DependencyService.Get<IPlatformUtils>().startDialtone(DialtoneType.busy);
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
             endVoIPSession();
         }
 
-        public static void hangupCall(byte[] session_id)
+        public static void hangupCall(byte[] session_id, bool error = false)
         {
             if (session_id == null)
             {
                 session_id = currentCallSessionId;
+            }
+            if (error)
+            {
+                DependencyService.Get<IPlatformUtils>().startDialtone(DialtoneType.error);
+            }
+            else
+            {
+                DependencyService.Get<IPlatformUtils>().stopDialtone();
             }
             StreamProcessor.sendAppEndSession(currentCallContact, session_id);
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
@@ -289,6 +304,7 @@ namespace SPIXI.VoIP
             {
                 return;
             }
+            DependencyService.Get<IPlatformUtils>().stopDialtone();
             ((SpixiContentPage)App.Current.MainPage.Navigation.NavigationStack.Last()).hideCallBar();
             endVoIPSession();
         }
@@ -340,7 +356,7 @@ namespace SPIXI.VoIP
                 Thread.Sleep(1000);
             }
             lastPacketReceivedCheckThread = null;
-            hangupCall(currentCallSessionId);
+            hangupCall(currentCallSessionId, true);
         }
 
         public static void setVolume(float volume)
