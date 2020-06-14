@@ -27,24 +27,6 @@ namespace SPIXI
             customChatBtn = customChatButton;
 
             loadPage(webView, "contact_details.html");
-
-            // TODOSPIXI
-            /*
-            // If nickname is still "Unknown", request the nickname again
-            if (friend.nickname.Equals("Unknown", StringComparison.Ordinal))
-            {
-                // Send the message to the S2 nodes
-                string recipient_address = friend.wallet_address;
-                byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.getNick, "", friend.pubkey);
-
-
-                Message message = new Message();
-                message.recipientAddress = recipient_address;
-                message.data = encrypted_message;
-
-                StreamProcessor.sendMessage(message);
-            }
-            */
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -62,6 +44,12 @@ namespace SPIXI
         private void onNavigating(object sender, WebNavigatingEventArgs e)
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
+
+            if (onNavigatingGlobal(current_url))
+            {
+                e.Cancel = true;
+                return;
+            }
 
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {

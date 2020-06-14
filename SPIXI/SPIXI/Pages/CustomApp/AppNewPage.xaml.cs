@@ -43,6 +43,11 @@ namespace SPIXI
             string current_url = HttpUtility.UrlDecode(e.Url);
             e.Cancel = true;
 
+            if (onNavigatingGlobal(current_url))
+            {
+                return;
+            }
+
             if (current_url.StartsWith("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();

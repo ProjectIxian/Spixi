@@ -179,5 +179,28 @@ namespace SPIXI
             Node.refreshAppRequests = true;
             updateScreen();
         }
+
+        protected bool onNavigatingGlobal(string url)
+        {
+            if (url.StartsWith("ixian:appAccept:"))
+            {
+                string session_id = url.Substring("ixian:appAccept:".Length);
+                onAppAccept(session_id);
+            }
+            else if (url.StartsWith("ixian:appReject:"))
+            {
+                string session_id = url.Substring("ixian:appReject:".Length);
+                onAppReject(session_id);
+            }
+            else if (url.StartsWith("ixian:hangUp:"))
+            {
+                string session_id = url.Substring("ixian:hangUp:".Length);
+                VoIPManager.hangupCall(Crypto.stringToHash(session_id));
+            }else
+            {
+                return false;
+            }
+            return true;
+        }
     }
 } 

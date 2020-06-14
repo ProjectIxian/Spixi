@@ -68,6 +68,11 @@ namespace SPIXI
             string current_url = HttpUtility.UrlDecode(e.Url);
             e.Cancel = true;
 
+            if (onNavigatingGlobal(current_url))
+            {
+                return;
+            }
+
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoad();
@@ -155,24 +160,6 @@ namespace SPIXI
                 string app_id = current_url.Substring("ixian:app:".Length);
                 onApp(app_id);
             }
-            else if (current_url.StartsWith("ixian:appAccept:"))
-            {
-                string session_id = current_url.Substring("ixian:appAccept:".Length);
-                onAppAccept(session_id);
-            }
-            else if (current_url.StartsWith("ixian:appReject:"))
-            {
-                string session_id = current_url.Substring("ixian:appReject:".Length);
-                onAppReject(session_id);
-            }
-            else if (current_url.StartsWith("ixian:hangUp:"))
-            {
-                if (!App.proximityNear)
-                {
-                    string session_id = current_url.Substring("ixian:hangUp:".Length);
-                    VoIPManager.hangupCall(Crypto.stringToHash(session_id));
-                }
-            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -229,39 +216,6 @@ namespace SPIXI
 
             await Task.Run(() =>
             {
-                // TODOSPIXI
-                /*            // Send the message to the S2 nodes
-                            byte[] recipient_address = friend.wallet_address;
-                            byte[] encrypted_message = StreamProcessor.prepareSpixiMessage(SpixiMessageCode.chat, str, friend.pubkey);
-                            // CryptoManager.lib.encryptData(Encoding.UTF8.GetBytes(string_to_send), friend.pubkey);
-
-                            // Check the relay ip
-                            string relayip = friend.getRelayIP();
-                            if (relayip == null)
-                            {
-                                Logging.warn("No relay node to send message to!");
-                                return;
-                            }
-                            if (relayip.Equals(node_ip, StringComparison.Ordinal) == false)
-                            {
-
-                                node_ip = relayip;
-                                // Connect to the contact's S2 relay first
-                                NetworkClientManager.connectToStreamNode(relayip);
-
-                                // TODO: optimize this
-                                while (NetworkClientManager.isNodeConnected(relayip) == false)
-                                {
-
-                                }
-                            }
-
-                            Message message = new Message();
-                            message.recipientAddress = recipient_address;
-                            message.data = encrypted_message;
-
-                            StreamProcessor.sendMessage(message, node_ip);*/
-
                 // store the message and display it
                 FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, str, true);
 

@@ -101,6 +101,12 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
+            if(onNavigatingGlobal(current_url))
+            {
+                e.Cancel = true;
+                return;
+            }
+
             if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
             {
                 onLoaded();
@@ -257,23 +263,7 @@ namespace SPIXI
                 //   prepBackground();
                 Navigation.PushAsync(new DownloadsPage(), Config.defaultXamarinAnimations);
             }
-            else if (current_url.StartsWith("ixian:appAccept:"))
-            {
-                string session_id = current_url.Substring("ixian:appAccept:".Length);
-                onAppAccept(session_id);
-            }
-            else if (current_url.StartsWith("ixian:appReject:"))
-            {
-                string session_id = current_url.Substring("ixian:appReject:".Length);
-                onAppReject(session_id);
-            }else if(current_url.StartsWith("ixian:hangUp:"))
-            {
-                if (!App.proximityNear)
-                {
-                    string session_id = current_url.Substring("ixian:hangUp:".Length);
-                    VoIPManager.hangupCall(Crypto.stringToHash(session_id));
-                }
-            }else if(current_url.StartsWith("ixian:viewLog"))
+            else if(current_url.StartsWith("ixian:viewLog"))
             {
                 // TODO perhaps move this whole functionality to Logging class and delete spixi.log.zip on start if exists
 
