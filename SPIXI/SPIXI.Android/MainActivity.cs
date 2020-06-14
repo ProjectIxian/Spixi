@@ -5,20 +5,14 @@ using System.Threading.Tasks;
 using System.IO;
 using Android.Content;
 using Plugin.LocalNotifications;
-using Xamarin.Forms;
 using SPIXI.Interfaces;
 using Android.Views;
-using SPIXI.Droid.Classes;
-using Android.Systems;
-using Android.Content.Res;
 
 namespace SPIXI.Droid
 {
     [Activity(Label = "SPIXI", Icon = "@mipmap/ic_launcher", RoundIcon = "@mipmap/ic_round_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleInstance)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        private ProximitySensor proximitySensor = null;
-
         // Field, property, and method for Picture Picker
         public static readonly int PickImageId = 1000;
 
@@ -50,8 +44,6 @@ namespace SPIXI.Droid
                 App.startingScreen = "";
             }
             
-            proximitySensor = new ProximitySensor();
-
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
             LoadApplication(App.Instance());
 
@@ -120,19 +112,11 @@ namespace SPIXI.Droid
         protected override void OnPause()
         {
             base.OnPause();
-            if (proximitySensor != null)
-            {
-                proximitySensor.OnPause();
-            }
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            if (proximitySensor != null)
-            {
-                proximitySensor.OnResume();
-            }
         }
     }
 }

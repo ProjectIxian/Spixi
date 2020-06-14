@@ -1,12 +1,10 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -14,9 +12,6 @@ namespace SPIXI
 {
     public partial class App : Application
 	{
-
-        public static bool proximityNear = false;
-
         private static App _singletonInstance;
 
         public static App Instance(bool force_redraw = false)

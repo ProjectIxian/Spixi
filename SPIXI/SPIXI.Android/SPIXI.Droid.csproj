@@ -120,7 +120,6 @@
     <Compile Include="Classes\PictureAndroid.cs" />
     <Compile Include="Classes\PicturePickerImplementation.cs" />
     <Compile Include="Classes\PowerManager.cs" />
-    <Compile Include="Classes\ProximitySensor.cs" />
     <Compile Include="Classes\PushService.cs" />
     <Compile Include="Classes\SpixiCodecInfo.cs" />
     <Compile Include="Classes\SpixiPermissions.cs" />
