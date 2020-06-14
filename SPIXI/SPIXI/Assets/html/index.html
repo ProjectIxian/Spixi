@@ -376,7 +376,9 @@
 
     function onboardingStart()
     {
-	    createOnboardingFrame();
+        onboardingLocalizedSkip = "*SL{onboarding-skip}";
+        onboardingLocalizedFinish = "*SL{onboarding-finish}";
+        createOnboardingFrame();
         onboarding(1);
     }
 
