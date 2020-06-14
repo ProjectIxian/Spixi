@@ -192,7 +192,7 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
                 total_size += buf.Length;
             }
 
-            if (total_size >= 400)
+            if (total_size >= 300)
             {
                 data_to_send = new byte[total_size];
                 int data_written = 0;

@@ -78,7 +78,6 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             // Length of the audio clip.
             bufferSize * 5
         );
-
         audioRecorder.StartRecording();
 
         echoCanceller = AcousticEchoCanceler.Create(audioRecorder.AudioSessionId);
@@ -282,7 +281,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
                 total_size += buf.Length;
             }
 
-            if (total_size >= 400)
+            if (total_size >= 300)
             {
                 data_to_send = new byte[total_size];
                 int data_written = 0;
