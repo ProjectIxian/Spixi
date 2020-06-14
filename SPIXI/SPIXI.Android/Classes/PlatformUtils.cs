@@ -1,5 +1,7 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
 using Android.Media;
+using Android.OS;
 using SPIXI.Droid;
 using SPIXI.Interfaces;
 using Xamarin.Forms;
@@ -44,9 +46,30 @@ public class PlatformUtils : IPlatformUtils
             return;
         }
 
-        ringtone = RingtoneManager.GetRingtone(MainActivity.Instance, RingtoneManager.GetDefaultUri(RingtoneType.Ringtone));
-        ringtone.Looping = true;
-        ringtone.Play();
+        bool ring = true;
+
+        if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)
+        {
+            NotificationManager nm = (NotificationManager)MainActivity.Instance.GetSystemService(Context.NotificationService);
+            InterruptionFilter int_filter = nm.CurrentInterruptionFilter;
+            if(int_filter != InterruptionFilter.Priority && int_filter != InterruptionFilter.All)
+            {
+                ring = false;
+            }
+        }
+
+        AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
+        if (am.RingerMode != RingerMode.Normal)
+        {
+            ring = false;
+        }
+
+        if (ring)
+        {
+            ringtone = RingtoneManager.GetRingtone(MainActivity.Instance, RingtoneManager.GetDefaultUri(RingtoneType.Ringtone));
+            ringtone.Looping = true;
+            ringtone.Play();
+        }
     }
 
     public void stopRinging()
@@ -74,7 +97,6 @@ public class PlatformUtils : IPlatformUtils
                 break;
             case DialtoneType.dialing:
                 tone_type = Tone.SupRingtone;
-                duration = 60000;
                 break;
             case DialtoneType.error:
                 tone_type = Tone.SupError;
@@ -84,7 +106,7 @@ public class PlatformUtils : IPlatformUtils
                 return;
         }
         AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
-        toneGenerator = new ToneGenerator(Stream.VoiceCall, am.GetStreamVolume(Stream.VoiceCall));
+        toneGenerator = new ToneGenerator(Stream.VoiceCall, am.GetStreamVolume(Stream.VoiceCall) * 50 / am.GetStreamMaxVolume(Stream.VoiceCall));
         toneGenerator.StartTone(tone_type, duration);
     }
 
