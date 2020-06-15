@@ -226,26 +226,24 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
     {
         while (running)
         {
-            Thread.Sleep(10);
-
             try
             {
                 int num_bytes = 0;
                 if (audioRecorder != null)
                 {
                     num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
+                    encode(num_bytes);
                 }
                 else
                 {
                     stop();
                 }
-                encode(num_bytes);
-                sendAvailableData();
             }
             catch (Exception e)
             {
                 Logging.error("Exception occured while recording audio stream: " + e);
             }
+            Thread.Yield();
         }
         recordThread = null;
     }
@@ -309,5 +307,6 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         {
             outputBuffers.Add(data);
         }
+        sendAvailableData();
     }
 }
