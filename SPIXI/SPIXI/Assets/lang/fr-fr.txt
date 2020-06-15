@@ -1,4 +1,4 @@
-language-code = fr-fr
+﻿language-code = fr-fr
 language = Français ( France )
 
 ; Address Screen
@@ -372,7 +372,7 @@ onboarding-screen2-text = Votre addresse Spixi est votre seul identifiant. Utili
 
 ; Onboarding Connect with your friends
 onboarding-screen3-title = Connectez vous avez vos amis
-onboarding-screen3-text = Vous pouvez ajouter un ami sur Spixi en scannant son QR Code ou en entrant son addresse. Appuyez sur le bouton d'action et sé "Nouveau Contact".
+onboarding-screen3-text = Vous pouvez ajouter un ami sur Spixi en scannant son QR Code ou en entrant son addresse. Appuyez sur le bouton d'action et sé &quot;Nouveau Contact&quot;.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Envoyer et recevoir des paiements
