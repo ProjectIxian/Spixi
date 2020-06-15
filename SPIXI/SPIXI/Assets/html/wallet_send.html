@@ -165,7 +165,7 @@
             contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient(\'' + addr + '\')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield amount-input" oninput="validate()" placeholder="0.00000000"></div>';
 
             if (document.getElementsByClassName("amount-input").length == 0) {
-                contactEntry.innerHTML += '<a class="max-amount" style="display:block; text-align:center;" href="ixian:getMaxAmount();">*SL{wallet-send-max}</a>';
+                contactEntry.innerHTML += '<a class="max-amount" style="display:block; text-align:center;" href="ixian:getMaxAmount();">' + "*SL{wallet-send-max}" + '</a>';
             }
 
             contactEntry.innerHTML += '<hr class="spixi-separator-full"/>';
