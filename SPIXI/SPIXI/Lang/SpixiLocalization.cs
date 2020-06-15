@@ -3,7 +3,6 @@ using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace SPIXI.Lang
@@ -13,6 +12,7 @@ namespace SPIXI.Lang
         private static List<string> languages = new List<string> {
             "en-us",
             "de-de",
+            "fr-fr",
             "sl-si"
         };
 
