@@ -1207,6 +1207,11 @@ img.emoji {
     border: 1px solid rgba(255, 30, 30, 0.3);
 }
 
+.spixi-bubble .text img
+{
+    max-width: 100%;
+}
+
 .spixi-bubble.file {
     font-size: 14pt;
 }

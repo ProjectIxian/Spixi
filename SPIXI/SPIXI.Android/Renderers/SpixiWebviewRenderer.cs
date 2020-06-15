@@ -7,12 +7,17 @@ using Xamarin.Forms.Platform.Android;
 using IXICore.Meta;
 using Android.Util;
 using Android.Views.InputMethods;
+using AndroidX.Core.View.InputMethod;
+using Android.OS;
+using IXICore;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 [assembly: ExportRenderer(typeof(Xamarin.Forms.WebView), typeof(SPIXI.Droid.Renderers.SpixiWebviewRenderer))]
 
 namespace SPIXI.Droid.Renderers
 {
-    public class SpixiWebView : Android.Webkit.WebView
+    public class SpixiWebView : Android.Webkit.WebView, InputConnectionCompat.IOnCommitContentListener
     {
         public SpixiWebView(Context context) : base(context)
         {
@@ -39,10 +44,61 @@ namespace SPIXI.Droid.Renderers
         {
         }
 
+        public bool OnCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts)
+        {
+            bool permission_requested = false;
+            bool processed = false;
+
+            // read and display inputContentInfo asynchronously
+            if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.NMr1
+                && (flags & InputConnectionCompat.InputContentGrantReadUriPermission) != 0)
+            {
+                try
+                {
+                    inputContentInfo.RequestPermission();
+                    permission_requested = true;
+                }
+                catch (Exception)
+                {
+                    return processed;
+                }
+            }
+
+            string url = inputContentInfo.LinkUri.ToString();
+
+            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
+            if (p != null && p.GetType() == typeof(SingleChatPage))
+            {
+                string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
+
+                if (Regex.IsMatch(url, rx_pattern))
+                {
+                    ((SingleChatPage)p).onSend(url);
+                    processed = true;
+                }
+            }
+
+            if(permission_requested)
+            {
+                inputContentInfo.ReleasePermission();
+            }
+
+            return processed;
+        }
+
         public override IInputConnection OnCreateInputConnection(EditorInfo outAttrs)
         {
             var ic = base.OnCreateInputConnection(outAttrs);
             outAttrs.ImeOptions = outAttrs.ImeOptions | Android.Views.InputMethods.ImeFlags.NoPersonalizedLearning;
+
+            if (ic != null)
+            {
+                // allow image insertion
+                EditorInfoCompat.SetContentMimeTypes(outAttrs, new string[] { "image/gif" });
+
+                ic = InputConnectionCompat.CreateWrapper(ic, outAttrs, this);
+            }
+
             return ic;
         }
     }
