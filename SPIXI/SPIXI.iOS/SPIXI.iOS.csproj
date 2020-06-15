@@ -224,4 +224,7 @@
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
     </BundleResource>
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\bg.png" />
+  </ItemGroup>
 </Project>

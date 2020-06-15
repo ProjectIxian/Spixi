@@ -18,11 +18,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="splash.png" translatesAutoresizingMaskIntoConstraints="NO" id="23" fixedFrame="YES">
-                                <rect key="frame" x="102" y="236" width="210" height="425"/>
-                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                <autoresizingMask key="autoresizingMask" heightSizable="YES" widthSizable="YES"/>
-                            </imageView>
+                          <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="24" fixedFrame="YES">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" heightSizable="YES" widthSizable="YES"/>
+                          </imageView>
+                          <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="splash.png" translatesAutoresizingMaskIntoConstraints="NO" id="23" fixedFrame="YES">
+                            <rect key="frame" x="102" y="236" width="210" height="425"/>
+                            <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" heightSizable="YES" widthSizable="YES"/>
+                          </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.67823809390000001" green="0.106185846" blue="0.340421319" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -35,5 +40,6 @@
     </scenes>
     <resources>
         <image name="splash.png" width="280" height="566"/>
+        <image name="bg.png" width="1" height="8192"/>
     </resources>
 </document>
