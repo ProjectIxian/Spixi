@@ -15,16 +15,19 @@ Languages           |  Translating    |  Available
 --- | --- | --- |
 Afrikaans           |  ❌            |  ❌
 Arabian             |  ❌            |  ❌
+Bengali             |  ❌            |  ❌
 Chinese             |  ❌            |  ❌
 Croatian            |  ✅            |  ❌
 English ( default ) |  ✅            |  ✅
-French              |  ❌            |  ✅
+French              |  ✅            |  ✅
 German              |  ✅            |  ❌
+Hindi               |  ❌            |  ❌
 Italian             |  ❌            |  ❌
 Japanese            |  ❌            |  ❌
 Korean              |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
 Romanian            |  ✅            |  ❌
+Russian             |  ✅            |  ❌
 Serbian             |  ✅            |  ❌
 Slovenian           |  ✅            |  ❌
 Spanish             |  ✅            |  ❌
