@@ -22,6 +22,7 @@
 /* General */
 body, html, * {
     font-family: 'roboto', sans-serif;
+    box-sizing: border-box;
 }
 
 a:hover {
@@ -325,9 +326,15 @@ a:active {
 .intro-descriptionbar {
     margin-top: 30px;
 }
+
+.intro-descriptionbar .row
+{
+    width: 100%;
+    padding: 0px 5%;
+}
+
 .intro-descriptionbar-icon {
     font-size: 24pt;
-    left: 24px;
 }
 
 .intro-passworddetails {
@@ -408,6 +415,7 @@ a:active {
 {
     margin: 0 auto;
     max-width: 300pt;
+    width: 100%;
 }
 
 @keyframes shadow-pulse
