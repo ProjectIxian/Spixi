@@ -224,8 +224,11 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void recordLoop()
     {
+        Android.OS.Process.SetThreadPriority(Android.OS.ThreadPriority.UrgentAudio);
+
         while (running)
         {
+            Thread.Sleep(1);
             try
             {
                 int num_bytes = 0;
@@ -243,7 +246,6 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             {
                 Logging.error("Exception occured while recording audio stream: " + e);
             }
-            Thread.Yield();
         }
         recordThread = null;
     }
