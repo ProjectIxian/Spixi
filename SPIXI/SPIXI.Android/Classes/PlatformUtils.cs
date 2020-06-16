@@ -68,6 +68,7 @@ public class PlatformUtils : IPlatformUtils
                 ring = false;
             }
 
+            MainActivity.Instance.VolumeControlStream = Stream.Ring;
             if (ring)
             {
                 Android.Net.Uri rt_url = RingtoneManager.GetDefaultUri(RingtoneType.Ringtone);
@@ -77,7 +78,6 @@ public class PlatformUtils : IPlatformUtils
 
                 ringtone = MediaPlayer.Create(MainActivity.Instance, rt_url, null, aa, 0);
                 ringtone.Looping = true;
-                MainActivity.Instance.VolumeControlStream = Stream.Ring;
                 ringtone.Start();
             }
         }catch(Exception e)
