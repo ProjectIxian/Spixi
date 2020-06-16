@@ -159,7 +159,7 @@ namespace SPIXI.VoIP
                         }
                     }
                 }
-                Thread.Sleep(10);
+                Thread.Sleep(5);
             }
             encodeThread = null;
         }
