@@ -165,11 +165,7 @@ public class AudioRecorderWPF : IAudioRecorder, IAudioEncoderCallback
         {
             try
             {
-                byte[] encoded_bytes = audioEncoder.encode(buffer, offset, size);
-                if (encoded_bytes != null)
-                {
-                    onEncodedData(encoded_bytes);
-                }
+                audioEncoder.encode(buffer, offset, size);
             }catch(Exception e)
             {
                 Logging.error("Exception occured in encode loop: " + e);

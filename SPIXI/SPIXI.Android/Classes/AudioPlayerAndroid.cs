@@ -197,11 +197,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
         {
             return;
         }
-        byte[] decoded_bytes = audioDecoder.decode(data);
-        if(decoded_bytes != null)
-        {
-            onDecodedData(decoded_bytes);
-        }
+        audioDecoder.decode(data);
     }
 
     public void onDecodedData(byte[] data)
@@ -216,5 +212,11 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
     public void setVolume(float volume)
     {
         // do nothing
+    }
+
+    public void onDecodedData(float[] data)
+    {
+        // not needed
+        throw new NotImplementedException();
     }
 }

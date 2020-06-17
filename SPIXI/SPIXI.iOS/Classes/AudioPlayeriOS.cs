@@ -1,9 +1,11 @@
 ﻿using AVFoundation;
 using Foundation;
+using IntentsUI;
 using IXICore.Meta;
 using SPIXI.VoIP;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayeriOS))]
@@ -12,9 +14,7 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
 {
     private AVAudioEngine audioEngine = null;
     private AVAudioPlayerNode audioPlayer = null;
-    private AVAudioConverter audioConverter = null;
     private AVAudioFormat inputAudioFormat = null;
-    private AVAudioFormat outputAudioFormat = null;
 
     private IAudioDecoder audioDecoder = null;
 
@@ -55,12 +55,10 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
 
         audioPlayer = new AVAudioPlayerNode();
         setVolume(AVAudioSession.SharedInstance().OutputVolume);
-        inputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMInt16, sampleRate, (uint)channels, false);
-        outputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMFloat32, sampleRate, (uint)channels, false);
+        inputAudioFormat = new AVAudioFormat(AVAudioCommonFormat.PCMFloat32, sampleRate, (uint)channels, false);
 
-        audioConverter = new AVAudioConverter(inputAudioFormat, outputAudioFormat);
         audioEngine.AttachNode(audioPlayer);
-        audioEngine.Connect(audioPlayer, audioEngine.MainMixerNode, outputAudioFormat);
+        audioEngine.Connect(audioPlayer, audioEngine.MainMixerNode, inputAudioFormat);
         audioEngine.Prepare();
         if(!audioEngine.StartAndReturnError(out error))
         {
@@ -84,7 +82,7 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(sampleRate, 1, this);
+        audioDecoder = new OpusDecoder(sampleRate, 1, this, true);
         audioDecoder.start();
     }
 
@@ -151,21 +149,6 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
             audioEngine.Dispose();
             audioEngine = null;
         }
-
-        if(audioConverter != null)
-        {
-            try
-            {
-                audioConverter.Reset();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            audioConverter.Dispose();
-            audioConverter = null;
-        }
     }
 
     public void Dispose()
@@ -184,42 +167,12 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
         {
             return;
         }
-        byte[] decoded_bytes = audioDecoder.decode(data);
-        if (decoded_bytes != null)
-        {
-            onDecodedData(decoded_bytes);
-        }
+        audioDecoder.decode(data);
     }
 
     public void onDecodedData(byte[] data)
     {
-        if (!running)
-        {
-            return;
-        }
-        if (audioPlayer != null)
-        {
-            AVAudioPcmBuffer buffer = new AVAudioPcmBuffer(inputAudioFormat, (uint)data.Length);
-            IntPtr int_data = Marshal.AllocHGlobal(data.Length);
-            Marshal.Copy(data, 0, int_data, data.Length);
-
-            buffer.AudioBufferList.SetData(0, int_data, data.Length);
-            buffer.FrameLength = (uint)data.Length/2;
-            AVAudioPcmBuffer output_buffer = new AVAudioPcmBuffer(outputAudioFormat, (uint)data.Length);
-            NSError error = new NSError();
-
-            if (audioConverter.ConvertToBuffer(output_buffer, buffer, out error))
-            {
-                audioPlayer.ScheduleBuffer(output_buffer, null);
-            }else
-            {
-                Logging.error("Error converting audio packet: " + error);
-            }
-            Marshal.FreeHGlobal(int_data);
-            buffer.Dispose();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
+        throw new NotImplementedException();
     }
 
     public void setVolume(float volume)
@@ -227,6 +180,31 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
         if (audioPlayer != null)
         {
             audioPlayer.Volume = volume;
+        }
+    }
+
+    public void onDecodedData(float[] data)
+    {
+        if (!running)
+        {
+            return;
+        }
+
+        if (audioPlayer != null)
+        {
+            AVAudioPcmBuffer buffer = new AVAudioPcmBuffer(inputAudioFormat, (uint)data.Length);
+            IntPtr int_data = Marshal.AllocHGlobal(data.Length * sizeof(float));
+            Marshal.Copy(data, 0, int_data, data.Length);
+
+            buffer.AudioBufferList.SetData(0, int_data, data.Length);
+            buffer.FrameLength = (uint)data.Length;
+
+            audioPlayer.ScheduleBuffer(buffer, () => {
+                Marshal.FreeHGlobal(int_data);
+                buffer.Dispose();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            });
         }
     }
 }

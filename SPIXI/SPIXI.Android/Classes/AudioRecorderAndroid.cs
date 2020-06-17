@@ -258,11 +258,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         }
         if (num_bytes > 0)
         {
-            byte[] encoded_bytes = audioEncoder.encode(buffer, 0, num_bytes);
-            if(encoded_bytes != null)
-            {
-                onEncodedData(encoded_bytes);
-            }
+            audioEncoder.encode(buffer, 0, num_bytes);
         }
     }
 

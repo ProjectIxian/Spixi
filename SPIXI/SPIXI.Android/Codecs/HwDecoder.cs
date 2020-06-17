@@ -54,11 +54,11 @@ namespace SPIXI.Droid.Codecs
             decodeThread.Start();
         }
 
-        public byte[] decode(byte[] data)
+        public void decode(byte[] data)
         {
             if (!running)
             {
-                return null;
+                return;
             }
             lock (pendingFrames)
             {
@@ -73,7 +73,7 @@ namespace SPIXI.Droid.Codecs
                 {
                     delay--;
                 }
-                return null;
+                return;
             }
         }
 

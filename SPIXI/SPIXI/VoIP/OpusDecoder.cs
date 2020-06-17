@@ -15,13 +15,15 @@ namespace SPIXI.VoIP
         int frameSize;
 
         IAudioDecoderCallback decodedDataCallback = null;
+        bool returnFloat = false;
 
-        public OpusDecoder(int samples, int channels, IAudioDecoderCallback decoder_callback)
+        public OpusDecoder(int samples, int channels, IAudioDecoderCallback decoder_callback, bool return_float = false)
         {
             this.samples = samples;
             this.channels = channels;
             frameSize = samples * 40 / 1000;
             decodedDataCallback = decoder_callback;
+            returnFloat = return_float;
         }
 
         private byte[] shortsToBytes(short[] input, int offset, int size)
@@ -35,22 +37,36 @@ namespace SPIXI.VoIP
             return output;
         }
 
-        public byte[] decode(byte[] data)
+        public void decode(byte[] data)
         {
             if (!running)
             {
-                return null;
+                return;
             }
-
-            short[] output_buffer = new short[frameSize * 2 * 10];
-            for(int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
+            if (returnFloat)
             {
-                packet_size = BitConverter.ToInt16(data, offset);
-                int decoded_size = decoder.Decode(data, offset + 2, packet_size, output_buffer, 0, output_buffer.Length, false);
-                decodedDataCallback.onDecodedData(shortsToBytes(output_buffer, 0, decoded_size));
+                float[] output_buffer = new float[frameSize * 4 * 10];
+                for (int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
+                {
+                    packet_size = BitConverter.ToInt16(data, offset);
+                    int decoded_size = decoder.Decode(data, offset + 2, packet_size, output_buffer, 0, output_buffer.Length, false);
+                    float[] send_buffer = new float[decoded_size];
+                    Array.Copy(output_buffer, send_buffer, send_buffer.Length);
+                    decodedDataCallback.onDecodedData(send_buffer);
+                }
+            }
+            else
+            {
+                short[] output_buffer = new short[frameSize * 2 * 10];
+                for (int offset = 0, packet_size = 0; offset < data.Length; offset += packet_size + 2)
+                {
+                    packet_size = BitConverter.ToInt16(data, offset);
+                    int decoded_size = decoder.Decode(data, offset + 2, packet_size, output_buffer, 0, output_buffer.Length, false);
+                    decodedDataCallback.onDecodedData(shortsToBytes(output_buffer, 0, decoded_size));
+                }
             }
 
-            return null;
+            return;
         }
 
         public void start()

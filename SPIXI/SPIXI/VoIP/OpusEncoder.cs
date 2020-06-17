@@ -47,11 +47,11 @@ namespace SPIXI.VoIP
             return output;
         }
 
-        public byte[] encode(byte[] data, int offset, int size)
+        public void encode(byte[] data, int offset, int size)
         {
             if (!running)
             {
-                return null;
+                return;
             }
 
             lock(inputBuffer)
@@ -62,13 +62,13 @@ namespace SPIXI.VoIP
                 }
                 if(size == 0)
                 {
-                    return null;
+                    return;
                 }
                 Array.Copy(data, offset, inputBuffer, inputBufferPos, size);
                 inputBufferPos += size;
             }
 
-            return null;
+            return;
         }
 
         public void start()
@@ -97,10 +97,10 @@ namespace SPIXI.VoIP
             }
             running = false;
 
-            encoder = null;
-
             lock (inputBuffer)
             {
+                encoder = null;
+
                 inputBuffer = null;
                 inputBufferPos = 0;
             }

@@ -74,15 +74,15 @@ namespace SPIXI.Droid.Codecs
             base.Dispose();
         }
 
-        public byte[] encode(byte[] data, int offset, int size)
+        public void encode(byte[] data, int offset, int size)
         {
             if(!running)
             { 
-                return null;
+                return;
             }
             if (size == 0)
             {
-                return null;
+                return;
             }
             int buffer_index = -1;
 
@@ -104,7 +104,7 @@ namespace SPIXI.Droid.Codecs
 
                 audioEncoder.QueueInputBuffer(buffer_index, offset, size, 0, 0);
             }
-            return null;
+            return;
         }
 
         public override void OnError(MediaCodec codec, MediaCodec.CodecException e)

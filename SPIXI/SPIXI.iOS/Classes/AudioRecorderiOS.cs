@@ -116,6 +116,7 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
         {
             try
             {
+                audioRecorder.InputNode.RemoveTapOnBus(0);
                 audioRecorder.Stop();
                 audioRecorder.Reset();
             }
@@ -183,11 +184,7 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
         {
             try
             {
-                byte[] encoded_bytes = audioEncoder.encode(buffer, offset, size);
-                if (encoded_bytes != null)
-                {
-                    onEncodedData(encoded_bytes);
-                }
+                audioEncoder.encode(buffer, offset, size);
             }
             catch (Exception e)
             {
