@@ -24,6 +24,11 @@ namespace SPIXI
 
             _webView = web_view;
 
+            _webView.Source = generatePage(html_file_name);
+        }
+
+        public WebViewSource generatePage(string html_file_name)
+        {
             var platform_utils = DependencyService.Get<IPlatformUtils>();
 
             if (Device.RuntimePlatform == Device.Android)
@@ -34,7 +39,7 @@ namespace SPIXI
                 source.Html = SpixiLocalization.localizeHtml(stream);
                 stream.Close();
                 stream.Dispose();
-                _webView.Source = source;
+                return source;
             }
             else
             {
@@ -43,9 +48,10 @@ namespace SPIXI
                 SpixiLocalization.localizeHtml(assets_file_path, localized_file_path);
                 var source = new UrlWebViewSource();
                 source.Url = platform_utils.getHtmlBaseUrl() + "ll_" + html_file_name;
-                _webView.Source = source;
+                return source;
             }
         }
+
 
         public virtual void recalculateLayout()
         {

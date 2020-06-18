@@ -5,7 +5,6 @@ using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
-using SPIXI.VoIP;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -298,6 +297,9 @@ namespace SPIXI
             {
                 Application.Current.Properties["onboardingComplete"] = true;
                 Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+
+                SpixiLocalization.addCustomString("OnboardingComplete", "true");
+                generatePage("index.html");
             }
             else
             {
