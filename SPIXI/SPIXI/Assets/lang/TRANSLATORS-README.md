@@ -28,6 +28,6 @@ Korean              |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
 Romanian            |  ✅            |  ❌
 Russian             |  ✅            |  ❌
-Serbian             |  ✅            |  ❌
-Slovenian           |  ✅            |  ❌
+Serbian             |  ✅            |  ✅
+Slovenian           |  ✅            |  ✅
 Spanish             |  ✅            |  ❌

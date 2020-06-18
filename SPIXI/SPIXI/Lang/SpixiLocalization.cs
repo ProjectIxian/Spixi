@@ -13,7 +13,8 @@ namespace SPIXI.Lang
             "en-us",
             "de-de",
             "fr-fr",
-            "sl-si"
+            "sl-si",
+            "sr-sp"
         };
 
         private static bool loaded = false;
