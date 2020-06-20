@@ -316,9 +316,14 @@ namespace CryptoLibs
 
             IBufferedCipher outCipher = CipherUtilities.GetCipher(algo);
 
-            int blockSize = outCipher.GetBlockSize();
-            // Perform key expansion
-            byte[] salt = getSecureRandomBytes(blockSize);
+
+            int salt_size = outCipher.GetBlockSize();
+            if (use_GCM)
+            {
+                // TODO TODO GCM mode requires 12 bytes salt, enable it after the next release
+                //salt_size = 12;
+            }
+            byte[] salt = getSecureRandomBytes(salt_size);
 
             ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
             try
@@ -331,11 +336,13 @@ namespace CryptoLibs
                 return null;
             }
 
-            List<byte> bytes = new List<byte>();
-            bytes.AddRange(salt);
-            bytes.AddRange(outCipher.DoFinal(input));
+            byte[] encrypted_data = outCipher.DoFinal(input);
 
-            return bytes.ToArray();
+            byte[] bytes = new byte[salt.Length + encrypted_data.Length];
+            Array.Copy(salt, bytes, salt.Length);
+            Array.Copy(encrypted_data, 0, bytes, salt.Length, encrypted_data.Length);
+
+           return bytes;
         }
 
         // Decrypt data using AES
@@ -349,11 +356,15 @@ namespace CryptoLibs
 
             IBufferedCipher inCipher = CipherUtilities.GetCipher(algo);
 
-            int blockSize = inCipher.GetBlockSize();
-            // Perform key expansion
-            byte[] salt = new byte[blockSize];
+            int salt_size = inCipher.GetBlockSize();
+            if (use_GCM && input.Length % 16 != 0)
+            {
+                // GCM mode requires 12 bytes salt
+                salt_size = 12;
+            }
+            byte[] salt = new byte[salt_size];
 
-            for (int i = 0; i < blockSize; i++)
+            for (int i = 0; i < salt_size; i++)
             {
                 salt[i] = input[inOffset + i];
             }
@@ -369,7 +380,7 @@ namespace CryptoLibs
                 Logging.error(string.Format("Error initializing decryption. {0}", e.ToString()));
             }
 
-            byte[] bytes = inCipher.DoFinal(input, inOffset + blockSize, input.Length - inOffset - blockSize);
+            byte[] bytes = inCipher.DoFinal(input, inOffset + salt_size, input.Length - inOffset - salt_size);
 
             return bytes;
         }
