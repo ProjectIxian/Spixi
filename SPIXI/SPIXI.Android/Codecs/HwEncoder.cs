@@ -152,5 +152,10 @@ namespace SPIXI.Droid.Codecs
         public override void OnOutputFormatChanged(MediaCodec codec, MediaFormat format)
         {
         }
+
+        public void encode(short[] data, int offset, int size)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

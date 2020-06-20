@@ -98,7 +98,7 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusEncoder(sampleRate, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
+        audioEncoder = new OpusEncoder(sampleRate, 24000, channels, Concentus.Enums.OpusApplication.OPUS_APPLICATION_VOIP, this);
         audioEncoder.start();
     }
 
@@ -160,8 +160,6 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
     {
         while (running)
         {
-            Thread.Sleep(10);
-
             try
             {
                 sendAvailableData();
@@ -170,6 +168,7 @@ public class AudioRecorderiOS : IAudioRecorder, IAudioEncoderCallback
             {
                 Logging.error("Exception occured while recording audio stream: " + e);
             }
+            Thread.Sleep(10);
         }
         recordThread = null;
     }

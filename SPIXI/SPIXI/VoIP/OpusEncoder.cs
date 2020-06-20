@@ -1,6 +1,6 @@
 ﻿using Concentus.Enums;
-using Concentus.Structs;
 using IXICore.Meta;
+using Org.BouncyCastle.Crypto.Digests;
 using System;
 using System.Threading;
 
@@ -22,8 +22,10 @@ namespace SPIXI.VoIP
 
         Thread encodeThread = null;
 
-        byte[] inputBuffer = null;
+        short[] inputBuffer = null;
         int inputBufferPos = 0;
+
+        byte[] frameOutputBuffer = new byte[1275];
 
         public OpusEncoder(int samples, int bit_rate, int channels, OpusApplication application, IAudioEncoderCallback encoder_callback)
         {
@@ -31,7 +33,7 @@ namespace SPIXI.VoIP
             bitRate = bit_rate;
             this.channels = channels;
             opusApplication = application;
-            frameSize = samples * 40 / 1000;
+            frameSize = CodecTools.getPcmFrameByteSize(samples, 16, channels) * 20;
             encodedDataCallback = encoder_callback;
         }
 
@@ -47,6 +49,30 @@ namespace SPIXI.VoIP
             return output;
         }
 
+        public void encode(short[] data, int offset, int size)
+        {
+            if (!running)
+            {
+                return;
+            }
+
+            lock (inputBuffer)
+            {
+                if (size > inputBuffer.Length - inputBufferPos)
+                {
+                    size = 0;
+                }
+                if (size == 0)
+                {
+                    return;
+                }
+                Array.Copy(data, offset, inputBuffer, inputBufferPos, size);
+                inputBufferPos += size;
+            }
+
+            return;
+        }
+
         public void encode(byte[] data, int offset, int size)
         {
             if (!running)
@@ -58,14 +84,15 @@ namespace SPIXI.VoIP
             {
                 if(size > inputBuffer.Length - inputBufferPos)
                 {
-                    size = inputBuffer.Length - inputBufferPos;
+                    size = 0;
                 }
                 if(size == 0)
                 {
                     return;
                 }
-                Array.Copy(data, offset, inputBuffer, inputBufferPos, size);
-                inputBufferPos += size;
+                short[] shorts = bytesToShorts(data, offset, size);
+                Array.Copy(shorts, 0, inputBuffer, inputBufferPos, shorts.Length);
+                inputBufferPos += shorts.Length;
             }
 
             return;
@@ -79,7 +106,7 @@ namespace SPIXI.VoIP
             }
             running = true;
 
-            inputBuffer = new byte[frameSize * 2 * 100];
+            inputBuffer = new short[frameSize * 500];
             inputBufferPos = 0;
             
             encoder = Concentus.Structs.OpusEncoder.Create(samples, channels, opusApplication);
@@ -111,53 +138,53 @@ namespace SPIXI.VoIP
             stop();
         }
 
-        private byte[] encodeFrame(byte[] data, int offset)
+        private byte[] encodeFrame(short[] shorts, int offset)
         {
-            byte[] output_buffer = new byte[1275];
-            int byte_frame_size = frameSize * 2;
-            short[] shorts = bytesToShorts(data, offset, byte_frame_size);
-            int packet_size = encoder.Encode(shorts, 0, frameSize, output_buffer, 0, output_buffer.Length);
-
+            int packet_size = encoder.Encode(shorts, offset, frameSize, frameOutputBuffer, 0, frameOutputBuffer.Length);
             byte[] trimmed_buffer = new byte[packet_size + 2];
 
             byte[] packet_size_bytes = BitConverter.GetBytes((short)packet_size);            
             trimmed_buffer[0] = packet_size_bytes[0];
             trimmed_buffer[1] = packet_size_bytes[1];
             
-            Array.Copy(output_buffer, 0, trimmed_buffer, 2, packet_size);
+            Array.Copy(frameOutputBuffer, 0, trimmed_buffer, 2, packet_size);
 
             return trimmed_buffer;
         }
 
         private void encodeLoop()
         {
+            short[] tmp_buffer = new short[inputBuffer.Length];
             while (running)
             {
+                int tmp_buffer_size = 0;
                 lock (inputBuffer)
                 {
-                    int b_frame_size = frameSize * 2;
-                    int encoded_bytes = 0;
-                    while (encoded_bytes + b_frame_size <= inputBufferPos)
+                    int frame_count = (int)Math.Floor((decimal)inputBufferPos / frameSize);
+                    if(frame_count > 0)
                     {
-                        try
-                        {
-                            byte[] data = encodeFrame(inputBuffer, encoded_bytes);
-                            encodedDataCallback.onEncodedData(data);
-                        }
-                        catch (Exception e)
-                        {
-                            Logging.error("Exception occured while encoding audio stream: " + e);
-                        }
-                        encoded_bytes += b_frame_size;
-                    }
-                    if (encoded_bytes > 0)
-                    {
-                        inputBufferPos = inputBufferPos - encoded_bytes;
+                        tmp_buffer_size = frame_count * frameSize;
+                        Array.Copy(inputBuffer, tmp_buffer, tmp_buffer_size);
+                        inputBufferPos = inputBufferPos - tmp_buffer_size;
                         if (inputBufferPos > 0)
                         {
-                            Array.Copy(inputBuffer, encoded_bytes, inputBuffer, 0, inputBufferPos);
+                            Array.Copy(inputBuffer, tmp_buffer_size, inputBuffer, 0, inputBufferPos);
                         }
                     }
+                }
+                int encoded_bytes = 0;
+                while (running && encoded_bytes + frameSize <= tmp_buffer_size)
+                {
+                    try
+                    {
+                        byte[] data = encodeFrame(tmp_buffer, encoded_bytes);
+                        encodedDataCallback.onEncodedData(data);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured while encoding audio stream: " + e);
+                    }
+                    encoded_bytes += frameSize;
                 }
                 Thread.Sleep(5);
             }

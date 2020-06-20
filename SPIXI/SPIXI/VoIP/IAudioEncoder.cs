@@ -12,5 +12,6 @@ namespace SPIXI.VoIP
         void start();
         void stop();
         void encode(byte[] data, int offset, int size);
+        void encode(short[] data, int offset, int size);
     }
 }

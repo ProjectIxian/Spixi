@@ -1,5 +1,5 @@
-﻿using Android.Content;
-using Android.Media;
+﻿using Android.Media;
+using Android.OS;
 using IXICore.Meta;
 using SPIXI.Droid;
 using SPIXI.Droid.Codecs;
@@ -18,6 +18,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     int bufferSize = 0;
 
+    string codec = "opus";
     int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
     int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
     int channels = SPIXI.Meta.Config.VoIP_channels;
@@ -36,17 +37,19 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
         running = true;
 
+        this.codec = codec;
+
         initPlayer();
-        initDecoder(codec);
+        initDecoder();
     }
 
     private void initPlayer()
     {
         Encoding encoding = Encoding.Pcm16bit;
 
-        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit);
+        bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, encoding);
         Logging.info("Min. buffer size " + bufferSize);
-        int new_buffer_size = CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 200;
+        int new_buffer_size = CodecTools.getPcmFrameByteSize(sampleRate, bitRate, channels) * 100;
         if (bufferSize < new_buffer_size)
         {
             bufferSize = (int)(Math.Ceiling((decimal)new_buffer_size / bufferSize) * bufferSize);
@@ -73,7 +76,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
         audioPlayer.Play();
     }
 
-    private void initDecoder(string codec)
+    private void initDecoder()
     {
         switch (codec)
         {
@@ -126,7 +129,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(sampleRate, 1, this);
+        audioDecoder = new OpusDecoder(sampleRate, channels, this, OpusDecoderReturnType.shorts);
         audioDecoder.start();
     }
 
@@ -212,6 +215,27 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
     public void setVolume(float volume)
     {
         // do nothing
+    }
+
+    public void onDecodedData(short[] data)
+    {
+        if (!running)
+        {
+            return;
+        }
+
+        audioPlayer.Write(data, 0, data.Length);
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.M)
+        {
+            if (audioPlayer.BufferSizeInFrames > 5000)
+            {
+                audioPlayer.PlaybackParams.SetSpeed(1.25f);
+            }
+            else if (audioPlayer.BufferSizeInFrames < 3000)
+            {
+                audioPlayer.PlaybackParams.SetSpeed(1.00f);
+            }
+        }
     }
 
     public void onDecodedData(float[] data)

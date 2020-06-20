@@ -186,9 +186,9 @@ namespace SPIXI.Droid.Codecs
         {
             while (running)
             {
-                Thread.Sleep(10);
                 if (delay > 0)
                 {
+                    Thread.Sleep(10);
                     continue;
                 }
                 int buffer_index = -1;
@@ -207,6 +207,7 @@ namespace SPIXI.Droid.Codecs
                 {
                     doDecode(buffer_index, frame);
                 }
+                Thread.Sleep(10);
             }
             decodeThread = null;
         }

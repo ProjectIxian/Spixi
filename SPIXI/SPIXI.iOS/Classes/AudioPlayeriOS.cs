@@ -1,11 +1,9 @@
 ﻿using AVFoundation;
 using Foundation;
-using IntentsUI;
 using IXICore.Meta;
 using SPIXI.VoIP;
 using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayeriOS))]
@@ -82,7 +80,7 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(sampleRate, 1, this, true);
+        audioDecoder = new OpusDecoder(sampleRate, channels, this, OpusDecoderReturnType.floats);
         audioDecoder.start();
     }
 
@@ -206,5 +204,10 @@ public class AudioPlayeriOS : IAudioPlayer, IAudioDecoderCallback
                 GC.WaitForPendingFinalizers();
             });
         }
+    }
+
+    public void onDecodedData(short[] data)
+    {
+        throw new NotImplementedException();
     }
 }

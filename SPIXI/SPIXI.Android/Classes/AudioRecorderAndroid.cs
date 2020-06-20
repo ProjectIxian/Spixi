@@ -1,6 +1,9 @@
-﻿using Android.Media;
+﻿using Android.Content;
+using Android.Media;
 using Android.Media.Audiofx;
+using Android.OS;
 using IXICore.Meta;
+using SPIXI.Droid;
 using SPIXI.Droid.Codecs;
 using SPIXI.VoIP;
 using System;
@@ -9,6 +12,23 @@ using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioRecorderAndroid))]
+
+public class AudioFocusListener
+    : Java.Lang.Object
+    , AudioManager.IOnAudioFocusChangeListener
+{
+    public void OnAudioFocusChange(AudioFocus focus_change)
+    {
+        switch(focus_change)
+        {
+            case AudioFocus.Loss:
+                // Permanent loss of audio focus
+                // Pause playback immediately
+                VoIPManager.hangupCall(null, true);
+                break;
+        }
+    }
+}
 
 public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 {
@@ -19,15 +39,20 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
     private AcousticEchoCanceler echoCanceller = null;
     private NoiseSuppressor noiseSuppressor = null;
 
+    private AudioFocusListener focusListener = null;
+    private AudioFocusRequestClass focusRequest = null;
+
     bool running = false;
 
     int bufferSize = 0;
+    short[] shortsBuffer = null;
     byte[] buffer = null;
 
 
     List<byte[]> outputBuffers = new List<byte[]>();
 
     Thread recordThread = null;
+    Thread senderThread = null;
 
     int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
     int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
@@ -47,23 +72,54 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         }
         running = true;
 
+        AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
+        if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+        {
+            focusListener = new AudioFocusListener();
+#pragma warning disable CS0618 // Type or member is obsolete
+            am.RequestAudioFocus(focusListener, Stream.VoiceCall, AudioFocus.GainTransient);
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+        else
+        {
+            AudioAttributes aa = new AudioAttributes.Builder()
+                                                    .SetContentType(AudioContentType.Speech)
+                                                    .SetFlags(AudioFlags.LowLatency)
+                                                    .SetUsage(AudioUsageKind.VoiceCommunication)
+                                                    .Build();
+
+            focusListener = new AudioFocusListener();
+
+            focusRequest = new AudioFocusRequestClass.Builder(AudioFocus.GainTransient)
+                                                     .SetAudioAttributes(aa)
+                                                     .SetFocusGain(AudioFocus.GainTransient)
+                                                     .SetOnAudioFocusChangeListener(focusListener)
+                                                     .Build();
+            am.RequestAudioFocus(focusRequest);
+        }
+
         lock (outputBuffers)
         {
             outputBuffers.Clear();
         }
 
         bufferSize = AudioTrack.GetMinBufferSize(sampleRate, ChannelOut.Mono, Encoding.Pcm16bit);
+
         initEncoder(codec);
         initRecorder();
 
         recordThread = new Thread(recordLoop);
         recordThread.Start();
+
+        senderThread = new Thread(senderLoop);
+        senderThread.Start();
     }
 
     private void initRecorder()
     {
         Encoding encoding = Encoding.Pcm16bit;
 
+        shortsBuffer = new short[bufferSize];
         buffer = new byte[bufferSize];
 
         audioRecorder = new AudioRecord(
@@ -80,8 +136,14 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         );
         audioRecorder.StartRecording();
 
-        echoCanceller = AcousticEchoCanceler.Create(audioRecorder.AudioSessionId);
-        noiseSuppressor = NoiseSuppressor.Create(audioRecorder.AudioSessionId);
+        if (AcousticEchoCanceler.IsAvailable)
+        {
+            echoCanceller = AcousticEchoCanceler.Create(audioRecorder.AudioSessionId);
+        }
+        if (NoiseSuppressor.IsAvailable)
+        {
+            noiseSuppressor = NoiseSuppressor.Create(audioRecorder.AudioSessionId);
+        }
     }
 
     private void initEncoder(string codec)
@@ -137,7 +199,7 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
     private void initOpusEncoder()
     {
-        audioEncoder = new OpusEncoder(sampleRate, 24000, 1, Concentus.Enums.OpusApplication.OPUS_APPLICATION_RESTRICTED_LOWDELAY, this);
+        audioEncoder = new OpusEncoder(sampleRate, 24000, channels, Concentus.Enums.OpusApplication.OPUS_APPLICATION_RESTRICTED_LOWDELAY, this);
         audioEncoder.start();
     }
 
@@ -200,10 +262,39 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         }
 
         buffer = null;
+        shortsBuffer = null;
         bufferSize = 0;
         lock (outputBuffers)
         {
             outputBuffers.Clear();
+        }
+
+
+        AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
+        if (Build.VERSION.SdkInt < BuildVersionCodes.O)
+        {
+            if (focusListener != null)
+            {
+#pragma warning disable CS0618 // Type or member is obsolete
+                am.AbandonAudioFocus(focusListener);
+#pragma warning restore CS0618 // Type or member is obsolete
+                focusListener.Dispose();
+                focusListener = null;
+            }
+        }
+        else
+        {
+            if (focusListener != null)
+            {
+                if (focusRequest != null)
+                {
+                    am.AbandonAudioFocusRequest(focusRequest);
+                    focusRequest.Dispose();
+                    focusRequest = null;
+                }
+                focusListener.Dispose();
+                focusListener = null;
+            }
         }
     }
 
@@ -228,14 +319,21 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
 
         while (running)
         {
-            Thread.Sleep(1);
+            int num_bytes = 0;
             try
             {
-                int num_bytes = 0;
                 if (audioRecorder != null)
                 {
-                    num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
-                    encode(num_bytes);
+                    if(audioEncoder is OpusEncoder)
+                    {
+                        num_bytes = audioRecorder.ReadAsync(shortsBuffer, 0, shortsBuffer.Length).Result;
+                        encode(num_bytes, true);
+                    }
+                    else
+                    {
+                        num_bytes = audioRecorder.Read(buffer, 0, buffer.Length);
+                        encode(num_bytes, false);
+                    }
                 }
                 else
                 {
@@ -246,11 +344,12 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
             {
                 Logging.error("Exception occured while recording audio stream: " + e);
             }
+            Thread.Sleep(1);
         }
         recordThread = null;
     }
 
-    private void encode(int num_bytes)
+    private void encode(int num_bytes, bool use_shorts)
     {
         if (!running)
         {
@@ -258,8 +357,34 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         }
         if (num_bytes > 0)
         {
-            audioEncoder.encode(buffer, 0, num_bytes);
+            if(use_shorts)
+            {
+                audioEncoder.encode(shortsBuffer, 0, num_bytes);
+            }
+            else
+            {
+                audioEncoder.encode(buffer, 0, num_bytes);
+            }
         }
+    }
+
+    private void senderLoop()
+    {
+        Android.OS.Process.SetThreadPriority(Android.OS.ThreadPriority.UrgentAudio);
+
+        while (running)
+        {
+            try
+            {
+                sendAvailableData();
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured while sending audio stream: " + e);
+            }
+            Thread.Sleep(5);
+        }
+        senderThread = null;
     }
 
     private void sendAvailableData()
@@ -292,6 +417,8 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         if (data_to_send != null)
         {
             OnSoundDataReceived(data_to_send);
+            //GC.Collect();
+            //GC.WaitForPendingFinalizers();
         }
     }
 
@@ -305,6 +432,5 @@ public class AudioRecorderAndroid : IAudioRecorder, IAudioEncoderCallback
         {
             outputBuffers.Add(data);
         }
-        sendAvailableData();
     }
 }

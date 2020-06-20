@@ -7,6 +7,7 @@ namespace SPIXI.VoIP
     public interface IAudioDecoderCallback
     {
         void onDecodedData(byte[] data);
+        void onDecodedData(short[] data);
         void onDecodedData(float[] data);
     }
 

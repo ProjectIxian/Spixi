@@ -2,7 +2,6 @@
 using NAudio.Wave;
 using SPIXI.VoIP;
 using System;
-using System.Threading;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(AudioPlayerWPF))]
@@ -63,7 +62,7 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
 
     private void initOpusDecoder()
     {
-        audioDecoder = new OpusDecoder(sampleRate, 1, this);
+        audioDecoder = new OpusDecoder(sampleRate, channels, this);
         audioDecoder.start();
     }
 
@@ -155,6 +154,11 @@ public class AudioPlayerWPF : IAudioPlayer, IAudioDecoderCallback
     }
 
     public void onDecodedData(float[] data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void onDecodedData(short[] data)
     {
         throw new NotImplementedException();
     }

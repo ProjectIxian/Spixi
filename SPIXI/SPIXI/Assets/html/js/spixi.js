@@ -116,7 +116,7 @@ function startCallTimeUpdate(className)
             }
         } catch (e) {
         }
-    }, 1500);
+    }, 500);
 }
 
 function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
