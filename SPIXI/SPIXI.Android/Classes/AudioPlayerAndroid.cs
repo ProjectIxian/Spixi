@@ -231,7 +231,7 @@ public class AudioPlayerAndroid :  IAudioPlayer, IAudioDecoderCallback
             {
                 audioPlayer.PlaybackParams.SetSpeed(1.25f);
             }
-            else if (audioPlayer.BufferSizeInFrames < 3000)
+            else if (audioPlayer.BufferSizeInFrames < 2500)
             {
                 audioPlayer.PlaybackParams.SetSpeed(1.00f);
             }
