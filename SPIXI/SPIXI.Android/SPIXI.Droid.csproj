@@ -35,7 +35,7 @@
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
     <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-    <AndroidDexTool>dx</AndroidDexTool>
+    <AndroidDexTool>d8</AndroidDexTool>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
