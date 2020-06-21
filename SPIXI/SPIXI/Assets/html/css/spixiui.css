@@ -1770,6 +1770,7 @@ img.emoji {
 
 .onboarding-image-section img {
     width: 100%;
+    max-width: 912px;
 }
 
 .onboarding-text-section {
