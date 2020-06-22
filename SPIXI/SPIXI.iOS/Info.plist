@@ -28,7 +28,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>io.ixian.spixi</string>
 	<key>CFBundleVersion</key>
-	<string>0.4.6.0</string>
+	<string>0.4.6.1</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -39,10 +39,10 @@
 	<string>Location access is needed for push notifications when app is in background</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location access is needed for push notifications when app is in use</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>Microphone usage is needed for voice calls</string>
-  <key>UIBackgroundModes</key>
-  <array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone usage is needed for voice calls</string>
+	<key>UIBackgroundModes</key>
+	<array>
 		<string>remote-notification</string>
 	</array>
 	<key>XSAppIconAssets</key>

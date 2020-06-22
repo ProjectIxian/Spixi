@@ -29,7 +29,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.4.6-dev"; // Spixi version
+        public static readonly string version = "spixi-0.4.6"; // Spixi version
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;
@@ -43,11 +43,11 @@ namespace SPIXI.Meta
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
         // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
-        public static ulong bakedBlockHeight = 1178999;
+        public static ulong bakedBlockHeight = 1198999;
 
         // Block checksum (paired with bakedBlockHeight) of bakedBlockHeight
         // Useful for optimized block header sync
-        public static byte[] bakedBlockChecksum = Crypto.stringToHash("ea09b12a653338fb9f49a1cada5cb82cfd6a01dcce8a84000f88e76a96a0f6ae184fdf6a18e33d0cfb3b4dab");
+        public static byte[] bakedBlockChecksum = Crypto.stringToHash("8124e339838d13ef449ab82dbc86a4738000a53bf575b6c84a94bd2dd74eaae9c8e41fa89aa05943ca3330a7");
 
 
         // Temporary variables for bh sync recovery
