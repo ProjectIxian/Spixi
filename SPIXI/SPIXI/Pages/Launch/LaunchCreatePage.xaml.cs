@@ -122,6 +122,8 @@ namespace SPIXI
 
                 if (Node.generateWallet(pass))
                 {
+                    Node.generatedNewWallet = true;
+
                     Node.start();
 
                     Node.localStorage.nickname = nick;

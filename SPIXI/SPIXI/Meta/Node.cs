@@ -47,7 +47,9 @@ namespace SPIXI.Meta
         public static TransactionInclusion tiv = null;
 
         public static CustomAppManager customAppManager = null;
-        
+
+        public static bool generatedNewWallet = false;
+
         // Private data
 
         // Node timer
@@ -120,8 +122,9 @@ namespace SPIXI.Meta
             else
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "headers");
-                if (!walletStorage.walletExists())
+                if (generatedNewWallet || !walletStorage.walletExists())
                 {
+                    generatedNewWallet = false;
                     block_height = Config.bakedBlockHeight;
                     block_checksum = Config.bakedBlockChecksum;
                 }
