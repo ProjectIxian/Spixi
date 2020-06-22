@@ -127,8 +127,8 @@ img.emoji {
 
 .ixicash-icon {
     object-fit: contain;
-    width: 28px;
-    height: 34px;
+    height: 16pt;
+    width: auto;
     vertical-align: middle;
 }
 /* Placeholders */
@@ -309,20 +309,19 @@ img.emoji {
     font-size: 14pt;
     padding-left: 20px;
     padding-top: 8px;
-    line-height: 16pt;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .spixi-balancebar-balance img
 {
     height: 14pt;
     margin-right: 5px;
-    width: auto;
-    line-height: 16pt;
 }
 
-.spixi-balancebar-balance *
+.spixi-balancebar-balance span
 {
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .spixi-balancebar-line {
@@ -1432,17 +1431,18 @@ img.emoji {
 {
     color: black;
     font-size: 15pt;
-    line-height: 16pt;
     font-weight: bold;
     margin-top: 5px;
-    vertical-align: top;
+    vertical-align: middle;
+    display: table-cell;
 }
 
 .spixi-bubble .amount .content .ixicash-icon {
     margin-right: 10px;
-    height: 16pt;
-    width: auto;
-    vertical-align: top;
+}
+
+.spixi-bubble .amount .content span {
+    vertical-align: middle;
 }
 
 .spixi-bubble .view {

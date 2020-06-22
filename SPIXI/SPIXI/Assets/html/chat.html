@@ -624,7 +624,7 @@
         function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender, sent, read, enableView) {
             var message = "<div id=\"tx_" + txid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
             message += "<div class=\"status\">*SL{chat-status}:<div class=\"content\">" + status + "<i class=\"fas " + statusIcon + "\"></i></div></div>";
-            message += "<div class=\"amount\">*SL{chat-amount}:<div class=\"content\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/>" + amount + "</div></div>";
+            message += "<div class=\"amount\">*SL{chat-amount}:<div class=\"content\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/><span>" + amount + "</span></div></div>";
             var viewStyle = "display:none;";
             if (enableView == "True") {
                 viewStyle = "";
