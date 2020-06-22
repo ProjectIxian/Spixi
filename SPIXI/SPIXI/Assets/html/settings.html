@@ -66,13 +66,14 @@
             *SL{settings-account-language-edit}
         </div>
         <div class="spixi-textfield-holder">
-            <div class="spixi-textfield language-selector" onmousedown="document.getElementById('LanguageDropDown').style.display='block';">
+            <div class="spixi-textfield language-selector settings" onmousedown="document.getElementById('LanguageDropDown').style.display='block';">
                 <span class="fa fa-sort-down"></span>
                 <div id="SelectedLanguage">*SL{language}</div>
                 <ul id="LanguageDropDown">
                     <li onmouseup="changeLanguage(this);" lang-data="en-us">English</li>
                     <li onmouseup="changeLanguage(this);" lang-data="de-de">Deutsch</li>
                     <li onmouseup="changeLanguage(this);" lang-data="fr-fr">Français</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="ja-jp">日本語</li>
                     <li onmouseup="changeLanguage(this);" lang-data="sl-si">Slovenščina</li>
                     <li onmouseup="changeLanguage(this);" lang-data="sr-sp">Srpski</li>
                 </ul>

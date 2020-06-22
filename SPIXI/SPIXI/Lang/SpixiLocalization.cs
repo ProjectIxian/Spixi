@@ -13,6 +13,7 @@ namespace SPIXI.Lang
             "en-us",
             "de-de",
             "fr-fr",
+            "ja-jp",
             "sl-si",
             "sr-sp"
         };
