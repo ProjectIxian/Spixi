@@ -310,16 +310,18 @@ img.emoji {
     padding-left: 20px;
     padding-top: 8px;
     line-height: 16pt;
-    vertical-align: top;
 }
 
 .spixi-balancebar-balance img
 {
     height: 14pt;
-    object-fit: contain;
     margin-right: 5px;
     width: auto;
     line-height: 16pt;
+}
+
+.spixi-balancebar-balance *
+{
     vertical-align: top;
 }
 
@@ -794,6 +796,7 @@ img.emoji {
     text-align: left;
     color: black;
     padding: 8pt 14pt;
+    height: auto;
 }
 
 .language-selector .fa-sort-down {
@@ -813,6 +816,11 @@ img.emoji {
     margin-top: 15px;
     margin-left: -14pt;
     box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+    z-index: 3;
+}
+
+.language-selector.settings ul {
+    background: white;
 }
 
 .language-selector ul li {
@@ -1427,6 +1435,7 @@ img.emoji {
     line-height: 16pt;
     font-weight: bold;
     margin-top: 5px;
+    vertical-align: top;
 }
 
 .spixi-bubble .amount .content .ixicash-icon {
@@ -1608,8 +1617,8 @@ img.emoji {
     position: fixed;
     z-index: 99;    
     width: 100%;
-    bottom: -60px;
-    height: 60px;
+    bottom: -100px;
+    min-height: 60px;
     background-color: #FFF;
     border-top: 1px solid #CBCBCB;
     color: #BABABA;
@@ -1649,7 +1658,6 @@ img.emoji {
 
 .chat_attach_tab {
     width: 120px;
-    height: 60px;
     font-size: 10pt;
     text-align: center;
     font-weight: bold;

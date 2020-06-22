@@ -132,6 +132,7 @@
 
         function onChatScreenLoaded()
         {
+            document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
             $('#chat_emoji').lsxEmojiPicker({
                 twemoji: true,
                 onSelect: function (emoji) {
@@ -623,7 +624,7 @@
         function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender, sent, read, enableView) {
             var message = "<div id=\"tx_" + txid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
             message += "<div class=\"status\">*SL{chat-status}:<div class=\"content\">" + status + "<i class=\"fas " + statusIcon + "\"></i></div></div>";
-            message += "<div class=\"amount\">*SL{chat-amount}:<div class=\"content\"><img class=\"ixicash-icon\" src=\"img/ixicash.png\"/>" + amount + "</div></div>";
+            message += "<div class=\"amount\">*SL{chat-amount}:<div class=\"content\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/>" + amount + "</div></div>";
             var viewStyle = "display:none;";
             if (enableView == "True") {
                 viewStyle = "";
@@ -699,12 +700,13 @@
         function hideAttach() {
             document.getElementById("chatbar").style.bottom = "0px";
             document.getElementById("chatholder").style.height = "57px";
-            document.getElementById("chatattachbar").style.bottom = "-60px";
+            document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
         }
 
         function showAttach() {
-            document.getElementById("chatbar").style.bottom = "60px";
-            document.getElementById("chatholder").style.height = "120px";
+            var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
+            document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
+            document.getElementById("chatholder").style.height = (attachBarHeight + 57) + "px";
             document.getElementById("chatattachbar").style.bottom = "0px";
             
             setTimeout(function () {
