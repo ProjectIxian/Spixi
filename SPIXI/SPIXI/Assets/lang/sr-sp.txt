@@ -254,8 +254,7 @@ settings-backup-invalidpassword-text = Unesite važeću lozinku.
 settings-encryption-title = Lozinka za Šifrovanje
 settings-encryption-description = Lozinka za šifrovanje je najvažnija lozinka koja omogućava pristup vašem nalogu i novčaniku. Trebat će vam u slučaju da izgubite pristup svom nalogu.
 settings-encryption-edit = Promenite vašu lozinku za šifrovanje.
-settings-encryption-type = Da biste je promenili prvo ukucajte <b>TRENUTNU</b>
-lozinku za šifrovanje. 
+settings-encryption-type = Da biste je promenili prvo ukucajte <b>TRENUTNU</b> lozinku za šifrovanje. 
 settings-encryption-placeholder = Trenutna lozinka za šifrovanje
 settings-encryption-typenew = Ukucajte <b>NOVU</b> lozinku za šifrovanje.
 settings-encryption-placeholdernew = Nova lozinka za šifrovanje
