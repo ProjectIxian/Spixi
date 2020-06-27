@@ -1,60 +1,60 @@
-﻿language-code = fr-fr
-language = Français ( France )
+language-code = fr-fr
+language = Français
 
 ; Address Screen
-address-title = Mon Portefeuille Spixi
-address-description = Votre addresse Spixi est liée à votre compte Spixi<br />Il s'agit de votre identifiant principal avec lequel vous pouvez intéragir avec les autres utilisateurs.
-address-copied = Addresse copié dans le presse papier
-address-gen-1 = Generation
+address-title = Mon portefeuille Spixi
+address-description = Votre addresse Spixi est liée à votre compte<br />Il s'agit de votre identifiant principal avec lequel vous pouvez intéragir avec d'autres utilisateurs.
+address-copied = Addresse copiée dans le presse papier
+address-gen-1 = Génération
 address-gen-1b = Preparation
 address-gen-2 = Votre SPIXI
 address-gen-2b = SPIXI
 address-gen-3 = addresse
 address-gen-4 = ...
-address-tooltip = Appuyez pour copier dans le presse papier
+address-tooltip = cliquez pour copier dans le presse papier
 
 ; App Details Screen
 app-details-title = Application Spixi
 app-details-publisher = Editeur:
 app-details-version = Version:
-app-details-uninstall = Desinstaller
+app-details-uninstall = Désinstaller
 app-details-dialog-title = Manageur de l'application Spixi
 app-details-dialog-removed-text = L'application à bien été supprimée.
-app-details-dialog-removefailed-text = Une erreur à eu lieu pendant le supprimage de l'application.
+app-details-dialog-removefailed-text = Une erreur à eu lieu pendant la désinstallation de l'application.
 
 ; New App Screen
 app-new-title = Nouvelle application
-app-new-description = Ajoutez une nouvelle application Spixi en collant son URL. L'application va être téléchargé et installé.
-app-new-install = Installation
+app-new-description = Ajoutez une application Spixi en collant son URL. L'application va être téléchargée puis installée.
+app-new-install = INSTALLER-----CAPS
 app-new-dialog-title = Manageur de l'application Spixi
 app-new-dialog-installed-text = L'application '{0}' à bien été installé.
 app-new-dialog-installfailed-text = Une erreur à eu lieu pendant l'installation de l'application.
 
 ; Apps Screen
-apps-title = Application Spixi
-apps-empty = Vous n'avez aucune application existante d'installé.
+apps-title = Applications Spixi
+apps-empty = Vous n'avez aucune applications installé(e)s.
 
 ; Chat Screen
-chat-sent-contact-request = à envoyé une requête de contact
-chat-accept = Accepter
-chat-ignore = Ignorer
-chat-type-placeholder = Taper votre message...
-chat-send-file = Envoyer le fichier
-chat-request-payment = Demander un Paiement
+chat-sent-contact-request = A ENVOYE UNE DEMANDE DE CONTACT-----CAPS
+chat-accept = ACCEPTER-----CAPS
+chat-ignore = IGNORER-----CAPS
+chat-type-placeholder = Tapez votre message...
+chat-send-file = Envoyer un fichier
+chat-request-payment = Demander un paiement
 chat-send-payment = Envoyer un paiement
 chat-status = Statut
 chat-amount = Montant
-chat-view = Vue
-chat-payment-request-sent = Requête de paiement envoyé
-chat-payment-request-received = Requête de paiement reçu
+chat-view = Details
+chat-payment-request-sent = Demande de paiement envoyé
+chat-payment-request-received = Demande de paiement reçu
 chat-payment-sent = Paiement envoyé
-chat-payment-received = Paiement reçu
+chat-payment-received = Payment reçu
 chat-payment-status-waiting-confirmation = En attente de confirmation
-chat-payment-status-declined = Décliné
+chat-payment-status-declined = Decliner
 chat-payment-status-pending = En attente
 chat-payment-status-confirmed = Confirmé
-chat-call-outgoing = Appel Sortant
-chat-call-incoming = Appel Entrant
+chat-call-outgoing = Appel sortant
+chat-call-incoming = Appel entrant
 chat-call-no-answer = Aucune réponse
 chat-call-missed = Appel manqué
 chat-call-ended = Fini
@@ -65,58 +65,58 @@ chat-text-too-long = Texte trop long.
 ; Contact Details Screen
 contact-details-chat = chat
 contact-details-send = envoyer
-contact-details-receive = reçu
+contact-details-receive = recevoir
 contact-details-notifications = Notifications
 contact-details-history = Historique
-contact-details-account-address = Compte Spixi et addresses du portefeuille
-contact-details-address-1 = Recupération
+contact-details-account-address = ADDRESSE SPIXI-----CAPS
+contact-details-address-1 = Récupération
 contact-details-address-2 = SPIXI
-contact-details-address-3 = addresse...
-contact-details-removecontact = Retirement
-contact-details-removedcontact-title = Retiré
-contact-details-removedcontact-text = Contact retiré de la liste.
-contact-details-deletehistory = Supprimer l'historique
+contact-details-address-3 = address...
+contact-details-removecontact = SUPPRIMER-----CAPS
+contact-details-removedcontact-title = Supprimé
+contact-details-removedcontact-text = Contact supprimé de la liste.
+contact-details-deletehistory = SUPPRIMER L'HISTORIQUE-----CAPS
 contact-details-deletedhistory-title = Supprimé
 contact-details-deletedhistory-text = Historique des messages supprimé.
 
 ; New Contact Screen
-contact-new-title = Nouveau contact
-contact-new-description = Ajouter un nouveau contact Spixi en collant leur addresse ou en scannant le QR Code. L'utilisateur va reçevoir une requête peu de temps après.
+contact-new-title = Nouveau Contact
+contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
 contact-new-placeholder = Coller / taper l'addresse
-contact-new-send-request = Envoyer une requête de contact
-contact-new-invalid-address-self-text = L'addresse que vous avez entré est votre propre addresse.
-contact-new-invalid-address-exists-text = Ce contact est déjà dans vos contacts.
+contact-new-send-request = ENVOYER UNE DEMANDE DE CONTACT-----CAPS
+contact-new-invalid-address-self-text = L'addresse que vous avez entrez est la votre.
+contact-new-invalid-address-exists-text = Ce contact est déjà dans votre liste
 
 ; Downloads Screen
-downloads-title = Telechargements
-downloads-empty = Vous n'avez aucun fichier téléchargé.
+downloads-title = Téléchargements
+downloads-empty = Vous n'avez pas de fichiers téléchargés.
 
 ; Index Screen
 index-balance = Ma balance IxiCash
 index-balance-info = * Appuyez et maintenez pour masquer
-index-balance-info2 = * Appuyez et maintenez pour voir
+index-balance-info2 = * Appuyez et maintenant pour montrer
 index-notifications = Notifications
 index-unread-chats = Messages non lu
-index-no-conversations = Vous n'avez aucune conversation existante.
+index-no-conversations = Vous n'avez aucune convesations existantes.
 index-send = envoyer
 index-activity = activité
 index-receive = recevoir
-index-recent-activity = Activité récente
-index-contacts-placeholder = Chercher des contacts
-index-tab-home = Menu
-index-tab-chats = chats
+index-recent-activity = Activités récentes
+index-contacts-placeholder = Rechercher des contacts
+index-tab-home = home
+index-tab-chats = conversations
 index-tab-wallet = portefeuille
 index-tab-contacts = contacts
-index-new-title = NEW
+index-new-title = NOUVEAU-----CAPS
 index-new-contact = Contact
-index-new-chat = Chat
+index-new-chat = Conversation
 index-new-send = Envoyer des IXI
 index-new-request = Demander des IXI
-index-new-cancel = ANNULER
+index-new-cancel = ANNULER-----CAPS
 index-side-title = Utilisateur Spixi
 index-side-myaddress = Mon addresse Spixi
-index-side-apps = Applicationss
-index-side-downloads = Téléchargements
+index-side-apps = Applications
+index-side-downloads = Téléchargementss
 index-side-settings = Paramètres
 index-side-security = Securité
 index-side-backup = Sauvegarde
@@ -125,10 +125,10 @@ index-side-about = A propos
 index-side-howtouse = Comment utiliser Spixi
 index-side-sendlog = Envoyer les logs
 index-devmode = Mode développeur activé
-index-excerpt-payment-request-sent = Demdande de paiement envoyé
-index-excerpt-payment-request-received = Demande de paiement reçu
+index-excerpt-payment-request-sent = Demande de paiement envoyé
+index-excerpt-payment-request-received = Demande de paiement reçue
 index-excerpt-payment-sent = Paiement envoyé
-index-excerpt-payment-received = Paiement reçu
+index-excerpt-payment-received = Payment Reçu
 index-excerpt-contact-accepted = Contact Accepté
 index-excerpt-contact-request = Demande de contact
 index-excerpt-file = Fichier
@@ -137,265 +137,265 @@ index-excerpt-self = Vous:
 
 ; Intro Screen
 intro-title = Bienvenue sur Spixi,
-intro-subtitle = Le chat décentralisé et sécurisé, portefeuille et plus
-intro-language-text = S'il vous plait selectionnez une language
-intro-text = S'il vous plait créez ou restaurez votre<br/>Compte Spixi pour procéder
-intro-create-account = Nouveau compte
-intro-restore-account = Restaurer votre compte
+intro-subtitle = le chat décentralizé et sécurisé, Portefeuille et plus.
+intro-language-text = S'il vous plait sélectionnez un language
+intro-text = S'il vous plait créez ou restaurez votre<br/>compte Spixi pour procéder
+intro-create-account = NOUVEAU COMPTE-----CAPS
+intro-restore-account = RESTAURER UN COMPTE-----CAPS
 
 ; Intro New Screen
 intro-new-description-1 = Créer un nouveau compte Spixi
-intro-new-description-2 = Entrer votre nom et image affichées
-intro-new-name-placeholder = Votre nom affiché
-intro-new-change-image = Appuyez pour changer votre image affichée
-intro-new-next = Suivant
+intro-new-description-2 = Entrez votre pseudo et votre photo de profil-----FIX
+intro-new-name-placeholder = Votre pseudo-----FIX
+intro-new-change-image = Cliquez pour changer votre photo de profil-----FIX
+intro-new-next = Prochaine étape
 intro-new-step-1 = Etape 1 sur 2
 intro-new-step-2 = Etape 2 sur 2
-intro-new-description-3 = Créer votre mot de passe de cryptage
-intro-new-description-4 = Pour finir la configuration de votre compte Spixi<br />Entrez s'il vous plait votre mot de passe d'encryptage.
-intro-new-password = Entrer votre mot de passe
-intro-new-finish = Terminé
-intro-new-create-title = Créer votre<br />Compte Spixi...
+intro-new-description-3 = Créer votre mot de passe d'encryption
+intro-new-description-4 = Pour finir la configuration de votre compte Spixi<br />Créez votre mot de passe d'encryption.
+intro-new-password = Entrer un nouveau mot de passe d'encryption
+intro-new-finish = Finir
+intro-new-create-title = Creation de votre<br />compte Spixi...
 intro-new-create-description = Cela peut prendre un peu de temps
 intro-new-password10 = Le mot de passe doit contenir au moins 10 caractères
-intro-new-passwordconf = Entrez le mot de passe pour confirmer
-intro-new-passwordnomatch = Les mots de passe ne correspondent âs
-intro-new-passwordmatch = Les mots de passe correspondent
+intro-new-passwordconf = Confirmez votre mot de passe
+intro-new-passwordnomatch = Les mot de passe ne sont pas les mêmes
+intro-new-passwordmatch = Les mot de passes sont les mêmes
 intro-new-emptynick-title = Pseudo invalide
-intro-new-emptynick-text = S'il vous plait entrez votre pseudo.
+intro-new-emptynick-text = S'il vout plait entrez votre pseudo.
 intro-new-avatarerror-title = Erreur d'avatar
 intro-new-walleterror-title = Erreur
-intro-new-walleterror-text = Impossible de générer un portefeuille, veuillez réessayer.
+intro-new-walleterror-text = Impossible de generer votre portefeuille. S'il vous plait réessayer.
 
 ; Intro Restore Screen
-intro-restore-description-1 = Rétablir l'accès à votre compte Spixi
-intro-restore-description-2 = Vous avez besoin du fichier de sauvegarde et du mot de passe pour restaurer votre compte Spixi sur cet appareil.
-intro-restore-password = Entrez votre mot de passe
-intro-restore-selectfile = Selectionnez le fichier de sauvegarde
-intro-restore-backupdescription = Définissez le fichier de sauvegarde associé au mot de passe
-intro-restore-action = Restaurer
-intro-restore-title = Restoration de l'accès à<br />votre compte Spixi
+intro-restore-description-1 = Restorer l'accès à votre compte Spixi
+intro-restore-description-2 = Vous avez besoin du fichier de sauvegarde et de votre mot de passe d'encryption pour restaurer votre compte Spixi existant.
+intro-restore-password = Entrez votre mot de passe d'encryption
+intro-restore-selectfile = Selectionner votre fichier de sauvegarde
+intro-restore-backupdescription = Définissez le fichier de sauvegarde associé au mot de passe d'encryption
+intro-restore-action = RESTAURER
+intro-restore-title = Restauration de votre<br />compte Spixi
 intro-restore-info = Cela peut prendre un peu de temps
 intro-restore-file-error-title = Erreur de fichier
-intro-restore-file-selecterror-text = Une erreur s'est produite lors de la sélection du fichier de restauration.
-intro-restore-file-readerror-text = Une erreur s'est produite pendant la lecture du fichier du portefeuille.
-intro-restore-file-writeerror-text = Une erreur s'est produite lors de la sauvegarde du portefeuille.
-intro-restore-file-invalidpassword-title = Mot de passe invalide
-intro-restore-file-invalidpassword-text = Impossible de déchiffrer le portefeuille, veuillez réessayer
+intro-restore-file-selecterror-text = Une erreur à eu lieu pendant la selection du fichier de restauration.
+intro-restore-file-readerror-text = Une erreur à eu lieu pendant la lecture du fichier du portefeuille.
+intro-restore-file-writeerror-text = Une erreur à eu lieu pendant la sauvegarde du fichier du portefeuille.
+intro-restore-file-invalidpassword-title = Mauvais mot de passe
+intro-restore-file-invalidpassword-text = Il est impossible de decrypter le portefeuille, veuillez réessayer.
 
 ; Intro Retry Screen
-intro-retry-description-1 = Re-entrez votre mot de passe
-intro-retry-description-2 = Il semble qu'il y ait un problème d'accès à votre compte. Veuillez ressaisir votre mot de passe pour continuer.
-intro-retry-placeholder = Ressaisissez votre mot de passe
+intro-retry-description-1 = Ré entrez votre mot de passe d'encryption.
+intro-retry-description-2 =  Il semble qu'il y a un problème d'accès à votre compte. Veuillez saisir le mot de passe pour continuer.
+intro-retry-placeholder = Entrez votre mot de passe d'encryption
 intro-retry-proceed = Procédez
-intro-retry-title = Rétablissage de l'accès à<br />votre portefeuille
+intro-retry-title = Restauration de l'accès à <br />votre portefeuille
 intro-retry-info = Cela peut prendre un peu de temps
 intro-retry-invalidpassword-title = Mauvais mot de passe
-intro-retry-invalidpassword-text = Impossible de déchiffrer le portefeuille, veuillez réessayer
+intro-retry-invalidpassword-text = Il est impossible de déchiffrer le portefeuille, veuillez réessayer.
 
 ; Lock Screen
-lock-description = Spixi est verrouillé
-lock-placeholder = Entrez votre mot de passe
-lock-error = Mauvais mot de passe
-lock-unlock = Ouverture
+lock-description = Spixi est verouillé
+lock-placeholder = Entrez votre mot de passe de vefrouillage
+lock-error = Mot de passe incorrect
+lock-unlock = Débloquer
 
 ; Settings Screen
 settings-title = Paramètres
 settings-save = Sauvegarder
 settings-cancel = Annuler
 settings-confirm = Confirmer
-settings-description = Modifiez les informations de votre compte Spixi et gérez les données stockées par l'application sur cet appareil.
-settings-account-information = Informations du compte
-settings-account-description = C'est ainsi que vous apparaissez aux autres utilisateurs de Spixi.<br />Vous pouvez modifier le nom et l'image affichées.
+settings-description = Modifier les paramètres et gérer les données stockées sur cet appareil.-----FIX
+settings-account-information = Paramètres de base-----FIX
+settings-account-description = Changer la langue par défaut, votre photo de profil et votre pseudo.-----FIX
 settings-account-language-edit = Language
-settings-account-image-edit = Modifier l'image affichée
-settings-account-nick-edit = Modifier le nom affiché
-settings-account-nick-placeholder = Tapez votre nom d'affichage
-settings-account-deleteinfo = Vous pouvez supprimer ce compte et tout le contenu qui lui est associé depuis cet appareil. Pour continuer à utilise Spixi, vous devrez créer un nouveau compte.
-settings-account-delete = Supprimer mon compte
-settings-deletea-title = Supprimer mon compte
-settings-deletea-text = Êtes vous sur de vouloir supprimer votre compte Spixi ?
+settings-account-image-edit = Votre photo de profil-----FIX
+settings-account-nick-edit = Pseudo-----FIX
+settings-account-nick-placeholder = Entrez votre nouveau pseudo-----FIX
+settings-account-deleteinfo = Vous pouvez supprimer votre compte Spixi et tout le contenu qui lui est associé à partir de cet appareil à tout moment. <br /><br />Remarque Importante : Vous devez créer un nouveau compte ou restaurer un compte existant pour continuer à utiliser Spixi sur cet appareil.-----FIX
+settings-account-delete = Supprimer mon compte-----FIX
+settings-deletea-title = Supprimer votre compte Spixi ?-----FIX
+settings-deletea-text = Êtes vous sur de vouloir supprimer votre compte Spixi ?<br/><br/>Cette action n'est pas reversible ! Il est recommandé de sauvegarder votre compte avant de le supprimer. Vous aurez besoin du fichier de sauvegarde si vous souhaitez restaurer l'accès à votre compte.-----FIX
 settings-deleteda-title = Supprimé
-settings-deleteda-text = Votre compte à bien été supprimé.
+settings-deleteda-text = Compte Spixi supprimé.-----FIX
 settings-wallet-settings = Paramètres du portefeuille
-settings-wallet-description = Votre portefeuille est associé à votre compte Spixi. Pour supprimer votre portefeuille et tout l'historique de cet appareil, appuyez sur supprimer.
-settings-wallet-delete = Supprimer mon portefeuille
-settings-deletew-title = Supprimer mon portefeuille
-settings-deletew-text = Êtes vous sur de vouloir supprimer votre portefeuille ?
+settings-wallet-description = Votre portefeuille est associé à votre compte Spixi. Pour supprimer votre portefeuille et tout l'historique des paiements sur cet appareil, appuyez sur le bouton "Supprimer mon portefeuille" ci-dessous.-----FIX
+settings-wallet-delete = Supprimer votre portefeuille
+settings-deletew-title = Supprimer ce portefeuille ?-----FIX
+settings-deletew-text = Êtes vous sur de vouloir supprimer votre portefeuille ?<br/><br/>Cette action n'est pas réversible ! En supprimant ce portefeuille, vous perdrez l'accès à tous les fonds qui s'y trouvent ! Pour restaurer ce portefeuille, vous aurez besoin du fichier de sauvegarde et du mot de passe d'encryption-----FIX
 settings-deletew-error-title = Erreur
-settings-deletew-error-text = Impossible de supprimer le fichier du portefeuille.
+settings-deletew-error-text = Impossible de supprimer le fichier de portefeuille.
 settings-history = Historique des messages
-settings-history-description = Votre portefeuille est associé à votre compte Spixi. Pour supprimer tout votre historique sur cet appareil, appuyer sur supprimer.
-settings-history-delete = Supprimer tout l'historique des messages
-settings-downloads-delete = Supprimer tout les téléchargements
-settings-deleteh-title = Supprimer l'historique des messages
-settings-deleteh-text = Êtes vous sur de vouloir supprimer l'historique de tous vos messages ?
+settings-history-description = L'historique complet de vos messages et tous les fichiers que vous avez téléchargées sont stockées sur cet appareil. Vous pouvez supprimer tout l'historique de vos messages ou vos téléchargements à tout moment en appuyant sur le bouton approprié ci-dessous.-----FIX
+settings-history-delete = Supprimer l'historique des messages-----FIX
+settings-downloads-delete = Supprimer tout les téléchargements-----FIX
+settings-deleteh-title = Supprimer l'historique des messages ?-----FIX
+settings-deleteh-text = Êtes vous sur de vouloir supprimer tout l'historique de vos messages ? Cette action n'est pas réversible !-----FIX
 settings-deletedh-title = Supprimé
-settings-deletedh-text = L'historique des messages à bien été supprimé.
-settings-deleted-title = Supprimer tout les téléchargements
-settings-deleted-text = Êtes vous sur de vouloir supprimer tous vos téléchargements ?
+settings-deletedh-text = L'historique des messages à été supprimé.
+settings-deleted-title = Supprimer tout les téléchargements ?-----FIX
+settings-deleted-text = Êtes vous sur de vouloir supprimer tout vos téléchargements ? Tous les fichiers que vous avez téléchargées dans Spixi seront supprimées ! Cette action n'est pas réversible !-----FIX
 settings-deletedd-title = Supprimé
-settings-deletedd-text = Supprimé {0} fichier téléchargés.
+settings-deletedd-text = Supprimé {0} fichier téléchargées.
 settings-deleted-error-title = Erreur
-settings-deleted-error-text = Une erreur inconnu s'est produite.
-settings-emptynick-title = Surnom invalide
-settings-emptynick-text = S'il vout plait, entrez votre surnom.
+settings-deleted-error-text = Une erreur inconnue s'est produite.
+settings-emptynick-title = Pseudo invalide
+settings-emptynick-text = S'il vous plait, entrez votre pseudo.
 
 ; Settings Backup Screen
-settings-backup-title = Sauvegarde du compte
-settings-backup-description = Sauvegardez votre compte en téléchargeant un fichier spécial que vous pourrez utiliser pour le restaurer.
-settings-backup-save = Enregistrer le fichier de sauvegarde
-settings-backup-notice = Ce fichier de sauvegarde et le mot de passe qui lui est associé seront nécessaire pour restaurer vos informations dans les cas suivants :
-settings-backup-notice2 = - Perte de cet appareil<br />- Desinstallation de Spixi de votre appareil<br />- Supprimer votre compte<br />- Supprimer votre portefeuille
-settings-backup-invalidpassword-title = Mauvais mot de passe
-settings-backup-invalidpassword-text = S'il vous plait entrez un mot de passe valide.
+settings-backup-title = Compte de sauvegarde
+settings-backup-description = Télécharger un fichier spécial qui vous permet de restaurer votre compte Spixi.-----FIX
+settings-backup-save = Enregistrer le fichier de sauvegarde-----FIX
+settings-backup-notice = Cette sauvegarde et le mot de passe de cryptage qui lui est associé, seront nécessaires pour restaurer votre accès dans les cas suivants :
+settings-backup-notice2 = - Perdre cet appareil<br />- Désinstaller Spixi et votre appareil<br />- Supprimer votre compte Spixi<br />- Supprimer votre portefeuille
+settings-backup-invalidpassword-title = Mot de passe invalide
+settings-backup-invalidpassword-text = Entrez un mot de passe valide s'il vous plait.-----FIX
 
 ; Settings Encryption Screen
 settings-encryption-title = Mot de passe
-settings-encryption-description = Le mot de passe est le plus important des mots de passe pour votre compte et votre portefeuille. Vous en aurez besoin tout le temps pour lancer Spixi ou si vous restaurez votre commpte.
-settings-encryption-edit = Modifier votre mot de passe d'encryption
-settings-encryption-type = Tapez votre <b>mot de passe</b>actuel
-settings-encryption-placeholder = Tapez votre mot de passe d'encryption
-settings-encryption-typenew = Tapez votre <b>nouveau</b> mot de passe
-settings-encryption-placeholdernew = Tapez votre nouveau mot de passe d'encryption
-settings-encryption-placeholderretype = Retapez votre nouveau mot de passe d'encryption
-settings-encryption-change = Modifier le mot de passe
-settings-encryption-password10 = Le mot de passe doit contenir au moins 10 caractères
-settings-encryption-passwordconf = Confirmez votre mot de pase
+settings-encryption-description = Le mot de passe d'encryption est le mot de passe le plus important pour votre compte et votre portefeuille. Vous aurez besoin de ce mot de passe si vous essayez de restaurer l'accès à votre compte ou portefeuille Spixi.-----fix
+settings-encryption-edit = Modifier votre mot de passe d'encryption-----FIX
+settings-encryption-type = Entrez votre  <b>mot de passe</b>actuel.-----FIX
+settings-encryption-placeholder = Votre mot de passe d'encryption actuel-----FIX
+settings-encryption-typenew = Tapez votre <b>nouveau</b> mot de passe.
+settings-encryption-placeholdernew = Votre nouveau mot de passe d'encryption-----FIX
+settings-encryption-placeholderretype = Retapez votre nouveau mot de passe d'encryption-----FIX
+settings-encryption-change = MODIFIER LE MOT DE PASSE-----CAPS
+settings-encryption-password10 = Le mot de passe doit contenir au moins 10 caractères-----FIX
+settings-encryption-passwordconf = Veuillez re-entrer le mot de passe pour confirmer
 settings-encryption-passwordnomatch = Les mots de passe ne sont pas les mêmes
 settings-encryption-passwordmatch = Les mots de passe sont les mêmes
 settings-encryption-invalidpassword-title = Mauvais mot de passe
-settings-encryption-invalidpassword-text = S'il vout plait entrez un mot de passe valide.
+settings-encryption-invalidpassword-text = S'il vous plait entrez un mot de passe valide.
 settings-encryption-passwordchanged-title = Mot de passe d'encryption
 settings-encryption-passwordchanged-text = Le mot de passe à bien été changé.
-settings-encryption-invalidpassword-current-text = Le mot de passe actuel est incorrect, veuillez réessayer..
+settings-encryption-invalidpassword-current-text = Le mot de passe actuel est incorrect, veuillez re-essayer.
 
 ; Settings Lock Screen
-settings-lock-title = Bloquer mon compte Spixi
-settings-lock-description = Créer un mot de passe pour votre compte Spixi afin de vous assurer que vous êtes le seul à utiliser votre compte sur cet appareil.
+settings-lock-title = Bloquer mon Spixi
+settings-lock-description = Créez un mot de passe pour votre Spixi, afin de vous assurer que vous êtes le seul à utiliser votre compte sur cet appareil.
 settings-lock-status = Statut de la sécurité:
-settings-lock-unlocked = Débloqué
-settings-lock-locked = Bloqué
-settings-lock-passwordinfo = Créer ou editer votre mot de passe
-settings-lock-password = Tapez votre <b>mot de passe</b> actuel
-settings-lock-password-new = Tapez votre <b>nouveau</b> mot de passe
-settings-lock-placeholder-1 = Tapez votre mot de passe pour verouiller
-settings-lock-placeholder-2 = Tapez votre nouveau mot de passe de verouillage
-settings-lock-placeholder-3 = Retapez votre nouveau mot de passe de verouillage
-settings-lock-info = Ce mot de passe sera requis à chaque fois que vous lancerez Spixi.
-settings-lock-save = Sauvegarder le mot de passe de verouillage
+settings-lock-unlocked = DEBLOQUE
+settings-lock-locked = BLOQUE
+settings-lock-passwordinfo = Créer ou éditer votre mot de passe de bloquage
+settings-lock-password = Entrez votre <b>mot de passe </b>ACTUEL.
+settings-lock-password-new = Entrez votre <b>NOUVEAU </b>mot de passe.
+settings-lock-placeholder-1 = Tapez votre mot de passe de verrouillage
+settings-lock-placeholder-2 = Tapez votre nouveau mot de passe de verrouillage
+settings-lock-placeholder-3 = Retapez votre nouveau mot de passe de verrouillage
+settings-lock-info = Ce mot de passe va être requis à chaque fois que vous allez lancer votre Spixi.
+settings-lock-save = DEFINIR LE MOT DE PASSE DE VERROUILLAGE-----FIX
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Demande de paiement
 wallet-contact-request-subtitle = Demande de paiement de:
-wallet-contact-request-amount = Montant demandé
+wallet-contact-request-amount = Paiement demandé
 wallet-contact-request-info = L'utilisateur à demandé un paiement pour le montant suivant
-wallet-contact-request-respond = Répondre à une demande de paiement
-wallet-contact-request-respondinfo = Répondre en refusant le demande de paiement ou passer à l'écran de paiement pour payer le montant demandé.
-wallet-contact-request-decline = Décliner
-wallet-contact-request-proceed = Procéder au paiement
+wallet-contact-request-respond = Répondre à la demande de paiement
+wallet-contact-request-respondinfo = Vous pouvez répondre à cette demande en refusant ou en acceptant le paiement. L'utilisateur qui à demandé le paiement sera informé de votre décision--------FIX
+wallet-contact-request-decline = DECLINER
+wallet-contact-request-proceed = ENVOYER UN PAIEMENT----FIX
 
 ; Wallet Recipient Screen
-wallet-recipient-title = Selectionner le destinataire
+wallet-recipient-title = Sélectionner le destinataire
 wallet-recipient-search-placeholder = Rechercher des contacts
-wallet-recipient-empty = 0 destinataires sélectionné(e)s
-wallet-recipient-add = Ajouter un / des destinataires
-wallet-recipient-selected = Destinataires sélectionnés
+wallet-recipient-empty = 0 contact/s selected
+wallet-recipient-add = Ajouter un contact/s
+wallet-recipient-selected = Contact/s selected
 
 ; Wallet Request Screen
-wallet-request-title = Requête de Paiement
-wallet-request-subtitle = Requête de montant specifique
-wallet-request-amount-placeholder = Taper un montant
+wallet-request-title = Demander un paiement
+wallet-request-subtitle = Demander un montant spécifique
+wallet-request-amount-placeholder = Entrez un montant
 wallet-request-address = Addresse actuelle
-wallet-request-send-info = Envoyer en tant que demande au destinataires suivant:
-wallet-request-add = Ajouter des utilisateurs supplémentaire / addresses pour envoyer cette requête pour le même montant.
+wallet-request-send-info = Envoyer en tant que demande au destinataires:
+wallet-request-add = Vous pouvez envoyer cette demande pour un même montant à plusieurs utilisateurs. <br/>Ajouter des utilisateurs / addresses suplémentaires auxquels envoyer cette demande.----FIX
 wallet-request-placeholder = Coller / saisir l'addresse
-wallet-request-send = Envoyer une requête
+wallet-request-send = ENVOYER LA DEMANDE---- FIX
 wallet-request-error-title = Erreur
-wallet-request-error-text = Veuillez saisir des informations valide dans les champs de saisie.
+wallet-request-error-text = Veuillez saisir des informations valides dans les champs de saisie.
 
 ; Wallet Send Screen
 wallet-send-title = Envoyer un paiement
-wallet-send-add = Ajouter un / des destinataire(s)
-wallet-send-placeholder = Coller / saisir l'addresse
-wallet-send-more = Vous pouvez ajouter des destinataires supplémentaires pour cette transaction.
-wallet-send-recipients = Destinataire(s)
-wallet-send-norecipients = Aucun destinataire sélectionné
-wallet-send-next = Prochaine étape
+wallet-send-add = Ajouter un / des destinataire/s
+wallet-send-placeholder = Coller / taper l'addresse
+wallet-send-more = Vous pouvez ajouter des destinataires supplémentaires pour cette transaction. Ces destinataires recevront un paiement du même montant.-----fix
+wallet-send-recipients = Destinataire/s
+wallet-send-norecipients = Aucun destinataire selectionné
+wallet-send-next = PROCHAINE ETAPE----- FIX
 wallet-send-max = Envoyer le montant maximum
 
 ; Wallet Send 2 Screen
 wallet-send2-title = Confirmer le paiement
-wallet-send2-policy = Politique sur les frais de transaction
-wallet-send2-info = Chaque paiement envoyé comporte des frais de paiement déterminés qui sont déduits du montant que vous avez transféré.
-wallet-send2-feeinfo = Définissez vos frais de transaction. Choisissez les entre normaux et haut préréglés. Vous pourrez définir des frais de transaction personalisées par Ko de données.
-wallet-send2-normal = Normal
+wallet-send2-policy = Politique des frais de transaction
+wallet-send2-info = Chaque paiement envoyé comporte des frais de paiements déterminés qui sont déduis du montant transféré.
+wallet-send2-feeinfo = Définissez vos frais de transaction pour cette transaction. Choisissez parmi NORMAUX ou HAUT préréglé. Vous pouvez définir des frais de transaction personalisés par Ko. Dans le cas ou le trafic augmente, la taille des frais de transaction peut influencer les paiements traités plus rapidement.------fix
+wallet-send2-normal = Normaux
 wallet-send2-high = Haut
-wallet-send2-custom = Custom
-wallet-send2-placeholder = Entrez les frais de transaction
+wallet-send2-custom = Customisés
+wallet-send2-placeholder = Entrer les frais de transaction
 wallet-send2-amount = Montant à envoyer
-wallet-send2-fee = Frais de transaction totaux
-wallet-send2-total = Montant total à payer sur le solde
-wallet-send2-send = Envoyer le paiement
+wallet-send2-fee = Frais de transactions totaux
+wallet-send2-total = Montant total qui va être retiré de votre portefeuille
+wallet-send2-send = ENVOYER LE PAIEMENT -----CAPS
 
 ; Wallet Sent Screen
 wallet-sent-title = Paiement envoyé
-wallet-sent-subtitle = Paiement envoyé a
+wallet-sent-subtitle = Paiement envoye à:
 wallet-sent-amount = Montant envoyé
-wallet-sent-status = Status du paiement
-wallet-sent-confirmed = Confirmé
-wallet-sent-unconfirmed = Non-confirmé
-wallet-sent-details = Le montant que vous avez envoyé à été déduit de votre solde.
+wallet-sent-status = Statut du paiement
+wallet-sent-confirmed = CONFIRME-----CAPS
+wallet-sent-unconfirmed = NON CONFIRME-----CAPS
+wallet-sent-details = Le montant que vous avez envoyé à bien été déduit de votre portefeuille.
 wallet-sent-fee = Frais de paiement
-wallet-sent-feeinfo = Chaque paiement envoyé comporte des frais de paiement déterminés qui sont déduits du montant transférés.
-wallet-sent-txid = TXID
-wallet-sent-dismiss = Rejeter
+wallet-sent-feeinfo = Chaque paiement envoyé à des frais de paiement qui est déduite du montant transféré.
+wallet-sent-txid = ID de Transaction
+wallet-sent-dismiss = REJETER-----FIX
 wallet-sentrecv-title = Paiement reçu
 wallet-sentrecv-subtitle = Paiement reçu de
 wallet-sentrecv-amount = Montant reçu
-wallet-sentrecv-details = Le montant reçu à été ajouté à votre solde.
+wallet-sentrecv-details = Le montant reçu à bien été rajotué au solde de votre portefeuille.----FIX
 
 ; Global wallet errors
 wallet-error-amount-title = Montant invalide
-wallet-error-amount-text = Veuillez saisir un montant valide.
-wallet-error-amountdecimal-text = Veuillez saisir le montant décimal correct.
-wallet-error-balance-title = Solde insuffisant
-wallet-error-balance-text = Votre solde est trop faiblre pour cette transaction. Le cout total de la transaction est {0}, tandis que votre solde est {1}.
+wallet-error-amount-text = S'il vous plait entrez un montant valide.
+wallet-error-amountdecimal-text = Veuillez entrer un montant decimal correct.
+wallet-error-balance-title = Solde insufisant
+wallet-error-balance-text = Votre solde est trop faible pour cette transaction. Le cout total de la transaction est {0}, tandis que votre solde est {1}.
 
 ; Onboarding Meet Spixi
-onboarding-screen1-title = Rencontrez Spixi!
-onboarding-screen1-text = Un messager décentralizé basé sur la blockchain avec un portefeuille de cryptomonnaie intégré.
+onboarding-screen1-title = Rencontrer Spixi!
+onboarding-screen1-text = Un messager décentralizé basé sur la blockchain avec un portefeuille de crypto monnaie intégré.
 
 ; Onboarding Your Address
-onboarding-screen2-title = Votre addresse
+onboarding-screen2-title = Votre addresse Spixi---- FIX
 onboarding-screen2-text = Votre addresse Spixi est votre seul identifiant. Utilisez le pour intéragir avec les autres sur Spixi. Vous pouvez trouver le votre dans le menu.
 
 ; Onboarding Connect with your friends
-onboarding-screen3-title = Connectez vous avez vos amis
-onboarding-screen3-text = Vous pouvez ajouter un ami sur Spixi en scannant son QR Code ou en entrant son addresse. Appuyez sur le bouton d'action et sé &quot;Nouveau Contact&quot;.
+onboarding-screen3-title = Connectez vous avec vos amis
+onboarding-screen3-text = Vus pouvez ajouter des amis sur Spixi en scannant leur Q Code,  ou en entrant leurs addresses. Cliquez sur le bouton action et sélectionnez "Nouveau Contact".
 
 ; Onboarding send and receive payments
-onboarding-screen4-title = Envoyer et recevoir des paiements
-onboarding-screen4-text = Utiliser le portefeuille intégré pour envoyer et recevoir rapidement des paiements Ixicash. Vous pouvez le faire dans votre portefeuille ou dans le chat aussi simplement qu'en envoyant un message !
-onboarding-skip = Passer
-onboarding-finish = Terminer
+onboarding-screen4-title = Envoyer et reçevoir des paiements
+onboarding-screen4-text = Utilisez le portefeuille intégré pour eenvoyer et reçevoir rapidement les paiements IxiCash. Vous pouvez le faire dans votre portefeuille ou dans le chat aussi facilement que l'envoi de message!
+onboarding-skip = PASSER-----CAPS
+onboarding-finish = FINIR-----CAPS
 
 ; Global
-global-connecting-s2 = Connection à un noeud Ixian S2...
+global-connecting-s2 = Connexion à un noeud Ixian S2...
 global-connecting-dlt = Connection au réseau Ixian...
-global-received = Reçu
-global-sent = Envoyé
+global-received = RECU-----CAPS
+global-sent = ENVOYER-----CAPS
 global-app-accept = Accepter
 global-app-reject = Rejeter
-global-app-wants-to-use = {0} à envie d'utiliser {1} avec toi.
+global-app-wants-to-use = {0} veut utiliser {1} avec vous.
 global-call-in-call = En appel
-global-call-dialing = Composition du numéro
+global-call-dialing = Composition
 global-call-incoming = Appel entrant
 
 global-dialog-error = Erreur
-global-dialog-ok = OK
+global-dialog-ok = OK-----CAPS
 
 global-invalid-address-title = Addresse invalide
-global-invalid-address-text = Veuillez entrer une addresse de portefeuille valide.
+global-invalid-address-text = S'il vous plait entrez une addresse valide.
 
-global-friend-request-accepted = {0} à accepté votre demande d'ami.
+global-friend-request-accepted = {0} à accepté votre demade d'ami.
