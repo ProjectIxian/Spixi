@@ -25,6 +25,7 @@ Hindi               |  ❌            |  ❌
 Italian             |  ❌            |  ❌
 Japanese            |  ✅            |  ✅
 Korean              |  ❌            |  ❌
+pendjabi            |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
 Romanian            |  ✅            |  ❌
 Russian             |  ✅            |  ❌
