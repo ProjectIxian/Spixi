@@ -1,4 +1,4 @@
-language-code = fr-fr
+﻿language-code = fr-fr
 language = Français
 
 ; Address Screen
