@@ -134,7 +134,7 @@ namespace SPIXI.Storage
                 // keep only last 1000 transactions
                 if (unconfirmedTransactions.Count > 1000)
                 {
-                    transactions.RemoveAt(0);
+                    unconfirmedTransactions.RemoveAt(0);
                 }
             }
             // Write to file
