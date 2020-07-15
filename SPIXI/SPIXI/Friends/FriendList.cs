@@ -48,32 +48,40 @@ namespace SPIXI
             }
             if (friend.bot && real_sender_address != null)
             {
-                if (!friend.contacts.ContainsKey(real_sender_address))
+                if (!friend.users.hasUser(real_sender_address))
                 {
-                    friend.contacts.Add(real_sender_address, new BotContact());
+                    friend.users.setPubKey(real_sender_address, null);
                 }
-                if (friend.contacts[real_sender_address].nick != nick)
+                if (friend.users.getUser(real_sender_address).getNick() != nick)
                 {
-                    friend.contacts[real_sender_address].nick = nick;
-                    // update messages with the new nick
-                    for (int i = friend.messages.Count - 1, j = 0; i >= 0; i--, j++)
+                    friend.users.getUser(real_sender_address).setNick(nick);
+                    foreach (var channel in friend.channels.channels)
                     {
-                        if (j > 1000)
-                        {
-                            break;
-                        }
-                        if (friend.messages[i].senderNick != "")
+                        List<FriendMessage> messages = friend.getMessages(channel.Value.index);
+                        if(messages == null)
                         {
                             continue;
                         }
-                        if (friend.messages[i].senderAddress == null || real_sender_address == null)
+                        // update messages with the new nick
+                        for (int i = messages.Count - 1, j = 0; i >= 0; i--, j++)
                         {
-                            Logging.warn("Sender address is null");
-                            continue;
-                        }
-                        if (friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
-                        {
-                            friend.messages[i].senderNick = nick;
+                            if (j > 1000)
+                            {
+                                break;
+                            }
+                            if (messages[i].senderNick != "")
+                            {
+                                continue;
+                            }
+                            if (messages[i].senderAddress == null || real_sender_address == null)
+                            {
+                                Logging.warn("Sender address is null");
+                                continue;
+                            }
+                            if (messages[i].senderAddress.SequenceEqual(real_sender_address))
+                            {
+                                messages[i].senderNick = nick;
+                            }
                         }
                     }
                     // update UI with the new nick
@@ -83,7 +91,7 @@ namespace SPIXI
                         friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
                     }
 
-                    Node.localStorage.writeAccountFile();
+                    friend.users.writeContactsToFile();
                 }
             }
             else
@@ -149,12 +157,12 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(byte[] id, byte[] wallet_address, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
+        public static void addMessage(byte[] id, byte[] wallet_address, int channel, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
-            addMessageWithType(id, FriendMessageType.standard, wallet_address, message, false, sender_address, timestamp, fire_local_notification);
+            addMessageWithType(id, FriendMessageType.standard, wallet_address, channel, message, false, sender_address, timestamp, fire_local_notification);
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, int channel, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
         {
             Friend friend = getFriend(wallet_address);
             if(friend == null)
@@ -195,13 +203,13 @@ namespace SPIXI
                 }
                 if (!local_sender)
                 {
-                    if (friend.contacts.ContainsKey(sender_address) && friend.contacts[sender_address].nick != "")
+                    if (friend.users.hasUser(sender_address) && friend.users.getUser(sender_address).getNick() != "")
                     {
-                        sender_nick = friend.contacts[sender_address].nick;
+                        sender_nick = friend.users.getUser(sender_address).getNick();
                     }
                     else
                     {
-                        if(!friend.contacts.ContainsKey(sender_address) || friend.contacts[sender_address].publicKey == null)
+                        if(!friend.users.hasUser(sender_address) || friend.users.getUser(sender_address).publicKey == null)
                         {
                             StreamProcessor.requestPubKey(friend, sender_address);
                         }
@@ -219,16 +227,26 @@ namespace SPIXI
             }
 
             FriendMessage friend_message = new FriendMessage(id, message, timestamp, local_sender, type, sender_address, sender_nick);
-            lock (friend.messages)
+            friend_message.payableDataLen = payable_data_len;
+
+            List<FriendMessage> messages = friend.getMessages(channel);
+            if(messages == null)
+            {
+                Logging.warn("Message with id {0} was sent to invalid channel {1}.", Crypto.hashToString(id), channel);
+                return null;
+            }
+            lock (messages)
             {
                 // TODO should be optimized
-                if(id != null && friend.messages.Find(x => x.id != null && x.id.SequenceEqual(id)) != null)
+                if(id != null && messages.Find(x => x.id != null && x.id.SequenceEqual(id)) != null)
                 {
                     Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
                     return null;
                 }
-                friend.messages.Add(friend_message);
+                messages.Add(friend_message);
             }
+
+            friend.lastMessage = friend_message;
 
             if (friend.bot)
             {
@@ -238,7 +256,10 @@ namespace SPIXI
                 }
                 else
                 {
-                    friend.lastReceivedMessageId = id;
+                    lock (friend.lastReceivedMessageIds)
+                    {
+                        friend.lastReceivedMessageIds.AddOrReplace(channel, id);
+                    }
                     saveToStorage();
                 }
 
@@ -247,7 +268,7 @@ namespace SPIXI
             // If a chat page is visible, insert the message directly
             if (friend.chat_page != null)
             {
-                friend.chat_page.insertMessage(friend_message);
+                friend.chat_page.insertMessage(friend_message, channel);
             }
 
             // Send a local push notification if Spixi is not in the foreground
@@ -268,7 +289,7 @@ namespace SPIXI
                 alert.flash();
 
             // Write to chat history
-            Node.localStorage.writeMessages(wallet_address, friend.messages);
+            Node.localStorage.writeMessages(wallet_address, channel, messages);
 
             return friend_message;
         }
@@ -421,13 +442,7 @@ namespace SPIXI
                 foreach (Friend friend in friends)
                 {
                     // Clear messages from memory
-                    lock (friend.messages)
-                    {
-                        friend.messages.Clear();
-                    }
-
-                    // Remove history file
-                    Node.localStorage.deleteMessages(friend.walletAddress);
+                    friend.deleteHistory();
                 }
             }
         }

@@ -155,7 +155,7 @@ namespace SPIXI
 
                 if (friend != null)
                 {
-                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, transaction.id, true);
+                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, transaction.id, true);
 
                     SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, Encoding.UTF8.GetBytes(transaction.id));
 

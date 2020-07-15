@@ -153,7 +153,8 @@ img.emoji {
     position: fixed;
     z-index: 100;
     
-    font-size: 16pt;
+    font-size: 20px;
+    line-height: 56px;
     background-image: linear-gradient(#951453, #c2185b);
 
    /* background: #771250;*/
@@ -171,7 +172,6 @@ img.emoji {
 }
 
 .spixi-toolbar-row {
-    padding-top: 10px;
     height: 56px;
 }
 
@@ -224,6 +224,10 @@ img.emoji {
     width: 100%;
     height: 56px;
 }
+.spixi-toolbar-holder.bot {
+    width: 100%;
+    height: 88px;
+}
 .spixi-toolbar-holder.extended {
     height: 128px;
 }
@@ -241,7 +245,7 @@ img.emoji {
 .spixi-toolbar-logo {
     background-image: url('../img/spixitoolbarlogo.png');
     width: 122px;
-    height: 40px;
+    height: 56px;
     background-size: 122px 40px;
     background-repeat: no-repeat;
     background-position: center;
@@ -250,13 +254,15 @@ img.emoji {
 
 .spixi-toolbar-option {
     box-sizing: border-box;
-    font-size: 12pt;
+    font-size: 14px;
     border: 1px solid white;
     border-radius: 10px;
     display: inline-block;
     padding: 3px 12px;
     position:absolute;
+    top: 11px;
 	right:10px;
+    line-height: 25px;
 }
 
 .spixi-toolbar-option:hover
@@ -268,11 +274,13 @@ img.emoji {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 36px;
 }
 .spixi-toolbar-chat-status {
-    font-size: 11pt;
-    margin-top: -4pt;
-    font-weight: 200;
+    font-size: 14px;
+    margin-top: -8px;
+    font-weight: bold;
+    line-height: 28px;
 }
 
 .spixi-toolbar-contact {
@@ -290,6 +298,65 @@ img.emoji {
 }
 .spixi-toolbar-contact-status {
     font-size: 9pt;
+}
+
+.spixi-channel-bar,
+.spixi-channel-selector {
+    position: fixed;
+    top: 56px;
+    left: 0px;
+    right: 0px;
+    height: 32px;
+    background: #FD287C;
+    z-index: 100;
+    line-height: 32px;
+    display: none;
+    font-size: 14px;
+}
+
+.spixi-channel-selector {
+    display: block;
+    top: 88px;
+    overflow: auto;
+    height:auto;
+    max-height: 50%;
+}
+
+.spixi-channel-selector .channel-icon,
+.spixi-channel-bar .channel-icon {
+    -ms-flex: 0 0 16px;
+    flex: 0 0 16px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.spixi-channel-selector .channel-name:before,
+.spixi-channel-bar .channel-name:before {
+    content: "#";
+}
+
+
+.spixi-channel-selector .channel-name,
+.spixi-channel-bar .channel-name {
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spixi-channel-bar .channel-name {
+    font-weight: bold;
+}
+
+.spixi-channel-bar .users-icon {
+    -ms-flex: 0 0 16px;
+    flex: 0 0 16px;
+    color: white;
+}
+
+.spixi-channel-selector-sep
+{
+    background: rgba(255, 255, 255, 0.5);
+    height: 1px;
 }
 
 /* BalanceBar */
@@ -377,7 +444,7 @@ img.emoji {
     color: #FFFFFF; 
 }
 .spixi-optionbar-tab-icon {
-    font-size: 16pt;
+    font-size: 20px;
     height: 26px;
 }
 .spixi-optionbar-label {
@@ -432,7 +499,7 @@ img.emoji {
 .spixi-tab {
     background: #ad1457;
     text-align: center;
-    font-size: 10pt;
+    font-size: 13px;
     font-weight: bold;
     color: #3a061d;
 }
@@ -1744,6 +1811,54 @@ img.emoji {
     width: 64px;
     height: 64px;
 }
+
+.chat-contacts-box {
+    position: fixed;
+    left: 0px;
+    top: 56px;
+    bottom: 0px;
+    right: 0px;
+    background: #E5E5E5;
+    overflow: auto;
+    z-index: 1000;
+    padding: 0px 20px;
+    box-sizing: border-box;
+}
+
+.chat-contacts-box *
+{
+    box-sizing: border-box;
+}
+
+.chat-contacts-box .row
+{
+    margin: 10px 0px;
+}
+
+.chat-contacts-box .nick
+{
+    font-size: 9pt;
+    font-weight: bold;
+    color: black;
+    line-height: 32px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-contacts-box .avatar
+{
+    -ms-flex: 0 0 32px;
+    flex: 0 0 32px;
+}
+
+.chat-contacts-box .avatar img
+{
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+}
+
 
 /* Onboarding */
 #Onboarding {

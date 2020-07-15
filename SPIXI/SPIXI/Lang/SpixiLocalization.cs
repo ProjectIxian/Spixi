@@ -64,6 +64,8 @@ namespace SPIXI.Lang
             StreamReader sr = new StreamReader(file_stream);
             string last_key = "";
 
+            bool success = true;
+
             while(!sr.EndOfStream)
             {
                 string line = sr.ReadLine().Trim();
@@ -75,14 +77,16 @@ namespace SPIXI.Lang
                 int sep_index = line.IndexOf("=");
                 if(sep_index == -1)
                 {
-                    return false;
+                    success = false;
+                    break;
                 }
 
                 last_key = line.Substring(0, sep_index).Trim();
                 string value = line.Substring(sep_index + 1).Trim();
                 if(last_key == "" || value == "")
                 {
-                    return false;
+                    success = false;
+                    break;
                 }
                 localized_strings.Add(last_key, value);
             }
@@ -92,6 +96,11 @@ namespace SPIXI.Lang
 
             file_stream.Close();
             file_stream.Dispose();
+
+            if(!success)
+            {
+                return false;
+            }
 
             loaded = true;
             localizedStrings = localized_strings;

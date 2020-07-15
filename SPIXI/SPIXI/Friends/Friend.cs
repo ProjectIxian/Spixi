@@ -1,14 +1,15 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Network;
+using IXICore.SpixiBot;
 using IXICore.Utils;
+using Org.BouncyCastle.Security;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Xamarin.Forms;
+using ZXing;
 
 namespace SPIXI
 {
@@ -44,6 +45,9 @@ namespace SPIXI
         public string senderNick = "";
 
         public long receivedTimestamp; // timestamp of when the message was received; used for storage purposes
+
+        public string transactionId = "";
+        public int payableDataLen = 0;
 
         public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
         {
@@ -114,6 +118,16 @@ namespace SPIXI
                     fileSize = reader.ReadUInt64();
 
                     receivedTimestamp = reader.ReadInt64();
+
+                    // try/catch can be removed after upgrade
+                    try
+                    {
+                        transactionId = reader.ReadString();
+                        payableDataLen = reader.ReadInt32();
+                    }catch(Exception)
+                    {
+
+                    }
                 }
             }
 
@@ -153,6 +167,9 @@ namespace SPIXI
                     writer.Write(fileSize);
 
                     writer.Write(receivedTimestamp);
+
+                    writer.Write(transactionId);
+                    writer.Write(payableDataLen);
                 }
                 return m.ToArray();
             }
@@ -200,61 +217,6 @@ namespace SPIXI
 
     }
 
-    public class BotContact
-    {
-        public string nick = "";
-        public byte[] publicKey;
-
-        public BotContact()
-        {
-
-        }
-
-        public BotContact(string nick, byte[] public_key)
-        {
-            this.nick = nick;
-            publicKey = public_key;
-        }
-
-        public BotContact(byte[] contact_bytes)
-        {
-            using (MemoryStream m = new MemoryStream(contact_bytes))
-            {
-                using (BinaryReader reader = new BinaryReader(m))
-                {
-                    nick = reader.ReadString();
-
-                    int pk_length = reader.ReadInt32();
-                    if (pk_length > 0)
-                    {
-                        publicKey = reader.ReadBytes(pk_length);
-                    }
-                }
-            }
-        }
-
-        public byte[] getBytes()
-        {
-            using (MemoryStream m = new MemoryStream())
-            {
-                using (BinaryWriter writer = new BinaryWriter(m))
-                {
-                    writer.Write(nick);
-
-                    if(publicKey == null)
-                    {
-                        writer.Write((int)0);
-                    }else
-                    {
-                        writer.Write(publicKey.Length);
-                        writer.Write(publicKey);
-                    }
-                }
-                return m.ToArray();
-            }
-        }
-    }
-
     public class Friend
     {
         public byte[] walletAddress;
@@ -273,23 +235,28 @@ namespace SPIXI
 
         public bool forcePush = false; // on error - for bypassing trying to resend to the same S2 and sending directly to push server
 
-        public List<FriendMessage> messages = new List<FriendMessage>();
+        private Dictionary<int, List<FriendMessage>> messages = new Dictionary<int, List<FriendMessage>>();
 
-        public Dictionary<byte[], BotContact> contacts = new Dictionary<byte[], BotContact>(new ByteArrayComparer()); // used by bot friends
+        public BotInfo botInfo = null;
+        public BotUsers users = null;
+        public BotGroups groups = null;
+        public BotChannels channels = null;
 
         public SingleChatPage chat_page = null;
 
         public bool approved = true;
 
-        public bool bot = false;
+        public bool bot { get;  private set; }
 
         private int _handshakeStatus = 0;
 
         public bool handshakePushed = false;
 
-        public byte[] lastReceivedMessageId = null; // Used primarily for bot purposes
+        public Dictionary<int, byte[]> lastReceivedMessageIds = new Dictionary<int, byte[]>(); // Used primarily for bot purposes
 
         public long lastReceivedHandshakeMessageTimestamp = 0;
+
+        public FriendMessage lastMessage = null;
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -301,9 +268,22 @@ namespace SPIXI
             chachaKey = chacha_key;
             aesKey = aes_key;
             keyGeneratedTime = key_generated_time;
+            bot = false;
         }
 
-        public Friend(byte[] bytes)
+        public void setBotMode()
+        {
+            bot = true;
+            string base_path = Path.Combine(Config.spixiUserFolder, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            users = new BotUsers(Path.Combine(base_path, "contacts.dat"), null, true);
+            users.loadContactsFromFile();
+            groups = new BotGroups(Path.Combine(base_path, "groups.dat"));
+            groups.loadGroupsFromFile();
+            channels = new BotChannels(Path.Combine(base_path, "channels.dat"));
+            channels.loadChannelsFromFile();
+        }
+
+        public Friend(byte[] bytes, int version)
         {
 
             using (MemoryStream m = new MemoryStream(bytes))
@@ -342,22 +322,60 @@ namespace SPIXI
                     bot = reader.ReadBoolean();
                     handshakePushed = reader.ReadBoolean();
 
-                    int num_contacts = reader.ReadInt32();
-                    for (int i = 0; i < num_contacts; i++)
+                    if (bot)
                     {
-                        int contact_len = reader.ReadInt32();
-
-                        BotContact contact = new BotContact(reader.ReadBytes(contact_len));
-                        contacts.Add(new Address(contact.publicKey).address, contact);
+                        setBotMode();
                     }
 
-                    int rcv_msg_id_len = reader.ReadInt32();
-                    if (rcv_msg_id_len > 0)
+                    if (version < 2)
                     {
-                        lastReceivedMessageId = reader.ReadBytes(rcv_msg_id_len);
+                        int num_contacts = reader.ReadInt32();
+                        for (int i = 0; i < num_contacts; i++)
+                        {
+                            int contact_len = reader.ReadInt32();
+
+                            BotContact contact = new BotContact(reader.ReadBytes(contact_len), true);
+                            users.contacts.Add(new Address(contact.publicKey).address, contact);
+                        }
+
+                        int rcv_msg_id_len = reader.ReadInt32();
+                        if (rcv_msg_id_len > 0)
+                        {
+                            reader.ReadBytes(rcv_msg_id_len);
+                        }
+                    }
+                    else
+                    {
+                        int bot_info_len = reader.ReadInt32();
+                        if (bot_info_len > 0)
+                        {
+                            botInfo = new BotInfo(reader.ReadBytes(bot_info_len));
+                        }
+
+                        int msg_count = reader.ReadInt32();
+                        for (int i = 0; i < msg_count; i++)
+                        {
+                            int channel = reader.ReadInt32();
+                            int msg_len = reader.ReadInt32();
+                            lastReceivedMessageIds.Add(channel, reader.ReadBytes(msg_len));
+                        }
                     }
 
                     lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
+
+                    // TODO try/catch wrapper can be removed after upgrade
+                    try
+                    {
+                        int last_message_len = reader.ReadInt32();
+                        if(last_message_len > 0)
+                        {
+                            lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
+                        }
+                    }
+                    catch(Exception)
+                    {
+
+                    }
                 }
             }
         }
@@ -413,28 +431,39 @@ namespace SPIXI
 
                     writer.Write(handshakePushed);
 
-                    int num_contacts = contacts.Count();
-                    writer.Write(num_contacts);
-
-                    foreach (var contact in contacts)
+                    if (botInfo != null)
                     {
-                        byte[] contact_bytes = contact.Value.getBytes();
-
-                        writer.Write(contact_bytes.Length);
-                        writer.Write(contact_bytes);
+                        byte[] bi_bytes = botInfo.getBytes();
+                        writer.Write(bi_bytes.Length);
+                        writer.Write(bi_bytes);
+                    }else
+                    {
+                        writer.Write(0);
                     }
 
-                    if (lastReceivedMessageId != null)
+                    lock(lastReceivedMessageIds)
                     {
-                        writer.Write(lastReceivedMessageId.Length);
-                        writer.Write(lastReceivedMessageId);
+                        writer.Write(lastReceivedMessageIds.Count);
+                        foreach(var msg in lastReceivedMessageIds)
+                        {
+                            writer.Write(msg.Key);
+                            writer.Write(msg.Value.Length);
+                            writer.Write(msg.Value);
+                        }
+                    }
+
+                    writer.Write(lastReceivedHandshakeMessageTimestamp);
+
+                    if (lastMessage != null)
+                    {
+                        byte[] msg_bytes = lastMessage.getBytes();
+                        writer.Write(msg_bytes.Length);
+                        writer.Write(msg_bytes);
                     }
                     else
                     {
                         writer.Write(0);
                     }
-
-                    writer.Write(lastReceivedHandshakeMessageTimestamp);
 
                 }
                 return m.ToArray();
@@ -448,13 +477,16 @@ namespace SPIXI
             int unreadCount = 0;
             lock(messages)
             {
-                for (int i = messages.Count - 1; i >= 0; i--)
+                foreach (var i in messages.Keys)
                 {
-                    if (messages[i].read == true || messages[i].localSender == true)
+                    for (int j = messages[i].Count - 1; j >= 0; j--)
                     {
-                        break;
+                        if (messages[i][j].read == true || messages[i][j].localSender == true)
+                        {
+                            break;
+                        }
+                        unreadCount++;
                     }
-                    unreadCount++;
                 }
             }
             return unreadCount;
@@ -478,35 +510,6 @@ namespace SPIXI
                 return false;
 
             return true;
-        }
-
-        // Check if the last message is unread. Returns true if it is unread.
-        public bool checkLastUnread()
-        {
-            if (messages.Count < 1)
-                return false;
-            FriendMessage last_message = messages[messages.Count - 1];
-            if (last_message.read == false && !last_message.localSender)
-                return true;
-
-            return false;
-        }
-
-        public int getMessageCount()
-        {
-            return messages.Count;
-        }
-
-        // Set last message as read
-        public void setLastRead()
-        {
-            if (messages.Count < 1)
-                return;
-            FriendMessage last_message = messages[messages.Count - 1];
-            if (!last_message.localSender)
-            {
-                last_message.read = true;
-            }
         }
 
 
@@ -665,9 +668,9 @@ namespace SPIXI
             return relayIP;
         }
 
-        public bool setMessageRead(byte[] id)
+        public bool setMessageRead(int channel, byte[] id)
         {
-            FriendMessage msg = messages.Find(x => x.id.SequenceEqual(id));
+            FriendMessage msg = messages[channel].Find(x => x.id.SequenceEqual(id));
             if(msg == null)
             {
                 Logging.error("Error trying to set read indicator, message does not exist");
@@ -679,7 +682,7 @@ namespace SPIXI
                 if (!msg.read)
                 {
                     msg.read = true;
-                    Node.localStorage.writeMessages(walletAddress, messages);
+                    Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
                 }
 
                 if(chat_page != null)
@@ -691,9 +694,9 @@ namespace SPIXI
             return true;
         }
 
-        public bool setMessageReceived(byte[] id)
+        public bool setMessageReceived(int channel, byte[] id)
         {
-            FriendMessage msg = messages.Find(x => x.id.SequenceEqual(id));
+            FriendMessage msg = messages[channel].Find(x => x.id.SequenceEqual(id));
             if (msg == null)
             {
                 Logging.error("Error trying to set received indicator, message does not exist");
@@ -705,7 +708,7 @@ namespace SPIXI
                 if (!msg.confirmed)
                 {
                     msg.confirmed = true;
-                    Node.localStorage.writeMessages(walletAddress, messages);
+                    Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
                 }
 
                 if (chat_page != null)
@@ -758,16 +761,16 @@ namespace SPIXI
             }
             lock (messages)
             {
-                var fm = messages.Find(x => x.id.SequenceEqual(session_id));
+                var fm = messages[0].Find(x => x.id.SequenceEqual(session_id));
                 if(fm == null)
                 {
                     Logging.warn("Cannot end call, no message with session ID exists.");
                     return;
                 }
-                if (call_accepted == true && messages.Last() != fm)
+                if (call_accepted == true && messages[0].Last() != fm)
                 {
                     fm.message = call_duration.ToString();
-                    FriendList.addMessageWithType(null, FriendMessageType.voiceCallEnd, walletAddress, fm.message, local_sender, null, 0, false);
+                    FriendList.addMessageWithType(null, FriendMessageType.voiceCallEnd, walletAddress, 0, fm.message, local_sender, null, 0, false);
                 }
                 else
                 {
@@ -776,18 +779,18 @@ namespace SPIXI
                     {
                         fm.message = call_duration.ToString();
                     }
-                    Node.localStorage.writeMessages(walletAddress, messages);
+                    Node.localStorage.writeMessages(walletAddress, 0, messages[0]);
                     if (chat_page != null)
                     {
-                        chat_page.insertMessage(fm);
+                        chat_page.insertMessage(fm, 0);
                     }
                 }
             }
         }
 
-        public bool hasMessage(byte[] message_id)
+        public bool hasMessage(int channel, byte[] message_id)
         {
-            var fm = messages.Find(x => x.id.SequenceEqual(message_id));
+            var fm = messages[channel].Find(x => x.id.SequenceEqual(message_id));
             if(fm == null)
             {
                 return false;
@@ -795,5 +798,35 @@ namespace SPIXI
 
             return true;
         }
+
+        public List<FriendMessage> getMessages(int channel)
+        {
+            try
+            {
+                lock (messages)
+                {
+                    if (!messages.ContainsKey(channel))
+                    {
+                        // Read messages from chat history
+                        messages[channel] = Node.localStorage.readLastMessages(walletAddress, channel);
+                    }
+                    if (messages.ContainsKey(channel))
+                    {
+                        return messages[channel];
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logging.error("Error reading contact's {0} messages: {1}", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), e);
+            }
+            return null;
+        }
+
+        public IxiNumber getMessagePrice(int msg_len)
+        {
+            return botInfo.cost * msg_len / 1000;
+        }
+
     }
 }

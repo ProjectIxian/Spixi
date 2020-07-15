@@ -106,7 +106,7 @@ namespace SPIXI
 
                     StreamProcessor.sendMessage(friend, message);
 
-                    Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                    Node.localStorage.writeMessages(friend.walletAddress, 0, friend.getMessages(0));
 
                     if (friend.chat_page != null)
                     {
@@ -127,7 +127,6 @@ namespace SPIXI
                 // Create an ixian transaction and send it to the dlt network
                 byte[] to = friend.walletAddress;
 
-                IxiNumber amounti = new IxiNumber(amount);
                 IxiNumber fee = ConsensusConfig.transactionPrice;
                 byte[] from = Node.walletStorage.getPrimaryAddress();
                 byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
@@ -150,7 +149,7 @@ namespace SPIXI
 
                 StreamProcessor.sendMessage(friend, message);
 
-                Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                Node.localStorage.writeMessages(friend.walletAddress, 0, friend.getMessages(0));
 
                 if (friend.chat_page != null)
                 {

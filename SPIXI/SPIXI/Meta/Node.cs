@@ -432,36 +432,44 @@ namespace SPIXI.Meta
             lock (PendingTransactions.pendingTransactions)
             {
                 long cur_time = Clock.getTimestamp();
-                List<object[]> tmp_pending_transactions = new List<object[]>(PendingTransactions.pendingTransactions);
+                List<PendingTransaction> tmp_pending_transactions = new List<PendingTransaction>(PendingTransactions.pendingTransactions);
                 int idx = 0;
                 foreach (var entry in tmp_pending_transactions)
                 {
-                    Transaction t = (Transaction)entry[0];
-                    long tx_time = (long)entry[1];
-                    if ((int)entry[2] > 3) // already received 3+ feedback
-                    {
-                        continue;
-                    }
+                    Transaction t = entry.transaction;
+                    long tx_time = entry.addedTimestamp;
 
                     if (t.applied != 0)
                     {
-                        PendingTransactions.pendingTransactions.RemoveAll(x => ((Transaction)x[0]).id.SequenceEqual(t.id));
+                        PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
                         continue;
                     }
 
                     // if transaction expired, remove it from pending transactions
                     if (last_block_height > ConsensusConfig.getRedactedWindowSize() && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
                     {
-                        Console.WriteLine("Error processing the transaction {0}", Encoding.UTF8.GetBytes(t.id));
-                        PendingTransactions.pendingTransactions.RemoveAll(x => ((Transaction)x[0]).id.SequenceEqual(t.id));
+                        Console.WriteLine("Error sending the transaction {0}", Encoding.UTF8.GetBytes(t.id));
+                        PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
                         continue;
                     }
 
                     if (cur_time - tx_time > 40) // if the transaction is pending for over 40 seconds, resend
                     {
                         CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.newTransaction, t.getBytes(), null);
-                        PendingTransactions.pendingTransactions[idx][1] = cur_time;
+                        entry.addedTimestamp = cur_time;
+                        entry.confirmedNodeList.Clear();
                     }
+
+                    if (entry.confirmedNodeList.Count() > 3) // already received 3+ feedback
+                    {
+                        continue;
+                    }
+
+                    if (cur_time - tx_time > 20) // if the transaction is pending for over 20 seconds, send inquiry
+                    {
+                        CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
+                    }
+
                     idx++;
                 }
             }

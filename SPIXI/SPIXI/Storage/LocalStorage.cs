@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 
 namespace SPIXI.Storage
 {  
@@ -137,14 +138,16 @@ namespace SPIXI.Storage
             }
             catch (Exception e)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot open account file. {0}", e.Message));
+                Logging.error("Cannot open account file: {0}", e.Message);
                 return false;
             }
+
+            int version = 0;
 
             try
             {
                 // TODO: decrypt data and compare the address/pubkey
-                System.Int32 version = reader.ReadInt32();
+                version = reader.ReadInt32();
                 int address_length = reader.ReadInt32();
                 byte[] address = reader.ReadBytes(address_length);
                 string nick = reader.ReadString();
@@ -157,27 +160,51 @@ namespace SPIXI.Storage
                 {
                     int friend_len = reader.ReadInt32();
 
-                    Friend friend = new Friend(reader.ReadBytes(friend_len));
+                    Friend friend = new Friend(reader.ReadBytes(friend_len), version);
 
-                    try
+                    string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+
+                    if (friend.bot)
                     {
-                        // Read messages from chat history
-                        friend.messages = readLastMessages(friend.walletAddress);
-                    }catch(Exception e)
+                        var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                        if (files.Count() > 0)
+                        {
+                            foreach(var file in files)
+                            {
+                                File.Delete(file);
+                            }
+                        }
+                    }else
                     {
-                        Logging.error("Error reading contact's {0} messages: {1}", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), e);
+                        var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                        if (files.Count() > 0)
+                        {
+                            string channel_path = Path.Combine(friend_path, "0");
+                            if (!Directory.Exists(channel_path))
+                            {
+                                Directory.CreateDirectory(channel_path);
+                            }
+                            foreach (var file in files)
+                            {
+                                File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
+                            }
+                        }
                     }
 
                     FriendList.addFriend(friend);
                 }
-
             }
             catch (Exception e)
             {
-                Logging.log(LogSeverity.error, String.Format("Cannot read from account file. {0}", e.Message));
+                Logging.error("Cannot read from account file: {0}", e.Message);
             }
 
             reader.Close();
+
+            if (version < 2)
+            {
+                writeAccountFile();
+            }
 
             return true;
         }
@@ -196,14 +223,14 @@ namespace SPIXI.Storage
                 }
                 catch (Exception e)
                 {
-                    Logging.log(LogSeverity.error, String.Format("Cannot create account file. {0}", e.Message));
+                    Logging.error("Cannot create account file: {0}", e.Message);
                     return false;
                 }
 
                 try
                 {
                     // TODO: encrypt written data
-                    System.Int32 version = 1; // Set the account file version
+                    int version = 2; // Set the account file version
                     writer.Write(version);
 
                     // Write the address used for verification
@@ -227,7 +254,7 @@ namespace SPIXI.Storage
                 }
                 catch (Exception e)
                 {
-                    Logging.log(LogSeverity.error, String.Format("Cannot write to account file. {0}", e.Message));
+                    Logging.error("Cannot write to account file: {0}", e.Message);
                 }
                 writer.Close();
             }
@@ -326,12 +353,12 @@ namespace SPIXI.Storage
         }
 
         // Reads the message archive for a given wallet
-        public List<FriendMessage> readLastMessages(byte[] wallet_bytes, long from_time_stamp = 0, int msg_count = 100, bool reverse = true)
+        public List<FriendMessage> readLastMessages(byte[] wallet_bytes, int channel, long from_time_stamp = 0, int msg_count = 100, bool reverse = true)
         {
             lock (messagesLock)
             {
                 string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-                string messages_path = Path.Combine(documentsPath, "Chats", wallet);
+                string messages_path = Path.Combine(documentsPath, "Chats", wallet, channel.ToString());
 
                 List<FriendMessage> messages = new List<FriendMessage>();
 
@@ -339,7 +366,7 @@ namespace SPIXI.Storage
                 {
                     return messages;
                 }
-                string[] files = Directory.GetFiles(messages_path);
+                string[] files = Directory.GetFiles(messages_path, "*.ixi");
                 if (reverse)
                 {
                     files = files.OrderByDescending(x => x).ToArray();
@@ -402,10 +429,10 @@ namespace SPIXI.Storage
             }
         }
 
-        private string getMessagesFullPath(string wallet_address, long min_timestamp)
+        private string getMessagesFullPath(string wallet_address, int channel, long min_timestamp)
         {
-            string messages_path = Path.Combine(documentsPath, "Chats", wallet_address);
-            var files = Directory.GetFiles(messages_path).OrderBy(x => x).ToArray();
+            string messages_path = Path.Combine(documentsPath, "Chats", wallet_address, channel.ToString());
+            var files = Directory.GetFiles(messages_path, "*.ixi").OrderBy(x => x).ToArray();
             for(int i = 0; i < files.Count(); i++)
             {
                 if (i + 1 < files.Count() && getTimestampFromFileName(files[i + 1]) > min_timestamp)
@@ -422,7 +449,7 @@ namespace SPIXI.Storage
         }
 
         // Writes the message archive for a given wallet
-        public bool writeMessages(byte[] wallet_bytes, List<FriendMessage> messages)
+        public bool writeMessages(byte[] wallet_bytes, int channel, List<FriendMessage> messages)
         {
             List<FriendMessage> local_messages = null;
             lock (messages)
@@ -432,14 +459,14 @@ namespace SPIXI.Storage
             lock (messagesLock)
             {
                 string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
-                string messages_path = Path.Combine(documentsPath, "Chats", wallet);
+                string messages_path = Path.Combine(documentsPath, "Chats", wallet, channel.ToString());
 
                 if (!Directory.Exists(messages_path))
                 {
                     Directory.CreateDirectory(messages_path);
                 }
 
-                string messages_full_path = getMessagesFullPath(wallet, local_messages.First().receivedTimestamp);
+                string messages_full_path = getMessagesFullPath(wallet, channel, local_messages.First().receivedTimestamp);
                 if (messages_full_path == null)
                 {
                     messages_full_path = Path.Combine(messages_path, local_messages.First().receivedTimestamp + ".ixi");

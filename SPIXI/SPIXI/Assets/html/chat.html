@@ -25,24 +25,60 @@
     <script src="js/spixi.js"></script>
 </head>
 <body onload="onChatScreenLoad();" style="position:fixed;width:100%;height:100%;">
+    <div id="templates" style="display: none;">
+        <div class="channel-selector-template">
+            <div class="row">
+                <div class="col channel-icon"></div>
+                <div class="col channel-name"></div>
+            </div>
+        </div>
+        <div class="channel">
+            <div class="row">
+                <div class="col-xs-6 channel-name"><div>&nbsp;</div></div>
+                <div class="col-xs-4 pdesc"></div>
+                <div class="col-xs-2 actions"></div>
+            </div>
+        </div>
+        <div class="group">
+            <div class="row">
+                <div class="col-xs-6 group-name"><div>&nbsp;</div></div>
+                <div class="col-xs-2 cost"></div>
+                <div class="col-xs-2 admin"></div>
+                <div class="col-xs-2 actions"></div>
+            </div>
+        </div>
+        <div class="user">
+            <div class="row">
+                <div class="col avatar"></div>
+                <div class="col nick"></div>
+            </div>
+        </div>
+    </div>
+    
     <div id="wrap" class="container-fluid noselect">
 
         <!-- Toolbar Chat -->
         <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
-            <div class="row spixi-toolbar-row" style="padding-top: 0px;">
-                <div id="backbtn" class="col-2" style="padding-top: 10px;">
+            <div class="row spixi-toolbar-row">
+                <div id="backbtn" class="col-2">
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="col-8">
                     <div id="title" class="spixi-toolbar-chat-name"></div>
                     <div id="status" class="spixi-toolbar-chat-status"></div>
                 </div>
-                <div class="col-2 spixi-center" style="padding-top: 10px;">
+                <div class="col-2 spixi-center">
                     <a href="ixian:call" id="CallButton" style="display:none;color:white;"><i class="fas fa-phone"></i></a>
                 </div>
             </div>
-
+        </div>
+        <div class="container-fluid spixi-channel-bar" onclick="displayChannelSelector();">
+            <div class="row">
+                <div class="col channel-icon"></div>
+                <div class="col channel-name"></div>
+                <div class="col users-icon" onclick="showContacts();"><i class="fa fa-user-friends"></i></div>
+            </div>
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
@@ -108,646 +144,21 @@
                     *SL{chat-send-payment}
                 </div>
                 <!--<div class="col-3 chat_attach_tab" id="ca_app">
-        <i class="fa fa-code chatattachsymbol"></i><br />
-        Use App
-    </div>-->
+                    <i class="fa fa-code chatattachsymbol"></i><br />
+                    Use App
+                </div>-->
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
     </div>
 
-
-    <script type="text/javascript">
-        var attachMode = false;
-
-        var contactrequestbar = document.getElementById("contactrequestbar");
-
-        function onChatScreenLoad()
-        {
-            document.getElementById("chat_input").focus();
-            twemoji.base = "libs/twemoji/";
-            twemoji.size = "72x72";
-            onload();
-        }
-
-        function onChatScreenLoaded()
-        {
-            document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-            $('#chat_emoji').lsxEmojiPicker({
-                twemoji: true,
-                onSelect: function (emoji) {
-                    var chatInput = document.getElementById("chat_input");
-                    if(chatInput.innerHTML == "<br>")
-                    {
-                        chatInput.innerHTML = emoji.value + " ";
-                    }else
-                    {
-                        chatInput.innerHTML += emoji.value + " ";
-                    }
-                    chatInput.focus();
-                }
-            });
-            document.getElementById("chat_input").focus();
-        }
-
-        document.getElementById("backbtn").onclick = function () {
-            location.href = "ixian:back";
-        }
-
-        function test() {
-            setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
-            //showContactRequest(true);
-            addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
-            addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
-            setTimeout(function () { updateFile(9090, "25", "False"); }, 1000);
-            setTimeout(function () { updateFile(9090, "50", "False"); }, 2000);
-            setTimeout(function () { updateFile(9090, "75", "False"); }, 3000);
-            setTimeout(function () { updateFile(9090, "100", "False"); }, 4000);
-
-            setTimeout(function () { addCall(1000, "Incoming call", "Duration 15:32", "False", "11:23 AM"); }, 1000);
-            setTimeout(function () { addCall(1000, "Incoming call", "Declined", "True", "11:23 AM"); }, 2000);
-
-            setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
-            setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
-            setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
-            setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
-            setTimeout(function () { addFile(12, 12, "", "file.png", "10:27 AM", "True", "True", "True"); }, 2200);
-            setTimeout(function () { addMe(5, "", "Great! Just got back from the moon.", "11:24 AM", "True", "True"); }, 2200);
-            setTimeout(function () { addThem(6, "img/spixiavatar.png", "Ohh??? What were you doing there?", "11:25 AM", "True", "True"); }, 2500);
-            setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
-            setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);
-
-            setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);
-        }
-
-
-        document.getElementById("ca_request").onclick = function () {
-            location.href = "ixian:request";
-        }
-        document.getElementById("ca_send").onclick = function () {
-            location.href = "ixian:send";
-        }
-
-        /*document.getElementById("ca_app").onclick = function () {
-            document.getElementById("AppsMenu").style.display = "block";
-        }*/
-
-        document.getElementById("ca_sendfile").onclick = function () {
-            var chatInput = document.getElementById("chat_input");
-            chatInput.click();
-            chatInput.focus();
-            if (attachMode == true) {
-                attachMode = false;
-                hideAttach();
-            }
-
-            location.href = "ixian:sendfile";
-        }
-
-        document.getElementById("request_bar_ignore").onclick = function () {
-            location.href = "ixian:back";
-        }
-        document.getElementById("request_bar_accept").onclick = function () {
-            showContactRequest(false);
-            location.href = "ixian:accept";
-        }
-        function showContactRequest(show) {
-            if (show == true) {
-                contactrequestbar.style.display = "block";
-                document.getElementById("chat_input").disabled = true;
-            }
-            else {
-                contactrequestbar.style.display = "none";
-                document.getElementById("chat_input").disabled = false;
-            }
-        }
-
-        document.getElementById("chat_send").onclick = function () {
-            var chatInput = document.getElementById("chat_input");
-            chatInput.click();
-            chatInput.focus();
-            var chat_text = chatInput.innerText;
-
-            if(chat_text.length > 1000)
-            {
-                alert("*SL{chat-text-too-long}");
-                return false;
-            }
-
-            if (chat_text.length > 0)
-                location.href = "ixian:chat:" + encodeURIComponent(chat_text);
-        }
-
-        var shiftPressed = false;
-
-        $("#chat_input").keydown(function (event) {
-            if(event.keyCode === 16)
-            {
-                shiftPressed = true;
-            }
-        });
-
-        $("#chat_input").keypress(function (event) {
-            if(event.keyCode === 13)
-            {
-                if(!shiftPressed)
-                {
-                    return false;
-                }
-            }
-        });
-
-        $("#chat_input").keyup(function (event) {
-            if(event.keyCode === 16)
-            {
-                shiftPressed = false;
-            }
-            if (event.keyCode === 13 && !shiftPressed) {
-                $("#chat_send").click();
-            }
-
-            var chat_text = document.getElementById("chat_input").innerHTML;
-            if (chat_text.length > 0)
-                document.getElementById("chat_send").style.backgroundColor = "#C1185B";
-            else
-                document.getElementById("chat_send").style.backgroundColor = "#BABABA";
-        });
-
-        function shouldScroll() {
-            var el = document.getElementById("wrap");
-            if (el.scrollTop >= el.scrollHeight - el.clientHeight - 20) {
-                return true;
-            }
-            return false;
-        }
-
-        $("#chat_input").focus(function (event) {
-            if (shouldScroll()) {
-                setTimeout(function () {
-                    document.getElementById("chatholder").scrollIntoView(false);
-                    // Hack for slow devices
-                    setTimeout(function () {
-                        document.getElementById("chatholder").scrollIntoView(false);
-                    }, 800);
-                }, 200);
-            }
-        });
-
-
-        $("#chat_input").click(function (event) {
-            if (shouldScroll()) {
-                setTimeout(function () {
-                    document.getElementById("chatholder").scrollIntoView(false);
-                    // Hack for slow devices
-                    setTimeout(function () {
-                        document.getElementById("chatholder").scrollIntoView(false);
-                    }, 800);
-                }, 200);
-            }
-        });
-
-        function clearInput() {
-            document.getElementById("chat_input").innerHTML = "";
-            document.getElementById("chat_send").style.backgroundColor = "#BABABA";
-        }
-
-        document.getElementById("messages").addEventListener("click", function (e) {
-            if (e.target.className.indexOf("nick") != -1) {
-                var nickEl = e.target;
-                var nick = nickEl.getAttribute("nick");
-                var address = nickEl.getAttribute("address");
-                if (address != nick) {
-                    if (nickEl.innerHTML == nick) {
-                        nickEl.innerHTML = address;
-                    } else {
-                        nickEl.innerHTML = nick;
-                    }
-                }
-            }
-        });
-
-        function parseImageUrl(text)
-        {
-            var imageServerKey = /https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+/;
-            var imageServerKeyCheck = /^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/;
-            for(var imageUrlIndex = text.search(imageServerKey), nextStartPos = 0; imageUrlIndex > -1; imageUrlIndex = text.substring(nextStartPos).search(imageServerKey))
-            {
-                var imageUrl = text.substring(imageUrlIndex, text.length);
-                var endIndex = imageUrl.indexOf(" ");
-                if(endIndex == -1)
-                {
-                    endIndex = imageUrl.length;
-                }
-                imageUrl = imageUrl.substring(0, endIndex);
-                if(imageUrl.search(imageServerKeyCheck) > -1)
-                {
-                    var imgHtml = '<img src="' + imageUrl + '"/>';
-                    text = text.replace(imageUrl, imgHtml);
-                    nextStartPos = imageUrlIndex + imgHtml.length;
-                }else
-                {
-                    nextStartPos = imageUrlIndex + 1;
-                }
-            }
-            return text;
-        }
-
-        function addText(id, address, nick, avatar, text, time, className) {
-            text = text.replace(/\n/g, "<br>");
-
-            var textEl = document.createElement('div');
-            textEl.className = "text selectable";
-
-            try
-            {
-                text = parseImageUrl(text);
-            }catch(e)
-            {
-            }
-            
-            textEl.innerHTML = text;
-            twemoji.parse(textEl);
-
-
-            var timeClass = "spixi-timestamp";
-            var relativeTime = getRelativeTime(time);
-
-            if (getTimeDifference(time) < 3600) {
-                timeClass = "spixi-timestamp spixi-rel-ts-active";
-            }
-
-            var timeEl = document.createElement('div');
-            timeEl.setAttribute("data-timestamp", time);
-            timeEl.className = "time selectable " + timeClass;
-            timeEl.innerHTML = relativeTime;
-
-            var bubbleEl = document.createElement('div');
-            bubbleEl.id = "msg_" + id;
-            bubbleEl.className = className + "";
-
-            if (nick != "") {
-                var nickEl = document.createElement('div');
-                if (nick == address) {
-                    nickEl.setAttribute("name", "a_" + address);
-                }
-                nickEl.setAttribute("nick", nick);
-                nickEl.setAttribute("address", address);
-                nickEl.className = "nick selectable";
-                nickEl.innerHTML = nick;
-                bubbleEl.appendChild(nickEl);
-            }
-
-            bubbleEl.appendChild(textEl);
-            bubbleEl.appendChild(timeEl);
-            bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
-
-            if (avatar != "") {
-
-                avatar = avatar.replace(/&#92;/g, '\\');
-
-                var avatarEl = document.createElement('img');
-                avatarEl.className = "avatar selectable";
-                avatarEl.src = avatar;
-                if(nick == "")
-                {
-                    avatarEl.alt = address;
-                }
-                bubbleEl.appendChild(avatarEl);
-            }
-
-            var scroll = shouldScroll();
-
-            document.getElementById("messages").appendChild(bubbleEl);
-
-            if (scroll) {
-                document.getElementById("chatholder").scrollIntoView(false);
-            }
-        }
-
-        function addMe(id, address, nick, avatar, text, time, sent, read) {
-            var additionalClasses = "";
-            if (sent == "True") {
-                additionalClasses = " sent";
-            }
-            if (read == "True") {
-                additionalClasses += " read";
-            }
-            addText(id, address, nick, avatar, text, time, "spixi-bubble myself" + additionalClasses);
-        }
-
-        function addThem(id, address, nick, avatar, text, time) {
-            addText(id, address, nick, avatar, text, time, "spixi-bubble");
-        }
-
-        function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, progress, complete) {
-
-            var additionalClasses = "";
-            if (me == "True") {
-                additionalClasses = " myself";
-                if (sent == "True") {
-                    additionalClasses += " sent";
-                }
-                if (read == "True") {
-                    additionalClasses += " read";
-                }
-            }
-
-            var textEl = document.createElement('div');
-            textEl.className = "text selectable";
-            textEl.innerHTML = name;
-
-            var icon = document.createElement('i');
-            icon.className = "fa fa-arrow-down actionicon";
-
-            var iconWrap = document.createElement('div');
-            iconWrap.className = "icon-wrap";
-
-            iconWrap.appendChild(icon);
-
-            var linkEl = document.createElement('a');
-            linkEl.style.display = "block";
-            linkEl.id = "file_" + fileid;
-
-            if (me == "True") {
-                linkEl.href = "ixian:openfile:" + fileid;
-                icon.className = "fa fa-folder-open actionicon";
-                linkEl.appendChild(iconWrap);
-                linkEl.appendChild(textEl);
-            }
-            else {
-                linkEl.href = "ixian:acceptfile:" + fileid;
-                linkEl.appendChild(textEl);
-                linkEl.appendChild(iconWrap);
-            }
-
-
-            addText(id, address, nick, avatar, linkEl.outerHTML, time, "spixi-bubble file" + additionalClasses);
-
-            if (progress == "100") {
-                updateFile(fileid, progress, complete);
-            }
-        }
-
-        function addCall(id, message, declined, time) {
-            var textEl = document.createElement('div');
-            textEl.className = "text selectable";
-            textEl.innerHTML = message;
-
-            var timeClass = "spixi-timestamp";
-            var relativeTime = getRelativeTime(time);
-            if (getTimeDifference(time) < 3600) {
-                timeClass = "spixi-timestamp spixi-rel-ts-active";
-            }
-
-            var timeEl = document.createElement('div');
-            timeEl.setAttribute("data-timestamp", time);
-            timeEl.className = "time selectable " + timeClass;
-            timeEl.innerHTML = relativeTime;
-        
-            var icon = document.createElement('div');
-            icon.className = "fa fa-phone icon";
-
-            var bubbleEl = document.getElementById("call_" + id);
-            var append = false;
-            if(bubbleEl == null)
-            {
-                bubbleEl = document.createElement('div');
-                append = true;
-            }else
-            {
-                bubbleEl.innerHTML = "";
-            }
-
-            bubbleEl.id = "call_" + id;
-            bubbleEl.className = "spixi-callbubble";
-            if (declined == "True") {
-                bubbleEl.className = "spixi-callbubble spixi-callbubble-declined";
-                icon.className = "fa fa-phone-slash icon";
-            }
-
-            bubbleEl.appendChild(icon);
-
-            var dataEl = document.createElement('div');
-            dataEl.className = "spixi-call-data";
-            dataEl.appendChild(textEl);
-            dataEl.appendChild(timeEl);
-
-            bubbleEl.appendChild(dataEl);
-
-
-            var scroll = shouldScroll();
-            if(append)
-            {
-                document.getElementById("messages").appendChild(bubbleEl);
-            }
-
-            if (scroll) {
-                document.getElementById("chatholder").scrollIntoView(false);
-            }
-        }
-
-        function updateFile(id, progress, complete) {
-            var fileEl = document.getElementById("file_" + id);
-            if (fileEl != null) {
-                if (complete == "True") {
-                    fileEl.href = "ixian:openfile:" + id;
-                }
-                else {
-                    fileEl.href = "javascript:void(0)";
-                }
-
-                var aEls = fileEl.getElementsByClassName("actionicon");
-                if (aEls.length == 0)
-                    aEls = fileEl.getElementsByClassName("actionprogress");
-
-                if (aEls.length > 0) {
-                    var aEl = aEls[0];
-                    if (complete == "True") {
-                        aEl.className = "fa fa-folder-open actionicon";
-                        aEl.innerHTML = "";
-                    }
-                    else {
-                        aEl.className = "actionprogress";
-                        aEl.innerHTML = progress + "<span class='smaller'>%</span>";
-                    }
-                }
-            }
-        }
-
-        function updateMessage(id, message, sent, read) {
-            message = message.replace(/\n/g, "<br>");
-
-            var msgEl = document.getElementById("msg_" + id);
-            var isFile = false;
-            var isPayment = false;
-
-            if (msgEl != null) {
-
-                var additionalClasses = "";
-                if (sent == "True") {
-                    additionalClasses = " sent";
-                }
-                if (read == "True") {
-                    additionalClasses += " read";
-                }
-
-                if (msgEl.className.indexOf("spixi-payment-request") > -1) {
-                    additionalClasses += " spixi-payment-request";
-                    isPayment = true;
-                }
-
-                if (msgEl.className.indexOf("file") > -1) {
-                    additionalClasses += " file";
-                    isFile = true;
-                }
-
-                msgEl.className = "spixi-bubble myself" + additionalClasses;
-
-                if (isFile == false && isPayment == false) {
-                    try
-                    {
-                        message = parseImageUrl(message);
-                    }catch(e)
-                    {
-                    }
-                    var textEls = msgEl.getElementsByClassName("text");
-                    if (textEls.length > 0) {
-                        var textEl = textEls[0];
-                        textEl.innerHTML = message;
-
-                        twemoji.parse(textEl);
-                    }
-                }
-            }
-        }
-
-        function addPaymentRequest(id, txid, address, nick, avatar, title, amount, status, statusIcon, time, localSender, sent, read, enableView) {
-            var message = "<div id=\"tx_" + txid + "\" class=\"txid-el\"><div class=\"title\"><i class=\"fas fa-flag\"></i> " + title + "</div>";
-            message += "<div class=\"status\">*SL{chat-status}:<div class=\"content\">" + status + "<i class=\"fas " + statusIcon + "\"></i></div></div>";
-            message += "<div class=\"amount\">*SL{chat-amount}:<div class=\"content\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/><span>" + amount + "</span></div></div>";
-            var viewStyle = "display:none;";
-            if (enableView == "True") {
-                viewStyle = "";
-            }
-            message += "<div class=\"view\" style=\"" + viewStyle + "\" onclick=\"location.href = 'ixian:viewPayment:" + id + "'\"><i class=\"fas fa-search\"></i> *SL{chat-view}</div>";
-
-            var additionalClasses = "";
-            if (localSender == "True") {
-                additionalClasses = " myself";
-                if (sent == "True") {
-                    additionalClasses += " sent";
-                }
-                if (read == "True") {
-                    additionalClasses += " read";
-                }
-            }
-
-            addText(id, address, nick, avatar, message, time, "spixi-bubble spixi-payment-request" + additionalClasses);
-        }
-
-        function updatePaymentRequestStatus(msgId, txid, status, statusIcon, enableView) {
-            var el = document.getElementById("msg_" + msgId);
-
-            if (el == null) {
-                return;
-            }
-
-            var tmpEls = el.getElementsByClassName("txid-el");
-            tmpEls[0].id = "tx_" + txid;
-
-            var statusEls = el.getElementsByClassName("status");
-            var statusContentEls = statusEls[0].getElementsByClassName("content");
-            statusContentEls[0].innerHTML = status + "<i class=\"fas " + statusIcon + "\"></i>";
-
-            var viewEls = el.getElementsByClassName("view");
-            if (enableView == "True") {
-                viewEls[0].style.display = "";
-            } else {
-                viewEls[0].style.display = "none";
-            }
-
-        }
-
-        function updateTransactionStatus(txid, status, statusIcon) {
-            var el = document.getElementById("tx_" + txid);
-
-            if (el == null) {
-                return;
-            }
-
-            var statusEls = el.getElementsByClassName("status");
-            var statusContentEls = statusEls[0].getElementsByClassName("content");
-            statusContentEls[0].innerHTML = status + "<i class=\"fas " + statusIcon + "\"></i>";
-        }
-
-        function setNickname(nick) {
-            document.getElementById("title").innerHTML = nick;
-            document.getElementById("contactrequesttitle").innerHTML = nick + " *SL{chat-sent-contact-request}";
-        }
-
-        // Handle 'attach' bar, allowing to send and request IXI
-        document.getElementById("chat_attach").onclick = function () {
-            if (attachMode == true) {
-                attachMode = false;
-                hideAttach();
-            }
-            else {
-                attachMode = true;
-                showAttach();
-            }
-        }
-
-        function hideAttach() {
-            document.getElementById("chatbar").style.bottom = "0px";
-            document.getElementById("chatholder").style.height = "57px";
-            document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-        }
-
-        function showAttach() {
-            var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
-            document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
-            document.getElementById("chatholder").style.height = (attachBarHeight + 57) + "px";
-            document.getElementById("chatattachbar").style.bottom = "0px";
-            
-            setTimeout(function () {
-                        document.getElementById("chatholder").scrollIntoView(false);
-            }, 400);
-        }
-
-        function showIndicator(ind) {
-            if (ind == "true") {
-                document.getElementById("status").innerHTML = "*SL{chat-online}";
-            } else {
-                document.getElementById("status").innerHTML = "*SL{chat-offline}";
-            }
-        }
-
-        function updateGroupChatNicks(address, nick) {
-            var nickEls = document.getElementsByName("a_" + address);
-            for (var i = 0; i < nickEls.length; i++) {
-                var nickEl = nickEls[i];
-                nickEl.name = "";
-                nickEl.setAttribute("nick", nick);
-                nickEl.innerHTML = nick;
-            }
-        }
-
-        function addApp(id, name, icon)
-        {
-            var appsEl = document.getElementById("AppsMenu");
-
-            var el = document.createElement("div");
-            el.onclick = function() { appsEl.style.display = "none"; location.href = "ixian:app:" + id; };
-            el.className = "spixi-app";
-            el.innerHTML = "<img src='" + icon + "'/><br/>" + name;
-
-            appsEl.appendChild(el);
-        }
-
-        function showCallButton()
-        {
-            document.getElementById("CallButton").style.display = "block";
-        }
+    <script src="js/chat.js"></script>
+    <script>
+        var SL_ChatTextTooLong = "*SL{chat-text-too-long}";
+        var SL_ChatStatus = "*SL{chat-status}";
+        var SL_ChatAmount = "*SL{chat-amount}";
+        var SL_ChatView = "*SL{chat-view}";
+        var SL_ChatSentContactRequest = "*SL{chat-sent-contact-request}";
     </script>
 </body>
 </html>

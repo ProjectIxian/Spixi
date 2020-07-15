@@ -1,15 +1,20 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.SpixiBot;
 using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Network;
+using SPIXI.Storage;
 using SPIXI.VoIP;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using Xamarin.Forms.Internals;
 
 namespace SPIXI
 {    
@@ -89,13 +94,13 @@ namespace SPIXI
                 FileTransfer transfer = new FileTransfer(data.data);
 
                 string message_data = string.Format("{0}:{1}", transfer.uid, transfer.fileName);
-                FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, message_data);
+                FriendMessage fm = FriendList.addMessageWithType(message_id, FriendMessageType.fileHeader, sender, data.channel, message_data);
                 if (fm != null)
                 {
                     fm.transferId = transfer.uid;
                     fm.filePath = transfer.fileName;
                     fm.fileSize = transfer.fileSize;
-                    Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+                    Node.localStorage.writeMessages(friend.walletAddress, transfer.channel, friend.getMessages(data.channel));
                 }
             }
             else
@@ -194,7 +199,7 @@ namespace SPIXI
 
 
         // Called when receiving received confirmation from the message recipient
-        public static void handleMsgReceived(byte[] sender, byte[] msg_id)
+        public static void handleMsgReceived(byte[] sender, int channel, byte[] msg_id)
         {
             Friend friend = FriendList.getFriend(sender);
 
@@ -260,7 +265,7 @@ namespace SPIXI
                     return;
                 }
 
-                friend.setMessageReceived(msg_id);
+                friend.setMessageReceived(channel, msg_id);
             }
             else
             {
@@ -269,12 +274,12 @@ namespace SPIXI
         }
 
         // Called when receiving read confirmation from the message recipient
-        public static void handleMsgRead(byte[] sender, byte[] msg_id)
+        public static void handleMsgRead(byte[] sender, int channel, byte[] msg_id)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend != null)
             {
-                friend.setMessageRead(msg_id);
+                friend.setMessageRead(channel, msg_id);
                 pendingMessageProcessor.removeMessage(friend, msg_id);
             }
             else
@@ -341,17 +346,27 @@ namespace SPIXI
             byte[] real_sender_address = null;
             byte[] sender_address = message.sender;
 
-            if (endpoint != null)
+            Friend tmp_friend = FriendList.getFriend(message.recipient);
+            if (tmp_friend != null)
             {
-                if (endpoint.presence.wallet.SequenceEqual(message.recipient))
+                if (tmp_friend.bot)
                 {
                     // message from a bot group chat
                     real_sender_address = message.sender;
                     sender_address = message.recipient;
 
                     replaced_sender_address = true;
+                }else
+                {
+                    Logging.error("Received message intended for recipient {0} that isn't a bot.", Base58Check.Base58CheckEncoding.EncodePlain(tmp_friend.walletAddress));
+                    return;
                 }
+            }else if(!Node.walletStorage.isMyAddress(message.recipient))
+            {
+                Logging.error("Received message for {0} but this address is not one of ours.", Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
+                return;
             }
+
 
             //Logging.info("Received S2 data from {0} for {1}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
 
@@ -365,6 +380,7 @@ namespace SPIXI
                 chacha_key = friend.chachaKey;
             }
 
+            int channel = 0;
             try
             {
                 if (message.type == StreamMessageCode.error)
@@ -391,6 +407,31 @@ namespace SPIXI
                 // Extract the Spixi message
                 SpixiMessage spixi_message = new SpixiMessage(message.data);
 
+                if(spixi_message != null)
+                {
+                    channel = spixi_message.channel;
+                }
+
+                if(friend != null)
+                {
+                    if (message.encryptionType == StreamMessageEncryptionCode.none)
+                    {
+                        if (!friend.bot)
+                        {
+                            switch(spixi_message.type)
+                            {
+                                case SpixiMessageCode.msgReceived:
+                                case SpixiMessageCode.requestAdd:
+                                case SpixiMessageCode.acceptAddBot:
+                                    break;
+                                default:
+                                    Logging.error("Expecting encrypted message from {0}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                                    return;
+                            }
+                        }
+                    }
+                }
+
                 switch (spixi_message.type)
                 {
                     case SpixiMessageCode.pubKey:
@@ -414,7 +455,7 @@ namespace SPIXI
                             else
                             {*/
                             // Add the message to the friend list
-                            FriendList.addMessage(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
+                            FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
                             //}
                         }
                         break;
@@ -433,12 +474,12 @@ namespace SPIXI
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
-                            else if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
+                            else if (replaced_sender_address && (!friend.users.hasUser(real_sender_address) || friend.users.getUser(real_sender_address).publicKey == null))
                             {
                                 requestPubKey(friend, real_sender_address);
                                 requestNickname(friend, real_sender_address);
                             }
-                            else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
+                            else if (replaced_sender_address && !message.verifySignature(friend.users.getUser(real_sender_address).publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                             }
@@ -470,11 +511,11 @@ namespace SPIXI
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
-                            else if (replaced_sender_address && (!friend.contacts.ContainsKey(real_sender_address) || friend.contacts[real_sender_address].publicKey == null))
+                            else if (replaced_sender_address && (!friend.users.hasUser(real_sender_address) || friend.users.getUser(real_sender_address).publicKey == null))
                             {
                                 requestPubKey(friend, real_sender_address);
                             }
-                            else if (replaced_sender_address && !message.verifySignature(friend.contacts[real_sender_address].publicKey))
+                            else if (replaced_sender_address && !message.verifySignature(friend.users.getUser(real_sender_address).publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                             }
@@ -514,14 +555,14 @@ namespace SPIXI
 
                     case SpixiMessageCode.msgReceived:
                         {
-                            handleMsgReceived(sender_address, spixi_message.data);
+                            handleMsgReceived(sender_address, spixi_message.channel, spixi_message.data);
                             // don't send confirmation back, so just return
                             return;
                         }
 
                     case SpixiMessageCode.msgRead:
                         {
-                            handleMsgRead(sender_address, spixi_message.data);
+                            handleMsgRead(sender_address, spixi_message.channel, spixi_message.data);
                             // don't send confirmation back, so just return
                             return;
                         }
@@ -651,6 +692,10 @@ namespace SPIXI
                             handleAcceptAddBot(sender_address, spixi_message.data);
                         }
                         break;
+
+                    case SpixiMessageCode.botAction:
+                        onBotAction(spixi_message.data, friend, channel);
+                        break;
                 }
 
                 if (friend == null)
@@ -673,7 +718,7 @@ namespace SPIXI
             msg_received.type = StreamMessageCode.info;
             msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg_received.recipient = sender_address;
-            msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id).getBytes();
+            msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id, channel).getBytes();
             msg_received.transaction = new byte[1];
             msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
@@ -696,11 +741,7 @@ namespace SPIXI
             }
 
             byte[] address = new Address(pub_key).address;
-            if (!friend.contacts.ContainsKey(address))
-            {
-                friend.contacts.Add(address, new BotContact());
-            }
-            friend.contacts[address].publicKey = pub_key;
+            friend.users.setPubKey(address, pub_key);
 
             Node.localStorage.writeAccountFile();
         }
@@ -752,7 +793,7 @@ namespace SPIXI
             {
                 new_friend.lastReceivedHandshakeMessageTimestamp = received_timestamp;
                 new_friend.handshakeStatus = 1;
-                FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, "");
+                FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, 0, "");
                 requestNickname(new_friend);
             }else
             {
@@ -806,7 +847,7 @@ namespace SPIXI
 
             sendAvatar(friend);
 
-            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
         private static void handleAcceptAddBot(byte[] sender_wallet, byte[] aes_key)
@@ -826,7 +867,7 @@ namespace SPIXI
 
             friend.aesKey = aes_key;
 
-            friend.bot = true;
+            friend.setBotMode();
 
             friend.handshakeStatus = 3;
 
@@ -834,10 +875,10 @@ namespace SPIXI
 
             sendNickname(friend);
 
-            sendGetMessages(friend);
+            sendGetBotInfo(friend);
 
 
-            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
 
@@ -852,7 +893,7 @@ namespace SPIXI
 
             if (new IxiNumber(amount) > 0)
             {
-                FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, amount);
+                FriendList.addMessageWithType(id, FriendMessageType.requestFunds, sender_wallet, 0, amount);
             }
         }
 
@@ -877,7 +918,7 @@ namespace SPIXI
                 msg_id = Crypto.stringToHash(msg_id_tx_id);
             }
 
-            FriendMessage msg = friend.messages.Find(x => x.id.SequenceEqual(msg_id));
+            FriendMessage msg = friend.getMessages(0).Find(x => x.id.SequenceEqual(msg_id));
             if(msg == null)
             {
                 return;
@@ -895,7 +936,7 @@ namespace SPIXI
             }
 
             // Write to chat history
-            Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+            Node.localStorage.writeMessages(friend.walletAddress, 0, friend.getMessages(0));
 
             if (friend.chat_page != null)
             {
@@ -912,7 +953,7 @@ namespace SPIXI
                 return;
             }
 
-            FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, txid);
+            FriendList.addMessageWithType(id, FriendMessageType.sentFunds, sender_wallet, 0, txid);
         }
 
         private static void handleAppData(byte[] sender_address, byte[] app_data_raw)
@@ -1074,11 +1115,11 @@ namespace SPIXI
                 {
                     if (app_id == "spixi.voip")
                     {
-                        if (!friend.hasMessage(app_data.sessionId))
+                        if (!friend.hasMessage(0, app_data.sessionId))
                         {
                             if (VoIPManager.onReceivedCall(friend, app_data.sessionId, app_data.data))
                             {
-                                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, "");
+                                FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.voiceCall, sender_address, 0, "");
                             }
                             Node.refreshAppRequests = true;
                         }
@@ -1090,7 +1131,7 @@ namespace SPIXI
                         return;
                     }
                 }
-                if (FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, app.id) != null)
+                if (FriendList.addMessageWithType(app_data.sessionId, FriendMessageType.appSession, sender_address, 0, app.id) != null)
                 {
                     app_page = new CustomAppPage(app_id, sender_address, user_addresses, am.getAppEntryPoint(app_id));
                     app_page.myRequestAddress = recipient_address;
@@ -1401,17 +1442,29 @@ namespace SPIXI
             sendMessage(friend, message);
         }
 
-        public static void sendGetMessages(Friend friend)
+        private static void sendGetMessages(Friend friend, int channel, byte[] id)
         {
-            byte[] last_message_id = null;
-
-            if(friend.messages.Count > 0)
-            {
-                last_message_id = friend.lastReceivedMessageId;
-            }
-
             // Send the message to the S2 nodes
-            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getMessages, last_message_id);
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botGetMessages, id, channel);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = id;
+
+            sendMessage(friend, message);
+        }
+
+        public static void sendGetBotInfo(Friend friend)
+        {
+            SpixiBotAction sba = new SpixiBotAction(SpixiBotActionCode.getInfo, null);
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botAction, sba.getBytes());
 
 
             StreamMessage message = new StreamMessage();
@@ -1422,7 +1475,47 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
-            message.id = new byte[] { 10 };
+            message.id = new byte[] { 11 };
+
+            sendMessage(friend, message);
+        }
+
+        public static void sendGetBotChannels(Friend friend)
+        {
+            SpixiBotAction sba = new SpixiBotAction(SpixiBotActionCode.getChannels, null);
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botAction, sba.getBytes());
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = new byte[] { 12 };
+
+            sendMessage(friend, message);
+        }
+
+        public static void sendGetBotUsers(Friend friend)
+        {
+            SpixiBotAction sba = new SpixiBotAction(SpixiBotActionCode.getUsers, null);
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botAction, sba.getBytes());
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = new byte[] { 13 };
 
             sendMessage(friend, message);
         }
@@ -1430,6 +1523,156 @@ namespace SPIXI
         public static void deletePendingMessages()
         {
             pendingMessageProcessor.deleteAll();
+        }
+
+
+        public static void onBotAction(byte[] action_data, Friend bot, int channel_id)
+        {
+            if(!bot.bot)
+            {
+                Logging.warn("Received onBotAction for a non-bot");
+                return;
+            }
+            SpixiBotAction sba = new SpixiBotAction(action_data);
+            switch (sba.action)
+            {
+                case SpixiBotActionCode.channel:
+                    BotChannel channel = new BotChannel(sba.data);
+                    bot.channels.setChannel(channel.channelName, channel);
+                    byte[] last_msg_id = null;
+                    lock (bot.lastReceivedMessageIds)
+                    {
+                        if (bot.lastReceivedMessageIds.ContainsKey(channel.index))
+                        {
+                            last_msg_id = bot.lastReceivedMessageIds[channel.index];
+                        }
+                    }
+                    sendGetMessages(bot, channel.index, last_msg_id);
+                    break;
+
+                case SpixiBotActionCode.info:
+                    BotInfo bi = new BotInfo(sba.data);
+                    if(bot.botInfo == null || bi.settingsGeneratedTime != bot.botInfo.settingsGeneratedTime)
+                    {
+                        bot.botInfo = bi;
+                        FriendList.setNickname(bot.walletAddress, bi.serverName, null);
+                        Node.localStorage.writeAccountFile();
+                    }
+                    bot.channels.channels.Clear();
+                    sendGetBotChannels(bot);
+                    sendGetBotUsers(bot);
+                    break;
+
+                case SpixiBotActionCode.user:
+                    BotContact user = new BotContact(sba.data, false);
+                    bot.users.setUser(user);
+                    break;
+
+                case SpixiBotActionCode.getPayment:
+                    onGetPayment(sba, bot, channel_id);
+                    break;
+            }
+        }
+
+        public static void onGetPayment(SpixiBotAction sba, Friend bot, int channel_id)
+        {
+            StreamTransactionRequest sta = new StreamTransactionRequest(sba.data);
+            FriendMessage fm = bot.getMessages(channel_id).Find(x => x.id.SequenceEqual(sta.messageID));
+            if(fm == null)
+            {
+                Logging.error("Unable to find message with id " + sta.messageID);
+                return;
+            }
+
+            if (fm.transactionId == "")
+            {
+                SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>();
+
+                byte[] from = Node.walletStorage.getPrimaryAddress();
+                IxiNumber price = bot.getMessagePrice(fm.payableDataLen);
+                if (price > sta.cost)
+                {
+                    // TODO TODO notify the user somehow
+                    Logging.warn("Received payment request for " + Crypto.hashToString(fm.id) + " that has higher than expected amount.");
+                    return;
+                }
+
+                if(price == 0)
+                {
+                    Logging.warn("Received payment request for " + Crypto.hashToString(fm.id) + " but requested price is 0.");
+                    return;
+                }
+
+                to_list.Add(bot.walletAddress, sta.cost);
+
+                IxiNumber fee = ConsensusConfig.transactionPrice;
+                byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+
+                Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+
+                IxiNumber total_amount = tx.amount + tx.fee;
+
+                if (Node.balance.balance < total_amount)
+                {
+                    // TODO TODO notify the user somehow
+                    Logging.warn("Received payment request for " + Crypto.hashToString(fm.id) + " but balance is too low.");
+                    return;
+                }
+
+                StreamTransaction st = new StreamTransaction(fm.id, tx);
+                sendBotAction(bot, SpixiBotActionCode.payment, st.getBytes());
+
+                fm.transactionId = tx.id;
+
+                TransactionCache.addUnconfirmedTransaction(tx);
+            }
+            else
+            {
+                Transaction tx = TransactionCache.getTransaction(fm.transactionId);
+                if (tx == null)
+                {
+                    tx = TransactionCache.getUnconfirmedTransaction(fm.transactionId);
+                }
+                // TODO TODO TODO handle expired/failed transaction
+                if (tx == null)
+                {
+                    // TODO TODO TODO do something
+                    Logging.warn("Tx " + fm.transactionId + " was already prepared for bot payment but is null now.");
+                }
+                else
+                {
+                    IxiNumber total_amount = tx.amount + tx.fee;
+
+                    if (Node.balance.balance < total_amount)
+                    {
+                        // TODO TODO notify the user somehow
+                        Logging.warn("Tx " + fm.transactionId + " was already prepared for bot payment but balance is too low now.");
+                        return;
+                    }
+
+                    StreamTransaction st = new StreamTransaction(fm.id, tx);
+                    sendBotAction(bot, SpixiBotActionCode.payment, st.getBytes());
+                }
+            }
+        }
+
+        public static void sendBotAction(Friend bot, SpixiBotActionCode action, byte[] data, int channel = 0)
+        {
+            SpixiBotAction sba = new SpixiBotAction(action, data);
+
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botAction, sba.getBytes(), channel);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = bot.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+            message.encryptionType = StreamMessageEncryptionCode.none;
+
+            sendMessage(bot, message);
         }
     }
 }

@@ -177,7 +177,7 @@ namespace SPIXI.Network
                                     Friend f = FriendList.getFriend(endpoint.presence.wallet);
                                     if (f != null && f.bot)
                                     {
-                                        StreamProcessor.sendGetMessages(f);
+                                        StreamProcessor.sendGetBotInfo(f);
                                     }
                                 }
 
@@ -287,7 +287,10 @@ namespace SPIXI.Network
                             // TODO: check for errors/exceptions
                             Transaction transaction = new Transaction(data, true);
 
-                            PendingTransactions.increaseReceivedCount(transaction.id);
+                            if (endpoint != null && endpoint.presenceAddress.type == 'M')
+                            {
+                                PendingTransactions.increaseReceivedCount(transaction.id, endpoint.presence.wallet);
+                            }
 
                             TransactionCache.addUnconfirmedTransaction(transaction);
 

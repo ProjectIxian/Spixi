@@ -563,14 +563,21 @@ namespace SPIXI
 
             foreach (Friend friend in FriendList.friends)
             {
-                if (friend.getMessageCount() > 0)
+                FriendMessage lastmsg = friend.lastMessage;
+                if(lastmsg == null)
+                {
+                    if(friend.getMessages(0).Count > 0)
+                    {
+                        lastmsg = friend.getMessages(0).Last();
+                    }
+                }
+                if (lastmsg != null)
                 {
                     string str_online = "false";
                     if (friend.online)
                         str_online = "true";
 
                     // Generate the excerpt depending on message type
-                    FriendMessage lastmsg = friend.messages.Last();
                     string excerpt = lastmsg.message;
                     if (lastmsg.type == FriendMessageType.requestFunds)
                     {

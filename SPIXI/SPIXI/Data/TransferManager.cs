@@ -27,6 +27,8 @@ namespace SPIXI
         public long lastTimeStamp = 0;      // Last activity timestamp in seconds
         public ulong lastPacket = 0;        // Last processed packet number
 
+        public int channel = 0;
+
         public FileTransfer()
         {
             uid = Guid.NewGuid().ToString("N");
@@ -78,6 +80,8 @@ namespace SPIXI
                             preview = reader.ReadBytes(data_length);
 
                         packetSize = reader.ReadInt32();
+
+                        channel = reader.ReadInt32();
                     }
                 }
             }
@@ -111,6 +115,8 @@ namespace SPIXI
                     }
 
                     writer.Write(packetSize);
+
+                    writer.Write(channel);
                 }
                 return m.ToArray();
             }
@@ -514,11 +520,11 @@ namespace SPIXI
 
             removePacketsForFileTransfer(uid);
 
-            FriendMessage fm = friend.messages.Find(x => x.transferId == uid);
+            FriendMessage fm = friend.getMessages(transfer.channel).Find(x => x.transferId == uid);
             fm.completed = true;
             fm.filePath = transfer.filePath;
 
-            Node.localStorage.writeMessages(friend.walletAddress, friend.messages);
+            Node.localStorage.writeMessages(friend.walletAddress, transfer.channel, friend.getMessages(transfer.channel));
 
             if (friend.chat_page != null)
             {
