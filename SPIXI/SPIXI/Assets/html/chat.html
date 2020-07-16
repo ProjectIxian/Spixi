@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="wrap" class="container-fluid noselect">
 
         <!-- Toolbar Chat -->
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid spixi-channel-bar" onclick="displayChannelSelector();">
+        <div class="container-fluid spixi-channel-bar" onclick="return displayChannelSelector(event);">
             <div class="row">
                 <div class="col channel-icon"></div>
                 <div class="col channel-name"></div>
@@ -151,14 +151,24 @@
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
     </div>
-
-    <script src="js/chat.js"></script>
     <script>
         var SL_ChatTextTooLong = "*SL{chat-text-too-long}";
         var SL_ChatStatus = "*SL{chat-status}";
         var SL_ChatAmount = "*SL{chat-amount}";
         var SL_ChatView = "*SL{chat-view}";
         var SL_ChatSentContactRequest = "*SL{chat-sent-contact-request}";
+        var SL_ContextMenu = {
+            "pinMessage": "*SL{chat-context-pin-message}",
+            "copyText": "*SL{chat-context-copy-text}",
+            "tipUser": "*SL{chat-context-tip-user}",
+            "likeMessage": "*SL{chat-context-like-message}",
+            "userInfo": "*SL{chat-context-user-info}",
+            "sendContactRequest": "*SL{chat-context-send-contact-request}",
+            "kickUser": "*SL{chat-context-kick-user}",
+            "banUser": "*SL{chat-context-ban-user}",
+            "deleteMessage": "*SL{chat-context-delete-message}"
+        };
     </script>
+    <script src="js/chat.js"></script>
 </body>
 </html>

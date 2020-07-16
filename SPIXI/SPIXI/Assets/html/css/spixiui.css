@@ -1859,6 +1859,35 @@ img.emoji {
     border-radius: 32px;
 }
 
+.chat-context-menu {
+    position: fixed;
+    background: #EBEBEB;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    z-index: 10000;
+    overflow: auto;
+}
+
+.chat-context-menu > div {
+    line-height: 20pt;
+    font-size: 8pt;
+    font-weight: bold;
+    padding: 0 10px;
+    color: #646565;
+}
+
+.chat-context-menu > div .icon
+{
+    padding-right: 14px;
+}
+
+.chat-context-menu > div:hover {
+    background: #D8D8D8;
+}
+
+.chat-context-menu > div:active {
+    color: #EC196C;
+}
 
 /* Onboarding */
 #Onboarding {

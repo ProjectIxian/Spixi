@@ -61,6 +61,16 @@ chat-call-ended = Ended
 chat-online = Online
 chat-offline = Offline
 chat-text-too-long = Text too long.
+chat-member-count = {0} members
+chat-context-pin-message = Pin message
+chat-context-copy-text = Copy text
+chat-context-tip-user = Tip user
+chat-context-like-message = Like message
+chat-context-user-info = User info
+chat-context-send-contact-request = Send contact request
+chat-context-kick-user = Kick user
+chat-context-ban-user = Ban user
+chat-context-delete-message = Delete message
 
 ; Contact Details Screen
 contact-details-chat = chat

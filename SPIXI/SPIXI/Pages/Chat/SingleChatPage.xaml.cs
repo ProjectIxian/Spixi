@@ -180,6 +180,13 @@ namespace SPIXI
                     selectedChannel = sel_channel;
                     loadMessages();
                 }
+            }else if(current_url.StartsWith("ixian:contextAction:"))
+            {
+                string action = current_url.Substring("ixian:contextAction:".Length);
+                action = action.Substring(0, action.IndexOf(':'));
+
+                string msg_id = current_url.Substring("ixian:contextAction:".Length + action.Length + 1);
+                onContextAction(action, msg_id);
             }
             else
             {
@@ -499,6 +506,22 @@ namespace SPIXI
 
             FriendList.addMessageWithType(custom_app_page.sessionId, FriendMessageType.appSession, friend.walletAddress, 0, app_id, true, null, 0, false);
             StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
+        }
+
+        private void onContextAction(string action, string msg_id_hex)
+        {
+            byte[] msg_id = Crypto.stringToHash(msg_id_hex);
+            switch(action)
+            {
+                case "sendContactRequest":
+                    break;
+                case "kickUser":
+                    break;
+                case "banUser":
+                    break;
+                case "deleteMessage":
+                    break;
+            }
         }
 
         private void onEntryCompleted(object sender, EventArgs e)

@@ -1,4 +1,5 @@
 ﻿var isBot = false;
+var isAdmin = false;
 
 var attachMode = false;
 
@@ -9,7 +10,43 @@ function onChatScreenLoad()
     document.getElementById("chat_input").focus();
     twemoji.base = "libs/twemoji/";
     twemoji.size = "72x72";
+    messagesEl.oncontextmenu = function(e)
+    {
+        hideContextMenus();
+        displayContextMenu(e);
+        e.stopPropagation();
+        return false;
+	};
+    messagesEl.addEventListener("click", function (e) {
+        if (e.target.className.indexOf("nick") != -1) {
+            var nickEl = e.target;
+            var nick = nickEl.getAttribute("nick");
+            var address = nickEl.getAttribute("address");
+            if (address != nick) {
+                if (nickEl.innerHTML == nick) {
+                    nickEl.innerHTML = address;
+                } else {
+                    nickEl.innerHTML = nick;
+                }
+            }
+        }
+    });
+
+    document.body.oncontextmenu = function(e)
+    {
+        hideContextMenus();
+        return false;
+	};
+    document.body.addEventListener("click", function(e){
+        hideContextMenus();
+	});
     onload();
+}
+
+function hideContextMenus()
+{
+    hideChannelSelector();
+    hideContextMenu();
 }
 
 function setBotMode(bot)
@@ -223,21 +260,6 @@ function clearInput() {
     document.getElementById("chat_input").innerHTML = "";
     document.getElementById("chat_send").style.backgroundColor = "#BABABA";
 }
-
-document.getElementById("messages").addEventListener("click", function (e) {
-    if (e.target.className.indexOf("nick") != -1) {
-        var nickEl = e.target;
-        var nick = nickEl.getAttribute("nick");
-        var address = nickEl.getAttribute("address");
-        if (address != nick) {
-            if (nickEl.innerHTML == nick) {
-                nickEl.innerHTML = address;
-            } else {
-                nickEl.innerHTML = nick;
-            }
-        }
-    }
-});
 
 function parseImageUrl(text)
 {
@@ -728,7 +750,7 @@ function selectChannel(id)
 }
 
 var channelSelectorEl = null;
-function displayChannelSelector()
+function displayChannelSelector(e)
 {
     if(channelSelectorEl != null)
     {
@@ -741,6 +763,10 @@ function displayChannelSelector()
     document.body.appendChild(channelSelectorEl);
 
     location.href = "ixian:populateChannelSelector";
+
+    e.stopPropagation();
+
+    return false;
 }
 
 function addChannelToSelector(id, name, icon)
@@ -764,14 +790,113 @@ function addChannelToSelector(id, name, icon)
     childEl.onclick = function(ev)
     {
         selectChannel(id);
-        channelSelectorEl.parentNode.removeChild(channelSelectorEl);
-        channelSelectorEl = null;
+        hideChannelSelector();
 	};
 
     channelSelectorEl.appendChild(childEl);
 }
 
+function hideChannelSelector()
+{
+    if(channelSelectorEl == null)
+    {
+        return;
+	}
+
+    channelSelectorEl.parentNode.removeChild(channelSelectorEl);
+    channelSelectorEl = null;
+}
+
 function clearMessages()
 {
     messagesEl.innerHTML = "";
+}
+
+function displayContextMenu(e)
+{
+    var contextMenuEl = document.getElementById("ContextMenu");
+    if(contextMenuEl != null)
+    {
+        contextMenuEl.parentNode.removeChild(contextMenuEl);
+	}
+
+
+    var msgEl = null;
+    for(var tmpEl = e.target; tmpEl != messagesEl; tmpEl = tmpEl.parentNode)
+    {
+        msgEl = tmpEl;
+	}
+
+    if(msgEl == null)
+    {
+         return;
+	}
+
+    var localMsg = false;
+    if(msgEl.className.indexOf("myself") != -1)
+    {
+        localMsg = true;
+	}
+
+    var menuHtml = "";
+    //menuHtml += "<div onclick=\"contextAction('pin', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-map-pin\"></i></span> " + SL_ContextMenu["pinMessage"] + "</div>";
+    //menuHtml += "<div onclick=\"contextAction('copy', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyText"] + "</div>";
+    if(!localMsg)
+    {
+        menuHtml += "<div onclick=\"contextAction('tip', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
+        //menuHtml += "<div onclick=\"contextAction('like', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-heart\"></i></span> " + SL_ContextMenu["likeMessage"] + "</div>";
+        menuHtml += "<div onclick=\"contextAction('userInfo', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-info-circle\"></i></span> " + SL_ContextMenu["userInfo"] + "</div>";
+        menuHtml += "<div onclick=\"contextAction('sendContactRequest', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-plus\"></i></span> " + SL_ContextMenu["sendContactRequest"] + "</div>";
+    }
+
+    if(isAdmin)
+    {
+        menuHtml += "<div onclick=\"contextAction('kickUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-times\"></i></span> " + SL_ContextMenu["kickUser"] + "</div>";
+        menuHtml += "<div onclick=\"contextAction('banUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-slash\"></i></span> " + SL_ContextMenu["banUser"] + "</div>";
+    }
+    if(isAdmin || localMsg)
+    {
+        menuHtml += "<div onclick=\"contextAction('deleteMessage', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-trash-alt\"></i></span> " + SL_ContextMenu["deleteMessage"] + "</div>";
+	}
+
+    contextMenuEl = document.createElement("div");
+    contextMenuEl.id = "ContextMenu";
+    contextMenuEl.className = "chat-context-menu";
+
+    contextMenuEl.innerHTML = menuHtml;
+    contextMenuEl.style.left = e.clientX + "px";
+    contextMenuEl.style.top = e.clientY + "px";
+
+    document.body.appendChild(contextMenuEl);
+
+    if(contextMenuEl.getBoundingClientRect().bottom > window.innerHeight)
+    {
+        contextMenuEl.style.top = "auto";
+        contextMenuEl.style.bottom = "0px";
+        contextMenuEl.style.maxHeight = "400px";
+	}
+
+    return;
+}
+
+function hideContextMenu()
+{
+    var contextMenuEl = document.getElementById("ContextMenu");
+    if(contextMenuEl != null)
+    {
+        contextMenuEl.parentNode.removeChild(contextMenuEl);
+	}
+}
+
+function contextAction(action, msgId)
+{
+    if(action == "copy")
+    {
+        // TODO implement
+	}else
+    {
+        msgId = msgId.substring(4);
+        location.href = "ixian:contextAction:" + action + ":" + msgId;
+	}
+    hideContextMenu();
 }
