@@ -1,5 +1,6 @@
 ﻿var isBot = false;
 var isAdmin = false;
+var messageCost = "";
 
 var attachMode = false;
 
@@ -49,8 +50,15 @@ function hideContextMenus()
     hideContextMenu();
 }
 
-function setBotMode(bot)
+function setBotMode(bot, cost, admin)
 {
+    if(admin == "True")
+    {
+         isAdmin = true;
+	}
+
+    messageCost = cost;
+
     if(bot == "True")
     {
         isBot = true;

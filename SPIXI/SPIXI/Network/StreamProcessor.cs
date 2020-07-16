@@ -1670,9 +1670,34 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
-            message.encryptionType = StreamMessageEncryptionCode.none;
+
+            if (bot.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+            }
 
             sendMessage(bot, message);
+        }
+
+        public static void sendMsgDelete(Friend friend, byte[] msg_id, int channel = 0)
+        {
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgDelete, msg_id, channel);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = friend.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            if (friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+            }
+
+            sendMessage(friend, message);
         }
     }
 }

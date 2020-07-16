@@ -240,7 +240,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString());
+            Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), friend.botInfo.admin.ToString());
             if(friend.bot)
             {
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
@@ -514,12 +514,20 @@ namespace SPIXI
             switch(action)
             {
                 case "sendContactRequest":
+                    byte[] new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
+                    Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
+                    FriendList.saveToStorage();
+
+                    StreamProcessor.sendContactRequest(new_friend);
                     break;
                 case "kickUser":
+                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
                 case "banUser":
+                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
                 case "deleteMessage":
+                    StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
                     break;
             }
         }
