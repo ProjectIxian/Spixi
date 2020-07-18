@@ -828,5 +828,20 @@ namespace SPIXI
             return botInfo.cost * msg_len / 1000;
         }
 
+        public void deleteMessage(byte[] msg_id, int channel)
+        {
+            lock(messages)
+            {
+                if (messages.ContainsKey(channel))
+                {
+                    FriendMessage fm = messages[0].Find(x => x.id.SequenceEqual(msg_id));
+                    if(fm != null)
+                    {
+                        messages[channel].Remove(fm);
+                        Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                    }
+                }
+            }
+        }
     }
 }

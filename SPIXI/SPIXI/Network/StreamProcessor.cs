@@ -696,6 +696,10 @@ namespace SPIXI
                     case SpixiMessageCode.botAction:
                         onBotAction(spixi_message.data, friend, channel);
                         break;
+
+                    case SpixiMessageCode.msgDelete:
+                        handleMsgDelete(friend, message.id, spixi_message.data, channel);
+                        break;
                 }
 
                 if (friend == null)
@@ -724,6 +728,19 @@ namespace SPIXI
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
             sendMessage(friend, msg_received, true, true, false, true);
+        }
+
+        public static void handleMsgDelete(Friend friend, byte[] msg_id, byte[] msg_id_to_del, int channel)
+        {
+            friend.deleteMessage(msg_id_to_del, channel);
+            if (friend.bot)
+            {
+                lock (friend.lastReceivedMessageIds)
+                {
+                    friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                }
+                FriendList.saveToStorage();
+            }
         }
 
         private static void handlePubKey(byte[] sender_wallet, byte[] pub_key)

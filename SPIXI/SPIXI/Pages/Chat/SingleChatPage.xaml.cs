@@ -240,9 +240,10 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), friend.botInfo.admin.ToString());
             if(friend.bot)
             {
+                string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.botInfo.cost.ToString() + " IXI");
+                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString());
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
                     selectedChannel = friend.botInfo.defaultChannel;
@@ -258,6 +259,9 @@ namespace SPIXI
                 {
                     selectedChannel = 0;
                 }
+            }else
+            {
+                Utils.sendUiCommand(webView, "setBotMode", "False", "0.00000000", "", "False");
             }
             new Thread(() =>
             {
@@ -528,6 +532,10 @@ namespace SPIXI
                     break;
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
+                    if (!friend.bot)
+                    {
+                        friend.deleteMessage(msg_id, selectedChannel);
+                    }
                     break;
             }
         }
