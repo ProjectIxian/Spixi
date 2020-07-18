@@ -71,6 +71,7 @@ chat-context-send-contact-request = Send contact request
 chat-context-kick-user = Kick user
 chat-context-ban-user = Ban user
 chat-context-delete-message = Delete message
+chat-message-cost-bar = Sending messages costs {0} per kB
 
 ; Contact Details Screen
 contact-details-chat = chat

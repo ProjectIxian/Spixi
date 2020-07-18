@@ -50,7 +50,7 @@ function hideContextMenus()
     hideContextMenu();
 }
 
-function setBotMode(bot, cost, admin)
+function setBotMode(bot, cost, costText, admin)
 {
     if(admin == "True")
     {
@@ -58,6 +58,21 @@ function setBotMode(bot, cost, admin)
 	}
 
     messageCost = cost;
+    var payBar = document.getElementById("SpixiPayableBar");
+    if(payBar != null)
+    {
+        document.body.removeChild(payBar);
+    }
+
+    if(messageCost != "0.00000000")
+    {
+        var msgEl = document.createElement("div");
+        msgEl.id = "SpixiPayableBar";
+        msgEl.className = "spixi-chat-payable-bar";
+        msgEl.innerHTML = "<span><i class='fa fa-info-circle'></i></span> " + costText;
+
+        document.body.appendChild(msgEl);
+    }
 
     if(bot == "True")
     {

@@ -1771,6 +1771,29 @@ img.emoji {
     display: block;
 }
 
+.spixi-chat-payable-bar {
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 24px;
+    color: white;
+    background: #FD287C;
+    position: fixed;
+    left: 0px;
+    bottom: 60px;
+    right: 0px;
+    padding: 0px 16px;
+    z-index: 1000;
+    vertical-align: middle;
+}
+
+.spixi-chat-payable-bar span
+{
+    font-size: 20px;
+    margin-right: 18px;
+    line-height: 24px;
+    vertical-align: middle;
+}
+
 #AppsMenu
 {
     z-index: 102;
