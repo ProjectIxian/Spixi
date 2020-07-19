@@ -225,10 +225,10 @@ var modalHtml = '<div class="modal-content" onclick="event.stopPropagation(); re
                 <div class="spixi-modal-header warn">\
                 </div>\
                 <hr class="spixi-separator noheightmargins fullwidth" />\
-
+                \
                 <div class="spixi-modal-text">\
                 </div>\
-
+                \
                 <hr class="spixi-separator noheightmargins fullwidth" />\
                 <div class="spixi-modal-footer">\
                     <div class="spixi-modal-button-left"></div>\
@@ -252,6 +252,7 @@ function showModalDialog(title, body, leftButton, rightButton){
     modalEl.getElementsByClassName("spixi-modal-button-right")[0].innerHTML = rightButton;
 
     document.body.appendChild(modalEl);
+    modalEl.style.display = "block";
 }
 
 function hideModalDialog()

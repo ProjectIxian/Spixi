@@ -1271,6 +1271,10 @@ img.emoji {
 }
 
 /* Chat */
+#messages {
+    padding-top: 20px;
+}
+
 .spixi-bubble
 {
     font-size: 10pt;
@@ -1591,7 +1595,7 @@ img.emoji {
     transition: all 0.6s;    
     
     width: 100%;
-    height: 57px;
+    height: 60px;
    /* background-color: aqua;*/
 
 }
@@ -2029,20 +2033,19 @@ img.emoji {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 2001; /* Sit on top */
-    padding-top: 100px;
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
 }
 
 .modal-content {
     position: relative;
 
-    background-color: #eef2f5;
+    background-color: white;
     margin: auto; /* 15% from the top and centered */
     border: 1px solid #888;
     border-radius: 12px;
@@ -2054,6 +2057,11 @@ img.emoji {
     animation-duration: 0.4s;
     
     font-size: 12pt;
+
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 .spixi-modal-header {
@@ -2067,7 +2075,7 @@ img.emoji {
     color: #ad1457;
 }
 .spixi-modal-footer {
-    height: 54px;
+    height: 38px;
 }
 
 .spixi-modal-text {
@@ -2075,8 +2083,10 @@ img.emoji {
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 10px;
-    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
     color: #6a6a6a;
+    overflow: auto;
 }
 
 .spixi-modal-item {
@@ -2096,22 +2106,56 @@ img.emoji {
     background-color: #dae2e9;
 }
 
-.spixi-modal-close {
-    float: right;
-    font-size: 14pt;
+.spixi-modal-close,
+.spixi-modal-button-right,
+.spixi-modal-confirm,
+.spixi-modal-button-left {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
     font-weight: bold;
     color: #ad1457;
-    padding-right: 14px;
-    padding-top: 14px;
+    box-sizing: border-box;
+    line-height: 38px;
+    margin: 0px;
+    padding: 0px;
+    float: right;
 }
 
-.spixi-modal-confirm {
+.spixi-modal-confirm,
+.spixi-modal-button-left {
     float: left;
-    font-size: 14pt;
+}
+
+.spixi-modal-tip-item
+{
+    line-height: 34px;
     font-weight: bold;
-    color: #ad1457;
-    padding-left: 14px;
-    padding-top: 14px;
+}
+
+.spixi-modal-tip-item .fa-check
+{
+    display: none;
+}
+
+.spixi-modal-tip-item.selected {
+    color: #1692D9;
+}
+
+.spixi-modal-tip-item.selected .fa-check
+{
+    display: inline-block;
+    color: #1692D9;
+}
+
+.spixi-modal-tip-item .spixi-textfield
+{
+    width: 50%;
+    float: right;
+    height: 32px;
+    box-sizing: border-box;
 }
 
 /* Misc Controls */

@@ -229,7 +229,7 @@ namespace SPIXI
                     {
                         role = Int32.Parse(contact.Value.role.Substring(0, contact.Value.role.IndexOf(';')));
                     }
-                    Utils.sendUiCommand(webView, "addContact",  address, contact.Value.getNick(), avatar, friend.groups.groupIndexToName(role));
+                    Utils.sendUiCommand(webView, "addContact",  address, contact.Value.getNick(), avatar, role.ToString());
                 }
             }
         }
@@ -539,14 +539,18 @@ namespace SPIXI
                         StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
                         IxianHandler.addTransaction(tx);
                         TransactionCache.addUnconfirmedTransaction(tx);
+                        displaySpixiAlert(SpixiLocalization._SL("chat-modal-tip-title"), SpixiLocalization._SL("chat-modal-tip-confirmed-body"), SpixiLocalization._SL("global-dialog-ok"));
                     }
                     break;
                 case "sendContactRequest":
                     byte[] new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
                     Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
-                    FriendList.saveToStorage();
+                    if (new_friend != null)
+                    {
+                        FriendList.saveToStorage();
 
-                    StreamProcessor.sendContactRequest(new_friend);
+                        StreamProcessor.sendContactRequest(new_friend);
+                    }
                     break;
                 case "kickUser":
                     StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress, 0, true);

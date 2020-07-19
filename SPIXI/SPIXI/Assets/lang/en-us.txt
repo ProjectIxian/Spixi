@@ -74,10 +74,11 @@ chat-context-delete-message = Delete message
 chat-message-cost-bar = Sending messages costs {0} per kB
 
 chat-modal-tip-title = Tip {0}?
-chat-modal-tip-body = Tap on the amount you want to tip or set a custom.
+chat-modal-tip-body = Tap on the amount you want to tip or set a custom tip.
 chat-modal-tip-custom = CUSTOM
 chat-modal-tip-pay-button = PAY
 chat-modal-tip-confirmation-body = You are about to tip &quot;{0}&quot; {1}. This amount will be deducted from your wallet.
+chat-modal-tip-confirmed-body = You have just tipped &quot;{0}&quot; with {1}. The amount has been deducted from your wallet.
 
 
 ; Contact Details Screen

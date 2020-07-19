@@ -72,7 +72,11 @@ function setBotMode(bot, cost, costText, admin)
         msgEl.innerHTML = "<span><i class='fa fa-info-circle'></i></span> " + costText;
 
         document.body.appendChild(msgEl);
-    }
+        document.getElementById("chatholder").style.height = "84px";
+    }else
+    {
+        document.getElementById("chatholder").style.height = "60px";    
+	}
 
     if(bot == "True")
     {
@@ -885,6 +889,11 @@ function displayContextMenu(e)
     contextMenuEl = document.createElement("div");
     contextMenuEl.id = "ContextMenu";
     contextMenuEl.className = "chat-context-menu";
+    contextMenuEl.onclick = function(e)
+    {
+        e.stopPropagation();
+        return false;
+	};
 
     contextMenuEl.innerHTML = menuHtml;
     contextMenuEl.style.left = e.clientX + "px";
@@ -916,6 +925,7 @@ var tipPrice = "0";
 
 function contextAction(action, msgId)
 {
+    msgId = msgId.substring(4);
     contextActionMsgId = msgId;
     if(action == "copy")
     {
@@ -924,10 +934,10 @@ function contextAction(action, msgId)
     {
         tipPrice = "0";
         var html = SL_Modals["tipBody"];
-        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('50');\">50 IXI</div>";
-        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('100');\">100 IXI</div>";
-        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('200');\">200 IXI</div>";
-        html += "<div class=\"spixi-modal-tip-item custom\" onclick=\"selectTip();\">" + SL_Modals["tipCustom"] + " <input type='text' class='spixi-textfield' onchange='tipPrice = this.value;'/></div>";
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('50');\">50 IXI <i class=\"fa fa-check\"></i></div>";
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('100');\">100 IXI <i class=\"fa fa-check\"></i></div>";
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('200');\">200 IXI <i class=\"fa fa-check\"></i></div>";
+        html += "<div class=\"spixi-modal-tip-item custom\" onclick=\"selectTip();\">" + SL_Modals["tipCustom"] + " <i class=\"fa fa-check\"></i> <input type='text' class='spixi-textfield' onchange='tipPrice = this.value;'/></div>";
 
         var payBtnHtml = "<div onclick='payTipConfirmation();'>" + SL_Modals["payButton"] + "</div>";
         var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
@@ -935,7 +945,6 @@ function contextAction(action, msgId)
         showModalDialog(SL_Modals["tipTitle"], html, payBtnHtml, cancelBtnHtml);
     }else
     {
-        msgId = msgId.substring(4);
         location.href = "ixian:contextAction:" + action + ":" + msgId;
 	}
     hideContextMenu();
@@ -950,6 +959,7 @@ function selectTip(amount)
     tipItems[0].className = "spixi-modal-tip-item";
     tipItems[1].className = "spixi-modal-tip-item";
     tipItems[2].className = "spixi-modal-tip-item";
+    tipItems[3].className = "spixi-modal-tip-item";
 
     if(amount == "50")
     {
@@ -993,5 +1003,6 @@ function payTipConfirmation()
 
 function payTip()
 {
+    hideModalDialog();
     location.href = "ixian:contextAction:tip:" + contextActionMsgId + ":" + tipPrice;
 }
