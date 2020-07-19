@@ -55,32 +55,35 @@ namespace SPIXI
                 if (friend.users.getUser(real_sender_address).getNick() != nick)
                 {
                     friend.users.getUser(real_sender_address).setNick(nick);
-                    foreach (var channel in friend.channels.channels)
+                    lock (friend.channels.channels)
                     {
-                        List<FriendMessage> messages = friend.getMessages(channel.Value.index);
-                        if(messages == null)
+                        foreach (var channel in friend.channels.channels)
                         {
-                            continue;
-                        }
-                        // update messages with the new nick
-                        for (int i = messages.Count - 1, j = 0; i >= 0; i--, j++)
-                        {
-                            if (j > 1000)
-                            {
-                                break;
-                            }
-                            if (messages[i].senderNick != "")
+                            List<FriendMessage> messages = friend.getMessages(channel.Value.index);
+                            if (messages == null)
                             {
                                 continue;
                             }
-                            if (messages[i].senderAddress == null || real_sender_address == null)
+                            // update messages with the new nick
+                            for (int i = messages.Count - 1, j = 0; i >= 0; i--, j++)
                             {
-                                Logging.warn("Sender address is null");
-                                continue;
-                            }
-                            if (messages[i].senderAddress.SequenceEqual(real_sender_address))
-                            {
-                                messages[i].senderNick = nick;
+                                if (j > 1000)
+                                {
+                                    break;
+                                }
+                                if (messages[i].senderNick != "")
+                                {
+                                    continue;
+                                }
+                                if (messages[i].senderAddress == null || real_sender_address == null)
+                                {
+                                    Logging.warn("Sender address is null");
+                                    continue;
+                                }
+                                if (messages[i].senderAddress.SequenceEqual(real_sender_address))
+                                {
+                                    messages[i].senderNick = nick;
+                                }
                             }
                         }
                     }

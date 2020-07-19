@@ -128,7 +128,10 @@ namespace SPIXI
                             int contact_len = reader.ReadInt32();
 
                             BotContact contact = new BotContact(reader.ReadBytes(contact_len), true);
-                            users.contacts.Add(new Address(contact.publicKey).address, contact);
+                            lock (users.contacts)
+                            {
+                                users.contacts.Add(new Address(contact.publicKey).address, contact);
+                            }
                         }
 
                         int rcv_msg_id_len = reader.ReadInt32();
