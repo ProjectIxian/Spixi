@@ -20,6 +20,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
+using System.ComponentModel;
 
 namespace SPIXI
 {
@@ -514,9 +515,32 @@ namespace SPIXI
 
         private void onContextAction(string action, string msg_id_hex)
         {
+            string data = "";
+            if (msg_id_hex.Contains(':'))
+            {
+                int sep_offset = msg_id_hex.IndexOf(':');
+                data = msg_id_hex.Substring(sep_offset + 1);
+                msg_id_hex = msg_id_hex.Substring(0, sep_offset);
+            }
             byte[] msg_id = Crypto.stringToHash(msg_id_hex);
             switch(action)
             {
+                case "tip":
+                    FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id));
+                    IxiNumber amount = new IxiNumber(data);
+                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, msg.senderAddress, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    if (tx.amount + tx.fee > IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress()))
+                    {
+                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), SpixiLocalization._SL("wallet-error-balance-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    }
+                    else
+                    {
+                        friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel);
+                        StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
+                        IxianHandler.addTransaction(tx);
+                        TransactionCache.addUnconfirmedTransaction(tx);
+                    }
+                    break;
                 case "sendContactRequest":
                     byte[] new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
                     Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
@@ -525,10 +549,10 @@ namespace SPIXI
                     StreamProcessor.sendContactRequest(new_friend);
                     break;
                 case "kickUser":
-                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
+                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress, 0, true);
                     break;
                 case "banUser":
-                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
+                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress, 0, true);
                     break;
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);

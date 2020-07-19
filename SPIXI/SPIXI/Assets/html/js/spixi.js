@@ -220,3 +220,45 @@ function showWarning(text) {
         msgEls[0].innerHTML = text;
     }
 }
+
+var modalHtml = '<div class="modal-content" onclick="event.stopPropagation(); return false;">\
+                <div class="spixi-modal-header warn">\
+                </div>\
+                <hr class="spixi-separator noheightmargins fullwidth" />\
+
+                <div class="spixi-modal-text">\
+                </div>\
+
+                <hr class="spixi-separator noheightmargins fullwidth" />\
+                <div class="spixi-modal-footer">\
+                    <div class="spixi-modal-button-left"></div>\
+                    <div class="spixi-modal-button-right"></div>\
+                </div>\
+        </div>';
+
+function showModalDialog(title, body, leftButton, rightButton){
+    hideModalDialog();
+
+    var modalEl = document.createElement("div");
+    modalEl.id = "SpixiModalDialog";
+    modalEl.className = "spixi-modal";
+    modalEl.innerHTML = modalHtml;
+    modalEl.onclick = hideModalDialog;
+
+    modalEl.getElementsByClassName("spixi-modal-header")[0].innerHTML = title;
+    modalEl.getElementsByClassName("spixi-modal-text")[0].innerHTML = body;
+
+    modalEl.getElementsByClassName("spixi-modal-button-left")[0].innerHTML = leftButton;
+    modalEl.getElementsByClassName("spixi-modal-button-right")[0].innerHTML = rightButton;
+
+    document.body.appendChild(modalEl);
+}
+
+function hideModalDialog()
+{
+    var modalEl = document.getElementById("SpixiModalDialog");
+    if(modalEl != null)
+    {
+        document.body.removeChild(modalEl);
+	}
+}

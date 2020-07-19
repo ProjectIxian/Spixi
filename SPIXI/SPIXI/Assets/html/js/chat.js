@@ -911,15 +911,87 @@ function hideContextMenu()
 	}
 }
 
+var contextActionMsgId = null;
+var tipPrice = "0";
+
 function contextAction(action, msgId)
 {
+    contextActionMsgId = msgId;
     if(action == "copy")
     {
         // TODO implement
-	}else
+	}else if (action == "tip")
+    {
+        tipPrice = "0";
+        var html = SL_Modals["tipBody"];
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('50');\">50 IXI</div>";
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('100');\">100 IXI</div>";
+        html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('200');\">200 IXI</div>";
+        html += "<div class=\"spixi-modal-tip-item custom\" onclick=\"selectTip();\">" + SL_Modals["tipCustom"] + " <input type='text' class='spixi-textfield' onchange='tipPrice = this.value;'/></div>";
+
+        var payBtnHtml = "<div onclick='payTipConfirmation();'>" + SL_Modals["payButton"] + "</div>";
+        var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
+
+        showModalDialog(SL_Modals["tipTitle"], html, payBtnHtml, cancelBtnHtml);
+    }else
     {
         msgId = msgId.substring(4);
         location.href = "ixian:contextAction:" + action + ":" + msgId;
 	}
     hideContextMenu();
+}
+
+function selectTip(amount)
+{
+    var modalEl = document.getElementById("SpixiModalDialog");
+
+    var tipItems = modalEl.getElementsByClassName("spixi-modal-tip-item");
+
+    tipItems[0].className = "spixi-modal-tip-item";
+    tipItems[1].className = "spixi-modal-tip-item";
+    tipItems[2].className = "spixi-modal-tip-item";
+
+    if(amount == "50")
+    {
+        tipItems[0].className += " selected";
+        tipPrice = amount;
+        modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
+	}else if(amount == "100")
+    {
+        tipItems[1].className += " selected";
+        tipPrice = amount;
+        modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
+	}else if(amount == "200")
+    {
+        tipItems[2].className += " selected";
+        tipPrice = amount;
+        modalEl.getElementsByClassName("spixi-textfield")[0].value = "";
+	}else
+    {
+        tipItems[3].className += " selected";
+        if(modalEl.getElementsByClassName("spixi-textfield")[0].value != "")
+        {
+            tipPrice = modalEl.getElementsByClassName("spixi-textfield")[0].value;
+		}else
+        {
+            tipPrice = "0";  
+		}
+	}
+}
+
+function payTipConfirmation()
+{
+    if(tipPrice == "0")
+    {
+        return;
+    }
+    var payBtnHtml = "<div onclick='payTip();'>" + SL_Modals["payButton"] + "</div>";
+    var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
+
+    showModalDialog(SL_Modals["tipTitle"], SL_Modals["tipConfirmationBody"], payBtnHtml, cancelBtnHtml);
+}
+
+function payTip()
+{
+    location.href = "ixian:contextAction:tip:" + contextActionMsgId + ":" + tipPrice;
 }
