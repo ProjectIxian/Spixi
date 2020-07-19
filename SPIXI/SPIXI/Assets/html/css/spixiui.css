@@ -1290,7 +1290,6 @@ img.emoji {
     padding: 15px;
     padding-top: 10px;
     min-width: 80px;
-    padding-bottom: 28px;   
     
     animation-name: chat_animation;
     animation-duration: 0.3s;
@@ -1341,10 +1340,10 @@ img.emoji {
 
 .spixi-bubble .time
 {
-    padding-top: 5px;
     padding-right: 15px;
-    font-size: 7pt;
-    color: #000;
+    font-size: 6pt;
+    line-height: 10pt;
+    color: #919191;
     z-index: 4;
     position: absolute;
 }
@@ -1425,8 +1424,8 @@ img.emoji {
 
 .spixi-bubble .statusIndicator {
     display: none;
-    margin-top: 8px;
-    font-size: 7pt;
+    font-size: 6pt;
+    line-height: 10pt;
 }
 
 .spixi-bubble.myself .statusIndicator {
@@ -2062,6 +2061,8 @@ img.emoji {
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
+
+    max-height: 80%;
 }
 
 .spixi-modal-header {
@@ -2084,7 +2085,6 @@ img.emoji {
     padding-right: 15px;
     padding-top: 10px;
     min-height: 100px;
-    max-height: 300px;
     color: #6a6a6a;
     overflow: auto;
 }
