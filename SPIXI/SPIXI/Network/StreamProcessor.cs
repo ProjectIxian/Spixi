@@ -1566,6 +1566,26 @@ namespace SPIXI
             sendMessage(friend, message);
         }
 
+        public static void sendGetBotGroups(Friend friend)
+        {
+            SpixiBotAction sba = new SpixiBotAction(SpixiBotActionCode.getGroups, null);
+            // Send the message to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.botAction, sba.getBytes());
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.recipient = friend.walletAddress;
+            message.data = spixi_message.getBytes();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.encryptionType = StreamMessageEncryptionCode.none;
+            message.id = new byte[] { 14 };
+
+            sendMessage(friend, message);
+        }
+
         public static void deletePendingMessages()
         {
             pendingMessageProcessor.deleteAll();
@@ -1603,10 +1623,14 @@ namespace SPIXI
                         bot.botInfo = bi;
                         FriendList.setNickname(bot.walletAddress, bi.serverName, null);
                         Node.localStorage.writeAccountFile();
+                        bot.groups.clear();
+                        // TODO TODO delete deleted groups locally
+                        sendGetBotGroups(bot);
                     }
-                    bot.channels.channels.Clear();
-                    sendGetBotChannels(bot);
                     sendGetBotUsers(bot);
+                    bot.channels.clear();
+                    // TODO TODO delete deleted channels locally
+                    sendGetBotChannels(bot);
                     break;
 
                 case SpixiBotActionCode.user:
