@@ -224,11 +224,7 @@ namespace SPIXI
                     {
                         avatar = "img/spixiavatar.png";
                     }
-                    int role = 0;
-                    if (contact.Value.role != "")
-                    {
-                        role = Int32.Parse(contact.Value.role.Substring(0, contact.Value.role.IndexOf(';')));
-                    }
+                    int role = contact.Value.getPrimaryRole();
                     Utils.sendUiCommand(webView, "addContact",  address, contact.Value.getNick(), avatar, role.ToString());
                 }
             }
@@ -297,6 +293,23 @@ namespace SPIXI
             if (str.Length < 1)
             {
                 return;
+            }
+
+            if(friend.bot)
+            {
+                if (friend.botInfo.cost > 0)
+                {
+                    IxiNumber message_cost = friend.getMessagePrice(str.Length);
+                    if (message_cost > 0)
+                    {
+                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                        if (tx.amount + tx.fee > IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress()))
+                        {
+                            await displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), SpixiLocalization._SL("wallet-error-balance-text"), SpixiLocalization._SL("global-dialog-ok"));
+                            return;
+                        }
+                    }
+                }
             }
 
             await Task.Run(() =>
