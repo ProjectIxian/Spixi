@@ -1,4 +1,5 @@
-﻿var isBot = false;
+﻿var notifications = false;
+var isBot = false;
 var isAdmin = false;
 var messageCost = "";
 
@@ -50,12 +51,14 @@ function hideContextMenus()
     hideContextMenu();
 }
 
-function setBotMode(bot, cost, costText, admin)
+function setBotMode(bot, cost, costText, admin, botDescription, notificationsString, address)
 {
     if(admin == "True")
     {
          isAdmin = true;
 	}
+
+    setAddress(address);
 
     messageCost = cost;
     var payBar = document.getElementById("SpixiPayableBar");
@@ -80,6 +83,7 @@ function setBotMode(bot, cost, costText, admin)
 
     if(bot == "True")
     {
+        generateQR();
         isBot = true;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "block";
@@ -89,6 +93,18 @@ function setBotMode(bot, cost, costText, admin)
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "none";
 	}
+
+    if(notificationsString == "True")
+    {
+        notifications = true;
+        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "fa fa-toggle-on spixi-bot-notifications-toggle";
+	}else
+    {
+        notifications = false;
+        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "fa fa-toggle-off spixi-bot-notifications-toggle";
+	}
+
+    document.getElementsByClassName("spixi-bot-description")[0].innerHTML = botDescription;
 }
 
 var selectedChannel = 0;
@@ -125,7 +141,10 @@ document.getElementById("backbtn").onclick = function () {
     if(document.getElementById("ContactsBox"))
     {
         hideContacts();
-	}else
+	}else if(document.getElementById("BotDetails").style.display == "block")
+    {
+        hideBotDetails();
+    }else
     {
         location.href = "ixian:back";
 	}
@@ -1005,4 +1024,93 @@ function payTip()
 {
     hideModalDialog();
     location.href = "ixian:contextAction:tip:" + contextActionMsgId + ":" + tipPrice;
+}
+
+function showBotDetails()
+{
+    if(!isBot)
+    {
+        return;
+    }
+    document.getElementById("BotDetails").style.display = "block";
+}
+
+function hideBotDetails()
+{
+    document.getElementById("BotDetails").style.display = "none";
+}
+
+function toggleNotifications(el)
+{
+    if(notifications)
+    {
+        notifications = false;
+        el.className = "fa fa-toggle-off spixi-bot-notifications-toggle";
+        location.href = "ixian:disableNotifications";
+	}else
+    {
+        notifications = true;
+        el.className = "fa fa-toggle-on spixi-bot-notifications-toggle";
+        location.href = "ixian:enableNotifications";
+	}
+}
+
+var wal_id = "";
+
+var clipboard = new ClipboardJS('.address_qr_holder', {
+    text: function () {
+        return wal_id;
+    }
+});
+
+clipboard.on('success', function (e) {
+    e.clearSelection();
+
+    var x = document.getElementById("toastbar");
+    x.className = "spixi-toastbar show";
+    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+});
+
+clipboard.on('error', function (e) {
+
+});
+
+
+var qrcode = new QRCode("qrcode", {
+    text: "",
+    width: 200,
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+});
+
+function generateQR() {
+    qrcode.clear(); // clear the code.
+    qrcode.makeCode(wal_id);
+}
+
+function setAddress(addr) {
+    wal_id = addr;
+    var parts = addr.match(/.{1,17}/g) || [];
+    document.getElementById("wal1").innerHTML = parts[0];
+    document.getElementById("wal2").innerHTML = parts[1];
+    document.getElementById("wal3").innerHTML = parts[2];
+    document.getElementById("wal4").innerHTML = parts[3];
+    generateQR();
+}
+
+function toggleSpixiBotAddress(toggleEl)
+{
+    var addressEl = document.getElementsByClassName("spixi-bot-address")[0];
+    if(addressEl.style.display == "none")
+    {
+        addressEl.style.display = "block";
+        toggleEl.className = "fa fa-chevron-up";
+	}else
+    {
+        addressEl.style.display = "none";
+        toggleEl.className = "fa fa-chevron-down";
+	}
 }

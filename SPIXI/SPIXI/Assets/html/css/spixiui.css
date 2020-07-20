@@ -327,6 +327,7 @@ img.emoji {
     -ms-flex: 0 0 16px;
     flex: 0 0 16px;
     color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
 }
 
 .spixi-channel-selector .channel-name:before,
@@ -351,6 +352,7 @@ img.emoji {
     -ms-flex: 0 0 16px;
     flex: 0 0 16px;
     color: white;
+    font-size: 16px;
 }
 
 .spixi-channel-selector-sep
@@ -640,8 +642,8 @@ img.emoji {
     
     width: 200px;
     height: 46px;
+    line-height: 46px;
     
-    padding-top: 10px;
     text-align: center;
     font-size: 14pt;
     font-weight: 400;
@@ -678,8 +680,8 @@ img.emoji {
 
 .spixi-button.small {
     height:36px;
+    line-height: 36px;
     border-radius: 18px;
-    padding-top: 8px;
     font-size: 10pt;
 }
 .spixi-button.smallwidth {
@@ -1914,6 +1916,43 @@ img.emoji {
 .chat-context-menu > div:active {
     color: #EC196C;
 }
+
+.spixi-bot-details {
+    position: fixed;
+    top: 56px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+    display: none;
+    background: #E5E5E5;
+    z-index: 2000;
+}
+
+.spixi-bot-details .spixi-textsection-header2
+{
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.spixi-bot-details .spixi-textsection-header2 > span > i {
+    font-size: 16pt;
+}
+
+.spixi-bot-notifications-toggle
+{
+    font-size: 20pt;
+    color: black;
+}
+
+.spixi-bot-details .spixi-button {
+    height: 30px;
+    line-height: 30px;
+    width: auto;
+    padding: 0 20px;
+}
+
 
 /* Onboarding */
 #Onboarding {

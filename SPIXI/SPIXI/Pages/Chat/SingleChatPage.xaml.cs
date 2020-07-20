@@ -181,13 +181,24 @@ namespace SPIXI
                     selectedChannel = sel_channel;
                     loadMessages();
                 }
-            }else if(current_url.StartsWith("ixian:contextAction:"))
+            }
+            else if (current_url.StartsWith("ixian:contextAction:"))
             {
                 string action = current_url.Substring("ixian:contextAction:".Length);
                 action = action.Substring(0, action.IndexOf(':'));
 
                 string msg_id = current_url.Substring("ixian:contextAction:".Length + action.Length + 1);
                 onContextAction(action, msg_id);
+            }
+            else if (current_url.StartsWith("ixian:enableNotifications"))
+            {
+                friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification = true;
+                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.enableNotifications, new byte[1] { 1 }, 0, true);
+            }
+            else if (current_url.StartsWith("ixian:disableNotifications"))
+            {
+                friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification = false;
+                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.enableNotifications, new byte[1] { 0 }, 0, true);
             }
             else
             {
@@ -240,7 +251,7 @@ namespace SPIXI
             if(friend.bot)
             {
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.botInfo.cost.ToString() + " IXI");
-                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString());
+                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString(), friend.botInfo.serverDescription, friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification.ToString(), Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
                     selectedChannel = friend.botInfo.defaultChannel;
@@ -573,10 +584,7 @@ namespace SPIXI
                     break;
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
-                    if (!friend.bot)
-                    {
-                        friend.deleteMessage(msg_id, selectedChannel);
-                    }
+                    friend.deleteMessage(msg_id, selectedChannel);
                     break;
             }
         }
