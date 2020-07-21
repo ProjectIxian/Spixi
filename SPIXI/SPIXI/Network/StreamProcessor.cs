@@ -1351,6 +1351,7 @@ namespace SPIXI
             else if (friend.aesKey == null || friend.chachaKey == null)
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
+                reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
             }
 
             sendMessage(friend, reply_message, true, true, false);
