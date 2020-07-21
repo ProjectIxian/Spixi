@@ -51,7 +51,9 @@ namespace SPIXI
 
         private HomePage ()
 		{
-			InitializeComponent ();
+            Node.preStart();
+
+            InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
 
@@ -61,8 +63,6 @@ namespace SPIXI
                 onboarding_complete = "true";
             }
             SpixiLocalization.addCustomString("OnboardingComplete", onboarding_complete);
-
-            Node.preStart();
 
             loadPage(webView, "index.html");
 
