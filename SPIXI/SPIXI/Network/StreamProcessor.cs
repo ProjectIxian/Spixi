@@ -209,60 +209,63 @@ namespace SPIXI
 
                 Logging.info("Friend's handshake status is {0}", friend.handshakeStatus);
 
-                if(msg_id.SequenceEqual(new byte[] { 0 }))
+                if (msg_id.Length == 1)
                 {
-                    if (friend.handshakeStatus == 0)
+                    if (msg_id.SequenceEqual(new byte[] { 0 }))
                     {
-                        friend.handshakeStatus = 1;
-                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                        if (friend.handshakeStatus == 0)
+                        {
+                            friend.handshakeStatus = 1;
+                            Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                if (msg_id.SequenceEqual(new byte[] { 1 }))
-                {
-                    // ignore - accept add
-                    return;
-                }
-
-                if (msg_id.SequenceEqual(new byte[] { 2 }))
-                {
-                    if (friend.handshakeStatus == 2)
+                    if (msg_id.SequenceEqual(new byte[] { 1 }))
                     {
-                        friend.handshakeStatus = 3;
-                        Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                        // ignore - accept add
+                        return;
                     }
-                    return;
-                }
 
-                if (msg_id.SequenceEqual(new byte[] { 3 }))
-                {
-                    // ignore - request nickname
-                    return;
-                }
+                    if (msg_id.SequenceEqual(new byte[] { 2 }))
+                    {
+                        if (friend.handshakeStatus == 2)
+                        {
+                            friend.handshakeStatus = 3;
+                            Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                        }
+                        return;
+                    }
 
-                if (msg_id.SequenceEqual(new byte[] { 4 }))
-                {
-                    // ignore - request avatar
-                    return;
-                }
+                    if (msg_id.SequenceEqual(new byte[] { 3 }))
+                    {
+                        // ignore - request nickname
+                        return;
+                    }
 
-                if (msg_id.SequenceEqual(new byte[] { 5 }))
-                {
-                    // ignore - nickname
-                    return;
-                }
+                    if (msg_id.SequenceEqual(new byte[] { 4 }))
+                    {
+                        // ignore - request avatar
+                        return;
+                    }
 
-                if (msg_id.SequenceEqual(new byte[] { 6 }))
-                {
-                    // ignore - avatar
-                    return;
-                }
+                    if (msg_id.SequenceEqual(new byte[] { 5 }))
+                    {
+                        // ignore - nickname
+                        return;
+                    }
 
-                if (msg_id.SequenceEqual(new byte[] { 10 }))
-                {
-                    // ignore, bot related
-                    return;
+                    if (msg_id.SequenceEqual(new byte[] { 6 }))
+                    {
+                        // ignore - avatar
+                        return;
+                    }
+
+                    if (msg_id.SequenceEqual(new byte[] { 10 }))
+                    {
+                        // ignore, bot related
+                        return;
+                    }
                 }
 
                 friend.setMessageReceived(channel, msg_id);
@@ -455,7 +458,19 @@ namespace SPIXI
                             else
                             {*/
                             // Add the message to the friend list
-                            FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
+                            FriendMessage fm = FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
+                            if(fm != null)
+                            {
+                                if (friend.bot)
+                                {
+                                    fm.read = true;
+                                    lock (friend.lastReceivedMessageIds)
+                                    {
+                                        friend.lastReceivedMessageIds.AddOrReplace(channel, message.id);
+                                    }
+                                    FriendList.saveToStorage();
+                                }
+                            }
                             //}
                         }
                         break;
@@ -750,26 +765,30 @@ namespace SPIXI
 
         public static void handleMsgDelete(Friend friend, byte[] msg_id, byte[] msg_id_to_del, int channel)
         {
-            friend.deleteMessage(msg_id_to_del, channel);
-            if (friend.bot)
+            if (friend.deleteMessage(msg_id_to_del, channel))
             {
-                lock (friend.lastReceivedMessageIds)
+                if (friend.bot)
                 {
-                    friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    lock (friend.lastReceivedMessageIds)
+                    {
+                        friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    }
+                    FriendList.saveToStorage();
                 }
-                FriendList.saveToStorage();
             }
         }
         public static void handleMsgReaction(Friend friend, byte[] msg_id, byte[] reaction_data, int channel)
         {
-            friend.addReaction(friend.walletAddress, new SpixiMessageReaction(reaction_data), channel);
-            if (friend.bot)
+            if (friend.addReaction(friend.walletAddress, new SpixiMessageReaction(reaction_data), channel))
             {
-                lock (friend.lastReceivedMessageIds)
+                if (friend.bot)
                 {
-                    friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    lock (friend.lastReceivedMessageIds)
+                    {
+                        friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    }
+                    FriendList.saveToStorage();
                 }
-                FriendList.saveToStorage();
             }
         }
 
@@ -918,12 +937,9 @@ namespace SPIXI
 
             friend.handshakeStatus = 3;
 
-            requestNickname(friend);
-
             sendNickname(friend);
 
             sendGetBotInfo(friend);
-
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
@@ -1501,7 +1517,6 @@ namespace SPIXI
             message.transaction = new byte[1];
             message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
-            message.id = id;
 
             sendMessage(friend, message);
         }
@@ -1693,6 +1708,8 @@ namespace SPIXI
                 sendBotAction(bot, SpixiBotActionCode.payment, st.getBytes(), channel_id, true);
 
                 fm.transactionId = tx.id;
+
+                Node.localStorage.writeMessages(bot.walletAddress, channel_id, bot.getMessages(channel_id));
 
                 TransactionCache.addUnconfirmedTransaction(tx);
             }

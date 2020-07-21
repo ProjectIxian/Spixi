@@ -62,6 +62,8 @@ namespace SPIXI
             }
             SpixiLocalization.addCustomString("OnboardingComplete", onboarding_complete);
 
+            Node.preStart();
+
             loadPage(webView, "index.html");
 
             if (!running)

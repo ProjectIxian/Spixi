@@ -584,7 +584,10 @@ namespace SPIXI
                     break;
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
-                    friend.deleteMessage(msg_id, selectedChannel);
+                    if (!friend.bot)
+                    {
+                        friend.deleteMessage(msg_id, selectedChannel);
+                    }
                     break;
             }
         }
@@ -930,6 +933,23 @@ namespace SPIXI
                     FriendMessage msg = messages[i];
                     updateMessageReadStatus(msg, selectedChannel);
                 }
+            }
+        }
+
+        public void deleteMessage(byte[] msg_id, int channel)
+        {
+            if (channel == selectedChannel)
+            {
+                Utils.sendUiCommand(webView, "deleteMessage", Crypto.hashToString(msg_id));
+            }
+        }
+
+        public void updateReactions(byte[] msg_id, int channel)
+        {
+            if (channel == selectedChannel)
+            {
+                string reactions_str = "";
+                Utils.sendUiCommand(webView, "addReactions", reactions_str);
             }
         }
 

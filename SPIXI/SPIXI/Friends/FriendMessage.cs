@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -116,26 +117,30 @@ namespace SPIXI
                     // try/catch can be removed after upgrade
                     try
                     {
-                        transactionId = reader.ReadString();
-                        payableDataLen = reader.ReadInt32();
-
-                        int reaction_count = reader.ReadInt32();
-                        for(int i = 0; i < reaction_count; i++)
+                        if(m.Position < m.Length)
                         {
-                            string reaction_key = reader.ReadString();
-                            List<ReactionData> reaction_datas = new List<ReactionData>();
-                            reactions.Add(reaction_key, reaction_datas);
-                            int reaction_user_count = reader.ReadInt32();
-                            for(int j = 0; j < reaction_user_count; j++)
+                            transactionId = reader.ReadString();
+                            payableDataLen = reader.ReadInt32();
+
+                            int reaction_count = reader.ReadInt32();
+                            for(int i = 0; i < reaction_count; i++)
                             {
-                                int rd_len = reader.ReadInt32();
-                                ReactionData reaction_data = new ReactionData(reader.ReadBytes(rd_len));
-                                reaction_datas.Add(reaction_data);
+                                string reaction_key = reader.ReadString();
+                                List<ReactionData> reaction_datas = new List<ReactionData>();
+                                reactions.Add(reaction_key, reaction_datas);
+                                int reaction_user_count = reader.ReadInt32();
+                                for(int j = 0; j < reaction_user_count; j++)
+                                {
+                                    int rd_len = reader.ReadInt32();
+                                    ReactionData reaction_data = new ReactionData(reader.ReadBytes(rd_len));
+                                    reaction_datas.Add(reaction_data);
+                                }
                             }
                         }
-                    }catch(Exception)
+                    }
+                    catch (Exception)
                     {
-
+                        Logging.info("");
                     }
                 }
             }
@@ -217,23 +222,28 @@ namespace SPIXI
             }
         }
 
-        public void addReaction(byte[] address, string reaction_data)
+        public bool addReaction(byte[] address, string reaction_data)
         {
             lock(reactions)
             {
                 string reaction = reaction_data.Substring(0, reaction_data.IndexOf(':'));
                 if(reaction == null || reaction == "")
                 {
-                    return;
+                    return false;
                 }
                 string data = null;
                 if(reaction_data.Length > reaction.Length + 1)
                 {
                     data = reaction_data.Substring(reaction.Length + 1);
                 }
-                    
-                reactions[reaction].Add(new ReactionData(address, data));
+
+                if (reactions[reaction].Find(x => x.sender.SequenceEqual(address)) == null)
+                {
+                    reactions[reaction].Add(new ReactionData(address, data));
+                    return true;
+                }
             }
+            return false;
         }
     }
 

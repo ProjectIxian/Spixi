@@ -1535,7 +1535,15 @@ img.emoji {
     vertical-align: top;
 }
 
+.spixi-bubble .reactions {
+    line-height: 28px;
+    background: #EBEBEB;
+    font-size: 10px;
+}
 
+.spixi-bubble .reactions img {
+    height: 16px;
+}
 
 .spixi-callbubble
 {
@@ -1943,6 +1951,7 @@ img.emoji {
 .spixi-bot-notifications-toggle
 {
     font-size: 20pt;
+    line-height: 30px;
     color: black;
 }
 

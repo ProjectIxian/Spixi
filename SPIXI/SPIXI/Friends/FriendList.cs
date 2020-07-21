@@ -160,9 +160,9 @@ namespace SPIXI
             }
         }
 
-        public static void addMessage(byte[] id, byte[] wallet_address, int channel, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
+        public static FriendMessage addMessage(byte[] id, byte[] wallet_address, int channel, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
-            addMessageWithType(id, FriendMessageType.standard, wallet_address, channel, message, false, sender_address, timestamp, fire_local_notification);
+            return addMessageWithType(id, FriendMessageType.standard, wallet_address, channel, message, false, sender_address, timestamp, fire_local_notification);
         }
 
         public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, int channel, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
@@ -250,23 +250,6 @@ namespace SPIXI
             }
 
             friend.lastMessage = friend_message;
-
-            if (friend.bot)
-            {
-                if (local_sender)
-                {
-                    friend_message.read = true;
-                }
-                else
-                {
-                    lock (friend.lastReceivedMessageIds)
-                    {
-                        friend.lastReceivedMessageIds.AddOrReplace(channel, id);
-                    }
-                    saveToStorage();
-                }
-
-            }
 
             // If a chat page is visible, insert the message directly
             if (friend.chat_page != null)

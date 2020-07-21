@@ -93,12 +93,18 @@ namespace SPIXI.Meta
             // Prepare the local storage
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
-            // Start local storage
-            localStorage.start();
-
-            customAppManager = new CustomAppManager(Config.spixiUserFolder);
-
             Logging.info("Node init done");
+        }
+
+        static public void preStart()
+        {
+            if (customAppManager == null)
+            {
+                // Start local storage
+                localStorage.start();
+
+                customAppManager = new CustomAppManager(Config.spixiUserFolder);
+            }
         }
 
         static public void start()

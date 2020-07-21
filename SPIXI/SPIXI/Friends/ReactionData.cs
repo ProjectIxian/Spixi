@@ -4,8 +4,8 @@ namespace SPIXI
 {
     public class ReactionData
     {
-        byte[] sender = null;
-        string data = null;
+        public byte[] sender = null;
+        public string data = null;
 
         public ReactionData(byte[] sender, string data)
         {

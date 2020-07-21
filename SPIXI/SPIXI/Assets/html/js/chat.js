@@ -336,6 +336,41 @@ function parseImageUrl(text)
 var messagesEl = document.getElementById("messages");
 var chatHolderEl = document.getElementById("chatholder");
 
+function addReactions(id, reactions)
+{
+    var msgEl = document.getElementById("msg_" + id);
+    if(msgEl == null)
+    {
+        return;
+	}
+
+    var reactionsEl = msgEl.getElementsByClassName("reactions")[0];
+    if(reactionsEl == null)
+    {
+    
+	}
+
+    reactionsEl.innerHTML = "";
+    var reactionArr = reactions.split(";");
+    for(var i = 0; i < reactionArr.length; i++)
+    {
+        if(reactionArr[0].startsWith("tip:"))
+        {
+            reactionsEl.innerHTML += "<img src=\"\">" + reactionArr[i] + "</div>";
+        }
+    }
+}
+
+function deleteMessage(id)
+{
+    var msgEl = document.getElementById("msg_" + id);
+    if(msgEl == null)
+    {
+        return;
+	}
+    msgEl.parentNode.removeChild(msgEl);
+}
+
 function addText(id, address, nick, avatar, text, time, className) {
     text = text.replace(/\n/g, "<br>");
 

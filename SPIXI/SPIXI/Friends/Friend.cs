@@ -162,13 +162,16 @@ namespace SPIXI
                     // TODO try/catch wrapper can be removed after upgrade
                     try
                     {
-                        int last_message_len = reader.ReadInt32();
-                        if(last_message_len > 0)
+                        if (m.Position < m.Length)
                         {
-                            lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
+                            int last_message_len = reader.ReadInt32();
+                            if(last_message_len > 0)
+                            {
+                                lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
+                            }
                         }
                     }
-                    catch(Exception)
+                    catch (Exception)
                     {
 
                     }
@@ -504,6 +507,10 @@ namespace SPIXI
                 if (!msg.confirmed)
                 {
                     msg.confirmed = true;
+                    if(bot)
+                    {
+                        msg.read = true;
+                    }
                     Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
                 }
 
@@ -624,7 +631,7 @@ namespace SPIXI
             return botInfo.cost * msg_len / 1000;
         }
 
-        public void deleteMessage(byte[] msg_id, int channel)
+        public bool deleteMessage(byte[] msg_id, int channel)
         {
             lock (messages)
             {
@@ -635,13 +642,29 @@ namespace SPIXI
                     {
                         messages[channel].Remove(fm);
                         Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                        if(chat_page != null)
+                        {
+                            chat_page.deleteMessage(msg_id, channel);
+                        }
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
-        public void addReaction(byte[] sender_address, SpixiMessageReaction reaction_data, int channel)
+        public bool addReaction(byte[] sender_address, SpixiMessageReaction reaction_data, int channel)
         {
+            if(!reaction_data.reaction.StartsWith("tip:"))
+            {
+                Logging.warn("Invalid reaction data: " + reaction_data.reaction);
+                return false;
+            }
+            if(reaction_data.reaction.Length > 64)
+            {
+                Logging.warn("Invalid reaction data length: " + reaction_data.reaction);
+                return false;
+            }
             lock (messages)
             {
                 if (messages.ContainsKey(channel))
@@ -649,11 +672,24 @@ namespace SPIXI
                     FriendMessage fm = messages[channel].Find(x => x.id.SequenceEqual(reaction_data.msgId));
                     if (fm != null)
                     {
-                        fm.addReaction(sender_address, reaction_data.reaction);
-                        Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                        if(fm.reactions.Count >= 10)
+                        {
+                            Logging.warn("Too many reactions on message " + Crypto.hashToString(reaction_data.msgId));
+                            return false;
+                        }
+                        if (fm.addReaction(sender_address, reaction_data.reaction))
+                        {
+                            Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                            if (chat_page != null)
+                            {
+                                chat_page.updateReactions(fm.id, channel);
+                            }
+                            return true;
+                        }
                     }
                 }
             }
+            return false;
         }
     }
 }

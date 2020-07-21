@@ -186,7 +186,13 @@ namespace SPIXI.Storage
                             }
                             foreach (var file in files)
                             {
-                                File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
+                                if (!friend.bot)
+                                {
+                                    File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
+                                }else
+                                {
+                                    File.Delete(file);
+                                }
                             }
                         }
                     }
