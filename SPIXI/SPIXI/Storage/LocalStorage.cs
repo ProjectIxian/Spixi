@@ -30,6 +30,7 @@ namespace SPIXI.Storage
 
         private int messagesPerFile = 1000;
 
+        private bool started = false;
 
         public LocalStorage(string path, int messages_per_file = 1000)
         {
@@ -73,6 +74,12 @@ namespace SPIXI.Storage
 
         public void start()
         {
+            if(started)
+            {
+                return;
+            }
+            started = true;
+
             // Read transactions
             readTransactionCacheFile();
 
@@ -160,9 +167,20 @@ namespace SPIXI.Storage
                 {
                     int friend_len = reader.ReadInt32();
 
-                    Friend friend = new Friend(reader.ReadBytes(friend_len), version);
+                    Friend friend = null;
+                    try
+                    {
+                        friend = new Friend(reader.ReadBytes(friend_len), version);
+                    }catch(Exception e)
+                    {
+                        Logging.error("Error reading contact from accounts file: " + e);
+                    }
 
                     string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    if(!Directory.Exists(friend_path))
+                    {
+                        Directory.CreateDirectory(friend_path);
+                    }
 
                     if (friend.bot)
                     {
@@ -202,7 +220,7 @@ namespace SPIXI.Storage
             }
             catch (Exception e)
             {
-                Logging.error("Cannot read from account file: {0}", e.Message);
+                Logging.error("Cannot read from account file: {0}", e);
             }
 
             reader.Close();
