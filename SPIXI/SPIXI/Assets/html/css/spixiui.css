@@ -645,13 +645,18 @@ img.emoji {
     line-height: 46px;
     
     text-align: center;
-    font-size: 14pt;
+    font-size: 19px;
     font-weight: 400;
     
+    padding: 0px;
+    margin: 0px;
+
     color: #fff;
     background: #c2185b;
     border-radius: 50px;
     box-shadow:0px 8px 19px #BBB;
+
+    box-sizing: border-box;
 }
 
 .spixi-button:hover {
@@ -682,7 +687,7 @@ img.emoji {
     height:36px;
     line-height: 36px;
     border-radius: 18px;
-    font-size: 10pt;
+    font-size: 14px;
 }
 .spixi-button.smallwidth {
     width: 160px;
@@ -698,6 +703,11 @@ img.emoji {
     background-color: #55516c;
     color: #f7f7f7;
     border: 2px solid #fff;
+    line-height:42px;
+}
+.spixi-button.small.ghost
+{
+    line-height:32px;
 }
 .spixi-button.ghost:hover {
     background-color: #c14c7f;
