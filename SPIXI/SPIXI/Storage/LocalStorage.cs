@@ -166,14 +166,16 @@ namespace SPIXI.Storage
                 for(int i = 0; i < num_contacts; i++)
                 {
                     int friend_len = reader.ReadInt32();
+                    byte[] friend_bytes = reader.ReadBytes(friend_len);
 
                     Friend friend = null;
                     try
                     {
-                        friend = new Friend(reader.ReadBytes(friend_len), version);
+                        friend = new Friend(friend_bytes, version);
                     }catch(Exception e)
                     {
                         Logging.error("Error reading contact from accounts file: " + e);
+                        continue;
                     }
 
                     string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
