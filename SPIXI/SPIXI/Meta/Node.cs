@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System;
@@ -65,6 +66,11 @@ namespace SPIXI.Meta
 
         public Node()
         {
+#if DEBUG
+            Logging.warn("Testing language files");
+            SpixiLocalization.testLanguageFiles("en-us");
+#endif
+
             Logging.info("Initing node constructor");
 
             Instance = this;

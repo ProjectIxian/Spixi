@@ -3,6 +3,7 @@ using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.NetworkInformation;
 using Xamarin.Forms;
 
 namespace SPIXI.Lang
@@ -10,6 +11,7 @@ namespace SPIXI.Lang
     public static class SpixiLocalization
     {
         private static List<string> languages = new List<string> {
+            "cn-cn",
             "en-us",
             "de-de",
             "fr-fr",
@@ -208,6 +210,90 @@ namespace SPIXI.Lang
             sr.Dispose();
 
             return lines;
+        }
+
+        private static Dictionary<string, int> testFile(string path)
+        {
+            Dictionary<string, int> keys = new Dictionary<string, int>();
+
+            Stream file_stream = DependencyService.Get<IPlatformUtils>().getAsset(path);
+
+            StreamReader sr = new StreamReader(file_stream);
+
+            int line_count = 0;
+
+            string last_key;
+
+            while (!sr.EndOfStream)
+            {
+                line_count++;
+                string line = sr.ReadLine().Trim();
+                if (line == "" || line.StartsWith(";"))
+                {
+                    continue;
+                }
+
+                int sep_index = line.IndexOf("=");
+                if (sep_index == -1)
+                {
+                    Logging.error("Language file " + path + " error on line: " + line_count + ", missing '=' separator");
+                    keys = null;
+                    break;
+                }
+
+                last_key = line.Substring(0, sep_index).Trim();
+                string value = line.Substring(sep_index + 1).Trim();
+                if (last_key == "" || value == "")
+                {
+                    Logging.error("Language file " + path + " error on line: " + line_count + ", key or value is empty/null");
+                    keys = null;
+                    break;
+                }
+
+                if(last_key.Contains("\"") || value.Contains("\""))
+                {
+                    Logging.error("Language file " + path + " error on line: " + line_count + ", '\"' character was used");
+                    keys = null;
+                    break;
+                }
+
+                int arg_count = 0;
+                while (value.Contains("{" + arg_count + "}"))
+                {
+                    arg_count++;
+                }
+                keys.Add(last_key, arg_count);
+            }
+
+            sr.Close();
+            sr.Dispose();
+
+            file_stream.Close();
+            file_stream.Dispose();
+
+            return keys;
+        }
+
+        public static void testLanguageFiles(string ref_language)
+        {
+            var ref_keys = testFile(Path.Combine("lang", ref_language + ".txt"));
+            foreach(var language in languages)
+            {
+                var test_keys = testFile(Path.Combine("lang", language + ".txt"));
+                foreach(var ref_key in ref_keys)
+                {
+                    if(!test_keys.ContainsKey(ref_key.Key))
+                    {
+                        Logging.error("Language file " + language + " error, missing key: " + ref_key.Key);
+                        continue;
+                    }
+                    if(test_keys[ref_key.Key] != ref_key.Value)
+                    {
+                        Logging.error("Language file " + language + " error, invalid number of arguments for key " + ref_key.Key);
+                        continue;
+                    }
+                }
+            }
         }
     }
 }
