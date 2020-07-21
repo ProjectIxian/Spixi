@@ -1283,7 +1283,7 @@ img.emoji {
     position:relative;
     background:#ffffff;
     border-radius:16px;
-    border: 1px solid #c1d3e0;    
+    border: 1px solid #c1d3e0;
     color: black;
     
     margin-left: 56px;
@@ -1536,13 +1536,21 @@ img.emoji {
 }
 
 .spixi-bubble .reactions {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     line-height: 28px;
     background: #EBEBEB;
     font-size: 10px;
+    border-radius: 0px 0px 16px 16px;
+    border: 1px solid #c1d3e0;
+    padding: 0px 15px;
 }
 
 .spixi-bubble .reactions img {
     height: 16px;
+    margin-right: 5px;
 }
 
 .spixi-callbubble

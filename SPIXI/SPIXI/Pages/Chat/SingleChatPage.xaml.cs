@@ -551,19 +551,37 @@ namespace SPIXI
             {
                 case "tip":
                     FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id));
+                    byte[] sender_address = msg.senderAddress;
+                    if(!friend.bot)
+                    {
+                        sender_address = friend.walletAddress;
+                    }
                     IxiNumber amount = new IxiNumber(data);
-                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, msg.senderAddress, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
                     if (tx.amount + tx.fee > IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress()))
                     {
                         displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), SpixiLocalization._SL("wallet-error-balance-text"), SpixiLocalization._SL("global-dialog-ok"));
                     }
                     else
                     {
-                        friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel);
-                        StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                        IxianHandler.addTransaction(tx);
-                        TransactionCache.addUnconfirmedTransaction(tx);
-                        displaySpixiAlert(SpixiLocalization._SL("chat-modal-tip-title"), SpixiLocalization._SL("chat-modal-tip-confirmed-body"), SpixiLocalization._SL("global-dialog-ok"));
+                        string nick = friend.nickname;
+                        if (friend.bot)
+                        {
+                            nick = friend.users.getUser(sender_address).getNick();
+                        }
+                        string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
+                        if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
+                        {
+                            StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
+                            IxianHandler.addTransaction(tx);
+                            TransactionCache.addUnconfirmedTransaction(tx);
+                            string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
+                            displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+                        }
+                        else
+                        {
+                            displaySpixiAlert(modal_title, SpixiLocalization._SL("chat-modal-tip-error-body"), SpixiLocalization._SL("global-dialog-ok"));
+                        }
                     }
                     break;
                 case "sendContactRequest":
@@ -633,6 +651,7 @@ namespace SPIXI
                         continue;
                     }
                     insertMessage(message, selectedChannel);
+                    updateReactions(message);
                 }
             }
         }
@@ -948,9 +967,19 @@ namespace SPIXI
         {
             if (channel == selectedChannel)
             {
-                string reactions_str = "";
-                Utils.sendUiCommand(webView, "addReactions", reactions_str);
+                FriendMessage fm = friend.getMessages(0).Find(x => x.id.SequenceEqual(msg_id));
+                updateReactions(fm);
             }
+        }
+
+        private void updateReactions(FriendMessage fm)
+        {
+            var reactions_str = "";
+            foreach (var reaction in fm.reactions)
+            {
+                reactions_str += reaction.Key + ":" + reaction.Value.Count() + ";";
+            }
+            Utils.sendUiCommand(webView, "addReactions", Crypto.hashToString(fm.id), reactions_str);
         }
 
         public void updateMessage(FriendMessage message)

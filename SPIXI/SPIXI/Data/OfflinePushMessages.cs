@@ -122,8 +122,11 @@ namespace SPIXI
                                 Friend f = FriendList.getFriend(new Address(pk).address);
                                 if (f != null && f.publicKey == null)
                                 {
-                                    f.publicKey = pk;
-                                    FriendList.saveToStorage();
+                                    if (pk != null)
+                                    {
+                                        f.publicKey = pk;
+                                        FriendList.saveToStorage();
+                                    }
                                 }
                             }
                             StreamProcessor.receiveData(data, null);

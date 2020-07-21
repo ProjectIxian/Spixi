@@ -660,7 +660,7 @@ namespace SPIXI
                 Logging.warn("Invalid reaction data: " + reaction_data.reaction);
                 return false;
             }
-            if(reaction_data.reaction.Length > 64)
+            if(reaction_data.reaction.Length > 128)
             {
                 Logging.warn("Invalid reaction data length: " + reaction_data.reaction);
                 return false;

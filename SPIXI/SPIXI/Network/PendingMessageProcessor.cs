@@ -224,7 +224,10 @@ namespace SPIXI.Network
                 if (friend.publicKey == null)
                 {
                     byte[] pub_k = FriendList.findContactPubkey(friend.walletAddress);
-                    friend.publicKey = pub_k;
+                    if (pub_k != null)
+                    {
+                        friend.publicKey = pub_k;
+                    }
                 }
 
                 Logging.warn("Could not send message to {0}, due to missing encryption keys!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));

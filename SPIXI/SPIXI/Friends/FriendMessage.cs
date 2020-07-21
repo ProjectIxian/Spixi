@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -235,6 +236,11 @@ namespace SPIXI
                 if(reaction_data.Length > reaction.Length + 1)
                 {
                     data = reaction_data.Substring(reaction.Length + 1);
+                }
+
+                if(!reactions.ContainsKey(reaction))
+                {
+                    reactions.Add(reaction, new List<ReactionData>());
                 }
 
                 if (reactions[reaction].Find(x => x.sender.SequenceEqual(address)) == null)

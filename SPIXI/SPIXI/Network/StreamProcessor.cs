@@ -381,6 +381,10 @@ namespace SPIXI
             {
                 aes_key = friend.aesKey;
                 chacha_key = friend.chachaKey;
+                if(friend.publicKey == null && endpoint.presence.pubkey != null && endpoint.presence.wallet.SequenceEqual(friend.walletAddress))
+                {
+                    friend.publicKey = endpoint.presence.pubkey;
+                }
             }
 
             int channel = 0;
@@ -485,7 +489,9 @@ namespace SPIXI
                     case SpixiMessageCode.nick:
                         {
                             // Set the nickname for the corresponding address
-                            if (!replaced_sender_address && friend.publicKey != null && !message.verifySignature(friend.publicKey))
+                            if (!replaced_sender_address && friend.publicKey != null
+                                && message.encryptionType != StreamMessageEncryptionCode.spixi1
+                                && !message.verifySignature(friend.publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
@@ -522,7 +528,9 @@ namespace SPIXI
                     case SpixiMessageCode.avatar:
                         {
                             // Set the avatar for the corresponding address
-                            if (!replaced_sender_address && friend.publicKey != null && !message.verifySignature(friend.publicKey))
+                            if (!replaced_sender_address && friend.publicKey != null
+                                && message.encryptionType != StreamMessageEncryptionCode.spixi1
+                                && !message.verifySignature(friend.publicKey))
                             {
                                 Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }

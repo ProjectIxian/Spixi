@@ -344,21 +344,43 @@ function addReactions(id, reactions)
         return;
 	}
 
-    var reactionsEl = msgEl.getElementsByClassName("reactions")[0];
+    var reactionsEls = msgEl.getElementsByClassName("reactions");
+    var reactionsEl = null;
     if(reactionsEl == null)
     {
-    
+        if(reactions == "")
+        {
+            return;  
+		}
+        reactionsEl = document.createElement("div");
+        reactionsEl.className = "reactions";
+        msgEl.appendChild(reactionsEl);
+	}else
+    {
+        reactionsEl = reactionsEls[0];
 	}
 
     reactionsEl.innerHTML = "";
     var reactionArr = reactions.split(";");
     for(var i = 0; i < reactionArr.length; i++)
     {
-        if(reactionArr[0].startsWith("tip:"))
+        if(reactionArr[i] == "")
         {
-            reactionsEl.innerHTML += "<img src=\"\">" + reactionArr[i] + "</div>";
+            continue;  
+		}
+        if(reactionArr[i].indexOf("tip:") == 0)
+        {
+            reactionsEl.innerHTML += "<div class=\"reaction\"><img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/>" + reactionArr[i].substring(4) + "</div>";
         }
     }
+    if(reactionsEl.innerHTML != "")
+    {
+        msgEl.style.paddingBottom = "43px";
+	}else
+    {
+        reactionsEl.parentNode.removeChild(reactionsEl);
+        msgEl.style.paddingBottom = "15px";
+	}
 }
 
 function deleteMessage(id)
