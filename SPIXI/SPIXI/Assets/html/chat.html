@@ -161,20 +161,20 @@
         <hr class="spixi-separator noheightmargins" />
 
         <div class="spixi-textsection-holder spixi-textsection-header2">
-            *SL{chat-bot-address} <span class="float-right"><i class="fa fa-chevron-down" onclick="toggleSpixiBotAddress(this);"></i></span>
+            *SL{chat-bot-address} <span class="float-right"><i class="fa fa-chevron-down" onclick="toggleSpixiBotAddress(this, 'BotAddress');"></i></span>
         </div>
-        <div class="spixi-textsection-holder spixi-bot-address" style="display:none;">
-            <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
-                <div class="address_qr" id="qrcode"></div>
+        <div id="BotAddress" class="spixi-textsection-holder spixi-bot-address" style="display:none;">
+            <div id="BotAddressQrHolder" class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+                <div class="address_qr" id="BotQrCode"></div>
 
-                <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
+                <div id="BotAddressToastBar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
 
                 <hr class="spixi-separator" />
 
-                <div id="wal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
-                <div id="wal2" class="spixi-text-address">*SL{contact-details-address-2}</div>
-                <div id="wal3" class="spixi-text-address">*SL{contact-details-address-3}</div>
-                <div id="wal4" class="spixi-text-address"></div>
+                <div id="BotWal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
+                <div id="BotWal2" class="spixi-text-address">*SL{contact-details-address-2}</div>
+                <div id="BotWal3" class="spixi-text-address">*SL{contact-details-address-3}</div>
+                <div id="BotWal4" class="spixi-text-address"></div>
 
                 <hr class="spixi-separator" />
                 <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
@@ -198,6 +198,52 @@
             *SL{chat-bot-leave}
             <div class="spixi-button small smallwidth float-right">
                 *SL{chat-bot-leave}
+            </div>
+        </div>
+    </div>
+    <div id="UserDetails" class="spixi-bot-user-details-wrap" onclick="hideUserDetails();">
+        <div class="spixi-bot-user-details" onclick="event.stopPropagation(); return false;">
+            <div class="spixi-textsection-holder spixi-bot-user-nick">
+            </div>
+            <hr class="spixi-separator noheightmargins" />
+
+            <div class="spixi-textsection-holder spixi-textsection-header2">
+                *SL{chat-bot-user-send-contact-request} <span class="float-right"><i class="fa fa-user-plus" onclick="sendContactRequest(user_address);"></i></span>
+            </div>
+            <hr class="spixi-separator noheightmargins" />
+
+            <div class="spixi-textsection-holder spixi-textsection-header2">
+                *SL{chat-bot-user-address} <span class="float-right"><i class="fa fa-chevron-down" onclick="toggleSpixiBotAddress(this, 'UserAddress');"></i></span>
+            </div>
+            <div id="UserAddress" class="spixi-textsection-holder spixi-bot-address" style="display:none;">
+                <div id="UserAddressQrHolder" class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+                    <div class="address_qr" id="UserQrCode"></div>
+
+                    <div id="UserAddressToastBar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
+
+                    <hr class="spixi-separator" />
+
+                    <div id="UserWal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
+                    <div id="UserWal2" class="spixi-text-address">*SL{contact-details-address-2}</div>
+                    <div id="UserWal3" class="spixi-text-address">*SL{contact-details-address-3}</div>
+                    <div id="UserWal4" class="spixi-text-address"></div>
+
+                    <hr class="spixi-separator" />
+                    <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
+                    <div class="spixi-holder-20"></div>
+
+                </div>
+            </div>
+            <hr class="spixi-separator noheightmargins" />
+
+            <div class="spixi-textsection-holder spixi-textsection-header2">
+                <div class="spixi-button small smallwidth float-left spixi-kick">
+                    *SL{chat-context-kick-user}
+                </div>
+
+                <div class="spixi-button small smallwidth float-right spixi-ban">
+                    *SL{chat-context-ban-user}
+                </div>
             </div>
         </div>
     </div>

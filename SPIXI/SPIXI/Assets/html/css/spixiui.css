@@ -1558,9 +1558,26 @@ img.emoji {
     padding: 0px 15px;
 }
 
-.spixi-bubble .reactions img {
+
+.spixi-bubble .reactions .reaction
+{
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.spixi-bubble .reactions .reaction img {
     height: 16px;
     margin-right: 5px;
+}
+
+.spixi-bubble .reactions .reaction i {
+    font-size: 16px;
+    line-height: 28px;
+    margin-right: 5px;
+}
+
+.spixi-bubble .reactions .reaction i.fa-heart {
+    color: red;
 }
 
 .spixi-callbubble
@@ -1634,7 +1651,7 @@ img.emoji {
     transition: all 0.6s;
     
     position: fixed;
-    z-index: 99;
+    z-index: 1001;
     
     width: 100%;
     bottom: 0;   
@@ -1744,7 +1761,6 @@ img.emoji {
     color: #BABABA;
     padding-top: 4px;
     vertical-align: middle;
-    
 }
 .chatattachsymbol {
     color: #1693da;
@@ -1815,6 +1831,11 @@ img.emoji {
     padding: 0px 16px;
     z-index: 1000;
     vertical-align: middle;
+    -moz-transition: all 0.6s ease-in-out;
+    -ms-transition: all 0.6s ease-in-out;
+    -o-transition: all 0.6s ease-in-out;
+    -webkit-transition: all 0.6s ease-in-out;
+    transition: all 0.6s;
 }
 
 .spixi-chat-payable-bar span
@@ -1943,7 +1964,8 @@ img.emoji {
     color: #EC196C;
 }
 
-.spixi-bot-details {
+.spixi-bot-details,
+.spixi-bot-user-details-wrap {
     position: fixed;
     top: 56px;
     left: 0px;
@@ -1955,14 +1977,34 @@ img.emoji {
     z-index: 2000;
 }
 
-.spixi-bot-details .spixi-textsection-header2
+.spixi-bot-user-details-wrap {
+    top: 0px;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+.spixi-bot-user-details {
+    border-radius: 34px 34px 0px 0px;
+    position: fixed;
+    top: 56px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background: #E5E5E5;
+    overflow: auto;
+    padding: 15px 0px;
+}
+
+.spixi-bot-details .spixi-textsection-header2,
+.spixi-bot-user-details .spixi-textsection-header2
 {
     line-height: 30px;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
-.spixi-bot-details .spixi-textsection-header2 > span > i {
+.spixi-bot-details .spixi-textsection-header2 > span > i,
+.spixi-bot-user-details .spixi-textsection-header2 > span > i
+{
     font-size: 16pt;
 }
 
@@ -1973,13 +2015,27 @@ img.emoji {
     color: black;
 }
 
-.spixi-bot-details .spixi-button {
+.spixi-bot-details .spixi-button,
+.spixi-bot-user-details .spixi-button
+{
     height: 30px;
     line-height: 30px;
     width: auto;
     padding: 0 20px;
 }
 
+.spixi-bot-user-details .spixi-bot-user-nick {
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 0px 0px 10px 0px;
+}
+
+.spixi-bot-user-details .spixi-bot-user-nick .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 32px;
+    margin-right: 18px;
+}
 
 /* Onboarding */
 #Onboarding {

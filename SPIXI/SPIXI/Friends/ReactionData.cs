@@ -22,6 +22,10 @@ namespace SPIXI
                     int sender_len = reader.ReadInt32();
                     sender = reader.ReadBytes(sender_len);
                     data = reader.ReadString();
+                    if(data == "")
+                    {
+                        data = null;
+                    }
                 }
             }
         }
@@ -34,7 +38,13 @@ namespace SPIXI
                 {
                     writer.Write(sender.Length);
                     writer.Write(sender);
-                    writer.Write(data);
+                    if (data != null)
+                    {
+                        writer.Write(data);
+                    }else
+                    {
+                        writer.Write("");
+                    }
                 }
                 return m.ToArray();
             }

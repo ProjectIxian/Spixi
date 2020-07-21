@@ -655,7 +655,7 @@ namespace SPIXI
 
         public bool addReaction(byte[] sender_address, SpixiMessageReaction reaction_data, int channel)
         {
-            if(!reaction_data.reaction.StartsWith("tip:"))
+            if(!reaction_data.reaction.StartsWith("tip:") && !reaction_data.reaction.StartsWith("like:"))
             {
                 Logging.warn("Invalid reaction data: " + reaction_data.reaction);
                 return false;

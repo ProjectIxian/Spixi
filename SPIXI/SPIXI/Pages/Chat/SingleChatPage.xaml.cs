@@ -129,11 +129,11 @@ namespace SPIXI
                 if (fm != null)
                 {
                     onAcceptFile(selectedChannel, fm);
-                }else
+                } else
                 {
                     Logging.error("Cannot find message with transfer id: {0}", id);
                 }
-               
+
             }
             else if (current_url.StartsWith("ixian:openfile:"))
             {
@@ -199,6 +199,17 @@ namespace SPIXI
             {
                 friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification = false;
                 StreamProcessor.sendBotAction(friend, SpixiBotActionCode.enableNotifications, new byte[1] { 0 }, 0, true);
+            }
+            else if (current_url.StartsWith("ixian:sendContactRequest:"))
+            {
+                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:sendContactRequest:".Length));
+                Friend new_friend = FriendList.addFriend(address, null, Base58Check.Base58CheckEncoding.EncodePlain(address), null, null, 0);
+                if (new_friend != null)
+                {
+                    FriendList.saveToStorage();
+
+                    StreamProcessor.sendContactRequest(new_friend);
+                }
             }
             else
             {
@@ -607,6 +618,12 @@ namespace SPIXI
                         friend.deleteMessage(msg_id, selectedChannel);
                     }
                     break;
+                case "like":
+                    if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
+                    {
+                        StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
+                    }
+                    break;
             }
         }
 
@@ -967,8 +984,11 @@ namespace SPIXI
         {
             if (channel == selectedChannel)
             {
-                FriendMessage fm = friend.getMessages(0).Find(x => x.id.SequenceEqual(msg_id));
-                updateReactions(fm);
+                FriendMessage fm = friend.getMessages(channel).Find(x => x.id.SequenceEqual(msg_id));
+                if (fm != null)
+                {
+                    updateReactions(fm);
+                }
             }
         }
 

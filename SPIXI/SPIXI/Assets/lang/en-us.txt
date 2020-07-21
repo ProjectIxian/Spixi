@@ -87,6 +87,9 @@ chat-bot-toggle-notifications = Toggle Notifications
 chat-bot-invite = Invite a Contact to This Bot
 chat-bot-leave = Leave Bot
 
+chat-bot-user-address = User Address
+chat-bot-user-send-contact-request = Send Contact Request
+
 ; Contact Details Screen
 contact-details-chat = chat
 contact-details-send = send
