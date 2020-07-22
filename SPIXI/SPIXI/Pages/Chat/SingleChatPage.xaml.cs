@@ -606,6 +606,11 @@ namespace SPIXI
                     IxiNumber amount = new IxiNumber(data);
                     Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
                     IxiNumber balance = IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress());
+                    if(tx.amount <= 0)
+                    {
+                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                        return;
+                    }
                     if (tx.amount + tx.fee > balance)
                     {
                         string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);

@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.SpixiBot;
+using IXICore.Utils;
 using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
