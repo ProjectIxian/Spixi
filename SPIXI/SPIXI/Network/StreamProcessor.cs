@@ -732,13 +732,23 @@ namespace SPIXI
                         break;
 
                     case SpixiMessageCode.msgReaction:
-                        if (friend.bot && !message.verifySignature(friend.publicKey))
+                        if (!replaced_sender_address && friend.publicKey != null
+                            && message.encryptionType != StreamMessageEncryptionCode.spixi1
+                            && !message.verifySignature(friend.publicKey))
+                        {
+                            Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                        }
+                        else if (replaced_sender_address && (!friend.users.hasUser(real_sender_address) || friend.users.getUser(real_sender_address).publicKey == null))
+                        {
+                            requestPubKey(friend, real_sender_address);
+                        }
+                        else if (replaced_sender_address && !message.verifySignature(friend.users.getUser(real_sender_address).publicKey))
                         {
                             Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address));
                         }
                         else
                         {
-                            handleMsgReaction(friend, message.id, spixi_message.data, channel);
+                            handleMsgReaction(friend, message.sender, message.id, spixi_message.data, channel);
                         }
                         break;
 
@@ -796,9 +806,9 @@ namespace SPIXI
                 }
             }
         }
-        public static void handleMsgReaction(Friend friend, byte[] msg_id, byte[] reaction_data, int channel)
+        public static void handleMsgReaction(Friend friend, byte[] sender, byte[] msg_id, byte[] reaction_data, int channel)
         {
-            if (friend.addReaction(friend.walletAddress, new SpixiMessageReaction(reaction_data), channel))
+            if (friend.addReaction(sender, new SpixiMessageReaction(reaction_data), channel))
             {
                 if (friend.bot)
                 {
