@@ -54,10 +54,9 @@ function hideContextMenus()
     hideContextMenu();
 }
 
-function setBotMode(bot, cost, costText, admin, botDescription, notificationsString, address)
+function setBotMode(bot, cost, costText, admin, botDescription, notificationsString)
 {
     userNick = address;
-    userAddress = address;
 
     if(admin == "True")
     {
@@ -127,8 +126,10 @@ function setSelectedChannel(id, icon, name)
     channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name;
 }
 
-function onChatScreenLoaded()
+function onChatScreenLoaded(address)
 {
+    userAddress = address;
+
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     $('#chat_emoji').lsxEmojiPicker({
         twemoji: true,

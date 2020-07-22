@@ -295,7 +295,7 @@ namespace SPIXI
                 }
 
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.botInfo.cost.ToString() + " IXI");
-                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString(), friend.botInfo.serverDescription, friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification.ToString(), Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString(), friend.botInfo.serverDescription, friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification.ToString());
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
                     selectedChannel = friend.botInfo.defaultChannel;
@@ -333,7 +333,7 @@ namespace SPIXI
 
             loadMessages();
 
-            Utils.sendUiCommand(webView, "onChatScreenLoaded");
+            Utils.sendUiCommand(webView, "onChatScreenLoaded", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
 
             if (FriendList.getUnreadMessageCount() == 0)
             {
