@@ -232,12 +232,12 @@
             </div>
             <hr class="spixi-separator noheightmargins" />
 
-            <div class="spixi-textsection-holder spixi-textsection-header2">
-                <div class="spixi-button small smallwidth float-left spixi-kick">
+            <div class="spixi-textsection-holder spixi-textsection-header2 spixi-bot-user-actions">
+                <div class="spixi-button small smallwidth float-left spixi-kick" onclick="kickUser();">
                     *SL{chat-context-kick-user}
                 </div>
 
-                <div class="spixi-button small smallwidth float-right spixi-ban">
+                <div class="spixi-button small smallwidth float-right spixi-ban" onclick="location.href='ixian:ban:' + document.getElementById('UserAddressQrHolder').getAttribute('data-clipboard-text');">
                     *SL{chat-context-ban-user}
                 </div>
             </div>
@@ -251,23 +251,33 @@
         var SL_ChatView = "*SL{chat-view}";
         var SL_ChatSentContactRequest = "*SL{chat-sent-contact-request}";
         var SL_ContextMenu = {
-        "pinMessage": "*SL{chat-context-pin-message}",
-        "copyText": "*SL{chat-context-copy-text}",
-        "tipUser": "*SL{chat-context-tip-user}",
-        "likeMessage": "*SL{chat-context-like-message}",
-        "userInfo": "*SL{chat-context-user-info}",
-        "sendContactRequest": "*SL{chat-context-send-contact-request}",
-        "kickUser": "*SL{chat-context-kick-user}",
-        "banUser": "*SL{chat-context-ban-user}",
-        "deleteMessage": "*SL{chat-context-delete-message}"
+            "pinMessage": "*SL{chat-context-pin-message}",
+            "copyText": "*SL{chat-context-copy-text}",
+            "tipUser": "*SL{chat-context-tip-user}",
+            "likeMessage": "*SL{chat-context-like-message}",
+            "userInfo": "*SL{chat-context-user-info}",
+            "sendContactRequest": "*SL{chat-context-send-contact-request}",
+            "kickUser": "*SL{chat-context-kick-user}",
+            "banUser": "*SL{chat-context-ban-user}",
+            "deleteMessage": "*SL{chat-context-delete-message}"
         };
         var SL_Modals = {
-        "cancel": "*SL{global-dialog-cancel}",
-        "tipTitle": "*SL{chat-modal-tip-title}",
-        "tipBody": "*SL{chat-modal-tip-body}",
-        "tipCustom": "*SL{chat-modal-tip-custom}",
-        "payButton": "*SL{chat-modal-tip-pay-button}",
-        "tipConfirmationBody": "*SL{chat-modal-tip-confirmation-body}"
+            "cancel": "*SL{global-dialog-cancel}",
+            "tipTitle": "*SL{chat-modal-tip-title}",
+            "tipBody": "*SL{chat-modal-tip-body}",
+            "tipCustom": "*SL{chat-modal-tip-custom}",
+            "payButton": "*SL{chat-modal-tip-pay-button}",
+            "tipConfirmationBody": "*SL{chat-modal-tip-confirmation-body}",
+            "kickTitle": "*SL{chat-modal-kick-title}",
+            "kickBody": "*SL{chat-modal-kick-body}",
+            "kickButton": "*SL{chat-modal-kick-kick-button}",
+            "kickedTitle": "*SL{chat-modal-kicked-title}",
+            "kickedBody": "*SL{chat-modal-kicked-body}",
+            "banTitle": "*SL{chat-modal-ban-title}",
+            "banBody": "*SL{chat-modal-ban-body}",
+            "banButton": "*SL{chat-modal-ban-ban-button}",
+            "bannedTitle": "*SL{chat-modal-banned-title}",
+            "bannedBody": "*SL{chat-modal-banned-body}"
         };
     </script>
     <script src="js/chat.js"></script>

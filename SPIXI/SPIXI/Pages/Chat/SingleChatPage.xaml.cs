@@ -129,7 +129,8 @@ namespace SPIXI
                 if (fm != null)
                 {
                     onAcceptFile(selectedChannel, fm);
-                } else
+                }
+                else
                 {
                     Logging.error("Cannot find message with transfer id: {0}", id);
                 }
@@ -210,6 +211,22 @@ namespace SPIXI
 
                     StreamProcessor.sendContactRequest(new_friend);
                 }
+            }
+            else if (current_url.StartsWith("ixian:kick:"))
+            {
+                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:kick:".Length));
+                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, address, 0, true);
+                string modal_title = String.Format(SpixiLocalization._SL("chat-modal-kicked-title"), address);
+                string modal_body = String.Format(SpixiLocalization._SL("chat-modal-kicked-body"), address);
+                displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+            }
+            else if (current_url.StartsWith("ixian:ban:"))
+            {
+                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:ban:".Length));
+                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, address, 0, true);
+                string modal_title = String.Format(SpixiLocalization._SL("chat-modal-banned-title"), address);
+                string modal_body = String.Format(SpixiLocalization._SL("chat-modal-banned-body"), address);
+                displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
             }
             else
             {

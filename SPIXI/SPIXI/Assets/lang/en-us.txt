@@ -90,6 +90,18 @@ chat-bot-leave = Leave Bot
 chat-bot-user-address = User Address
 chat-bot-user-send-contact-request = Send Contact Request
 
+chat-modal-kick-title = Kick {0}?
+chat-modal-kick-body = Are you sure you want to kick '{0}' from this server?
+chat-modal-kick-kick-button = KICK USER
+chat-modal-kicked-title = Kicked {0}
+chat-modal-kicked-body = You have kicked '{0}' from this server.
+
+chat-modal-ban-title = Ban {0}?
+chat-modal-ban-body = Are you sure you want to ban '{0}' from this server?
+chat-modal-ban-ban-button = BAN USER
+chat-modal-banned-title = Banned {0}
+chat-modal-banned-body = You have banned '{0}' from this server.
+
 ; Contact Details Screen
 contact-details-chat = chat
 contact-details-send = send

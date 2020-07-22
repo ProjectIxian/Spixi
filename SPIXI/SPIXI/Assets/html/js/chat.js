@@ -56,6 +56,11 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
     if(admin == "True")
     {
          isAdmin = true;
+         document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "block";
+	}else
+    {
+         isAdmin = false;
+         document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "none";
 	}
 
     setBotAddress(address);
@@ -1031,14 +1036,21 @@ function contextAction(action, msgId)
         // TODO implement
 	}else if (action == "tip")
     {
+        var msgEl = document.getElementById("msg_" + msgId);
+        var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+
+        var title = SL_Modals["tipTitle"];
+        title = title.replace("{0}", nick);
+
         tipPrice = "0";
         var html = SL_Modals["tipBody"];
+
         html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('50');\">50 IXI <i class=\"fa fa-check\"></i></div>";
         html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('100');\">100 IXI <i class=\"fa fa-check\"></i></div>";
         html += "<div class=\"spixi-modal-tip-item\" onclick=\"selectTip('200');\">200 IXI <i class=\"fa fa-check\"></i></div>";
         html += "<div class=\"spixi-modal-tip-item custom\" onclick=\"selectTip();\">" + SL_Modals["tipCustom"] + " <i class=\"fa fa-check\"></i> <input type='text' class='spixi-textfield' onchange='tipPrice = this.value;'/></div>";
 
-        var payBtnHtml = "<div onclick='payTipConfirmation();'>" + SL_Modals["payButton"] + "</div>";
+        var payBtnHtml = "<div onclick='payTipConfirmation(\"" + msgId + "\");'>" + SL_Modals["payButton"] + "</div>";
         var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
         showModalDialog(SL_Modals["tipTitle"], html, payBtnHtml, cancelBtnHtml);
@@ -1092,16 +1104,30 @@ function selectTip(amount)
 	}
 }
 
-function payTipConfirmation()
+function payTipConfirmation(msgId)
 {
     if(tipPrice == "0")
     {
         return;
     }
+
+    var msgEl = document.getElementById("msg_" + msgId);
+
+    var address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
+    var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+
+    var title = SL_Modals["tipTitle"];
+    title = title.replace("{0}", nick);
+
+    var html = SL_Modals["tipConfirmationBody"];
+
+    html = html.replace("{0}", nick + " (" + address + ")");
+    html = html.replace("{1}", tipPrice + " IXI");
+
     var payBtnHtml = "<div onclick='payTip();'>" + SL_Modals["payButton"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
-    showModalDialog(SL_Modals["tipTitle"], SL_Modals["tipConfirmationBody"], payBtnHtml, cancelBtnHtml);
+    showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
 }
 
 function payTip()
@@ -1231,4 +1257,36 @@ function hideUserDetails(e)
 function sendContactRequest(address)
 {
     location.href = "ixian:sendContactRequest:" + address;
+}
+
+function kickUser()
+{
+    var address = document.getElementById('UserAddressQrHolder').getAttribute('data-clipboard-text');
+
+    var title = SL_Modals["kickTitle"];
+    title = title.replace("{0}", address);
+
+    var html = SL_Modals["kickBody"];
+    html = html.replace("{0}", address);
+
+    var payBtnHtml = "<div onclick=\"location.href='ixian:kick:" + address +  "';\">" + SL_Modals["kickButton"] + "</div>";
+    var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
+
+    showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
+}
+
+function banUser()
+{
+    var address = document.getElementById('UserAddressQrHolder').getAttribute('data-clipboard-text');
+
+    var title = SL_Modals["banTitle"];
+    title = title.replace("{0}", address);
+
+    var html = SL_Modals["banBody"];
+    html = html.replace("{0}", address);
+
+    var payBtnHtml = "<div onclick=\"location.href='ixian:ban:" + address +  "';\">" + SL_Modals["banButton"] + "</div>";
+    var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
+
+    showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
 }
