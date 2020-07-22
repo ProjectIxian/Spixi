@@ -282,6 +282,18 @@ namespace SPIXI
         {
             if(friend.bot)
             {
+                int sleep_cnt = 0;
+                while (friend.botInfo == null)
+                {
+                    if (sleep_cnt >= 50)
+                    {
+                        // TODO TODO perhaps an error or something that the bot isn't ready yet should be displayed
+                        Navigation.PopAsync(Config.defaultXamarinAnimations);
+                    }
+                    Thread.Sleep(100);
+                    sleep_cnt++;
+                }
+
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.botInfo.cost.ToString() + " IXI");
                 Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString(), friend.botInfo.serverDescription, friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification.ToString(), Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
@@ -291,11 +303,12 @@ namespace SPIXI
                 if (selectedChannel != 0)
                 {
                     BotChannel channel = friend.channels.getChannel(friend.channels.channelIndexToName(selectedChannel));
-                    if(channel != null)
+                    if (channel != null)
                     {
                         Utils.sendUiCommand(webView, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
                     }
-                }else
+                }
+                else
                 {
                     selectedChannel = 0;
                 }
