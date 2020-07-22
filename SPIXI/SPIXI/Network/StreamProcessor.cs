@@ -741,6 +741,17 @@ namespace SPIXI
                             handleMsgReaction(friend, message.id, spixi_message.data, channel);
                         }
                         break;
+
+                    case SpixiMessageCode.msgTyping:
+                        if(friend.bot)
+                        {
+                            return;
+                        }
+                        if(friend.chat_page != null)
+                        {
+                            friend.chat_page.showTyping();
+                        }
+                        return;
                 }
 
                 if (friend == null)
@@ -1786,7 +1797,7 @@ namespace SPIXI
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgDelete, msg_id, channel);
 
             StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
+            message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.transaction = new byte[1];
@@ -1808,7 +1819,7 @@ namespace SPIXI
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgReaction, new SpixiMessageReaction(msg_id, reaction).getBytes(), channel);
 
             StreamMessage message = new StreamMessage();
-            message.type = StreamMessageCode.info;
+            message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.transaction = new byte[1];
@@ -1822,6 +1833,22 @@ namespace SPIXI
             }
 
             sendMessage(friend, message);
+        }
+
+        public static void sendTyping(Friend friend)
+        {
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgTyping, null, 0);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = friend.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            sendMessage(friend, message, false, false, false, true);
         }
     }
 }

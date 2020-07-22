@@ -7,6 +7,9 @@ var attachMode = false;
 
 var contactrequestbar = document.getElementById("contactrequestbar");
 
+var userNick = "";
+var userAddress = "";
+
 function onChatScreenLoad()
 {
     document.getElementById("chat_input").focus();
@@ -53,6 +56,9 @@ function hideContextMenus()
 
 function setBotMode(bot, cost, costText, admin, botDescription, notificationsString, address)
 {
+    userNick = address;
+    userAddress = address;
+
     if(admin == "True")
     {
          isAdmin = true;
@@ -240,10 +246,21 @@ document.getElementById("chat_send").onclick = function () {
 
 var shiftPressed = false;
 
+var lastTypingSent = new Date().getTime();
+
 $("#chat_input").keydown(function (event) {
     if(event.keyCode === 16)
     {
         shiftPressed = true;
+    }
+    if(isBot)
+    {
+         return;
+	}
+    if(new Date().getTime() - lastTypingSent > 1000)
+    {
+        lastTypingSent = new Date().getTime();
+        location.href = "ixian:typing";
     }
 });
 
@@ -471,6 +488,8 @@ function addText(id, address, nick, avatar, text, time, className) {
     }
 
     var scroll = shouldScroll();
+
+    hideUserTyping();
 
     messagesEl.appendChild(bubbleEl);
 
@@ -736,6 +755,7 @@ function updateTransactionStatus(txid, status, statusIcon) {
 }
 
 function setNickname(nick) {
+    userNick = nick;
     document.getElementById("title").innerHTML = nick;
     document.getElementById("contactrequesttitle").innerHTML = nick + " " + SL_ChatContactRequest;
 }
@@ -1037,7 +1057,15 @@ function contextAction(action, msgId)
 	}else if (action == "tip")
     {
         var msgEl = document.getElementById("msg_" + msgId);
-        var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+        var nick = null;
+        if(msgEl.getElementsByClassName("nick").length > 0)
+        {
+            msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+        }
+        if(nick == null)
+        {
+              nick = userNick;
+		}
 
         var title = SL_Modals["tipTitle"];
         title = title.replace("{0}", nick);
@@ -1053,7 +1081,7 @@ function contextAction(action, msgId)
         var payBtnHtml = "<div onclick='payTipConfirmation(\"" + msgId + "\");'>" + SL_Modals["payButton"] + "</div>";
         var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
-        showModalDialog(SL_Modals["tipTitle"], html, payBtnHtml, cancelBtnHtml);
+        showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
     }else if(action == "userInfo")
     {
         var msgEl = document.getElementById("msg_" + msgId);
@@ -1112,9 +1140,21 @@ function payTipConfirmation(msgId)
     }
 
     var msgEl = document.getElementById("msg_" + msgId);
-
-    var address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
-    var nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+    var address = null;
+    var nick = null;
+    if(msgEl.getElementsByClassName("nick").length > 0)
+    {
+        address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
+        nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+    }
+    if(address == null)
+    {
+        address = userAddress;
+	}
+    if(nick == null)
+    {
+        nick = userNick;
+	}
 
     var title = SL_Modals["tipTitle"];
     title = title.replace("{0}", nick);
@@ -1289,4 +1329,26 @@ function banUser()
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
 
     showModalDialog(title, html, payBtnHtml, cancelBtnHtml);
+}
+
+var userTypingTimeout = null;
+function showUserTyping()
+{
+    if(userTypingTimeout != null)
+    {
+        clearTimeout(userTypingTimeout);
+        userTypingTimeout = null;
+	}
+    document.getElementById("UserTyping").style.display = "block";
+    userTypingTimeout = setTimeout(hideUserTyping, 5000);
+}
+
+function hideUserTyping()
+{
+    document.getElementById("UserTyping").style.display = "none";
+    if(userTypingTimeout != null)
+    {
+        clearTimeout(userTypingTimeout);
+        userTypingTimeout = null;
+	}
 }

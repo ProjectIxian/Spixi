@@ -228,6 +228,10 @@ namespace SPIXI
                 string modal_body = String.Format(SpixiLocalization._SL("chat-modal-banned-body"), address);
                 displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
             }
+            else if (current_url.StartsWith("ixian:typing"))
+            {
+                StreamProcessor.sendTyping(friend);
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -342,9 +346,11 @@ namespace SPIXI
                     if (message_cost > 0)
                     {
                         Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
-                        if (tx.amount + tx.fee > IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress()))
+                        IxiNumber balance = IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress());
+                        if (tx.amount + tx.fee > balance)
                         {
-                            await displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), SpixiLocalization._SL("wallet-error-balance-text"), SpixiLocalization._SL("global-dialog-ok"));
+                            string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);
+                            await displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
                             return;
                         }
                     }
@@ -586,9 +592,11 @@ namespace SPIXI
                     }
                     IxiNumber amount = new IxiNumber(data);
                     Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
-                    if (tx.amount + tx.fee > IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress()))
+                    IxiNumber balance = IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress());
+                    if (tx.amount + tx.fee > balance)
                     {
-                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), SpixiLocalization._SL("wallet-error-balance-text"), SpixiLocalization._SL("global-dialog-ok"));
+                        string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);
+                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
                     }
                     else
                     {
@@ -995,6 +1003,11 @@ namespace SPIXI
             {
                 Utils.sendUiCommand(webView, "deleteMessage", Crypto.hashToString(msg_id));
             }
+        }
+
+        public void showTyping()
+        {
+            Utils.sendUiCommand(webView, "showUserTyping");
         }
 
         public void updateReactions(byte[] msg_id, int channel)
