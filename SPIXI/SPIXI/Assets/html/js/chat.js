@@ -56,8 +56,6 @@ function hideContextMenus()
 
 function setBotMode(bot, cost, costText, admin, botDescription, notificationsString)
 {
-    userNick = address;
-
     if(admin == "True")
     {
          isAdmin = true;
@@ -67,8 +65,6 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
          isAdmin = false;
          document.getElementsByClassName("spixi-bot-user-actions")[0].style.display = "none";
 	}
-
-    setBotAddress(address);
 
     messageCost = cost;
     var payBar = document.getElementById("SpixiPayableBar");
@@ -126,10 +122,8 @@ function setSelectedChannel(id, icon, name)
     channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name;
 }
 
-function onChatScreenLoaded(address)
+function onChatScreenLoaded()
 {
-    userAddress = address;
-
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     $('#chat_emoji').lsxEmojiPicker({
         twemoji: true,
@@ -146,6 +140,13 @@ function onChatScreenLoaded(address)
         }
     });
     document.getElementById("chat_input").focus();
+}
+
+function onChatScreenReady(address)
+{
+    userAddress = address;
+    userNick = address;
+    setBotAddress(address);
 }
 
 document.getElementById("backbtn").onclick = function () {

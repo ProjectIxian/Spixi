@@ -13,9 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using Xamarin.Forms.Internals;
 
 namespace SPIXI
 {    
@@ -513,7 +511,15 @@ namespace SPIXI
                                 }
                                 else
                                 {
-                                    FriendList.setNickname(sender_address, Base58Check.Base58CheckEncoding.EncodePlain(sender_address), real_sender_address);
+                                    string nick;
+                                    if(real_sender_address != null)
+                                    {
+                                        nick = Base58Check.Base58CheckEncoding.EncodePlain(sender_address);
+                                    }else
+                                    {
+                                        nick = Base58Check.Base58CheckEncoding.EncodePlain(sender_address);
+                                    }
+                                    FriendList.setNickname(sender_address, nick, real_sender_address);
                                 }
                             }
                         }

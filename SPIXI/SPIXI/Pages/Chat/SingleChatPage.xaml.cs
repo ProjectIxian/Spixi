@@ -280,7 +280,9 @@ namespace SPIXI
 
         private void onLoad()
         {
-            if(friend.bot)
+            Utils.sendUiCommand(webView, "onChatScreenReady", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+
+            if (friend.bot)
             {
                 int sleep_cnt = 0;
                 while (friend.botInfo == null)
@@ -289,6 +291,7 @@ namespace SPIXI
                     {
                         // TODO TODO perhaps an error or something that the bot isn't ready yet should be displayed
                         Navigation.PopAsync(Config.defaultXamarinAnimations);
+                        return;
                     }
                     Thread.Sleep(100);
                     sleep_cnt++;
@@ -333,7 +336,7 @@ namespace SPIXI
 
             loadMessages();
 
-            Utils.sendUiCommand(webView, "onChatScreenLoaded", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            Utils.sendUiCommand(webView, "onChatScreenLoaded");
 
             if (FriendList.getUnreadMessageCount() == 0)
             {
