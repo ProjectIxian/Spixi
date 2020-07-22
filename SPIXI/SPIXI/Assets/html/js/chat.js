@@ -96,11 +96,11 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
     if(notificationsString == "True")
     {
         notifications = true;
-        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "fa fa-toggle-on spixi-bot-notifications-toggle";
+        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "spixi-switch spixi-bot-notifications-toggle";
 	}else
     {
         notifications = false;
-        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "fa fa-toggle-off spixi-bot-notifications-toggle";
+        document.getElementsByClassName("spixi-bot-notifications-toggle")[0].className = "spixi-switch off spixi-bot-notifications-toggle";
 	}
 
     document.getElementsByClassName("spixi-bot-description")[0].innerHTML = botDescription;
@@ -343,6 +343,8 @@ function addReactions(id, reactions)
         return;
 	}
 
+    var scroll = shouldScroll();
+
     var reactionsEls = msgEl.getElementsByClassName("reactions");
     var reactionsEl = null;
     if(reactionsEl == null)
@@ -375,14 +377,19 @@ function addReactions(id, reactions)
             reactionsEl.innerHTML += "<div class=\"reaction\"><i class=\"fa fa-heart\"></i>" + reactionArr[i].substring(5) + "</div>";
         }
     }
+
     if(reactionsEl.innerHTML != "")
     {
-        msgEl.style.paddingBottom = "43px";
+        msgEl.style.paddingBottom = "48px";
 	}else
     {
         reactionsEl.parentNode.removeChild(reactionsEl);
-        msgEl.style.paddingBottom = "15px";
+        msgEl.style.paddingBottom = "20px";
 	}
+
+    if (scroll) {
+        chatHolderEl.scrollIntoView(false);
+    }
 }
 
 function deleteMessage(id)
@@ -1122,57 +1129,30 @@ function toggleNotifications(el)
     if(notifications)
     {
         notifications = false;
-        el.className = "fa fa-toggle-off spixi-bot-notifications-toggle";
+        el.className = "spixi-switch off spixi-bot-notifications-toggle";
         location.href = "ixian:disableNotifications";
 	}else
     {
         notifications = true;
-        el.className = "fa fa-toggle-on spixi-bot-notifications-toggle";
+        el.className = "spixi-switch spixi-bot-notifications-toggle";
         location.href = "ixian:enableNotifications";
 	}
 }
 
-var bot_address = "";
-var user_address = "";
+var clipboardJs = new ClipboardJS('.address_qr_holder');
 
-var botAddressClipboard = new ClipboardJS('#BotAddressQrHolder', {
-    text: function () {
-        return bot_address;
-    }
-});
-
-botAddressClipboard.on('success', function (e) {
+clipboardJs.on('success', function (e) {
     e.clearSelection();
 
-    var x = document.getElementById("BotAddressToastBar");
+    var x = document.getElementsByClassName("spixi-toastbar")[0];
     x.className = "spixi-toastbar show";
     setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 
 });
 
-botAddressClipboard.on('error', function (e) {
+clipboardJs.on('error', function (e) {
 
 });
-
-var userAddressClipboard = new ClipboardJS('#UserAddressQrHolder', {
-    text: function () {
-        return user_address;
-    }
-});
-
-userAddressClipboard.on('success', function (e) {
-    e.clearSelection();
-
-    var x = document.getElementById("UserAddressToastBar");
-    x.className = "spixi-toastbar show";
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
-
-});
-
-userAddressClipboard.on('error', function (e) {
-
-});
-
 
 var botQrCode = new QRCode("BotQrCode", {
     text: "",
@@ -1199,6 +1179,7 @@ function setBotAddress(addr) {
     document.getElementById("BotWal2").innerHTML = parts[1];
     document.getElementById("BotWal3").innerHTML = parts[2];
     document.getElementById("BotWal4").innerHTML = parts[3];
+    document.getElementById("BotAddressQrHolder").setAttribute("data-clipboard-text", addr);
     botQrCode.clear(); // clear the code.
     botQrCode.makeCode(addr);
 }
@@ -1210,6 +1191,7 @@ function setUserAddress(addr) {
     document.getElementById("UserWal2").innerHTML = parts[1];
     document.getElementById("UserWal3").innerHTML = parts[2];
     document.getElementById("UserWal4").innerHTML = parts[3];
+    document.getElementById("UserAddressQrHolder").setAttribute("data-clipboard-text", addr);
     userQrCode.clear(); // clear the code.
     userQrCode.makeCode(addr);
 }
@@ -1236,8 +1218,12 @@ function showUserDetails(nick, address)
     setUserAddress(address);
 }
 
-function hideUserDetails()
+function hideUserDetails(e)
 {
+    if(e.target != e.currentTarget)
+    {
+         return;
+	}
     var userDetailsEl = document.getElementById("UserDetails");
     userDetailsEl.style.display = "none";
 }

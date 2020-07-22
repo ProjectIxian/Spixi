@@ -167,8 +167,6 @@
             <div id="BotAddressQrHolder" class="address_qr_holder" data-clipboard-text="SPIXI RULES">
                 <div class="address_qr" id="BotQrCode"></div>
 
-                <div id="BotAddressToastBar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
-
                 <hr class="spixi-separator" />
 
                 <div id="BotWal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
@@ -185,7 +183,7 @@
         <hr class="spixi-separator noheightmargins" />
 
         <div class="spixi-textsection-holder spixi-textsection-header2">
-            *SL{chat-bot-toggle-notifications} <span class="float-right"><i class="fa fa-toggle-off spixi-bot-notifications-toggle" onclick="toggleNotifications(this);"></i></span>
+            *SL{chat-bot-toggle-notifications} <div class="spixi-switch off spixi-bot-notifications-toggle" onclick="toggleNotifications(this);"></div>
         </div>
         <hr class="spixi-separator noheightmargins" />
 
@@ -201,8 +199,8 @@
             </div>
         </div>
     </div>
-    <div id="UserDetails" class="spixi-bot-user-details-wrap" onclick="hideUserDetails();">
-        <div class="spixi-bot-user-details" onclick="event.stopPropagation(); return false;">
+    <div id="UserDetails" class="spixi-bot-user-details-wrap" onclick="hideUserDetails(event);">
+        <div class="spixi-bot-user-details">
             <div class="spixi-textsection-holder spixi-bot-user-nick">
             </div>
             <hr class="spixi-separator noheightmargins" />
@@ -218,8 +216,6 @@
             <div id="UserAddress" class="spixi-textsection-holder spixi-bot-address" style="display:none;">
                 <div id="UserAddressQrHolder" class="address_qr_holder" data-clipboard-text="SPIXI RULES">
                     <div class="address_qr" id="UserQrCode"></div>
-
-                    <div id="UserAddressToastBar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
 
                     <hr class="spixi-separator" />
 
@@ -247,6 +243,7 @@
             </div>
         </div>
     </div>
+    <div class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
     <script>
         var SL_ChatTextTooLong = "*SL{chat-text-too-long}";
         var SL_ChatStatus = "*SL{chat-status}";

@@ -557,7 +557,7 @@ img.emoji {
     border-radius: 20px; 
     padding: 16px; 
     position: fixed; 
-    z-index: 100; 
+    z-index: 2001; 
     left: 50%; 
     top: 50%;
     font-size: 11pt;
@@ -1301,6 +1301,7 @@ img.emoji {
     margin-bottom: 10px;
     padding: 15px;
     padding-top: 10px;
+    padding-bottom: 20px;
     min-width: 80px;
     
     animation-name: chat_animation;
@@ -1558,6 +1559,10 @@ img.emoji {
     padding: 0px 15px;
 }
 
+.spixi-bubble .reactions * 
+{
+    vertical-align: middle;
+}
 
 .spixi-bubble .reactions .reaction
 {
@@ -1975,6 +1980,11 @@ img.emoji {
     display: none;
     background: #E5E5E5;
     z-index: 2000;
+
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
 }
 
 .spixi-bot-user-details-wrap {
@@ -2008,11 +2018,9 @@ img.emoji {
     font-size: 16pt;
 }
 
-.spixi-bot-notifications-toggle
-{
-    font-size: 20pt;
-    line-height: 30px;
-    color: black;
+.spixi-bot-details .spixi-switch {
+    height: 30px;
+    margin-right: 0px;
 }
 
 .spixi-bot-details .spixi-button,
