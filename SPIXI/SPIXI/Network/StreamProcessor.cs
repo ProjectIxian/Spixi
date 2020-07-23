@@ -379,9 +379,12 @@ namespace SPIXI
             {
                 aes_key = friend.aesKey;
                 chacha_key = friend.chachaKey;
-                if(friend.publicKey == null && endpoint.presence.pubkey != null && endpoint.presence.wallet.SequenceEqual(friend.walletAddress))
+                if(friend.publicKey == null)
                 {
-                    friend.publicKey = endpoint.presence.pubkey;
+                    if (endpoint != null && endpoint.presence.pubkey != null && endpoint.presence.wallet.SequenceEqual(friend.walletAddress))
+                    {
+                        friend.publicKey = endpoint.presence.pubkey;
+                    }
                 }
             }
 
