@@ -1,14 +1,27 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using IXICore.Utils;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Authentication.ExtendedProtection;
+using System.Threading;
 
 namespace SPIXI.Storage
 {  
+    class WriteMessagesRequest
+    {
+        public long startTime = 0;
+        public long lastRequestTime = 0;
+
+        public WriteMessagesRequest(long start_time)
+        {
+            startTime = start_time;
+            lastRequestTime = start_time;
+        }
+    }
+
     // Used for storing and retrieving local data for SPIXI
     class LocalStorage
     {
@@ -31,6 +44,12 @@ namespace SPIXI.Storage
         private int messagesPerFile = 1000;
 
         private bool started = false;
+
+        private bool running = false;
+
+        private Thread storageThread = null;
+
+        Dictionary<byte[], Dictionary<int, WriteMessagesRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteMessagesRequest>>(new ByteArrayComparer());
 
         public LocalStorage(string path, int messages_per_file = 1000)
         {
@@ -79,12 +98,105 @@ namespace SPIXI.Storage
                 return;
             }
             started = true;
+            running = true;
 
             // Read transactions
             readTransactionCacheFile();
 
             // Read the account file
             readAccountFile();
+
+            storageThread = new Thread(storageLoop);
+        }
+
+        public void stop()
+        {
+            running = false;
+        }
+
+        private void storageLoop()
+        {
+            Thread.CurrentThread.IsBackground = true;
+            while(running)
+            {
+                try
+                {
+                    writePendingMessages();
+                }catch(Exception e)
+                {
+                    Logging.error("Exception occured in storage loop: " + e);
+                }
+                Thread.Sleep(1000);
+            }
+            try
+            {
+                writePendingMessages(true);
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured while trying to flush storage: " + e);
+            }
+            storageThread = null;
+        }
+
+        private void writePendingMessages(bool flush = false)
+        {
+            Dictionary<byte[], Dictionary<int, WriteMessagesRequest>> tmp_requests;
+            lock (writeMessagesRequests)
+            {
+                tmp_requests = new Dictionary<byte[], Dictionary<int, WriteMessagesRequest>>(writeMessagesRequests);
+            }
+            long cur_time = Clock.getTimestamp();
+            foreach (var request in tmp_requests)
+            {
+                Friend friend = FriendList.getFriend(request.Key);
+                if (friend == null)
+                {
+                    lock (writeMessagesRequests)
+                    {
+                        writeMessagesRequests.Remove(request.Key);
+                    }
+                    continue;
+                }
+                Dictionary<int, WriteMessagesRequest> tmp_channels;
+                lock (request.Value)
+                {
+                    tmp_channels = new Dictionary<int, WriteMessagesRequest>(request.Value);
+                }
+                foreach (var request_channel in tmp_channels)
+                {
+                    if (!flush)
+                    {
+                        if (cur_time - request_channel.Value.startTime < 5)
+                        {
+                            if (cur_time - request_channel.Value.lastRequestTime < 2)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                    int channel = request_channel.Key;
+                    try
+                    {
+                        requestWriteMessages(request.Key, channel);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured while trying to write messages: " + e);
+                    }
+                    lock (writeMessagesRequests[request.Key])
+                    {
+                        writeMessagesRequests[request.Key].Remove(channel);
+                    }
+                    lock (writeMessagesRequests)
+                    {
+                        if (writeMessagesRequests[request.Key].Count == 0)
+                        {
+                            writeMessagesRequests.Remove(request.Key);
+                        }
+                    }
+                }
+            }
         }
 
         // Returns the user's avatar path
@@ -474,8 +586,32 @@ namespace SPIXI.Storage
             return null;
         }
 
+        public void requestWriteMessages(byte[] wallet_address, int channel)
+        {
+            lock (writeMessagesRequests)
+            {
+                if (!writeMessagesRequests.ContainsKey(wallet_address))
+                {
+                    writeMessagesRequests.Add(wallet_address, new Dictionary<int, WriteMessagesRequest>());
+                }
+            }
+            lock(writeMessagesRequests[wallet_address])
+            {
+                if(writeMessagesRequests[wallet_address].ContainsKey(channel))
+                {
+                    writeMessagesRequests[wallet_address][channel].lastRequestTime = Clock.getTimestamp();
+                }
+                else
+                {
+                    writeMessagesRequests[wallet_address][channel] = new WriteMessagesRequest(Clock.getTimestamp());
+                }
+            }
+            // wait at least one second after last request before writing
+            // wait max 5 seconds from first request
+        }
+
         // Writes the message archive for a given wallet
-        public bool writeMessages(byte[] wallet_bytes, int channel, List<FriendMessage> messages)
+        private bool writeMessages(byte[] wallet_bytes, int channel, List<FriendMessage> messages)
         {
             List<FriendMessage> local_messages = null;
             lock (messages)

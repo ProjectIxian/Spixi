@@ -10,11 +10,11 @@ namespace SPIXI.Meta
 
         public static bool isTestNet = false;
 
-        public static bool enablePushNotifications = true; // Push notifications are disabled for now
+        public static bool enablePushNotifications = true;
 
         public static string walletFile = "wallet.ixi";
 
-        public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Spixi");
+        public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "SpixiDev");
 
         public static int encryptionRetryPasswordAttempts = 3;   // How many allowed attempts in the LaunchRetry page before throwing the user back to Launch Page
 
@@ -29,7 +29,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.4.6"; // Spixi version
+        public static readonly string version = "spixi-0.5.0g-dev"; // Spixi version
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;

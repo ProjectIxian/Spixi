@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace SPIXI
 {
-    class FriendList
+    public class FriendList
     {
         public static List<Friend> friends = new List<Friend>();
 
@@ -310,7 +310,7 @@ namespace SPIXI
                 alert.flash();
 
             // Write to chat history
-            Node.localStorage.writeMessages(wallet_address, channel, messages);
+            Node.localStorage.requestWriteMessages(wallet_address, channel);
 
             return friend_message;
         }

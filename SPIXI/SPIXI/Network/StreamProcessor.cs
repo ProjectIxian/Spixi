@@ -98,7 +98,7 @@ namespace SPIXI
                     fm.transferId = transfer.uid;
                     fm.filePath = transfer.fileName;
                     fm.fileSize = transfer.fileSize;
-                    Node.localStorage.writeMessages(friend.walletAddress, transfer.channel, friend.getMessages(data.channel));
+                    Node.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
                 }
             }
             else
@@ -1017,7 +1017,7 @@ namespace SPIXI
             }
 
             // Write to chat history
-            Node.localStorage.writeMessages(friend.walletAddress, 0, friend.getMessages(0));
+            Node.localStorage.requestWriteMessages(friend.walletAddress, 0);
 
             if (friend.chat_page != null)
             {
@@ -1728,7 +1728,7 @@ namespace SPIXI
 
                 fm.transactionId = tx.id;
 
-                Node.localStorage.writeMessages(bot.walletAddress, channel_id, bot.getMessages(channel_id));
+                Node.localStorage.requestWriteMessages(bot.walletAddress, channel_id);
 
                 TransactionCache.addUnconfirmedTransaction(tx);
             }

@@ -468,7 +468,7 @@ namespace SPIXI
                 friend_message.transferId = transfer.uid;
                 friend_message.filePath = transfer.filePath;
 
-                Node.localStorage.writeMessages(friend.walletAddress, selectedChannel, friend.getMessages(selectedChannel));
+                Node.localStorage.requestWriteMessages(friend.walletAddress, selectedChannel);
             }
             catch (Exception ex)
             {
@@ -735,7 +735,7 @@ namespace SPIXI
                     if (!message.read)
                     {
                         message.read = true;
-                        Node.localStorage.writeMessages(friend.walletAddress, channel, friend.getMessages(channel));
+                        Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
                     }
                     return;
                 }
@@ -977,7 +977,7 @@ namespace SPIXI
                 Node.shouldRefreshContacts = true;
 
                 message.read = true;
-                Node.localStorage.writeMessages(friend.walletAddress, channel, friend.getMessages(channel));
+                Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
 
                 if (!friend.bot)
                 {

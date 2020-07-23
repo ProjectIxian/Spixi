@@ -488,7 +488,7 @@ namespace SPIXI
                 if (!msg.read)
                 {
                     msg.read = true;
-                    Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                    Node.localStorage.requestWriteMessages(walletAddress, channel);
                 }
 
                 if(chat_page != null)
@@ -518,7 +518,7 @@ namespace SPIXI
                     {
                         msg.read = true;
                     }
-                    Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                    Node.localStorage.requestWriteMessages(walletAddress, channel);
                 }
 
                 if (chat_page != null)
@@ -589,7 +589,7 @@ namespace SPIXI
                     {
                         fm.message = call_duration.ToString();
                     }
-                    Node.localStorage.writeMessages(walletAddress, 0, messages[0]);
+                    Node.localStorage.requestWriteMessages(walletAddress, 0);
                     if (chat_page != null)
                     {
                         chat_page.insertMessage(fm, 0);
@@ -648,7 +648,7 @@ namespace SPIXI
                     if (fm != null)
                     {
                         messages[channel].Remove(fm);
-                        Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                        Node.localStorage.requestWriteMessages(walletAddress, channel);
                         if(chat_page != null)
                         {
                             chat_page.deleteMessage(msg_id, channel);
@@ -686,7 +686,7 @@ namespace SPIXI
                         }
                         if (fm.addReaction(sender_address, reaction_data.reaction))
                         {
-                            Node.localStorage.writeMessages(walletAddress, channel, messages[channel]);
+                            Node.localStorage.requestWriteMessages(walletAddress, channel);
                             if (chat_page != null)
                             {
                                 chat_page.updateReactions(fm.id, channel);

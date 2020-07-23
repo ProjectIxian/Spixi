@@ -288,6 +288,8 @@ namespace SPIXI.Meta
 
             // Stop the stream processor
             StreamProcessor.uninitialize();
+
+            localStorage.stop();
         }
 
         public override bool isAcceptingConnections()

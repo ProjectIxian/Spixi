@@ -539,7 +539,7 @@ namespace SPIXI
             fm.completed = true;
             fm.filePath = transfer.filePath;
 
-            Node.localStorage.writeMessages(friend.walletAddress, transfer.channel, friend.getMessages(transfer.channel));
+            Node.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
 
             if (friend.chat_page != null)
             {
