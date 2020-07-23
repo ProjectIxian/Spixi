@@ -505,9 +505,11 @@ namespace SPIXI
             if (friend == null)
                 return;
 
+            bool incoming = true;
             FileTransfer transfer = TransferManager.getIncomingTransfer(uid);
             if (transfer == null)
             {
+                incoming = false;
                 transfer = TransferManager.getOutgoingTransfer(uid);
                 if (transfer == null)
                 {
@@ -516,6 +518,19 @@ namespace SPIXI
             }
 
             transfer.fileStream.Dispose();
+            
+            if(incoming && transfer.fileName != null && transfer.fileName != "")
+            {
+                string final_file_path = Path.Combine(downloadsPath, transfer.fileName);
+                int instance_num = 0;
+                while (File.Exists(final_file_path))
+                {
+                    instance_num++;
+                    final_file_path = Path.Combine(downloadsPath, Path.GetFileNameWithoutExtension(transfer.fileName) + "-" + instance_num.ToString() + Path.GetExtension(transfer.fileName));
+                }
+                File.Move(transfer.filePath, final_file_path);
+            }
+
             transfer.completed = true;
 
             removePacketsForFileTransfer(uid);
@@ -610,7 +625,8 @@ namespace SPIXI
 
                 transfer.lastTimeStamp = Clock.getTimestamp();
 
-                transfer.filePath = Path.Combine(downloadsPath, transfer.fileName);
+                transfer.filePath = Path.Combine(downloadsPath, transfer.fileName + "." + uid + ".ixipart");
+
                 transfer.fileStream = File.Create(transfer.filePath);
                 transfer.fileStream.SetLength((long)transfer.fileSize);
 
