@@ -462,18 +462,6 @@ namespace SPIXI
                             {*/
                             // Add the message to the friend list
                             FriendMessage fm = FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
-                            if(fm != null)
-                            {
-                                if (friend.bot)
-                                {
-                                    fm.read = true;
-                                    lock (friend.lastReceivedMessageIds)
-                                    {
-                                        friend.lastReceivedMessageIds.AddOrReplace(channel, message.id);
-                                    }
-                                    FriendList.saveToStorage();
-                                }
-                            }
                             //}
                         }
                         break;

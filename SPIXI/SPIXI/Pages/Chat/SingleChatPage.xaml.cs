@@ -9,7 +9,6 @@ using SPIXI.Meta;
 using SPIXI.Storage;
 using SPIXI.VoIP;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,7 +19,6 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
-using System.ComponentModel;
 
 namespace SPIXI
 {
@@ -42,6 +40,8 @@ namespace SPIXI
             friend = fr;
 
             friend.chat_page = this;
+
+            selectedChannel = friend.lastMessageChannel;
 
             loadPage(webView, "chat.html");
         }

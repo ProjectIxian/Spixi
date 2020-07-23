@@ -49,7 +49,8 @@ namespace SPIXI
 
         public long lastReceivedHandshakeMessageTimestamp = 0;
 
-        public FriendMessage lastMessage = null;
+        public FriendMessage lastMessage { get; private set; }
+        public int lastMessageChannel { get; private set; }
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -62,6 +63,8 @@ namespace SPIXI
             aesKey = aes_key;
             keyGeneratedTime = key_generated_time;
             bot = false;
+            lastMessage = null;
+            lastMessageChannel = 0;
         }
 
         public void setBotMode()
@@ -169,6 +172,8 @@ namespace SPIXI
                             {
                                 lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
                             }
+
+                            lastMessageChannel = reader.ReadInt32();
                         }
                     }
                     catch (Exception)
@@ -263,6 +268,8 @@ namespace SPIXI
                     {
                         writer.Write(0);
                     }
+
+                    writer.Write(lastMessageChannel);
 
                 }
                 return m.ToArray();
@@ -690,6 +697,12 @@ namespace SPIXI
                 }
             }
             return false;
+        }
+
+        public void setLastMessage(FriendMessage msg, int channel)
+        {
+            lastMessage = msg;
+            lastMessageChannel = channel;
         }
     }
 }

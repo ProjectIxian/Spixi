@@ -241,15 +241,52 @@ namespace SPIXI
             lock (messages)
             {
                 // TODO should be optimized
-                if(id != null && messages.Find(x => x.id != null && x.id.SequenceEqual(id)) != null)
+                if(id != null)
                 {
-                    Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
+                    FriendMessage tmp_msg = messages.Find(x => x.id != null && x.id.SequenceEqual(id));
+
+                    if(tmp_msg != null)
+                    {
+                        if (!tmp_msg.localSender)
+                        {
+                            Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
+                        }else
+                        {
+                            if(messages.Last() == tmp_msg)
+                            {
+                                friend.setLastMessage(tmp_msg, channel);
+                                if (friend.bot)
+                                {
+                                    tmp_msg.read = true;
+                                    lock (friend.lastReceivedMessageIds)
+                                    {
+                                        friend.lastReceivedMessageIds.AddOrReplace(channel, tmp_msg.id);
+                                    }
+                                    FriendList.saveToStorage();
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                }
+                else
+                {
+                    Logging.error("Message id sent by {9} is null!", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                     return null;
                 }
                 messages.Add(friend_message);
             }
 
-            friend.lastMessage = friend_message;
+            friend.setLastMessage(friend_message, channel);
+            if (friend.bot)
+            {
+                friend_message.read = true;
+                lock (friend.lastReceivedMessageIds)
+                {
+                    friend.lastReceivedMessageIds.AddOrReplace(channel, friend_message.id);
+                }
+                FriendList.saveToStorage();
+            }
 
             // If a chat page is visible, insert the message directly
             if (friend.chat_page != null)
