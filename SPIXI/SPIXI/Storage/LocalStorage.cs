@@ -356,7 +356,7 @@ namespace SPIXI.Storage
                         }
                         catch (Exception e)
                         {
-                            Logging.error("Error occured while trying to prepare file transfer for file {0}, full path {1}: {2}", t_file_name, msg.filePath, e);
+                            Logging.error("Error occured while trying to prepare file transfer for file '{0}' - friend '{1}', message contents '{2}' full path '{3}': {4}", t_file_name, path, msg.message, msg.filePath, e);
                         }
                     }
 
