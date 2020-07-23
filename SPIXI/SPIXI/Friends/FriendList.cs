@@ -262,9 +262,9 @@ namespace SPIXI
                         return null;
                     }
                 }
-                else
+                else if(!local_sender)
                 {
-                    Logging.error("Message id sent by {9} is null!", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    Logging.error("Message id sent by {0} is null!", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                     return null;
                 }
                 messages.Add(friend_message);
