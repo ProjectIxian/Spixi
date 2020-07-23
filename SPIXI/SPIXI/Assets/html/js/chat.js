@@ -1342,16 +1342,16 @@ function showUserTyping()
         userTypingTimeout = null;
 	}
     var userTypingEl = document.getElementById("UserTyping");
-    if(userTypingEl.style.display != "block")
+    if(userTypingEl.style.left != "20px")
     {
-        userTypingEl.style.display = "block";
+        userTypingEl.style.left = "20px";
     }
     userTypingTimeout = setTimeout(hideUserTyping, 5000);
 }
 
 function hideUserTyping()
 {
-    document.getElementById("UserTyping").style.display = "none";
+    document.getElementById("UserTyping").style.left = "";
     if(userTypingTimeout != null)
     {
         clearTimeout(userTypingTimeout);

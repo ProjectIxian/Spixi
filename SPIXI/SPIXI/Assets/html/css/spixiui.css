@@ -2051,9 +2051,8 @@ img.emoji {
 {
     position: fixed;
     bottom: 70px;
-    left: 20px;
+    left: -100px;
     z-index: 7;
-    display: none;
 }
 
 .typing-indicator {
@@ -2092,7 +2091,7 @@ img.emoji {
     width: 4px;
     float: left;
     margin: 0 1px;
-    background-color: white; /*#9E9EA1;*/
+    background-color: white;
     display: block;
     border-radius: 50%;
     opacity: 0.4;
