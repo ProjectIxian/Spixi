@@ -1,10 +1,10 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.SpixiBot;
+using IXICore.Utils;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 
@@ -703,6 +703,19 @@ namespace SPIXI
         {
             lastMessage = msg;
             lastMessageChannel = channel;
+        }
+
+        public bool setLastReceivedMessageIds(byte[] msg_id, int channel)
+        {
+            if (bot)
+            {
+                lock (lastReceivedMessageIds)
+                {
+                    lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -2,7 +2,6 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.SpixiBot;
-using IXICore.Utils;
 using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -791,12 +790,8 @@ namespace SPIXI
         {
             if (friend.deleteMessage(msg_id_to_del, channel))
             {
-                if (friend.bot)
+                if (friend.setLastReceivedMessageIds(msg_id, channel))
                 {
-                    lock (friend.lastReceivedMessageIds)
-                    {
-                        friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
-                    }
                     FriendList.saveToStorage();
                 }
             }
@@ -805,12 +800,8 @@ namespace SPIXI
         {
             if (friend.addReaction(sender, new SpixiMessageReaction(reaction_data), channel))
             {
-                if (friend.bot)
+                if (friend.setLastReceivedMessageIds(msg_id, channel))
                 {
-                    lock (friend.lastReceivedMessageIds)
-                    {
-                        friend.lastReceivedMessageIds.AddOrReplace(channel, msg_id);
-                    }
                     FriendList.saveToStorage();
                 }
             }

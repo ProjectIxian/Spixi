@@ -255,15 +255,8 @@ namespace SPIXI
                             if(messages.Last() == tmp_msg)
                             {
                                 friend.setLastMessage(tmp_msg, channel);
-                                if (friend.bot)
-                                {
-                                    tmp_msg.read = true;
-                                    lock (friend.lastReceivedMessageIds)
-                                    {
-                                        friend.lastReceivedMessageIds.AddOrReplace(channel, tmp_msg.id);
-                                    }
-                                    FriendList.saveToStorage();
-                                }
+                                friend.setLastReceivedMessageIds(tmp_msg.id, channel);
+                                FriendList.saveToStorage();
                             }
                         }
                         return null;
@@ -278,15 +271,8 @@ namespace SPIXI
             }
 
             friend.setLastMessage(friend_message, channel);
-            if (friend.bot)
-            {
-                friend_message.read = true;
-                lock (friend.lastReceivedMessageIds)
-                {
-                    friend.lastReceivedMessageIds.AddOrReplace(channel, friend_message.id);
-                }
-                FriendList.saveToStorage();
-            }
+            friend.setLastReceivedMessageIds(friend_message.id, channel);
+            FriendList.saveToStorage();
 
             // If a chat page is visible, insert the message directly
             if (friend.chat_page != null)
