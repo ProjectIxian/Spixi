@@ -1001,6 +1001,14 @@ namespace SPIXI
             {
                 return;
             }
+            if(friend.lastMessageChannel == selectedChannel)
+            {
+                if (!friend.lastMessage.read && !friend.lastMessage.localSender && App.isInForeground)
+                {
+                    friend.lastMessage.read = true;
+                    FriendList.saveToStorage();
+                }
+            }
             var messages = friend.getMessages(selectedChannel);
             lock (messages)
             {

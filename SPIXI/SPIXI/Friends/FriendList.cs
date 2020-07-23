@@ -197,11 +197,17 @@ namespace SPIXI
                 }
             }
 
+            bool set_read = false;
+
             string sender_nick = "";
             if(friend.bot && sender_address != null)
             {
                 if(IxianHandler.getWalletStorage().isMyAddress(sender_address))
                 {
+                    if (!local_sender)
+                    {
+                        set_read = true;
+                    }
                     local_sender = true;
                 }
                 if (!local_sender)
@@ -268,6 +274,12 @@ namespace SPIXI
                     return null;
                 }
                 messages.Add(friend_message);
+            }
+
+            if(set_read)
+            {
+                friend_message.confirmed = true;
+                friend_message.read = true;
             }
 
             friend.setLastMessage(friend_message, channel);
