@@ -701,7 +701,7 @@ namespace SPIXI
 
         public void setLastMessage(FriendMessage msg, int channel)
         {
-            lastMessage = msg;
+            lastMessage = new FriendMessage(msg.getBytes());
             lastMessageChannel = channel;
         }
 
@@ -716,6 +716,20 @@ namespace SPIXI
                 }
             }
             return false;
+        }
+
+        public void freeMemory()
+        {
+            if (chat_page != null)
+            {
+                return;
+            }
+
+            lock(messages)
+            {
+                Node.localStorage.writePendingMessages(true);
+                messages.Clear();
+            }
         }
     }
 }

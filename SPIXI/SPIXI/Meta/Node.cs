@@ -485,5 +485,10 @@ namespace SPIXI.Meta
                 }
             }
         }
+
+        public void onLowMemory()
+        {
+            FriendList.onLowMemory();
+        }
     }
 }

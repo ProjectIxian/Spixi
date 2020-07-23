@@ -578,5 +578,17 @@ namespace SPIXI
                 }
             }
         }
+
+
+        public static void onLowMemory()
+        {
+            lock (friends)
+            {
+                foreach (var friend in friends)
+                {
+                    friend.freeMemory();
+                }
+            }
+        }
     }
 }

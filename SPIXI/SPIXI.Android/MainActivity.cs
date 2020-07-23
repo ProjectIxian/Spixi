@@ -118,6 +118,13 @@ namespace SPIXI.Droid
         {
             base.OnResume();
         }
+
+        public override void OnLowMemory()
+        {
+            base.OnLowMemory();
+
+            App.Instance().onLowMemory();
+        }
     }
 }
 

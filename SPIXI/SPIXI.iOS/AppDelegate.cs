@@ -138,5 +138,12 @@ namespace SPIXI.iOS
                 fm.CreateSymbolicLink(file.Name, file.FullName, out ns_error);
             }
         }
+
+        public override void ReceiveMemoryWarning(UIApplication application)
+        {
+            base.ReceiveMemoryWarning(application);
+
+            App.Instance().onLowMemory();
+        }
     }
 }

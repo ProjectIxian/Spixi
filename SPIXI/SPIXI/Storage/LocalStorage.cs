@@ -139,7 +139,7 @@ namespace SPIXI.Storage
             storageThread = null;
         }
 
-        private void writePendingMessages(bool flush = false)
+        public void writePendingMessages(bool flush = false)
         {
             Dictionary<byte[], Dictionary<int, WriteMessagesRequest>> tmp_requests;
             lock (writeMessagesRequests)

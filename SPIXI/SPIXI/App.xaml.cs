@@ -205,5 +205,10 @@ namespace SPIXI
 
             }
         }
+
+        public void onLowMemory()
+        {
+            Node.Instance.onLowMemory();
+        }
     }
 }
