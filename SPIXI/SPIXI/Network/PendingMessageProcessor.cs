@@ -229,9 +229,16 @@ namespace SPIXI.Network
                         friend.publicKey = pub_k;
                     }
                 }
-
-                Logging.warn("Could not send message to {0}, due to missing encryption keys!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                return false;
+                if(!friend.bot)
+                {
+                    Logging.warn("Could not send message to {0}, due to missing encryption keys!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                    return false;
+                }else
+                {
+                    // TODO TODO TODO perhaps it would be better to discard such message and notify the user
+                    Logging.warn("Tried sending encrypted message of type {0} without encryption keys to {1}, which is a bot, changing message encryption type to none!", msg.type, Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                    msg.encryptionType = StreamMessageEncryptionCode.none;
+                }
             }
 
             bool sent = false;
