@@ -81,10 +81,10 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         msgEl.innerHTML = "<span><i class='fa fa-info-circle'></i></span> " + costText;
 
         document.body.appendChild(msgEl);
-        document.getElementById("chatholder").style.height = "84px";
+        document.getElementById("chatholder").style.height = "94px";
     }else
     {
-        document.getElementById("chatholder").style.height = "60px";    
+        document.getElementById("chatholder").style.height = "70px";    
 	}
 
     if(bot == "True")
@@ -776,7 +776,7 @@ document.getElementById("chat_attach").onclick = function () {
 
 function hideAttach() {
     document.getElementById("chatbar").style.bottom = "0px";
-    document.getElementById("chatholder").style.height = "60px";
+    document.getElementById("chatholder").style.height = "70px";
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     var payBar = document.getElementById("SpixiPayableBar");
     if(payBar != null)
@@ -789,7 +789,7 @@ function hideAttach() {
 function showAttach() {
     var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
     document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
-    document.getElementById("chatholder").style.height = (attachBarHeight + 60) + "px";
+    document.getElementById("chatholder").style.height = (attachBarHeight + 70) + "px";
     document.getElementById("chatattachbar").style.bottom = "0px";
     var payBar = document.getElementById("SpixiPayableBar");
     if(payBar != null)
@@ -1341,7 +1341,11 @@ function showUserTyping()
         clearTimeout(userTypingTimeout);
         userTypingTimeout = null;
 	}
-    document.getElementById("UserTyping").style.display = "block";
+    var userTypingEl = document.getElementById("UserTyping");
+    if(userTypingEl.style.display != "block")
+    {
+        userTypingEl.style.display = "block";
+    }
     userTypingTimeout = setTimeout(hideUserTyping, 5000);
 }
 

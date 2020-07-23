@@ -77,8 +77,8 @@ a:active {
 }
 
 img.emoji {
-    max-width: 20pt;
-    max-height: 20pt;
+    max-width: 20pt !important;
+    max-height: 20pt !important;
     object-fit: contain;
     margin: 0 .05em 0 .1em;
     vertical-align: -0.5em;
@@ -1319,6 +1319,7 @@ img.emoji {
 .spixi-bubble .text img
 {
     max-width: 100%;
+    object-fit: contain;
 }
 
 .spixi-bubble.file {
@@ -2049,75 +2050,94 @@ img.emoji {
 #UserTyping
 {
     position: fixed;
-    bottom: 75px;
-    left: 15px;
+    bottom: 70px;
+    left: 20px;
+    z-index: 7;
     display: none;
 }
 
-.lds-ellipsis {
-    display: inline-block;
+.typing-indicator {
+    background-color: black;
+    will-change: transform;
+    width: auto;
+    border-radius: 12px;
+    padding: 5px;
+    display: table;
+    margin: 0 auto;
     position: relative;
+    -webkit-animation: 2s bulge infinite ease-out;
+    animation: 2s bulge infinite ease-out;
 }
 
-.lds-ellipsis div {
+.typing-indicator::before, .typing-indicator::after {
+    content: '';
     position: absolute;
-    width: 7px;
-    height: 7px;
+    bottom: -2px;
+    left: -2px;
+    height: 6px;
+    width: 6px;
     border-radius: 50%;
-    background: #000;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    background-color: black;
 }
 
-.lds-ellipsis div:nth-child(1) {
-    left: 5px;
-    animation: lds-ellipsis1 0.6s infinite;
+.typing-indicator::after {
+    height: 4px;
+    width: 4px;
+    left: -5px;
+    bottom: -5px;
 }
 
-.lds-ellipsis div:nth-child(2) {
-    left: 5px;
-    animation: lds-ellipsis2 0.6s infinite;
+.typing-indicator span {
+    height: 4px;
+    width: 4px;
+    float: left;
+    margin: 0 1px;
+    background-color: white; /*#9E9EA1;*/
+    display: block;
+    border-radius: 50%;
+    opacity: 0.4;
 }
 
-.lds-ellipsis div:nth-child(3) {
-    left: 20px;
-    animation: lds-ellipsis2 0.6s infinite;
+.typing-indicator span:nth-of-type(1) {
+    -webkit-animation: 1s blink infinite 0.3333s;
+    animation: 1s blink infinite 0.3333s;
 }
 
-.lds-ellipsis div:nth-child(4) {
-    left: 32px;
-    animation: lds-ellipsis3 0.6s infinite;
+.typing-indicator span:nth-of-type(2) {
+    -webkit-animation: 1s blink infinite 0.6666s;
+    animation: 1s blink infinite 0.6666s;
 }
 
-@keyframes lds-ellipsis1 {
-    0% {
-        transform: scale(0);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+.typing-indicator span:nth-of-type(3) {
+    -webkit-animation: 1s blink infinite 0.9999s;
+    animation: 1s blink infinite 0.9999s;
 }
 
-@keyframes lds-ellipsis3 {
-    0% {
-        transform: scale(1);
-    }
-
-    100% {
-        transform: scale(0);
+@-webkit-keyframes blink {
+    50% {
+        opacity: 1;
     }
 }
 
-@keyframes lds-ellipsis2 {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    100% {
-        transform: translate(16px, 0);
+@keyframes blink {
+    50% {
+        opacity: 1;
     }
 }
 
+@-webkit-keyframes bulge {
+    50% {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes bulge {
+    50% {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+    }
+}
 
 /* Onboarding */
 #Onboarding {
