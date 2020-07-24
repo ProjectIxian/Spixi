@@ -54,6 +54,8 @@ namespace SPIXI.Storage
         Dictionary<byte[], Dictionary<int, WriteRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
         WriteRequest writeAccountRequest = new WriteRequest(0);
 
+        private object flushLock = new object();
+
         public LocalStorage(string path, int messages_per_file = 1000)
         {
             // Retrieve the app-specific and platform-specific documents path
@@ -116,6 +118,10 @@ namespace SPIXI.Storage
 
         public void stop()
         {
+            if(started == false)
+            {
+                return;
+            }
             running = false;
             started = false;
             while(!stopped)
@@ -129,20 +135,24 @@ namespace SPIXI.Storage
             while(running)
             {
                 Thread.Sleep(1000);
-                try
+                lock (flushLock)
                 {
-                    writePendingAccountFile();
-                }
-                catch (Exception e)
-                {
-                    Logging.error("Exception occured writing account file from storage loop: " + e);
-                }
-                try
-                {
-                    writePendingMessages();
-                }catch(Exception e)
-                {
-                    Logging.error("Exception occured writing pending messages from storage loop: " + e);
+                    try
+                    {
+                        writePendingAccountFile();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured writing account file from storage loop: " + e);
+                    }
+                    try
+                    {
+                        writePendingMessages();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured writing pending messages from storage loop: " + e);
+                    }
                 }
             }
             flush();
@@ -154,21 +164,24 @@ namespace SPIXI.Storage
         
         public void flush()
         {
-            try
+            lock (flushLock)
             {
-                writePendingAccountFile(true);
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception occured flushing account file from storage loop: " + e);
-            }
-            try
-            {
-                writePendingMessages(true);
-            }
-            catch (Exception e)
-            {
-                Logging.error("Exception occured flushing pending messages from storage loop: " + e);
+                try
+                {
+                    writePendingAccountFile(true);
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured flushing account file: " + e);
+                }
+                try
+                {
+                    writePendingMessages(true);
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured flushing pending messages: " + e);
+                }
             }
         }
 
