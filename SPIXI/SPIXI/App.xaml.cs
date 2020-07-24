@@ -162,6 +162,7 @@ namespace SPIXI
 		{
             // Handle when your app sleeps
             isInForeground = false;
+            Node.localStorage.flush();
             base.OnSleep();
         }
 

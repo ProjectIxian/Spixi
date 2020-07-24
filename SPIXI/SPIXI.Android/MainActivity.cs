@@ -7,6 +7,10 @@ using Android.Content;
 using Plugin.LocalNotifications;
 using SPIXI.Interfaces;
 using Android.Views;
+using Android.Runtime;
+using Org.W3c.Dom;
+using IXICore.Meta;
+using System.Threading;
 
 namespace SPIXI.Droid
 {
@@ -124,6 +128,29 @@ namespace SPIXI.Droid
             base.OnLowMemory();
 
             App.Instance().onLowMemory();
+        }
+
+        public override void OnTrimMemory([GeneratedEnum] TrimMemory level)
+        {
+            base.OnTrimMemory(level);
+
+            App.Instance().onLowMemory();
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+            IxianHandler.shutdown();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            IxianHandler.shutdown();
+            while (IxianHandler.status != NodeStatus.stopped)
+            {
+                Thread.Sleep(10);
+            }
         }
     }
 }

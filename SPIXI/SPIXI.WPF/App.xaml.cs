@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using IXICore.Meta;
+using System;
+using System.Threading;
 using System.Windows;
 
 namespace SPIXI.WPF
@@ -15,8 +12,11 @@ namespace SPIXI.WPF
     {
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            // TODO: pass down the exit call to the MainActivity in Spixi
-            Environment.Exit(0);
+            IxianHandler.shutdown();
+            while (IxianHandler.status != NodeStatus.stopped)
+            {
+                Thread.Sleep(10);
+            }
         }
     }
 }

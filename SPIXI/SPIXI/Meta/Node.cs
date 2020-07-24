@@ -260,9 +260,12 @@ namespace SPIXI.Meta
             {
                 return;
             }
+            Logging.info("Stopping node...");
             running = false;
 
             customAppManager.stop();
+
+            localStorage.stop();
 
             // Stop TIV
             tiv.stop();
@@ -289,7 +292,11 @@ namespace SPIXI.Meta
             // Stop the stream processor
             StreamProcessor.uninitialize();
 
-            localStorage.stop();
+            IxianHandler.status = NodeStatus.stopped;
+
+            Logging.info("Node stopped");
+
+            Logging.stop();
         }
 
         public override bool isAcceptingConnections()

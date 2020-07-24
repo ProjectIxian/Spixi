@@ -8,6 +8,8 @@ using System.IO;
 using MediaPlayer;
 using SPIXI.VoIP;
 using AVFoundation;
+using IXICore.Meta;
+using System.Threading;
 
 namespace SPIXI.iOS
 {
@@ -144,6 +146,16 @@ namespace SPIXI.iOS
             base.ReceiveMemoryWarning(application);
 
             App.Instance().onLowMemory();
+        }
+
+        public override void WillTerminate(UIApplication uiApplication)
+        {
+            base.WillTerminate(uiApplication);
+            IxianHandler.shutdown();
+            while (IxianHandler.status != NodeStatus.stopped)
+            {
+                Thread.Sleep(10);
+            }
         }
     }
 }
