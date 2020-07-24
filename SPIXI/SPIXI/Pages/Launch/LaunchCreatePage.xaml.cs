@@ -114,8 +114,6 @@ namespace SPIXI
             // Generate the account on a different thread
             new Thread(() =>
             {
-                Thread.CurrentThread.IsBackground = true;
-
                 // Aquire the wake lock
                 bool wake_lock_sd = DependencyService.Get<IPowerManager>().AquireLock("screenDim");
                 bool wake_lock_p = DependencyService.Get<IPowerManager>().AquireLock("partial");
@@ -127,7 +125,7 @@ namespace SPIXI
                     Node.start();
 
                     Node.localStorage.nickname = nick;
-                    Node.localStorage.writeAccountFile();
+                    FriendList.saveToStorage();
 
                     // TODO: encrypt the password
                     Application.Current.Properties["walletpass"] = pass;

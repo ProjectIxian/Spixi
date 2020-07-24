@@ -827,7 +827,7 @@ namespace SPIXI
             byte[] address = new Address(pub_key).address;
             friend.users.setPubKey(address, pub_key);
 
-            Node.localStorage.writeAccountFile();
+            FriendList.saveToStorage();
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
@@ -1656,7 +1656,7 @@ namespace SPIXI
                     {
                         bot.botInfo = bi;
                         FriendList.setNickname(bot.walletAddress, bi.serverName, null);
-                        Node.localStorage.writeAccountFile();
+                        FriendList.saveToStorage();
                         bot.groups.clear();
                         // TODO TODO delete deleted groups locally
                         sendGetBotGroups(bot);

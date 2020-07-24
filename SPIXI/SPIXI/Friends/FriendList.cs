@@ -19,9 +19,9 @@ namespace SPIXI
 
         private static Cuckoo friendMatcher = new Cuckoo(128); // default size of 128, will be increased if neccessary
 
-        public static bool saveToStorage()
+        public static void saveToStorage()
         {
-            return Node.localStorage.writeAccountFile();
+            Node.localStorage.requestWriteAccountFile();
         }
 
         // Retrieves a friend based on the wallet_address
@@ -290,6 +290,10 @@ namespace SPIXI
             if (friend.chat_page != null)
             {
                 friend.chat_page.insertMessage(friend_message, channel);
+            }else if(!set_read)
+            {
+                friend.unreadMessageCount++;
+                FriendList.saveToStorage();
             }
 
             // Send a local push notification if Spixi is not in the foreground
@@ -378,9 +382,10 @@ namespace SPIXI
             // Delete avatar
             Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
 
-            bool stat = friends.Remove(friend);
-            if (!stat)
-                return stat;
+            if(!friends.Remove(friend))
+            {
+                return false;
+            }
 
             lock(friendMatcher)
             {
@@ -388,11 +393,11 @@ namespace SPIXI
             }
 
             // Write changes to storage
-            stat = saveToStorage();
+            saveToStorage();
 
             Node.shouldRefreshContacts = true;
 
-            return stat;
+            return true;
         }
 
         // Finds a presence entry's pubkey

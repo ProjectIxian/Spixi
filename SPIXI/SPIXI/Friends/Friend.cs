@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace SPIXI
 {
@@ -51,6 +52,8 @@ namespace SPIXI
 
         public FriendMessage lastMessage { get; private set; }
         public int lastMessageChannel { get; private set; }
+
+        public int unreadMessageCount = 0;
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -174,6 +177,8 @@ namespace SPIXI
                             }
 
                             lastMessageChannel = reader.ReadInt32();
+
+                            unreadMessageCount = reader.ReadInt32();
                         }
                     }
                     catch (Exception)
@@ -271,6 +276,7 @@ namespace SPIXI
 
                     writer.Write(lastMessageChannel);
 
+                    writer.Write(unreadMessageCount);
                 }
                 return m.ToArray();
             }
@@ -280,28 +286,16 @@ namespace SPIXI
         // TODO: optimize this
         public int getUnreadMessageCount()
         {
-            int unreadCount = 0;
-            lock(messages)
-            {
-                foreach (var i in messages.Keys)
-                {
-                    for (int j = messages[i].Count - 1; j >= 0; j--)
-                    {
-                        if (messages[i][j].read == true || messages[i][j].localSender == true)
-                        {
-                            break;
-                        }
-                        unreadCount++;
-                    }
-                }
-            }
-            return unreadCount;
+            return unreadMessageCount;
         }
 
         // Flushes the temporary message history
         public bool flushHistory()
         {
-            messages.Clear();
+            lock (messages)
+            {
+                messages.Clear();
+            }
             return true;
         }
 
@@ -476,7 +470,13 @@ namespace SPIXI
 
         public bool setMessageRead(int channel, byte[] id)
         {
-            FriendMessage msg = messages[channel].Find(x => x.id.SequenceEqual(id));
+            var tmp_messages = getMessages(channel);
+            if(tmp_messages == null)
+            {
+                return false;
+            }
+
+            FriendMessage msg = tmp_messages.Find(x => x.id.SequenceEqual(id));
             if(msg == null)
             {
                 Logging.error("Error trying to set read indicator, message does not exist");
@@ -502,10 +502,15 @@ namespace SPIXI
 
         public bool setMessageReceived(int channel, byte[] id)
         {
-            FriendMessage msg = messages[channel].Find(x => x.id.SequenceEqual(id));
+            var tmp_messages = getMessages(channel);
+            if (tmp_messages == null)
+            {
+                return false;
+            }
+            FriendMessage msg = tmp_messages.Find(x => x.id.SequenceEqual(id));
             if (msg == null)
             {
-                Logging.error("Error trying to set received indicator, message does not exist");
+                Logging.error("Error trying to set received indicator, message from {0} for channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
                 return false;
             }
 
@@ -571,13 +576,18 @@ namespace SPIXI
             }
             lock (messages)
             {
-                var fm = messages[0].Find(x => x.id.SequenceEqual(session_id));
+                var tmp_messages = getMessages(0);
+                if (tmp_messages == null)
+                {
+                    return;
+                }
+                var fm = tmp_messages.Find(x => x.id.SequenceEqual(session_id));
                 if(fm == null)
                 {
                     Logging.warn("Cannot end call, no message with session ID exists.");
                     return;
                 }
-                if (call_accepted == true && messages[0].Last() != fm)
+                if (call_accepted == true && tmp_messages.Last() != fm)
                 {
                     fm.message = call_duration.ToString();
                     FriendList.addMessageWithType(null, FriendMessageType.voiceCallEnd, walletAddress, 0, fm.message, local_sender, null, 0, false);
@@ -600,7 +610,13 @@ namespace SPIXI
 
         public bool hasMessage(int channel, byte[] message_id)
         {
-            var fm = messages[channel].Find(x => x.id.SequenceEqual(message_id));
+            var tmp_messages = getMessages(channel);
+            if(tmp_messages == null)
+            {
+                return false;
+            }
+
+            var fm = tmp_messages.Find(x => x.id.SequenceEqual(message_id));
             if(fm == null)
             {
                 return false;
@@ -613,6 +629,11 @@ namespace SPIXI
         {
             try
             {
+                if (channels != null && !channels.hasChannel(channel))
+                {
+                    Logging.error("Error getting messages for {0}, channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
+                    return null;
+                }
                 lock (messages)
                 {
                     if (!messages.ContainsKey(channel))
@@ -620,10 +641,7 @@ namespace SPIXI
                         // Read messages from chat history
                         messages[channel] = Node.localStorage.readLastMessages(walletAddress, channel);
                     }
-                    if (messages.ContainsKey(channel))
-                    {
-                        return messages[channel];
-                    }
+                    return messages[channel];
                 }
             }
             catch (Exception e)
@@ -642,19 +660,21 @@ namespace SPIXI
         {
             lock (messages)
             {
-                if (messages.ContainsKey(channel))
+                var tmp_messages = getMessages(channel);
+                if (tmp_messages == null)
                 {
-                    FriendMessage fm = messages[channel].Find(x => x.id.SequenceEqual(msg_id));
-                    if (fm != null)
+                    return false;
+                }
+                FriendMessage fm = tmp_messages.Find(x => x.id.SequenceEqual(msg_id));
+                if (fm != null)
+                {
+                    tmp_messages.Remove(fm);
+                    Node.localStorage.requestWriteMessages(walletAddress, channel);
+                    if(chat_page != null)
                     {
-                        messages[channel].Remove(fm);
-                        Node.localStorage.requestWriteMessages(walletAddress, channel);
-                        if(chat_page != null)
-                        {
-                            chat_page.deleteMessage(msg_id, channel);
-                        }
-                        return true;
+                        chat_page.deleteMessage(msg_id, channel);
                     }
+                    return true;
                 }
             }
             return false;
@@ -674,25 +694,27 @@ namespace SPIXI
             }
             lock (messages)
             {
-                if (messages.ContainsKey(channel))
+                var tmp_messages = getMessages(channel);
+                if (tmp_messages == null)
                 {
-                    FriendMessage fm = messages[channel].Find(x => x.id.SequenceEqual(reaction_data.msgId));
-                    if (fm != null)
+                    return false;
+                }
+                FriendMessage fm = tmp_messages.Find(x => x.id.SequenceEqual(reaction_data.msgId));
+                if (fm != null)
+                {
+                    if(fm.reactions.Count >= 10)
                     {
-                        if(fm.reactions.Count >= 10)
+                        Logging.warn("Too many reactions on message " + Crypto.hashToString(reaction_data.msgId));
+                        return false;
+                    }
+                    if (fm.addReaction(sender_address, reaction_data.reaction))
+                    {
+                        Node.localStorage.requestWriteMessages(walletAddress, channel);
+                        if (chat_page != null)
                         {
-                            Logging.warn("Too many reactions on message " + Crypto.hashToString(reaction_data.msgId));
-                            return false;
+                            chat_page.updateReactions(fm.id, channel);
                         }
-                        if (fm.addReaction(sender_address, reaction_data.reaction))
-                        {
-                            Node.localStorage.requestWriteMessages(walletAddress, channel);
-                            if (chat_page != null)
-                            {
-                                chat_page.updateReactions(fm.id, channel);
-                            }
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -727,7 +749,7 @@ namespace SPIXI
 
             lock(messages)
             {
-                Node.localStorage.writePendingMessages(true);
+                Node.localStorage.flush();
                 messages.Clear();
             }
         }
