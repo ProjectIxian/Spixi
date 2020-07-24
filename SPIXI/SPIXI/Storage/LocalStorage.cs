@@ -10,12 +10,12 @@ using System.Threading;
 
 namespace SPIXI.Storage
 {  
-    class WriteMessagesRequest
+    class WriteRequest
     {
         public long startTime = 0;
         public long lastRequestTime = 0;
 
-        public WriteMessagesRequest(long start_time)
+        public WriteRequest(long start_time)
         {
             startTime = start_time;
             lastRequestTime = start_time;
@@ -47,9 +47,12 @@ namespace SPIXI.Storage
 
         private bool running = false;
 
+        private bool stopped = true;
+
         private Thread storageThread = null;
 
-        Dictionary<byte[], Dictionary<int, WriteMessagesRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteMessagesRequest>>(new ByteArrayComparer());
+        Dictionary<byte[], Dictionary<int, WriteRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
+        WriteRequest writeAccountRequest = new WriteRequest(0);
 
         public LocalStorage(string path, int messages_per_file = 1000)
         {
@@ -97,6 +100,7 @@ namespace SPIXI.Storage
             {
                 return;
             }
+            stopped = false;
             started = true;
             running = true;
 
@@ -107,26 +111,56 @@ namespace SPIXI.Storage
             readAccountFile();
 
             storageThread = new Thread(storageLoop);
+            storageThread.Start();
         }
 
         public void stop()
         {
             running = false;
+            started = false;
+            while(!stopped)
+            {
+                Thread.Sleep(10);
+            }
         }
 
         private void storageLoop()
         {
-            Thread.CurrentThread.IsBackground = true;
             while(running)
             {
+                Thread.Sleep(1000);
+                try
+                {
+                    writePendingAccountFile();
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured writing account file from storage loop: " + e);
+                }
                 try
                 {
                     writePendingMessages();
                 }catch(Exception e)
                 {
-                    Logging.error("Exception occured in storage loop: " + e);
+                    Logging.error("Exception occured writing pending messages from storage loop: " + e);
                 }
-                Thread.Sleep(1000);
+            }
+            flush();
+            stopped = true;
+            writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
+            writeAccountRequest = new WriteRequest(0);
+            storageThread = null;
+        }
+        
+        public void flush()
+        {
+            try
+            {
+                writePendingAccountFile(true);
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occured flushing account file from storage loop: " + e);
             }
             try
             {
@@ -134,17 +168,17 @@ namespace SPIXI.Storage
             }
             catch (Exception e)
             {
-                Logging.error("Exception occured while trying to flush storage: " + e);
+                Logging.error("Exception occured flushing pending messages from storage loop: " + e);
             }
-            storageThread = null;
         }
 
         public void writePendingMessages(bool flush = false)
         {
-            Dictionary<byte[], Dictionary<int, WriteMessagesRequest>> tmp_requests;
+            // TODO TODO TODO message received should probably be sent when the message is written to storage instead of when received
+            Dictionary<byte[], Dictionary<int, WriteRequest>> tmp_requests;
             lock (writeMessagesRequests)
             {
-                tmp_requests = new Dictionary<byte[], Dictionary<int, WriteMessagesRequest>>(writeMessagesRequests);
+                tmp_requests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(writeMessagesRequests);
             }
             long cur_time = Clock.getTimestamp();
             foreach (var request in tmp_requests)
@@ -158,10 +192,10 @@ namespace SPIXI.Storage
                     }
                     continue;
                 }
-                Dictionary<int, WriteMessagesRequest> tmp_channels;
+                Dictionary<int, WriteRequest> tmp_channels;
                 lock (request.Value)
                 {
-                    tmp_channels = new Dictionary<int, WriteMessagesRequest>(request.Value);
+                    tmp_channels = new Dictionary<int, WriteRequest>(request.Value);
                 }
                 foreach (var request_channel in tmp_channels)
                 {
@@ -178,11 +212,11 @@ namespace SPIXI.Storage
                     int channel = request_channel.Key;
                     try
                     {
-                        requestWriteMessages(request.Key, channel);
+                        writeMessages(request.Key, channel, friend.getMessages(channel));
                     }
                     catch (Exception e)
                     {
-                        Logging.error("Exception occured while trying to write messages: " + e);
+                        Logging.error("Exception occured while trying to write messages for {0}: {1}", Base58Check.Base58CheckEncoding.EncodePlain(request.Key), e);
                     }
                     lock (writeMessagesRequests[request.Key])
                     {
@@ -196,6 +230,38 @@ namespace SPIXI.Storage
                         }
                     }
                 }
+            }
+        }
+
+
+        public void writePendingAccountFile(bool flush = false)
+        {
+            lock (writeAccountRequest)
+            {
+                if (writeAccountRequest.startTime == 0)
+                {
+                    return;
+                }
+                if (!flush)
+                {
+                    long cur_time = Clock.getTimestamp();
+                    if (cur_time - writeAccountRequest.startTime < 5)
+                    {
+                        if (cur_time - writeAccountRequest.lastRequestTime < 2)
+                        {
+                            return;
+                        }
+                    }
+                }
+                try
+                {
+                    writeAccountFile();
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured while trying to write account file: " + e);
+                }
+                writeAccountRequest.startTime = 0;
             }
         }
 
@@ -347,8 +413,30 @@ namespace SPIXI.Storage
             return true;
         }
 
+
+        public void requestWriteAccountFile()
+        {
+            if (!running)
+            {
+                Logging.warn("Requested write account file but local storage is not running.");
+                return;
+            }
+            lock (writeAccountRequest)
+            {
+                if (writeAccountRequest.startTime != 0)
+                {
+                    writeAccountRequest.lastRequestTime = Clock.getTimestamp();
+                }
+                else
+                {
+                    writeAccountRequest.startTime = Clock.getTimestamp();
+                    writeAccountRequest.lastRequestTime = Clock.getTimestamp();
+                }
+            }
+        }
+        
         // Write the account file to local storage
-        public bool writeAccountFile()
+        private bool writeAccountFile()
         {
             lock (accountLock)
             {
@@ -588,11 +676,16 @@ namespace SPIXI.Storage
 
         public void requestWriteMessages(byte[] wallet_address, int channel)
         {
+            if(!running)
+            {
+                Logging.warn("Requested write account file but local storage is not running.");
+                return;
+            }
             lock (writeMessagesRequests)
             {
                 if (!writeMessagesRequests.ContainsKey(wallet_address))
                 {
-                    writeMessagesRequests.Add(wallet_address, new Dictionary<int, WriteMessagesRequest>());
+                    writeMessagesRequests.Add(wallet_address, new Dictionary<int, WriteRequest>());
                 }
             }
             lock(writeMessagesRequests[wallet_address])
@@ -603,11 +696,9 @@ namespace SPIXI.Storage
                 }
                 else
                 {
-                    writeMessagesRequests[wallet_address][channel] = new WriteMessagesRequest(Clock.getTimestamp());
+                    writeMessagesRequests[wallet_address][channel] = new WriteRequest(Clock.getTimestamp());
                 }
             }
-            // wait at least one second after last request before writing
-            // wait max 5 seconds from first request
         }
 
         // Writes the message archive for a given wallet
