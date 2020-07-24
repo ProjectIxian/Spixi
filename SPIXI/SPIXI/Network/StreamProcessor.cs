@@ -616,8 +616,7 @@ namespace SPIXI
                     case SpixiMessageCode.fileFullyReceived:
                         {
                             handleFileFullyReceived(sender_address, spixi_message);
-                            // don't send confirmation back, so just return
-                            return;
+                            break;
                         }
 
                     case SpixiMessageCode.appData:
@@ -1657,12 +1656,10 @@ namespace SPIXI
                         bot.botInfo = bi;
                         FriendList.setNickname(bot.walletAddress, bi.serverName, null);
                         FriendList.saveToStorage();
-                        bot.groups.clear();
                         // TODO TODO delete deleted groups locally
                         sendGetBotGroups(bot);
                     }
                     sendGetBotUsers(bot);
-                    bot.channels.clear();
                     // TODO TODO delete deleted channels locally
                     sendGetBotChannels(bot);
                     break;

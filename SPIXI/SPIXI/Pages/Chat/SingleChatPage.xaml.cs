@@ -175,7 +175,7 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:selectChannel:"))
             {
                 int sel_channel = Int32.Parse(current_url.Substring("ixian:selectChannel:".Length));
-                BotChannel channel = friend.channels.getChannel(friend.channels.channelIndexToName(sel_channel));
+                BotChannel channel = friend.channels.getChannel(sel_channel);
                 if (channel != null)
                 {
                     Utils.sendUiCommand(webView, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
@@ -305,7 +305,7 @@ namespace SPIXI
                 }
                 if (selectedChannel != 0)
                 {
-                    BotChannel channel = friend.channels.getChannel(friend.channels.channelIndexToName(selectedChannel));
+                    BotChannel channel = friend.channels.getChannel(selectedChannel);
                     if (channel != null)
                     {
                         Utils.sendUiCommand(webView, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
@@ -976,8 +976,14 @@ namespace SPIXI
             {
                 Node.shouldRefreshContacts = true;
 
-                message.read = true;
+                message.read = true;                
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
+                if (friend.unreadMessageCount > 0)
+                {
+                    // TODO improve this by reducing the number of unread messages by unread message
+                    friend.unreadMessageCount = 0;
+                    FriendList.saveToStorage();
+                }
 
                 if (!friend.bot)
                 {
@@ -1023,6 +1029,11 @@ namespace SPIXI
                     FriendMessage msg = messages[i];
                     updateMessageReadStatus(msg, selectedChannel);
                 }
+            }
+            if (friend.unreadMessageCount > 0)
+            {
+                friend.unreadMessageCount = 0;
+                FriendList.saveToStorage();
             }
         }
 
