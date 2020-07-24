@@ -266,6 +266,9 @@ namespace SPIXI
                             }
                         }
                         return null;
+                    }else
+                    {
+                        friend.setLastReceivedMessageIds(friend_message.id, channel);
                     }
                 }
                 else if(!local_sender)
@@ -283,7 +286,6 @@ namespace SPIXI
             }
 
             friend.setLastMessage(friend_message, channel);
-            friend.setLastReceivedMessageIds(friend_message.id, channel);
             FriendList.saveToStorage();
 
             // If a chat page is visible, insert the message directly
