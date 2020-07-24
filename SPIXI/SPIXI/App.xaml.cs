@@ -102,7 +102,7 @@ namespace SPIXI
                 else
                 {
                     // Wallet found, see if it can be decrypted
-                    bool wallet_decrypted = Node.walletStorage.isLoadded();
+                    bool wallet_decrypted = Node.walletStorage.isLoaded();
                     if (!wallet_decrypted)
                     {
                         wallet_decrypted = Node.loadWallet();
