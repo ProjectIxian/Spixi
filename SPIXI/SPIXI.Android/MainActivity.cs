@@ -140,17 +140,13 @@ namespace SPIXI.Droid
         protected override void OnStop()
         {
             base.OnStop();
-            IxianHandler.shutdown();
+            App.Instance().flush();
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            IxianHandler.shutdown();
-            while (IxianHandler.status != NodeStatus.stopped)
-            {
-                Thread.Sleep(10);
-            }
+            App.Instance().flush();
         }
     }
 }

@@ -211,5 +211,10 @@ namespace SPIXI
         {
             Node.Instance.onLowMemory();
         }
+
+        public void flush()
+        {
+            Node.localStorage.flush();
+        }
     }
 }
