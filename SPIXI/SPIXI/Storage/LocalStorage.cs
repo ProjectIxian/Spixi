@@ -52,7 +52,6 @@ namespace SPIXI.Storage
         private Thread storageThread = null;
 
         Dictionary<byte[], Dictionary<int, WriteRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
-        WriteRequest writeAccountRequest = new WriteRequest(0);
 
         private object flushLock = new object();
 
@@ -139,14 +138,6 @@ namespace SPIXI.Storage
                 {
                     try
                     {
-                        writePendingAccountFile();
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.error("Exception occured writing account file from storage loop: " + e);
-                    }
-                    try
-                    {
                         writePendingMessages();
                     }
                     catch (Exception e)
@@ -158,7 +149,6 @@ namespace SPIXI.Storage
             flush();
             stopped = true;
             writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
-            writeAccountRequest = new WriteRequest(0);
             storageThread = null;
         }
         
@@ -166,14 +156,6 @@ namespace SPIXI.Storage
         {
             lock (flushLock)
             {
-                try
-                {
-                    writePendingAccountFile(true);
-                }
-                catch (Exception e)
-                {
-                    Logging.error("Exception occured flushing account file: " + e);
-                }
                 try
                 {
                     writePendingMessages(true);
@@ -243,38 +225,6 @@ namespace SPIXI.Storage
                         }
                     }
                 }
-            }
-        }
-
-
-        public void writePendingAccountFile(bool flush = false)
-        {
-            lock (writeAccountRequest)
-            {
-                if (writeAccountRequest.startTime == 0)
-                {
-                    return;
-                }
-                if (!flush)
-                {
-                    long cur_time = Clock.getTimestamp();
-                    if (cur_time - writeAccountRequest.startTime < 5)
-                    {
-                        if (cur_time - writeAccountRequest.lastRequestTime < 2)
-                        {
-                            return;
-                        }
-                    }
-                }
-                try
-                {
-                    writeAccountFile();
-                }
-                catch (Exception e)
-                {
-                    Logging.error("Exception occured while trying to write account file: " + e);
-                }
-                writeAccountRequest.startTime = 0;
             }
         }
 
@@ -352,63 +302,74 @@ namespace SPIXI.Storage
 
                 nickname = nick;
 
-                FriendList.clear();
-                int num_contacts = reader.ReadInt32();
-                for(int i = 0; i < num_contacts; i++)
+                if(version < 3)
                 {
-                    int friend_len = reader.ReadInt32();
-                    byte[] friend_bytes = reader.ReadBytes(friend_len);
+                    FriendList.contactsLoaded = true;
+                    FriendList.clear();
+                    int num_contacts = reader.ReadInt32();
+                    for (int i = 0; i < num_contacts; i++)
+                    {
+                        int friend_len = reader.ReadInt32();
+                        byte[] friend_bytes = reader.ReadBytes(friend_len);
 
-                    Friend friend = null;
-                    try
-                    {
-                        friend = new Friend(friend_bytes, version);
-                    }catch(Exception e)
-                    {
-                        Logging.error("Error reading contact from accounts file: " + e);
-                        continue;
-                    }
-
-                    string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
-                    if(!Directory.Exists(friend_path))
-                    {
-                        Directory.CreateDirectory(friend_path);
-                    }
-
-                    if (friend.bot)
-                    {
-                        var files = Directory.EnumerateFiles(friend_path, "*.ixi");
-                        if (files.Count() > 0)
+                        Friend friend = null;
+                        try
                         {
-                            foreach(var file in files)
-                            {
-                                File.Delete(file);
-                            }
+                            friend = new Friend(friend_bytes, version);
                         }
-                    }else
-                    {
-                        var files = Directory.EnumerateFiles(friend_path, "*.ixi");
-                        if (files.Count() > 0)
+                        catch (Exception e)
                         {
-                            string channel_path = Path.Combine(friend_path, "0");
-                            if (!Directory.Exists(channel_path))
+                            Logging.error("Error reading contact from accounts file: " + e);
+                            continue;
+                        }
+
+                        string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                        if (!Directory.Exists(friend_path))
+                        {
+                            Directory.CreateDirectory(friend_path);
+                        }
+
+                        if (friend.bot)
+                        {
+                            var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                            if (files.Count() > 0)
                             {
-                                Directory.CreateDirectory(channel_path);
-                            }
-                            foreach (var file in files)
-                            {
-                                if (!friend.bot)
-                                {
-                                    File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
-                                }else
+                                foreach (var file in files)
                                 {
                                     File.Delete(file);
                                 }
                             }
                         }
-                    }
+                        else
+                        {
+                            var files = Directory.EnumerateFiles(friend_path, "*.ixi");
+                            if (files.Count() > 0)
+                            {
+                                string channel_path = Path.Combine(friend_path, "0");
+                                if (!Directory.Exists(channel_path))
+                                {
+                                    Directory.CreateDirectory(channel_path);
+                                }
+                                foreach (var file in files)
+                                {
+                                    if (!friend.bot)
+                                    {
+                                        File.Move(file, Path.Combine(channel_path, Path.GetFileName(file)));
+                                    }
+                                    else
+                                    {
+                                        File.Delete(file);
+                                    }
+                                }
+                            }
+                        }
 
-                    FriendList.addFriend(friend);
+                        if(FriendList.addFriend(friend) != null)
+                        {
+                            friend.save();
+                            friend.saveMetaData();
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -418,38 +379,16 @@ namespace SPIXI.Storage
 
             reader.Close();
 
-            if (version < 2)
+            if (version < 3)
             {
                 writeAccountFile();
             }
 
             return true;
         }
-
-
-        public void requestWriteAccountFile()
-        {
-            if (!running)
-            {
-                Logging.warn("Requested write account file but local storage is not running.");
-                return;
-            }
-            lock (writeAccountRequest)
-            {
-                if (writeAccountRequest.startTime != 0)
-                {
-                    writeAccountRequest.lastRequestTime = Clock.getTimestamp();
-                }
-                else
-                {
-                    writeAccountRequest.startTime = Clock.getTimestamp();
-                    writeAccountRequest.lastRequestTime = Clock.getTimestamp();
-                }
-            }
-        }
         
         // Write the account file to local storage
-        private bool writeAccountFile()
+        public bool writeAccountFile()
         {
             lock (accountLock)
             {
@@ -469,7 +408,7 @@ namespace SPIXI.Storage
                 try
                 {
                     // TODO: encrypt written data
-                    int version = 2; // Set the account file version
+                    int version = 3; // Set the account file version
                     writer.Write(version);
 
                     // Write the address used for verification
@@ -478,18 +417,6 @@ namespace SPIXI.Storage
 
                     // Write account information
                     writer.Write(nickname);
-
-                    int num_contacts = FriendList.friends.Count;
-                    writer.Write(num_contacts);
-
-                    foreach (Friend friend in FriendList.friends)
-                    {
-                        byte[] friend_bytes = friend.getBytes();
-
-                        writer.Write(friend_bytes.Length);
-                        writer.Write(friend_bytes);
-                    }
-
                 }
                 catch (Exception e)
                 {

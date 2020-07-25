@@ -224,10 +224,7 @@ namespace SPIXI.Network
                 if (friend.publicKey == null)
                 {
                     byte[] pub_k = FriendList.findContactPubkey(friend.walletAddress);
-                    if (pub_k != null)
-                    {
-                        friend.publicKey = pub_k;
-                    }
+                    friend.setPublicKey(pub_k);
                 }
                 if(!friend.bot)
                 {

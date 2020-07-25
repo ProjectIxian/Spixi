@@ -189,9 +189,12 @@ namespace SPIXI
 
                 Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);
 
-                FriendList.saveToStorage();
+                if (friend != null)
+                {
+                    friend.save();
 
-                StreamProcessor.sendContactRequest(friend);
+                    StreamProcessor.sendContactRequest(friend);
+                }
             }catch(Exception)
             {
 

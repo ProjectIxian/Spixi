@@ -41,7 +41,7 @@ namespace SPIXI
 
             friend.chat_page = this;
 
-            selectedChannel = friend.lastMessageChannel;
+            selectedChannel = friend.metaData.lastMessageChannel;
 
             loadPage(webView, "chat.html");
         }
@@ -207,7 +207,7 @@ namespace SPIXI
                 Friend new_friend = FriendList.addFriend(address, null, Base58Check.Base58CheckEncoding.EncodePlain(address), null, null, 0);
                 if (new_friend != null)
                 {
-                    FriendList.saveToStorage();
+                    new_friend.save();
 
                     StreamProcessor.sendContactRequest(new_friend);
                 }
@@ -285,7 +285,7 @@ namespace SPIXI
             if (friend.bot)
             {
                 int sleep_cnt = 0;
-                while (friend.botInfo == null)
+                while (friend.metaData.botInfo == null || !friend.channels.hasChannel(friend.metaData.botInfo.defaultChannel))
                 {
                     if (sleep_cnt >= 50)
                     {
@@ -297,11 +297,18 @@ namespace SPIXI
                     sleep_cnt++;
                 }
 
-                string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.botInfo.cost.ToString() + " IXI");
-                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.botInfo.cost.ToString(), cost_text, friend.botInfo.admin.ToString(), friend.botInfo.serverDescription, friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification.ToString());
+                string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.metaData.botInfo.cost.ToString() + " IXI");
+                bool send_notification = true;
+                BotContact tmp_bot_contact = friend.users.getUser(Node.walletStorage.getPrimaryAddress());
+                if (tmp_bot_contact != null)
+                {
+                    send_notification = tmp_bot_contact.sendNotification;
+                }
+                    
+                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
-                    selectedChannel = friend.botInfo.defaultChannel;
+                    selectedChannel = friend.metaData.botInfo.defaultChannel;
                 }
                 if (selectedChannel != 0)
                 {
@@ -356,7 +363,7 @@ namespace SPIXI
 
             if(friend.bot)
             {
-                if (friend.botInfo.cost > 0)
+                if (friend.metaData.botInfo.cost > 0)
                 {
                     IxiNumber message_cost = friend.getMessagePrice(str.Length);
                     if (message_cost > 0)
@@ -646,7 +653,7 @@ namespace SPIXI
                     Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
                     if (new_friend != null)
                     {
-                        FriendList.saveToStorage();
+                        new_friend.save();
 
                         StreamProcessor.sendContactRequest(new_friend);
                     }
@@ -978,11 +985,11 @@ namespace SPIXI
 
                 message.read = true;                
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
-                if (friend.unreadMessageCount > 0)
+                if (friend.metaData.unreadMessageCount > 0)
                 {
                     // TODO improve this by reducing the number of unread messages by unread message
-                    friend.unreadMessageCount = 0;
-                    FriendList.saveToStorage();
+                    friend.metaData.unreadMessageCount = 0;
+                    friend.saveMetaData();
                 }
 
                 if (!friend.bot)
@@ -1007,12 +1014,12 @@ namespace SPIXI
             {
                 return;
             }
-            if(friend.lastMessageChannel == selectedChannel)
+            if(friend.metaData.lastMessageChannel == selectedChannel)
             {
-                if (!friend.lastMessage.read && !friend.lastMessage.localSender && App.isInForeground)
+                if (!friend.metaData.lastMessage.read && !friend.metaData.lastMessage.localSender && App.isInForeground)
                 {
-                    friend.lastMessage.read = true;
-                    FriendList.saveToStorage();
+                    friend.metaData.lastMessage.read = true;
+                    friend.saveMetaData();
                 }
             }
             var messages = friend.getMessages(selectedChannel);
@@ -1030,10 +1037,10 @@ namespace SPIXI
                     updateMessageReadStatus(msg, selectedChannel);
                 }
             }
-            if (friend.unreadMessageCount > 0)
+            if (friend.metaData.unreadMessageCount > 0)
             {
-                friend.unreadMessageCount = 0;
-                FriendList.saveToStorage();
+                friend.metaData.unreadMessageCount = 0;
+                friend.saveMetaData();
             }
         }
 

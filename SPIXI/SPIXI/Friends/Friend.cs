@@ -11,10 +11,138 @@ using Xamarin.Forms;
 
 namespace SPIXI
 {
+    public class FriendMetaData
+    {
+        public BotInfo botInfo = null;
+        public Dictionary<int, byte[]> lastReceivedMessageIds = new Dictionary<int, byte[]>(); // Used primarily for bot purposes
+        public FriendMessage lastMessage { get; private set; }
+        public int lastMessageChannel { get; private set; }
+
+        public int unreadMessageCount = 0;
+
+        public FriendMetaData()
+        {
+            lastMessage = null;
+            lastMessageChannel = 0;
+            unreadMessageCount = 0;
+        }
+
+
+        public FriendMetaData(byte[] bytes)
+        {
+
+            using (MemoryStream m = new MemoryStream(bytes))
+            {
+                using (BinaryReader reader = new BinaryReader(m))
+                {
+                    int version = reader.ReadInt32();
+
+                    int bot_info_len = reader.ReadInt32();
+                    if (bot_info_len > 0)
+                    {
+                        botInfo = new BotInfo(reader.ReadBytes(bot_info_len));
+                    }
+
+                    int msg_count = reader.ReadInt32();
+                    for (int i = 0; i < msg_count; i++)
+                    {
+                        int channel = reader.ReadInt32();
+                        int msg_len = reader.ReadInt32();
+                        lastReceivedMessageIds.Add(channel, reader.ReadBytes(msg_len));
+                    }
+
+                    int last_message_len = reader.ReadInt32();
+                    if (last_message_len > 0)
+                    {
+                        lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
+                    }
+
+                    lastMessageChannel = reader.ReadInt32();
+
+                    unreadMessageCount = reader.ReadInt32();
+                }
+            }
+        }
+
+        public byte[] getBytes()
+        {
+            using (MemoryStream m = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(m))
+                {
+                    writer.Write(0);
+
+                    if (botInfo != null)
+                    {
+                        byte[] bi_bytes = botInfo.getBytes();
+                        writer.Write(bi_bytes.Length);
+                        writer.Write(bi_bytes);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    lock (lastReceivedMessageIds)
+                    {
+                        writer.Write(lastReceivedMessageIds.Count);
+                        foreach (var msg in lastReceivedMessageIds)
+                        {
+                            writer.Write(msg.Key);
+                            writer.Write(msg.Value.Length);
+                            writer.Write(msg.Value);
+                        }
+                    }
+
+                    if (lastMessage != null)
+                    {
+                        byte[] msg_bytes = lastMessage.getBytes();
+                        writer.Write(msg_bytes.Length);
+                        writer.Write(msg_bytes);
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
+
+                    writer.Write(lastMessageChannel);
+
+                    writer.Write(unreadMessageCount);
+                }
+                return m.ToArray();
+            }
+        }
+
+        public void setLastMessage(FriendMessage msg, int channel)
+        {
+            lastMessage = new FriendMessage(msg.getBytes());
+            lastMessageChannel = channel;
+        }
+
+        public bool setLastReceivedMessageIds(byte[] msg_id, int channel)
+        {
+            if (botInfo != null)
+            {
+                lock (lastReceivedMessageIds)
+                {
+                    lastReceivedMessageIds.AddOrReplace(channel, msg_id);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void setUnreadMessageCount(int count)
+        {
+            unreadMessageCount = count;
+        }
+    }
+
+
     public class Friend
     {
-        public byte[] walletAddress;
-        public byte[] publicKey;
+        public byte[] walletAddress { get; private set; }
+        public byte[] publicKey { get; private set; }
 
         private string _nick = "";
 
@@ -31,10 +159,10 @@ namespace SPIXI
 
         private Dictionary<int, List<FriendMessage>> messages = new Dictionary<int, List<FriendMessage>>();
 
-        public BotInfo botInfo = null;
         public BotUsers users = null;
         public BotGroups groups = null;
         public BotChannels channels = null;
+        public FriendMetaData metaData = new FriendMetaData();
 
         public SingleChatPage chat_page = null;
 
@@ -46,14 +174,7 @@ namespace SPIXI
 
         public bool handshakePushed = false;
 
-        public Dictionary<int, byte[]> lastReceivedMessageIds = new Dictionary<int, byte[]>(); // Used primarily for bot purposes
-
         public long lastReceivedHandshakeMessageTimestamp = 0;
-
-        public FriendMessage lastMessage { get; private set; }
-        public int lastMessageChannel { get; private set; }
-
-        public int unreadMessageCount = 0;
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
@@ -66,14 +187,12 @@ namespace SPIXI
             aesKey = aes_key;
             keyGeneratedTime = key_generated_time;
             bot = false;
-            lastMessage = null;
-            lastMessageChannel = 0;
         }
 
         public void setBotMode()
         {
             bot = true;
-            string base_path = Path.Combine(Config.spixiUserFolder, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
             users = new BotUsers(Path.Combine(base_path, "contacts.dat"), null, true);
             users.loadContactsFromFile();
             groups = new BotGroups(Path.Combine(base_path, "groups.dat"));
@@ -82,13 +201,18 @@ namespace SPIXI
             channels.loadChannelsFromFile();
         }
 
-        public Friend(byte[] bytes, int version)
+        public Friend(byte[] bytes, int version = 4)
         {
 
             using (MemoryStream m = new MemoryStream(bytes))
             {
                 using (BinaryReader reader = new BinaryReader(m))
                 {
+                    if(version >= 4)
+                    {
+                        version = reader.ReadInt32();
+                    }
+
                     int wal_length = reader.ReadInt32();
                     walletAddress = reader.ReadBytes(wal_length);
 
@@ -126,64 +250,9 @@ namespace SPIXI
                         setBotMode();
                     }
 
-                    if (version < 2)
+                    if(version >= 4)
                     {
-                        int num_contacts = reader.ReadInt32();
-                        for (int i = 0; i < num_contacts; i++)
-                        {
-                            int contact_len = reader.ReadInt32();
-
-                            BotContact contact = new BotContact(reader.ReadBytes(contact_len), true);
-                            lock (users.contacts)
-                            {
-                                users.contacts.Add(new Address(contact.publicKey).address, contact);
-                            }
-                        }
-
-                        int rcv_msg_id_len = reader.ReadInt32();
-                        if (rcv_msg_id_len > 0)
-                        {
-                            reader.ReadBytes(rcv_msg_id_len);
-                        }
-                    }
-                    else
-                    {
-                        int bot_info_len = reader.ReadInt32();
-                        if (bot_info_len > 0)
-                        {
-                            botInfo = new BotInfo(reader.ReadBytes(bot_info_len));
-                        }
-
-                        int msg_count = reader.ReadInt32();
-                        for (int i = 0; i < msg_count; i++)
-                        {
-                            int channel = reader.ReadInt32();
-                            int msg_len = reader.ReadInt32();
-                            lastReceivedMessageIds.Add(channel, reader.ReadBytes(msg_len));
-                        }
-                    }
-
-                    lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
-
-                    // TODO try/catch wrapper can be removed after upgrade
-                    try
-                    {
-                        if (m.Position < m.Length)
-                        {
-                            int last_message_len = reader.ReadInt32();
-                            if(last_message_len > 0)
-                            {
-                                lastMessage = new FriendMessage(reader.ReadBytes(last_message_len));
-                            }
-
-                            lastMessageChannel = reader.ReadInt32();
-
-                            unreadMessageCount = reader.ReadInt32();
-                        }
-                    }
-                    catch (Exception)
-                    {
-
+                        lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
                     }
                 }
             }
@@ -195,6 +264,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
+                    writer.Write(4);
 
                     writer.Write(walletAddress.Length);
                     writer.Write(walletAddress);
@@ -240,53 +310,16 @@ namespace SPIXI
 
                     writer.Write(handshakePushed);
 
-                    if (botInfo != null)
-                    {
-                        byte[] bi_bytes = botInfo.getBytes();
-                        writer.Write(bi_bytes.Length);
-                        writer.Write(bi_bytes);
-                    }else
-                    {
-                        writer.Write(0);
-                    }
-
-                    lock(lastReceivedMessageIds)
-                    {
-                        writer.Write(lastReceivedMessageIds.Count);
-                        foreach(var msg in lastReceivedMessageIds)
-                        {
-                            writer.Write(msg.Key);
-                            writer.Write(msg.Value.Length);
-                            writer.Write(msg.Value);
-                        }
-                    }
-
                     writer.Write(lastReceivedHandshakeMessageTimestamp);
-
-                    if (lastMessage != null)
-                    {
-                        byte[] msg_bytes = lastMessage.getBytes();
-                        writer.Write(msg_bytes.Length);
-                        writer.Write(msg_bytes);
-                    }
-                    else
-                    {
-                        writer.Write(0);
-                    }
-
-                    writer.Write(lastMessageChannel);
-
-                    writer.Write(unreadMessageCount);
                 }
                 return m.ToArray();
             }
         }
 
         // Get the number of unread messages
-        // TODO: optimize this
         public int getUnreadMessageCount()
         {
-            return unreadMessageCount;
+            return metaData.unreadMessageCount;
         }
 
         // Flushes the temporary message history
@@ -547,7 +580,7 @@ namespace SPIXI
                 {
                     _handshakeStatus = value;
                     handshakePushed = false;
-                    FriendList.saveToStorage();
+                    save();
                 }
             }
         }
@@ -563,7 +596,7 @@ namespace SPIXI
                 if (_nick != value)
                 {
                     _nick = value;
-                    FriendList.saveToStorage();
+                    save();
                 }
             }
         }
@@ -653,7 +686,7 @@ namespace SPIXI
 
         public IxiNumber getMessagePrice(int msg_len)
         {
-            return botInfo.cost * msg_len / 1000;
+            return metaData.botInfo.cost * msg_len / 1000;
         }
 
         public bool deleteMessage(byte[] msg_id, int channel)
@@ -721,25 +754,6 @@ namespace SPIXI
             return false;
         }
 
-        public void setLastMessage(FriendMessage msg, int channel)
-        {
-            lastMessage = new FriendMessage(msg.getBytes());
-            lastMessageChannel = channel;
-        }
-
-        public bool setLastReceivedMessageIds(byte[] msg_id, int channel)
-        {
-            if (bot)
-            {
-                lock (lastReceivedMessageIds)
-                {
-                    lastReceivedMessageIds.AddOrReplace(channel, msg_id);
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public void freeMemory()
         {
             if (chat_page != null)
@@ -751,6 +765,55 @@ namespace SPIXI
             {
                 Node.localStorage.flush();
                 messages.Clear();
+            }
+        }
+
+        public void save()
+        {
+            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            if(!Directory.Exists(base_path))
+            {
+                Directory.CreateDirectory(base_path);
+            }
+
+            File.WriteAllBytes(Path.Combine(base_path, "account.ixi"), getBytes());
+        }
+
+        public void saveMetaData()
+        {
+            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            if (!Directory.Exists(base_path))
+            {
+                Directory.CreateDirectory(base_path);
+            }
+
+            File.WriteAllBytes(Path.Combine(base_path, "meta.ixi"), metaData.getBytes());
+        }
+
+        public void loadMetaData()
+        {
+            string path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), "meta.ixi");
+            if (File.Exists(path))
+            {
+                metaData = new FriendMetaData(File.ReadAllBytes(path));
+            }
+        }
+
+        public void setPublicKey(byte[] public_key)
+        {
+            if (publicKey == null)
+            {
+                publicKey = public_key;
+                save();
+            }
+        }
+
+        public void delete()
+        {
+            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            if (Directory.Exists(base_path))
+            {
+                Directory.Delete(base_path, true);
             }
         }
     }

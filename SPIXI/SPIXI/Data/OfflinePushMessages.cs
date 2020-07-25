@@ -120,13 +120,9 @@ namespace SPIXI
                             {
                                 byte[] pk = Convert.FromBase64String(str[2]);
                                 Friend f = FriendList.getFriend(new Address(pk).address);
-                                if (f != null && f.publicKey == null)
+                                if (f != null && pk != null)
                                 {
-                                    if (pk != null)
-                                    {
-                                        f.publicKey = pk;
-                                        FriendList.saveToStorage();
-                                    }
+                                    f.setPublicKey(pk);
                                 }
                             }
                             StreamProcessor.receiveData(data, null);

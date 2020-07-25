@@ -101,6 +101,8 @@ namespace SPIXI.Meta
 
             customAppManager = new CustomAppManager(Config.spixiUserFolder);
 
+            FriendList.init(Config.spixiUserFolder);
+
             Logging.info("Node init done");
         }
 
@@ -108,6 +110,8 @@ namespace SPIXI.Meta
         {
             // Start local storage
             localStorage.start();
+
+            FriendList.loadContacts();
         }
 
         static public void start()

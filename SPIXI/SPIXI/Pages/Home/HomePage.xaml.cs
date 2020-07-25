@@ -565,7 +565,7 @@ namespace SPIXI
 
             foreach (Friend friend in FriendList.friends)
             {
-                FriendMessage lastmsg = friend.lastMessage;
+                FriendMessage lastmsg = friend.metaData.lastMessage;
                 if(lastmsg == null)
                 {
                     if(friend.getMessages(0).Count > 0)

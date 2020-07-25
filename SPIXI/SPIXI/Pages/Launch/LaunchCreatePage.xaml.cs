@@ -125,7 +125,7 @@ namespace SPIXI
                     Node.start();
 
                     Node.localStorage.nickname = nick;
-                    FriendList.saveToStorage();
+                    Node.localStorage.writeAccountFile();
 
                     // TODO: encrypt the password
                     Application.Current.Properties["walletpass"] = pass;
@@ -143,10 +143,12 @@ namespace SPIXI
                     });
 
                     Friend friend = FriendList.addFriend(Base58Check.Base58CheckEncoding.DecodePlain("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+                    if (friend != null)
+                    {
+                        friend.save();
 
-                    FriendList.saveToStorage();
-
-                    StreamProcessor.sendContactRequest(friend);
+                        StreamProcessor.sendContactRequest(friend);
+                    }
                 }
                 else
                 {

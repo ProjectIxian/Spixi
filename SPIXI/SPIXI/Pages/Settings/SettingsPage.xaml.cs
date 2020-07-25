@@ -148,7 +148,7 @@ namespace SPIXI
                 Node.localStorage.nickname = nick;
                 FriendList.broadcastNicknameChange();
             }
-            FriendList.saveToStorage();
+            Node.localStorage.writeAccountFile();
             Node.changedSettings = true;
             applyAvatar();
 

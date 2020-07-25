@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Utils;
+using Org.BouncyCastle.Bcpg;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Network;
@@ -19,9 +20,18 @@ namespace SPIXI
 
         private static Cuckoo friendMatcher = new Cuckoo(128); // default size of 128, will be increased if neccessary
 
-        public static void saveToStorage()
+        public static string accountsPath { get; private set; } = "Acc";
+
+        public static bool contactsLoaded = false;
+
+        public static void init(string base_path)
         {
-            Node.localStorage.requestWriteAccountFile();
+            accountsPath = Path.Combine(base_path, accountsPath);
+            if(!Directory.Exists(accountsPath))
+            {
+                Directory.CreateDirectory(accountsPath);
+            }
+            contactsLoaded = false;
         }
 
         // Retrieves a friend based on the wallet_address
@@ -260,15 +270,15 @@ namespace SPIXI
                         {
                             if(messages.Last() == tmp_msg)
                             {
-                                friend.setLastMessage(tmp_msg, channel);
-                                friend.setLastReceivedMessageIds(tmp_msg.id, channel);
-                                FriendList.saveToStorage();
+                                friend.metaData.setLastMessage(tmp_msg, channel);
+                                friend.metaData.setLastReceivedMessageIds(tmp_msg.id, channel);
+                                friend.saveMetaData();
                             }
                         }
                         return null;
                     }else
                     {
-                        friend.setLastReceivedMessageIds(friend_message.id, channel);
+                        friend.metaData.setLastReceivedMessageIds(friend_message.id, channel);
                     }
                 }
                 else if(!local_sender)
@@ -285,8 +295,8 @@ namespace SPIXI
                 friend_message.read = true;
             }
 
-            friend.setLastMessage(friend_message, channel);
-            FriendList.saveToStorage();
+            friend.metaData.setLastMessage(friend_message, channel);
+            friend.saveMetaData();
 
             // If a chat page is visible, insert the message directly
             if (friend.chat_page != null)
@@ -294,8 +304,8 @@ namespace SPIXI
                 friend.chat_page.insertMessage(friend_message, channel);
             }else if(!set_read)
             {
-                friend.unreadMessageCount++;
-                FriendList.saveToStorage();
+                friend.metaData.unreadMessageCount++;
+                friend.saveMetaData();
             }
 
             // Send a local push notification if Spixi is not in the foreground
@@ -341,8 +351,11 @@ namespace SPIXI
                 return null;
             }
 
-            // Add new friend to the friendlist
-            friends.Add(new_friend);
+            lock (friends)
+            {
+                // Add new friend to the friendlist
+                friends.Add(new_friend);
+            }
 
             Node.shouldRefreshContacts = true;
 
@@ -354,9 +367,12 @@ namespace SPIXI
                     {
                         // rebuild cuckoo filter with a larger size
                         friendMatcher = new Cuckoo(friendMatcher.numItems * 2);
-                        foreach (Friend f in friends)
+                        lock (friends)
                         {
-                            friendMatcher.Add(f.walletAddress);
+                            foreach (Friend f in friends)
+                            {
+                                friendMatcher.Add(f.walletAddress);
+                            }
                         }
                     }
                 }
@@ -371,7 +387,10 @@ namespace SPIXI
         // Clear the entire list of contacts
         public static bool clear()
         {
-            friends.Clear();
+            lock (friends)
+            {
+                friends.Clear();
+            }
             return true;
         }
 
@@ -384,9 +403,12 @@ namespace SPIXI
             // Delete avatar
             Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
 
-            if(!friends.Remove(friend))
+            lock (friends)
             {
-                return false;
+                if (!friends.Remove(friend))
+                {
+                    return false;
+                }
             }
 
             lock(friendMatcher)
@@ -395,7 +417,7 @@ namespace SPIXI
             }
 
             // Write changes to storage
-            saveToStorage();
+            friend.delete();
 
             Node.shouldRefreshContacts = true;
 
@@ -594,6 +616,46 @@ namespace SPIXI
                 foreach (var friend in friends)
                 {
                     friend.freeMemory();
+                }
+            }
+        }
+
+        public static void loadContacts()
+        {
+            if(contactsLoaded)
+            {
+                return;
+            }
+            contactsLoaded = true;
+            lock (friends)
+            {
+                friends.Clear();
+
+                var accs = Directory.EnumerateDirectories(accountsPath);
+                foreach(var acc in accs)
+                {
+                    string acc_path = Path.Combine(acc, "account.ixi");
+                    if (File.Exists(acc_path))
+                    {
+                        try
+                        {
+                            Friend f = addFriend(new Friend(File.ReadAllBytes(acc_path)));
+                            if (f != null)
+                            {
+                                f.loadMetaData();
+                            }
+                            else
+                            {
+                                Logging.error("Error adding contact {0}", acc);
+                            }
+                        }catch(Exception e)
+                        {
+                            Logging.error("Exception occured while loading contact {0}: {1}", acc, e);
+                        }
+                    }else
+                    {
+                        Logging.error("Error adding contact {0}, account.ixi doesn't exist", acc);
+                    }
                 }
             }
         }

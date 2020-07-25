@@ -388,7 +388,7 @@ namespace SPIXI
                 {
                     if (endpoint != null && endpoint.presence.pubkey != null && endpoint.presence.wallet.SequenceEqual(friend.walletAddress))
                     {
-                        friend.publicKey = endpoint.presence.pubkey;
+                        friend.setPublicKey(endpoint.presence.pubkey);
                     }
                 }
             }
@@ -797,9 +797,9 @@ namespace SPIXI
         {
             if (friend.deleteMessage(msg_id_to_del, channel))
             {
-                if (friend.setLastReceivedMessageIds(msg_id, channel))
+                if (friend.metaData.setLastReceivedMessageIds(msg_id, channel))
                 {
-                    FriendList.saveToStorage();
+                    friend.saveMetaData();
                 }
             }
         }
@@ -807,9 +807,9 @@ namespace SPIXI
         {
             if (friend.addReaction(sender, new SpixiMessageReaction(reaction_data), channel))
             {
-                if (friend.setLastReceivedMessageIds(msg_id, channel))
+                if (friend.metaData.setLastReceivedMessageIds(msg_id, channel))
                 {
-                    FriendList.saveToStorage();
+                    friend.saveMetaData();
                 }
             }
         }
@@ -830,8 +830,6 @@ namespace SPIXI
 
             byte[] address = new Address(pub_key).address;
             friend.users.setPubKey(address, pub_key);
-
-            FriendList.saveToStorage();
         }
 
         // Sends the nickname back to the sender, detects if it should fetch the sender's nickname and fetches it automatically
@@ -1322,7 +1320,7 @@ namespace SPIXI
                 friend.generateKeys();
             }
 
-            FriendList.saveToStorage();
+            friend.save();
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
 
@@ -1644,11 +1642,11 @@ namespace SPIXI
                     BotChannel channel = new BotChannel(sba.data);
                     bot.channels.setChannel(channel.channelName, channel);
                     byte[] last_msg_id = null;
-                    lock (bot.lastReceivedMessageIds)
+                    lock (bot.metaData.lastReceivedMessageIds)
                     {
-                        if (bot.lastReceivedMessageIds.ContainsKey(channel.index))
+                        if (bot.metaData.lastReceivedMessageIds.ContainsKey(channel.index))
                         {
-                            last_msg_id = bot.lastReceivedMessageIds[channel.index];
+                            last_msg_id = bot.metaData.lastReceivedMessageIds[channel.index];
                         }
                     }
                     sendGetMessages(bot, channel.index, last_msg_id);
@@ -1656,11 +1654,12 @@ namespace SPIXI
 
                 case SpixiBotActionCode.info:
                     BotInfo bi = new BotInfo(sba.data);
-                    if(bot.botInfo == null || bi.settingsGeneratedTime != bot.botInfo.settingsGeneratedTime)
+                    if(bot.metaData.botInfo == null || bi.settingsGeneratedTime != bot.metaData.botInfo.settingsGeneratedTime)
                     {
-                        bot.botInfo = bi;
+                        bot.metaData.botInfo = bi;
+                        bot.saveMetaData();
                         FriendList.setNickname(bot.walletAddress, bi.serverName, null);
-                        FriendList.saveToStorage();
+                        bot.save();
                         // TODO TODO delete deleted groups locally
                         sendGetBotGroups(bot);
                     }
