@@ -263,9 +263,12 @@ namespace SPIXI.Meta
             Logging.info("Stopping node...");
             running = false;
 
-            customAppManager.stop();
+            // Stop the stream processor
+            StreamProcessor.uninitialize();
 
             localStorage.stop();
+
+            customAppManager.stop();
 
             // Stop TIV
             tiv.stop();
@@ -288,9 +291,6 @@ namespace SPIXI.Meta
 
             NetworkClientManager.stop();
             StreamClientManager.stop();
-
-            // Stop the stream processor
-            StreamProcessor.uninitialize();
 
             IxianHandler.status = NodeStatus.stopped;
 

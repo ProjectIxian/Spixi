@@ -335,6 +335,11 @@ namespace SPIXI
         // Called when receiving S2 data from clients
         public static void receiveData(byte[] bytes, RemoteEndpoint endpoint)
         {
+            if(running == false)
+            {
+                return;
+            }
+
             StreamMessage message = new StreamMessage(bytes);
 
             if (message.data == null)
