@@ -2,7 +2,6 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Utils;
-using Org.BouncyCastle.Bcpg;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Network;

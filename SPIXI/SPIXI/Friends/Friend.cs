@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Xamarin.Forms;
 
 namespace SPIXI
 {
@@ -176,6 +175,8 @@ namespace SPIXI
 
         public long lastReceivedHandshakeMessageTimestamp = 0;
 
+        private object saveLock = new object();
+
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
             walletAddress = wallet;
@@ -245,14 +246,14 @@ namespace SPIXI
                     bot = reader.ReadBoolean();
                     handshakePushed = reader.ReadBoolean();
 
-                    if (bot)
-                    {
-                        setBotMode();
-                    }
-
                     if(version >= 4)
                     {
                         lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
+                    }
+
+                    if (bot)
+                    {
+                        setBotMode();
                     }
                 }
             }
@@ -770,24 +771,30 @@ namespace SPIXI
 
         public void save()
         {
-            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
-            if(!Directory.Exists(base_path))
+            lock (saveLock)
             {
-                Directory.CreateDirectory(base_path);
-            }
+                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                if (!Directory.Exists(base_path))
+                {
+                    Directory.CreateDirectory(base_path);
+                }
 
-            File.WriteAllBytes(Path.Combine(base_path, "account.ixi"), getBytes());
+                File.WriteAllBytes(Path.Combine(base_path, "account.ixi"), getBytes());
+            }
         }
 
         public void saveMetaData()
         {
-            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
-            if (!Directory.Exists(base_path))
+            lock (saveLock)
             {
-                Directory.CreateDirectory(base_path);
-            }
+                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                if (!Directory.Exists(base_path))
+                {
+                    Directory.CreateDirectory(base_path);
+                }
 
-            File.WriteAllBytes(Path.Combine(base_path, "meta.ixi"), metaData.getBytes());
+                File.WriteAllBytes(Path.Combine(base_path, "meta.ixi"), metaData.getBytes());
+            }
         }
 
         public void loadMetaData()
@@ -810,10 +817,13 @@ namespace SPIXI
 
         public void delete()
         {
-            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
-            if (Directory.Exists(base_path))
+            lock (saveLock)
             {
-                Directory.Delete(base_path, true);
+                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                if (Directory.Exists(base_path))
+                {
+                    Directory.Delete(base_path, true);
+                }
             }
         }
     }
