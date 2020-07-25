@@ -102,6 +102,9 @@ chat-modal-ban-ban-button = BAN USER
 chat-modal-banned-title = Banned {0}
 chat-modal-banned-body = You have banned '{0}' from this server.
 
+chat-bot-not-ready-title = Bot isn't ready
+chat-bot-not-ready-body = Bot isn't ready yet, please try again in a few minutes.
+
 ; Contact Details Screen
 contact-details-chat = chat
 contact-details-send = send

@@ -214,19 +214,15 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:kick:"))
             {
-                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:kick:".Length));
-                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, address, 0, true);
-                string modal_title = String.Format(SpixiLocalization._SL("chat-modal-kicked-title"), address);
-                string modal_body = String.Format(SpixiLocalization._SL("chat-modal-kicked-body"), address);
-                displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+                string str_address = current_url.Substring("ixian:kick:".Length);
+                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(str_address);
+                onKickUser(address);
             }
             else if (current_url.StartsWith("ixian:ban:"))
             {
+                string str_address = current_url.Substring("ixian:ban:".Length);
                 byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:ban:".Length));
-                StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, address, 0, true);
-                string modal_title = String.Format(SpixiLocalization._SL("chat-modal-banned-title"), address);
-                string modal_body = String.Format(SpixiLocalization._SL("chat-modal-banned-body"), address);
-                displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+                onBanUser(address);
             }
             else if (current_url.StartsWith("ixian:typing"))
             {
@@ -289,8 +285,8 @@ namespace SPIXI
                 {
                     if (sleep_cnt >= 50)
                     {
-                        // TODO TODO perhaps an error or something that the bot isn't ready yet should be displayed
                         Navigation.PopAsync(Config.defaultXamarinAnimations);
+                        DisplayAlert(SpixiLocalization._SL("chat-bot-not-ready-title"), SpixiLocalization._SL("chat-bot-not-ready-body"), SpixiLocalization._SL("global-dialog-ok"));
                         return;
                     }
                     Thread.Sleep(100);
@@ -594,6 +590,26 @@ namespace SPIXI
             StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
         }
 
+        private void onKickUser(byte[] address)
+        {
+            string str_address = Base58Check.Base58CheckEncoding.EncodePlain(address);
+            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, address, 0, true);
+            string modal_title = String.Format(SpixiLocalization._SL("chat-modal-kicked-title"), str_address);
+            string modal_body = String.Format(SpixiLocalization._SL("chat-modal-kicked-body"), str_address);
+            displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+
+        }
+
+        private void onBanUser(byte[] address)
+        {
+            string str_address = Base58Check.Base58CheckEncoding.EncodePlain(address);
+            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, address, 0, true);
+            string modal_title = String.Format(SpixiLocalization._SL("chat-modal-banned-title"), str_address);
+            string modal_body = String.Format(SpixiLocalization._SL("chat-modal-banned-body"), str_address);
+            displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
+        }
+
+
         private void onContextAction(string action, string msg_id_hex)
         {
             string data = "";
@@ -648,6 +664,7 @@ namespace SPIXI
                         }
                     }
                     break;
+
                 case "sendContactRequest":
                     byte[] new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
                     Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
@@ -658,12 +675,15 @@ namespace SPIXI
                         StreamProcessor.sendContactRequest(new_friend);
                     }
                     break;
+
                 case "kickUser":
-                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress, 0, true);
+                    onKickUser(friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
+
                 case "banUser":
-                    StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress, 0, true);
+                    onBanUser(friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress);
                     break;
+
                 case "deleteMessage":
                     StreamProcessor.sendMsgDelete(friend, msg_id, selectedChannel);
                     if (!friend.bot)
@@ -671,6 +691,7 @@ namespace SPIXI
                         friend.deleteMessage(msg_id, selectedChannel);
                     }
                     break;
+
                 case "like":
                     if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
                     {
