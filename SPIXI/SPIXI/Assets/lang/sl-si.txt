@@ -305,6 +305,7 @@ wallet-recipient-selected = prejemnik/-ov izbran/-ih
 ; Wallet Request Screen
 wallet-request-title = Zahtevaj Plačilo
 wallet-request-subtitle = Zahtevaj določen znesek
+wallet-request-amount-placeholder = Vpišite znesek
 wallet-request-address = Trenutni naslov
 wallet-request-send-info = Pošlji kot zahtevek stikom:
 wallet-request-add = Če želite poslati zahtevek za plačilo v enakem znesku večim osebam, lahko to storite tako, da dodate posamezen stik ali vpišete naslov. 

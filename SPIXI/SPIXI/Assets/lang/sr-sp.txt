@@ -305,6 +305,7 @@ wallet-recipient-selected = primaoc/a odabran/ih
 ; Wallet Request Screen
 wallet-request-title = Pošalji Zahtev za Uplatu
 wallet-request-subtitle = Zatražite određeni iznos
+wallet-request-amount-placeholder = Unesite iznos
 wallet-request-address = Trenutna adresa
 wallet-request-send-info = Pošalji zahtev kontaktima:
 wallet-request-add = Da biste zahtev za uplatu u istom iznosu poslali većem broju ljudi, to možete učinite tako da dodate kontakte ili ukucate adrese.
