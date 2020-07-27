@@ -1356,7 +1356,7 @@ img.emoji {
 .spixi-bubble .time
 {
     padding-right: 15px;
-    font-size: 6pt;
+    font-size: 7pt;
     line-height: 10pt;
     color: #919191;
     z-index: 4;
@@ -1364,7 +1364,8 @@ img.emoji {
 }
 .spixi-bubble.myself .time {
     text-align: right;
-    right: 15px;
+    right: 13pt;
+    padding-right: 15px;
 }
 
 .spixi-bubble.file.myself {
@@ -1415,7 +1416,13 @@ img.emoji {
 .spixi-bubble.file .text .icon-wrap {
     display: table-cell;
     vertical-align: middle;
-    width: 40px;
+    width: 50px;
+    padding-left: 10px;
+}
+
+.spixi-bubble.myself.file .icon-wrap {
+    padding-left: 0px;
+    padding-right: 10px;
 }
 
 .spixi-bubble.file .text .text {
@@ -1426,6 +1433,7 @@ img.emoji {
     text-decoration: none;
     word-wrap: break-word;
     word-break: break-all;
+    vertical-align: middle;
 }
 
 .spixi-bubble.file.myself .text .text{
@@ -1439,7 +1447,7 @@ img.emoji {
 
 .spixi-bubble .statusIndicator {
     display: none;
-    font-size: 6pt;
+    font-size: 7pt;
     line-height: 10pt;
 }
 
@@ -1460,6 +1468,7 @@ img.emoji {
 
 .spixi-bubble .statusIndicator.paid {
     display: none;
+    font-size: 9pt;
 }
 
 .spixi-bubble.paid .statusIndicator
@@ -2066,7 +2075,8 @@ img.emoji {
 {
     position: fixed;
     bottom: 70px;
-    left: -100px;
+    left: 20px;
+    visibility:hidden;
     z-index: 7;
 }
 
