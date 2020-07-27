@@ -267,12 +267,13 @@ namespace SPIXI
                             Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
                         }else
                         {
-                            if(messages.Last() == tmp_msg)
-                            {
-                                friend.metaData.setLastMessage(tmp_msg, channel);
-                                friend.metaData.setLastReceivedMessageIds(tmp_msg.id, channel);
-                                friend.saveMetaData();
-                            }
+                            tmp_msg.read = true;
+                        }
+                        if (messages.Last() == tmp_msg)
+                        {
+                            friend.metaData.setLastMessage(tmp_msg, channel);
+                            friend.metaData.setLastReceivedMessageIds(tmp_msg.id, channel);
+                            friend.saveMetaData();
                         }
                         return null;
                     }else

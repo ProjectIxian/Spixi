@@ -565,6 +565,11 @@ namespace SPIXI
 
             foreach (Friend friend in FriendList.friends)
             {
+                if(friend.pendingDeletion)
+                {
+                    continue;
+                }
+
                 FriendMessage lastmsg = friend.metaData.lastMessage;
                 if(lastmsg == null)
                 {

@@ -40,7 +40,6 @@ function onChatScreenLoad()
     document.body.oncontextmenu = function(e)
     {
         hideContextMenus();
-        return false;
 	};
     document.body.addEventListener("click", function(e){
         hideContextMenus();
@@ -82,9 +81,11 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
 
         document.body.appendChild(msgEl);
         document.getElementById("chatholder").style.height = "94px";
+        document.getElementById("chat_send").innerHTML = '<i class="fa fa-wallet"></i>';
     }else
     {
         document.getElementById("chatholder").style.height = "70px";    
+        document.getElementById("chat_send").innerHTML = '<i class="fa fa-paper-plane"></i>';
 	}
 
     if(bot == "True")
@@ -474,6 +475,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     bubbleEl.appendChild(textEl);
     bubbleEl.appendChild(timeEl);
     bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
+    bubbleEl.innerHTML += "<i class=\"statusIndicator paid fas fa-wallet\"></i>";
 
     if (avatar != "") {
 
@@ -500,7 +502,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     }
 }
 
-function addMe(id, address, nick, avatar, text, time, sent, read) {
+function addMe(id, address, nick, avatar, text, time, sent, read, paid) {
     var additionalClasses = "";
     if (sent == "True") {
         additionalClasses = " sent";
@@ -508,6 +510,10 @@ function addMe(id, address, nick, avatar, text, time, sent, read) {
     if (read == "True") {
         additionalClasses += " read";
     }
+    if(paid == "True")
+    {
+         additionalClasses += " paid";
+	}
     addText(id, address, nick, avatar, text, time, "spixi-bubble myself" + additionalClasses);
 }
 
@@ -515,7 +521,7 @@ function addThem(id, address, nick, avatar, text, time) {
     addText(id, address, nick, avatar, text, time, "spixi-bubble");
 }
 
-function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, progress, complete) {
+function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, progress, complete, paid) {
 
     var additionalClasses = "";
     if (me == "True") {
@@ -556,6 +562,10 @@ function addFile(id, address, nick, avatar, fileid, name, time, me, sent, read, 
         linkEl.appendChild(iconWrap);
     }
 
+    if(paid == "True")
+    {
+         additionalClasses += " paid";
+	}
 
     addText(id, address, nick, avatar, linkEl.outerHTML, time, "spixi-bubble file" + additionalClasses);
 
@@ -650,7 +660,7 @@ function updateFile(id, progress, complete) {
     }
 }
 
-function updateMessage(id, message, sent, read) {
+function updateMessage(id, message, sent, read, paid) {
     message = message.replace(/\n/g, "<br>");
 
     var msgEl = document.getElementById("msg_" + id);
@@ -660,12 +670,18 @@ function updateMessage(id, message, sent, read) {
     if (msgEl != null) {
 
         var additionalClasses = "";
+
         if (sent == "True") {
             additionalClasses = " sent";
         }
         if (read == "True") {
             additionalClasses += " read";
         }
+
+        if(paid == "True")
+        {
+            additionalClasses += " paid";
+		}
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {
             additionalClasses += " spixi-payment-request";
@@ -787,6 +803,10 @@ function hideAttach() {
 }
 
 function showAttach() {
+    if(isBot)
+    {
+        return;
+	}
     var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
     document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
     document.getElementById("chatholder").style.height = (attachBarHeight + 70) + "px";
@@ -979,7 +999,7 @@ function displayContextMenu(e)
 
     if(msgEl == null)
     {
-         return;
+         return false;
 	}
 
     var localMsg = false;
@@ -990,7 +1010,8 @@ function displayContextMenu(e)
 
     var menuHtml = "";
     //menuHtml += "<div onclick=\"contextAction('pin', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-map-pin\"></i></span> " + SL_ContextMenu["pinMessage"] + "</div>";
-    //menuHtml += "<div onclick=\"contextAction('copy', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyText"] + "</div>";
+    menuHtml += "<div onclick=\"contextAction('copy', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-quote-right\"></i></span> " + SL_ContextMenu["copyMessage"] + "</div>";
+    menuHtml += "<div onclick=\"contextAction('copySelected', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-copy\"></i></span> " + SL_ContextMenu["copySelected"] + "</div>";
     if(!localMsg)
     {
         menuHtml += "<div onclick=\"contextAction('tip', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-wallet\"></i></span> " + SL_ContextMenu["tipUser"] + "</div>";
@@ -1020,6 +1041,12 @@ function displayContextMenu(e)
         e.stopPropagation();
         return false;
 	};
+    contextMenuEl.onmousedown = function(e)
+    {
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+	};
 
     contextMenuEl.innerHTML = menuHtml;
     contextMenuEl.style.left = e.clientX + "px";
@@ -1034,7 +1061,7 @@ function displayContextMenu(e)
         contextMenuEl.style.maxHeight = "400px";
 	}
 
-    return;
+    return true;
 }
 
 function hideContextMenu()
@@ -1055,8 +1082,13 @@ function contextAction(action, msgId)
     contextActionMsgId = msgId;
     if(action == "copy")
     {
-        // TODO implement
-	}else if (action == "tip")
+        window.getSelection().selectAllChildren(document.getElementById("msg_" + msgId));
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+	}else if(action == "copySelected")
+    {
+        document.execCommand('copy');
+    }else if (action == "tip")
     {
         var msgEl = document.getElementById("msg_" + msgId);
         var nick = null;

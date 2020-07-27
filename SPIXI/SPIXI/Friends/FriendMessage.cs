@@ -18,7 +18,9 @@ namespace SPIXI
         voiceCall,
         voiceCallEnd,
         appSession,
-        appSessionEnd
+        appSessionEnd,
+        kicked,
+        banned
     }
 
     public class FriendMessage

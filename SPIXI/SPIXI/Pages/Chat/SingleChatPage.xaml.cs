@@ -227,6 +227,17 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:typing"))
             {
                 StreamProcessor.sendTyping(friend);
+            }else if(current_url.StartsWith("ixian:leave"))
+            {
+                if(friend.bot)
+                {
+                    friend.pendingDeletion = true;
+                    friend.save();
+                    Node.shouldRefreshContacts = true;
+                    StreamProcessor.sendLeave(friend, null);
+                    displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    Navigation.PopAsync();
+                }
             }
             else
             {
@@ -775,6 +786,11 @@ namespace SPIXI
                     return;
             }
 
+            bool paid = false;
+            if (message.transactionId != "")
+            {
+                paid = true;
+            }
             string prefix = "addMe";
             string avatar = "";
             string address = friend.nickname;
@@ -949,7 +965,7 @@ namespace SPIXI
                     {
                         progress = "100";
                     }
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString());
+                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), paid.ToString());
                 }
             }
             
@@ -957,7 +973,7 @@ namespace SPIXI
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString());
+                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
             }
 
             if(message.type == FriendMessageType.voiceCall || message.type == FriendMessageType.voiceCallEnd)
@@ -1102,7 +1118,12 @@ namespace SPIXI
 
         public void updateMessage(FriendMessage message)
         {
-            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString());
+            bool paid = false;
+            if(message.transactionId != "")
+            {
+                paid = true;
+            }
+            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString(), paid.ToString());
         }
 
         public void updateFile(string uid, string progress, bool complete)

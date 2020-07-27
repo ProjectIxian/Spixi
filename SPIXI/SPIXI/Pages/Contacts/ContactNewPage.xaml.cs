@@ -181,10 +181,18 @@ namespace SPIXI
                     return;
                 }
 
-                if (FriendList.getFriend(recipient_address) != null)
+                Friend old_friend = FriendList.getFriend(recipient_address);
+                if (old_friend != null)
                 {
-                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-exists-text"), SpixiLocalization._SL("global-dialog-ok"));
-                    return;
+                    if (old_friend.pendingDeletion)
+                    {
+                        FriendList.removeFriend(old_friend);
+                    }
+                    else
+                    {
+                        displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-exists-text"), SpixiLocalization._SL("global-dialog-ok"));
+                        return;
+                    }
                 }
 
                 Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);

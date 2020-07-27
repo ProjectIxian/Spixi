@@ -175,6 +175,8 @@ namespace SPIXI
 
         public long lastReceivedHandshakeMessageTimestamp = 0;
 
+        public bool pendingDeletion = false;
+
         private object saveLock = new object();
 
         public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
@@ -249,6 +251,13 @@ namespace SPIXI
                     if(version >= 4)
                     {
                         lastReceivedHandshakeMessageTimestamp = reader.ReadInt64();
+                        try
+                        {
+                            pendingDeletion = reader.ReadBoolean();
+                        }catch(Exception)
+                        {
+
+                        }
                     }
 
                     if (bot)
@@ -312,6 +321,8 @@ namespace SPIXI
                     writer.Write(handshakePushed);
 
                     writer.Write(lastReceivedHandshakeMessageTimestamp);
+
+                    writer.Write(pendingDeletion);
                 }
                 return m.ToArray();
             }
@@ -553,10 +564,6 @@ namespace SPIXI
                 if (!msg.confirmed)
                 {
                     msg.confirmed = true;
-                    if(bot)
-                    {
-                        msg.read = true;
-                    }
                     Node.localStorage.requestWriteMessages(walletAddress, channel);
                 }
 

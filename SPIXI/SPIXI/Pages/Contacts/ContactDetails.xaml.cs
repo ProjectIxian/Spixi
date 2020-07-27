@@ -136,9 +136,20 @@ namespace SPIXI
 
         private void onRemove()
         {
-            if (FriendList.removeFriend(friend) == true)
+            if (friend.bot && friend.metaData.botInfo != null)
             {
+                friend.pendingDeletion = true;
+                friend.save();
+                Node.shouldRefreshContacts = true;
+                StreamProcessor.sendLeave(friend, null);
                 displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
+            }
+            else
+            {
+                if (FriendList.removeFriend(friend) == true)
+                {
+                    displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
+                }
             }
         }
 

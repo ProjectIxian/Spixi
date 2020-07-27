@@ -1149,6 +1149,7 @@ img.emoji {
     font-size: 9pt;
     background-color: #1f1f27;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
+    box-sizing: border-box;
 }
 
 /* ListItems */
@@ -1455,6 +1456,20 @@ img.emoji {
 .spixi-bubble.read .statusIndicator {
     color: #1fb817;
     display: inline-block;
+}
+
+.spixi-bubble .statusIndicator.paid {
+    display: none;
+}
+
+.spixi-bubble.paid .statusIndicator
+{
+    display: none !important;
+}
+
+.spixi-bubble.paid .statusIndicator.paid
+{
+    display: inherit !important;
 }
 
 .spixi-bubble .title {
@@ -1901,7 +1916,7 @@ img.emoji {
     right: 0px;
     background: #E5E5E5;
     overflow: auto;
-    z-index: 1000;
+    z-index: 2000;
     padding: 0px 20px;
     box-sizing: border-box;
 }

@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.SpixiBot;
+using Org.BouncyCastle.Bcpg;
 using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 
 namespace SPIXI
 {    
@@ -763,6 +765,17 @@ namespace SPIXI
                             friend.chat_page.showTyping();
                         }
                         return;
+
+                    case SpixiMessageCode.leaveConfirmed:
+                        if(!friend.bot)
+                        {
+                            return;
+                        }
+                        if (friend.pendingDeletion)
+                        {
+                            FriendList.removeFriend(friend);
+                        }
+                        break;
                 }
 
                 if (friend == null)
@@ -1649,6 +1662,7 @@ namespace SPIXI
                             last_msg_id = bot.metaData.lastReceivedMessageIds[channel.index];
                         }
                     }
+                    Logging.info("Sending request for messages from ID: " + Crypto.hashToString(last_msg_id));
                     sendGetMessages(bot, channel.index, last_msg_id);
                     break;
 
@@ -1676,7 +1690,25 @@ namespace SPIXI
                 case SpixiBotActionCode.getPayment:
                     onGetPayment(sba, bot, channel_id);
                     break;
+
+                case SpixiBotActionCode.kickUser:
+                    onKickUser(bot, sba.data);
+                    break;
+
+                case SpixiBotActionCode.banUser:
+                    onBanUser(bot, sba.data);
+                    break;
             }
+        }
+
+        public static void onKickUser(Friend friend, byte[] data)
+        {
+            FriendList.addMessageWithType(null, FriendMessageType.kicked, friend.walletAddress, 0, SpixiLocalization._SL("chat-kicked"));
+        }
+
+        public static void onBanUser(Friend friend, byte[] data)
+        {
+            FriendList.addMessageWithType(null, FriendMessageType.banned, friend.walletAddress, 0, SpixiLocalization._SL("chat-banned"));
         }
 
         public static void onGetPayment(SpixiBotAction sba, Friend bot, int channel_id)
@@ -1837,6 +1869,12 @@ namespace SPIXI
 
         public static void sendTyping(Friend friend)
         {
+            if(friend.bot)
+            {
+                // ignore for bots, for now
+                return;
+            }
+
             // Prepare the message and send to the S2 nodes
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.msgTyping, null, 0);
 
@@ -1848,7 +1886,35 @@ namespace SPIXI
             message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
+            if (friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+            }
+
             sendMessage(friend, message, false, false, false, true);
+        }
+
+        public static void sendLeave(Friend friend, byte[] data)
+        {
+            // Prepare the message and send to the S2 nodes
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.leave, data, 0);
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.info;
+            message.recipient = friend.walletAddress;
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_message.getBytes();
+
+            if (friend.bot)
+            {
+                message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+            }
+
+            sendMessage(friend, message);
         }
     }
 }
