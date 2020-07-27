@@ -175,7 +175,7 @@ namespace SPIXI.Storage
             {
                 tmp_requests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(writeMessagesRequests);
             }
-            long cur_time = Clock.getTimestamp();
+            long cur_time = Clock.getTimestampMillis();
             foreach (var request in tmp_requests)
             {
                 Friend friend = FriendList.getFriend(request.Key);
@@ -196,9 +196,9 @@ namespace SPIXI.Storage
                 {
                     if (!flush)
                     {
-                        if (cur_time - request_channel.Value.startTime < 5)
+                        if (cur_time - request_channel.Value.startTime < 2000)
                         {
-                            if (cur_time - request_channel.Value.lastRequestTime < 2)
+                            if (cur_time - request_channel.Value.lastRequestTime < 500)
                             {
                                 continue;
                             }
@@ -632,11 +632,11 @@ namespace SPIXI.Storage
             {
                 if(writeMessagesRequests[wallet_address].ContainsKey(channel))
                 {
-                    writeMessagesRequests[wallet_address][channel].lastRequestTime = Clock.getTimestamp();
+                    writeMessagesRequests[wallet_address][channel].lastRequestTime = Clock.getTimestampMillis();
                 }
                 else
                 {
-                    writeMessagesRequests[wallet_address][channel] = new WriteRequest(Clock.getTimestamp());
+                    writeMessagesRequests[wallet_address][channel] = new WriteRequest(Clock.getTimestampMillis());
                 }
             }
         }
