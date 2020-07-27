@@ -326,6 +326,37 @@ $("#chat_input").click(function (event) {
     }
 });
 
+$("#chat_input").on('paste', function (e) {
+    var data = e.clipboardData || window.clipboardData;
+
+    var inputEl = document.getElementById("chat_input");
+
+    var inputElData = inputEl.innerHTML;
+
+    var caret = null;
+    try
+    {
+        caret = getCaretPosition(inputEl);
+    }catch(e)
+    {
+        
+	}
+
+    if(caret)
+    {
+        inputEl.innerHTML = inputElData.substring(0, caret) + data.getData('Text') + inputElData.substring(caret);
+    }else if(caret === 0)
+    {
+        inputEl.innerHTML = data.getData('Text') + inputElData.substring(caret);
+	}else
+    {
+        inputEl.innerHTML = inputElData.substring(caret) + data.getData('Text');
+	}
+
+    e.stopPropagation();
+    e.preventDefault();
+});
+
 function clearInput() {
     document.getElementById("chat_input").innerHTML = "";
     document.getElementById("chat_send").style.backgroundColor = "#BABABA";
@@ -1374,19 +1405,42 @@ function showUserTyping()
         userTypingTimeout = null;
 	}
     var userTypingEl = document.getElementById("UserTyping");
-    if(userTypingEl.style.left != "20px")
-    {
-        userTypingEl.style.left = "20px";
-    }
+    userTypingEl.style.visibility = "visible";
     userTypingTimeout = setTimeout(hideUserTyping, 5000);
 }
 
 function hideUserTyping()
 {
-    document.getElementById("UserTyping").style.left = "";
+    document.getElementById("UserTyping").style.visibility = "";
     if(userTypingTimeout != null)
     {
         clearTimeout(userTypingTimeout);
         userTypingTimeout = null;
 	}
+}
+
+// function getCaretPosition copied from https://stackoverflow.com/questions/3972014/get-contenteditable-caret-index-position
+function getCaretPosition(editableDiv) {
+  var caretPos = 0,
+    sel, range;
+  if (window.getSelection) {
+    sel = window.getSelection();
+    if (sel.rangeCount) {
+      range = sel.getRangeAt(0);
+      if (range.commonAncestorContainer.parentNode == editableDiv) {
+        caretPos = range.endOffset;
+      }
+    }
+  } else if (document.selection && document.selection.createRange) {
+    range = document.selection.createRange();
+    if (range.parentElement() == editableDiv) {
+      var tempEl = document.createElement("span");
+      editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+      var tempRange = range.duplicate();
+      tempRange.moveToElementText(tempEl);
+      tempRange.setEndPoint("EndToEnd", range);
+      caretPos = tempRange.text.length;
+    }
+  }
+  return caretPos;
 }
