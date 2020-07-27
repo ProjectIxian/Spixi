@@ -267,7 +267,7 @@ namespace SPIXI
                             Logging.warn("Message with id {0} was already in message list.", Crypto.hashToString(id));
                         }else
                         {
-                            tmp_msg.read = true;
+                            friend.setMessageRead(channel, id);
                         }
                         if (messages.Last() == tmp_msg)
                         {
