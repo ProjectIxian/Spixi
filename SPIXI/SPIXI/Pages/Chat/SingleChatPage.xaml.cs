@@ -193,12 +193,14 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:enableNotifications"))
             {
-                friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification = true;
+                friend.metaData.botInfo.sendNotification = true;
+                friend.saveMetaData();
                 StreamProcessor.sendBotAction(friend, SpixiBotActionCode.enableNotifications, new byte[1] { 1 }, 0, true);
             }
             else if (current_url.StartsWith("ixian:disableNotifications"))
             {
-                friend.users.getUser(Node.walletStorage.getPrimaryAddress()).sendNotification = false;
+                friend.metaData.botInfo.sendNotification = false;
+                friend.saveMetaData();
                 StreamProcessor.sendBotAction(friend, SpixiBotActionCode.enableNotifications, new byte[1] { 0 }, 0, true);
             }
             else if (current_url.StartsWith("ixian:sendContactRequest:"))
@@ -305,12 +307,7 @@ namespace SPIXI
                 }
 
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.metaData.botInfo.cost.ToString() + " IXI");
-                bool send_notification = true;
-                BotContact tmp_bot_contact = friend.users.getUser(Node.walletStorage.getPrimaryAddress());
-                if (tmp_bot_contact != null)
-                {
-                    send_notification = tmp_bot_contact.sendNotification;
-                }
+                bool send_notification = friend.metaData.botInfo.sendNotification;
                     
                 Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
