@@ -298,11 +298,6 @@ namespace SPIXI
                     Logging.warn("Incoming file transfer {0} already prepared.", transfer.uid);
                     return null;
                 }
-                if (incomingTransfers.Find(x => x.fileName.SequenceEqual(transfer.fileName)) != null)
-                {
-                    Logging.warn("Incoming file transfer for filename already prepared.", transfer.fileName);
-                    return null;
-                }
                 incomingTransfers.Add(transfer);
             }
 
@@ -529,6 +524,7 @@ namespace SPIXI
                     final_file_path = Path.Combine(downloadsPath, Path.GetFileNameWithoutExtension(transfer.fileName) + "-" + instance_num.ToString() + Path.GetExtension(transfer.fileName));
                 }
                 File.Move(transfer.filePath, final_file_path);
+                transfer.filePath = final_file_path;
             }
 
             transfer.completed = true;
@@ -540,6 +536,20 @@ namespace SPIXI
             fm.filePath = transfer.filePath;
 
             Node.localStorage.requestWriteMessages(friend.walletAddress, transfer.channel);
+
+            if(incoming)
+            {
+                lock (incomingTransfers)
+                {
+                    incomingTransfers.Remove(transfer);
+                }
+            }else
+            {
+                lock (outgoingTransfers)
+                {
+                    outgoingTransfers.Remove(transfer);
+                }
+            }
 
             if (friend.chat_page != null)
             {
