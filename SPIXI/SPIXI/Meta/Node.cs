@@ -262,8 +262,11 @@ namespace SPIXI.Meta
         {
             if (!running)
             {
+                Logging.stop();
+                IxianHandler.status = NodeStatus.stopped;
                 return;
             }
+
             Logging.info("Stopping node...");
             running = false;
 
