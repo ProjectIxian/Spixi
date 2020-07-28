@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Xamarin.Forms;
 
 namespace SPIXI
@@ -121,52 +122,22 @@ namespace SPIXI
                 Logging.error("Received nickname for a friend that's not in the friend list.");
                 return;
             }
+            string address;
             if (friend.bot && real_sender_address != null)
             {
-                // TODO implement
-                /*if (!friend.contacts.ContainsKey(real_sender_address))
-                {
-                    friend.contacts.Add(real_sender_address, new BotContact());
-                }
-                if (friend.contacts[real_sender_address].nick != nick)
-                {
-                    friend.contacts[real_sender_address].nick = nick;
-                    // update messages with the new nick
-                    for (int i = friend.messages.Count - 1, j = 0; i >= 0; i--, j++)
-                    {
-                        if (j > 1000)
-                        {
-                            break;
-                        }
-                        if (friend.messages[i].senderNick != "")
-                        {
-                            continue;
-                        }
-                        if (friend.messages[i].senderAddress == null || real_sender_address == null)
-                        {
-                            Logging.warn("Sender address is null");
-                            continue;
-                        }
-                        if (friend.messages[i].senderAddress.SequenceEqual(real_sender_address))
-                        {
-                            friend.messages[i].senderNick = nick;
-                        }
-                    }
-                    // update UI with the new nick
-                    if (friend.chat_page != null)
-                    {
-                        Logging.info("Updating group chat nicks");
-                        friend.chat_page.updateGroupChatNicks(real_sender_address, nick);
-                    }
-                }*/
+                address = Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address);
             }
             else
             {
-                Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address));
-                Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address), avatar);
-                Node.localStorage.writeAvatar(Base58Check.Base58CheckEncoding.EncodePlain(wallet_address) + "_128", DependencyService.Get<IPicturePicker>().ResizeImage(avatar, 128, 128));
-                Node.shouldRefreshContacts = true;
+                address = Base58Check.Base58CheckEncoding.EncodePlain(wallet_address);
             }
+            Node.localStorage.deleteAvatar(address);
+            if (avatar != null)
+            {
+                Node.localStorage.writeAvatar(address, avatar);
+                Node.localStorage.writeAvatar(address + "_128", DependencyService.Get<IPicturePicker>().ResizeImage(avatar, 128, 128, 100));
+            }
+            Node.shouldRefreshContacts = true;
         }
 
         public static FriendMessage addMessage(byte[] id, byte[] wallet_address, int channel, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
@@ -585,30 +556,36 @@ namespace SPIXI
 
         public static void broadcastNicknameChange()
         {
-            lock (friends)
+            new Thread(() =>
             {
-                foreach (var friend in friends)
+                lock (friends)
                 {
-                    if (friend.approved)
+                    foreach (var friend in friends)
                     {
-                        StreamProcessor.sendNickname(friend);
+                        if (friend.approved)
+                        {
+                            StreamProcessor.sendNickname(friend);
+                        }
                     }
                 }
-            }
+            }).Start();
         }
 
         public static void broadcastAvatarChange()
         {
-            lock (friends)
+            new Thread(() =>
             {
-                foreach (var friend in friends)
+                lock (friends)
                 {
-                    if (friend.handshakeStatus >= 3)
+                    foreach (var friend in friends)
                     {
-                        StreamProcessor.sendAvatar(friend);
+                        if (friend.handshakeStatus >= 3)
+                        {
+                            StreamProcessor.sendAvatar(friend);
+                        }
                     }
                 }
-            }
+            }).Start();
         }
 
 
