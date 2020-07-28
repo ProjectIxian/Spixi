@@ -1386,11 +1386,6 @@ namespace SPIXI
         {
             byte[] avatar_bytes = Node.localStorage.getOwnAvatarBytes();
 
-            if (avatar_bytes == null)
-            {
-                return;
-            }
-
             SpixiMessage reply_spixi_message = new SpixiMessage(SpixiMessageCode.avatar, avatar_bytes);
 
             // Send the nickname message to friend
@@ -1481,11 +1476,6 @@ namespace SPIXI
         // Requests the avatar of the sender
         public static void requestAvatar(Friend friend, byte[] contact_address = null)
         {
-            if (contact_address == null)
-            {
-                contact_address = new byte[1];
-            }
-
             // Prepare the message and send to the S2 nodes
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.getAvatar, contact_address);
 
@@ -1685,6 +1675,11 @@ namespace SPIXI
                 case SpixiBotActionCode.user:
                     BotContact user = new BotContact(sba.data, false);
                     bot.users.setUser(user);
+                    byte[] user_address = new Address(user.publicKey).address;
+                    if (user.hasAvatar && Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(user_address)) == null)
+                    {
+                        requestAvatar(bot, user_address);
+                    }
                     break;
 
                 case SpixiBotActionCode.getPayment:
