@@ -69,7 +69,7 @@ namespace SPIXI.iOS.Classes
             imagePicker.DismissModalViewController(true);
         }
 
-        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height)
+        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height, int quality)
         {
             UIImage original_image = ImageFromByteArray(image_data);
 
@@ -119,7 +119,7 @@ namespace SPIXI.iOS.Classes
             var resized_image = UIGraphics.GetImageFromCurrentImageContext();
             UIGraphics.EndImageContext();
 
-            var bytes_imagen = resized_image.AsJPEG().ToArray();
+            var bytes_imagen = resized_image.AsJPEG((nfloat)quality/100).ToArray();
             resized_image.Dispose();
             cropped_image.Dispose();
 

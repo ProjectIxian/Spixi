@@ -13,6 +13,6 @@ namespace SPIXI.Interfaces
     public interface IPicturePicker
     {
         Task<SpixiImageData> PickImageAsync();
-        byte[] ResizeImage(byte[] image_data, int width, int height);
+        byte[] ResizeImage(byte[] image_data, int width, int height, int quality);
     }
 }

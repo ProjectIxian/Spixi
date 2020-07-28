@@ -35,7 +35,7 @@ namespace SPIXI.Droid.Classes
             return activity.PickImageTaskCompletionSource.Task;
         }
 
-        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height)
+        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height, int quality)
         {
             Bitmap original_image = BitmapFactory.DecodeByteArray(image_data, 0, image_data.Length);
 
@@ -75,7 +75,7 @@ namespace SPIXI.Droid.Classes
 
             using (MemoryStream ms = new MemoryStream())
             {
-                resized_image.Compress(Bitmap.CompressFormat.Jpeg, 100, ms);
+                resized_image.Compress(Bitmap.CompressFormat.Jpeg, quality, ms);
                 resized_image.Dispose();
                 cropped_image.Dispose();
                 return ms.ToArray();

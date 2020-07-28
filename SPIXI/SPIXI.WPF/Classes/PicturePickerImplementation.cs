@@ -33,7 +33,7 @@ namespace SPIXI.WPF.Classes
             return Task.FromResult(spixi_img_data);
         }
 
-        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height)
+        public byte[] ResizeImage(byte[] image_data, int new_width, int new_height, int quality)
         {
             BitmapImage original_image = new BitmapImage();
             original_image.BeginInit();
@@ -88,7 +88,7 @@ namespace SPIXI.WPF.Classes
 
             JpegBitmapEncoder jbe = new JpegBitmapEncoder();
             jbe.Frames.Add(BitmapFrame.Create(resized_image));
-            jbe.QualityLevel = 100;
+            jbe.QualityLevel = quality;
 
             using (MemoryStream stream = new MemoryStream())
             {
