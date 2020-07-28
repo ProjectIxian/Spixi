@@ -2,7 +2,6 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.SpixiBot;
-using Org.BouncyCastle.Bcpg;
 using SPIXI.CustomApps;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -14,7 +13,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml;
 
 namespace SPIXI
 {    
@@ -548,7 +546,7 @@ namespace SPIXI
                             }
                             else
                             {
-                                if (spixi_message.data != null)
+                                if (spixi_message.data != null && spixi_message.data.Length < 500000)
                                 {
                                     FriendList.setAvatar(sender_address, spixi_message.data, real_sender_address);
                                 }
