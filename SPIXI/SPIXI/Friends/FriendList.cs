@@ -558,14 +558,16 @@ namespace SPIXI
         {
             new Thread(() =>
             {
+                List<Friend> tmp_friends = null;
                 lock (friends)
                 {
-                    foreach (var friend in friends)
+                    tmp_friends = new List<Friend>(friends);
+                }
+                foreach (var friend in tmp_friends)
+                {
+                    if (friend.approved)
                     {
-                        if (friend.approved)
-                        {
-                            StreamProcessor.sendNickname(friend);
-                        }
+                        StreamProcessor.sendNickname(friend);
                     }
                 }
             }).Start();
@@ -575,14 +577,16 @@ namespace SPIXI
         {
             new Thread(() =>
             {
+                List<Friend> tmp_friends = null;
                 lock (friends)
                 {
-                    foreach (var friend in friends)
+                    tmp_friends = new List<Friend>(friends);
+                }
+                foreach (var friend in tmp_friends)
+                {
+                    if (friend.handshakeStatus >= 3)
                     {
-                        if (friend.handshakeStatus >= 3)
-                        {
-                            StreamProcessor.sendAvatar(friend);
-                        }
+                        StreamProcessor.sendAvatar(friend);
                     }
                 }
             }).Start();
