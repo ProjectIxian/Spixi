@@ -61,6 +61,53 @@ chat-call-ended = Klic končan
 chat-online = Na voljo
 chat-offline = Ni na voljo
 chat-text-too-long = Sporočilo je predolgo.
+chat-member-count = {0} Član/-ov
+chat-context-pin-message = Pripni sporočilo
+chat-context-copy-message = Kopiraj sporočilo
+chat-context-copy-selected = Kopiraj označeno
+chat-context-tip-user = Nagradi uporabnika
+chat-context-like-message = Všečkaj sporočilo
+chat-context-user-info = Podrobnosti uporabnika
+chat-context-send-contact-request = Pošlji zahtevo za stik
+chat-context-kick-user = Odstrani uporabnika
+chat-context-ban-user = Prepovej uporabnika
+chat-context-delete-message = Izbriši sporočilo
+chat-message-cost-bar = Cena sporočila je {0} za poslan kB
+
+chat-modal-tip-title = Nagradi {0}?
+chat-modal-tip-body = Izberite znesek nagrade ali pa vnesite poljuben znesek.
+chat-modal-tip-custom = POLJUBNO
+chat-modal-tip-pay-button = PLAČAJ
+chat-modal-tip-confirmation-body = Nagradili boste uporabnika '{0}' z zneskom {1}. Ta znesek bo odvzet z vaše denarnice.
+chat-modal-tip-confirmed-body = Pravkar ste nagradili uporabnika '{0}'. Poslali ste mu {1}. Znesek je bil odvzet z vaše denarnice.
+chat-modal-tip-error-body = Pri pošiljanju nagrade je prišlo je do nepričakovane napake.
+
+chat-bot-details-info = Informacije o Bot-u
+chat-bot-address = Naslov Bot-a
+chat-bot-toggle-notifications = Vklop/izklop obvestil
+chat-bot-invite = Povabi stik/-e 
+chat-bot-leave = Zapusti
+
+chat-bot-user-address = Naslov uporabnika
+chat-bot-user-send-contact-request = Pošlji zahtevo za stik
+
+chat-modal-kick-title = Odstrani {0}?
+chat-modal-kick-body = Ali ste prepričani, da želite odstraniti '{0}' z vašega strežnika?
+chat-modal-kick-kick-button = ODSTRANI UPORABNIKA
+chat-modal-kicked-title = {0} je bil odstranjen
+chat-modal-kicked-body = Odstranili ste '{0}' s tega strežnika.
+
+chat-modal-ban-title = Prepovej {0}?
+chat-modal-ban-body = Ali ste prepričani, da želite prepovedati uporabniku '{0}' dostop do vašega strežnika?
+chat-modal-ban-ban-button = PREPOVEJ
+chat-modal-banned-title = Uporabnik {0} je prepovedan
+chat-modal-banned-body = Uporabniku '{0}' ste prepovedali dostop do vašega strežnika.
+
+chat-bot-not-ready-title = Bot ni pripravljen
+chat-bot-not-ready-body = Bot trenutno ni pripravljen, prosimo poskusite ponovno čez nekaj trenutkov.
+
+chat-kicked = Odstranili so vas iz te skupine.
+chat-banned = Prepovedan vam je dostop do te skupine.
 
 ; Contact Details Screen
 contact-details-chat = klepet
@@ -394,6 +441,7 @@ global-call-incoming = Dohodni klic
 
 global-dialog-error = Napaka
 global-dialog-ok = OK
+global-dialog-cancel = PREKLIČI
 
 global-invalid-address-title = Neveljaven naslov
 global-invalid-address-text = Prosim, da vnesete veljaven naslov.

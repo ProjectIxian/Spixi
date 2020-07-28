@@ -56,7 +56,54 @@ chat-call-missed = 不在着信
 chat-call-ended = 終了
 chat-online = オンライン
 chat-offline = オフライン
-chat-text-too-long = テキストが長すぎます
+chat-text-too-long = テキストが長すぎますchat-member-count = {0} メンバー
+chat-context-pin-message = メッセージをピン留め
+chat-context-copy-message = メッセージをコピー
+chat-context-copy-selected = 選択されたメッセージをコピー
+chat-context-tip-user = Tip
+chat-context-like-message = Like
+chat-context-user-info = ユーザー情報
+chat-context-send-contact-request = リクエストを送信
+chat-context-kick-user = Kick
+chat-context-ban-user = Ban
+chat-context-delete-message = メッセージを削除
+chat-message-cost-bar = メッセージ送信コスト {0} per kB
+
+chat-modal-tip-title = Tip {0}?
+chat-modal-tip-body = チップする額を選択するか、カスタムチップを設定してください。
+chat-modal-tip-custom = CUSTOM
+chat-modal-tip-pay-button = PAY
+chat-modal-tip-confirmation-body = 以下の額をチップします。 '{0}' {1}. このチップはウォレットから差し引かれます。
+chat-modal-tip-confirmed-body = 以下の額をチップしました。 '{0}' with {1}. このチップはウォレットから差し引かれました。
+chat-modal-tip-error-body = エラーが発生しました。
+
+chat-bot-details-info = ボット情報
+chat-bot-address = Bot Address
+chat-bot-toggle-notifications = 通知設定
+chat-bot-invite = このボットに招待する
+chat-bot-leave = 退出
+
+chat-bot-user-address = User Address
+chat-bot-user-send-contact-request = リクエストを送信
+
+chat-modal-kick-title = Kick {0}?
+chat-modal-kick-body = '{0}' をこのサーバーからキックしますか？
+chat-modal-kick-kick-button = KICK
+chat-modal-kicked-title = {0} をキック
+chat-modal-kicked-body = '{0}' をこのサーバーからキックしました。
+
+chat-modal-ban-title = Ban {0}?
+chat-modal-ban-body = '{0}' をこのサーバーからBANしますか？
+chat-modal-ban-ban-button = BAN
+chat-modal-banned-title = {0} をBAN
+chat-modal-banned-body = '{0}' をこのサーバーからBANしました。
+
+chat-bot-not-ready-title = ボットを準備中...
+chat-bot-not-ready-body = ボットは準備中です。数分後、もう一度お試しください。
+
+chat-kicked = グループからキックされました。
+chat-banned = グループからBANされました。
+
 ; Contact Details Screen
 contact-details-chat = チャット
 contact-details-send = 送信
@@ -362,7 +409,8 @@ global-call-dialing = ダイヤル中
 global-call-incoming = 着信中
 
 global-dialog-error = Error
-global-dialog-ok = OK
+global-dialog-ok = OKglobal-dialog-cancel = CANCEL
+
 global-invalid-address-title = 無効なアドレス
 global-invalid-address-text = 有効なアドレスを入力してください
 global-friend-request-accepted = {0} がリクエストを承認しました

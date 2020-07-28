@@ -61,6 +61,53 @@ chat-call-ended = Fini
 chat-online = En ligne
 chat-offline = Hors ligne
 chat-text-too-long = Texte trop long.
+chat-member-count = {0} membres
+chat-context-pin-message = Message épinglés
+chat-context-copy-message = Copier le message
+chat-context-copy-selected = Copie sélectionné
+chat-context-tip-user = Donner à l'utilisateur
+chat-context-like-message = Like message
+chat-context-user-info = Infos de l'utilisateur
+chat-context-send-contact-request = Envoyer une demande de contact
+chat-context-kick-user = Kick l'utilisateur
+chat-context-ban-user = Bannir l'utilisateur
+chat-context-delete-message = Supprimer le message
+chat-message-cost-bar = Les frais d'envoi de messages sont de {0} par kB
+
+chat-modal-tip-title = Donner {0}?
+chat-modal-tip-body = Appuyez sur le montant que vous sohaitez donner ou définissez un pourboire personnalisé.
+chat-modal-tip-custom = CUSTOM
+chat-modal-tip-pay-button = PAYER
+chat-modal-tip-confirmation-body = Vous êtes sur le point de donner un pourboire de '{0}' {1}. Ce montant va être déduit de votre portefeuille.
+chat-modal-tip-confirmed-body = Vous avez donner '{0}' avec {1}. Le montant à bien été déduit de votre portefeuille.
+chat-modal-tip-error-body = Erreur inconnu pendant la  tentative dde donnation à l'utilisateur.
+
+chat-bot-details-info = Informations sur le Bot
+chat-bot-address = Addresse du Bot
+chat-bot-toggle-notifications = Basculer les notifications
+chat-bot-invite = Inviter un contact dans ce Bot
+chat-bot-leave = Quitter le Bot
+
+chat-bot-user-address = Addresse de l'utilisateur
+chat-bot-user-send-contact-request = Envoyer une demande de contact
+
+chat-modal-kick-title = Kick {0}?
+chat-modal-kick-body = Êtes vous sur de vouloir kick '{0}' de ce serveur ?
+chat-modal-kick-kick-button = KICK L'UTILISATEUR
+chat-modal-kicked-title = Kické {0}
+chat-modal-kicked-body = Vous avez kick '{0}' de ce serveur.
+
+chat-modal-ban-title = Bannir {0}?
+chat-modal-ban-body = Êtes vous sur de vouloir bannir '{0}' de ce serveur ?
+chat-modal-ban-ban-button = BANNIR L'UTILISATEUR
+chat-modal-banned-title = Banni(e) {0}
+chat-modal-banned-body = Vous avez banni(e) '{0}' de ce serveur.
+
+chat-bot-not-ready-title = Le bot n'est pas prêt
+chat-bot-not-ready-body = Le bot n'est pass encore prêt, veuillez réessayer dans quelques minutes.
+
+chat-kicked = Vous avez été exclu du groupe.
+chat-banned = Vousz avez été banni(e) de ce groupe.
 
 ; Contact Details Screen
 contact-details-chat = chat
@@ -394,6 +441,7 @@ global-call-incoming = Appel entrant
 
 global-dialog-error = Erreur
 global-dialog-ok = OK
+global-dialog-cancel = ANNULER
 
 global-invalid-address-title = Addresse invalide
 global-invalid-address-text = S'il vous plait entrez une addresse valide.

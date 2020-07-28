@@ -61,6 +61,53 @@ chat-call-ended = Poziv je završen
 chat-online = Dostupan/na
 chat-offline = Nedostupan/na
 chat-text-too-long = Poruka je suviše duga.
+chat-member-count = {0} članova
+chat-context-pin-message = Prikvači poruku
+chat-context-copy-message = Kopiraj poruku
+chat-context-copy-selected = Kopiraj odabrano
+chat-context-tip-user = Nagradi korisnika
+chat-context-like-message = Svidja mi se 
+chat-context-user-info = Podaci o korisniku
+chat-context-send-contact-request = Pošalji zahtev za kontakt
+chat-context-kick-user = Izbaci korisnika
+chat-context-ban-user = Zabrani korisnika
+chat-context-delete-message = Obriši poruku
+chat-message-cost-bar = Slanje poruke košta {0} na kB
+
+chat-modal-tip-title = Nagradi {0}?
+chat-modal-tip-body = Odaberite nagradu ili ukucajte određen iznos.
+chat-modal-tip-custom = ODREDI
+chat-modal-tip-pay-button = PLATI
+chat-modal-tip-confirmation-body = Korisnika'{0}' ćete nagraditi sa {1}. Ovaj iznos biće oduzet iz vašeg novčanika.
+chat-modal-tip-confirmed-body = Korisnika '{0}' ste nagradili sa {1}. Ovaj iznos je oduzet iz vašeg novčanika.
+chat-modal-tip-error-body = Došlo je do neočekivane greške prilikom izvršavanja nagrade.
+
+chat-bot-details-info = Informacije o Bot-u
+chat-bot-address = Adresa Bot-a
+chat-bot-toggle-notifications = Uključi / Isključi obaveštenja
+chat-bot-invite = Pozovite kontakt u ovaj Bot
+chat-bot-leave = Napusti ovaj Bot
+
+chat-bot-user-address = Adresa korisnika
+chat-bot-user-send-contact-request = Pošalji zahtev za kontakt
+
+chat-modal-kick-title = Izbaci {0}?
+chat-modal-kick-body = Da li ste sigurni da želite izbaciti'{0}' sa vašeg servera?
+chat-modal-kick-kick-button = IZBACI
+chat-modal-kicked-title = Korisnik {0} je izbačen
+chat-modal-kicked-body = Izbacili ste '{0}' sa ovog servera
+
+chat-modal-ban-title = Zabrani {0}?
+chat-modal-ban-body = Da li ste sigurni da želite zabraniti korisniku '{0}' pristup ovom serveru?
+chat-modal-ban-ban-button = Zabrani
+chat-modal-banned-title = Zabranjen {0}
+chat-modal-banned-body = Korisniku '{0}' ste zabranili pristup ovom serveru.
+
+chat-bot-not-ready-title = Bot nije spreman.
+chat-bot-not-ready-body = Bot trenutno nije spreman, molimo vas da pokušate ponovo kroz nekoliko trenutaka.
+
+chat-kicked = Bili ste izbačeni iz ovog razgovora.
+chat-banned = Zabranjen vam je pristup do ovog razgovora.
 
 ; Contact Details Screen
 contact-details-chat = razgovor
@@ -387,13 +434,14 @@ global-received = PRIMLJENO
 global-sent = POSLATO
 global-app-accept = PRIHVATI
 global-app-reject = ODBIJ
-global-app-wants-to-use = {0} Želi upotrebiti sa vama {1}.
+global-app-wants-to-use = {0} želi upotrebiti sa vama {1}.
 global-call-in-call = Poziv
 global-call-dialing = Zovem
 global-call-incoming = Dolazni poziv
 
 global-dialog-error = Greška
 global-dialog-ok = OK
+global-dialog-cancel = PONIŠTI
 
 global-invalid-address-title = Nevažeća adresa
 global-invalid-address-text = Molimo vas da unesete važeću adresu.
