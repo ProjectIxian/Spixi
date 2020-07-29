@@ -3,7 +3,6 @@ using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
-using SPIXI.Lang;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Timers;
+using System.Threading;
 using Xamarin.Forms;
 
 namespace SPIXI.Meta
@@ -53,8 +52,7 @@ namespace SPIXI.Meta
 
         // Private data
 
-        // Node timer
-        private static System.Timers.Timer mainLoopTimer;
+        private static Thread mainLoopThread;
 
         private static ulong networkBlockHeight = 0;
         private static byte[] networkBlockChecksum = null;
@@ -170,10 +168,15 @@ namespace SPIXI.Meta
 
             startCounter++;
 
-            // Setup a timer to handle routine updates
-            mainLoopTimer = new System.Timers.Timer(2500);
-            mainLoopTimer.Elapsed += new ElapsedEventHandler(onUpdate);
-            mainLoopTimer.Start();
+            if (mainLoopThread != null)
+            {
+                mainLoopThread.Abort();
+                mainLoopThread = null;
+            }
+
+            mainLoopThread = new Thread(mainLoop);
+            mainLoopThread.Name = "Main_Loop_Thread";
+            mainLoopThread.Start();
 
             // Init push service
             string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
@@ -227,34 +230,45 @@ namespace SPIXI.Meta
         }
 
         // Handle timer routines
-        static public void onUpdate(object source, ElapsedEventArgs e)
+        static public void mainLoop()
         {
-            // Update the friendlist
-            FriendList.Update();
-
-            // Cleanup the presence list
-            // TODO: optimize this by using a different thread perhaps
-            PresenceList.performCleanup();
-
-
-            if (Node.walletStorage.getPrimaryAddress() == null)
-                return;
-
-            if(Config.enablePushNotifications)
-                OfflinePushMessages.fetchPushMessages();
-
-            // Request initial wallet balance
-            if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
+            while (running)
             {
-                using (MemoryStream mw = new MemoryStream())
+                try
                 {
-                    using (BinaryWriter writer = new BinaryWriter(mw))
+                    // Update the friendlist
+                    FriendList.Update();
+
+                    // Cleanup the presence list
+                    // TODO: optimize this by using a different thread perhaps
+                    PresenceList.performCleanup();
+
+
+                    if (Node.walletStorage.getPrimaryAddress() == null)
+                        return;
+
+                    if (Config.enablePushNotifications)
+                        OfflinePushMessages.fetchPushMessages();
+
+                    // Request initial wallet balance
+                    if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
-                        writer.Write(Node.walletStorage.getPrimaryAddress().Length);
-                        writer.Write(Node.walletStorage.getPrimaryAddress());
-                        NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
+                        using (MemoryStream mw = new MemoryStream())
+                        {
+                            using (BinaryWriter writer = new BinaryWriter(mw))
+                            {
+                                writer.Write(Node.walletStorage.getPrimaryAddress().Length);
+                                writer.Write(Node.walletStorage.getPrimaryAddress());
+                                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
+                            }
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured in mainLoop: " + e);
+                }
+                Thread.Sleep(2500);
             }
         }
 
@@ -285,13 +299,6 @@ namespace SPIXI.Meta
 
             // Stop the keepalive thread
             PresenceList.stopKeepAlive();
-
-            // Stop the loop timer
-            if (mainLoopTimer != null)
-            {
-                mainLoopTimer.Stop();
-                mainLoopTimer = null;
-            }
 
             // Stop the network queue
             NetworkQueue.stop();
