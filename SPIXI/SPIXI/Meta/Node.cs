@@ -3,6 +3,7 @@ using IXICore.Meta;
 using IXICore.Network;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
+using SPIXI.Lang;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System;
@@ -223,7 +224,7 @@ namespace SPIXI.Meta
         static public void connectToNetwork()
         {
             // Start the network client manager
-            NetworkClientManager.start();
+            NetworkClientManager.start(true);
 
             // Start the s2 client manager
             StreamClientManager.start();
