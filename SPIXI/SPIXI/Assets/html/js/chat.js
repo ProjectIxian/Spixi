@@ -92,7 +92,7 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
     {
         isBot = true;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
-        document.getElementsByClassName("spixi-channel-bar")[0].style.display = "block";
+        document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
 	}else
     {
         isBot = false;
@@ -164,7 +164,9 @@ document.getElementById("backbtn").onclick = function () {
 }
 
 function test() {
-    setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
+    setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
+    setOnlineStatus("Online");
+    showCallButton();
     //showContactRequest(true);
     addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
     addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
@@ -806,7 +808,7 @@ function updateTransactionStatus(txid, status, statusIcon) {
 function setNickname(nick) {
     userNick = nick;
     document.getElementById("title").innerHTML = nick;
-    document.getElementById("contactrequesttitle").innerHTML = nick + " " + SL_ChatContactRequest;
+    document.getElementById("contactrequesttitle").innerHTML = nick + " " + SL_ChatSentContactRequest;
 }
 
 // Handle 'attach' bar, allowing to send and request IXI
@@ -924,6 +926,7 @@ function addContact(address, nick, avatar, role)
 
     var childEl = document.createElement("div");
     childEl.innerHTML = userTemplate;
+    childEl.onclick = function(){ showUserDetails(nick, address); };
 
     childEl.getElementsByClassName("avatar")[0].innerHTML = "<img src='" + avatar + "'/>";
     childEl.getElementsByClassName("nick")[0].innerHTML = nick;
@@ -933,16 +936,6 @@ function addContact(address, nick, avatar, role)
 	}
             
     contactsBox.appendChild(childEl);
-}
-
-function showChannels()
-{
-
-}
-
-function showDetails()
-{
-
 }
 
 function selectChannel(id)
@@ -958,7 +951,7 @@ function displayChannelSelector(e)
         channelSelectorEl.parentNode.removeChild(channelSelectorEl);
 	}
     channelSelectorEl = document.createElement("div");
-    channelSelectorEl.className = "container-fluid spixi-channel-selector";
+    channelSelectorEl.className = "spixi-channel-selector";
     channelSelectorEl.innerHTML = "<div class='spixi-channel-selector-sep'></div>";
 
     document.body.appendChild(channelSelectorEl);
@@ -970,7 +963,7 @@ function displayChannelSelector(e)
     return false;
 }
 
-function addChannelToSelector(id, name, icon)
+function addChannelToSelector(id, name, icon, unread)
 {
     if(channelSelectorEl == null)
     {
@@ -980,6 +973,11 @@ function addChannelToSelector(id, name, icon)
 
     var childEl = document.createElement("div");
     childEl.innerHTML = channelTemplate;
+
+    if(unread == "True")
+    {
+        name = name + "<div class=\"unread-indicator\"></div>";
+	}
 
     childEl.getElementsByClassName("channel-icon")[0].innerHTML = "<i class='fa " + icon + "'></i>";
     childEl.getElementsByClassName("channel-name")[0].innerHTML = name;
@@ -1080,16 +1078,31 @@ function displayContextMenu(e)
 	};
 
     contextMenuEl.innerHTML = menuHtml;
-    contextMenuEl.style.left = e.clientX + "px";
+    contextMenuEl.style.left = "0px";
     contextMenuEl.style.top = e.clientY + "px";
+    contextMenuEl.style.bottom = "auto";
+    contextMenuEl.style.right = "auto";
 
     document.body.appendChild(contextMenuEl);
+
 
     if(contextMenuEl.getBoundingClientRect().bottom > window.innerHeight)
     {
         contextMenuEl.style.top = "auto";
         contextMenuEl.style.bottom = "0px";
-        contextMenuEl.style.maxHeight = "400px";
+        contextMenuEl.style.maxHeight = "300px";
+	}
+
+    var menuWidth = contextMenuEl.offsetWidth;
+
+    if(e.clientX + menuWidth > window.innerWidth)
+    {
+        contextMenuEl.style.left = "auto";
+        contextMenuEl.style.right = "0px";
+        contextMenuEl.style.minWidth = menuWidth + "px";
+	}else
+    {
+        contextMenuEl.style.left = e.clientX + "px";
 	}
 
     return true;

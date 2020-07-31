@@ -31,14 +31,14 @@
         <!-- Toolbar Main-->
         <div class="spixi-toolbar shadow">
             <div class="spixi-toolbar-line"></div>
-            <div class="row spixi-toolbar-row">
-                <div class="col-2" id="MainMenu">
+            <div class="spixi-toolbar-row">
+                <div id="MainMenu">
                     <i class="fas fa-bars"></i>
                 </div>
-                <div class="col-8" style="padding-right: 50pt;">
+                <div>
                     <div class="spixi-toolbar-logo" onclick="countLogoClick();"></div>
                 </div>
-                <div class="col-2">
+                <div>
                 </div>
             </div>
 
@@ -217,29 +217,25 @@
                 <li id="tab1" class="col-3 spixi-tab active">
                     <a data-toggle="tab" href="#home" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-home"></i></div>
-                        *SL{index-tab-home}
-                        <div class="tab_placeholder"></div>
+                        <div class="spixi-tab-text">*SL{index-tab-home}</div>
                     </a>
                 </li>
                 <li id="tab2" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-comment"></i><div class="spixi-footer-chat-unread-indicator"></div></div>
-                        *SL{index-tab-chats}
-                        <div class="tab_placeholder"></div>
+                        <div class="spixi-tab-text">*SL{index-tab-chats}</div>
                     </a>
                 </li>
                 <li id="tab3" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#wallet" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-wallet"></i></div>
-                        *SL{index-tab-wallet}
-                        <div class="tab_placeholder"></div>
+                        <div class="spixi-tab-text">*SL{index-tab-wallet}</div>
                     </a>
                 </li>
                 <li id="tab4" class="col-3 spixi-tab">
                     <a data-toggle="tab" href="#contacts" class="spixi-tab-pad">
                         <div class="spixi-tab-icon"><i class="fa fa-address-book"></i></div>
-                        *SL{index-tab-contacts}
-                        <div class="tab_placeholder"></div>
+                        <div class="spixi-tab-text">*SL{index-tab-contacts}</div>
                     </a>
                 </li>
             </ul>
@@ -379,13 +375,15 @@
         onboardingLocalizedSkip = "*SL{onboarding-skip}";
         onboardingLocalizedFinish = "*SL{onboarding-finish}";
         createOnboardingFrame();
-        onboarding(1);
+        onboarding(100);
     }
 
     function onboarding(section)
     {
         var title = "";
         var text = "";
+        var showPager = true;
+        var showSkip = true;
         switch(section)
         {
             case 1:
@@ -403,9 +401,22 @@
             case 4:
                 title = "*SL{onboarding-screen4-title}";
                 text = "*SL{onboarding-screen4-text}";
+                showSkip = false;
+                break;
+            case 100:
+                title = "*SL{onboarding-bot-title}";
+                text = "*SL{onboarding-bot-text}";
+                text += '<div class="spixi-holder-20"></div>';
+                text += '<div class="spixi-separator-white"></div>';
+                text += '<div class="spixi-holder-20"></div>';
+                text += "<div class=\"intro-button center\" onclick=\"location.href='ixian:joinBot'; onboarding(1);\">*SL{onboarding-bot-join-button}</div>";
+                text += '<div class="spixi-holder-20"></div>';
+                text += "<div class=\"intro-button center\" onclick=\"onboarding(1);\">*SL{onboarding-bot-dont-join-button}</div>";
+                showPager = false;
+                showSkip = false;
                 break;
         }
-	    setOnboardingContents(title, text, section);
+	    setOnboardingContents(title, text, section, showPager, showSkip);
     }
 
     if("*SL{OnboardingComplete}" == "false")
@@ -820,11 +831,8 @@
                 leftSidebar.style.display = "block";
                 document.getElementById('leftSidebarHelper').style.display = "none";
 
-                var transformStyle = 'translateX(0px)';
-                leftSidebar.style.webkitTransform = transformStyle;
-                leftSidebar.style.MozTransform = transformStyle;
-                leftSidebar.style.msTransform = transformStyle;
-                leftSidebar.style.transform = transformStyle;
+                leftSidebar.style.right = "0px";
+                document.getElementById("version").style.left = "0px";
             }
         },
         threshold:10
@@ -837,11 +845,9 @@
             {
                 if (phase=="move")
                 {
-                    var transformStyle = 'translateX(-'+distance+'px)';
-                    leftSidebar.style.webkitTransform = transformStyle;
-                    leftSidebar.style.MozTransform = transformStyle;
-                    leftSidebar.style.msTransform = transformStyle;
-                    leftSidebar.style.transform = transformStyle;
+                    leftSidebar.style.left = "-" + distance + "px";
+                    leftSidebar.style.right = distance + "px";
+                    document.getElementById("version").style.left = "-" + distance + "px";
                 }
 
                 if (phase == "end" || phase == "cancel")
@@ -851,11 +857,9 @@
                         leftSidebar.style.display = "none";
                         document.getElementById('leftSidebarHelper').style.display = "block";
                     }
-                    var transformStyle = 'translateX(0px)';
-                    leftSidebar.style.webkitTransform = transformStyle;
-                    leftSidebar.style.MozTransform = transformStyle;
-                    leftSidebar.style.msTransform = transformStyle;
-                    leftSidebar.style.transform = transformStyle;
+                    leftSidebar.style.left = "0px";
+                    leftSidebar.style.right = "0px";
+                    document.getElementById("version").style.left = "0px";
                 }
             }
         },

@@ -302,6 +302,15 @@ namespace SPIXI
 
                 SpixiLocalization.addCustomString("OnboardingComplete", "true");
                 generatePage("index.html");
+            }else if(current_url.StartsWith("ixian:joinBot"))
+            {
+                Friend friend = FriendList.addFriend(Base58Check.Base58CheckEncoding.DecodePlain("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+                if (friend != null)
+                {
+                    friend.save();
+
+                    StreamProcessor.sendContactRequest(friend);
+                }
             }
             else
             {

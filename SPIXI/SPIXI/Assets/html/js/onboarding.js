@@ -33,12 +33,12 @@ function createOnboardingFrame()
 	document.body.appendChild(frame);
 }
 
-function setOnboardingContents(title, text, section)
+function setOnboardingContents(title, text, section, showPager, showSkip)
 {
 	var imgSection = document.getElementsByClassName("onboarding-image-section")[0];
 	var imgName = "onboarding" + section + ".png";
 	imgSection.innerHTML = "";
-	if(section != 4)
+	if(showSkip)
 	{
 		imgSection.innerHTML += "<div class='onboarding-skip' onclick='finishOnboarding();'>" + onboardingLocalizedSkip + "<div>";
 	}
@@ -48,37 +48,40 @@ function setOnboardingContents(title, text, section)
 	textSection.innerHTML = "<div class='onboarding-title'>" + title + "</div>";
 	textSection.innerHTML += "<div class='onboarding-text'>" + text + "</div>";
 
-	var prevSection = document.getElementsByClassName("onboarding-prev")[0];
-	if(section > 1)
+	if(showPager)
 	{
-		prevSection.innerHTML = "<i class='fa fa-chevron-left'></i>";
-		prevSection.onclick = function(){ onboarding(section - 1); };
-	}else
-	{
-		prevSection.innerHTML = "";
-	}
-
-	var pagerSection = document.getElementsByClassName("onboarding-pager")[0];
-	pagerSection.innerHTML = "";
-	for(var i = 1; i <= 4; i++)
-	{
-		var sel = "";
-		if(i == section)
+		var prevSection = document.getElementsByClassName("onboarding-prev")[0];
+		if(section > 1)
 		{
-			sel = "sel";
+			prevSection.innerHTML = "<i class='fa fa-chevron-left'></i>";
+			prevSection.onclick = function(){ onboarding(section - 1); };
+		}else
+		{
+			prevSection.innerHTML = "";
 		}
-		pagerSection.innerHTML += "<i class='fa fa-circle " + sel + "'></i>";
-	}
 
-	var nextSection = document.getElementsByClassName("onboarding-next")[0];
-	if(section < 4)
-	{
-		nextSection.innerHTML = "<i class='fa fa-chevron-right'></i>";
-		nextSection.onclick = function(){ onboarding( section + 1); };
-	}else
-	{
-		nextSection.innerHTML = onboardingLocalizedFinish;
-		nextSection.onclick = finishOnboarding;
+		var pagerSection = document.getElementsByClassName("onboarding-pager")[0];
+		pagerSection.innerHTML = "";
+		for(var i = 1; i <= 4; i++)
+		{
+			var sel = "";
+			if(i == section)
+			{
+				sel = "sel";
+			}
+			pagerSection.innerHTML += "<i class='fa fa-circle " + sel + "'></i>";
+		}
+
+		var nextSection = document.getElementsByClassName("onboarding-next")[0];
+		if(section < 4)
+		{
+			nextSection.innerHTML = "<i class='fa fa-chevron-right'></i>";
+			nextSection.onclick = function(){ onboarding( section + 1); };
+		}else
+		{
+			nextSection.innerHTML = onboardingLocalizedFinish;
+			nextSection.onclick = finishOnboarding;
+		}
 	}
 }
 
