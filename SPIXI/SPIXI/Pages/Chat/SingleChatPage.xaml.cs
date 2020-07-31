@@ -258,7 +258,13 @@ namespace SPIXI
                 foreach(var channel in channels.Values)
                 {
                     string icon = "fa-globe-africa";
-                    Utils.sendUiCommand(webView, "addChannelToSelector", channel.index.ToString(), channel.channelName, icon);
+                    bool unread = false;
+                    var messages = friend.getMessages(channel.index);
+                    if (messages != null && messages.Count() > 0 && !messages.Last().localSender && !messages.Last().read)
+                    {
+                        unread = true;
+                    }
+                    Utils.sendUiCommand(webView, "addChannelToSelector", channel.index.ToString(), channel.channelName, icon, unread.ToString());
                 }
             }
         }
