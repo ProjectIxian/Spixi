@@ -409,6 +409,14 @@ wallet-error-amountdecimal-text = Unesite tačan decimalni iznos.
 wallet-error-balance-title = Stanje u novčaniku je prenisko.
 wallet-error-balance-text = Stanje u vašem novčaniku je prenisko da biste dovršili ovu transakciju. Stanje u vašem novčaniku je {1}, a za ovu transkaciju mora biti najmanje {0}.
 
+; Onboarding join official bot
+; TODO Translate
+onboarding-bot-title = Would you like to join Ixian's Official Bot?
+onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
+onboarding-bot-join-button = JOIN
+onboarding-bot-dont-join-button = DON'T JOIN
+; End of TODO translate
+
 ; Onboarding Meet Spixi
 onboarding-screen1-title = Ćao, ja sam Spixi!
 onboarding-screen1-text = Decentralizovana i bezbedna aplikacija za ćaskanje, koja se zasniva na blockchain tehnologiji sa novčanikom za kriptovalute.

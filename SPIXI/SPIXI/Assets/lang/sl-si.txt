@@ -409,6 +409,14 @@ wallet-error-amountdecimal-text = Prosim, da vpišete veljavne decimalno vrednos
 wallet-error-balance-title = Stanje v vaši denarnici je prenizko.
 wallet-error-balance-text = Stanje vaše denarnice je prenizko za izvedbo te transakcije. Trenutno stanje vaše denarnice je {1}, za izvedbo plačilo pa morate imeti vsaj {0}.
 
+; Onboarding join official bot
+; TODO Translate
+onboarding-bot-title = Would you like to join Ixian's Official Bot?
+onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
+onboarding-bot-join-button = JOIN
+onboarding-bot-dont-join-button = DON'T JOIN
+; End of TODO translate
+
 ; Onboarding Meet Spixi
 onboarding-screen1-title = Pozravljeni, jaz sem Spixi!
 onboarding-screen1-text = Za moje delovanje skrbi tehnologija veriženja podatkovnih blokov ali &quot;Blockchain&quot;. Sem decentralizirana in varna aplikacija za klepet, z denarnico za kriptovalute.

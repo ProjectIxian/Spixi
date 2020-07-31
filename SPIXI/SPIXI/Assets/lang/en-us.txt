@@ -409,6 +409,12 @@ wallet-error-amountdecimal-text = Please type in the correct decimal amount.
 wallet-error-balance-title = Insufficient balance
 wallet-error-balance-text = Your balance is too low for this transaction. Total cost of the transaction is {0}, while your balance is {1}.
 
+; Onboarding join official bot
+onboarding-bot-title = Would you like to join Ixian's Official Bot?
+onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
+onboarding-bot-join-button = JOIN
+onboarding-bot-dont-join-button = DON'T JOIN
+
 ; Onboarding Meet Spixi
 onboarding-screen1-title = Meet Spixi!
 onboarding-screen1-text = A blockchain based decentralized messenger with an integrated cryptocurrency wallet.

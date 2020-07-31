@@ -62,6 +62,56 @@ chat-online = 在线
 chat-offline = 离线
 chat-text-too-long = 文字太长。
 
+; TODO translate
+chat-member-count = {0} members
+chat-context-pin-message = Pin message
+chat-context-copy-message = Copy message
+chat-context-copy-selected = Copy selected
+chat-context-tip-user = Tip user
+chat-context-like-message = Like message
+chat-context-user-info = User info
+chat-context-send-contact-request = Send contact request
+chat-context-kick-user = Kick user
+chat-context-ban-user = Ban user
+chat-context-delete-message = Delete message
+chat-message-cost-bar = Sending messages costs {0} per kB
+
+chat-modal-tip-title = Tip {0}?
+chat-modal-tip-body = Tap on the amount you want to tip or set a custom tip.
+chat-modal-tip-custom = CUSTOM
+chat-modal-tip-pay-button = PAY
+chat-modal-tip-confirmation-body = You are about to tip '{0}' {1}. This amount will be deducted from your wallet.
+chat-modal-tip-confirmed-body = You have just tipped '{0}' with {1}. The amount has been deducted from your wallet.
+chat-modal-tip-error-body = Unknown error occured while trying to tip user.
+
+chat-bot-details-info = Bot Info
+chat-bot-address = Bot Address
+chat-bot-toggle-notifications = Toggle Notifications
+chat-bot-invite = Invite a Contact to This Bot
+chat-bot-leave = Leave Bot
+
+chat-bot-user-address = User Address
+chat-bot-user-send-contact-request = Send Contact Request
+
+chat-modal-kick-title = Kick {0}?
+chat-modal-kick-body = Are you sure you want to kick '{0}' from this server?
+chat-modal-kick-kick-button = KICK USER
+chat-modal-kicked-title = Kicked {0}
+chat-modal-kicked-body = You have kicked '{0}' from this server.
+
+chat-modal-ban-title = Ban {0}?
+chat-modal-ban-body = Are you sure you want to ban '{0}' from this server?
+chat-modal-ban-ban-button = BAN USER
+chat-modal-banned-title = Banned {0}
+chat-modal-banned-body = You have banned '{0}' from this server.
+
+chat-bot-not-ready-title = Bot isn't ready
+chat-bot-not-ready-body = Bot isn't ready yet, please try again in a few minutes.
+
+chat-kicked = You've been kicked from this group chat.
+chat-banned = You've been banned from this group chat.
+; End of TODO translate
+
 ; Contact Details Screen
 contact-details-chat = 对话
 contact-details-send = 发送
@@ -362,6 +412,14 @@ wallet-error-amountdecimal-text = 请输入正确的小数位。
 wallet-error-balance-title = 余额不足
 wallet-error-balance-text = 余额太低，无法完成此交易。 交易总费用为 {0}, 你的余额为 {1}.
 
+; Onboarding join official bot
+; TODO Translate
+onboarding-bot-title = Would you like to join Ixian's Official Bot?
+onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
+onboarding-bot-join-button = JOIN
+onboarding-bot-dont-join-button = DON'T JOIN
+; End of TODO translate
+
 ; Onboarding Meet Spixi
 onboarding-screen1-title = 遇上 Spixi!
 onboarding-screen1-text = 带有集成加密货币钱包与无关键中心化的区块链。
@@ -394,6 +452,8 @@ global-call-incoming = 来电
 
 global-dialog-error = 错误
 global-dialog-ok = 好
+; TODO translate
+global-dialog-cancel = CANCEL
 
 global-invalid-address-title = 地址无效
 global-invalid-address-text = 请输入有效的钱包地址

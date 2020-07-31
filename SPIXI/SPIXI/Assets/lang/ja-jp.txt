@@ -382,6 +382,14 @@ wallet-error-amount-text = 有効な金額を入力してください
 wallet-error-amountdecimal-text = 適切な小数を入力してください
 wallet-error-balance-title = 残高不足
 wallet-error-balance-text = 残高が不足しています。 トランザクションの必要残高は {0}, 現在の残高は {1}。
+; Onboarding join official bot
+; TODO Translate
+onboarding-bot-title = Would you like to join Ixian's Official Bot?
+onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
+onboarding-bot-join-button = JOIN
+onboarding-bot-dont-join-button = DON'T JOIN
+; End of TODO translate
+
 ; Onboarding Meet Spixi
 onboarding-screen1-title = Meet Spixi!
 onboarding-screen1-text = 暗号通貨ウォレットが統合されたブロックチェーンベースの分散メッセンジャー
