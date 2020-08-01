@@ -14,7 +14,7 @@ namespace SPIXI.Meta
 
         public static string walletFile = "wallet.ixi";
 
-        public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "SpixiDev");
+        public static string spixiUserFolder = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "Spixi");
 
         public static int encryptionRetryPasswordAttempts = 3;   // How many allowed attempts in the LaunchRetry page before throwing the user back to Launch Page
 
@@ -24,12 +24,10 @@ namespace SPIXI.Meta
 
         public static readonly string pushServiceUrl = "https://ipn.ixian.io/v1";
 
-        public static readonly int networkClientReconnectInterval = 10 * 1000; // Time in milliseconds
-
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.5.0g-dev"; // Spixi version
+        public static readonly string version = "spixi-0.5.0"; // Spixi version
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;
@@ -43,11 +41,11 @@ namespace SPIXI.Meta
         // Block height at which the current version of Spixi was generated
         // Useful for optimized block header sync
         // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
-        public static ulong bakedBlockHeight = 1198999;
+        public static ulong bakedBlockHeight = 1262999;
 
         // Block checksum (paired with bakedBlockHeight) of bakedBlockHeight
         // Useful for optimized block header sync
-        public static byte[] bakedBlockChecksum = Crypto.stringToHash("8124e339838d13ef449ab82dbc86a4738000a53bf575b6c84a94bd2dd74eaae9c8e41fa89aa05943ca3330a7");
+        public static byte[] bakedBlockChecksum = Crypto.stringToHash("456357156126adfa5b20ee46169de8c68545a2570835a92898933ad39f1855d34de38ff76b08edf4a053fbe7");
 
 
         // Temporary variables for bh sync recovery
