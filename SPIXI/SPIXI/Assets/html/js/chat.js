@@ -22,6 +22,13 @@ function onChatScreenLoad()
         e.stopPropagation();
         return false;
 	};
+    messagesEl.ondblclick = function(e)
+    {
+        hideContextMenus();
+        displayContextMenu(e);
+        e.stopPropagation();
+        return false;
+	};
     messagesEl.addEventListener("click", function (e) {
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
