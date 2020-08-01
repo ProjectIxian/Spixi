@@ -1418,6 +1418,8 @@ img.emoji {
 {
     padding-right: 15px;
     font-size: 9px;
+    height: 20px;
+    max-height: 20px;
     color: #919191;
     z-index: 4;
 }
@@ -1507,8 +1509,7 @@ img.emoji {
 .spixi-bubble .statusIndicator {
     display: none;
     font-size: 9px;
-    line-height: 13px;
-    margin-top: -13px;
+    margin-top: -17px;
 }
 
 .spixi-bubble.myself .statusIndicator {
