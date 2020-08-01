@@ -228,7 +228,10 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:typing"))
             {
-                StreamProcessor.sendTyping(friend);
+                new Thread(() =>
+                {
+                    StreamProcessor.sendTyping(friend);
+                }).Start();
             }else if(current_url.StartsWith("ixian:leave"))
             {
                 if(friend.bot)
@@ -666,7 +669,10 @@ namespace SPIXI
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
                         if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
-                            StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
+                            new Thread(() =>
+                            {
+                                StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
+                            }).Start();
                             IxianHandler.addTransaction(tx);
                             TransactionCache.addUnconfirmedTransaction(tx);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
@@ -709,7 +715,10 @@ namespace SPIXI
                 case "like":
                     if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
                     {
-                        StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
+                        new Thread(() =>
+                        {
+                            StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
+                        }).Start();
                     }
                     break;
             }
