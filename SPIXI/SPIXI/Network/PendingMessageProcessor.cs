@@ -96,45 +96,49 @@ namespace SPIXI.Network
 
         public void processPendingMessages()
         {
+            List<PendingRecipient> tmp_pending_recipients;
             lock (pendingRecipients)
             {
-                List<PendingRecipient> tmp_pending_recipients = new List<PendingRecipient>(pendingRecipients);
-                foreach (PendingRecipient recipient in tmp_pending_recipients)
+                tmp_pending_recipients = new List<PendingRecipient>(pendingRecipients);
+            }
+            foreach (PendingRecipient recipient in tmp_pending_recipients)
+            {
+                Friend friend = FriendList.getFriend(recipient.address);
+                if (friend == null)
                 {
-                    Friend friend = FriendList.getFriend(recipient.address);
-                    if (friend == null)
+                    Directory.Delete(Path.Combine(storagePath, Base58Check.Base58CheckEncoding.EncodePlain(recipient.address)), true);
+                    lock (pendingRecipients)
                     {
-                        Directory.Delete(Path.Combine(storagePath, Base58Check.Base58CheckEncoding.EncodePlain(recipient.address)), true);
                         pendingRecipients.Remove(recipient);
-                        continue;
                     }
-                    friend.searchForRelay(); // TODO cuckoo filter should be used instead, need to check the performance when PL is big
-                    List<PendingMessageHeader> message_headers = null;
-                    if (!friend.online)
+                    continue;
+                }
+                friend.searchForRelay(); // TODO cuckoo filter should be used instead, need to check the performance when PL is big
+                List<PendingMessageHeader> message_headers = null;
+                if (!friend.online)
+                {
+                    message_headers = recipient.messageQueue.FindAll(x => x.sendToServer);
+                }
+                else
+                {
+                    message_headers = recipient.messageQueue;
+                }
+                if (message_headers != null && message_headers.Count > 0)
+                {
+                    List<PendingMessageHeader> tmp_msg_headers = new List<PendingMessageHeader>(message_headers);
+                    bool failed_sending = false;
+                    foreach (var message_header in tmp_msg_headers)
                     {
-                        message_headers = recipient.messageQueue.FindAll(x => x.sendToServer);
-                    }
-                    else
-                    {
-                        message_headers = recipient.messageQueue;
-                    }
-                    if (message_headers != null && message_headers.Count > 0)
-                    {
-                        List<PendingMessageHeader> tmp_msg_headers = new List<PendingMessageHeader>(message_headers);
-                        bool failed_sending = false;
-                        foreach (var message_header in tmp_msg_headers)
+                        bool sent = processMessage(friend, message_header.filePath);
+                        if (message_header.sendToServer && !sent)
                         {
-                            bool sent = processMessage(friend, message_header.filePath);
-                            if (message_header.sendToServer && !sent)
-                            {
-                                failed_sending = true;
-                                break;
-                            }
+                            failed_sending = true;
+                            break;
                         }
-                        if (!failed_sending)
-                        {
-                            friend.forcePush = false;
-                        }
+                    }
+                    if (!failed_sending)
+                    {
+                        friend.forcePush = false;
                     }
                 }
             }
