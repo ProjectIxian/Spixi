@@ -405,7 +405,7 @@ function addReactions(id, reactions)
 
     var reactionsEls = msgEl.getElementsByClassName("reactions");
     var reactionsEl = null;
-    if(reactionsEl == null)
+    if(reactionsEls.length == 0)
     {
         if(reactions == "")
         {
