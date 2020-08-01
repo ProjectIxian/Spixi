@@ -436,13 +436,9 @@ function addReactions(id, reactions)
         }
     }
 
-    if(reactionsEl.innerHTML != "")
-    {
-        msgEl.style.paddingBottom = "48px";
-	}else
+    if(reactionsEl.innerHTML == "")
     {
         reactionsEl.parentNode.removeChild(reactionsEl);
-        msgEl.style.paddingBottom = "20px";
 	}
 
     if (scroll) {
@@ -489,9 +485,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     timeEl.className = "time selectable " + timeClass;
     timeEl.innerHTML = relativeTime;
 
-    var bubbleEl = document.createElement('div');
-    bubbleEl.id = "msg_" + id;
-    bubbleEl.className = className + "";
+    var bubbleContentWrapEl = document.createElement('div');
 
     if (nick != "") {
         var nickEl = document.createElement('div');
@@ -502,13 +496,18 @@ function addText(id, address, nick, avatar, text, time, className) {
         nickEl.setAttribute("address", address);
         nickEl.className = "nick selectable";
         nickEl.innerHTML = nick;
-        bubbleEl.appendChild(nickEl);
+        bubbleContentWrapEl.appendChild(nickEl);
     }
 
-    bubbleEl.appendChild(textEl);
-    bubbleEl.appendChild(timeEl);
-    bubbleEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
-    bubbleEl.innerHTML += "<i class=\"statusIndicator paid fas fa-wallet\"></i>";
+    bubbleContentWrapEl.appendChild(textEl);
+    bubbleContentWrapEl.appendChild(timeEl);
+    bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
+    bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator paid fas fa-wallet\"></i>";
+
+    var bubbleEl = document.createElement("div");
+    bubbleEl.id = "msg_" + id;
+    bubbleEl.className = className + "";
+    bubbleEl.appendChild(bubbleContentWrapEl);
 
     if (avatar != "") {
 
