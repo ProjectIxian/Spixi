@@ -47,7 +47,7 @@ chat-amount = Iznos
 chat-view = Detalji
 chat-payment-request-sent = Zahtev POSLAT
 chat-payment-request-received = Zahtev PRIMLJEN
-chat-payment-sent = Uplata je IZVRŠENA
+chat-payment-sent = Uplata je POSLATA
 chat-payment-received = Uplata je PRIMLJENA
 chat-payment-status-waiting-confirmation = ČEKA POTVRDU
 chat-payment-status-declined = ODBIJENO
@@ -150,8 +150,8 @@ index-activity = aktivnost
 index-receive = prejmi
 index-recent-activity = Skorašnja aktivnost
 index-contacts-placeholder = Pretraži kontakte
-index-tab-home = ------------
-index-tab-chats = razgovori-----
+index-tab-home = početna
+index-tab-chats = razgovori
 index-tab-wallet = novčanik
 index-tab-contacts = kontakti
 index-new-title = Novi
@@ -174,13 +174,13 @@ index-side-sendlog = Pošalji dnevnik
 index-devmode = Razvojni mod je aktiviran
 index-excerpt-payment-request-sent = Poslali ste zahtev za uplatu
 index-excerpt-payment-request-received = Primili ste zahtev za uplatu
-index-excerpt-payment-sent = Uplata POSLATA -------
-index-excerpt-payment-received = Uplata PRIMLJENA ---------
+index-excerpt-payment-sent = Uplata POSLATA 
+index-excerpt-payment-received = Uplata PRIMLJENA 
 index-excerpt-contact-accepted = Zahtev za kontakt je prihvaćen
 index-excerpt-contact-request = Zahtev za kontakt
 index-excerpt-file = Datoteka
 index-excerpt-voice-call = Poziv
-index-excerpt-self = Ja:
+index-excerpt-self = Vi:
 
 ; Intro Screen
 intro-title = Dobrodošli u Spixi-ju,
@@ -427,7 +427,7 @@ onboarding-screen2-text = Vaša Spixi adresa je vaš jedinstevn identifikator, p
 
 ; Onboarding Connect with your friends
 onboarding-screen3-title = Povežite se sa prijateljima
-onboarding-screen3-text = Da bi dodali nov kontakt upišite njihovu Spixi adresu ili jednostavno skenirajte QR kod. Da počnete, stistnite dugme &quot;+&quot; in odaberite &quot;Novi Kontakt&quot;.
+onboarding-screen3-text = Da bi dodali nov kontakt upišite njihovu Spixi adresu ili jednostavno skenirajte QR kod. Da počnete, stisnite dugme &quot;+&quot; i odaberite &quot;Novi Kontakt&quot;.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Slanje i primanje uplata
