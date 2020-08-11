@@ -394,10 +394,12 @@ namespace SPIXI.Storage
             {
                 string account_filename = Path.Combine(documentsPath, accountFileName);
 
+                FileStream fs;
                 BinaryWriter writer;
                 try
                 {
-                    writer = new BinaryWriter(new FileStream(account_filename, FileMode.Create));
+                    fs = new FileStream(account_filename, FileMode.Create);
+                    writer = new BinaryWriter(fs);
                 }
                 catch (Exception e)
                 {
@@ -422,7 +424,13 @@ namespace SPIXI.Storage
                 {
                     Logging.error("Cannot write to account file: {0}", e.Message);
                 }
+                writer.Flush();
                 writer.Close();
+                writer.Dispose();
+
+                fs.Flush();
+                fs.Close();
+                fs.Dispose();
             }
             return true;
         }
@@ -853,11 +861,13 @@ namespace SPIXI.Storage
             {
                 string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
+                FileStream fs;
                 BinaryWriter writer;
                 try
                 {
                     // Prepare the file for writing
-                    writer = new BinaryWriter(new FileStream(tx_filename, FileMode.Create));
+                    fs = new FileStream(tx_filename, FileMode.Create);
+                    writer = new BinaryWriter(fs);
                 }
                 catch (Exception e)
                 {
@@ -908,7 +918,13 @@ namespace SPIXI.Storage
                     writer.Close();
                     return false;
                 }
+                writer.Flush();
                 writer.Close();
+                writer.Dispose();
+
+                fs.Flush();
+                fs.Close();
+                fs.Dispose();
             }
 
             return true;
