@@ -64,18 +64,24 @@ namespace SPIXI.Droid.Renderers
                 }
             }
 
-            string url = inputContentInfo.LinkUri.ToString();
-
-            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
-            if (p != null && p.GetType() == typeof(SingleChatPage))
+            if (inputContentInfo.LinkUri != null)
             {
-                string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
+                string url = inputContentInfo.LinkUri.ToString();
 
-                if (Regex.IsMatch(url, rx_pattern))
+                Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
+                if (p != null && p.GetType() == typeof(SingleChatPage))
                 {
-                    ((SingleChatPage)p).onSend(url);
-                    processed = true;
+                    string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
+
+                    if (Regex.IsMatch(url, rx_pattern))
+                    {
+                        ((SingleChatPage)p).onSend(url);
+                        processed = true;
+                    }
                 }
+            }else
+            {
+                Logging.error("Error adding keyboard content, LinkUri is null");
             }
 
             if(permission_requested)
