@@ -196,9 +196,9 @@ namespace SPIXI.Storage
                 {
                     if (!flush)
                     {
-                        if (cur_time - request_channel.Value.startTime < 2000)
+                        if (cur_time - request_channel.Value.startTime < 1000)
                         {
-                            if (cur_time - request_channel.Value.lastRequestTime < 500)
+                            if (cur_time - request_channel.Value.lastRequestTime < 200)
                             {
                                 continue;
                             }
@@ -675,6 +675,7 @@ namespace SPIXI.Storage
                 bool first = true;
                 for (int i = 0; i < local_messages.Count;)
                 {
+                    FileStream fs;
                     BinaryWriter writer;
                     if (!first)
                     {
@@ -684,7 +685,8 @@ namespace SPIXI.Storage
                     try
                     {
                         // Prepare the file for writing
-                        writer = new BinaryWriter(new FileStream(messages_full_path, FileMode.Create));
+                        fs = new FileStream(messages_full_path, FileMode.Create);
+                        writer = new BinaryWriter(fs);
                     }
                     catch (Exception e)
                     {
@@ -725,7 +727,13 @@ namespace SPIXI.Storage
                     {
                         Logging.error("Cannot write to chat file. {0}", e.Message);
                     }
+                    writer.Flush();
                     writer.Close();
+                    writer.Dispose();
+
+                    fs.Flush();
+                    fs.Close();
+                    fs.Dispose();
                 }
 
                 return true;
