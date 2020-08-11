@@ -146,32 +146,33 @@ namespace SPIXI.Network
 
         public void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages, bool send_to_server, bool send_push_notification, bool remove_after_sending = false)
         {
+            PendingMessage pm = new PendingMessage(msg, send_to_server, send_push_notification, remove_after_sending);
+            PendingMessageHeader tmp_msg_header = tmp_msg_header = getPendingMessageHeader(friend, msg.id);
+            if (tmp_msg_header != null)
+            {
+                pm.filePath = tmp_msg_header.filePath;
+            }
+            PendingRecipient tmp_recipient = null;
             lock (pendingRecipients)
             {
-                PendingMessage pm = new PendingMessage(msg, send_to_server, send_push_notification, remove_after_sending);
-                PendingMessageHeader tmp_msg_header = getPendingMessageHeader(friend, msg.id);
-                if (tmp_msg_header != null)
-                {
-                    pm.filePath = tmp_msg_header.filePath;
-                }
-                PendingRecipient tmp_recipient = pendingRecipients.Find(x => x.address.SequenceEqual(msg.recipient));
+                tmp_recipient = pendingRecipients.Find(x => x.address.SequenceEqual(msg.recipient));
                 if (tmp_recipient == null)
                 {
                     tmp_recipient = new PendingRecipient(msg.recipient);
                     pendingRecipients.Add(tmp_recipient);
                 }
-                if (add_to_pending_messages)
+            }
+            if (add_to_pending_messages)
+            {
+                pm.save(storagePath);
+                if (tmp_msg_header == null)
                 {
-                    pm.save(storagePath);
-                    if (tmp_msg_header == null)
-                    {
-                        tmp_recipient.messageQueue.Add(new PendingMessageHeader() { filePath = pm.filePath, id = pm.streamMessage.id, sendToServer = pm.sendToServer });
-                    }
+                    tmp_recipient.messageQueue.Add(new PendingMessageHeader() { filePath = pm.filePath, id = pm.streamMessage.id, sendToServer = pm.sendToServer });
                 }
-                if (tmp_recipient.messageQueue.Count == 1 || !add_to_pending_messages)
-                {
-                    sendMessage(friend, pm, add_to_pending_messages);
-                }
+            }
+            if (tmp_recipient.messageQueue.Count == 1 || !add_to_pending_messages)
+            {
+                sendMessage(friend, pm, add_to_pending_messages);
             }
         }
 
@@ -324,10 +325,13 @@ namespace SPIXI.Network
 
         private PendingMessageHeader getPendingMessageHeader(Friend friend, byte[] msg_id)
         {
-            PendingRecipient pending_recipient = pendingRecipients.Find(x => x.address.SequenceEqual(friend.walletAddress));
-            if (pending_recipient != null)
+            lock (pendingRecipients)
             {
-                return pending_recipient.messageQueue.Find(x => x.id.SequenceEqual(msg_id));
+                PendingRecipient pending_recipient = pendingRecipients.Find(x => x.address.SequenceEqual(friend.walletAddress));
+                if (pending_recipient != null)
+                {
+                    return pending_recipient.messageQueue.Find(x => x.id.SequenceEqual(msg_id));
+                }
             }
             return null;
         }

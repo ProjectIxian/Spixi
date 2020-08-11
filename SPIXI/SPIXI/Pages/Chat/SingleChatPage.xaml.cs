@@ -228,10 +228,7 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:typing"))
             {
-                new Thread(() =>
-                {
-                    StreamProcessor.sendTyping(friend);
-                }).Start();
+                StreamProcessor.sendTyping(friend);
             }else if(current_url.StartsWith("ixian:leave"))
             {
                 if(friend.bot)
@@ -393,37 +390,33 @@ namespace SPIXI
                 }
             }
 
-            await Task.Run(() =>
+            // Send the message
+            SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str), selectedChannel);
+            byte[] spixi_msg_bytes = spixi_message.getBytes();
+
+            // store the message and display it
+            FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
+
+            // Finally, clear the input field
+            Utils.sendUiCommand(webView, "clearInput");
+
+
+            StreamMessage message = new StreamMessage();
+            message.type = StreamMessageCode.data;
+            message.recipient = friend.walletAddress;
+            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.transaction = new byte[1];
+            message.sigdata = new byte[1];
+            message.data = spixi_msg_bytes;
+            message.id = friend_message.id;
+
+            if (friend.bot)
             {
-                // Send the message
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.chat, Encoding.UTF8.GetBytes(str), selectedChannel);
-                byte[] spixi_msg_bytes = spixi_message.getBytes();
+                message.encryptionType = StreamMessageEncryptionCode.none;
+                message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+            }
 
-                // store the message and display it
-                FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
-
-                // Finally, clear the input field
-                Utils.sendUiCommand(webView, "clearInput");
-
-
-                StreamMessage message = new StreamMessage();
-                message.type = StreamMessageCode.data;
-                message.recipient = friend.walletAddress;
-                message.sender = Node.walletStorage.getPrimaryAddress();
-                message.transaction = new byte[1];
-                message.sigdata = new byte[1];
-                message.data = spixi_msg_bytes;
-                message.id = friend_message.id;
-
-                if (friend.bot)
-                {
-                    message.encryptionType = StreamMessageEncryptionCode.none;
-                    message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-                }
-
-                StreamProcessor.sendMessage(friend, message);
-            });
-
+            StreamProcessor.sendMessage(friend, message);
         }
 
         public async Task onSendFile()
@@ -669,10 +662,7 @@ namespace SPIXI
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
                         if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
-                            new Thread(() =>
-                            {
-                                StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                            }).Start();
+                            StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
                             IxianHandler.addTransaction(tx);
                             TransactionCache.addUnconfirmedTransaction(tx);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
@@ -715,10 +705,7 @@ namespace SPIXI
                 case "like":
                     if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
                     {
-                        new Thread(() =>
-                        {
-                            StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
-                        }).Start();
+                        StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
                     }
                     break;
             }

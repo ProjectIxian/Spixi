@@ -536,19 +536,21 @@ namespace SPIXI
         public static void requestAllFriendsPresences()
         {
             // TODO TODO use hidden address matcher
+            List<Friend> tmp_friends = null;
             lock (friends)
             {
-                foreach (var entry in friends)
+                tmp_friends = new List<Friend>(friends);
+            }
+            foreach (var entry in tmp_friends)
+            {
+                using (MemoryStream m = new MemoryStream(1280))
                 {
-                    using (MemoryStream m = new MemoryStream(1280))
+                    using (BinaryWriter writer = new BinaryWriter(m))
                     {
-                        using (BinaryWriter writer = new BinaryWriter(m))
-                        {
-                            writer.Write(entry.walletAddress.Length);
-                            writer.Write(entry.walletAddress);
+                        writer.Write(entry.walletAddress.Length);
+                        writer.Write(entry.walletAddress);
 
-                            CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence, m.ToArray(), 0, null);
-                        }
+                        CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence, m.ToArray(), 0, null);
                     }
                 }
             }

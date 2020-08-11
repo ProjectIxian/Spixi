@@ -154,13 +154,14 @@ namespace SPIXI
 
         private static void connectToBotNodes()
         {
-            lock(FriendList.friends)
+            List<Friend> bot_list = null;
+            lock (FriendList.friends)
             {
-                var bot_list = FriendList.friends.FindAll(x => x.bot);
-                foreach(var bot_entry in bot_list)
-                {
-                    connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
-                }
+                bot_list = FriendList.friends.FindAll(x => x.bot);
+            }
+            foreach(var bot_entry in bot_list)
+            {
+                connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
             }
         }
 
@@ -173,18 +174,24 @@ namespace SPIXI
 
             while (autoReconnect)
             {
-                handleDisconnectedClients();
-
-                string[] netClients = getConnectedClients();
-
-                // Check if we need to connect to more neighbors
-                if (netClients.Length < 1 || !netClients.Contains(primaryS2Address))
+                try
                 {
-                    // Scan for and connect to a new neighbor
-                    connectToRandomStreamNode();
-                }
+                    handleDisconnectedClients();
 
-                connectToBotNodes();
+                    string[] netClients = getConnectedClients();
+
+                    // Check if we need to connect to more neighbors
+                    if (netClients.Length < 1 || !netClients.Contains(primaryS2Address))
+                    {
+                        // Scan for and connect to a new neighbor
+                        connectToRandomStreamNode();
+                    }
+
+                    connectToBotNodes();
+                }catch(Exception e)
+                {
+                    Logging.error("Error trying to reconnect stream clients: " + e);
+                }
 
                 // Wait 5 seconds before rechecking
                 Thread.Sleep(CoreConfig.networkClientReconnectInterval);
