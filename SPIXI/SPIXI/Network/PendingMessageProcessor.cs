@@ -10,12 +10,25 @@ using System.Threading;
 
 namespace SPIXI.Network
 {
+    class OffloadedMessage
+    {
+        public Friend friend;
+        public StreamMessage msg;
+        public bool addToPendingMessages;
+        public bool sendToServer;
+        public bool sendPushNotification;
+        public bool removeAfterSending;
+    }
+
+
     class PendingMessageProcessor
     {
         Thread pendingMessagesThread; // Thread that checks the offline messages list for outstanding messages
+        Thread offloadedMessagesThread;
         bool running = false;
 
         List<PendingRecipient> pendingRecipients = new List<PendingRecipient>();
+        List<OffloadedMessage> msgQueue = new List<OffloadedMessage>();
 
         string storagePath = "MsgQueue";
         public PendingMessageProcessor(string root_storage_path)
@@ -86,12 +99,15 @@ namespace SPIXI.Network
             pendingMessagesThread = new Thread(messageProcessorLoop);
             pendingMessagesThread.Start();
 
+            offloadedMessagesThread = new Thread(offloadedMessageProcessorLoop);
+            offloadedMessagesThread.Start();
         }
 
         public void stop()
         {
             running = false;
             pendingMessagesThread = null;
+            offloadedMessagesThread = null;
         }
 
         public void processPendingMessages()
@@ -146,8 +162,15 @@ namespace SPIXI.Network
 
         public void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages, bool send_to_server, bool send_push_notification, bool remove_after_sending = false)
         {
-            PendingMessage pm = new PendingMessage(msg, send_to_server, send_push_notification, remove_after_sending);
-            PendingMessageHeader tmp_msg_header = tmp_msg_header = getPendingMessageHeader(friend, msg.id);
+            OffloadedMessage om = new OffloadedMessage{ friend = friend, msg = msg, addToPendingMessages = add_to_pending_messages, sendToServer = send_to_server, sendPushNotification = send_push_notification, removeAfterSending = remove_after_sending  };
+            msgQueue.Add(om);
+        }
+
+        private void sendMessage(OffloadedMessage om)
+        {
+            PendingMessage pm = new PendingMessage(om.msg, om.sendToServer, om.sendPushNotification, om.removeAfterSending);
+            StreamMessage msg = pm.streamMessage;
+            PendingMessageHeader tmp_msg_header = tmp_msg_header = getPendingMessageHeader(om.friend, msg.id);
             if (tmp_msg_header != null)
             {
                 pm.filePath = tmp_msg_header.filePath;
@@ -162,7 +185,7 @@ namespace SPIXI.Network
                     pendingRecipients.Add(tmp_recipient);
                 }
             }
-            if (add_to_pending_messages)
+            if (om.addToPendingMessages)
             {
                 pm.save(storagePath);
                 if (tmp_msg_header == null)
@@ -170,9 +193,9 @@ namespace SPIXI.Network
                     tmp_recipient.messageQueue.Add(new PendingMessageHeader() { filePath = pm.filePath, id = pm.streamMessage.id, sendToServer = pm.sendToServer });
                 }
             }
-            if (tmp_recipient.messageQueue.Count == 1 || !add_to_pending_messages)
+            if (tmp_recipient.messageQueue.Count == 1 || !om.addToPendingMessages)
             {
-                sendMessage(friend, pm, add_to_pending_messages);
+                sendMessage(om.friend, pm, om.addToPendingMessages);
             }
         }
 
@@ -353,6 +376,29 @@ namespace SPIXI.Network
                 }
 
                 Thread.Sleep(5000);
+            }
+        }
+
+        private void offloadedMessageProcessorLoop()
+        {
+            while (running)
+            {
+                while(msgQueue.Count > 0)
+                {
+                    try
+                    {
+                        OffloadedMessage om = msgQueue[0];
+                        msgQueue.RemoveAt(0);
+                        sendMessage(om);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Unknown exception occured in offloadedMessageProcessorLoop: " + e);
+                    }
+
+                }
+
+                Thread.Sleep(10); // TODO increase sleep onSleep, reset it onResume
             }
         }
 
