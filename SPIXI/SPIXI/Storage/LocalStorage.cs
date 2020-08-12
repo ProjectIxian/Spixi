@@ -428,7 +428,6 @@ namespace SPIXI.Storage
                 writer.Close();
                 writer.Dispose();
 
-                fs.Flush();
                 fs.Close();
                 fs.Dispose();
             }
@@ -739,7 +738,6 @@ namespace SPIXI.Storage
                     writer.Close();
                     writer.Dispose();
 
-                    fs.Flush();
                     fs.Close();
                     fs.Dispose();
                 }
@@ -922,7 +920,6 @@ namespace SPIXI.Storage
                 writer.Close();
                 writer.Dispose();
 
-                fs.Flush();
                 fs.Close();
                 fs.Dispose();
             }
