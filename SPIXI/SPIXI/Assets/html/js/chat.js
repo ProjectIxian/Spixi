@@ -895,7 +895,7 @@ function showCallButton()
     }
 }
 
-function showContacts()
+function showContacts(e)
 {
     var contactsBox = document.getElementById("ContactsBox");
     if(contactsBox != null)
@@ -908,7 +908,11 @@ function showContacts()
 
     document.body.appendChild(contactsBox);
 
+    e.stopPropagation();
+
     location.href = "ixian:loadContacts";
+
+    return false;
 }
 
 function hideContacts()
