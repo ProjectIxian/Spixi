@@ -510,7 +510,7 @@ namespace SPIXI
                                     string nick;
                                     if(real_sender_address != null)
                                     {
-                                        nick = Base58Check.Base58CheckEncoding.EncodePlain(sender_address);
+                                        nick = Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address);
                                     }else
                                     {
                                         nick = Base58Check.Base58CheckEncoding.EncodePlain(sender_address);
