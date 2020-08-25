@@ -224,7 +224,7 @@ namespace SPIXI.Meta
         static public void connectToNetwork()
         {
             // Start the network client manager
-            NetworkClientManager.start(true);
+            NetworkClientManager.start(2);
 
             // Start the s2 client manager
             StreamClientManager.start();
