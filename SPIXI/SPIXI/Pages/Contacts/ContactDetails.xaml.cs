@@ -123,6 +123,11 @@ namespace SPIXI
                 }
 
                 Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+            }else if(current_url.Contains("ixian:userdefinednick:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:userdefinednick:" }, StringSplitOptions.None);
+                string nick = split[1];
+                friend.setUserDefinedNick(nick);
             }
             else
             {

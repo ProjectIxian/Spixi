@@ -144,6 +144,7 @@ namespace SPIXI
         public byte[] publicKey { get; private set; }
 
         private string _nick = "";
+        private string userDefinedNick = "";
 
         public byte[] chachaKey = null; // TODO TODO don't keep keys in plaintext in memory
         public byte[] aesKey = null; // TODO TODO don't keep keys in plaintext in memory
@@ -254,6 +255,7 @@ namespace SPIXI
                         try
                         {
                             pendingDeletion = reader.ReadBoolean();
+                            userDefinedNick = reader.ReadString();
                         }catch(Exception)
                         {
 
@@ -323,6 +325,8 @@ namespace SPIXI
                     writer.Write(lastReceivedHandshakeMessageTimestamp);
 
                     writer.Write(pendingDeletion);
+
+                    writer.Write(userDefinedNick);
                 }
                 return m.ToArray();
             }
@@ -597,6 +601,10 @@ namespace SPIXI
         {
             get
             {
+                if(userDefinedNick != "")
+                {
+                    return userDefinedNick;
+                }
                 return _nick;
             }
             set
@@ -607,6 +615,12 @@ namespace SPIXI
                     save();
                 }
             }
+        }
+
+        public void setUserDefinedNick(string nick)
+        {
+            userDefinedNick = nick;
+            save();
         }
 
         public void endCall(byte[] session_id, bool call_accepted, long call_duration, bool local_sender)

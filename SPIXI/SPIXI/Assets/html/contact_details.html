@@ -34,7 +34,7 @@
             </div>
             <div class="col-10"></div>
 
-            <div class="spixi-toolbar-contact-name" id="nickname"></div>
+            <div class="spixi-toolbar-contact-name" id="nickname" onclick="editNick();"></div>
             <div class="spixi-toolbar-contact-status" id="status"></div>
 
             <!-- OptionBar -->
@@ -195,7 +195,12 @@
         }
 
         function setNickname(nick) {
-            document.getElementById("nickname").innerHTML = nick;
+            var nickEl = document.getElementById("nickname");
+            nickEl.setAttribute("nick", nick);
+            if(nickEl.innerHTML.indexOf("<input ") != 0)
+            {
+                nickEl.innerHTML = nick;
+            }
         }
 
         function setAvatar(avatarPath) {
@@ -288,6 +293,27 @@
                 eicon.className = "fa fa-caret-down";
 
             }
+        }
+
+        function editNick()
+        {
+            var nickEl = document.getElementById("nickname");
+            nickEl.innerHTML = "<input type=\"text\" value=\"\" onblur=\"setUserDefinedNick(this.value);\" onclick=\"event.stopPropagation();\"/>";
+            nickEl.firstElementChild.focus();
+        }
+
+        function setUserDefinedNick(nick)
+        {
+            var nickEl = document.getElementById("nickname");
+            if(nick == "")
+            {
+                nickEl.innerHTML = nickEl.getAttribute("nick");
+            }else
+            {
+                nickEl.innerHTML = nick;
+            }
+
+            location.href = "ixian:userdefinednick:" + nick;
         }
     </script>
 </body>
