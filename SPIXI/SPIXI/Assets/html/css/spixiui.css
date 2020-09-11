@@ -614,10 +614,10 @@ img.emoji {
 /* ErrorBar */
 .spixi-errorbar {
     width: 100%;
-    height: 32px;
+    min-height: 32px;
     background-color: #f3aa1d;
     color: #FFFFFF;
-    padding-top: 3px;
+    padding: 3px 0px;
     font-size: 12pt;
 }
 .spixi-errorbar.chat
