@@ -123,6 +123,8 @@ namespace SPIXI.Meta
 
             running = true;
 
+            UpdateVerify.init(Config.checkVersionUrl, Config.checkVersionSeconds);
+
             ulong block_height = 1;
             byte[] block_checksum = null;
 

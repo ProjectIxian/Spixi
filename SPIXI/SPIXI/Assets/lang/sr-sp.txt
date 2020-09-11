@@ -455,3 +455,5 @@ global-invalid-address-title = Nevažeća adresa
 global-invalid-address-text = Molimo vas da unesete važeću adresu.
 
 global-friend-request-accepted = {0} je prihvatio/la vaš zahtev za kontakt.
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.

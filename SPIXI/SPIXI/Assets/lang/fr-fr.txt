@@ -455,3 +455,5 @@ global-invalid-address-title = Addresse invalide
 global-invalid-address-text = S'il vous plait entrez une addresse valide.
 
 global-friend-request-accepted = {0} à accepté votre demade d'ami.
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.

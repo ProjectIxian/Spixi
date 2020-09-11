@@ -459,3 +459,5 @@ global-invalid-address-title = 地址无效
 global-invalid-address-text = 请输入有效的钱包地址
 
 global-friend-request-accepted = {0} 已接受您的朋友请求。
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.

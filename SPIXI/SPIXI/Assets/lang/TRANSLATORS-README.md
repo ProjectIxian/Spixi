@@ -16,7 +16,7 @@ Languages           |  Translating    |  Available
 Afrikaans           |  ❌            |  ❌
 Arabian             |  ❌            |  ❌
 Bengali             |  ❌            |  ❌
-Chinese             |  ❌            |  ❌
+Chinese             |  ✅            |  ✅
 Croatian            |  ✅            |  ❌
 English ( default ) |  ✅            |  ✅
 French              |  ✅            |  ✅
@@ -25,6 +25,7 @@ Hindi               |  ❌            |  ❌
 Italian             |  ❌            |  ❌
 Japanese            |  ✅            |  ✅
 Korean              |  ❌            |  ❌
+Latvian				|  ✅            |  ✅
 Punjabi             |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
 Romanian            |  ✅            |  ❌

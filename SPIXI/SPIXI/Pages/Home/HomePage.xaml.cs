@@ -759,14 +759,23 @@ namespace SPIXI
 
             loadTransactions();
 
-            // Check the ixian dlt
-            if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+            string new_version = checkForUpdate();
+            if (!new_version.StartsWith("(") && new_version.CompareTo(Config.version) > 0)
             {
-                Utils.sendUiCommand(webView, "showWarning", "");
+                Utils.sendUiCommand(webView, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                // Check the ixian dlt
+                if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+                {
+                    Utils.sendUiCommand(webView, "showWarning", "");
+                }
+                else
+                {
+                    Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                }
+
             }
 
             Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);
@@ -820,6 +829,18 @@ namespace SPIXI
                     }
                 }
             }
+        }
+
+        private string checkForUpdate()
+        {
+            UpdateVerify.checkVersion();
+            if (UpdateVerify.inProgress) return "(checking)";
+            if (UpdateVerify.ready)
+            {
+                if (UpdateVerify.error) return "(error)";
+                return UpdateVerify.serverVersion;
+            }
+            return "(not checked)";
         }
     }
 }

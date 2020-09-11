@@ -453,3 +453,5 @@ global-invalid-address-title = Invalid address
 global-invalid-address-text = Please enter a valid wallet address.
 
 global-friend-request-accepted = {0} has accepted your friend request.
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.

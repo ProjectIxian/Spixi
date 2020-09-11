@@ -422,3 +422,5 @@ global-dialog-ok = OKglobal-dialog-cancel = CANCEL
 global-invalid-address-title = 無効なアドレス
 global-invalid-address-text = 有効なアドレスを入力してください
 global-friend-request-accepted = {0} がリクエストを承認しました
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.

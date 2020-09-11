@@ -459,3 +459,5 @@ global-invalid-address-title = Ungültige Adresse
 global-invalid-address-text = Bitte gib eine gültige Adresse ein.
 
 global-friend-request-accepted = {0} hat deine Freundschaftsanfrage angenommen.
+
+global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
