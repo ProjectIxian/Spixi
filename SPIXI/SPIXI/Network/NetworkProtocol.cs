@@ -215,7 +215,9 @@ namespace SPIXI.Network
                     case ProtocolMessageCode.keepAlivePresence:
                         {
                             byte[] address = null;
-                            bool updated = PresenceList.receiveKeepAlive(data, out address, endpoint);
+                            long last_seen = 0;
+                            byte[] device_id = null;
+                            bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, endpoint);
                         }
                         break;
 

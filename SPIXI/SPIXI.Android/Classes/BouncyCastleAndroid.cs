@@ -274,6 +274,12 @@ namespace CryptoLibs
 
                 KeyPair kp = rsaKeyFromBytes(publicKey);
 
+                if (kp == null)
+                {
+                    Logging.warn("Error occured while verifying signature {0}, invalid public key {1}", Crypto.hashToString(signature), Crypto.hashToString(publicKey));
+                    return false;
+                }
+
                 Signature sig = Signature.GetInstance("SHA512withRSA");
                 sig.InitVerify(kp.Public);
                 sig.Update(input_data);
@@ -281,7 +287,7 @@ namespace CryptoLibs
             }
             catch (Exception e)
             {
-                Logging.warn(string.Format("Invalid public key {0}:{1}", publicKey, e.Message));
+                Logging.warn("Error occured while verifying signature {0} with public key {1}: {2}", Crypto.hashToString(signature), Crypto.hashToString(publicKey), e.Message);
             }
             return false;
         }

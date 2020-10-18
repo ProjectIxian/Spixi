@@ -141,7 +141,7 @@ namespace SPIXI
 
             Logging.info("Broadcasting tx");
 
-            IxianHandler.addTransaction(transaction);
+            IxianHandler.addTransaction(transaction, true);
             Logging.info("Adding to cache");
 
             // Add the unconfirmed transaction to the cache

@@ -663,7 +663,7 @@ namespace SPIXI
                         if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
-                            IxianHandler.addTransaction(tx);
+                            IxianHandler.addTransaction(tx, true);
                             TransactionCache.addUnconfirmedTransaction(tx);
                             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-tip-confirmed-body"), nick, amount.ToString() + " IXI");
                             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));

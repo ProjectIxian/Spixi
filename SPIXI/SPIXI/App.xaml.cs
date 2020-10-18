@@ -60,7 +60,7 @@ namespace SPIXI
                 // Load or generate a device ID.
                 if (Application.Current.Properties.ContainsKey("uid"))
                 {
-                    string uid = Application.Current.Properties["uid"] as string;
+                    byte[] uid = Application.Current.Properties["uid"] as byte[];
                     // TODO: sanitize the uid if necessary
                     CoreConfig.device_id = uid;
                 }
