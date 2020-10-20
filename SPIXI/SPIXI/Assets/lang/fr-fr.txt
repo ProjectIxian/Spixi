@@ -410,12 +410,10 @@ wallet-error-balance-title = Solde insufisant
 wallet-error-balance-text = Votre solde est trop faible pour cette transaction. Le cout total de la transaction est {0}, tandis que votre solde est {1}.
 
 ; Onboarding join official bot
-; TODO Translate
-onboarding-bot-title = Would you like to join Ixian's Official Bot?
-onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
-onboarding-bot-join-button = JOIN
-onboarding-bot-dont-join-button = DON'T JOIN
-; End of TODO translate
+onboarding-bot-title = Voulez vous rejoindre notre Bot Officiel Ixian ?
+onboarding-bot-text = Rejoignez notre bot officiel, ou vous pouvez nous parler à propos de ce que vous pensez de Spixi, suivez les mises à jours et discutez directement avec les développeurs et les autres utilisateurs.
+onboarding-bot-join-button = REJOINDE
+onboarding-bot-dont-join-button = NE PAS REJOINDRE
 
 ; Onboarding Meet Spixi
 onboarding-screen1-title = Rencontrer Spixi!
@@ -427,7 +425,7 @@ onboarding-screen2-text = Votre addresse Spixi est votre seul identifiant. Utili
 
 ; Onboarding Connect with your friends
 onboarding-screen3-title = Connectez vous avec vos amis
-onboarding-screen3-text = Vus pouvez ajouter des amis sur Spixi en scannant leur Q Code,  ou en entrant leurs addresses. Cliquez sur le bouton action et sélectionnez &quot;Nouveau Contact&quot;.
+onboarding-screen3-text = Vous pouvez ajouter des amis sur Spixi en scannant leur Q Code,  ou en entrant leurs addresses. Cliquez sur le bouton action et sélectionnez &quot;Nouveau Contact&quot;.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Envoyer et reçevoir des paiements
