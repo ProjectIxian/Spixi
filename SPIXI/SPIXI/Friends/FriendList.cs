@@ -169,10 +169,10 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(mw))
                     {
-                        writer.Write(wallet_address.Length);
+                        writer.WriteIxiVarInt(wallet_address.Length);
                         writer.Write(wallet_address);
 
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
                 }
             }
@@ -426,10 +426,10 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(mw))
                     {
-                        writer.Write(wallet_address.Length);
+                        writer.WriteIxiVarInt(wallet_address.Length);
                         writer.Write(wallet_address);
 
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence, mw.ToArray(), null);
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
                 }
                 return null;
@@ -547,10 +547,10 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(m))
                     {
-                        writer.Write(entry.walletAddress.Length);
+                        writer.WriteIxiVarInt(entry.walletAddress.Length);
                         writer.Write(entry.walletAddress);
 
-                        CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence, m.ToArray(), 0, null);
+                        CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence2, m.ToArray(), 0, null);
                     }
                 }
             }
