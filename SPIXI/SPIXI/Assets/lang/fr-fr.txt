@@ -6,17 +6,17 @@ address-title = Mon portefeuille Spixi
 address-description = Votre addresse Spixi est liée à votre compte<br />Il s'agit de votre identifiant principal avec lequel vous pouvez intéragir avec d'autres utilisateurs.
 address-copied = Addresse copiée dans le presse papier
 address-gen-1 = Génération
-address-gen-1b = Preparation
+address-gen-1b = Préparation
 address-gen-2 = Votre SPIXI
 address-gen-2b = SPIXI
-address-gen-3 = addresse
+address-gen-3 = Addresse
 address-gen-4 = ...
-address-tooltip = cliquez pour copier dans le presse papier
+address-tooltip = Cliquez pour copier dans le presse papier
 
 ; App Details Screen
 app-details-title = Application Spixi
-app-details-publisher = Editeur:
-app-details-version = Version:
+app-details-publisher = Editeur :
+app-details-version = Version :
 app-details-uninstall = Désinstaller
 app-details-dialog-title = Manageur de l'application Spixi
 app-details-dialog-removed-text = L'application à bien été supprimée.
@@ -32,7 +32,7 @@ app-new-dialog-installfailed-text = Une erreur à eu lieu pendant l'installation
 
 ; Apps Screen
 apps-title = Applications Spixi
-apps-empty = Vous n'avez aucune applications installé(e)s.
+apps-empty = Vous n'avez aucune applications installés.
 
 ; Chat Screen
 chat-sent-contact-request = A ENVOYE UNE DEMANDE DE CONTACT
@@ -44,13 +44,13 @@ chat-request-payment = Demander un paiement
 chat-send-payment = Envoyer un paiement
 chat-status = Statut
 chat-amount = Montant
-chat-view = Details
+chat-view = Détails
 chat-payment-request-sent = Demande de paiement envoyé
 chat-payment-request-received = Demande de paiement reçu
 chat-payment-sent = Paiement envoyé
-chat-payment-received = Payment reçu
+chat-payment-received = Paiement reçu
 chat-payment-status-waiting-confirmation = En attente de confirmation
-chat-payment-status-declined = Decliner
+chat-payment-status-declined = Décliner
 chat-payment-status-pending = En attente
 chat-payment-status-confirmed = Confirmé
 chat-call-outgoing = Appel sortant
@@ -66,7 +66,7 @@ chat-context-pin-message = Message épinglés
 chat-context-copy-message = Copier le message
 chat-context-copy-selected = Copie sélectionné
 chat-context-tip-user = Donner à l'utilisateur
-chat-context-like-message = Like message
+chat-context-like-message = Liker le message
 chat-context-user-info = Infos de l'utilisateur
 chat-context-send-contact-request = Envoyer une demande de contact
 chat-context-kick-user = Kick l'utilisateur
@@ -74,13 +74,13 @@ chat-context-ban-user = Bannir l'utilisateur
 chat-context-delete-message = Supprimer le message
 chat-message-cost-bar = Les frais d'envoi de messages sont de {0} par kB
 
-chat-modal-tip-title = Donner {0}?
+chat-modal-tip-title = Donner {0} ?
 chat-modal-tip-body = Appuyez sur le montant que vous sohaitez donner ou définissez un pourboire personnalisé.
 chat-modal-tip-custom = CUSTOM
 chat-modal-tip-pay-button = PAYER
 chat-modal-tip-confirmation-body = Vous êtes sur le point de donner un pourboire de '{0}' {1}. Ce montant va être déduit de votre portefeuille.
 chat-modal-tip-confirmed-body = Vous avez donner '{0}' avec {1}. Le montant à bien été déduit de votre portefeuille.
-chat-modal-tip-error-body = Erreur inconnu pendant la  tentative dde donnation à l'utilisateur.
+chat-modal-tip-error-body = Erreur inconnu pendant la  tentative de donnation à l'utilisateur.
 
 chat-bot-details-info = Informations sur le Bot
 chat-bot-address = Addresse du Bot
@@ -91,34 +91,34 @@ chat-bot-leave = Quitter le Bot
 chat-bot-user-address = Addresse de l'utilisateur
 chat-bot-user-send-contact-request = Envoyer une demande de contact
 
-chat-modal-kick-title = Kick {0}?
+chat-modal-kick-title = Kick {0} ?
 chat-modal-kick-body = Êtes vous sur de vouloir kick '{0}' de ce serveur ?
 chat-modal-kick-kick-button = KICK L'UTILISATEUR
-chat-modal-kicked-title = Kické {0}
-chat-modal-kicked-body = Vous avez kick '{0}' de ce serveur.
+chat-modal-kicked-title = {0} à été Kick
+chat-modal-kicked-body = Vous avez kick '{0}' de ce serveur
 
 chat-modal-ban-title = Bannir {0}?
 chat-modal-ban-body = Êtes vous sur de vouloir bannir '{0}' de ce serveur ?
 chat-modal-ban-ban-button = BANNIR L'UTILISATEUR
 chat-modal-banned-title = Banni(e) {0}
-chat-modal-banned-body = Vous avez banni(e) '{0}' de ce serveur.
+chat-modal-banned-body = Vous avez banni(e) '{0}' de ce serveur
 
 chat-bot-not-ready-title = Le bot n'est pas prêt
-chat-bot-not-ready-body = Le bot n'est pass encore prêt, veuillez réessayer dans quelques minutes.
+chat-bot-not-ready-body = Le bot n'est pass encore prêt, veuillez réessayer dans quelques minutes
 
 chat-kicked = Vous avez été exclu du groupe.
-chat-banned = Vousz avez été banni(e) de ce groupe.
+chat-banned = Vous avez été banni(e) de ce groupe
 
 ; Contact Details Screen
-contact-details-chat = chat
-contact-details-send = envoyer
-contact-details-receive = recevoir
+contact-details-chat = Chat
+contact-details-send = Envoyer
+contact-details-receive = Recevoir
 contact-details-notifications = Notifications
 contact-details-history = Historique
 contact-details-account-address = ADDRESSE SPIXI
 contact-details-address-1 = Récupération
 contact-details-address-2 = SPIXI
-contact-details-address-3 = address...
+contact-details-address-3 = Addresse ...
 contact-details-removecontact = SUPPRIMER
 contact-details-removedcontact-title = Supprimé
 contact-details-removedcontact-text = Contact supprimé de la liste.
@@ -128,7 +128,7 @@ contact-details-deletedhistory-text = Historique des messages supprimé.
 
 ; New Contact Screen
 contact-new-title = Nouveau Contact
-contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
+contact-new-description = Ajouter un nouveau contact Spixi en collant leur addresse ou en scannant leur QR Code. L'utilisateur reçevra une demande peu après.
 contact-new-placeholder = Coller / taper l'addresse
 contact-new-send-request = ENVOYER UNE DEMANDE DE CONTACT
 contact-new-invalid-address-self-text = L'addresse que vous avez entrez est la votre.
@@ -145,15 +145,15 @@ index-balance-info2 = * Appuyez et maintenant pour montrer
 index-notifications = Notifications
 index-unread-chats = Messages non lu
 index-no-conversations = Vous n'avez aucune convesations existantes.
-index-send = envoyer
-index-activity = activité
-index-receive = recevoir
+index-send = Envoyer
+index-activity = Activité
+index-receive = Recevoir
 index-recent-activity = Activités récentes
 index-contacts-placeholder = Rechercher des contacts
-index-tab-home = home
-index-tab-chats = conversations
-index-tab-wallet = portefeuille
-index-tab-contacts = contacts
+index-tab-home = Home
+index-tab-chats = Conversations
+index-tab-wallet = Portefeuille
+index-tab-contacts = Contacts
 index-new-title = NOUVEAU
 index-new-contact = Contact
 index-new-chat = Conversation
@@ -180,11 +180,11 @@ index-excerpt-contact-accepted = Contact Accepté
 index-excerpt-contact-request = Demande de contact
 index-excerpt-file = Fichier
 index-excerpt-voice-call = Appel vocal
-index-excerpt-self = Vous:
+index-excerpt-self = Vous :
 
 ; Intro Screen
-intro-title = Bienvenue sur Spixi,
-intro-subtitle = le chat décentralizé et sécurisé, Portefeuille et plus.
+intro-title = Bienvenu sur Spixi,
+intro-subtitle = Le chat décentralizé et sécurisé, Portefeuille et plus.
 intro-language-text = S'il vous plait sélectionnez un language
 intro-text = S'il vous plait créez ou restaurez votre<br/>compte Spixi pour procéder
 intro-create-account = NOUVEAU COMPTE
@@ -345,9 +345,9 @@ wallet-contact-request-proceed = ENVOYER UN PAIEMENT
 ; Wallet Recipient Screen
 wallet-recipient-title = Sélectionner le destinataire
 wallet-recipient-search-placeholder = Rechercher des contacts
-wallet-recipient-empty = 0 contact/s selected
-wallet-recipient-add = Ajouter un contact/s
-wallet-recipient-selected = Contact/s selected
+wallet-recipient-empty = 0 contact(s) sélectionnés
+wallet-recipient-add = Ajouter un contact
+wallet-recipient-selected = Contact(s) sélectionnés
 
 ; Wallet Request Screen
 wallet-request-title = Demander un paiement
@@ -410,15 +410,13 @@ wallet-error-balance-title = Solde insufisant
 wallet-error-balance-text = Votre solde est trop faible pour cette transaction. Le cout total de la transaction est {0}, tandis que votre solde est {1}.
 
 ; Onboarding join official bot
-; TODO Translate
-onboarding-bot-title = Would you like to join Ixian's Official Bot?
-onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
-onboarding-bot-join-button = JOIN
-onboarding-bot-dont-join-button = DON'T JOIN
-; End of TODO translate
+onboarding-bot-title = Voulez vous rejoindre le Bot Officiel Ixian ?
+onboarding-bot-text = Rejoignez notre bot officiel, ou vous pourrez nous parlez à propos de Spixi, suivez les mises à jours et discutez directement avec les développeurs et les autres utilisateurs.
+onboarding-bot-join-button = REJOINDRE
+onboarding-bot-dont-join-button = NE PAS REJOINDRE
 
 ; Onboarding Meet Spixi
-onboarding-screen1-title = Rencontrer Spixi!
+onboarding-screen1-title = Rencontrer Spixi !
 onboarding-screen1-text = Un messager décentralizé basé sur la blockchain avec un portefeuille de crypto monnaie intégré.
 
 ; Onboarding Your Address
