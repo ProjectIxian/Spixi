@@ -5,38 +5,15 @@ using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 
 namespace SPIXI.Network
 {
     public class ProtocolMessage
     {
-        public static ProtocolMessageCode waitingFor = 0;
-        public static bool blocked = false;
-
-        public static void setWaitFor(ProtocolMessageCode value)
-        {
-            waitingFor = value;
-            blocked = true;
-        }
-
-        public static void wait(int timeout_seconds)
-        {
-            DateTime start = DateTime.UtcNow;
-            while (blocked)
-            {
-                if ((DateTime.UtcNow - start).TotalSeconds > timeout_seconds)
-                {
-                    Logging.warn("Timeout occured while waiting for " + waitingFor);
-                    break;
-                }
-                Thread.Sleep(250);
-            }
-        }
-
         public static void resubscribeEvents()
         {
             lock (NetworkClientManager.networkClients)
@@ -45,7 +22,7 @@ namespace SPIXI.Network
                 {
                     if (client.isConnected() && client.helloReceived)
                     {
-                        if (client.presenceAddress.type != 'M')
+                        if (client.presenceAddress.type != 'M' && client.presenceAddress.type != 'H')
                         {
                             continue;
                         }
@@ -53,6 +30,7 @@ namespace SPIXI.Network
                         // Get presences
                         client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                         client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                        client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
 
                         byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.all, new byte[0]);
                         client.sendData(ProtocolMessageCode.detachEvent, event_data);
@@ -181,13 +159,14 @@ namespace SPIXI.Network
                                         }
                                     }
 
-                                    if (endpoint.presenceAddress.type == 'M')
+                                    if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
                                     {
                                         Node.setNetworkBlock(last_block_num, block_checksum, block_version);
 
                                         // Get random presences
                                         endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                                         endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
 
                                         subscribeToEvents(endpoint);
                                     }
@@ -247,13 +226,14 @@ namespace SPIXI.Network
                                         }
                                     }
 
-                                    if (endpoint.presenceAddress.type == 'M')
+                                    if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
                                     {
                                         Node.setNetworkBlock(last_block_num, block_checksum, block_version);
 
                                         // Get random presences
                                         endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                                         endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
 
                                         subscribeToEvents(endpoint);
                                     }
@@ -317,6 +297,37 @@ namespace SPIXI.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.getPresence2:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    int walletLen = (int)reader.ReadIxiVarUInt();
+                                    byte[] wallet = reader.ReadBytes(walletLen);
+
+                                    Presence p = PresenceList.getPresenceByAddress(wallet);
+                                    if (p != null)
+                                    {
+                                        lock (p)
+                                        {
+                                            byte[][] presence_chunks = p.getByteChunks();
+                                            foreach (byte[] presence_chunk in presence_chunks)
+                                            {
+                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // TODO blacklisting point
+                                        Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", Base58Check.Base58CheckEncoding.EncodePlain(wallet)));
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
                     case ProtocolMessageCode.balance:
                         {
                             using (MemoryStream m = new MemoryStream(data))
@@ -351,13 +362,47 @@ namespace SPIXI.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.balance2:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    int address_length = (int)reader.ReadIxiVarUInt();
+                                    byte[] address = reader.ReadBytes(address_length);
+
+                                    // Retrieve the latest balance
+                                    IxiNumber balance = new IxiNumber(new BigInteger(reader.ReadBytes((int)reader.ReadIxiVarUInt())));
+
+                                    if (address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                                    {
+                                        // Retrieve the blockheight for the balance
+                                        ulong block_height = reader.ReadIxiVarUInt();
+
+                                        if (block_height > Node.balance.blockHeight && (Node.balance.balance != balance || Node.balance.blockHeight == 0))
+                                        {
+                                            byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
+
+                                            Node.balance.address = address;
+                                            Node.balance.balance = balance;
+                                            Node.balance.blockHeight = block_height;
+                                            Node.balance.blockChecksum = block_checksum;
+                                            Node.balance.lastUpdate = Clock.getTimestamp();
+                                            Node.balance.verified = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
                     case ProtocolMessageCode.newTransaction:
                     case ProtocolMessageCode.transactionData:
                         {
                             // TODO: check for errors/exceptions
                             Transaction transaction = new Transaction(data, true);
 
-                            if (endpoint != null && endpoint.presenceAddress.type == 'M')
+                            if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
                             {
                                 PendingTransactions.increaseReceivedCount(transaction.id, endpoint.presence.wallet);
                             }
@@ -372,10 +417,23 @@ namespace SPIXI.Network
                         CoreProtocolMessage.processBye(data, endpoint);
                         break;
 
+                    case ProtocolMessageCode.blockHeaders:
+                        {
+                            // Forward the block headers to the TIV handler
+                            Node.tiv.receivedBlockHeaders(data, endpoint);
+                        }
+                        break;
+
                     case ProtocolMessageCode.blockHeaders2:
                         {
                             // Forward the block headers to the TIV handler
                             Node.tiv.receivedBlockHeaders2(data, endpoint);
+                        }
+                        break;
+
+                    case ProtocolMessageCode.pitData:
+                        {
+                            Node.tiv.receivedPIT(data, endpoint);
                         }
                         break;
 
@@ -393,11 +451,6 @@ namespace SPIXI.Network
             catch (Exception e)
             {
                 Logging.error(string.Format("Error parsing network message. Details: {0}", e.ToString()));
-            }
-
-            if (waitingFor == code)
-            {
-                blocked = false;
             }
         }
     }

@@ -148,7 +148,7 @@ namespace SPIXI
             else
             {
                 Logging.error("FAILED TO ADD RANDOM STREAM NODE");
-                CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' }, null, null);
+                CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' }, null, null);
             }
         }
 

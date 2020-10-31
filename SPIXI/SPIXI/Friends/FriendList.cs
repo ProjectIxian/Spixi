@@ -172,7 +172,7 @@ namespace SPIXI
                         writer.WriteIxiVarInt(wallet_address.Length);
                         writer.Write(wallet_address);
 
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
                 }
             }
@@ -429,7 +429,7 @@ namespace SPIXI
                         writer.WriteIxiVarInt(wallet_address.Length);
                         writer.Write(wallet_address);
 
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
                 }
                 return null;
@@ -550,7 +550,7 @@ namespace SPIXI
                         writer.WriteIxiVarInt(entry.walletAddress.Length);
                         writer.Write(entry.walletAddress);
 
-                        CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M' }, ProtocolMessageCode.getPresence2, m.ToArray(), 0, null);
+                        CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, m.ToArray(), 0, null);
                     }
                 }
             }

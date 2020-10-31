@@ -76,15 +76,13 @@ namespace SPIXI.Meta
             Instance = this;
 
             CoreConfig.productVersion = Config.version;
-            IxianHandler.setHandler(this);
-
-            CoreConfig.isTestNet = Config.isTestNet;
+            IxianHandler.init(this, Config.networkType);
 
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
             string peers_filename = "peers.ixi";
-            if(CoreConfig.isTestNet)
+            if(IxianHandler.isTestNet)
             {
                 peers_filename = "testnet-peers.ixi";
             }
@@ -130,7 +128,7 @@ namespace SPIXI.Meta
             byte[] block_checksum = null;
 
             string headers_path;
-            if (Config.isTestNet)
+            if (IxianHandler.isTestNet)
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
             }
@@ -263,7 +261,7 @@ namespace SPIXI.Meta
                             {
                                 writer.WriteIxiVarInt(Node.walletStorage.getPrimaryAddress().Length);
                                 writer.Write(Node.walletStorage.getPrimaryAddress());
-                                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance2, mw.ToArray(), null);
+                                NetworkClientManager.broadcastData(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, mw.ToArray(), null);
                             }
                         }
                     }
