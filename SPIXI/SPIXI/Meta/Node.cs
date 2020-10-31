@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.Utils;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
@@ -75,15 +76,13 @@ namespace SPIXI.Meta
             Instance = this;
 
             CoreConfig.productVersion = Config.version;
-            IxianHandler.setHandler(this);
-
-            CoreConfig.isTestNet = Config.isTestNet;
+            IxianHandler.init(this, Config.networkType);
 
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
             string peers_filename = "peers.ixi";
-            if(CoreConfig.isTestNet)
+            if(IxianHandler.isTestNet)
             {
                 peers_filename = "testnet-peers.ixi";
             }
@@ -129,7 +128,7 @@ namespace SPIXI.Meta
             byte[] block_checksum = null;
 
             string headers_path;
-            if (Config.isTestNet)
+            if (IxianHandler.isTestNet)
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "testnet-headers");
             }
@@ -260,9 +259,9 @@ namespace SPIXI.Meta
                         {
                             using (BinaryWriter writer = new BinaryWriter(mw))
                             {
-                                writer.Write(Node.walletStorage.getPrimaryAddress().Length);
+                                writer.WriteIxiVarInt(Node.walletStorage.getPrimaryAddress().Length);
                                 writer.Write(Node.walletStorage.getPrimaryAddress());
-                                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.getBalance, mw.ToArray(), null);
+                                NetworkClientManager.broadcastData(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, mw.ToArray(), null);
                             }
                         }
                     }
@@ -403,7 +402,7 @@ namespace SPIXI.Meta
         public override bool addTransaction(Transaction tx, bool force_broadcast)
         {
             // TODO Send to peer if directly connectable
-            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.newTransaction, tx.getBytes(), null);
+            CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData, tx.getBytes(), null);
             PendingTransactions.addPendingLocalTransaction(tx);
             return true;
         }
@@ -490,7 +489,7 @@ namespace SPIXI.Meta
 
                     if (cur_time - tx_time > 40) // if the transaction is pending for over 40 seconds, resend
                     {
-                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.newTransaction, t.getBytes(), null);
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.transactionData, t.getBytes(), null);
                         entry.addedTimestamp = cur_time;
                         entry.confirmedNodeList.Clear();
                     }

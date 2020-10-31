@@ -5,38 +5,15 @@ using IXICore.Utils;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Threading;
 
 namespace SPIXI.Network
 {
     public class ProtocolMessage
     {
-        public static ProtocolMessageCode waitingFor = 0;
-        public static bool blocked = false;
-
-        public static void setWaitFor(ProtocolMessageCode value)
-        {
-            waitingFor = value;
-            blocked = true;
-        }
-
-        public static void wait(int timeout_seconds)
-        {
-            DateTime start = DateTime.UtcNow;
-            while (blocked)
-            {
-                if ((DateTime.UtcNow - start).TotalSeconds > timeout_seconds)
-                {
-                    Logging.warn("Timeout occured while waiting for " + waitingFor);
-                    break;
-                }
-                Thread.Sleep(250);
-            }
-        }
-
         public static void resubscribeEvents()
         {
             lock (NetworkClientManager.networkClients)
@@ -45,7 +22,7 @@ namespace SPIXI.Network
                 {
                     if (client.isConnected() && client.helloReceived)
                     {
-                        if (client.presenceAddress.type != 'M')
+                        if (client.presenceAddress.type != 'M' && client.presenceAddress.type != 'H')
                         {
                             continue;
                         }
@@ -53,6 +30,7 @@ namespace SPIXI.Network
                         // Get presences
                         client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
                         client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                        client.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
 
                         byte[] event_data = NetworkEvents.prepareEventMessageData(NetworkEvents.Type.all, new byte[0]);
                         client.sendData(ProtocolMessageCode.detachEvent, event_data);
@@ -92,18 +70,12 @@ namespace SPIXI.Network
                             {
                                 using (BinaryReader reader = new BinaryReader(m))
                                 {
-                                    if (CoreProtocolMessage.processHelloMessage(endpoint, reader))
+                                    if(data[0] == 5)
                                     {
-                                        byte[] challenge_response = null;
-
-                                        int challenge_len = reader.ReadInt32();
-                                        byte[] challenge = reader.ReadBytes(challenge_len);
-
-                                        challenge_response = CryptoManager.lib.getSignature(challenge, IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-
-                                        CoreProtocolMessage.sendHelloMessage(endpoint, true, challenge_response);
-                                        endpoint.helloReceived = true;
-                                        return;
+                                        CoreProtocolMessage.processHelloMessageV5(endpoint, reader);
+                                    }else
+                                    {
+                                        CoreProtocolMessage.processHelloMessageV6(endpoint, reader);
                                     }
                                 }
                             }
@@ -117,84 +89,157 @@ namespace SPIXI.Network
                         {
                             using (BinaryReader reader = new BinaryReader(m))
                             {
-                                if (!CoreProtocolMessage.processHelloMessage(endpoint, reader))
+                                if(data[0] == 5)
                                 {
-                                    return;
-                                }
-
-                                ulong last_block_num = reader.ReadUInt64();
-                                int bcLen = reader.ReadInt32();
-                                byte[] block_checksum = reader.ReadBytes(bcLen);
-                                int wsLen = reader.ReadInt32();
-                                byte[] walletstate_checksum = reader.ReadBytes(wsLen);
-                                int consensus = reader.ReadInt32(); // deprecated
-
-                                endpoint.blockHeight = last_block_num;
-
-                                int block_version = reader.ReadInt32();
-
-                                // Check for legacy level
-                                ulong legacy_level = reader.ReadUInt64(); // deprecated
-
-                                int challenge_response_len = reader.ReadInt32();
-                                byte[] challenge_response = reader.ReadBytes(challenge_response_len);
-                                if (!CryptoManager.lib.verifySignature(endpoint.challenge, endpoint.serverPubKey, challenge_response))
-                                {
-                                    CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.authFailed, string.Format("Invalid challenge response."), "", true);
-                                    return;
-                                }
-
-                                if (endpoint.presenceAddress.type != 'C')
-                                {
-                                    ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
-                                    if (last_block_num + 10 < highest_block_height)
+                                    if (!CoreProtocolMessage.processHelloMessageV5(endpoint, reader))
                                     {
-                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
                                         return;
                                     }
-                                }
 
-                                // Process the hello data
-                                endpoint.helloReceived = true;
-                                NetworkClientManager.recalculateLocalTimeDifference();
+                                    ulong last_block_num = reader.ReadUInt64();
+                                    int bcLen = reader.ReadInt32();
+                                    byte[] block_checksum = reader.ReadBytes(bcLen);
+                                    int wsLen = reader.ReadInt32();
+                                    byte[] walletstate_checksum = reader.ReadBytes(wsLen);
+                                    int consensus = reader.ReadInt32(); // deprecated
 
-                                if (endpoint.presenceAddress.type == 'R')
-                                {
-                                    string[] connected_servers = StreamClientManager.getConnectedClients(true);
-                                    if (connected_servers.Count() == 1 || !connected_servers.Contains(StreamClientManager.primaryS2Address))
+                                    endpoint.blockHeight = last_block_num;
+
+                                    int block_version = reader.ReadInt32();
+
+                                    // Check for legacy level
+                                    ulong legacy_level = reader.ReadUInt64(); // deprecated
+
+                                    int challenge_response_len = reader.ReadInt32();
+                                    byte[] challenge_response = reader.ReadBytes(challenge_response_len);
+                                    if (!CryptoManager.lib.verifySignature(endpoint.challenge, endpoint.serverPubKey, challenge_response))
                                     {
-                                        if(StreamClientManager.primaryS2Address == "")
+                                        CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.authFailed, string.Format("Invalid challenge response."), "", true);
+                                        return;
+                                    }
+
+                                    if (endpoint.presenceAddress.type != 'C')
+                                    {
+                                        ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
+                                        if (last_block_num + 10 < highest_block_height)
                                         {
-                                            FriendList.requestAllFriendsPresences();
+                                            CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
+                                            return;
                                         }
-                                        // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
-                                        StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
-                                        // TODO TODO do not set if directly connectable
-                                        IxianHandler.publicIP = endpoint.address;
-                                        IxianHandler.publicPort = endpoint.incomingPort;
-                                        PresenceList.forceSendKeepAlive = true;
-                                        Logging.info("Forcing KA from networkprotocol");
                                     }
-                                }else if (endpoint.presenceAddress.type == 'C')
-                                {
-                                    Friend f = FriendList.getFriend(endpoint.presence.wallet);
-                                    if (f != null && f.bot)
+
+                                    // Process the hello data
+                                    endpoint.helloReceived = true;
+                                    NetworkClientManager.recalculateLocalTimeDifference();
+
+                                    if (endpoint.presenceAddress.type == 'R')
                                     {
-                                        StreamProcessor.sendGetBotInfo(f);
+                                        string[] connected_servers = StreamClientManager.getConnectedClients(true);
+                                        if (connected_servers.Count() == 1 || !connected_servers.Contains(StreamClientManager.primaryS2Address))
+                                        {
+                                            if (StreamClientManager.primaryS2Address == "")
+                                            {
+                                                FriendList.requestAllFriendsPresences();
+                                            }
+                                            // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
+                                            StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
+                                            // TODO TODO do not set if directly connectable
+                                            IxianHandler.publicIP = endpoint.address;
+                                            IxianHandler.publicPort = endpoint.incomingPort;
+                                            PresenceList.forceSendKeepAlive = true;
+                                            Logging.info("Forcing KA from networkprotocol");
+                                        }
                                     }
-                                }
+                                    else if (endpoint.presenceAddress.type == 'C')
+                                    {
+                                        Friend f = FriendList.getFriend(endpoint.presence.wallet);
+                                        if (f != null && f.bot)
+                                        {
+                                            StreamProcessor.sendGetBotInfo(f);
+                                        }
+                                    }
 
-                                if(endpoint.presenceAddress.type == 'M')
+                                    if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
+                                    {
+                                        Node.setNetworkBlock(last_block_num, block_checksum, block_version);
+
+                                        // Get random presences
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
+
+                                        subscribeToEvents(endpoint);
+                                    }
+                                }else
                                 {
-                                    Node.setNetworkBlock(last_block_num, block_checksum, block_version);
+                                    if (!CoreProtocolMessage.processHelloMessageV6(endpoint, reader))
+                                    {
+                                        return;
+                                    }
 
-                                    // Get random presences
-                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
-                                    endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                                    ulong last_block_num = reader.ReadIxiVarUInt();
+                                    int bcLen = (int)reader.ReadIxiVarUInt();
+                                    byte[] block_checksum = reader.ReadBytes(bcLen);
 
-                                    subscribeToEvents(endpoint);
+                                    endpoint.blockHeight = last_block_num;
+
+                                    int block_version = (int)reader.ReadIxiVarUInt();
+
+                                    if (endpoint.presenceAddress.type != 'C')
+                                    {
+                                        ulong highest_block_height = IxianHandler.getHighestKnownNetworkBlockHeight();
+                                        if (last_block_num + 10 < highest_block_height)
+                                        {
+                                            CoreProtocolMessage.sendBye(endpoint, ProtocolByeCode.tooFarBehind, string.Format("Your node is too far behind, your block height is {0}, highest network block height is {1}.", last_block_num, highest_block_height), highest_block_height.ToString(), true);
+                                            return;
+                                        }
+                                    }
+
+                                    // Process the hello data
+                                    endpoint.helloReceived = true;
+                                    NetworkClientManager.recalculateLocalTimeDifference();
+
+                                    if (endpoint.presenceAddress.type == 'R')
+                                    {
+                                        string[] connected_servers = StreamClientManager.getConnectedClients(true);
+                                        if (connected_servers.Count() == 1 || !connected_servers.Contains(StreamClientManager.primaryS2Address))
+                                        {
+                                            if (StreamClientManager.primaryS2Address == "")
+                                            {
+                                                FriendList.requestAllFriendsPresences();
+                                            }
+                                            // TODO set the primary s2 host more efficiently, perhaps allow for multiple s2 primary hosts
+                                            StreamClientManager.primaryS2Address = endpoint.getFullAddress(true);
+                                            // TODO TODO do not set if directly connectable
+                                            IxianHandler.publicIP = endpoint.address;
+                                            IxianHandler.publicPort = endpoint.incomingPort;
+                                            PresenceList.forceSendKeepAlive = true;
+                                            Logging.info("Forcing KA from networkprotocol");
+                                        }
+                                    }
+                                    else if (endpoint.presenceAddress.type == 'C')
+                                    {
+                                        Friend f = FriendList.getFriend(endpoint.presence.wallet);
+                                        if (f != null && f.bot)
+                                        {
+                                            StreamProcessor.sendGetBotInfo(f);
+                                        }
+                                    }
+
+                                    if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
+                                    {
+                                        Node.setNetworkBlock(last_block_num, block_checksum, block_version);
+
+                                        // Get random presences
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'R' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'M' });
+                                        endpoint.sendData(ProtocolMessageCode.getRandomPresences, new byte[1] { (byte)'H' });
+
+                                        subscribeToEvents(endpoint);
+                                    }
                                 }
                             }
+
                         }
                         break;
 
@@ -228,6 +273,37 @@ namespace SPIXI.Network
                                 using (BinaryReader reader = new BinaryReader(m))
                                 {
                                     int walletLen = reader.ReadInt32();
+                                    byte[] wallet = reader.ReadBytes(walletLen);
+
+                                    Presence p = PresenceList.getPresenceByAddress(wallet);
+                                    if (p != null)
+                                    {
+                                        lock (p)
+                                        {
+                                            byte[][] presence_chunks = p.getByteChunks();
+                                            foreach (byte[] presence_chunk in presence_chunks)
+                                            {
+                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // TODO blacklisting point
+                                        Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", Base58Check.Base58CheckEncoding.EncodePlain(wallet)));
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
+                    case ProtocolMessageCode.getPresence2:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    int walletLen = (int)reader.ReadIxiVarUInt();
                                     byte[] wallet = reader.ReadBytes(walletLen);
 
                                     Presence p = PresenceList.getPresenceByAddress(wallet);
@@ -286,13 +362,47 @@ namespace SPIXI.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.balance2:
+                        {
+                            using (MemoryStream m = new MemoryStream(data))
+                            {
+                                using (BinaryReader reader = new BinaryReader(m))
+                                {
+                                    int address_length = (int)reader.ReadIxiVarUInt();
+                                    byte[] address = reader.ReadBytes(address_length);
+
+                                    // Retrieve the latest balance
+                                    IxiNumber balance = new IxiNumber(new BigInteger(reader.ReadBytes((int)reader.ReadIxiVarUInt())));
+
+                                    if (address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                                    {
+                                        // Retrieve the blockheight for the balance
+                                        ulong block_height = reader.ReadIxiVarUInt();
+
+                                        if (block_height > Node.balance.blockHeight && (Node.balance.balance != balance || Node.balance.blockHeight == 0))
+                                        {
+                                            byte[] block_checksum = reader.ReadBytes((int)reader.ReadIxiVarUInt());
+
+                                            Node.balance.address = address;
+                                            Node.balance.balance = balance;
+                                            Node.balance.blockHeight = block_height;
+                                            Node.balance.blockChecksum = block_checksum;
+                                            Node.balance.lastUpdate = Clock.getTimestamp();
+                                            Node.balance.verified = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        break;
+
                     case ProtocolMessageCode.newTransaction:
                     case ProtocolMessageCode.transactionData:
                         {
                             // TODO: check for errors/exceptions
                             Transaction transaction = new Transaction(data, true);
 
-                            if (endpoint != null && endpoint.presenceAddress.type == 'M')
+                            if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
                             {
                                 PendingTransactions.increaseReceivedCount(transaction.id, endpoint.presence.wallet);
                             }
@@ -304,75 +414,7 @@ namespace SPIXI.Network
                         break;
 
                     case ProtocolMessageCode.bye:
-                        {
-                            using (MemoryStream m = new MemoryStream(data))
-                            {
-                                using (BinaryReader reader = new BinaryReader(m))
-                                {
-                                    endpoint.stop();
-
-                                    bool byeV1 = false;
-                                    try
-                                    {
-                                        ProtocolByeCode byeCode = (ProtocolByeCode)reader.ReadInt32();
-                                        string byeMessage = reader.ReadString();
-                                        string byeData = reader.ReadString();
-
-                                        byeV1 = true;
-
-                                        switch (byeCode)
-                                        {
-                                            case ProtocolByeCode.bye: // all good
-                                                break;
-
-                                            case ProtocolByeCode.deprecated: // deprecated node disconnected
-                                                Logging.info(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
-                                                break;
-
-                                            case ProtocolByeCode.incorrectIp: // incorrect IP
-                                                if (IxiUtils.validateIPv4(byeData))
-                                                {
-                                                    if (NetworkClientManager.getConnectedClients(true).Length < 2)
-                                                    {
-                                                        // TODO TODO do not set if not directly connectable
-                                                        IxianHandler.publicIP = byeData;
-                                                        Logging.info("Changed internal IP Address to " + byeData + ", reconnecting");
-                                                    }
-                                                }
-                                                break;
-
-                                            case ProtocolByeCode.notConnectable: // not connectable from the internet
-                                                Logging.error("This node must be connectable from the internet, to connect to the network.");
-                                                Logging.error("Please setup uPNP and/or port forwarding on your router for port " + IxianHandler.publicPort + ".");
-                                                NetworkServer.connectable = false;
-                                                break;
-
-                                            default:
-                                                Logging.warn(string.Format("Disconnected with message: {0} {1}", byeMessage, byeData));
-                                                break;
-                                        }
-                                    }
-                                    catch (Exception)
-                                    {
-
-                                    }
-                                    if (byeV1)
-                                    {
-                                        return;
-                                    }
-
-                                    reader.BaseStream.Seek(0, SeekOrigin.Begin);
-
-                                    // Retrieve the message
-                                    string message = reader.ReadString();
-
-                                    if (message.Length > 0)
-                                        Logging.info(string.Format("Disconnected with message: {0}", message));
-                                    else
-                                        Logging.info("Disconnected");
-                                }
-                            }
-                        }
+                        CoreProtocolMessage.processBye(data, endpoint);
                         break;
 
                     case ProtocolMessageCode.blockHeaders:
@@ -382,9 +424,22 @@ namespace SPIXI.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.blockHeaders2:
+                        {
+                            // Forward the block headers to the TIV handler
+                            Node.tiv.receivedBlockHeaders2(data, endpoint);
+                        }
+                        break;
+
                     case ProtocolMessageCode.pitData:
                         {
                             Node.tiv.receivedPIT(data, endpoint);
+                        }
+                        break;
+
+                    case ProtocolMessageCode.pitData2:
+                        {
+                            Node.tiv.receivedPIT2(data, endpoint);
                         }
                         break;
 
@@ -396,11 +451,6 @@ namespace SPIXI.Network
             catch (Exception e)
             {
                 Logging.error(string.Format("Error parsing network message. Details: {0}", e.ToString()));
-            }
-
-            if (waitingFor == code)
-            {
-                blocked = false;
             }
         }
     }

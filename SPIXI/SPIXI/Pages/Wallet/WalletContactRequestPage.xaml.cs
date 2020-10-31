@@ -133,8 +133,8 @@ namespace SPIXI
 
                 Transaction transaction = new Transaction((int)Transaction.Type.Normal, amount, fee, to, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
-                NetworkClientManager.broadcastData(new char[] { 'M' }, ProtocolMessageCode.newTransaction, transaction.getBytes(), null);
-
+                IxianHandler.addTransaction(transaction, true);
+                
                 SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.id));
 
                 requestMsg.message = ":" + transaction.id;

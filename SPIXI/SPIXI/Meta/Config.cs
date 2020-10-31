@@ -1,4 +1,5 @@
 ﻿using IXICore;
+using IXICore.Meta;
 using System.IO;
 
 namespace SPIXI.Meta
@@ -8,7 +9,7 @@ namespace SPIXI.Meta
         // Providing pre-defined values
         // Can be read from a file later, or read from the command line
 
-        public static bool isTestNet = false;
+        public static NetworkType networkType = NetworkType.main;
 
         public static bool enablePushNotifications = true;
 
