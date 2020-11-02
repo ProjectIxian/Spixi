@@ -75,8 +75,7 @@ namespace SPIXI.Meta
 
             Instance = this;
 
-            CoreConfig.productVersion = Config.version;
-            IxianHandler.init(this, Config.networkType);
+            IxianHandler.init(Config.version, this, Config.networkType);
 
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
