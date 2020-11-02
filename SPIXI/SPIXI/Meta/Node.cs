@@ -81,13 +81,7 @@ namespace SPIXI.Meta
             // Prepare the wallet
             walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
-            string peers_filename = "peers.ixi";
-            if(IxianHandler.isTestNet)
-            {
-                peers_filename = "testnet-peers.ixi";
-            }
-
-            PeerStorage.init(Config.spixiUserFolder, peers_filename);
+            PeerStorage.init(Config.spixiUserFolder);
 
             // Init TIV
             tiv = new TransactionInclusion();
@@ -124,7 +118,7 @@ namespace SPIXI.Meta
 
             UpdateVerify.init(Config.checkVersionUrl, Config.checkVersionSeconds);
 
-            ulong block_height = 1;
+            ulong block_height = 0;
             byte[] block_checksum = null;
 
             string headers_path;
@@ -138,8 +132,8 @@ namespace SPIXI.Meta
                 if (generatedNewWallet || !walletStorage.walletExists())
                 {
                     generatedNewWallet = false;
-                    block_height = Config.bakedBlockHeight;
-                    block_checksum = Config.bakedBlockChecksum;
+                    block_height = CoreConfig.bakedBlockHeight;
+                    block_checksum = CoreConfig.bakedBlockChecksum;
                 }
                 else
                 {
