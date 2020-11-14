@@ -1,4 +1,4 @@
-﻿language-code = lt-LT
+﻿language-code = lt-lt
 language = Lithuanian
 
 ; Address Screen
@@ -265,7 +265,7 @@ settings-deletea-text = Ar tikrai norite ištrinti „Spixi“ paskyrą? <br/> <
 settings-deleteda-title = Pašalinta
 settings-deleteda-text = Spixi paskyra pašalinta.
 settings-wallet-settings = Piniginės nustatymai
-settings-wallet-description = Jūsų piniginė susieta su jūsų „Spixi“ paskyra. Norėdami ištrinti savo piniginę ir visą mokėjimų istoriją šiame įrenginyje, palieskite žemiau esantį mygtuką "Ištrinti mano piniginę".
+settings-wallet-description = Jūsų piniginė susieta su jūsų „Spixi“ paskyra. Norėdami ištrinti savo piniginę ir visą mokėjimų istoriją šiame įrenginyje, palieskite žemiau esantį mygtuką &quot;Ištrinti mano piniginę&quot;.
 settings-wallet-delete = IŠTRINTI MANO PINIGINĘ
 settings-deletew-title = Ištrinti šią piniginę?
 settings-deletew-text = Ar tikrai norite ištrinti savo piniginę? <br/> <br/> Šis veiksmas negrįžtamas! Ištrynę šią piniginę prarasite prieigą prie visų joje esančių lėšų! Norėdami atkurti šią piniginę, jums reikės atsarginės kopijos failo ir šifravimo slaptažodžio!
