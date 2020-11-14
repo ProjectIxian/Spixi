@@ -61,8 +61,14 @@ namespace SPIXI
                 if (Application.Current.Properties.ContainsKey("uid"))
                 {
                     byte[] uid = Application.Current.Properties["uid"] as byte[];
-                    // TODO: sanitize the uid if necessary
-                    CoreConfig.device_id = uid;
+                    if(uid == null)
+                    {
+                        // Generate and save the device ID
+                        Application.Current.Properties["uid"] = CoreConfig.device_id;
+                    }else
+                    {
+                        CoreConfig.device_id = uid;
+                    }
                 }
                 else
                 {
