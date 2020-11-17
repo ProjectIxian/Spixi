@@ -161,7 +161,10 @@ namespace SPIXI
             }
             foreach(var bot_entry in bot_list)
             {
-                connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
+                if(bot_entry.relayIP != null)
+                {
+                    connectTo(bot_entry.searchForRelay(), bot_entry.walletAddress);
+                }
             }
         }
 
