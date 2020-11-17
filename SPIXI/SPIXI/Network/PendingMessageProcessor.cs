@@ -234,17 +234,33 @@ namespace SPIXI.Network
             bool send_push_notification = pending_message.sendPushNotification;
 
             // TODO this function has to be improved and node's wallet address has to be added
-            if ((friend.publicKey != null && msg.encryptionType == StreamMessageEncryptionCode.rsa) || (msg.encryptionType != StreamMessageEncryptionCode.rsa && friend.aesKey != null && friend.chachaKey != null))
+            if (friend.publicKey != null || (msg.encryptionType != StreamMessageEncryptionCode.rsa && friend.aesKey != null && friend.chachaKey != null))
             {
-                if (msg.encryptionType == StreamMessageEncryptionCode.none)
+                if(msg.encryptionType == StreamMessageEncryptionCode.none)
                 {
-                    // upgrade encryption type
-                    msg.encryptionType = StreamMessageEncryptionCode.spixi1;
+                    if (friend.aesKey != null && friend.chachaKey != null)
+                    {
+                        // upgrade encryption type
+                        msg.encryptionType = StreamMessageEncryptionCode.spixi1;
+                    }
+                    else
+                    {
+                        // upgrade encryption type
+                        msg.encryptionType = StreamMessageEncryptionCode.rsa;
+                    }
+                }
+                if (msg.version == 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa && !msg.encrypted)
+                {
+                    msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
                 }
                 if (!msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey))
                 {
                     Logging.warn("Could not encrypt message for {0}!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
                     return false;
+                }
+                if(msg.version > 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa)
+                {
+                    msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
                 }
             }
             else if (msg.encryptionType != StreamMessageEncryptionCode.none)
@@ -257,7 +273,8 @@ namespace SPIXI.Network
                 if(!friend.bot)
                 {
                     Logging.warn("Could not send message to {0}, due to missing encryption keys!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                    return false;
+                    // Return true in case it has other messages in the queue that need to be processed and aren't encrypted
+                    return true;
                 }else
                 {
                     // TODO TODO TODO perhaps it would be better to discard such message and notify the user
