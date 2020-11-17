@@ -192,8 +192,6 @@ namespace SPIXI
                 message.type = StreamMessageCode.info;
                 message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
                 message.sender = Node.walletStorage.getPrimaryAddress();
-                message.transaction = new byte[1];
-                message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
                 message.id = friend_message.id;
 

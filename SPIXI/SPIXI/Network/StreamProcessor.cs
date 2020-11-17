@@ -661,7 +661,7 @@ namespace SPIXI
                             // Friend request
                             if (!new Address(spixi_message.data).address.SequenceEqual(sender_address) || !message.verifySignature(spixi_message.data))
                             {
-                                Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                                Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type.ToString(), Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
                             else
                             {
@@ -681,7 +681,7 @@ namespace SPIXI
                             }
                             if (!message.verifySignature(pub_k))
                             {
-                                Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type, Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
+                                Logging.error("Unable to verify signature for message type: {0}, id: {1}, from: {2}.", message.type.ToString(), Crypto.hashToString(message.id), Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                             }
                             else
                             {
@@ -798,8 +798,6 @@ namespace SPIXI
             msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg_received.recipient = sender_address;
             msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id, channel).getBytes();
-            msg_received.transaction = new byte[1];
-            msg_received.sigdata = new byte[1];
             msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
             sendMessage(friend, msg_received, true, true, false, true);
@@ -889,6 +887,10 @@ namespace SPIXI
 
             if (new_friend != null)
             {
+                if (new_friend.lastReceivedHandshakeMessageTimestamp >= received_timestamp)
+                {
+                    return;
+                }
                 new_friend.lastReceivedHandshakeMessageTimestamp = received_timestamp;
                 new_friend.handshakeStatus = 1;
                 FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, 0, "");
@@ -1080,8 +1082,6 @@ namespace SPIXI
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = Node.walletStorage.getPrimaryAddress();
-            new_msg.transaction = new byte[1];
-            new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg);
@@ -1098,8 +1098,6 @@ namespace SPIXI
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = Node.walletStorage.getPrimaryAddress();
-            new_msg.transaction = new byte[1];
-            new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg, true, false, false);
@@ -1116,8 +1114,6 @@ namespace SPIXI
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
             new_msg.sender = Node.walletStorage.getPrimaryAddress();
-            new_msg.transaction = new byte[1];
-            new_msg.sigdata = new byte[1];
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg);
@@ -1134,8 +1130,6 @@ namespace SPIXI
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
             msg.sender = Node.walletStorage.getPrimaryAddress();
-            msg.transaction = new byte[1];
-            msg.sigdata = new byte[1];
             msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, msg, false, false, false);
@@ -1152,8 +1146,6 @@ namespace SPIXI
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
             msg.sender = Node.walletStorage.getPrimaryAddress();
-            msg.transaction = new byte[1];
-            msg.sigdata = new byte[1];
             msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, msg, true, true, false);
@@ -1340,13 +1332,9 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
             message.encryptionType = StreamMessageEncryptionCode.rsa;
             message.id = new byte[] { 1 };
-
-            message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
             sendMessage(friend, message);
 
@@ -1362,8 +1350,6 @@ namespace SPIXI
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
             reply_message.sender = Node.walletStorage.getPrimaryAddress();
-            reply_message.transaction = new byte[1];
-            reply_message.sigdata = new byte[1];
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 5 };
 
@@ -1375,7 +1361,6 @@ namespace SPIXI
             else if (friend.aesKey == null || friend.chachaKey == null)
             {
                 reply_message.encryptionType = StreamMessageEncryptionCode.rsa;
-                reply_message.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
             }
 
             sendMessage(friend, reply_message, true, true, false);
@@ -1392,8 +1377,6 @@ namespace SPIXI
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
             reply_message.sender = Node.walletStorage.getPrimaryAddress();
-            reply_message.transaction = new byte[1];
-            reply_message.sigdata = new byte[1];
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 6 };
 
@@ -1417,8 +1400,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
             if (friend.bot)
             {
@@ -1450,8 +1431,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
             if (!friend.bot)
             {
@@ -1482,8 +1461,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
             if (!friend.bot)
             {
@@ -1517,8 +1494,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 0 };
 
@@ -1537,8 +1512,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
 
             sendMessage(friend, message);
@@ -1556,8 +1529,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 11 };
 
@@ -1576,8 +1547,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 12 };
 
@@ -1596,8 +1565,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 13 };
 
@@ -1616,8 +1583,6 @@ namespace SPIXI
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.recipient = friend.walletAddress;
             message.data = spixi_message.getBytes();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.encryptionType = StreamMessageEncryptionCode.none;
             message.id = new byte[] { 14 };
 
@@ -1800,8 +1765,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = bot.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
             if (bot.bot)
@@ -1826,8 +1789,6 @@ namespace SPIXI
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
             if (friend.bot)
@@ -1848,8 +1809,6 @@ namespace SPIXI
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
             if (friend.bot)
@@ -1876,8 +1835,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
             if (friend.bot)
@@ -1898,8 +1855,6 @@ namespace SPIXI
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
             message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_message.getBytes();
 
             if (friend.bot)

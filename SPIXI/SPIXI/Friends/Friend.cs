@@ -428,13 +428,9 @@ namespace SPIXI
                         sm.type = StreamMessageCode.info;
                         sm.recipient = walletAddress;
                         sm.sender = Node.walletStorage.getPrimaryAddress();
-                        sm.transaction = new byte[1];
-                        sm.sigdata = new byte[1];
                         sm.data = spixi_message.getBytes();
                         sm.encryptionType = StreamMessageEncryptionCode.rsa;
                         sm.id = new byte[] { 2 };
-
-                        sm.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
                         StreamProcessor.sendMessage(this, sm);
                     }

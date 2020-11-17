@@ -405,8 +405,6 @@ namespace SPIXI
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
             message.sender = Node.walletStorage.getPrimaryAddress();
-            message.transaction = new byte[1];
-            message.sigdata = new byte[1];
             message.data = spixi_msg_bytes;
             message.id = friend_message.id;
 
@@ -466,8 +464,6 @@ namespace SPIXI
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
                 message.sender = Node.walletStorage.getPrimaryAddress();
-                message.transaction = new byte[1];
-                message.sigdata = new byte[1];
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message);
@@ -1011,7 +1007,7 @@ namespace SPIXI
 
         private void updateMessageReadStatus(FriendMessage message, int channel)
         {
-            if (!message.read && !message.localSender && App.isInForeground)
+            if (!message.read && !message.localSender && App.isInForeground && message.type != FriendMessageType.requestAdd)
             {
                 Node.shouldRefreshContacts = true;
 
@@ -1032,8 +1028,7 @@ namespace SPIXI
                     msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     msg_received.recipient = friend.walletAddress;
                     msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
-                    msg_received.transaction = new byte[1];
-                    msg_received.sigdata = new byte[1];
+                    msg_received.encrypted = false;
 
                     StreamProcessor.sendMessage(friend, msg_received, true, true, false, true);
                 }
