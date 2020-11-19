@@ -254,6 +254,11 @@ namespace SPIXI.Network
                             Logging.info("NET: Receiving presence list update");
                             // Parse the data and update entries in the presence list
                             Presence p = PresenceList.updateFromBytes(data);
+                            Friend f = FriendList.getFriend(p.wallet);
+                            if(f != null)
+                            {
+                                f.relayIP = p.addresses[0].address;
+                            }
                         }
                         break;
 
@@ -263,6 +268,12 @@ namespace SPIXI.Network
                             long last_seen = 0;
                             byte[] device_id = null;
                             bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, endpoint);
+                            Presence p = PresenceList.getPresenceByAddress(address);
+                            Friend f = FriendList.getFriend(p.wallet);
+                            if (f != null)
+                            {
+                                f.relayIP = p.addresses[0].address;
+                            }
                         }
                         break;
 
