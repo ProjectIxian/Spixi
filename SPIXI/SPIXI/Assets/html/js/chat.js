@@ -959,6 +959,9 @@ function displayChannelSelector(e)
     if(channelSelectorEl != null)
     {
         channelSelectorEl.parentNode.removeChild(channelSelectorEl);
+        channelSelectorEl = null;
+        e.stopPropagation();
+        return false;
 	}
     channelSelectorEl = document.createElement("div");
     channelSelectorEl.className = "spixi-channel-selector";
@@ -1003,6 +1006,14 @@ function addChannelToSelector(id, name, icon, unread)
 	};
 
     channelSelectorEl.appendChild(childEl);
+
+    if(channelSelectorEl.getElementsByClassName("unread-indicator").length == 0)
+    {
+        channelSelectorEl.className = "spixi-channel-selector";
+    }else
+    {
+        channelSelectorEl.className = "spixi-channel-selector unread-indicator";
+    }
 }
 
 function hideChannelSelector()
