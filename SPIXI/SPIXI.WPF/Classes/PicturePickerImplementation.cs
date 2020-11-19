@@ -68,7 +68,7 @@ namespace SPIXI.WPF.Classes
 
             var cropped_image = new CroppedBitmap(original_image, new Int32Rect(crop_x, crop_y, cropped_width, cropped_height));
 
-            var rect = new Rect(0, 0, new_width, new_height);
+            var rect = new System.Windows.Rect(0, 0, new_width, new_height);
 
             var group = new DrawingGroup();
             RenderOptions.SetBitmapScalingMode(group, BitmapScalingMode.HighQuality);
