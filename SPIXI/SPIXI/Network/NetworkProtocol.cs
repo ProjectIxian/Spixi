@@ -272,6 +272,9 @@ namespace SPIXI.Network
                             byte[] device_id = null;
                             bool updated = PresenceList.receiveKeepAlive(data, out address, out last_seen, out device_id, endpoint);
                             Presence p = PresenceList.getPresenceByAddress(address);
+                            if (p == null)
+                                return;
+
                             Friend f = FriendList.getFriend(p.wallet);
                             if (f != null)
                             {
