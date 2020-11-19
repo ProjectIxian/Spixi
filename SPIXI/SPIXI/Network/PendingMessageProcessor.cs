@@ -243,24 +243,27 @@ namespace SPIXI.Network
                         // upgrade encryption type
                         msg.encryptionType = StreamMessageEncryptionCode.spixi1;
                     }
-                    else
+                    else if (!friend.bot)
                     {
                         // upgrade encryption type
                         msg.encryptionType = StreamMessageEncryptionCode.rsa;
                     }
                 }
-                if (msg.version == 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa && !msg.encrypted)
+                if(msg.encryptionType != StreamMessageEncryptionCode.none)
                 {
-                    msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
-                }
-                if (!msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey))
-                {
-                    Logging.warn("Could not encrypt message for {0}!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
-                    return false;
-                }
-                if(msg.version > 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa)
-                {
-                    msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                    if (msg.version == 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa && !msg.encrypted)
+                    {
+                        msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                    }
+                    if (!msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey))
+                    {
+                        Logging.warn("Could not encrypt message for {0}!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                        return false;
+                    }
+                    if (msg.version > 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa)
+                    {
+                        msg.sign(IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                    }
                 }
             }
             else if (msg.encryptionType != StreamMessageEncryptionCode.none)
