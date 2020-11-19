@@ -254,6 +254,9 @@ namespace SPIXI.Network
                             Logging.info("NET: Receiving presence list update");
                             // Parse the data and update entries in the presence list
                             Presence p = PresenceList.updateFromBytes(data);
+                            if (p == null)
+                                return;
+
                             Friend f = FriendList.getFriend(p.wallet);
                             if(f != null)
                             {
