@@ -341,7 +341,7 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     var unreadEl = document.getElementById("un_" + wal);
     if(chatEl != null)
     {
-        if((excerpt == "" && time == 0) || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
+        if((excerpt == "" && msgTimestamp == 0) || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
         {
             chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
             unreadEl.className = "spixi-list-item" + indicator + unreadIndicator;
@@ -357,7 +357,10 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     {
         unreadEl.parentElement.removeChild(unreadEl);
     }
-    addUnreadActivity(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, true);
+    if(unread > 0)
+    {
+        addUnreadActivity(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, true);
+    }
 }
 
 
