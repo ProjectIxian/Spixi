@@ -1009,9 +1009,10 @@ namespace SPIXI
         {
             if (!message.read && !message.localSender && App.isInForeground && message.type != FriendMessageType.requestAdd)
             {
-                UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
+                message.read = true;
 
-                message.read = true;                
+                UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
+
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
                 if (friend.metaData.unreadMessageCount > 0)
                 {

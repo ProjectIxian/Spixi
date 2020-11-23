@@ -325,7 +325,8 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     }
     
     var indicator = " offline";
-    if (online == "true") {
+    if (("" + online).toLowerCase() == "true") {
+        online = "true";
         indicator = " online";
     }
 
@@ -334,26 +335,29 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
         unreadIndicator = " unread";
     }
     el.className = "spixi-list-item" + indicator + unreadIndicator;
-
-    var timeClass = "spixi-timestamp";
-    var relativeTime = getRelativeTime(msgTimestamp);
-
-    if (getTimeDifference(msgTimestamp) < 3600) {
-        timeClass = "spixi-timestamp spixi-rel-ts-active";
-    }
     
     // update for chats
     var chatEl = document.getElementById("ch_" + wal);
-    if(chatEl == null)
+    var unreadEl = document.getElementById("un_" + wal);
+    if(chatEl != null)
     {
-        addChat(wal, el.getElementsByClassName("nick")[0].innerHTML, msgTimestamp, el.getElementsByClassName("spixi-list-item-avatar")[0].src, online, excerpt, unread);
-    }else
-    {
-        chatEl.getElementsByClassName("excerpt")[0].innerHTML = excerpt;
-        chatEl.getElementsByClassName("spixi-timestamp")[0].className = timeClass;
-        chatEl.getElementsByClassName("spixi-timestamp")[0].setAttribute("data-timestamp", msgTimestamp);
-        chatEl.getElementsByClassName("spixi-timestamp")[0].innerHTML = relativeTime;
+        if((excerpt == "" && time == 0) || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
+        {
+            chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
+            unreadEl.className = "spixi-list-item" + indicator + unreadIndicator;
+            return;
+        }
+        chatEl.parentElement.removeChild(chatEl);
     }
+
+    var nickEl = el.getElementsByClassName("nick");
+    var avatarEl = el.getElementsByClassName("spixi-list-item-avatar");
+    addChat(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, unread, true);
+    if(unreadEl != null)
+    {
+        unreadEl.parentElement.removeChild(unreadEl);
+    }
+    addUnreadActivity(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, true);
 }
 
 
@@ -395,7 +399,7 @@ function clearChats() {
 }
 
 // Adds a chat
-function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread)
+function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread, insertToTop)
 {
     from = htmlEscape(from);
     timestamp = htmlEscape(timestamp);
@@ -422,11 +426,19 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread)
     }
 
     var chatsNode = document.getElementById("chatlist");
-    var readmsg = document.createElement("a");
+    var readmsg = document.createElement("div");
+    readmsg.id = "ch_" + wallet;
+    readmsg.className = "spixi-list-item" + indicator + unreadIndicator;
     readmsg.href = "ixian:chat:" + wallet;
-    readmsg.innerHTML = '<div id="ch_' + wallet + '" class="spixi-list-item' + indicator + unreadIndicator + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle excerpt">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></div>';
+    readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle excerpt">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
 
-    chatsNode.appendChild(readmsg);
+    if(insertToTop)
+    {
+        chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
+    }else
+    {
+        chatsNode.appendChild(readmsg);
+    }
     document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
 }
@@ -445,7 +457,7 @@ function clearUnreadActivity() {
     document.getElementById("exp2-contents").innerHTML = "";
 }
 
-function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg) {
+function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg, insertToTop) {
     from = htmlEscape(from);
     timestamp = htmlEscape(timestamp);
     avatar = avatar.replace(/&#92;/g, '\\');
@@ -468,10 +480,17 @@ function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg)
     var chatsNode = document.getElementById("exp2-contents");
     var readmsg = document.createElement("div");
     readmsg.href = "ixian:chat:" + wallet;
+    readmsg.id = "un_" + wallet;
     readmsg.className = "spixi-list-item " + indicator;
     readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
 
-    chatsNode.appendChild(readmsg);
+    if(insertToTop)
+    {
+        chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
+    }else
+    {
+        chatsNode.appendChild(readmsg);
+    }
     document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
 }

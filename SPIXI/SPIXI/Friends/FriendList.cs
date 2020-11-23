@@ -164,8 +164,6 @@ namespace SPIXI
                 return null;
             }
 
-            UIHelpers.setContactStatus(wallet_address, friend.online, friend.getUnreadMessageCount());
-
             if (!friend.online)
             {
                 using (MemoryStream mw = new MemoryStream())
@@ -263,7 +261,7 @@ namespace SPIXI
                 messages.Add(friend_message);
             }
 
-            if(set_read)
+            if (set_read)
             {
                 friend_message.confirmed = true;
                 friend_message.read = true;
@@ -281,6 +279,8 @@ namespace SPIXI
                 friend.metaData.unreadMessageCount++;
                 friend.saveMetaData();
             }
+
+            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), message, timestamp);
 
             // Send a local push notification if Spixi is not in the foreground
             if (fire_local_notification && !local_sender)
@@ -499,14 +499,14 @@ namespace SPIXI
                         if(friend.online == false)
                         {
                             friend.online = true;
-                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
                         }
                     }else
                     {
                         if (friend.online == true)
                         {
                             friend.online = false;
-                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
                         }
                     }
                 }
