@@ -1009,7 +1009,7 @@ namespace SPIXI
         {
             if (!message.read && !message.localSender && App.isInForeground && message.type != FriendMessageType.requestAdd)
             {
-                Node.shouldRefreshContacts = true;
+                UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
 
                 message.read = true;                
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);

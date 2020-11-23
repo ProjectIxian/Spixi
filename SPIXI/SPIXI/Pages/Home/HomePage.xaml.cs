@@ -842,5 +842,10 @@ namespace SPIXI
             }
             return "(not checked)";
         }
+
+        public void setContactStatus(byte[] address, bool online, int unread)
+        {
+            Utils.sendUiCommand(webView, "setContactStatus", Base58Check.Base58CheckEncoding.EncodePlain(address), online.ToString(), unread.ToString());
+        }
     }
 }

@@ -109,8 +109,11 @@ namespace SPIXI
             }
             else
             {
-                friend.nickname = nick;
-                Node.shouldRefreshContacts = true;
+                if(friend.nickname != nick)
+                {
+                    friend.nickname = nick;
+                    Node.shouldRefreshContacts = true;
+                }
             }
         }
         // Set the avatar for a specific wallet address
@@ -161,7 +164,7 @@ namespace SPIXI
                 return null;
             }
 
-            Node.shouldRefreshContacts = true;
+            UIHelpers.setContactStatus(wallet_address, friend.online, friend.getUnreadMessageCount());
 
             if (!friend.online)
             {
@@ -495,16 +498,16 @@ namespace SPIXI
                     {
                         if(friend.online == false)
                         {
-                            Node.shouldRefreshContacts = true;
+                            friend.online = true;
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
                         }
-                        friend.online = true;
                     }else
                     {
                         if (friend.online == true)
                         {
-                            Node.shouldRefreshContacts = true;
+                            friend.online = false;
+                            UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount());
                         }
-                        friend.online = false;
                     }
                 }
             }
