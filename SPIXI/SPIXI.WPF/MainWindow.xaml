@@ -6,7 +6,7 @@
         xmlns:wpf="clr-namespace:Xamarin.Forms.Platform.WPF;assembly=Xamarin.Forms.Platform.WPF"
         xmlns:local="clr-namespace:SPIXI.WPF"
         mc:Ignorable="d"
-        Title="SPIXI IM" Height="700" Width="450" Style="{StaticResource SpixiWindowStyle}">
+        Title="Spixi IM" Height="700" Width="450" Style="{StaticResource SpixiWindowStyle}">
     <Grid>
 
     </Grid>

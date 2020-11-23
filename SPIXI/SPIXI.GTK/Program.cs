@@ -19,7 +19,7 @@ namespace SPIXI.GTK
             var app = App.Instance();
             var window = new FormsWindow();
             window.LoadApplication(app);
-            window.SetApplicationTitle("SPIXI");
+            window.SetApplicationTitle("Spixi");
             window.Show();
 
             Gtk.Application.Run();
