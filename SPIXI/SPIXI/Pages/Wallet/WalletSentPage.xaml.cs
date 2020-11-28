@@ -142,7 +142,7 @@ namespace SPIXI
             }
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.id);
+                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", Transaction.txIdV8ToLegacy(transaction.id));
             return;
         }
 

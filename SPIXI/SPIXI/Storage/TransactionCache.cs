@@ -2,6 +2,7 @@
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SPIXI.Storage
 {
@@ -14,14 +15,14 @@ namespace SPIXI.Storage
 
         // Retrieve a transaction from local storage
         // Todo: if transaction not found in local storage, send a network-wide request
-        public static Transaction getTransaction(string txid)
+        public static Transaction getTransaction(byte[] txid)
         {
             // First check the confirmed transactions cache
             lock (transactions)
             {
                 foreach (Transaction tx in transactions)
                 {
-                    if (txid.Equals(tx.id, StringComparison.Ordinal))
+                    if (txid.SequenceEqual(tx.id))
                         return tx;
                 }
             }
@@ -30,14 +31,14 @@ namespace SPIXI.Storage
         }
 
         // Retrieves an unconfirmed transaction if found in local storage
-        public static Transaction getUnconfirmedTransaction(string txid)
+        public static Transaction getUnconfirmedTransaction(byte[] txid)
         {
             // Check also in unconfirmed transactions
             lock (unconfirmedTransactions)
             {
                 foreach (Transaction tx in unconfirmedTransactions)
                 {
-                    if (txid.Equals(tx.id, StringComparison.Ordinal))
+                    if (txid.SequenceEqual(tx.id))
                         return tx;
                 }
             }
@@ -53,7 +54,7 @@ namespace SPIXI.Storage
                 Transaction cached_tx = null;
                 foreach (Transaction tx in transactions)
                 {
-                    if (transaction.id.Equals(tx.id, StringComparison.Ordinal))
+                    if (transaction.id.SequenceEqual(tx.id))
                     {
                         cached_tx = tx;
                         break;
@@ -72,7 +73,7 @@ namespace SPIXI.Storage
                     cached_tx = null;
                     foreach (Transaction tx in unconfirmedTransactions)
                     {
-                        if (transaction.id.Equals(tx.id, StringComparison.Ordinal))
+                        if (transaction.id.SequenceEqual(tx.id))
                         {
                             cached_tx = tx;
                             break;
@@ -114,7 +115,7 @@ namespace SPIXI.Storage
                 Transaction cached_tx = null;
                 foreach (Transaction tx in unconfirmedTransactions)
                 {
-                    if (transaction.id.Equals(tx.id, StringComparison.Ordinal))
+                    if (transaction.id.SequenceEqual(tx.id))
                     {
                         cached_tx = tx;
                         break;

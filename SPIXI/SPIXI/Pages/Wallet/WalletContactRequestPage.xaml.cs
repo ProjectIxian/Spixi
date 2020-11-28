@@ -108,7 +108,7 @@ namespace SPIXI
 
                     if (friend.chat_page != null)
                     {
-                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, "", SpixiLocalization._SL("chat-payment-status-declined"));
+                        friend.chat_page.updateRequestFundsStatus(requestMsg.id, null, SpixiLocalization._SL("chat-payment-status-declined"));
                     }
                 }
             }

@@ -92,12 +92,12 @@ namespace SPIXI
             else if (current_url.Contains("ixian:txdetails:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:txdetails:" }, StringSplitOptions.None);
-                string id = split[1];
+                byte[] id = Transaction.txIdLegacyToV8(split[1]);
 
                 Transaction transaction = null;
                 foreach (Transaction tx in TransactionCache.transactions)
                 {
-                    if (tx.id.Equals(id, StringComparison.Ordinal))
+                    if (tx.id.SequenceEqual(id))
                     {
                         transaction = tx;
                         break;
@@ -108,7 +108,7 @@ namespace SPIXI
                 {
                     foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.Equals(id, StringComparison.Ordinal))
+                        if (tx.id.SequenceEqual(id))
                         {
                             transaction = tx;
                             break;
@@ -187,7 +187,7 @@ namespace SPIXI
                     tx_type = SpixiLocalization._SL("global-sent");
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, utransaction.amount.ToString(), "false");
+                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, utransaction.amount.ToString(), "false");
             }
 
             for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
@@ -215,7 +215,7 @@ namespace SPIXI
                     confirmed = "error";
                 }
 
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, transaction.amount.ToString(), confirmed);
+                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, transaction.amount.ToString(), confirmed);
             }
         }
 

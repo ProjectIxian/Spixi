@@ -7,10 +7,13 @@ namespace SPIXI
     {
         public static void setContactStatus(byte[] address, bool online, int unread, string excerpt, long timestamp)
         {
-            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
-            if (p.GetType() == typeof(HomePage))
+            var stack = App.Current.MainPage.Navigation.NavigationStack;
+            foreach (Page p in stack)
             {
-                ((HomePage)p).setContactStatus(address, online, unread, excerpt, timestamp);
+                if (p.GetType() == typeof(HomePage))
+                {
+                    ((HomePage)p).setContactStatus(address, online, unread, excerpt, timestamp);
+                }
             }
         }
     }

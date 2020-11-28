@@ -1037,7 +1037,8 @@ namespace SPIXI
 
             if (friend.chat_page != null)
             {
-                friend.chat_page.updateRequestFundsStatus(msg_id, tx_id, status);
+                byte[] b_tx_id = Transaction.txIdLegacyToV8(tx_id);
+                friend.chat_page.updateRequestFundsStatus(msg_id, b_tx_id, status);
             }
         }
 
@@ -1718,7 +1719,7 @@ namespace SPIXI
                 StreamTransaction st = new StreamTransaction(fm.id, tx);
                 sendBotAction(bot, SpixiBotActionCode.payment, st.getBytes(), channel_id, true);
 
-                fm.transactionId = tx.id;
+                fm.transactionId = Transaction.txIdV8ToLegacy(tx.id);
 
                 Node.localStorage.requestWriteMessages(bot.walletAddress, channel_id);
 
@@ -1726,10 +1727,11 @@ namespace SPIXI
             }
             else
             {
-                Transaction tx = TransactionCache.getTransaction(fm.transactionId);
+                byte[] b_txid = Transaction.txIdLegacyToV8(fm.transactionId);
+                Transaction tx = TransactionCache.getTransaction(b_txid);
                 if (tx == null)
                 {
-                    tx = TransactionCache.getUnconfirmedTransaction(fm.transactionId);
+                    tx = TransactionCache.getUnconfirmedTransaction(b_txid);
                 }
                 // TODO TODO TODO handle expired/failed transaction
                 if (tx == null)

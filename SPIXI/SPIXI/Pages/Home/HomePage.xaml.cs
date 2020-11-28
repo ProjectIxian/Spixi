@@ -219,11 +219,12 @@ namespace SPIXI
             {
                 string[] split = current_url.Split(new string[] { "ixian:txdetails:" }, StringSplitOptions.None);
                 string id = split[1];
+                byte[] b_txid = Transaction.txIdLegacyToV8(id);
 
                 Transaction transaction = null;
                 foreach (Transaction tx in TransactionCache.transactions)
                 {
-                    if (tx.id.Equals(id, StringComparison.Ordinal))
+                    if (tx.id.SequenceEqual(b_txid))
                     {
                         transaction = tx;
                         break;
@@ -234,7 +235,7 @@ namespace SPIXI
                 {
                     foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.Equals(id, StringComparison.Ordinal))
+                        if (tx.id.SequenceEqual(b_txid))
                         {
                             transaction = tx;
                             break;
@@ -711,7 +712,7 @@ namespace SPIXI
                     amount = calculateReceivedAmount(utransaction);
                 }
                 string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.id, tx_type, time, amount.ToString(), "false");
+                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, amount.ToString(), "false");
             }
 
             int max_tx_count = 0;
@@ -741,7 +742,7 @@ namespace SPIXI
                     confirmed = "error";
                 }
 
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.id, tx_type, time, amount.ToString(), confirmed);
+                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, amount.ToString(), confirmed);
             }
         }
 

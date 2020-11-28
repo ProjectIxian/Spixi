@@ -328,7 +328,7 @@ namespace SPIXI.Meta
             networkBlockVersion = block_version;
         }
 
-        public override void receivedTransactionInclusionVerificationResponse(string txid, bool verified)
+        public override void receivedTransactionInclusionVerificationResponse(byte[] txid, bool verified)
         {
             // TODO implement error
             // TODO implement blocknum
@@ -347,7 +347,7 @@ namespace SPIXI.Meta
             Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
             if (p.GetType() == typeof(SingleChatPage))
             {
-                ((SingleChatPage)p).updateTransactionStatus(txid, verified);
+                ((SingleChatPage)p).updateTransactionStatus(Transaction.txIdV8ToLegacy(txid), verified);
             }
         }
 
@@ -475,7 +475,7 @@ namespace SPIXI.Meta
                     // if transaction expired, remove it from pending transactions
                     if (last_block_height > ConsensusConfig.getRedactedWindowSize() && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
                     {
-                        Console.WriteLine("Error sending the transaction {0}", Encoding.UTF8.GetBytes(t.id));
+                        Console.WriteLine("Error sending the transaction {0}", Transaction.txIdV8ToLegacy(t.id));
                         PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
                         continue;
                     }
@@ -494,7 +494,7 @@ namespace SPIXI.Meta
 
                     if (cur_time - tx_time > 20) // if the transaction is pending for over 20 seconds, send inquiry
                     {
-                        CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
+                        CoreProtocolMessage.broadcastGetTransaction(Transaction.txIdV8ToLegacy(t.id), 0);
                     }
 
                     idx++;

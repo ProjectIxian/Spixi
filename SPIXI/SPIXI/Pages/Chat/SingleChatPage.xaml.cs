@@ -533,11 +533,12 @@ namespace SPIXI
                 {
                     id = id.Substring(1);
                 }
+                byte[] b_id = Transaction.txIdLegacyToV8(id);
 
                 Transaction transaction = null;
                 foreach (Transaction tx in TransactionCache.transactions)
                 {
-                    if (tx.id.Equals(id, StringComparison.Ordinal))
+                    if (tx.id.SequenceEqual(b_id))
                     {
                         transaction = tx;
                         break;
@@ -548,7 +549,7 @@ namespace SPIXI
                 {
                     foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.Equals(id, StringComparison.Ordinal))
+                        if (tx.id.SequenceEqual(b_id))
                         {
                             transaction = tx;
                             break;
@@ -855,12 +856,13 @@ namespace SPIXI
                 {
                     status = SpixiLocalization._SL("chat-payment-status-pending");
                     txid = message.message.Substring(1);
+                    byte[] b_txid = Transaction.txIdLegacyToV8(txid);
 
                     bool confirmed = true;
-                    Transaction transaction = TransactionCache.getTransaction(txid);
+                    Transaction transaction = TransactionCache.getTransaction(b_txid);
                     if (transaction == null)
                     {
-                        transaction = TransactionCache.getUnconfirmedTransaction(txid);
+                        transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
                         confirmed = false;
                     }
 
@@ -898,10 +900,11 @@ namespace SPIXI
             if (message.type == FriendMessageType.sentFunds)
             {
                 bool confirmed = true;
-                Transaction transaction = TransactionCache.getTransaction(message.message);
+                byte[] b_txid = Transaction.txIdLegacyToV8(message.message);
+                Transaction transaction = TransactionCache.getTransaction(b_txid);
                 if (transaction == null)
                 {
-                    transaction = TransactionCache.getUnconfirmedTransaction(message.message);
+                    transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
                     confirmed = false;
                 }
 
@@ -1011,8 +1014,6 @@ namespace SPIXI
             {
                 message.read = true;
 
-                UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
-
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
                 if (friend.metaData.unreadMessageCount > 0)
                 {
@@ -1020,6 +1021,8 @@ namespace SPIXI
                     friend.metaData.unreadMessageCount = 0;
                     friend.saveMetaData();
                 }
+
+                UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
 
                 if (!friend.bot)
                 {
@@ -1141,7 +1144,7 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "updateTransactionStatus", txid, status, status_icon);
         }
 
-        public void updateRequestFundsStatus(byte[] msg_id, string txid, string status)
+        public void updateRequestFundsStatus(byte[] msg_id, byte[] txid, string status)
         {
             string status_icon = "fa-clock";
             bool enableView = true;
@@ -1150,7 +1153,7 @@ namespace SPIXI
                 status_icon = "fa-exclamation-circle";
                 enableView = false;
             }
-            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), txid, status, status_icon, enableView.ToString());
+            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), Transaction.txIdV8ToLegacy(txid), status, status_icon, enableView.ToString());
         }
 
         // Executed every second
