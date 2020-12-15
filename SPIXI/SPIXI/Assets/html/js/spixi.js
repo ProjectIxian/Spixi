@@ -19,6 +19,15 @@ function unescapeParameter(str)
             .replace(/&#34;/g, "\"");
 }
 
+function escapeParameter(str)
+{
+   return str.replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+}
+
 function quickScanJS() {
     let scanner = new Instascan.Scanner({});
     scanner.addListener('scan', function (content) {

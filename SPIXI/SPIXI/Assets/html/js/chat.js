@@ -49,6 +49,11 @@ function onChatScreenLoad()
         hideContextMenus();
 	};
     document.body.addEventListener("click", function(e){
+        var emoji_picker = $('.lsx-emojipicker-container');
+        if(emoji_picker != null && emoji_picker.length > 0)
+        {
+            emoji_picker.hide();
+        }
         hideContextMenus();
 	});
     onload();
@@ -134,7 +139,7 @@ function onChatScreenLoaded()
 {
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     $('#chat_emoji').lsxEmojiPicker({
-        twemoji: true,
+        twemoji: false,
         onSelect: function (emoji) {
             var chatInput = document.getElementById("chat_input");
             if(chatInput.innerHTML == "<br>")
@@ -371,32 +376,6 @@ function clearInput() {
     document.getElementById("chat_send").style.backgroundColor = "#BABABA";
 }
 
-function parseImageUrl(text)
-{
-    var imageServerKey = /https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+/;
-    var imageServerKeyCheck = /^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/;
-    for(var imageUrlIndex = text.search(imageServerKey), nextStartPos = 0; imageUrlIndex > -1; imageUrlIndex = text.substring(nextStartPos).search(imageServerKey))
-    {
-        var imageUrl = text.substring(imageUrlIndex, text.length);
-        var endIndex = imageUrl.indexOf(" ");
-        if(endIndex == -1)
-        {
-            endIndex = imageUrl.length;
-        }
-        imageUrl = imageUrl.substring(0, endIndex);
-        if(imageUrl.search(imageServerKeyCheck) > -1)
-        {
-            var imgHtml = '<img src="' + imageUrl + '"/>';
-            text = text.replace(imageUrl, imgHtml);
-            nextStartPos = imageUrlIndex + imgHtml.length;
-        }else
-        {
-            nextStartPos = imageUrlIndex + 1;
-        }
-    }
-    return text;
-}
-
 var messagesEl = document.getElementById("messages");
 var chatHolderEl = document.getElementById("chatholder");
 
@@ -463,18 +442,49 @@ function deleteMessage(id)
     msgEl.parentNode.removeChild(msgEl);
 }
 
+function linkify(text)
+{
+   text = text.replace(/((http:\/\/|https:\/\/|ftp:\/\/|www\.)[^'"\,\s]+[^\.])/g, function(){
+        if(text.match(/^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/))
+        {
+            // Giphy/Tenor image
+            return "<img src=\"" + escapeParameter(arguments[0]) + "\"/>";
+        }
+        return "<div class=\"spixi-external-link\" onclick=\"onExternalLink(event, '" + escapeParameter(arguments[0]) + "')\">" + arguments[0] + "</div> ";
+        });
+    return text;
+}
+
+function onExternalLink(e, url)
+{
+    var title = SL_Modals["externalLinkTitle"];
+    var body = SL_Modals["externalLinkBody"];
+    body = body.replace("{0}", "<b>" + url + "</b>");
+    var visitButtonHtml = "<div onclick=\"window.open('" + escapeParameter(url) + "', '_blank');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
+    var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
+    showModalDialog(title, body, cancelBtnHtml, visitButtonHtml);
+    e.stopPropagation();
+    return false;
+}
+
+function parseMessageText(text)
+{
+    try
+    {
+        text = linkify(text);
+    }catch(e)
+    {
+    }
+    return text;
+}
+
 function addText(id, address, nick, avatar, text, time, className) {
     text = text.replace(/\n/g, "<br>");
 
     var textEl = document.createElement('div');
     textEl.className = "text selectable";
 
-    try
-    {
-        text = parseImageUrl(text);
-    }catch(e)
-    {
-    }
+    text = parseMessageText(text);
             
     textEl.innerHTML = text;
     twemoji.parse(textEl);
@@ -527,6 +537,18 @@ function addText(id, address, nick, avatar, text, time, className) {
         {
             avatarEl.alt = address;
         }
+        var avatarHtml = avatarEl.outerHTML;
+        avatarEl.onclick = function(e)
+        {
+            if(nick == "")
+            {
+                address = userAddress;
+                nick = userNick;
+            }
+            showUserDetails(avatarHtml + " " + nick, address);
+            e.preventDefault;
+        };
+
         bubbleEl.appendChild(avatarEl);
     }
 
@@ -735,12 +757,7 @@ function updateMessage(id, message, sent, read, paid) {
         msgEl.className = "spixi-bubble myself" + additionalClasses;
 
         if (isFile == false && isPayment == false) {
-            try
-            {
-                message = parseImageUrl(message);
-            }catch(e)
-            {
-            }
+            message = parseMessageText(message);
             var textEls = msgEl.getElementsByClassName("text");
             if (textEls.length > 0) {
                 var textEl = textEls[0];
@@ -1147,7 +1164,7 @@ function contextAction(action, msgId)
     contextActionMsgId = msgId;
     if(action == "copy")
     {
-        window.getSelection().selectAllChildren(document.getElementById("msg_" + msgId));
+        window.getSelection().selectAllChildren(document.getElementById("msg_" + msgId).getElementsByClassName("text")[0]);
         document.execCommand('copy');
         window.getSelection().removeAllRanges();
 	}else if(action == "copySelected")
@@ -1156,15 +1173,21 @@ function contextAction(action, msgId)
     }else if (action == "tip")
     {
         var msgEl = document.getElementById("msg_" + msgId);
+        var address = null;
         var nick = null;
         if(msgEl.getElementsByClassName("nick").length > 0)
         {
-            msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
+            address = msgEl.getElementsByClassName("nick")[0].getAttribute("address");
+            nick = msgEl.getElementsByClassName("nick")[0].getAttribute("nick");
         }
+        if(address == null)
+        {
+            address = userAddress;
+	    }
         if(nick == null)
         {
-              nick = userNick;
-		}
+            nick = userNick;
+	    }
 
         var title = SL_Modals["tipTitle"];
         title = title.replace("{0}", nick);
