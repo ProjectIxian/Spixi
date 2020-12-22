@@ -4,7 +4,6 @@ using SPIXI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.NetworkInformation;
 using Xamarin.Forms;
 
 namespace SPIXI.Lang
@@ -214,9 +213,9 @@ namespace SPIXI.Lang
             return lines;
         }
 
-        private static Dictionary<string, int> testFile(string path)
+        private static Dictionary<string, (int argCount, string value)> testFile(string path)
         {
-            Dictionary<string, int> keys = new Dictionary<string, int>();
+            Dictionary<string, (int, string)> keys = new Dictionary<string, (int, string)>();
 
             Stream file_stream = DependencyService.Get<IPlatformUtils>().getAsset(path);
 
@@ -264,7 +263,7 @@ namespace SPIXI.Lang
                 {
                     arg_count++;
                 }
-                keys.Add(last_key, arg_count);
+                keys.Add(last_key, (arg_count, value));
             }
 
             sr.Close();
@@ -281,6 +280,10 @@ namespace SPIXI.Lang
             var ref_keys = testFile(Path.Combine("lang", ref_language + ".txt"));
             foreach(var language in languages)
             {
+                if(language == ref_language)
+                {
+                    continue;
+                }
                 var test_keys = testFile(Path.Combine("lang", language + ".txt"));
                 foreach(var ref_key in ref_keys)
                 {
@@ -289,9 +292,14 @@ namespace SPIXI.Lang
                         Logging.error("Language file " + language + " error, missing key: " + ref_key.Key);
                         continue;
                     }
-                    if(test_keys[ref_key.Key] != ref_key.Value)
+                    if (test_keys[ref_key.Key].argCount != ref_key.Value.argCount)
                     {
                         Logging.error("Language file " + language + " error, invalid number of arguments for key " + ref_key.Key);
+                        continue;
+                    }
+                    if (test_keys[ref_key.Key].value == ref_key.Value.value)
+                    {
+                        Logging.error("Language file " + language + " error, value is the same as reference value for key " + ref_key.Key);
                         continue;
                     }
                 }
