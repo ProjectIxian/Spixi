@@ -35,7 +35,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
+            //Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
 
         }
 
@@ -57,9 +57,14 @@ namespace SPIXI
             {
                 Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
-
+            else
+            {
+                // Otherwise it's just normal navigation
+                e.Cancel = false;
+                return;
+            }
+            e.Cancel = true;
         }
-
 
         protected override bool OnBackButtonPressed()
         {
