@@ -993,6 +993,17 @@ function displayChannelSelector(e)
     return false;
 }
 
+function setChannelSelectorStatus(read)
+{
+    if(!read)
+    {
+        document.getElementsByClassName("spixi-channel-bar")[0].className("spixi-channel-bar unread");
+    }else
+    {
+        document.getElementsByClassName("spixi-channel-bar")[0].className("spixi-channel-bar");
+    }
+}
+
 function addChannelToSelector(id, name, icon, unread)
 {
     if(channelSelectorEl == null)
@@ -1026,10 +1037,10 @@ function addChannelToSelector(id, name, icon, unread)
 
     if(channelSelectorEl.getElementsByClassName("unread-indicator").length == 0)
     {
-        channelSelectorEl.className = "spixi-channel-selector";
+        setChannelSelectorStatus(false);
     }else
     {
-        channelSelectorEl.className = "spixi-channel-selector unread-indicator";
+        setChannelSelectorStatus(true);
     }
 }
 

@@ -269,6 +269,32 @@ namespace SPIXI
             }
         }
 
+        private void setChannelSelectorUnread()
+        {
+            if(!friend.bot)
+            {
+                return;
+            }
+
+            var channels = friend.channels.channels;
+            lock (channels)
+            {
+                foreach (var channel in channels.Values)
+                {
+                    bool unread = false;
+                    var messages = friend.getMessages(channel.index);
+                    if (messages != null && messages.Count() > 0 && !messages.Last().localSender && !messages.Last().read)
+                    {
+                        unread = true;
+                    }
+                    if(unread)
+                    {
+                        Utils.sendUiCommand(webView, "setChannelSelectorStatus", "true");
+                    }
+                }
+            }
+        }
+
         private void loadContacts()
         {
             var contacts = friend.users.contacts;
@@ -354,6 +380,8 @@ namespace SPIXI
             loadMessages();
 
             Utils.sendUiCommand(webView, "onChatScreenLoaded");
+
+            setChannelSelectorUnread();
 
             if (FriendList.getUnreadMessageCount() == 0)
             {
