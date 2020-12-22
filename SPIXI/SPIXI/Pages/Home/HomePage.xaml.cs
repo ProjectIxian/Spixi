@@ -151,6 +151,10 @@ namespace SPIXI
             {
                 Navigation.PushAsync(new WalletReceivePage(), Config.defaultXamarinAnimations);
             }
+            else if (current_url.Equals("ixian:wixi", StringComparison.Ordinal))
+            {
+                Navigation.PushAsync(new WIXISendPage(), Config.defaultXamarinAnimations);
+            }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
                 //onChangeAvatarAsync(sender, e);

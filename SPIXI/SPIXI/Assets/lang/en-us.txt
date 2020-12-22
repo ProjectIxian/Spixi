@@ -168,6 +168,7 @@ index-side-settings = Settings
 index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
+index-side-wixi = Wrap IxiCash
 index-side-about = About
 index-side-howtouse = How to use Spixi
 index-side-sendlog = Send Log
