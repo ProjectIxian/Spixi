@@ -36,7 +36,7 @@ jobs:
       run: nuget restore Spixi.sln
 
     - name: Building Spixi
-      run: msbuild Spixi.sln
+      run: msbuild Spixi.sln -target:SPIXI_WPF
 
     #- name: Running Unit Tests
     #  run: dotnet test UnitTests\bin\Debug\unittests.dll --verbosity normal
