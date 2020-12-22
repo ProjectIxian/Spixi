@@ -168,6 +168,7 @@ index-side-settings = Nustatymai
 index-side-security = Saugumas
 index-side-backup = Atsarginė kopija
 index-side-password = Slaptažodis
+index-side-wixi = Wrap IxiCash
 index-side-about = Apie
 index-side-howtouse = Kap naudoti Spixi
 index-side-sendlog = Siųsti Log
@@ -455,3 +456,7 @@ global-invalid-address-text = Įveskite galiojantį piniginės adresą.
 global-friend-request-accepted = {0} priėmė jūsų draugo užklausą.
 
 global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinkite, kad gautumėt naujas funkcijas ir galimybes.
+
+global-modal-external-link-title = You are about to visit an external link
+global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-button-visit = VISIT

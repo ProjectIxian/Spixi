@@ -168,6 +168,7 @@ index-side-settings = Nastavitve
 index-side-security = Varnost
 index-side-backup = Varnostna kopija
 index-side-password = Geslo
+index-side-wixi = Wrap IxiCash
 index-side-about = O aplikaciji Spixi
 index-side-howtouse = Navodila za uporabo
 index-side-sendlog = Pošlji dnevnik 
@@ -457,3 +458,7 @@ global-invalid-address-text = Prosim, da vnesete veljaven naslov.
 global-friend-request-accepted = {0} je sprejel/-a vaš zahtevek za stik.
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+
+global-modal-external-link-title = You are about to visit an external link
+global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-button-visit = VISIT

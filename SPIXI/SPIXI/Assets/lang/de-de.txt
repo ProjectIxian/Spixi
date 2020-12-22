@@ -171,6 +171,7 @@ index-side-settings = Einstellungen
 index-side-security = Sicherheit
 index-side-backup = Backup
 index-side-password = Passwort
+index-side-wixi = Wrap IxiCash
 index-side-about = Über
 index-side-howtouse = Wie verwende ich Spixi
 index-side-sendlog = Log senden
@@ -461,3 +462,7 @@ global-invalid-address-text = Bitte gib eine gültige Adresse ein.
 global-friend-request-accepted = {0} hat deine Freundschaftsanfrage angenommen.
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+
+global-modal-external-link-title = You are about to visit an external link
+global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-button-visit = VISIT

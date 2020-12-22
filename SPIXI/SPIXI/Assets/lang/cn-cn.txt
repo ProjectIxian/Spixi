@@ -171,6 +171,7 @@ index-side-settings = 设定
 index-side-security = 安全性
 index-side-backup = 备份
 index-side-password = 密码
+index-side-wixi = Wrap IxiCash
 index-side-about = 关于
 index-side-howtouse = 如何使用Spixi
 index-side-sendlog = 发送记录
@@ -461,3 +462,7 @@ global-invalid-address-text = 请输入有效的钱包地址
 global-friend-request-accepted = {0} 已接受您的朋友请求。
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+
+global-modal-external-link-title = You are about to visit an external link
+global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-button-visit = VISIT

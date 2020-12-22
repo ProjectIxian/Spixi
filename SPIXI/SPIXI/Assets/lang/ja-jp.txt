@@ -158,6 +158,7 @@ index-side-settings = Settings
 index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
+index-side-wixi = Wrap IxiCash
 index-side-about = About
 index-side-howtouse = Spixiの使い方
 index-side-sendlog = ログを送信
@@ -424,3 +425,7 @@ global-invalid-address-text = 有効なアドレスを入力してください
 global-friend-request-accepted = {0} がリクエストを承認しました
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+
+global-modal-external-link-title = You are about to visit an external link
+global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-button-visit = VISIT
