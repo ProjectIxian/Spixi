@@ -213,7 +213,7 @@ namespace SPIXI.Lang
             return lines;
         }
 
-        private static Dictionary<string, (int argCount, string value)> testFile(string path)
+        private static Dictionary<string, (int argCount, string localizedString)> testFile(string path)
         {
             Dictionary<string, (int, string)> keys = new Dictionary<string, (int, string)>();
 
@@ -297,9 +297,9 @@ namespace SPIXI.Lang
                         Logging.error("Language file " + language + " error, invalid number of arguments for key " + ref_key.Key);
                         continue;
                     }
-                    if (test_keys[ref_key.Key].value == ref_key.Value.value)
+                    if (test_keys[ref_key.Key].localizedString == ref_key.Value.localizedString)
                     {
-                        Logging.error("Language file " + language + " error, value is the same as reference value for key " + ref_key.Key);
+                        Logging.warn("Language file " + language + " error, value is the same as reference value for key " + ref_key.Key);
                         continue;
                     }
                 }
