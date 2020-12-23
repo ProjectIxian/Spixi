@@ -405,7 +405,7 @@ img.emoji {
     display: none;
 }
 
-.spixi-channel-bar .unread .unread-indicator,
+.spixi-channel-bar.unread .unread-indicator,
 .spixi-channel-selector .unread-indicator {
     background: white;
     display: inline-block;
@@ -1894,14 +1894,14 @@ img.emoji {
 
 .spixi-friend-status-indicator {
     display: none;
-    border: 4px solid #eef2f5 !important;
-    border-radius: 20px;
-    width: 20px !important;
-    height: 20px !important;
-    background: #28ec23;
+    border: 2px solid #eef2f5 !important;
+    border-radius: 18px;
+    width: 18px !important;
+    height: 18px !important;
+    background: #288823;
     position: relative;
-    margin-top: -16px;
-    margin-left: 29px;
+    margin-top: -17px;
+    margin-left: 30px;
     box-sizing: border-box;
 }
 

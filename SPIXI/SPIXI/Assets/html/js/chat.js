@@ -132,7 +132,7 @@ function setSelectedChannel(id, icon, name)
     selectedChannel = id;
     var channelBarEl = document.getElementsByClassName("spixi-channel-bar")[0]; 
     channelBarEl.getElementsByClassName("channel-icon")[0].innerHTML = "<i class=\"fa " + icon + "\"></i>";
-    channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name;
+    channelBarEl.getElementsByClassName("channel-name")[0].innerHTML = name + "<div class=\"unread-indicator\"></div>";
 }
 
 function onChatScreenLoaded()
@@ -211,9 +211,9 @@ document.getElementById("ca_send").onclick = function () {
     location.href = "ixian:send";
 }
 
-/*document.getElementById("ca_app").onclick = function () {
+document.getElementById("ca_app").onclick = function () {
     document.getElementById("AppsMenu").style.display = "block";
-}*/
+}
 
 document.getElementById("ca_sendfile").onclick = function () {
     var chatInput = document.getElementById("chat_input");
@@ -995,12 +995,12 @@ function displayChannelSelector(e)
 
 function setChannelSelectorStatus(read)
 {
-    if(!read)
+    if(read == "true")
     {
-        document.getElementsByClassName("spixi-channel-bar")[0].className("spixi-channel-bar unread");
+        document.getElementsByClassName("spixi-channel-bar")[0].className = "spixi-channel-bar";
     }else
     {
-        document.getElementsByClassName("spixi-channel-bar")[0].className("spixi-channel-bar");
+        document.getElementsByClassName("spixi-channel-bar")[0].className = "spixi-channel-bar unread";
     }
 }
 
@@ -1037,10 +1037,10 @@ function addChannelToSelector(id, name, icon, unread)
 
     if(channelSelectorEl.getElementsByClassName("unread-indicator").length == 0)
     {
-        setChannelSelectorStatus(false);
+        setChannelSelectorStatus("true");
     }else
     {
-        setChannelSelectorStatus(true);
+        setChannelSelectorStatus("");
     }
 }
 

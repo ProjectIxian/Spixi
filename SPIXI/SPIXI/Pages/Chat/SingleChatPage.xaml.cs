@@ -289,7 +289,7 @@ namespace SPIXI
                     }
                     if(unread)
                     {
-                        Utils.sendUiCommand(webView, "setChannelSelectorStatus", "true");
+                        Utils.sendUiCommand(webView, "setChannelSelectorStatus", "");
                     }
                 }
             }
@@ -342,6 +342,7 @@ namespace SPIXI
                 bool send_notification = friend.metaData.botInfo.sendNotification;
                     
                 Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
+                setChannelSelectorUnread();
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
                     selectedChannel = friend.metaData.botInfo.defaultChannel;
@@ -380,8 +381,6 @@ namespace SPIXI
             loadMessages();
 
             Utils.sendUiCommand(webView, "onChatScreenLoaded");
-
-            setChannelSelectorUnread();
 
             if (FriendList.getUnreadMessageCount() == 0)
             {
