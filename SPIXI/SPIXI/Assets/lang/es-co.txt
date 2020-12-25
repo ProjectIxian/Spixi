@@ -142,7 +142,7 @@ downloads-empty = No tienes archivos descargados.
 index-balance = Mi balance de IxiCash
 index-balance-info = * Tocar y mantener para ocultar
 index-balance-info2 = * Pulse y mantenga pulsado para mostrar
-índice-notificaciones = Notificaciones
+index-notifications = Notificaciones
 index-unread-chats = Chats no leídos
 index-no-conversations = No tienes conversaciones existentes.
 index-send = enviar
@@ -168,6 +168,7 @@ index-side-settings = Ajustes
 index-side-security = Seguridad
 index-side-backup = Copia de seguridad
 index-side-password = Contraseña
+index-side-wixi = Envolver IxiCash
 index-side-about = Acerca de
 index-side-howtouse = Cómo usar Spixi
 index-side-sendlog = Enviar Log
@@ -210,7 +211,7 @@ intro-new-passwordnomatch = Las contraseñas no coinciden
 intro-new-passwordmatch = Contraseñas que coinciden
 intro-new-emptynick-title = Apodo inválido
 intro-new-emptynick-text = Por favor, introduzca su apodo.
-intro-new-avatar-error-title = error de avatar
+intro-new-avatarerror-title = Error de avatar
 intro-new-walleterror-title = Error
 intro-new-walleterror-text = No se puede generar la billetera. Por favor, inténtelo de nuevo.
 
@@ -218,7 +219,7 @@ intro-new-walleterror-text = No se puede generar la billetera. Por favor, intén
 intro-restore-description-1 = Restaurar el acceso a su cuenta Spixi
 intro-restore-description-2 = Necesitas el archivo de copia de seguridad y la contraseña de cifrado para restaurar tu cuenta de Spixi en este dispositivo.
 intro-restore-password = Introduzca su contraseña de cifrado
-intro-restore-selectfile = Select Backup File
+intro-restore-selectfile = Seleccione el archivo de copia de seguridad
 intro-restore-backupdescription = Establecer el archivo de copia de seguridad que está asociado con la contraseña de cifrado
 intro-restore-action = RESTAURAR
 intro-restore-title = Restaurando el acceso a<br /> su cuenta de Spixi
@@ -237,8 +238,8 @@ intro-retry-placeholder = Introduzca su contraseña de cifrado
 intro-retry-proceed = PROCEDER
 intro-retry-title = Restaurando el acceso a<br /> su billetera
 intro-retry-info = Esto puede tomar un tiempo
-intro-retry-invalid-password-title = Contraseña inválida
-intro-retry-invalido-password-text = No se puede desencriptar la billetera, por favor, inténtelo de nuevo.
+intro-retry-invalidpassword-title = Contraseña inválida
+intro-retry-invalidpassword-text = No se puede desencriptar la billetera, por favor, inténtelo de nuevo.
 
 ; Lock Screen 
 lock-description = Spixi está bloqueado
@@ -313,9 +314,9 @@ settings-encryption-passwordnomatch = Las contraseñas no coinciden
 settings-encryption-passwordmatch = Contraseña valida
 settings-encryption-invalidpassword-title = Contraseña invalida
 settings-encryption-invalidpassword-text = Por favor, introduzca una contraseña válida.
-settings-encryption-password-changed-title = Contraseña de cifrado
+settings-encryption-passwordchanged-title = Contraseña de cifrado
 settings-encryption-passwordchanged-text = Contraseña cambiada con éxito.
-settings-encryption-invalid-password-current-text = La contraseña actual es incorrecta, por favor inténtelo de nuevo.
+settings-encryption-invalidpassword-current-text = La contraseña actual es incorrecta, por favor inténtelo de nuevo.
 
 ; Settings Lock Screen
 settings-lock-title = Bloquear mi Spixi
@@ -323,7 +324,7 @@ settings-lock-description = Crear una contraseña de bloqueo para tu Spixi, para
 settings-lock-status = Estado de seguridad:
 settings-lock-unlocked = DESBLOQUEADO
 settings-lock-locked = BLOQUEADO
-settings-lock-passwordfo = Crear o editar la contraseña de bloqueo
+settings-lock-passwordinfo = Crear o editar la contraseña de bloqueo
 settings-lock-password = Escriba su contraseña de bloqueo <b>ACTUAL</b>.
 settings-lock-password-new = Escriba su <b>NUEVA</b> contraseña de bloqueo.
 settings-lock-placeholder-1 = Escriba su contraseña de bloqueo
@@ -357,7 +358,7 @@ wallet-request-address = Dirección actual
 wallet-request-send-info = Enviar como solicitud a los destinatarios:
 wallet-request-add = Puede enviar esta solicitud por la misma cantidad a más de 1 usuario. <br/>Añadir usuarios/direcciones adicionales para enviar esta solicitud.
 wallet-request-placeholder = Pegar/escribir dirección
-billetera-pedido-enviar = ENVIAR PETICIÓN
+wallet-request-send = ENVIAR PETICIÓN
 wallet-request-error-title = Error
 wallet-request-error-text = Por favor, introduzca información válida en los campos de entrada.
 
@@ -398,9 +399,25 @@ wallet-sent-feeinfo = Cada pago enviado tiene una cierta tasa de pago que se ded
 wallet-sent-txid = TXID
 wallet-sent-dismiss = DESCARTAR
 wallet-sentrecv-title = Pago Recibido
-wallet-sentv-subtitle = Pago recibido de
-wallet-sentv-amount = Cantidad recibida
-wallet-sentv-details = La cantidad recibida se ha añadido al saldo de su billetera.
+wallet-sentrecv-subtitle = Pago recibido de
+wallet-sentrecv-amount = Cantidad recibida
+wallet-sentrecv-details = La cantidad recibida se ha añadido al saldo de su billetera.
+
+; Wixi Send Screen
+wixi-send-title = Envolver IxiCash
+wixi-send-eth = Ethereum Dirección
+wixi-send-placeholder = Escriba/pegue/escanee su dirección de Ethereum...
+wixi-send-more = Las fichas WIXI se enviarán a la dirección anterior..
+wixi-send-amounttext = La cantidad de IXI que quieres envolver en WIXI. El mínimo es de 5.000.000 de IXI.
+wixi-send-wrap = Envuelve mi IxiCash
+
+; Wixi Sent Screen
+wixi-sent-title = Cambiar IxiCash por WIXI
+wixi-sent-subtitle = WIXI será enviado a la dirección de ETH:
+wixi-sent-amount = Cantidad envuelta
+wixi-sent-status = IxiCash Estado de la transferencia
+wixi-sent-details = La cantidad ha sido deducida de su balance de IxiCash. Recibirá las fichas WIXI equivalentes en su dirección ETH.
+wixi-sent-txid = IxiCash TXID
 
 ; Global wallet errors
 wallet-error-amount-title = Cantidad inválida
@@ -457,3 +474,8 @@ global-invalid-address-text = Por favor, introduzca una dirección de billetera 
 global-friend-request-accepted = {0} ha aceptado su solicitud de amistad.
 
 global-update-available = La nueva versión de Spixi ({0}) está disponible. Por favor, actualícela para una mejor experiencia.
+
+
+global-modal-external-link-title = Está a punto de visitar un enlace externo
+global-modal-external-link-body = Está a punto de visitar un enlace externo {0}. Los enlaces externos son potencialmente peligrosos, continúe bajo su propio riesgo.
+global-modal-external-link-button-visit = VISITA

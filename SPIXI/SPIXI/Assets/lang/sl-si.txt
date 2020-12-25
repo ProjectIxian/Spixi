@@ -168,7 +168,7 @@ index-side-settings = Nastavitve
 index-side-security = Varnost
 index-side-backup = Varnostna kopija
 index-side-password = Geslo
-index-side-wixi = Wrap IxiCash
+index-side-wixi = Pretvori IxiCash
 index-side-about = O aplikaciji Spixi
 index-side-howtouse = Navodila za uporabo
 index-side-sendlog = Pošlji dnevnik 
@@ -182,6 +182,22 @@ index-excerpt-contact-request = Zahtevek za stik
 index-excerpt-file = Datoteka
 index-excerpt-voice-call = Glasovni Klic
 index-excerpt-self = Jaz:
+
+; Wixi Send Screen
+wixi-send-title = Pretvori IxiCash
+wixi-send-eth = Ethereum Naslove
+wixi-send-placeholder = Vpišite/prilepite/skenirajte vaš Ethereum naslov...
+wixi-send-more = WIXI žetoni bodo poslani na naslov, ki ste ga navedli zgoraj...
+wixi-send-amounttext = Znesek IXI-jev, ki jih želite pretvoriti. Minimalen znesek je 5.000.000 IXI.
+wixi-send-wrap = Pretvori moj IxiCash
+
+; Wixi Sent Screen
+wixi-sent-title = Pretvarajm IXI v WIXI
+wixi-sent-subtitle = WIXI žetoni bodo poslani na ETH naslov:
+wixi-sent-amount = Znesek pretvorjenih žetonov
+wixi-sent-status = IxiCash Status Nakazila
+wixi-sent-details = Znesek je bil odvzet z vašega IxiCash stanja. Na vaš ETH naslov boste prejeli enako število WIXI žetonov.
+wixi-sent-txid = IxiCash TXID
 
 ; Intro Screen
 intro-title = Dobrodošli v Spixi-ju,
@@ -412,10 +428,10 @@ wallet-error-balance-text = Stanje vaše denarnice je prenizko za izvedbo te tra
 
 ; Onboarding join official bot
 ; TODO Translate
-onboarding-bot-title = Would you like to join Ixian's Official Bot?
-onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
-onboarding-bot-join-button = JOIN
-onboarding-bot-dont-join-button = DON'T JOIN
+onboarding-bot-title = Ali želite vstopiti v uradno Spixi skupino?
+onboarding-bot-text = Vstopite v našo uradno Spixi skupino, kjer nam lahko poveste kaj menite o Spixi-ju, dobite informacije o prihajajočih posodobitvah ali pa se pogovarjate neposredno z razvijalci in ostalimi uporabniki.
+onboarding-bot-join-button = VSTOPI
+onboarding-bot-dont-join-button = ZAVRNI
 ; End of TODO translate
 
 ; Onboarding Meet Spixi
@@ -457,8 +473,8 @@ global-invalid-address-text = Prosim, da vnesete veljaven naslov.
 
 global-friend-request-accepted = {0} je sprejel/-a vaš zahtevek za stik.
 
-global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+global-update-available = Novejša različica Spixi-ja ({0}) je na voljo. Prosimo vas, da posodobite aplikacijo za boljšo uporabniško izkušnjo.
 
-global-modal-external-link-title = You are about to visit an external link
-global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
-global-modal-external-link-button-visit = VISIT
+global-modal-external-link-title = Želite odpreti zunanjo povezavo?
+global-modal-external-link-body = S tem boste obiskali zunanjo povezavo {0}. Zunanje povezave so lahko nevarne in lahko vsebujejo nevarno vsebino. Nadaljujte le v primeru, če to razumete in ste pripravljeni sprejeti tveganja.
+global-modal-external-link-button-visit = NADALJUJ

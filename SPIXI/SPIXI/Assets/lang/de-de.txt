@@ -63,53 +63,53 @@ chat-offline = Offline
 chat-text-too-long = Text ist zu lang.
 
 ; TODO translate
-chat-member-count = {0} members
-chat-context-pin-message = Pin message
-chat-context-copy-message = Copy message
-chat-context-copy-selected = Copy selected
-chat-context-tip-user = Tip user
-chat-context-like-message = Like message
-chat-context-user-info = User info
-chat-context-send-contact-request = Send contact request
-chat-context-kick-user = Kick user
-chat-context-ban-user = Ban user
-chat-context-delete-message = Delete message
-chat-message-cost-bar = Sending messages costs {0} per kB
+chat-member-count = {0} Mitglieder
+chat-context-pin-message = Nachricht anpinnen
+chat-context-copy-message = Nachricht kopieren
+chat-context-copy-selected = Auswahl kopieren
+chat-context-tip-user = Benutzer Trinkgeld senden
+chat-context-like-message = Nachricht liken
+chat-context-user-info = Benutzer Info
+chat-context-send-contact-request = Benutzeranfrage senden
+chat-context-kick-user = Benutzer kicken
+chat-context-ban-user = Benutzer bannen
+chat-context-delete-message = Nachricht löschen
+chat-message-cost-bar = Das Senden der Nachricht kostet {0} pro kB
 
-chat-modal-tip-title = Tip {0}?
-chat-modal-tip-body = Tap on the amount you want to tip or set a custom tip.
-chat-modal-tip-custom = CUSTOM
-chat-modal-tip-pay-button = PAY
-chat-modal-tip-confirmation-body = You are about to tip '{0}' {1}. This amount will be deducted from your wallet.
-chat-modal-tip-confirmed-body = You have just tipped '{0}' with {1}. The amount has been deducted from your wallet.
-chat-modal-tip-error-body = Unknown error occured while trying to tip user.
+chat-modal-tip-title = {0} senden?
+chat-modal-tip-body = Drücke auf die Anzahl die du senden möchtest oder definiere eine eigene Menge.
+chat-modal-tip-custom = Benutzerdefiniert
+chat-modal-tip-pay-button = Bezahlen
+chat-modal-tip-confirmation-body = Du bist dabei an '{0}' {1} zu senden. Dies wird von deiner Brieftasche abgezogen.
+chat-modal-tip-confirmed-body = Du hast gerade an '{0}' {1} gesendet. Dies wurde von deiner Brieftasche abgezogen.
+chat-modal-tip-error-body = Unbekannter Fehler während des Sendens aufgetreten.
 
 chat-bot-details-info = Bot Info
-chat-bot-address = Bot Address
-chat-bot-toggle-notifications = Toggle Notifications
-chat-bot-invite = Invite a Contact to This Bot
-chat-bot-leave = Leave Bot
+chat-bot-address = Bot Adresse
+chat-bot-toggle-notifications = Benachrichtigungen umschalten
+chat-bot-invite = Lade einen Kontakt zu diesem Bot ein
+chat-bot-leave = Bot verlassen
 
-chat-bot-user-address = User Address
-chat-bot-user-send-contact-request = Send Contact Request
+chat-bot-user-address = Benutzer Adresse
+chat-bot-user-send-contact-request = Kontaktanfrage senden
 
 chat-modal-kick-title = Kick {0}?
-chat-modal-kick-body = Are you sure you want to kick '{0}' from this server?
-chat-modal-kick-kick-button = KICK USER
-chat-modal-kicked-title = Kicked {0}
-chat-modal-kicked-body = You have kicked '{0}' from this server.
+chat-modal-kick-body = Bist du dir sicher dass du '{0}' vom Server kicken willst?
+chat-modal-kick-kick-button = Benutzer gekickt
+chat-modal-kicked-title = {0} gekickt
+chat-modal-kicked-body = Du hast '{0}' vom Server gekickt.
 
-chat-modal-ban-title = Ban {0}?
-chat-modal-ban-body = Are you sure you want to ban '{0}' from this server?
-chat-modal-ban-ban-button = BAN USER
-chat-modal-banned-title = Banned {0}
-chat-modal-banned-body = You have banned '{0}' from this server.
+chat-modal-ban-title = {0} bannen?
+chat-modal-ban-body = Bist du dir sicher dass du '{0}' vom Server bannen willst?
+chat-modal-ban-ban-button = Benutzer bannen
+chat-modal-banned-title = {0} wurde gebannt
+chat-modal-banned-body = Du hast '{0}' vom Server gebannt.
 
-chat-bot-not-ready-title = Bot isn't ready
-chat-bot-not-ready-body = Bot isn't ready yet, please try again in a few minutes.
+chat-bot-not-ready-title = Bot ist nicht bereit.
+chat-bot-not-ready-body = Bot ist noch nicht bereit, bitte versuche es in ein paar Minuten nochmal.
 
-chat-kicked = You've been kicked from this group chat.
-chat-banned = You've been banned from this group chat.
+chat-kicked = Du wurdest von diesem Grupppenchat gekickt.
+chat-banned = Du wurdest von diesem Gruppenchat gebannt.
 ; End of TODO translate
 
 ; Contact Details Screen
@@ -406,6 +406,23 @@ wallet-sentrecv-subtitle = Zahlung erhalten von
 wallet-sentrecv-amount = Betrag erhalten
 wallet-sentrecv-details = Der empfangene Betrag wurde deinem Guthaben hinzugefügt.
 
+; Wixi Send Screen
+wixi-send-title = Wrap IxiCash
+wixi-send-eth = Ethereum Adresse
+wixi-send-placeholder = Füge deine Ethereum Adresse ein...
+wixi-send-more = WIXI Token werden zu der oben genannten Adresse gesendet.
+wixi-send-amounttext = Menge an IXI die du zu WIXI verpacken möchtest. Minimum sind 5,000,000 IXI.
+wixi-send-wrap = IxiCash verpacken
+
+; Wixi Sent Screen
+wixi-sent-title = IxiCash zu WIXI tauschen
+wixi-sent-subtitle = WIXI werden zu dieserETH Adresse gesendet:
+wixi-sent-amount = Verpackte Menge
+wixi-sent-status = IxiCash Transfer Status
+wixi-sent-details = Die angegebene Menge wurde von deiner IxiCash Brieftasche abgezogen. Du wirst die gleichwertige Menge an WIXI Tokens auf deiner ETH Adresse erhalten.
+wixi-sent-txid = IxiCash TXID
+
+
 ; Global wallet errors
 wallet-error-amount-title = Ungültiger Betrag
 wallet-error-amount-text = Bitte gib einen gültigen Betrag ein.
@@ -415,10 +432,10 @@ wallet-error-balance-text = Du hast zu wenig Guthaben für diese Transaktion. Ko
 
 ; Onboarding join official bot
 ; TODO Translate
-onboarding-bot-title = Would you like to join Ixian's Official Bot?
-onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
-onboarding-bot-join-button = JOIN
-onboarding-bot-dont-join-button = DON'T JOIN
+onboarding-bot-title = Würdest du gerne Ixian's offiziellem Bot beitreten?
+onboarding-bot-text = Tritt unserem offiziellen Bot bei, wo du uns mitteilen kannst, was du über Spixi denkst. Hier erfährst du immer die neuesten Updates und kannst direkt mit den Entwicklern oder anderen Benutzern schreiben.
+onboarding-bot-join-button = Beitreten
+onboarding-bot-dont-join-button = Nicht beitreten
 ; End of TODO translate
 
 ; Onboarding Meet Spixi
@@ -454,15 +471,15 @@ global-call-incoming = Eingehender Anruf
 global-dialog-error = Fehler
 global-dialog-ok = OK
 ; TODO translate
-global-dialog-cancel = CANCEL
+global-dialog-cancel = Abbrechen
 
 global-invalid-address-title = Ungültige Adresse
 global-invalid-address-text = Bitte gib eine gültige Adresse ein.
 
 global-friend-request-accepted = {0} hat deine Freundschaftsanfrage angenommen.
 
-global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+global-update-available = Eine neue Version von Spixi ({0}) ist verfügbar. Bitte mach ein Update um die beste Benutzererfahrungen zu erhalten.
 
-global-modal-external-link-title = You are about to visit an external link
-global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
-global-modal-external-link-button-visit = VISIT
+global-modal-external-link-title = Du bist dabei einen externen Link aufzurufen
+global-modal-external-link-body = Du bist dabei einen externen Link aufzurufen {0}. Externe Links können potentiell gefährlich sein, fortfahren geschieht auf eigenes Risiko.
+global-modal-external-link-button-visit = Aufrufen
