@@ -13,6 +13,7 @@ namespace SPIXI.Lang
         private static List<string> languages = new List<string> {
             "cn-cn",
             "en-us",
+            "es-co",
             "de-de",
             "fr-fr",
             "ja-jp",

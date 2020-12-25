@@ -17,7 +17,7 @@ Afrikaans           |  ❌            |  ❌
 Arabian             |  ❌            |  ❌
 Bengali             |  ❌            |  ❌
 Chinese             |  ✅            |  ✅
-Croatian            |  ✅            |  ❌
+Croatian            |  ❌            |  ❌
 English ( default ) |  ✅            |  ✅
 French              |  ✅            |  ✅
 German              |  ✅            |  ✅
@@ -25,11 +25,11 @@ Hindi               |  ❌            |  ❌
 Italian             |  ❌            |  ❌
 Japanese            |  ✅            |  ✅
 Korean              |  ❌            |  ❌
-Lithuanian				|  ✅            |  ✅
+Lithuanian			|  ✅            |  ✅
 Punjabi             |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
-Romanian            |  ✅            |  ❌
-Russian             |  ✅            |  ❌
+Romanian            |  ❌            |  ❌
+Russian             |  ❌            |  ❌
 Serbian             |  ✅            |  ✅
 Slovenian           |  ✅            |  ✅
-Spanish             |  ✅            |  ❌
+Spanish             |  ✅            |  ✅
