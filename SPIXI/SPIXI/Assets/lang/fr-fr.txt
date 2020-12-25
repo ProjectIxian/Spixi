@@ -403,6 +403,22 @@ wallet-sentrecv-subtitle = Paiement reçu de
 wallet-sentrecv-amount = Montant reçu
 wallet-sentrecv-details = Le montant reçu à bien été rajotué au solde de votre portefeuille.
 
+; Wixi Send Screen
+wixi-send-title = Envelopper IxiCash
+wixi-send-eth = Ethereum Adresse
+wixi-send-placeholder = Tapez/collez/scannez votre adresse Ethereum...
+wixi-send-more = Les jetons WIXI seront envoyés à l'adresse ci-dessus.
+wixi-send-amounttext = Quantité de IXI que vous voulez emballer dans WIXI. Le minimum est de 5.000.000 IXI.
+wixi-send-wrap = Envelopper mon IxiCash
+
+; Wixi Sent Screen
+wixi-sent-title = Remplacement d'IxiCash par WIXI
+wixi-sent-subtitle = WIXI sera envoyé à l'adresse de l'ETH:
+wixi-sent-amount = Montant enveloppé
+wixi-sent-status = IxiCash Statut de transfert
+wixi-sent-details = Le montant a été déduit de votre solde IxiCash. Vous recevrez les jetons WIXI équivalents sur votre adresse ETH.
+wixi-sent-txid = IxiCash TXID
+
 ; Global wallet errors
 wallet-error-amount-title = Montant invalide
 wallet-error-amount-text = S'il vous plait entrez un montant valide.
@@ -455,8 +471,8 @@ global-invalid-address-text = S'il vous plait entrez une addresse valide.
 
 global-friend-request-accepted = {0} à accepté votre demade d'ami.
 
-global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
+global-update-available = Une nouvelle version de Spixi ({0}) est disponible. Veuillez vous mettre à jour pour une meilleure expérience.
 
-global-modal-external-link-title = You are about to visit an external link
-global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
-global-modal-external-link-button-visit = VISIT
+global-modal-external-link-title = Vous êtes sur le point de visiter un lien externe
+global-modal-external-link-body = Vous êtes sur le point de visiter un lien externe {0}. Les liens externes sont potentiellement dangereux, continuez à vos propres risques.
+global-modal-external-link-button-visit = CONTINUER

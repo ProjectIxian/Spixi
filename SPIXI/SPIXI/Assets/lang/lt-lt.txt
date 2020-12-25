@@ -403,6 +403,22 @@ wallet-sentrecv-subtitle = Mokėjimas gautas iš
 wallet-sentrecv-amount = Gauta suma
 wallet-sentrecv-details = Gauta suma buvo pridėta prie jūsų balanso.
 
+; Wixi Send Screen
+wixi-send-title = Apvyniokite IxiCash
+wixi-send-eth = Ethereum Adresas
+wixi-send-placeholder = Įveskite / įklijuokite / nuskaitykite savo Ethereum adresą...
+wixi-send-more = WIXI žetonai bus išsiųsti aukščiau nurodytu adresu.
+wixi-send-amounttext = IXI kiekis, kurį norite įtraukti į WIXI. Mažiausias yra 5 000 000 IXI.
+wixi-send-wrap = Apvyniokite mano IxiCash
+
+; Wixi Sent Screen
+wixi-sent-title = Pakeisti IxiCash į WIXI
+wixi-sent-subtitle = WIXI bus išsiųstas ETH adresu:
+wixi-sent-amount = Apvyniota suma
+wixi-sent-status = IxiCash Perkėlimo Būsena
+wixi-sent-details = Suma buvo išskaičiuota iš IxiCash balanso. Savo ETH adresu gausite lygiaverčius WIXI žetonus.
+wixi-sent-txid = IxiCash TXID
+
 ; Global wallet errors
 wallet-error-amount-title = Neteisinga suma
 wallet-error-amount-text = Įveskite galiojančią sumą.
@@ -457,6 +473,6 @@ global-friend-request-accepted = {0} priėmė jūsų draugo užklausą.
 
 global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinkite, kad gautumėt naujas funkcijas ir galimybes.
 
-global-modal-external-link-title = You are about to visit an external link
-global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
-global-modal-external-link-button-visit = VISIT
+global-modal-external-link-title = Ketinate aplankyti išorinę nuorodą
+global-modal-external-link-body = Ketinate aplankyti išorinę nuorodą {0}. Išorinės nuorodos yra potencialiai pavojingos, tęskite savo pačių rizika.
+global-modal-external-link-button-visit = Tęsti
