@@ -460,7 +460,7 @@ function onExternalLink(e, url)
     var title = SL_Modals["externalLinkTitle"];
     var body = SL_Modals["externalLinkBody"];
     body = body.replace("{0}", "<b>" + url + "</b>");
-    var visitButtonHtml = "<div onclick=\"window.open('" + escapeParameter(url) + "', '_blank');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
+    var visitButtonHtml = "<div onclick=\"location.href='ixian:openLink:" + escapeParameter(url) + "';\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
     showModalDialog(title, body, cancelBtnHtml, visitButtonHtml);
     e.stopPropagation();

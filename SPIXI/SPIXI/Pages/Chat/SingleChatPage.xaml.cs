@@ -241,6 +241,19 @@ namespace SPIXI
                     Navigation.PopAsync();
                 }
             }
+            else if (current_url.StartsWith("ixian:openLink:", StringComparison.Ordinal))
+            {
+                string link = current_url.Substring("ixian:openLink:".Length);
+                try
+                {
+#pragma warning disable CS0618 // Type or member is obsolete
+                    Device.OpenUri(new Uri(link));
+#pragma warning restore CS0618 // Type or member is obsolete
+                }catch(Exception ex)
+                {
+                    Logging.error("Exception occured while trying to open URL '{0}': {1}",  link, ex);
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation
