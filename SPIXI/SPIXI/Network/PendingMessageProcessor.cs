@@ -427,7 +427,10 @@ namespace SPIXI.Network
             lock (pendingRecipients)
             {
                 pendingRecipients.Clear();
-                Directory.Delete(storagePath, true);
+                if(Directory.Exists(storagePath))
+                {
+                    Directory.Delete(storagePath, true);
+                }
             }
         }
     }

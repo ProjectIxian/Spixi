@@ -454,7 +454,7 @@ namespace SPIXI.Network
             }
             catch (Exception e)
             {
-                Logging.error(string.Format("Error parsing network message. Details: {0}", e.ToString()));
+                Logging.error("Error parsing network message. Details: {0}", e.ToString());
             }
         }
     }

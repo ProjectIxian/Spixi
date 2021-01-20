@@ -177,6 +177,11 @@ namespace SPIXI
                 // Stop network activity
                 Node.stop();
 
+                Application.Current.Properties.Remove("onboardingComplete");
+                Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
+
+                SpixiLocalization.addCustomString("OnboardingComplete", "false");
+
                 Node.localStorage.deleteTransactionCacheFile();
                 TransactionCache.clearAllTransactions();
                 Node.tiv.clearCache();
@@ -203,6 +208,7 @@ namespace SPIXI
             Node.localStorage.deleteAllDownloads();
             StreamProcessor.deletePendingMessages();
             FriendList.deleteEntireHistory();
+            FriendList.deleteAccounts();
             FriendList.clear();
 
             displaySpixiAlert(SpixiLocalization._SL("settings-deleteda-title"), SpixiLocalization._SL("settings-deleteda-text"), SpixiLocalization._SL("global-dialog-ok"));

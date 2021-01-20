@@ -788,7 +788,13 @@ namespace SPIXI
                         skip_messages--;
                         continue;
                     }
-                    insertMessage(message, selectedChannel);
+                    try
+                    {
+                        insertMessage(message, selectedChannel);
+                    }catch(Exception e)
+                    {
+                        Logging.error("Error loading message: {0}", e);
+                    }
                     updateReactions(message);
                 }
             }
