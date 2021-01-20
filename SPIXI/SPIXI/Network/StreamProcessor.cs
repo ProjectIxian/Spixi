@@ -562,7 +562,7 @@ namespace SPIXI
                     case SpixiMessageCode.sentFunds:
                         {
                             // Friend requested funds
-                            handleSentFunds(message.id, sender_address, Encoding.UTF8.GetString(spixi_message.data));
+                            handleSentFunds(message.id, sender_address, Transaction.txIdV8ToLegacy(spixi_message.data));
                         }
                         break;
 
