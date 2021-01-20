@@ -115,19 +115,22 @@ namespace SPIXI
                     {
                         try
                         {
-                            byte[] data = Convert.FromBase64String(str[1]);
-                            if (str[2] != "")
+                            if(str[1] != "")
                             {
-                                byte[] pk = Convert.FromBase64String(str[2]);
-                                Friend f = FriendList.getFriend(new Address(pk).address);
-                                if (f != null && pk != null)
+                                byte[] data = Convert.FromBase64String(str[1]);
+                                if (str[2] != "")
                                 {
-                                    f.setPublicKey(pk);
+                                    byte[] pk = Convert.FromBase64String(str[2]);
+                                    Friend f = FriendList.getFriend(new Address(pk).address);
+                                    if (f != null && pk != null)
+                                    {
+                                        f.setPublicKey(pk);
+                                    }
                                 }
+                                StreamProcessor.receiveData(data, null);
                             }
-                            StreamProcessor.receiveData(data, null);
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             Logging.error("Exception occured in fetchPushMessages while parsing the json response: {0}", e);
                         }
