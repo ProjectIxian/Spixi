@@ -8,9 +8,7 @@ using Plugin.LocalNotifications;
 using SPIXI.Interfaces;
 using Android.Views;
 using Android.Runtime;
-using Org.W3c.Dom;
-using IXICore.Meta;
-using System.Threading;
+using SPIXI.Lang;
 
 namespace SPIXI.Droid
 {
@@ -49,6 +47,9 @@ namespace SPIXI.Droid
             }
             
             IXICore.CryptoManager.initLib(new CryptoLibs.BouncyCastleAndroid());
+
+            SpixiLocalization.addCustomString("Platform", "Xamarin-Droid");
+
             LoadApplication(App.Instance());
 
             this.Window.ClearFlags(WindowManagerFlags.Fullscreen);

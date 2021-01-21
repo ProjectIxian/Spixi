@@ -10,6 +10,7 @@ using SPIXI.VoIP;
 using AVFoundation;
 using IXICore.Meta;
 using System.Threading;
+using SPIXI.Lang;
 
 namespace SPIXI.iOS
 {
@@ -55,7 +56,9 @@ namespace SPIXI.iOS
             prepareStorage();
 
             NSNotificationCenter.DefaultCenter.AddObserver(MPMusicPlayerController.VolumeDidChangeNotification, onVolumeChanged);
-                
+
+            SpixiLocalization.addCustomString("Platform", "Xamarin-iOS");
+
             LoadApplication(App.Instance());
 
             prepareBackgroundService();
