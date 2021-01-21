@@ -29,7 +29,7 @@ Lithuanian			|  ✅            |  ✅
 Punjabi             |  ❌            |  ❌
 Portuguese          |  ❌            |  ❌
 Romanian            |  ❌            |  ❌
-Russian             |  ❌            |  ❌
+Russian             |  ✅            |  ✅
 Serbian             |  ✅            |  ✅
 Slovenian           |  ✅            |  ✅
 Spanish             |  ✅            |  ✅

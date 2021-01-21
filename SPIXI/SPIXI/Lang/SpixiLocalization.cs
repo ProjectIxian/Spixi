@@ -18,6 +18,7 @@ namespace SPIXI.Lang
             "fr-fr",
             "ja-jp",
             "lt-lt",
+            "ru-ru",
             "sl-si",
             "sr-sp"
         };
