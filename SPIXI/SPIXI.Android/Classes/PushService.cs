@@ -74,7 +74,7 @@ public class PushService_Android : IPushService
             .SetSmallIcon(Resource.Drawable.statusicon)
             .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
 
-        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.KitkatWatch)
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
         {
             builder.SetGroup("NEWMSGL");
         }
@@ -94,11 +94,10 @@ public class PushService_Android : IPushService
             manager.CreateNotificationChannelGroup(group);
 
             var channelNameJava = new Java.Lang.String(channelName);
-            var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.Default)
+            var channel = new NotificationChannel(channelId, channelNameJava, NotificationImportance.High)
             {
                 Description = channelDescription,
-                Group = "NEWMSGL",
-                Importance = NotificationImportance.High
+                Group = "NEWMSGL"
             };
             manager.CreateNotificationChannel(channel);
         }

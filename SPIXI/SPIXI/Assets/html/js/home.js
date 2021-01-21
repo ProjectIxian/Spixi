@@ -344,22 +344,30 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
         if((excerpt == "" && msgTimestamp == 0) || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
         {
             chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
-            unreadEl.className = "spixi-list-item" + indicator + unreadIndicator;
+            if(unreadEl != null)
+            {
+                unreadEl.className = "spixi-list-item" + indicator + unreadIndicator;
+            }
             return;
         }
         chatEl.parentElement.removeChild(chatEl);
     }
 
-    var nickEl = el.getElementsByClassName("nick");
-    var avatarEl = el.getElementsByClassName("spixi-list-item-avatar");
-    addChat(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, unread, true);
     if(unreadEl != null)
     {
         unreadEl.parentElement.removeChild(unreadEl);
     }
+
+    var nickEl = el.getElementsByClassName("nick");
+    var nick = nickEl[0].innerHTML;
+    var avatarEl = el.getElementsByClassName("spixi-list-item-avatar");
+    var avatarSrc = avatarEl[0].src;
+
+    addChat(wal, nick, msgTimestamp, avatarSrc, online, excerpt, unread, true);
+
     if(unread > 0)
     {
-        addUnreadActivity(wal, nickEl[0].innerHTML, msgTimestamp, avatarEl[0].src, online, excerpt, true);
+        addUnreadActivity(wal, nick, msgTimestamp, avatarSrc, online, excerpt, true);
     }
 }
 

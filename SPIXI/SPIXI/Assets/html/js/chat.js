@@ -211,9 +211,9 @@ document.getElementById("ca_send").onclick = function () {
     location.href = "ixian:send";
 }
 
-document.getElementById("ca_app").onclick = function () {
+/*document.getElementById("ca_app").onclick = function () {
     document.getElementById("AppsMenu").style.display = "block";
-}
+}*/
 
 document.getElementById("ca_sendfile").onclick = function () {
     var chatInput = document.getElementById("chat_input");
@@ -460,7 +460,7 @@ function onExternalLink(e, url)
     var title = SL_Modals["externalLinkTitle"];
     var body = SL_Modals["externalLinkBody"];
     body = body.replace("{0}", "<b>" + url + "</b>");
-    var visitButtonHtml = "<div onclick=\"window.open('" + escapeParameter(url) + "', '_blank');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
+    var visitButtonHtml = "<div onclick=\"location.href='ixian:openLink:" + escapeParameter(url) + "';\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
     showModalDialog(title, body, cancelBtnHtml, visitButtonHtml);
     e.stopPropagation();

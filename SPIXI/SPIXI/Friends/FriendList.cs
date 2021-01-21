@@ -290,7 +290,8 @@ namespace SPIXI
                     // don't fire notification for nickname and avatar
                     if(!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
                     {
-                        if (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification)
+                        if (friend.bot == false
+                            || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
                         {
                             DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
                         }
@@ -459,6 +460,17 @@ namespace SPIXI
 
             // Finally, return the ip address of the node
             return hostname;
+        }
+
+        public static void deleteAccounts()
+        {
+            lock (friends)
+            {
+                foreach (Friend friend in friends)
+                {
+                    friend.delete();
+                }
+            }
         }
 
         // Deletes entire history for all friends in the friendlist
