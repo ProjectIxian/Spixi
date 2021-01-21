@@ -15,20 +15,27 @@ function onChatScreenLoad()
     document.getElementById("chat_input").focus();
     twemoji.base = "libs/twemoji/";
     twemoji.size = "72x72";
-    messagesEl.oncontextmenu = function(e)
+    if(SL_Platform == "Xamarin-WPF")
     {
-        hideContextMenus();
-        displayContextMenu(e);
-        e.stopPropagation();
-        return false;
-	};
-    messagesEl.ondblclick = function(e)
+        messagesEl.oncontextmenu = function(e)
+        {
+            hideContextMenus();
+            displayContextMenu(e);
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+	    };
+    } else
     {
-        hideContextMenus();
-        displayContextMenu(e);
-        e.stopPropagation();
-        return false;
-	};
+        messagesEl.ondblclick = function(e)
+        {
+            hideContextMenus();
+            displayContextMenu(e);
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+	    };
+    }
     messagesEl.addEventListener("click", function (e) {
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
