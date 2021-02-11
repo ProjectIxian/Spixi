@@ -546,9 +546,14 @@ namespace SPIXI
 
         public void loadChats()
         {
+            List<Friend> friends;
+            lock(FriendList.friends)
+            {
+                friends = new List<Friend>(FriendList.friends);
+            }
             // Check if there are any changes from last time first
             int unread = 0;
-            foreach (Friend friend in FriendList.friends)
+            foreach (Friend friend in friends)
             {
                 int umc = friend.getUnreadMessageCount();
                 if(umc > 0)
@@ -577,7 +582,7 @@ namespace SPIXI
             // Prepare a list of message helpers, to facilitate sorting and communication with the UI
             List<FriendMessageHelper> helper_msgs = new List<FriendMessageHelper>();
 
-            foreach (Friend friend in FriendList.friends)
+            foreach (Friend friend in friends)
             {
                 if(friend.pendingDeletion)
                 {
