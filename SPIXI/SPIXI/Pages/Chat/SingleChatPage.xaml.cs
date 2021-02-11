@@ -1056,17 +1056,18 @@ namespace SPIXI
 
         private void updateMessageReadStatus(FriendMessage message, int channel)
         {
+            if (App.isInForeground && friend.metaData.unreadMessageCount > 0)
+            {
+                // TODO improve this by reducing the number of unread messages by unread message
+                // TODO make sure to handle edge cases like deleted message
+                friend.metaData.unreadMessageCount = 0;
+                friend.saveMetaData();
+            }
             if (!message.read && !message.localSender && App.isInForeground && message.type != FriendMessageType.requestAdd)
             {
                 message.read = true;
 
                 Node.localStorage.requestWriteMessages(friend.walletAddress, channel);
-                if (friend.metaData.unreadMessageCount > 0)
-                {
-                    // TODO improve this by reducing the number of unread messages by unread message
-                    friend.metaData.unreadMessageCount = 0;
-                    friend.saveMetaData();
-                }
 
                 UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), "", 0);
 
