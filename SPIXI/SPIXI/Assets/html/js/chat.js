@@ -1113,7 +1113,7 @@ function displayContextMenu(e)
         menuHtml += "<div onclick=\"contextAction('kickUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-times\"></i></span> " + SL_ContextMenu["kickUser"] + "</div>";
         menuHtml += "<div onclick=\"contextAction('banUser', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-user-slash\"></i></span> " + SL_ContextMenu["banUser"] + "</div>";
     }
-    if(isAdmin || localMsg)
+    if(isAdmin || localMsg || !isBot)
     {
         menuHtml += "<div onclick=\"contextAction('deleteMessage', '" +  msgEl.id + "');\"><span class=\"icon\"><i class=\"fa fa-trash-alt\"></i></span> " + SL_ContextMenu["deleteMessage"] + "</div>";
 	}
