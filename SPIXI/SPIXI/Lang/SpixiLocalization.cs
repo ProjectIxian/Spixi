@@ -18,6 +18,7 @@ namespace SPIXI.Lang
             "fr-fr",
             "ja-jp",
             "lt-lt",
+            "pt-br",
             "ru-ru",
             "sl-si",
             "sr-sp"
@@ -301,7 +302,7 @@ namespace SPIXI.Lang
                     }
                     if (test_keys[ref_key.Key].localizedString == ref_key.Value.localizedString)
                     {
-                        Logging.warn("Language file " + language + " error, value is the same as reference value for key " + ref_key.Key);
+                        Logging.warn("Language file " + language + " warn, value is the same as reference value for key " + ref_key.Key);
                         continue;
                     }
                 }

@@ -1,5 +1,5 @@
 ﻿language-code = lt-lt
-language = Lithuanian
+language = Lietuviškai
 
 ; Address Screen
 address-title = Mano Spixi piniginė

@@ -27,7 +27,7 @@ Japanese            |  ✅            |  ✅
 Korean              |  ❌            |  ❌
 Lithuanian			|  ✅            |  ✅
 Punjabi             |  ❌            |  ❌
-Portuguese          |  ❌            |  ❌
+Portuguese          |  ✅            |  ✅
 Romanian            |  ❌            |  ❌
 Russian             |  ✅            |  ✅
 Serbian             |  ✅            |  ✅
