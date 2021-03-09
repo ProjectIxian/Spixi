@@ -193,14 +193,14 @@ intro-restore-account = RESTORE ACCOUNT
 
 ; Intro New Screen
 intro-new-description-1 = Create New Spixi Account
-intro-new-description-2 = Enter your Nikcname and Picture
+intro-new-description-2 = Enter your Nickname and Picture
 intro-new-name-placeholder = Your Nickname
 intro-new-change-image = Tap to change your picture
 intro-new-next = NEXT
 intro-new-step-1 = Step 1 of 2
 intro-new-step-2 = Step 2 of 2
 intro-new-description-3 = Create your Encryption Password
-intro-new-description-4 = To finish setting up your Spixi account<br />please create your Encryption Password.
+intro-new-description-4 = Please create your 'Encryption Password' to finish setting up your Spixi account 
 intro-new-password = Enter new encryption password
 intro-new-finish = FINISH
 intro-new-create-title = Creating your<br />Spixi account...
