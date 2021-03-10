@@ -4,14 +4,12 @@ using IXICore.Network;
 using IXICore.Utils;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
-using SPIXI.Lang;
 using SPIXI.Network;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Xamarin.Forms;
 
@@ -68,7 +66,7 @@ namespace SPIXI.Meta
         {
 #if DEBUG
             Logging.warn("Testing language files");
-            SpixiLocalization.testLanguageFiles("en-us");
+            Lang.SpixiLocalization.testLanguageFiles("en-us");
 #endif
 
             Logging.info("Initing node constructor");
@@ -95,6 +93,12 @@ namespace SPIXI.Meta
             FriendList.init(Config.spixiUserFolder);
 
             Logging.info("Node init done");
+
+            string backup_file_name = Path.Combine(Config.spixiUserFolder, "spixi.account.backup.ixi");
+            if(File.Exists(backup_file_name))
+            {
+                File.Delete(backup_file_name);
+            }
         }
 
         static public void preStart()
@@ -381,13 +385,9 @@ namespace SPIXI.Meta
 
         public override int getLastBlockVersion()
         {
-            if (tiv.getLastBlockHeader() == null)
+            if (tiv.getLastBlockHeader() == null || tiv.getLastBlockHeader().version < Block.maxVersion)
             {
-                return BlockVer.v6;
-            }
-            if (tiv.getLastBlockHeader().version < BlockVer.v6)
-            {
-                return BlockVer.v6;
+                return Block.maxVersion - 1;
             }
             return tiv.getLastBlockHeader().version;
         }
@@ -494,7 +494,7 @@ namespace SPIXI.Meta
 
                     if (cur_time - tx_time > 20) // if the transaction is pending for over 20 seconds, send inquiry
                     {
-                        CoreProtocolMessage.broadcastGetTransaction(Transaction.txIdV8ToLegacy(t.id), 0);
+                        CoreProtocolMessage.broadcastGetTransaction(t.id, 0);
                     }
 
                     idx++;

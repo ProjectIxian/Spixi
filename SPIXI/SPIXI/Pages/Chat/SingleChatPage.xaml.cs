@@ -927,7 +927,7 @@ namespace SPIXI
                     else
                     {
                         // TODO think about how to make this more private
-                        CoreProtocolMessage.broadcastGetTransaction(txid, 0, null);
+                        CoreProtocolMessage.broadcastGetTransaction(Transaction.txIdLegacyToV8(txid), 0, null);
                     }
                     enableView = true;
                 }
@@ -977,7 +977,7 @@ namespace SPIXI
                 else
                 {
                     // TODO think about how to make this more private
-                    CoreProtocolMessage.broadcastGetTransaction(message.message, 0, null);
+                    CoreProtocolMessage.broadcastGetTransaction(Transaction.txIdLegacyToV8(message.message), 0, null);
                 }
 
                 // Call webview methods on the main UI thread only
