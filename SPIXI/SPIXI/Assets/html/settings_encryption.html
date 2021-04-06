@@ -65,7 +65,7 @@
             *SL{settings-encryption-type}
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="passwordOld" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholder}">
+            <input type="password" class="spixi-textfield" id="passwordOld" oninput="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholder}">
         </div>
 
         <hr class="spixi-separator" />
@@ -74,10 +74,10 @@
             *SL{settings-encryption-typenew}
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="password" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholdernew}">
+            <input type="password" class="spixi-textfield" id="password" oninput="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholdernew}">
         </div>
         <div class="spixi-textfield-holder">
-            <input type="password" class="spixi-textfield" id="passwordConfirm" onkeyup="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholderretype}">
+            <input type="password" class="spixi-textfield" id="passwordConfirm" oninput="checkPasswordMatch()" placeholder="*SL{settings-encryption-placeholderretype}">
         </div>
         <hr class="spixi-separator" />
         <div id="passwordInfoText" class="spixi-center"><i class="spixi-text-address fa fa-info-circle"></i> *SL{settings-encryption-password10}</div>
