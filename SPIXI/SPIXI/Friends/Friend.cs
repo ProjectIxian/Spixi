@@ -157,6 +157,8 @@ namespace SPIXI
 
         public bool forcePush = false; // on error - for bypassing trying to resend to the same S2 and sending directly to push server
 
+        public long addedTimestamp = 0;
+
         private Dictionary<int, List<FriendMessage>> messages = new Dictionary<int, List<FriendMessage>>();
 
         public BotUsers users = null;
@@ -191,6 +193,7 @@ namespace SPIXI
             aesKey = aes_key;
             keyGeneratedTime = key_generated_time;
             bot = false;
+            addedTimestamp = Clock.getNetworkTimestamp();
         }
 
         public void setBotMode()
@@ -262,6 +265,11 @@ namespace SPIXI
                         }
                     }
 
+                    if(version >= 5)
+                    {
+                        addedTimestamp = reader.ReadInt64();
+                    }
+
                     if (bot)
                     {
                         setBotMode();
@@ -276,7 +284,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    writer.Write(4);
+                    writer.Write(5);
 
                     writer.Write(walletAddress.Length);
                     writer.Write(walletAddress);
@@ -327,6 +335,8 @@ namespace SPIXI
                     writer.Write(pendingDeletion);
 
                     writer.Write(userDefinedNick);
+
+                    writer.Write(addedTimestamp);
                 }
                 return m.ToArray();
             }

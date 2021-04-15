@@ -261,7 +261,14 @@ namespace SPIXI
                 messages.Add(friend_message);
             }
 
-            if (set_read)
+            bool old_message = false;
+            // Check if the message was sent before the friend was added to the contact list
+            if(friend.addedTimestamp > friend_message.timestamp)
+            {
+                old_message = true;               
+            }
+
+            if (set_read || old_message)
             {
                 friend_message.confirmed = true;
                 friend_message.read = true;
@@ -276,33 +283,39 @@ namespace SPIXI
                 friend.chat_page.insertMessage(friend_message, channel);
             }else if(!set_read)
             {
-                friend.metaData.unreadMessageCount++;
+                // Increase the unread counter if this is a new message
+                if(!old_message)
+                    friend.metaData.unreadMessageCount++;
+
                 friend.saveMetaData();
             }
 
             UIHelpers.setContactStatus(friend.walletAddress, friend.online, friend.getUnreadMessageCount(), message, timestamp);
 
-            // Send a local push notification if Spixi is not in the foreground
-            if (fire_local_notification && !local_sender)
+            // Only send alerts if this is a new message
+            if (old_message == false)
             {
-                if (App.isInForeground == false || friend.chat_page == null)
+                // Send a local push notification if Spixi is not in the foreground
+                if (fire_local_notification && !local_sender)
                 {
-                    // don't fire notification for nickname and avatar
-                    if(!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
+                    if (App.isInForeground == false || friend.chat_page == null)
                     {
-                        if (friend.bot == false
-                            || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
+                        // don't fire notification for nickname and avatar
+                        if (!friend_message.id.SequenceEqual(new byte[] { 4 }) && !friend_message.id.SequenceEqual(new byte[] { 5 }))
                         {
-                            DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                            if (friend.bot == false
+                                || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
+                            {
+                                DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                            }
                         }
                     }
                 }
+
+                ISystemAlert alert = DependencyService.Get<ISystemAlert>();
+                if (alert != null)
+                    alert.flash();
             }
-
-            ISystemAlert alert = DependencyService.Get<ISystemAlert>();
-            if (alert != null)
-                alert.flash();
-
             // Write to chat history
             Node.localStorage.requestWriteMessages(wallet_address, channel);
 
