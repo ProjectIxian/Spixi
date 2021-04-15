@@ -49,6 +49,19 @@ namespace SPIXI
 
         private bool fromSettings = false;
 
+
+        // Interal cache object to store contact status items
+        private struct contactStatusCacheItem
+        {
+            public byte[] address;
+            public bool online;
+            public int unread;
+            public string excerpt;
+            public long timestamp;
+        }
+        private static List<contactStatusCacheItem> contactStatusCache = new List<contactStatusCacheItem>();
+
+
         private HomePage ()
 		{
             Node.preStart();
@@ -764,9 +777,9 @@ namespace SPIXI
 
             loadChats();
             loadContacts();
-
             Node.shouldRefreshContacts = false;
 
+            updateContactStatus();
             loadTransactions();
 
             string new_version = checkForUpdate();
@@ -853,9 +866,63 @@ namespace SPIXI
             return "(not checked)";
         }
 
+        // Adds and filters a new contact status to the cache
+        // Can be called from any thread
         public void setContactStatus(byte[] address, bool online, int unread, string excerpt, long timestamp)
         {
-            Utils.sendUiCommand(webView, "setContactStatus", Base58Check.Base58CheckEncoding.EncodePlain(address), online.ToString(), unread.ToString(), excerpt, timestamp.ToString());
+            // Cache and filter contact status changes to reduce cpu usage with many notifications
+            lock (contactStatusCache)
+            {
+                bool _alreadyInCache = false;
+                int i = 0;
+                for(i = 0; i < contactStatusCache.Count; i++)
+                {
+                    contactStatusCacheItem cacheItem = contactStatusCache[i];
+                    if (cacheItem.address.SequenceEqual(address))
+                    {
+                        // Update the cached status to the latest message
+                        if(timestamp > cacheItem.timestamp)
+                        {
+                            cacheItem.timestamp = timestamp;
+                            cacheItem.unread = unread;
+                            cacheItem.online = online;
+                            cacheItem.excerpt = excerpt;
+                        }
+                        // Already in cache, break to minimize processing
+                        _alreadyInCache = true;
+                        break;
+                    }
+                }
+
+                // If not found in cache, add this message
+                if(!_alreadyInCache)
+                {
+                    contactStatusCacheItem cacheItem = new contactStatusCacheItem();
+                    cacheItem.address = address;
+                    cacheItem.online = online;
+                    cacheItem.unread = unread;
+                    cacheItem.excerpt = excerpt;
+                    cacheItem.timestamp = timestamp;
+                    contactStatusCache.Add(cacheItem);
+                }
+            }
+
+        }
+        // Updates the status for all entries in the contact status cache
+        // Called from a UI thread
+        public void updateContactStatus()
+        {
+            lock (contactStatusCache)
+            {
+                // Go through each cache item and perform the status update
+                foreach (contactStatusCacheItem cacheItem in contactStatusCache)
+                {
+                    Utils.sendUiCommand(webView, "setContactStatus", Base58Check.Base58CheckEncoding.EncodePlain(cacheItem.address), 
+                        cacheItem.online.ToString(), cacheItem.unread.ToString(), cacheItem.excerpt, cacheItem.timestamp.ToString());
+                }
+                // Clear the contact status cache
+                contactStatusCache.Clear();
+            }
         }
     }
 }
