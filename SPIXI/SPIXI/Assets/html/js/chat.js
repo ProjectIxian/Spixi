@@ -36,6 +36,12 @@ function onChatScreenLoad()
             return false;
 	    };
     }
+
+	if(SL_Platform == "Xamarin-iOS")
+	{
+		setInterval('iosFixer();', 500);
+	}
+	
     messagesEl.addEventListener("click", function (e) {
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
@@ -186,8 +192,8 @@ function test() {
     setNickname("TesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTesterTester");
     setOnlineStatus("Online");
     showCallButton();
-    //showContactRequest(true);
-    addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
+    showContactRequest(true);
+ /*   addMe(0, "img/spixiavatar.png", "Hi!", "11:23 AM");
     addFile(10, 9090, "img/spixiavatar.png", "file1.png", "10:23 AM", false, false, false);
     setTimeout(function () { updateFile(9090, "25", "False"); }, 1000);
     setTimeout(function () { updateFile(9090, "50", "False"); }, 2000);
@@ -197,7 +203,7 @@ function test() {
     setTimeout(function () { addCall(1000, "Incoming call", "Duration 15:32", "False", "11:23 AM"); }, 1000);
     setTimeout(function () { addCall(1000, "Incoming call", "Declined", "True", "11:23 AM"); }, 2000);
 
-    setTimeout(function () { addMe(1, "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True"); }, 1000);
+    setTimeout(function () { addMe(1, "aaa", "me", "img/spixiavatar.png", "How are you today? &#x1f602", "11:23 AM", "True", "True", "False"); }, 1000);
     setTimeout(function () { addThem(2, "img/spixiavatar.png", "Hey! &#x1f604", "11:24 AM", "True", "True"); }, 1300);
     setTimeout(function () { addThem(3, "img/spixiavatar.png", "Great, thanks for asking.", "11:24 AM", "True", "True"); }, 1600);
     setTimeout(function () { addThem(4, "img/spixiavatar.png", "And how are you?", "11:24 AM", "True", "True"); }, 1900);
@@ -207,7 +213,7 @@ function test() {
     setTimeout(function () { addMe(7, "", "Was building my own Luna Park...", "11:25 AM", "True", "False"); }, 3000);
     setTimeout(function () { addMe(8, "", "html<div>injection</div>test", "11:25 AM", "False", "False"); }, 4000);
 
-    setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);
+    setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);*/
 }
 
 
@@ -324,7 +330,7 @@ function shouldScroll() {
 
 $("#chat_input").focus(function (event) {
     if (shouldScroll()) {
-        setTimeout(function () {
+        setTimeout(function () {			
             document.getElementById("chatholder").scrollIntoView(false);
             // Hack for slow devices
             setTimeout(function () {
@@ -336,7 +342,7 @@ $("#chat_input").focus(function (event) {
 
 
 $("#chat_input").click(function (event) {
-    if (shouldScroll()) {
+    if (shouldScroll()) {		
         setTimeout(function () {
             document.getElementById("chatholder").scrollIntoView(false);
             // Hack for slow devices
@@ -1518,4 +1524,21 @@ function getCaretPosition(editableDiv) {
     }
   }
   return caretPos;
+}
+
+// Fix for iOS toolbar offscreen issue when soft keyboard is shown
+var initialOffset = window.outerHeight - window.innerHeight;
+function iosFixer() {
+	var newOffset = window.outerHeight - window.innerHeight;
+				
+	if(newOffset > initialOffset)
+	{
+		var diff = newOffset - initialOffset;
+		document.getElementById("chattoolbar").style.top = diff+"px";
+	}
+	else if (newOffset < initialOffset)
+	{
+		document.getElementById("chattoolbar").style.top = "0px";
+	}
+	initialOffset = newOffset;			
 }
