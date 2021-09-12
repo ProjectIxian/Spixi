@@ -442,11 +442,6 @@ namespace SPIXI.Meta
             return 0;
         }
 
-        public override WalletStorage getWalletStorage()
-        {
-            return walletStorage;
-        }
-
         public override void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
             ProtocolMessage.parseProtocolMessage(code, data, endpoint);
@@ -505,6 +500,11 @@ namespace SPIXI.Meta
         public void onLowMemory()
         {
             FriendList.onLowMemory();
+        }
+
+        public override BlockHeader getBlockHeader(ulong blockNum)
+        {
+            return BlockHeaderStorage.getBlockHeader(blockNum);
         }
     }
 }

@@ -162,7 +162,7 @@ namespace SPIXI.Network
                         {
                             Logging.info("NET: Receiving presence list update");
                             // Parse the data and update entries in the presence list
-                            Presence p = PresenceList.updateFromBytes(data);
+                            Presence p = PresenceList.updateFromBytes(data, 0);
                             if (p == null)
                                 return;
 
@@ -322,7 +322,6 @@ namespace SPIXI.Network
                         }
                         break;
 
-                    case ProtocolMessageCode.newTransaction:
                     case ProtocolMessageCode.transactionData:
                         {
                             // TODO: check for errors/exceptions
