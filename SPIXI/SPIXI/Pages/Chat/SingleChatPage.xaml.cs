@@ -418,8 +418,8 @@ namespace SPIXI
                     IxiNumber message_cost = friend.getMessagePrice(str.Length);
                     if (message_cost > 0)
                     {
-                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
-                        IxiNumber balance = IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress());
+                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, IxianHandler.getWalletStorage().getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                        IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                         if (tx.amount + tx.fee > balance)
                         {
                             string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), tx.amount + tx.fee, balance);
@@ -444,7 +444,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_msg_bytes;
             message.id = friend_message.id;
 
@@ -503,7 +503,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
-                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message);
@@ -677,8 +677,8 @@ namespace SPIXI
                         sender_address = friend.walletAddress;
                     }
                     IxiNumber amount = new IxiNumber(data);
-                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, Node.walletStorage.getPrimaryAddress(), null, Node.walletStorage.getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
-                    IxiNumber balance = IxianHandler.getWalletBalance(Node.walletStorage.getPrimaryAddress());
+                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, IxianHandler.getWalletStorage().getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                     if(tx.amount <= 0)
                     {
                         displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
@@ -697,7 +697,7 @@ namespace SPIXI
                             nick = friend.users.getUser(sender_address).getNick();
                         }
                         string modal_title = String.Format(SpixiLocalization._SL("chat-modal-tip-title"), nick);
-                        if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
+                        if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "tip:" + tx.id), selectedChannel))
                         {
                             StreamProcessor.sendReaction(friend, msg_id, "tip:" + tx.id, selectedChannel);
                             IxianHandler.addTransaction(tx, true);
@@ -740,7 +740,7 @@ namespace SPIXI
                     break;
 
                 case "like":
-                    if (friend.addReaction(Node.walletStorage.getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
+                    if (friend.addReaction(IxianHandler.getWalletStorage().getPrimaryAddress(), new SpixiMessageReaction(msg_id, "like:"), selectedChannel))
                     {
                         StreamProcessor.sendReaction(friend, msg_id, "like:", selectedChannel);
                     }

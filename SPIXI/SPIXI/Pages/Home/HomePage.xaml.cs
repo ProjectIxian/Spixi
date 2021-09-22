@@ -478,7 +478,7 @@ namespace SPIXI
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
             //webView.Eval(string.Format("setBalance(\"{0}\")", "0.0000"));
-            //webView.Eval(string.Format("setAddress(\"{0}\")", Node.walletStorage.address));
+            //webView.Eval(string.Format("setAddress(\"{0}\")", IxianHandler.getWalletStorage().address));
         }
 
 
@@ -725,7 +725,7 @@ namespace SPIXI
                 Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
                 string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = utransaction.amount;
-                if (Node.walletStorage.isMyAddress((new Address(utransaction.pubKey).address)))
+                if (IxianHandler.getWalletStorage().isMyAddress((new Address(utransaction.pubKey).address)))
                 {
                     tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
                 }
@@ -748,7 +748,7 @@ namespace SPIXI
                 Transaction transaction = TransactionCache.transactions[i];
                 string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = transaction.amount;
-                if (Node.walletStorage.isMyAddress((new Address(transaction.pubKey).address)))
+                if (IxianHandler.getWalletStorage().isMyAddress((new Address(transaction.pubKey).address)))
                 {
                     tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
                 }

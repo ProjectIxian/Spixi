@@ -266,7 +266,7 @@ namespace SPIXI.Network
                                     // Retrieve the latest balance
                                     IxiNumber balance = reader.ReadString();
 
-                                    if (address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                                    if (address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                                     {
                                         // Retrieve the blockheight for the balance
                                         ulong block_height = reader.ReadUInt64();
@@ -300,7 +300,7 @@ namespace SPIXI.Network
                                     // Retrieve the latest balance
                                     IxiNumber balance = new IxiNumber(new BigInteger(reader.ReadBytes((int)reader.ReadIxiVarUInt())));
 
-                                    if (address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                                    if (address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                                     {
                                         // Retrieve the blockheight for the balance
                                         ulong block_height = reader.ReadIxiVarUInt();

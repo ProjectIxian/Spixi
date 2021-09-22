@@ -349,7 +349,7 @@ namespace SPIXI.Network
 
                      // Create a new IXIAN transaction
                      //  byte[] checksum = Crypto.sha256(encrypted_message);
-                     Transaction transaction = new Transaction(0, msg.recipientAddress, Node.walletStorage.address);
+                     Transaction transaction = new Transaction(0, msg.recipientAddress, IxianHandler.getWalletStorage().address);
                      //  transaction.data = Encoding.UTF8.GetString(checksum);
                      msg.transactionID = transaction.id;
                      //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.newTransaction, transaction.getBytes());

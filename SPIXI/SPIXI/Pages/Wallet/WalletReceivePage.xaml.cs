@@ -20,7 +20,7 @@ namespace SPIXI
 		public WalletReceivePage ()
 		{
 			InitializeComponent ();
-//            pubkeyAddress.Text = Node.walletStorage.address;
+//            pubkeyAddress.Text = IxianHandler.getWalletStorage().address;
             NavigationPage.SetHasNavigationBar(this, false);
 
 
@@ -30,7 +30,7 @@ namespace SPIXI
         public WalletReceivePage(Friend friend)
         {
             InitializeComponent();
-            //            pubkeyAddress.Text = Node.walletStorage.address;
+            //            pubkeyAddress.Text = IxianHandler.getWalletStorage().address;
             NavigationPage.SetHasNavigationBar(this, false);
 
             local_friend = friend;
@@ -45,7 +45,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress()));
+            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress()));
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -191,7 +191,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;
                 message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
-                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
                 message.id = friend_message.id;
 

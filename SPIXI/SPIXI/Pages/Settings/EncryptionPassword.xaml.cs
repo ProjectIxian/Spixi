@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore.Meta;
+using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
@@ -56,9 +57,9 @@ namespace SPIXI
                 string[] split_url = current_url.Split(new string[] { "--1ec4ce59e0535704d4--" }, StringSplitOptions.None);
                 string old_password = split_url[1];
                 string new_password = split_url[2];
-                if (Node.walletStorage.isValidPassword(old_password))
+                if (IxianHandler.getWalletStorage().isValidPassword(old_password))
                 {
-                    Node.walletStorage.writeWallet(new_password);
+                    IxianHandler.getWalletStorage().writeWallet(new_password);
                     displaySpixiAlert(SpixiLocalization._SL("settings-encryption-passwordchanged-title"), SpixiLocalization._SL("settings-encryption-passwordchanged-text"), SpixiLocalization._SL("global-dialog-ok"));
                     Navigation.PopAsync(Config.defaultXamarinAnimations);
                 }

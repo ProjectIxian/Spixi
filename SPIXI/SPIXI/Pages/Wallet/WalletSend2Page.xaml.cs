@@ -78,8 +78,8 @@ namespace SPIXI
         private void onLoad()
         {
             IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getPrimaryAddress();
-            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+            byte[] from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
 
             transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
@@ -162,7 +162,7 @@ namespace SPIXI
                     StreamMessage message = new StreamMessage();
                     message.type = StreamMessageCode.info;
                     message.recipient = friend.walletAddress;
-                    message.sender = Node.walletStorage.getPrimaryAddress();
+                    message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     message.data = spixi_message.getBytes();
                     message.id = friend_message.id;
 

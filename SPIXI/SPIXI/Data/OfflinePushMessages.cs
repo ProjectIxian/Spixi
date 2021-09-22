@@ -29,7 +29,7 @@ namespace SPIXI
 
             if (msg.id.Length == 1 && msg.id[0] == 1)
             {
-                pub_key = HttpUtility.UrlEncode(Convert.ToBase64String(Node.walletStorage.getPrimaryPublicKey()));
+                pub_key = HttpUtility.UrlEncode(Convert.ToBase64String(IxianHandler.getWalletStorage().getPrimaryPublicKey()));
             }
 
 
@@ -77,7 +77,7 @@ namespace SPIXI
 
             try
             {
-                string receiver = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
+                string receiver = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
 
                 nonce++;
 
@@ -169,10 +169,10 @@ namespace SPIXI
                 {
                     nonce++;
 
-                    byte[] sig = CryptoManager.lib.getSignature(UTF8Encoding.UTF8.GetBytes(nonce.ToString()), Node.walletStorage.getPrimaryPrivateKey());
+                    byte[] sig = CryptoManager.lib.getSignature(UTF8Encoding.UTF8.GetBytes(nonce.ToString()), IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
                     string url = String.Format("{0}/register.php", Config.pushServiceUrl);
-                    string parameters = String.Format("pk={0}&nonce={1}&sig={2}", Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryPublicKey()), nonce, Crypto.hashToString(sig));
+                    string parameters = String.Format("pk={0}&nonce={1}&sig={2}", Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryPublicKey()), nonce, Crypto.hashToString(sig));
 
                     client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                     string htmlCode = client.UploadString(url, parameters);

@@ -131,8 +131,8 @@ namespace SPIXI
         private void sendPayment(string ethaddress, IxiNumber amount)
         {
             IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = Node.walletStorage.getPrimaryAddress();
-            byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+            byte[] from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
 
 
             byte[] _address = Base58Check.Base58CheckEncoding.DecodePlain(Config.bridgeAddress);

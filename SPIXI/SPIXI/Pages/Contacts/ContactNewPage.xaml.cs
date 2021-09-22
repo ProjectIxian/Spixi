@@ -175,7 +175,7 @@ namespace SPIXI
                     return;
                 }
 
-                if(recipient_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                if(recipient_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;

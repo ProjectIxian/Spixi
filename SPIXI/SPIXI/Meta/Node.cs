@@ -27,9 +27,6 @@ namespace SPIXI.Meta
 
     class Node: IxianNode
     {
-        // Use the SPIXI-specific wallet storage code
-        public static WalletStorage walletStorage;
-
         // Used for all local data storage
         public static SPIXI.Storage.LocalStorage localStorage;
 
@@ -74,9 +71,6 @@ namespace SPIXI.Meta
             Instance = this;
 
             IxianHandler.init(Config.version, this, Config.networkType);
-
-            // Prepare the wallet
-            walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
 
             PeerStorage.init(Config.spixiUserFolder);
 
@@ -132,7 +126,7 @@ namespace SPIXI.Meta
             else
             {
                 headers_path = Path.Combine(Config.spixiUserFolder, "headers");
-                if (generatedNewWallet || !walletStorage.walletExists())
+                if (generatedNewWallet || !checkForExistingWallet())
                 {
                     generatedNewWallet = false;
                     block_height = CoreConfig.bakedBlockHeight;
@@ -192,7 +186,7 @@ namespace SPIXI.Meta
         // Returns true if found, otherwise false.
         static public bool checkForExistingWallet()
         {
-            if (File.Exists(walletStorage.getFileName()) == false)
+            if (!File.Exists(Path.Combine(Config.spixiUserFolder, Config.walletFile)))
             {
                 Logging.log(LogSeverity.error, "Cannot read wallet file.");
                 return false;
@@ -210,12 +204,18 @@ namespace SPIXI.Meta
             string password = Application.Current.Properties["walletpass"].ToString();
 
 
-            return walletStorage.readWallet(password);
+            WalletStorage walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
+            if(walletStorage.readWallet(password))
+            {
+                IxianHandler.addWallet(walletStorage);
+                return true;
+            }
+            return false;
         }
 
         static public bool generateWallet(string pass)
         {
-            return walletStorage.generateWallet(pass);
+            return IxianHandler.getWalletStorage().generateWallet(pass);
         }
         
 
@@ -242,8 +242,8 @@ namespace SPIXI.Meta
                     // TODO: optimize this by using a different thread perhaps
                     PresenceList.performCleanup();
 
-
-                    if (Node.walletStorage.getPrimaryAddress() == null)
+                    byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress();
+                    if (primaryAddress == null)
                         return;
 
                     if (Config.enablePushNotifications)
@@ -256,8 +256,8 @@ namespace SPIXI.Meta
                         {
                             using (BinaryWriter writer = new BinaryWriter(mw))
                             {
-                                writer.WriteIxiVarInt(Node.walletStorage.getPrimaryAddress().Length);
-                                writer.Write(Node.walletStorage.getPrimaryAddress());
+                                writer.WriteIxiVarInt(primaryAddress.Length);
+                                writer.Write(primaryAddress);
                                 NetworkClientManager.broadcastData(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, mw.ToArray(), null);
                             }
                         }

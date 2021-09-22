@@ -362,7 +362,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
-                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message, false, false, false);
@@ -566,7 +566,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.data;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
 
             StreamProcessor.sendMessage(friend, message, true, true, false);
@@ -594,7 +594,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
-                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message, false, false, false);
@@ -639,7 +639,7 @@ namespace SPIXI
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.data;
                 message.recipient = friend.walletAddress;
-                message.sender = Node.walletStorage.getPrimaryAddress();
+                message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
 
                 StreamProcessor.sendMessage(friend, message);

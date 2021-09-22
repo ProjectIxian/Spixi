@@ -108,7 +108,7 @@ namespace SPIXI
                 else
                 {
                     // Wallet found, see if it can be decrypted
-                    bool wallet_decrypted = Node.walletStorage.isLoaded();
+                    bool wallet_decrypted = IxianHandler.getWalletList().Count > 0 ? IxianHandler.getWalletStorage().isLoaded() : false;
                     if (!wallet_decrypted)
                     {
                         wallet_decrypted = Node.loadWallet();

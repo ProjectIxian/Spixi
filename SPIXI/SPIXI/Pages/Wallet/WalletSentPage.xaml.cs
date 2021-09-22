@@ -96,7 +96,7 @@ namespace SPIXI
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
             byte[] addr = new Address(ctransaction.pubKey).address;
-            if (addr.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+            if (addr.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
             {
                 // this is a sent payment
 

@@ -324,7 +324,7 @@ namespace SPIXI
 
 
                             // Update the DLT transaction as well
-                            Transaction transaction = new Transaction(0, msg.recipientAddress, Node.walletStorage.address);
+                            Transaction transaction = new Transaction(0, msg.recipientAddress, IxianHandler.getWalletStorage().address);
                             transaction.id = msg.transactionID;
                             //transaction.data = Encoding.UTF8.GetString(checksum);
                             //ProtocolMessage.broadcastProtocolMessage(ProtocolMessageCode.updateTransaction, transaction.getBytes());
@@ -368,7 +368,7 @@ namespace SPIXI
                     Logging.error("Received message intended for recipient {0} that isn't a bot.", Base58Check.Base58CheckEncoding.EncodePlain(tmp_friend.walletAddress));
                     return;
                 }
-            }else if(!Node.walletStorage.isMyAddress(message.recipient))
+            }else if(!IxianHandler.getWalletStorage().isMyAddress(message.recipient))
             {
                 Logging.error("Received message for {0} but this address is not one of ours.", Base58Check.Base58CheckEncoding.EncodePlain(message.recipient));
                 return;
@@ -411,7 +411,7 @@ namespace SPIXI
                 // TODO TODO TODO prevent encryption type downgrades
                 if (message.encryptionType != StreamMessageEncryptionCode.none)
                 {
-                    if (!message.decrypt(Node.walletStorage.getPrimaryPrivateKey(), aes_key, chacha_key))
+                    if (!message.decrypt(IxianHandler.getWalletStorage().getPrimaryPrivateKey(), aes_key, chacha_key))
                     {
                         Logging.error("Could not decrypt message from {0}", Base58Check.Base58CheckEncoding.EncodePlain(sender_address));
                         return;
@@ -1082,7 +1082,7 @@ namespace SPIXI
             StreamMessage new_msg = new StreamMessage();
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
-            new_msg.sender = Node.walletStorage.getPrimaryAddress();
+            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg);
@@ -1098,7 +1098,7 @@ namespace SPIXI
             StreamMessage new_msg = new StreamMessage();
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
-            new_msg.sender = Node.walletStorage.getPrimaryAddress();
+            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg, true, false, false);
@@ -1114,7 +1114,7 @@ namespace SPIXI
             StreamMessage new_msg = new StreamMessage();
             new_msg.type = StreamMessageCode.data;
             new_msg.recipient = friend.walletAddress;
-            new_msg.sender = Node.walletStorage.getPrimaryAddress();
+            new_msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             new_msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, new_msg);
@@ -1130,7 +1130,7 @@ namespace SPIXI
             StreamMessage msg = new StreamMessage();
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
-            msg.sender = Node.walletStorage.getPrimaryAddress();
+            msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, msg, false, false, false);
@@ -1146,7 +1146,7 @@ namespace SPIXI
             StreamMessage msg = new StreamMessage();
             msg.type = StreamMessageCode.data;
             msg.recipient = friend.walletAddress;
-            msg.sender = Node.walletStorage.getPrimaryAddress();
+            msg.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             msg.data = spixi_msg.getBytes();
 
             sendMessage(friend, msg, true, true, false);
@@ -1163,7 +1163,7 @@ namespace SPIXI
                 return;
             }
 
-            if (!Node.walletStorage.isMyAddress(recipient_address))
+            if (!IxianHandler.getWalletStorage().isMyAddress(recipient_address))
             {
                 return;
             }
@@ -1332,7 +1332,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
             message.encryptionType = StreamMessageEncryptionCode.rsa;
             message.id = new byte[] { 1 };
@@ -1350,7 +1350,7 @@ namespace SPIXI
             StreamMessage reply_message = new StreamMessage();
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
-            reply_message.sender = Node.walletStorage.getPrimaryAddress();
+            reply_message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 5 };
 
@@ -1377,7 +1377,7 @@ namespace SPIXI
             StreamMessage reply_message = new StreamMessage();
             reply_message.type = StreamMessageCode.info;
             reply_message.recipient = friend.walletAddress;
-            reply_message.sender = Node.walletStorage.getPrimaryAddress();
+            reply_message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             reply_message.data = reply_spixi_message.getBytes();
             reply_message.id = new byte[] { 6 };
 
@@ -1400,7 +1400,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
             if (friend.bot)
             {
@@ -1431,7 +1431,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
             if (!friend.bot)
             {
@@ -1461,7 +1461,7 @@ namespace SPIXI
             StreamMessage message = new StreamMessage();
             message.type = StreamMessageCode.info;
             message.recipient = friend.walletAddress;
-            message.sender = Node.walletStorage.getPrimaryAddress();
+            message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
             message.data = spixi_message.getBytes();
             if (!friend.bot)
             {
@@ -1685,7 +1685,7 @@ namespace SPIXI
             {
                 SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>();
 
-                byte[] from = Node.walletStorage.getPrimaryAddress();
+                byte[] from = IxianHandler.getWalletStorage().getPrimaryAddress();
                 IxiNumber price = bot.getMessagePrice(fm.payableDataLen);
                 if (price > sta.cost)
                 {
@@ -1703,7 +1703,7 @@ namespace SPIXI
                 to_list.Add(bot.walletAddress, sta.cost);
 
                 IxiNumber fee = ConsensusConfig.transactionPrice;
-                byte[] pubKey = Node.walletStorage.getPrimaryPublicKey();
+                byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
 
                 Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 

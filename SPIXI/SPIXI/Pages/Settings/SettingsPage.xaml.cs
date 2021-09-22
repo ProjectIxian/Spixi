@@ -167,10 +167,8 @@ namespace SPIXI
 
         public void onDeleteWallet(object sender, EventArgs e)
         {
-            if (Node.walletStorage.deleteWallet())
+            if (IxianHandler.getWalletStorage().deleteWallet())
             {
-                Node.walletStorage = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
-
                 // Also delete the account
                 onDeleteAccount();
 

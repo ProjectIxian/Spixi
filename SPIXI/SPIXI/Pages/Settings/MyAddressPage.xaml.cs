@@ -1,4 +1,5 @@
-﻿using SPIXI.Interfaces;
+﻿using IXICore.Meta;
+using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
 using System.Web;
@@ -25,7 +26,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            string address_string = Base58Check.Base58CheckEncoding.EncodePlain(Node.walletStorage.getPrimaryAddress());
+            string address_string = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
             Utils.sendUiCommand(webView, "setAddress", address_string);
         }
 

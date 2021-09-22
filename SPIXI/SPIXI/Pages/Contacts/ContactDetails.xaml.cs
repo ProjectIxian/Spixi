@@ -182,7 +182,7 @@ namespace SPIXI
                 }
 
                 string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                 {
                     tx_type = SpixiLocalization._SL("global-sent");
                 }
@@ -203,7 +203,7 @@ namespace SPIXI
                 }
 
                 string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.SequenceEqual(Node.walletStorage.getPrimaryAddress()))
+                if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                 {
                     tx_type = SpixiLocalization._SL("global-sent");
                 }
