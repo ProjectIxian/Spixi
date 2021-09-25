@@ -215,7 +215,15 @@ namespace SPIXI.Meta
 
         static public bool generateWallet(string pass)
         {
-            return IxianHandler.getWalletStorage().generateWallet(pass);
+            if(IxianHandler.getWalletList().Count == 0)
+            {
+                WalletStorage ws = new WalletStorage(Path.Combine(Config.spixiUserFolder, Config.walletFile));
+                if(ws.generateWallet(pass))
+                {
+                    return IxianHandler.addWallet(ws);
+                }
+            }
+            return false;
         }
         
 

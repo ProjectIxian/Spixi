@@ -57,7 +57,7 @@
             *SL{settings-backup-save}
         </div>
         <div class="spixi-textsection-holder">
-            *SL{settings-backup-notice} 
+            *SL{settings-backup-notice}
         </div>
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-italic">
@@ -67,10 +67,16 @@
 
         <hr class="spixi-separator-main" />
 
-        <div id="sendrequest" class="spixi-button large center">
+        <div id="BackupWallet" class="spixi-button large center">
             <i class="fas fa-download"></i>&nbsp; *SL{settings-backup-save}
         </div>
+<!--
+        <hr class="spixi-separator" />
 
+        <div id="BackupAccount" class="spixi-button large center">
+            <i class="fas fa-download"></i>&nbsp; *SL{settings-backup-account-save}
+        </div>
+-->
         <div class="spixi-holder-20"></div>
 
 
@@ -83,8 +89,12 @@
             location.href = "ixian:back";
         }
 
-        document.getElementById("sendrequest").onclick = function () {
-            location.href = "ixian:backup";
+        document.getElementById("BackupAccount").onclick = function () {
+            location.href = "ixian:backupAccount";
+        }
+
+        document.getElementById("BackupWallet").onclick = function () {
+            location.href = "ixian:backupWallet";
         }
 
     </script>

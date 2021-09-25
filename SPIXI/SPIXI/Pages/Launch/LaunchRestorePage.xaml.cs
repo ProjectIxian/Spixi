@@ -1,4 +1,5 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
@@ -6,7 +7,9 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -117,21 +120,105 @@ namespace SPIXI
             Application.Current.Properties["walletpass"] = pass;
             Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
 
-            string filepath = Path.Combine(Config.spixiUserFolder, Config.walletFile);
-            if (!Node.walletStorage.verifyWallet(filepath + ".tmp", pass))
+            string source_path = Path.Combine(Config.spixiUserFolder, Config.walletFile) + ".tmp";
+            if(!File.Exists(source_path))
+            {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-error-title"), SpixiLocalization._SL("intro-restore-file-selecterror-text"), SpixiLocalization._SL("global-dialog-ok"));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                return;
+            }
+            if (restoreAccountFile(source_path, pass))
+            {
+                return;
+            }
+            restoreWalletFile(source_path, pass);
+        }
+
+        private bool restoreAccountFile(string source_path, string pass)
+        {
+            // TODO add file header
+            string tmpDirectory = Path.Combine(Config.spixiUserFolder, "tmp_zip");
+            try
+            {
+                if(Directory.Exists(tmpDirectory))
+                {
+                    Directory.Delete(tmpDirectory, true);
+                }
+                Directory.CreateDirectory(tmpDirectory);
+                byte[] decrypted = CryptoManager.lib.decryptWithPassword(File.ReadAllBytes(source_path), pass, true);
+                byte[] header = UTF8Encoding.UTF8.GetBytes("SPIXIACCB1");
+                for(int i = 0; i < header.Length; i++)
+                {
+                    if(decrypted[i] != header[i])
+                    {
+                        Directory.Delete(tmpDirectory, true);
+                        return false;
+                    }
+                }
+                byte[] zipFileBytes = decrypted.Skip(header.Length).ToArray();
+                File.WriteAllBytes(source_path, zipFileBytes);
+                ZipFile.ExtractToDirectory(source_path, tmpDirectory);
+                string tmpWalletFile = Path.Combine(tmpDirectory, Config.walletFile);
+                WalletStorage ws = new WalletStorage(tmpWalletFile);
+                if (!ws.verifyWallet(tmpWalletFile, pass))
+                {
+                    Directory.Delete(tmpDirectory, true);
+                    displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    // Remove overlay
+                    Utils.sendUiCommand(webView, "removeLoadingOverlay");
+                    return false;
+                }
+                Directory.Delete(Path.Combine(Config.spixiUserFolder, "Acc"), true);
+                Directory.Move(Path.Combine(tmpDirectory, "Acc"), Path.Combine(Config.spixiUserFolder, "Acc"));
+                if (File.Exists(Path.Combine(tmpDirectory, "account.ixi")))
+                {
+                    File.Move(Path.Combine(tmpDirectory, "account.ixi"), Path.Combine(Config.spixiUserFolder, "account.ixi"));
+                }
+                if (File.Exists(Path.Combine(tmpDirectory, "avatar.jpg")))
+                {
+                    File.Move(Path.Combine(tmpDirectory, "avatar.jpg"), Path.Combine(Config.spixiUserFolder, "avatar.jpg"));
+                }
+                if (File.Exists(Path.Combine(tmpDirectory, "txcache.ixi")))
+                {
+                    File.Move(Path.Combine(tmpDirectory, "txcache.ixi"), Path.Combine(Config.spixiUserFolder, "txcache.ixi"));
+                }
+                File.Move(Path.Combine(tmpDirectory, "wallet.ixi"), Path.Combine(Config.spixiUserFolder, "wallet.ixi"));
+
+                Node.loadWallet();
+                Directory.Delete(tmpDirectory, true);
+                File.Delete(source_path);
+                Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
+                Navigation.RemovePage(this);
+                return true;
+            }catch(Exception e)
+            {
+                Logging.warn("Exception occured while trying to restore account file: " + e);
+                Directory.Delete(tmpDirectory, true);
+            }
+            return false;
+        }
+
+        private bool restoreWalletFile(string source_path, string pass)
+        {
+            // TODO add file header
+            string target_filepath = Path.Combine(Config.spixiUserFolder, Config.walletFile);
+            WalletStorage ws = new WalletStorage(source_path);
+            if (!ws.verifyWallet(source_path, pass))
             {
                 displaySpixiAlert(SpixiLocalization._SL("intro-restore-file-invalidpassword-title"), SpixiLocalization._SL("intro-restore-file-invalidpassword-text"), SpixiLocalization._SL("global-dialog-ok"));
                 // Remove overlay
                 Utils.sendUiCommand(webView, "removeLoadingOverlay");
-                return;
-            }else
+                return false;
+            }
+            else
             {
-                File.Move(filepath + ".tmp", filepath);
+                File.Move(source_path, target_filepath);
                 Node.loadWallet();
             }
-
             Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
+            return true;
         }
 
         protected override bool OnBackButtonPressed()
