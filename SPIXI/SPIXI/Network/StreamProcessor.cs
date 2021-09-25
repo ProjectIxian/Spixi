@@ -50,6 +50,10 @@ namespace SPIXI
         // Send an encrypted message using the S2 network
         public static void sendMessage(Friend friend, StreamMessage msg, bool add_to_pending_messages = true, bool send_to_server = true, bool send_push_notification = true, bool remove_after_sending = false)
         {
+            if(friend.bot)
+            {
+                send_to_server = false;
+            }
             pendingMessageProcessor.sendMessage(friend, msg, add_to_pending_messages, send_to_server, send_push_notification, remove_after_sending);
         }
 

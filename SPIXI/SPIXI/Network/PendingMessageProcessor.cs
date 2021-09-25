@@ -129,7 +129,10 @@ namespace SPIXI.Network
                     }
                     continue;
                 }
-                friend.searchForRelay(); // TODO cuckoo filter should be used instead, need to check the performance when PL is big
+                if(friend.bot && !friend.online)
+                {
+                    continue;
+                }
                 List<PendingMessageHeader> message_headers = null;
                 if (!friend.online)
                 {
