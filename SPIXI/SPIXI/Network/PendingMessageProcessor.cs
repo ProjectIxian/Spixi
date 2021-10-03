@@ -320,6 +320,8 @@ namespace SPIXI.Network
                     if (OfflinePushMessages.sendPushMessage(msg, send_push_notification))
                     {
                         pending_message.sendToServer = false;
+                        // TODO set the proper channel
+                        friend.setMessageSent(0, pending_message.streamMessage.id);
                         if (add_to_pending_messages)
                         {
                             pending_message.save(storagePath);

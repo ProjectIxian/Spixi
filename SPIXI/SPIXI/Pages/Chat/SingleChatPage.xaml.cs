@@ -1013,7 +1013,7 @@ namespace SPIXI
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
             }
 
             if(message.type == FriendMessageType.voiceCall || message.type == FriendMessageType.voiceCallEnd)
@@ -1164,7 +1164,7 @@ namespace SPIXI
             {
                 paid = true;
             }
-            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
         }
 
         public void updateFile(string uid, string progress, bool complete)

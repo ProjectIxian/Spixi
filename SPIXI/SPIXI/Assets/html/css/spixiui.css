@@ -1426,6 +1426,7 @@ img.emoji {
 }
 
 .spixi-bubble.sent,
+.spixi-bubble.confirmed,
 .spixi-bubble.read
 {
     border: none;
@@ -1538,7 +1539,7 @@ img.emoji {
     float: right;
 }
 
-.spixi-bubble.sent .statusIndicator {
+.spixi-bubble.confirmed .statusIndicator {
     color: #a7a7a7;
     display: inline-block;
 }

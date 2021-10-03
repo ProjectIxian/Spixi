@@ -586,6 +586,38 @@ namespace SPIXI
             return true;
         }
 
+
+        public bool setMessageSent(int channel, byte[] id)
+        {
+            var tmp_messages = getMessages(channel);
+            if (tmp_messages == null)
+            {
+                return false;
+            }
+            FriendMessage msg = tmp_messages.Find(x => x.id.SequenceEqual(id));
+            if (msg == null)
+            {
+                Logging.error("Error trying to set sent indicator, message from {0} for channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
+                return false;
+            }
+
+            if (msg.localSender)
+            {
+                if (!msg.sent)
+                {
+                    msg.sent = true;
+                    Node.localStorage.requestWriteMessages(walletAddress, channel);
+                }
+
+                if (chat_page != null)
+                {
+                    chat_page.updateMessage(msg);
+                }
+            }
+
+            return true;
+        }
+
         public int handshakeStatus
         {
             get

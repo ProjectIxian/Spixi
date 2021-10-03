@@ -31,6 +31,7 @@ namespace SPIXI
         public bool localSender;
         public bool read;
         public bool confirmed;
+        public bool sent; // if sent to PN/Offline server
         public FriendMessageType type;
         public string transferId; // UID of file transfer if applicable
         public bool completed; // for file transfer, indicating whether the transfer completed
@@ -63,6 +64,7 @@ namespace SPIXI
             filePath = "";
             fileSize = 0;
             receivedTimestamp = Clock.getTimestamp();
+            sent = false;
         }
 
         public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
@@ -80,6 +82,7 @@ namespace SPIXI
             filePath = "";
             fileSize = 0;
             receivedTimestamp = Clock.getTimestamp();
+            sent = false;
         }
 
         public FriendMessage(byte[] bytes)
@@ -139,6 +142,10 @@ namespace SPIXI
                                     reaction_datas.Add(reaction_data);
                                 }
                             }
+                        }
+                        if (m.Position < m.Length)
+                        {
+                            sent = reader.ReadBoolean();
                         }
                     }
                     catch (Exception)
@@ -203,6 +210,8 @@ namespace SPIXI
                             }
                         }
                     }
+
+                    writer.Write(sent);
                 }
                 return m.ToArray();
             }

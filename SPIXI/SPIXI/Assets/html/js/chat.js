@@ -576,10 +576,13 @@ function addText(id, address, nick, avatar, text, time, className) {
     }
 }
 
-function addMe(id, address, nick, avatar, text, time, sent, read, paid) {
+function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid) {
     var additionalClasses = "";
     if (sent == "True") {
         additionalClasses = " sent";
+    }
+    if (confirmed == "True") {
+        additionalClasses = " confirmed";
     }
     if (read == "True") {
         additionalClasses += " read";
@@ -734,7 +737,7 @@ function updateFile(id, progress, complete) {
     }
 }
 
-function updateMessage(id, message, sent, read, paid) {
+function updateMessage(id, message, sent, confirmed, read, paid) {
     message = message.replace(/\n/g, "<br>");
 
     var msgEl = document.getElementById("msg_" + id);
@@ -748,6 +751,9 @@ function updateMessage(id, message, sent, read, paid) {
         if (sent == "True") {
             additionalClasses = " sent";
         }
+        if (confirmed == "True") {
+            additionalClasses = " confirmed";
+        }
         if (read == "True") {
             additionalClasses += " read";
         }
@@ -755,7 +761,7 @@ function updateMessage(id, message, sent, read, paid) {
         if(paid == "True")
         {
             additionalClasses += " paid";
-		}
+    		}
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {
             additionalClasses += " spixi-payment-request";
