@@ -397,7 +397,6 @@ namespace SPIXI
                     }
                 }
             }
-
             int channel = 0;
             try
             {
@@ -796,15 +795,18 @@ namespace SPIXI
                 Logging.error("Exception occured in StreamProcessor.receiveData: " + e);
             }
 
-            // Send received confirmation
-            StreamMessage msg_received = new StreamMessage();
-            msg_received.type = StreamMessageCode.info;
-            msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
-            msg_received.recipient = sender_address;
-            msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id, channel).getBytes();
-            msg_received.encryptionType = StreamMessageEncryptionCode.none;
+            if(message.requireRcvConfirmation)
+            {
+                // Send received confirmation
+                StreamMessage msg_received = new StreamMessage();
+                msg_received.type = StreamMessageCode.info;
+                msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
+                msg_received.recipient = sender_address;
+                msg_received.data = new SpixiMessage(SpixiMessageCode.msgReceived, message.id, channel).getBytes();
+                msg_received.encryptionType = StreamMessageEncryptionCode.none;
 
-            sendMessage(friend, msg_received, true, true, false, true);
+                sendMessage(friend, msg_received, true, true, false, true);
+            }
         }
 
         public static void handleMsgDelete(Friend friend, byte[] msg_id, byte[] msg_id_to_del, int channel)
