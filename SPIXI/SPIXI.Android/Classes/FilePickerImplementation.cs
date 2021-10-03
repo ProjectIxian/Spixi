@@ -6,12 +6,13 @@ using SPIXI.Droid.Classes;
 using Xamarin.Forms;
 using Android.Graphics;
 using System;
+using Xamarin.Essentials;
 
-[assembly: Dependency(typeof(PicturePickerImplementation))]
+[assembly: Dependency(typeof(FilePickerImplementation))]
 
 namespace SPIXI.Droid.Classes
 {
-    public class PicturePickerImplementation : IPicturePicker
+    public class FilePickerImplementation : IFilePicker
     {
         public Task<SpixiImageData> PickImageAsync()
         {
@@ -33,6 +34,18 @@ namespace SPIXI.Droid.Classes
 
             // Return Task object
             return activity.PickImageTaskCompletionSource.Task;
+        }
+
+        public async Task<SpixiImageData> PickFileAsync()
+        {
+            FileResult fileData = await FilePicker.PickAsync();
+            if (fileData == null)
+                return null; // User canceled file picking
+
+            SpixiImageData spixi_img_data = new SpixiImageData() { name = fileData.FileName, path = fileData.FullPath, stream = await fileData.OpenReadAsync() };
+
+            // Return Task object
+            return spixi_img_data;
         }
 
         public byte[] ResizeImage(byte[] image_data, int new_width, int new_height, int quality)

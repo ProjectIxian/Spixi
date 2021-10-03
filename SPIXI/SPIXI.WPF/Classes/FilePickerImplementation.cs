@@ -1,5 +1,4 @@
 ﻿
-using IXICore.Meta;
 using Microsoft.Win32;
 using SPIXI.Interfaces;
 using SPIXI.WPF.Classes;
@@ -11,11 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(PicturePickerImplementation))]
+[assembly: Dependency(typeof(FilePickerImplementation))]
 
 namespace SPIXI.WPF.Classes
 {
-    public class PicturePickerImplementation : IPicturePicker
+    public class FilePickerImplementation : IFilePicker
     {
         public Task<SpixiImageData> PickImageAsync()
         {
@@ -31,6 +30,21 @@ namespace SPIXI.WPF.Classes
 
             // Return Task object
             return Task.FromResult(spixi_img_data);
+        }
+
+        public async Task<SpixiImageData> PickFileAsync()
+        {
+            OpenFileDialog file_dialog = new OpenFileDialog();
+            file_dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            SpixiImageData spixi_img_data = null;
+            if (file_dialog.ShowDialog() == true)
+            {
+                spixi_img_data = new SpixiImageData() { name = Path.GetFileName(file_dialog.FileName), path = file_dialog.FileName, stream = File.OpenRead(file_dialog.FileName) };
+            }
+
+            // Return Task object
+            return spixi_img_data;
         }
 
         public byte[] ResizeImage(byte[] image_data, int new_width, int new_height, int quality)

@@ -1,7 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -11,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -74,12 +73,15 @@ namespace SPIXI
             byte[] _data = null;
             try
             {
-                FileData fileData = await CrossFilePicker.Current.PickFile();
+                var picker_service = DependencyService.Get<IFilePicker>();
+
+                SpixiImageData fileData = await picker_service.PickFileAsync();
                 if (fileData == null)
                     return; // User canceled file picking
 
-                string fileName = fileData.FileName;
-                _data = fileData.DataArray;
+                var stream = fileData.stream;
+                _data = new byte[stream.Length];
+                stream.Read(_data, 0, (int)stream.Length);
             }
             catch (Exception ex)
             {

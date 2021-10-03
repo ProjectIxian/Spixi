@@ -71,7 +71,7 @@ namespace SPIXI
 
         public async Task onChangeAvatarAsync(object sender, EventArgs e)
         {
-            var picker_service = DependencyService.Get<IPicturePicker>();
+            var picker_service = DependencyService.Get<IFilePicker>();
 
             SpixiImageData spixi_img_data = await picker_service.PickImageAsync();
             Stream stream = spixi_img_data.stream;

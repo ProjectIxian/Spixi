@@ -138,7 +138,7 @@ namespace SPIXI
             if (avatar != null)
             {
                 Node.localStorage.writeAvatar(address, avatar);
-                Node.localStorage.writeAvatar(address + "_128", DependencyService.Get<IPicturePicker>().ResizeImage(avatar, 128, 128, 100));
+                Node.localStorage.writeAvatar(address + "_128", DependencyService.Get<IFilePicker>().ResizeImage(avatar, 128, 128, 100));
             }
             Node.shouldRefreshContacts = true;
         }

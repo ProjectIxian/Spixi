@@ -10,9 +10,10 @@ namespace SPIXI.Interfaces
         public string path = null;
     }
 
-    public interface IPicturePicker
+    public interface IFilePicker
     {
         Task<SpixiImageData> PickImageAsync();
+        Task<SpixiImageData> PickFileAsync();
         byte[] ResizeImage(byte[] image_data, int width, int height, int quality);
     }
 }

@@ -108,7 +108,7 @@
     <Compile Include="Classes\PlatformUtils.cs" />
     <Compile Include="Classes\FileOperations.cs" />
     <Compile Include="Classes\PictureiOS.cs" />
-    <Compile Include="Classes\PicturePickerImplementation.cs" />
+    <Compile Include="Classes\FilePickerImplementation.cs" />
     <Compile Include="Classes\PowerManager.cs" />
     <Compile Include="Classes\PushService.cs" />
     <Compile Include="Classes\SpixiCodecInfo.cs" />

@@ -4,17 +4,17 @@ using System.IO;
 using System.Threading.Tasks;
 using Foundation;
 using IXICore.Meta;
-using MobileCoreServices;
 using SPIXI.Interfaces;
 using SPIXI.iOS.Classes;
 using UIKit;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
-[assembly: Dependency(typeof(PicturePickerImplementation))]
+[assembly: Dependency(typeof(FilePickerImplementation))]
 
 namespace SPIXI.iOS.Classes
 {
-    public class PicturePickerImplementation : IPicturePicker
+    public class FilePickerImplementation : IFilePicker
     {
         TaskCompletionSource<SpixiImageData> taskCompletionSource;
         UIImagePickerController imagePicker;
@@ -40,6 +40,18 @@ namespace SPIXI.iOS.Classes
             // Return Task object
             taskCompletionSource = new TaskCompletionSource<SpixiImageData>();
             return taskCompletionSource.Task;
+        }
+
+        public async Task<SpixiImageData> PickFileAsync()
+        {
+            FileResult fileData = await FilePicker.PickAsync();
+            if (fileData == null)
+                return null; // User canceled file picking
+
+            SpixiImageData spixi_img_data = new SpixiImageData() { name = Path.GetFileName(fileData.FullPath), path = fileData.FullPath, stream = await fileData.OpenReadAsync() };
+
+            // Return Task object
+            return spixi_img_data;
         }
 
         void OnImagePickerFinishedPickingMedia(object sender, UIImagePickerMediaPickedEventArgs args)

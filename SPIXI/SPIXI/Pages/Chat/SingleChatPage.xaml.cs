@@ -1,8 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
-using Plugin.FilePicker;
-using Plugin.FilePicker.Abstractions;
 using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Meta;
@@ -19,6 +17,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
+using Xamarin.Essentials;
 
 namespace SPIXI
 {
@@ -466,33 +465,23 @@ namespace SPIXI
                 string fileName = null;
                 string filePath = null;
 
-                // Special case for iOS platform
-                if (Device.RuntimePlatform == Device.iOS)
+                var picker_service = DependencyService.Get<IFilePicker>();
+
+                SpixiImageData spixi_img_data = await picker_service.PickFileAsync();
+                if(spixi_img_data == null)
                 {
-                    var picker_service = DependencyService.Get<IPicturePicker>();
-
-                    SpixiImageData spixi_img_data = await picker_service.PickImageAsync();
-                    stream = spixi_img_data.stream;
-
-                    if (stream == null)
-                    {
-                        return;
-                    }
-
-                    fileName = spixi_img_data.name;
-                    filePath = spixi_img_data.path;
+                    return;
                 }
-                else
+
+                stream = spixi_img_data.stream;
+
+                if (stream == null)
                 {
-                    FileData fileData = await CrossFilePicker.Current.PickFile();
-                    if (fileData == null)
-                        return; // User canceled file picking
-
-                    stream = fileData.GetStream();
-
-                    fileName = fileData.FileName;
-                    filePath = fileData.FilePath;
+                    return;
                 }
+
+                fileName = spixi_img_data.name;
+                filePath = spixi_img_data.path;
 
                 FileTransfer transfer = TransferManager.prepareFileTransfer(fileName, stream, filePath);
                 transfer.channel = selectedChannel;
