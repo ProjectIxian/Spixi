@@ -467,8 +467,17 @@ namespace SPIXI
 
                 var picker_service = DependencyService.Get<IFilePicker>();
 
-                SpixiImageData spixi_img_data = await picker_service.PickFileAsync();
-                if(spixi_img_data == null)
+                SpixiImageData spixi_img_data;
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    spixi_img_data = await picker_service.PickImageAsync();
+                }
+                else
+                {
+                    spixi_img_data = await picker_service.PickFileAsync();
+                }
+
+                if (spixi_img_data == null)
                 {
                     return;
                 }
