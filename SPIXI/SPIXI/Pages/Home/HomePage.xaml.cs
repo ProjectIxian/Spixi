@@ -250,12 +250,15 @@ namespace SPIXI
 
                 if (transaction == null)
                 {
-                    foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
+                    lock (TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.SequenceEqual(b_txid))
+                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                         {
-                            transaction = tx;
-                            break;
+                            if (tx.id.SequenceEqual(b_txid))
+                            {
+                                transaction = tx;
+                                break;
+                            }
                         }
                     }
 
@@ -719,22 +722,24 @@ namespace SPIXI
             lastTransactionChange = TransactionCache.lastChange;
 
             Utils.sendUiCommand(webView, "clearPaymentActivity");
-
-            for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
+            lock (TransactionCache.unconfirmedTransactions)
             {
-                Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
-                string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
-                IxiNumber amount = utransaction.amount;
-                if (IxianHandler.getWalletStorage().isMyAddress((new Address(utransaction.pubKey).address)))
+                for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
                 {
-                    tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
+                    Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
+                    string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
+                    IxiNumber amount = utransaction.amount;
+                    if (IxianHandler.getWalletStorage().isMyAddress((new Address(utransaction.pubKey).address)))
+                    {
+                        tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
+                    }
+                    else
+                    {
+                        amount = calculateReceivedAmount(utransaction);
+                    }
+                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
+                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, amount.ToString(), "false");
                 }
-                else
-                {
-                    amount = calculateReceivedAmount(utransaction);
-                }
-                string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, amount.ToString(), "false");
             }
 
             int max_tx_count = 0;

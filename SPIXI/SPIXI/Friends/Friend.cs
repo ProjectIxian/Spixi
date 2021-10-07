@@ -557,6 +557,10 @@ namespace SPIXI
 
         public bool setMessageReceived(int channel, byte[] id)
         {
+            if(channel == -1)
+            {
+                return false;
+            }
             var tmp_messages = getMessages(channel);
             if (tmp_messages == null)
             {

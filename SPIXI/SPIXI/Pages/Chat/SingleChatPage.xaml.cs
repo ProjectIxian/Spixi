@@ -585,12 +585,15 @@ namespace SPIXI
 
                 if (transaction == null)
                 {
-                    foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
+                    lock (TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.SequenceEqual(b_id))
+                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                         {
-                            transaction = tx;
-                            break;
+                            if (tx.id.SequenceEqual(b_id))
+                            {
+                                transaction = tx;
+                                break;
+                            }
                         }
                     }
 
@@ -1210,7 +1213,12 @@ namespace SPIXI
 
             if(friend.bot)
             {
-                Utils.sendUiCommand(webView, "setOnlineStatus", String.Format(SpixiLocalization._SL("chat-member-count"), friend.users.contacts.Count()));
+                long userCount = 0;
+                if(friend.metaData != null && friend.metaData.botInfo != null)
+                {
+                    userCount = friend.metaData.botInfo.userCount;
+                }
+                Utils.sendUiCommand(webView, "setOnlineStatus", String.Format(SpixiLocalization._SL("chat-member-count"), userCount));
             }
             else
             {

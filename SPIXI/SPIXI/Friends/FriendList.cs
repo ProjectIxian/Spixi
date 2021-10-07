@@ -201,9 +201,8 @@ namespace SPIXI
                     {
                         if(!friend.users.hasUser(sender_address) || friend.users.getUser(sender_address).publicKey == null)
                         {
-                            StreamProcessor.requestPubKey(friend, sender_address);
+                            StreamProcessor.requestBotUser(friend, sender_address);
                         }
-                        StreamProcessor.requestNickname(friend, sender_address);
                     }
                 }
             }else

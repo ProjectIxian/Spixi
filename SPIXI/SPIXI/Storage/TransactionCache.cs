@@ -69,6 +69,7 @@ namespace SPIXI.Storage
                 }
                 
                 // Remove from unconfirmed transactions if found
+                lock(unconfirmedTransactions)
                 {
                     cached_tx = null;
                     foreach (Transaction tx in unconfirmedTransactions)

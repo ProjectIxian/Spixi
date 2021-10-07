@@ -106,12 +106,15 @@ namespace SPIXI
 
                 if (transaction == null)
                 {
-                    foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
+                    lock (TransactionCache.unconfirmedTransactions)
                     {
-                        if (tx.id.SequenceEqual(id))
+                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
                         {
-                            transaction = tx;
-                            break;
+                            if (tx.id.SequenceEqual(id))
+                            {
+                                transaction = tx;
+                                break;
+                            }
                         }
                     }
 
@@ -170,52 +173,54 @@ namespace SPIXI
         public void loadTransactions()
         {
             Utils.sendUiCommand(webView, "clearRecentActivity");
-
-            foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
+            lock(TransactionCache.unconfirmedTransactions)
             {
-                byte[] from_address = new Address(utransaction.pubKey).address;
-                // Filter out unrelated transactions
-                if(from_address.SequenceEqual(friend.walletAddress) == false)
+                foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
                 {
-                    if (utransaction.toList.ContainsKey(friend.walletAddress) == false)
-                        continue;
+                    byte[] from_address = new Address(utransaction.pubKey).address;
+                    // Filter out unrelated transactions
+                    if (from_address.SequenceEqual(friend.walletAddress) == false)
+                    {
+                        if (utransaction.toList.ContainsKey(friend.walletAddress) == false)
+                            continue;
+                    }
+
+                    string tx_type = SpixiLocalization._SL("global-received");
+                    if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                    {
+                        tx_type = SpixiLocalization._SL("global-sent");
+                    }
+                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
+                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, utransaction.amount.ToString(), "false");
                 }
 
-                string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
                 {
-                    tx_type = SpixiLocalization._SL("global-sent");
+                    Transaction transaction = TransactionCache.transactions[i];
+
+                    byte[] from_address = new Address(transaction.pubKey).address;
+                    // Filter out unrelated transactions
+                    if (from_address.SequenceEqual(friend.walletAddress) == false)
+                    {
+                        if (transaction.toList.ContainsKey(friend.walletAddress) == false)
+                            continue;
+                    }
+
+                    string tx_type = SpixiLocalization._SL("global-received");
+                    if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                    {
+                        tx_type = SpixiLocalization._SL("global-sent");
+                    }
+                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
+
+                    string confirmed = "true";
+                    if (transaction.applied == 0)
+                    {
+                        confirmed = "error";
+                    }
+
+                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, transaction.amount.ToString(), confirmed);
                 }
-                string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, utransaction.amount.ToString(), "false");
-            }
-
-            for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
-            {
-                Transaction transaction = TransactionCache.transactions[i];
-
-                byte[] from_address = new Address(transaction.pubKey).address;
-                // Filter out unrelated transactions
-                if (from_address.SequenceEqual(friend.walletAddress) == false)
-                {
-                    if (transaction.toList.ContainsKey(friend.walletAddress) == false)
-                        continue;
-                }
-
-                string tx_type = SpixiLocalization._SL("global-received");
-                if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
-                {
-                    tx_type = SpixiLocalization._SL("global-sent");
-                }
-                string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-
-                string confirmed = "true";
-                if (transaction.applied == 0)
-                {
-                    confirmed = "error";
-                }
-
-                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, transaction.amount.ToString(), confirmed);
             }
         }
 
