@@ -84,6 +84,21 @@
             </div>
         </div>
 
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-appearance-edit}
+        </div>
+        <div class="spixi-textfield-holder">
+            <div class="spixi-textfield language-selector settings" onmousedown="document.getElementById('AppearanceDropDown').style.display='block';">
+                <span class="fa fa-sort-down"></span>
+                <div id="SelectedAppearance">*SL{settings-account-appearance-edit}</div>
+                <ul id="AppearanceDropDown">
+                    <li onmouseup="changeAppearance(this);" app-data="0">*SL{settings-account-appearance-automatic}</li>
+                    <li onmouseup="changeAppearance(this);" app-data="1">*SL{settings-account-appearance-light}</li>
+                    <li onmouseup="changeAppearance(this);" app-data="2">*SL{settings-account-appearance-dark}</li>
+                </ul>
+            </div>
+        </div>
+
         <hr class="spixi-separator" />
         <div class="spixi-textsection-holder spixi-textsection-header2">
             *SL{settings-account-image-edit}
@@ -335,6 +350,25 @@
             location.href = "ixian:language:" + langEl.getAttribute("lang-data");
             return false;
         }
+
+        function setAppearance(num) {
+            var content = "*SL{settings-account-appearance-automatic}";
+            if (num == 1)
+                content = "*SL{settings-account-appearance-light}";
+            else if (num == 2)
+                content = "*SL{settings-account-appearance-dark}";
+            document.getElementById("SelectedAppearance").innerHTML = content;
+        }
+
+        function changeAppearance(appEl) {
+            document.getElementById('AppearanceDropDown').style.display = 'none';
+            var attr = appEl.getAttribute("app-data");
+            setAppearance(attr);
+            location.href = "ixian:appearance:" + attr;
+            return false;
+        }
+
+
     </script>
 </body>
 </html>

@@ -169,7 +169,7 @@ img.emoji {
     z-index: 100;
     
     font-size: 20px;
-    background-image: linear-gradient(#951453, #c2185b);
+    background-image: linear-gradient(#800E44, #800E44);
 
     color: #FFF;
 
@@ -186,7 +186,7 @@ img.emoji {
 }
 
 .spixi-toolbar.shadow {
-    box-shadow:0px 1px 2px #777;
+    box-shadow:0px 0px 0px #777;
 }
 
 .spixi-toolbar-row {
@@ -334,10 +334,11 @@ img.emoji {
     left: 0px;
     right: 0px;
     height: 32px;
-    background: #FD287C;
+    background: rgba(58, 11, 34, 0.95);
     z-index: 100;
     display: none;
-    font-size: 14px;
+    font-size: 12px;
+    line-height: 18px;
     width: 100%;
 }
 
@@ -360,7 +361,7 @@ img.emoji {
     display: table-cell;
     width: 32px;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 16px;
+    font-size: 12px;
     vertical-align: middle;
     text-align: right;
 }
@@ -379,6 +380,8 @@ img.emoji {
     text-overflow: ellipsis;
     vertical-align: middle;
     padding-left: 20px;
+    padding-bottom: 6px;
+    padding-top: 6px;
 }
 
 .spixi-channel-bar .channel-name {
@@ -389,14 +392,14 @@ img.emoji {
     display: table-cell;
     width: 38px;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     vertical-align: middle;
     text-align: left;
 }
 
 .spixi-channel-selector-sep
 {
-    background: rgba(255, 255, 255, 0.5);
+    background: #63334B;
     height: 1px;
 }
 
@@ -407,20 +410,20 @@ img.emoji {
 
 .spixi-channel-bar.unread .unread-indicator,
 .spixi-channel-selector .unread-indicator {
-    background: white;
+    background: #DA84AA;
     display: inline-block;
     margin-left: 10px;
-    border-radius: 10px;
-    width: 10px;
-    height: 10px;
+    border-radius: 80px;
+    width: 8px;
+    height: 8px;
 }
 
 /* BalanceBar */
 .spixi-balancebar {
     width: 100%;
     color: #fff;
-    background-color: #25193c;
-    box-shadow: 0px 4px 10px #777;
+    background-color: #19293C;
+    box-shadow: 0px 0px 0px #777;
     padding: 10px 0px;
 }
 .spixi-balancebar-label {
@@ -470,10 +473,10 @@ img.emoji {
 .spixi-optionbar {
     width: 100%;
     color: #fff;
-    background: rgb(37, 25, 60);
+    background: #19293C;
 }
 .spixi-optionbar-contact-details {
-    background: rgba(37, 25, 60, 0.5);
+    background: #19293C;
 }
 .spixi-optionbar-frame {
     width: 100%;
@@ -511,8 +514,8 @@ img.emoji {
 .spixi-descriptionbar {
     width: 100%;
     color: #fff;
-    background-color: #25193c;
-    box-shadow:0px 4px 10px #777;    
+    background-color: #19293C;
+    box-shadow:0px 0px 0px #777;    
 }
 .spixi-descriptionbar-row {
     padding: 10px;
@@ -636,10 +639,12 @@ img.emoji {
 .spixi-errorbar {
     width: 100%;
     min-height: 32px;
-    background-color: #f3aa1d;
-    color: #FFFFFF;
+    background-color: #FACA6E;
+    color: #2C3D4A;
     padding: 3px 0px;
-    font-size: 12pt;
+    font-size: 10pt;
+    padding-top: 2px;
+    border-bottom: solid 1px #EFBA55;
 }
 .spixi-errorbar.chat
 {
@@ -649,9 +654,11 @@ img.emoji {
 .spixi-errorbar-icon {
     float:left;
     margin-left: 20px;
+    padding-top: 4px;
 }
 .spixi-errorbar-message {
     margin-left: 60px;
+    padding-top: 2px;
 }
 
 /* CallBar */
@@ -714,7 +721,7 @@ img.emoji {
     color: #fff;
     background: #c2185b;
     border-radius: 50px;
-    box-shadow:0px 8px 19px #BBB;
+    box-shadow:0px 0px 0px #BBB;
 
     box-sizing: border-box;
 }
@@ -755,7 +762,7 @@ img.emoji {
     width: 140px;
 }
 .spixi-button.darkshadow {
-    box-shadow:0px 8px 19px #333;
+    box-shadow:0px 0px 0px #333;
 }
 
 .spixi-button.ghost {
@@ -788,7 +795,7 @@ img.emoji {
     width: 64px;
     height: 64px;
     border-radius: 64px;
-    box-shadow: 0px 4px 10px #888;
+    box-shadow: 0px 2px 4px #888;
 
     font-size: 18pt;
     background: #1692d9;
@@ -860,7 +867,7 @@ img.emoji {
     color: #ad1457;
     background: #fefcfd;
     border-radius: 360px;
-    box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+    box-shadow: 0px 0px 0px 0px rgba(1, 1, 1, 0.18);
 }
 
 .intro-button:hover {
@@ -975,7 +982,7 @@ img.emoji {
     margin: 0px;
     margin-top: 15px;
     margin-left: -14pt;
-    box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+    box-shadow: 0px 0px 0px 0px rgba(1, 1, 1, 0.18);
     z-index: 3;
 }
 
@@ -1061,7 +1068,7 @@ img.emoji {
 
 .spixi-expansion-left {
     position: absolute;
-    width: 20px;
+    width: 6px;
     height: 50px;
     background-color: #dbdee1;
     margin-right: 10px;
@@ -1072,10 +1079,10 @@ img.emoji {
 }
 
 .spixi-expansion-left.active {
-    background-color: #ad1457;
+    background-color: #800E44;
 }
 .spixi-expansion-icon {
-    color: #ad1457;
+    color: #800E44;
     float:left;
     font-size: 16pt;
     margin-top: 10px;
@@ -1090,9 +1097,9 @@ img.emoji {
     margin-left: 15px;
 }
 .spixi-expansion-right {
-    color: #ad1457;
+    color: #800E44;
     float:right;
-    font-size: 12pt;
+    font-size: 10pt;
     margin-top:12px;
     margin-right: 15px;
 }
@@ -1111,7 +1118,7 @@ img.emoji {
     
     background-color: #FFF;
     border-radius: 10px;
-    box-shadow:0px 4px 10px #777;
+    box-shadow:0px 0px 0px #777;
 }
 .spixi-expansion-box.expanded {
     height: 150px;
@@ -1239,7 +1246,7 @@ img.emoji {
     color: #b5b5b5;
     font-size: 9pt;
     background-color: #1f1f27;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
+    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2),0 0px 0px 0 rgba(0,0,0,0.89);
 }
 
 /* ListItems */
@@ -1299,7 +1306,7 @@ img.emoji {
 }
 
 .spixi-list-item-title {
-    color: #000000;
+    color: #1C1C1D;
     font-size: 10pt;
     font-weight: bold;
     overflow: hidden;
@@ -1307,7 +1314,7 @@ img.emoji {
 	text-overflow: ellipsis;
 }
 .spixi-list-item-title-center {
-    color: #000000;
+    color: #1C1C1D;
     font-size: 10pt;
     width: 100%;
     overflow: hidden;
@@ -1319,11 +1326,10 @@ img.emoji {
 }
 .spixi-list-item-title-center.selected {
     font-weight: bold;
-    font-style: italic;
 }
 
 .spixi-list-item-subtitle {
-    color: #000000;
+    color: #1C1C1D;
     font-size: 9pt;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1350,6 +1356,7 @@ img.emoji {
     top: 50%;
     transform: translateY(-50%);
     right: 15px;
+    color: #1C1C1D;
 }
 
 .spixi-list-item-action-icon {
@@ -1407,7 +1414,7 @@ img.emoji {
 .spixi-bubble.myself {
     margin-left: 125px;
     margin-right: 11px;
-    background: #cbe3f1;
+    background: #D6E8F3;
     border: 1px solid rgba(255, 30, 30, 0.3);
 }
 
@@ -1439,7 +1446,7 @@ img.emoji {
 .spixi-bubble .time
 {
     padding-right: 15px;
-    font-size: 9px;
+    font-size: 8px;
     height: 20px;
     max-height: 20px;
     color: #919191;
@@ -1658,7 +1665,7 @@ img.emoji {
     background: #EBEBEB;
     font-size: 10px;
     border-radius: 0px 0px 16px 16px;
-    border: 1px solid #c1d3e0;
+    border: 0px solid #c1d3e0;
     padding: 0px 14px;
     text-align: left;
 }
@@ -1899,7 +1906,7 @@ img.emoji {
     border-radius: 18px;
     width: 18px !important;
     height: 18px !important;
-    background: #288823;
+    background: #11DD7B;
     position: relative;
     margin-top: -17px;
     margin-left: 30px;
@@ -1917,9 +1924,9 @@ img.emoji {
 .spixi-chat-unread-indicator {
     display: none;
     border-radius: 10pt;
-    width: 10pt;
-    height: 10pt;
-    background: #c2185b;
+    width: 8pt;
+    height: 8pt;
+    background: #D00968;
     vertical-align: middle;
     right: 65pt;
     margin-right: 25px;
@@ -2583,7 +2590,7 @@ img.emoji {
     color: #5bbb0e;
 }
 .spixi-text-red {
-    color: #ad1457;
+    color: #19293C;
 }
 
 /* Animations */

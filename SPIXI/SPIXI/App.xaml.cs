@@ -95,6 +95,15 @@ namespace SPIXI
 
                 movePersonalFiles();
 
+                // Load theme and appearance
+                ThemeAppearance themeAppearance = ThemeAppearance.automatic;
+                if (Application.Current.Properties.ContainsKey("appearance"))
+                {
+                    themeAppearance = (ThemeAppearance)Current.Properties["appearance"];
+                }
+                ThemeManager.loadTheme("spixiui", themeAppearance);
+
+                // Start Ixian code
                 node = new Node();
 
                 // Attempt to load a pre-existing wallet

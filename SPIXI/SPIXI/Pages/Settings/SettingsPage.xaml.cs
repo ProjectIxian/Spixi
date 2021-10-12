@@ -36,6 +36,8 @@ namespace SPIXI
         private void onLoad()
         {
             Utils.sendUiCommand(webView, "setNickname", Node.localStorage.nickname);
+            int activeAppearance = (int)ThemeManager.getActiveAppearance();
+            Utils.sendUiCommand(webView, "setAppearance", activeAppearance.ToString()); 
 
             var filePath = Node.localStorage.getOwnAvatarPath();
             if (filePath.Equals("img/spixiavatar.png", StringComparison.Ordinal))
@@ -49,6 +51,7 @@ namespace SPIXI
             }
 
             Utils.sendUiCommand(webView, "loadAvatar", filePath);
+
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -120,6 +123,17 @@ namespace SPIXI
                 {
                     selectedLanguage = null;
                 }
+            }
+            else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
+            {
+                string appearanceString = current_url.Substring("ixian:appearance:".Length);
+                ThemeAppearance appearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
+
+                if (ThemeManager.changeAppearance(appearance))
+                {
+                    loadPage(webView, "settings.html");
+                }
+                
             }
             else
             {
