@@ -27,6 +27,12 @@ namespace SPIXI
             _webView.Source = generatePage(html_file_name);
         }
 
+        public void reload()
+        {
+            if(_webView != null)
+                _webView.Reload();
+        }
+
         public WebViewSource generatePage(string html_file_name)
         {
             var platform_utils = DependencyService.Get<IPlatformUtils>();

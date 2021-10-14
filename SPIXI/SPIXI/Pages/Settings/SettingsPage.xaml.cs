@@ -18,6 +18,7 @@ namespace SPIXI
     public partial class SettingsPage : SpixiContentPage
     {
         string selectedLanguage = null;
+        ThemeAppearance selectedAppearance = ThemeAppearance.automatic;
 
         public SettingsPage()
         {
@@ -36,8 +37,9 @@ namespace SPIXI
         private void onLoad()
         {
             Utils.sendUiCommand(webView, "setNickname", Node.localStorage.nickname);
-            int activeAppearance = (int)ThemeManager.getActiveAppearance();
-            Utils.sendUiCommand(webView, "setAppearance", activeAppearance.ToString()); 
+            selectedAppearance = ThemeManager.getActiveAppearance();
+            int activeAppearanceIdx = (int)selectedAppearance;
+            Utils.sendUiCommand(webView, "setAppearance", activeAppearanceIdx.ToString()); 
 
             var filePath = Node.localStorage.getOwnAvatarPath();
             if (filePath.Equals("img/spixiavatar.png", StringComparison.Ordinal))
@@ -127,13 +129,7 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
             {
                 string appearanceString = current_url.Substring("ixian:appearance:".Length);
-                ThemeAppearance appearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
-
-                if (ThemeManager.changeAppearance(appearance))
-                {
-                    loadPage(webView, "settings.html");
-                }
-                
+                selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);             
             }
             else
             {
@@ -166,6 +162,14 @@ namespace SPIXI
             Node.changedSettings = true;
             applyAvatar();
 
+            if (ThemeManager.changeAppearance(selectedAppearance))
+            {
+                UIHelpers.reloadAllPages();
+                if (Device.RuntimePlatform == Device.iOS)
+                    return; // iOS automatically pops the current page when reloading contents
+            }
+
+            // Pop the current page from the stack
             Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
