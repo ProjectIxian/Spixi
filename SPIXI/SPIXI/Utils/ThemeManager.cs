@@ -28,6 +28,11 @@ namespace SPIXI
             {
                 appearance_name = "dark";
             }
+            else if(appearance == ThemeAppearance.automatic)
+            {
+                if(Application.Current.UserAppTheme == OSAppTheme.Dark)
+                    appearance_name = "dark";
+            }
 
             string theme_folder_path = Path.Combine(platform_utils.getAssetsPath(), Path.Combine("html", "css"));
             string original_theme_file_path = Path.Combine(theme_folder_path, name + "-" + appearance_name + ".css");

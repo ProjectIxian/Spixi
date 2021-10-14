@@ -102,6 +102,15 @@ namespace SPIXI
                     themeAppearance = (ThemeAppearance)Current.Properties["appearance"];
                 }
                 ThemeManager.loadTheme("spixiui", themeAppearance);
+                Current.RequestedThemeChanged += (s, a) =>
+                {
+                    // Respond to the theme change
+                    Current.UserAppTheme = a.RequestedTheme;
+                    if(ThemeManager.getActiveAppearance() == ThemeAppearance.automatic)
+                        ThemeManager.changeAppearance(ThemeAppearance.automatic);
+
+                    UIHelpers.reloadAllPages();
+                };
 
                 // Start Ixian code
                 node = new Node();
@@ -231,5 +240,6 @@ namespace SPIXI
         {
             Node.localStorage.flush();
         }
+
     }
 }
