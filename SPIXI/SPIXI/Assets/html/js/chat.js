@@ -314,10 +314,12 @@ $("#chat_input").keyup(function (event) {
     }
 
     var chat_text = document.getElementById("chat_input").innerHTML;
-    if (chat_text.length > 0)
-        document.getElementById("chat_send").style.backgroundColor = "#C1185B";
+
+    if (chat_text.length > 0 && chat_text != "<br>")
+        document.getElementById("chat_send").className = "chatbar-sendbutton chatbar-sendbutton-active";
     else
-        document.getElementById("chat_send").style.backgroundColor = "#BABABA";
+        document.getElementById("chat_send").className = "chatbar-sendbutton";
+
 });
 
 function shouldScroll() {
@@ -386,7 +388,7 @@ $("#chat_input").on('paste', function (e) {
 
 function clearInput() {
     document.getElementById("chat_input").innerHTML = "";
-    document.getElementById("chat_send").style.backgroundColor = "#BABABA";
+    document.getElementById("chat_send").className = "chatbar-sendbutton";
 }
 
 var messagesEl = document.getElementById("messages");

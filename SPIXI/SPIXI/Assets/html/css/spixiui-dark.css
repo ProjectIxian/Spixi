@@ -1817,6 +1817,10 @@ img.emoji {
     min-width: 40px;
 }
 
+.chatbar-sendbutton-active {
+    background: #C1185B none repeat scroll 0 0;
+}
+
 .chatbar-input-wrapper {
     display: table-cell;
     padding: 0px 10px 0px 3px;
