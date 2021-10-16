@@ -42,7 +42,8 @@ namespace SPIXI
                 var source = new HtmlWebViewSource();
                 Stream stream = platform_utils.getAsset(Path.Combine("html", html_file_name));
                 source.BaseUrl = platform_utils.getAssetsBaseUrl() + "html/";
-                source.Html = SpixiLocalization.localizeHtml(stream);
+                // TODO: handle appearance changes in Android the same way as on other platforms
+                source.Html = SpixiLocalization.localizeHtml(stream).Replace("css/spixiui.css", "css/" + ThemeManager.getActiveAppearanceString() + ".css");
                 stream.Close();
                 stream.Dispose();
                 return source;

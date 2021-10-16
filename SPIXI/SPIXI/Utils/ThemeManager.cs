@@ -34,11 +34,14 @@ namespace SPIXI
                     appearance_name = "dark";
             }
 
-            string theme_folder_path = Path.Combine(platform_utils.getAssetsPath(), Path.Combine("html", "css"));
-            string original_theme_file_path = Path.Combine(theme_folder_path, name + "-" + appearance_name + ".css");
-            string active_theme_file_path = Path.Combine(theme_folder_path, "spixiui.css");
+            if (Device.RuntimePlatform != Device.Android)
+            {
+                string theme_folder_path = Path.Combine(platform_utils.getAssetsPath(), Path.Combine("html", "css"));
+                string original_theme_file_path = Path.Combine(theme_folder_path, name + "-" + appearance_name + ".css");
+                string active_theme_file_path = Path.Combine(theme_folder_path, "spixiui.css");
 
-            System.IO.File.Copy(original_theme_file_path, active_theme_file_path, true);
+                System.IO.File.Copy(original_theme_file_path, active_theme_file_path, true);
+            }
 
             activeTheme = name;
             activeAppearance = appearance;
@@ -57,6 +60,22 @@ namespace SPIXI
         public static ThemeAppearance getActiveAppearance()
         {
             return activeAppearance;
+        }
+
+        // Temporary function to handle Android appearance changes. Will be removed in the future
+        public static string getActiveAppearanceString()
+        {
+            if (activeAppearance == ThemeAppearance.dark)
+            {
+                return "spixiui-dark";
+            }
+            else if (activeAppearance == ThemeAppearance.automatic)
+            {
+                if (Application.Current.UserAppTheme == OSAppTheme.Dark)
+                    return "spixiui-dark";
+            }
+
+            return "spixiui-light";
         }
 
     }
