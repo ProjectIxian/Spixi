@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using SPIXI.Meta;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace SPIXI
@@ -7,13 +8,13 @@ namespace SPIXI
     {
         public static void setContactStatus(byte[] address, bool online, int unread, string excerpt, long timestamp)
         {
-            var stack = App.Current.MainPage.Navigation.NavigationStack;
-            foreach (Page p in stack)
+            Page page = App.Current.MainPage.Navigation.NavigationStack.Last();
+            if (page != null && page is HomePage)
             {
-                if (p.GetType() == typeof(HomePage))
-                {
-                    ((HomePage)p).setContactStatus(address, online, unread, excerpt, timestamp);
-                }
+                ((HomePage)page).setContactStatus(address, online, unread, excerpt, timestamp);
+            }else
+            {
+                Node.shouldRefreshContacts = true;
             }
         }
 
