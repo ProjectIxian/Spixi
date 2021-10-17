@@ -854,6 +854,9 @@ namespace SPIXI
 
         private static void sendReceivedConfirmation(Friend friend, byte[] senderAddress, byte[] messageId, int channel)
         {
+            if (friend == null)
+                return;
+
             // Send received confirmation
             StreamMessage msg_received = new StreamMessage();
             msg_received.type = StreamMessageCode.info;

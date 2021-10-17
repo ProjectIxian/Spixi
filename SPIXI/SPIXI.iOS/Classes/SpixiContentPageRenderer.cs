@@ -19,8 +19,8 @@ namespace SPIXI
         {
             base.ViewDidLoad();
             // Set the background color to the default SPIXI colorscheme
-            View.BackgroundColor = UIColor.FromRGB(173, 0, 87);
-
+            View.BackgroundColor = UIColor.FromRGB(0, 0, 0); //UIColor.FromRGB(173, 0, 87);
+            
             var cp = Element as SpixiContentPage;
             if (cp != null && !cp.CancelsTouchesInView)
             {
