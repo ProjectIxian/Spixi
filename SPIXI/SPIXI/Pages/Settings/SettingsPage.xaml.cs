@@ -261,12 +261,12 @@ namespace SPIXI
             var picker_service = DependencyService.Get<IFilePicker>();
 
             SpixiImageData spixi_img_data = await picker_service.PickImageAsync();
-            Stream stream = spixi_img_data.stream;
-
-            if (stream == null)
-            {
+            if (spixi_img_data == null)
                 return;
-            }
+
+            Stream stream = spixi_img_data.stream;
+            if (stream == null)
+                return;          
 
             var file_path = Path.Combine(Node.localStorage.avatarsPath, "avatar-tmp.jpg");
             try
