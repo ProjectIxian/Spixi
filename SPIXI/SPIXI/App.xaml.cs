@@ -96,6 +96,8 @@ namespace SPIXI
                 movePersonalFiles();
 
                 // Load theme and appearance
+                OSAppTheme currentTheme = Application.Current.RequestedTheme;
+                Current.UserAppTheme = currentTheme;
                 ThemeAppearance themeAppearance = ThemeAppearance.automatic;
                 if (Application.Current.Properties.ContainsKey("appearance"))
                 {
