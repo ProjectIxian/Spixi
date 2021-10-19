@@ -280,6 +280,7 @@ settings-emptynick-text = ユーザーネームを入力してください
 settings-backup-title = Backup Account
 settings-backup-description = 復元に使用できる特別なファイルをダウンロードして、アカウントをバックアップします。
 settings-backup-save = バックアップファイルを保存
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = このバックアップファイルとそれに関連付けられているパスワードは、次の場合に情報を復元するために必要になります。
 settings-backup-notice2 = - 端末を紛失した場合<br />- アプリをアンインストールした場合<br />- アカウントを削除した場合<br />- ウォレットを削除した場合
 settings-backup-invalidpassword-title = 無効なパスワード

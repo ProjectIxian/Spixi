@@ -297,6 +297,7 @@ settings-emptynick-text = Por favor, introduzca su apodo.
 settings-backup-title = Cuenta de respaldo
 settings-backup-description = Descarga un archivo especial que te permite restaurar tu cuenta de Spixi.
 settings-backup-save = GUARDAR ARCHIVO DE RESPALDO
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = Esta copia de seguridad y la contraseña de cifrado asociada a ella serán necesarias para restaurar su acceso en los siguientes casos:
 settings-backup-notice2 = - perder este dispositivo<br />- desinstalar Spixi de su dispositivo<br />- borrar su cuenta de Spixi<br />- borrar su billetera
 settings-backup-invalidpassword-title = Contraseña inválida

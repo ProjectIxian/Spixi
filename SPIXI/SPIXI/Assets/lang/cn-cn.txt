@@ -300,6 +300,7 @@ settings-emptynick-text = 请输入你的昵称。
 settings-backup-title = 备用帐户
 settings-backup-description = 下载特別档案，用以还原Spixi帐户。
 settings-backup-save = 储存备份档案
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = 在以下情况，需要此备份档案和与密码来恢复登入权限：
 settings-backup-notice2 = - 丢失此装置 <br />- 从装置上卸载Spixi <br />- 删除你的Spixi帐户 <br />- 删除你的钱包
 settings-backup-invalidpassword-title = 密码无效

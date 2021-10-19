@@ -300,6 +300,7 @@ settings-emptynick-text = Bitte gib deinen Namen ein.
 settings-backup-title = Account sichern
 settings-backup-description = Um deinen Account zu sichern, musst du eine spezielle Datei herunterladen um deinen Spixi Account wiederherzustellen.
 settings-backup-save = Sichere Wiederherstellungsdatei
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = Die Wiederherstellungsdatei sowie das zugehörige Verschlüsselungspasswort werden benötigt um deine Informationen in den folgenden Fällen wiederherzustellen:
 settings-backup-notice2 = - Verlust deines Gerätes<br />- Deinstallation von Spixi von deinem Gerät<br />- Löschung deines Accounts<br />- Löschung deiner Brieftasche
 settings-backup-invalidpassword-title = Ungültiges Passwort

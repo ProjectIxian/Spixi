@@ -297,6 +297,7 @@ settings-emptynick-text = Unesite svoj nadimak.
 settings-backup-title = Rezervna kopija
 settings-backup-description = Preuzmite posebnu datoteku koja vam omogućava da vratite pristup svom Spixi nalogu.
 settings-backup-save = PREUZMITE DATOTEKU
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = Ova datoteka i lozinka za šifrovanje koja je povezana sa ovim Spixi nalogom su potrebne u slučaju da želite da obnovite pristup vašem Spixi nalogu. Sačuvajte ih na sigurnom mestu, jer su potrebne u sledećim slučajevima:
 settings-backup-notice2 = - ako izgubite ovaj uređaj<br />- ako uklonite aplikaciju Spixi sa vašeg uređaja<br />- ako izbrišete ovaj Spixi nalog<br />- ako izbrišete novčanik
 settings-backup-invalidpassword-title = Nevažeća lozinka

@@ -297,6 +297,7 @@ settings-emptynick-text = Įveskite savo slapyvardį.
 settings-backup-title = Paskyros atsarginė kopija
 settings-backup-description = Atsisiųskite specialų failą, kuris leidžia atkurti „Spixi“ paskyrą.
 settings-backup-save = IŠSAUGOTI ATSARGINĮ FAILĄ
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = Šis atsarginės kopijos failas ir su juo susietas šifravimo slaptažodis bus reikalingas atkuriant jūsų informaciją šiais atvejais:
 settings-backup-notice2 = - pametus šį įrenginį<br />- pašalinus Spixi iš savo įrenginio<br />- Pašalinus savo Paskyrą<br />- Pašalinus savo piniginę
 settings-backup-invalidpassword-title = Neteisingas slaptažodis

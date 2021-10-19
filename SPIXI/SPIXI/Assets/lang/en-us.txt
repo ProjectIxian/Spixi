@@ -295,8 +295,9 @@ settings-emptynick-text = Please enter your nickname.
 
 ; Settings Backup Screen
 settings-backup-title = Backup Account
-settings-backup-description = Download a special file which allows you to restore your Spixi account.
-settings-backup-save = SAVE BACKUP FILE
+settings-backup-description = Download a wallet or account file which allows you to restore your Spixi account.
+settings-backup-save = BACKUP WALLET
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = This backup and the encryption password associated with it will be required to restore your access in the following cases:
 settings-backup-notice2 = - lose this device<br />- uninstall Spixi from your device<br />- delete your Spixi account<br />- delete your wallet
 settings-backup-invalidpassword-title = Invalid password

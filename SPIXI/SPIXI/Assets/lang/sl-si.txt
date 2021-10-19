@@ -312,7 +312,8 @@ settings-emptynick-text = Vnesite svoj vzdevek.
 ; Settings Backup Screen
 settings-backup-title = Obnovitev Računa
 settings-backup-description = Prenesite posebno datoteko, ki vam omogoča obnovitev dostopa do vašega Spixi računa.
-settings-backup-save = PRENESITE DATOTEKO
+settings-backup-save = VARNOSTNA KOPIJA DENARNICE
+settings-backup-account-save = VARNOSTNA KOPIJA RAČUNA
 settings-backup-notice = Ta datoteka za obnovitev in enkripcijsko geslo, ki je povezano z njo bosta potrebna za obnovitev dostopa do vašega Spixi računa. Oboje varno shranite saj jih boste potrebovali v sledečih primerih:
 settings-backup-notice2 = - ob izgubi te naprave<br />- v primeru, da izbrišete ali odstranite Spixi iz te naprave<br />- v primeru da izbrišete vaš Spixi račun<br />- v primeru, da izbrišete vašo denarnico
 settings-backup-invalidpassword-title = Neveljavno geslo

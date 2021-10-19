@@ -298,6 +298,7 @@ settings-emptynick-text = Введите Ваше имя.
 settings-backup-title = Резервное копирование аккаунта
 settings-backup-description = Загрузить файл, который позволит восстановить Ваш аккаунт Spixi.
 settings-backup-save = СОХРАНИТЬ ФАЙЛ ВОССТАНОВЛЕНИЯ
+settings-backup-account-save = BACKUP ACCOUNT
 settings-backup-notice = Этот файл восстановления и связанный с ним пароль шифрования, потребуются для восстановления доступа в следующих случаях:
 settings-backup-notice2 = - потеря устройства<br />- удаление Spixi с Вашего устройства<br />- удаление Вашего аккаунта Spixi<br />- удаление кошелька
 settings-backup-invalidpassword-title = Неправильный пароль
