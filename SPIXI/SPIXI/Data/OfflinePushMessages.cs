@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using SPIXI.Meta;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web;
 
@@ -37,16 +37,17 @@ namespace SPIXI
             if (f == null)
                 return true; // return true to skip sending this message and remove it from the queue
 
-            string URI = String.Format("{0}/push.php", Config.pushServiceUrl);
-            string parameters = String.Format("tag={0}&data={1}&pk={2}&push={3}&fa={4}", receiver, data, pub_key, push, sender);
+            string url = string.Format("{0}/push.php", Config.pushServiceUrl);
+            string parameters = string.Format("tag={0}&data={1}&pk={2}&push={3}&fa={4}", receiver, data, pub_key, push, sender);
 
-            using (WebClient client = new WebClient())
+            using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string htmlCode = client.UploadString(URI, parameters);
-                    if (htmlCode.Equals("OK"))
+                    HttpContent httpContent = new StringContent(parameters, Encoding.UTF8, "application/x-www-form-urlencoded");
+                    var response = client.PostAsync(url, httpContent).Result;
+                    string body = response.Content.ReadAsStringAsync().Result;
+                    if (body.Equals("OK"))
                     {
                         return true;
                     }
@@ -81,30 +82,30 @@ namespace SPIXI
 
                 nonce++;
 
-                byte[] sig = Crypto.sha512(UTF8Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
+                byte[] sig = Crypto.sha512(Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
 
-                using (WebClient client = new WebClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    string url = String.Format("{0}/fetch.php?tag={1}&nonce={2}&sig={3}", Config.pushServiceUrl, receiver, nonce, Crypto.hashToString(sig));
-                    string htmlCode = client.DownloadString(url);
+                    string url = string.Format("{0}/fetch.php?tag={1}&nonce={2}&sig={3}", Config.pushServiceUrl, receiver, nonce, Crypto.hashToString(sig));
+                    string body = client.GetStringAsync(url).Result;
 
-                    if (htmlCode.StartsWith("ERROR"))
+                    if (body.StartsWith("ERROR"))
                     {
-                        if(htmlCode.StartsWith("ERROR: Nonce too low "))
+                        if(body.StartsWith("ERROR: Nonce too low "))
                         {
-                            nonce = Int32.Parse(htmlCode.Substring("ERROR: Nonce too low ".Length));
+                            nonce = int.Parse(body.Substring("ERROR: Nonce too low ".Length));
                         }
                         return false;
                     }
 
-                    if (htmlCode == "UNREGISTERED")
+                    if (body == "UNREGISTERED")
                     {
                         pushNotificationAuthKey = null;
                         registerWithPushNotificationServer();
                         return false;
                     }
 
-                    List<string[]> jsonResponse = JsonConvert.DeserializeObject<List<string[]>>(htmlCode);
+                    List<string[]> jsonResponse = JsonConvert.DeserializeObject<List<string[]>>(body);
 
                     if(jsonResponse != null && jsonResponse.Count > 0)
                     {
@@ -138,11 +139,11 @@ namespace SPIXI
                         try
                         {
                             nonce++;
-                            sig = Crypto.sha512(UTF8Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
+                            sig = Crypto.sha512(Encoding.UTF8.GetBytes(nonce + pushNotificationAuthKey));
 
                             string id = str[0];
-                            url = String.Format("{0}/remove.php?id={1}&nonce={2}&sig={3}", Config.pushServiceUrl, id, nonce, Crypto.hashToString(sig));
-                            htmlCode = client.DownloadString(url);
+                            url = string.Format("{0}/remove.php?id={1}&nonce={2}&sig={3}", Config.pushServiceUrl, id, nonce, Crypto.hashToString(sig));
+                            body = client.GetStringAsync(url).Result;
                         }
                         catch (Exception e)
                         {
@@ -165,28 +166,29 @@ namespace SPIXI
         {
             try
             {
-                using (WebClient client = new WebClient())
+                using (HttpClient client = new HttpClient())
                 {
                     nonce++;
 
-                    byte[] sig = CryptoManager.lib.getSignature(UTF8Encoding.UTF8.GetBytes(nonce.ToString()), IxianHandler.getWalletStorage().getPrimaryPrivateKey());
+                    byte[] sig = CryptoManager.lib.getSignature(Encoding.UTF8.GetBytes(nonce.ToString()), IxianHandler.getWalletStorage().getPrimaryPrivateKey());
 
-                    string url = String.Format("{0}/register.php", Config.pushServiceUrl);
-                    string parameters = String.Format("pk={0}&nonce={1}&sig={2}", Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryPublicKey()), nonce, Crypto.hashToString(sig));
+                    string url = string.Format("{0}/register.php", Config.pushServiceUrl);
+                    string parameters = string.Format("pk={0}&nonce={1}&sig={2}", Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryPublicKey()), nonce, Crypto.hashToString(sig));
 
-                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string htmlCode = client.UploadString(url, parameters);
+                    HttpContent httpContent = new StringContent(parameters, Encoding.UTF8, "application/x-www-form-urlencoded");
+                    var response = client.PostAsync(url, httpContent).Result;
+                    string body = response.Content.ReadAsStringAsync().Result;
 
-                    if (htmlCode.StartsWith("ERROR"))
+                    if (body.StartsWith("ERROR"))
                     {
-                        if (htmlCode.StartsWith("ERROR: Nonce too low "))
+                        if (body.StartsWith("ERROR: Nonce too low "))
                         {
-                            nonce = Int32.Parse(htmlCode.Substring("ERROR: Nonce too low ".Length));
+                            nonce = int.Parse(body.Substring("ERROR: Nonce too low ".Length));
                         }
                         return false;
                     }
 
-                    List<string> jsonResponse = JsonConvert.DeserializeObject<List<string>>(htmlCode);
+                    List<string> jsonResponse = JsonConvert.DeserializeObject<List<string>>(body);
 
                     if(jsonResponse[0] != "")
                     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 
 namespace SPIXI.CustomApps
 {
@@ -81,11 +81,11 @@ namespace SPIXI.CustomApps
         {
             string file_name = Path.GetRandomFileName();
             string source_app_file_path = Path.Combine(tmpPath, file_name);
-            using (WebClient client = new WebClient())
+            using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    client.DownloadFile(url, source_app_file_path);
+                    File.WriteAllBytes(source_app_file_path, client.GetByteArrayAsync(url).Result);
                 }
                 catch (Exception e)
                 {
