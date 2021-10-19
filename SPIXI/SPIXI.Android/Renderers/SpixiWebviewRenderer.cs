@@ -132,16 +132,16 @@ namespace SPIXI.Droid.Renderers
 
             if (Control != null)
             {
-                Control.SetWebViewClient(new WebClient(this));
+                Control.SetWebViewClient(new SpixiWebViewClient(this));
             }
         }
 
-        class WebClient : WebViewClient
+        class SpixiWebViewClient : WebViewClient
         {
             WebNavigationResult _navigationResult = WebNavigationResult.Success;
             SpixiWebviewRenderer _renderer;
 
-            public WebClient(SpixiWebviewRenderer renderer)
+            public SpixiWebViewClient(SpixiWebviewRenderer renderer)
             {
                 if (renderer == null)
                     throw new ArgumentNullException("renderer");

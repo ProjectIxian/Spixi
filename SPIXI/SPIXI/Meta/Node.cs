@@ -28,7 +28,7 @@ namespace SPIXI.Meta
     class Node: IxianNode
     {
         // Used for all local data storage
-        public static SPIXI.Storage.LocalStorage localStorage;
+        public static LocalStorage localStorage;
 
         // Used to force reloading of some homescreen elements
         public static bool changedSettings = false;
@@ -66,9 +66,12 @@ namespace SPIXI.Meta
             Lang.SpixiLocalization.testLanguageFiles("en-us");
 #endif
 
+               
             Logging.info("Initing node constructor");
 
             Instance = this;
+
+            CoreConfig.simultaneousConnectedNeighbors = 6;
 
             IxianHandler.init(Config.version, this, Config.networkType);
 
@@ -114,6 +117,7 @@ namespace SPIXI.Meta
             running = true;
 
             UpdateVerify.init(Config.checkVersionUrl, Config.checkVersionSeconds);
+            UpdateVerify.start();
 
             ulong block_height = 0;
             byte[] block_checksum = null;
@@ -239,6 +243,21 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void mainLoop()
         {
+            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress();
+            if (primaryAddress == null)
+                return;
+
+            byte[] getBalanceBytes;
+            using (MemoryStream mw = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(mw))
+                {
+                    writer.WriteIxiVarInt(primaryAddress.Length);
+                    writer.Write(primaryAddress);
+                }
+                getBalanceBytes = mw.ToArray();
+            }
+
             while (running)
             {
                 try
@@ -246,30 +265,18 @@ namespace SPIXI.Meta
                     // Update the friendlist
                     FriendList.Update();
 
-                    // Cleanup the presence list
-                    // TODO: optimize this by using a different thread perhaps
-                    PresenceList.performCleanup();
-
-                    byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress();
-                    if (primaryAddress == null)
-                        return;
+                    // Request initial wallet balance
+                    if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
+                    {
+                        CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                    }
 
                     if (Config.enablePushNotifications)
                         OfflinePushMessages.fetchPushMessages();
 
-                    // Request initial wallet balance
-                    if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
-                    {
-                        using (MemoryStream mw = new MemoryStream())
-                        {
-                            using (BinaryWriter writer = new BinaryWriter(mw))
-                            {
-                                writer.WriteIxiVarInt(primaryAddress.Length);
-                                writer.Write(primaryAddress);
-                                NetworkClientManager.broadcastData(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, mw.ToArray(), null);
-                            }
-                        }
-                    }
+                    // Cleanup the presence list
+                    // TODO: optimize this by using a different thread perhaps
+                    PresenceList.performCleanup();
                 }
                 catch (Exception e)
                 {
@@ -312,6 +319,8 @@ namespace SPIXI.Meta
 
             NetworkClientManager.stop();
             StreamClientManager.stop();
+
+            UpdateVerify.stop();
 
             IxianHandler.status = NodeStatus.stopped;
 
