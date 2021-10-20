@@ -41,6 +41,8 @@
 	<string>Location access is needed for push notifications when app is in use</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone usage is needed for voice calls</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Biometric authentication for unlocking the app</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

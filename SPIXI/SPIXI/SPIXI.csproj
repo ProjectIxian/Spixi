@@ -22,6 +22,7 @@
     <PackageReference Include="Concentus" Version="1.1.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Open.NAT.Core" Version="2.1.0.5" />
+    <PackageReference Include="Plugin.Fingerprint" Version="2.1.4" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.10" />
     <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />

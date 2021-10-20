@@ -9,6 +9,7 @@ using SPIXI.Interfaces;
 using Android.Views;
 using Android.Runtime;
 using SPIXI.Lang;
+using Plugin.Fingerprint;
 
 namespace SPIXI.Droid
 {
@@ -25,6 +26,8 @@ namespace SPIXI.Droid
         protected override void OnCreate(Bundle bundle)
         {
             Instance = this;
+
+            CrossFingerprint.SetCurrentActivityResolver(() => this);
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
