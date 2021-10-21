@@ -243,9 +243,10 @@ intro-retry-invalidpassword-text = Cannot decrypt wallet, please try again.
 
 ; Lock Screen
 lock-description = Spixi is LOCKED
-lock-placeholder = Enter your LOCK PASSWORD
+lock-placeholder = Enter your WALLET PASSWORD
 lock-error = Incorrect Password
 lock-unlock = UNLOCK
+lock-change = CHANGE WALLET
 
 ; Settings Screen
 settings-title = Settings
@@ -482,3 +483,7 @@ global-update-available = New version of Spixi ({0}) is available. Please update
 global-modal-external-link-title = You are about to visit an external link
 global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
 global-modal-external-link-button-visit = VISIT
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

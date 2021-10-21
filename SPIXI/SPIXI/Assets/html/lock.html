@@ -56,6 +56,11 @@
             *SL{lock-unlock}
         </div>
 
+        <div class="intro-holder-70"></div>
+        <div id="changebtn" class="intro-button center">
+            *SL{lock-change}
+        </div>
+
         <div class="intro-holder-20"></div>
 
     </div>
@@ -63,6 +68,7 @@
 
     <script type="text/javascript">
         var unlockbtn = document.getElementById("unlockbtn");
+        var changebtn = document.getElementById("changebtn");
         var errormessage = document.getElementById("errormessage");
 
 
@@ -71,7 +77,11 @@
                 return;
             }
 
-            setTimeout(function () { unlock(); }, 400);
+            unlock();
+        }
+
+        changebtn.onclick = function () {
+            location.href = "ixian:change";
         }
 
         function checkPassword() {
@@ -89,7 +99,7 @@
         function unlock() {
             var pass = $("#password").val();
 
-            // Check that the passwords are correct
+            // Check that the password is correct
             if (checkPassword() == false) {
                 return;
             }
