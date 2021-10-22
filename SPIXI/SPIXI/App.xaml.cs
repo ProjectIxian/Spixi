@@ -218,13 +218,13 @@ namespace SPIXI
             isInForeground = true;
             base.OnResume();
 
-            if (isLockEnabled())
+            /*if (isLockEnabled())
             {
                 // Show the lock screen
                 OfflinePushMessages.lastUpdate = 0;
                 MainPage = new NavigationPage(new SPIXI.LockPage());
                 return;
-            }
+            }*/
 
             if (MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
             {
