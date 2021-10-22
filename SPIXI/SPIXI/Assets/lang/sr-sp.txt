@@ -246,6 +246,7 @@ lock-description = Spixi je ZAKLJUČAN
 lock-placeholder = Vnesite ŠIFRU ZA OTKLJUČAVANJE
 lock-error = Pogrešna šifra
 lock-unlock = OTKLJUČAJ
+lock-change = CHANGE WALLET
 
 ; Settings Screen
 settings-title = Podešavanja
@@ -337,6 +338,8 @@ settings-lock-placeholder-2 = Nova bezbednosna šifra
 settings-lock-placeholder-3 = Ponovo ukucajte novu šifru
 settings-lock-info = Ova lozinka će biti potrebna prilikom svake prijave u Spixi.
 settings-lock-save = POSTAVI ŠIFRU
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Zahtev za Uplatu
@@ -483,3 +486,8 @@ global-update-available = Nova verzija Spixi-ja ({0}) je dostupna. Molimo vas da
 global-modal-external-link-title = Posetićete spoljnu vezu
 global-modal-external-link-body = Posetićete spoljnu vezu {0}. Spoljni veze su potencijalno opasne i mogu sadržavati nebezbedan sadržaj. Nastavite samo u slučaju, da razumete sve opasnosti i preuzimate rizik. 
 global-modal-external-link-button-visit = NASTAVI
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

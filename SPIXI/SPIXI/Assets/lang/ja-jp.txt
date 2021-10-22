@@ -230,7 +230,8 @@ intro-retry-invalidpassword-text = アカウントの復元に失敗しました
 lock-description = ロックされています
 lock-placeholder = パスワードを入力してください
 lock-error = パスワードが間違っています
-lock-unlock = 解除されました
+lock-unlock = 解除されましたlock-change = CHANGE WALLET
+
 ; Settings Screen
 settings-title = Settings
 settings-save = 保存
@@ -317,7 +318,9 @@ settings-lock-placeholder-1 = ロックパスワードを入力
 settings-lock-placeholder-2 = 新しいロックパスワードを入力
 settings-lock-placeholder-3 = 再度新しいロックパスワードを入力
 settings-lock-info = このパスワードは、アプリを起動するたびに必要になります
-settings-lock-save = ロックパスワードを保存
+settings-lock-save = ロックパスワードを保存settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
+
 ; Wallet Contact Request Screen
 wallet-contact-request-title = 支払い請求
 wallet-contact-request-subtitle = 支払い請求 From:
@@ -450,3 +453,8 @@ global-update-available = New version of Spixi ({0}) is available. Please update
 global-modal-external-link-title = You are about to visit an external link
 global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
 global-modal-external-link-button-visit = VISIT
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

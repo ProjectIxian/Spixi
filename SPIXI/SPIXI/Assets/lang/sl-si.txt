@@ -262,6 +262,7 @@ lock-description = Spixi je ZAKLENJEN
 lock-placeholder = Vnesite GESLO ZA ODKLEP
 lock-error = Geslo ni pravilno
 lock-unlock = ODKLENI
+lock-change = ZAMENJAJ DENARNICO
 
 ; Settings Screen
 settings-title = Nastavitve
@@ -353,6 +354,8 @@ settings-lock-placeholder-2 = Vpišite novo varnostno geslo
 settings-lock-placeholder-3 = Ponovno vpišite novo varnostno geslo
 settings-lock-info = To geslo boste morali vnesti ob vsakem zagonu Spixi-ja.
 settings-lock-save = NASTAVI VARNOSTNO GESLO
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Zahtevek za Plačilo
@@ -483,3 +486,8 @@ global-update-available = Novejša različica Spixi-ja ({0}) je na voljo. Prosim
 global-modal-external-link-title = Želite odpreti zunanjo povezavo?
 global-modal-external-link-body = S tem boste obiskali zunanjo povezavo {0}. Zunanje povezave so lahko nevarne in lahko vsebujejo nevarno vsebino. Nadaljujte le v primeru, če to razumete in ste pripravljeni sprejeti tveganja.
 global-modal-external-link-button-visit = NADALJUJ
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

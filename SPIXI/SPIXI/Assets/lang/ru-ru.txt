@@ -247,6 +247,7 @@ lock-description = Spixi ЗАБЛОКИРОВАНО
 lock-placeholder = Введите Ваш пароль для разблокировки
 lock-error = Пароль не верный
 lock-unlock = РАЗБЛОКИРОВАТЬ
+lock-change = CHANGE WALLET
 
 ; Settings Screen
 settings-title = Настройки
@@ -338,6 +339,8 @@ settings-lock-placeholder-2 = Введите Ваш новый пароль бл
 settings-lock-placeholder-3 = Повторите Ваш новый пароль блокировки
 settings-lock-info = Этот пароль требуется вводить при каждом запуске Spixi.
 settings-lock-save = УСТАНОВИТЬ ПАРОЛЬ БЛОКИРОВКИ
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Запрос платежа
@@ -483,3 +486,8 @@ global-update-available = Новая версия Spixi ({0}) доступна �
 global-modal-external-link-title = Вы собираетесь перейти по внешней ссылке
 global-modal-external-link-body = Вы собираетесь перейти по внешней ссылки {0}. Внешние ресурсы могут нести угрозу, будьте внимательны.
 global-modal-external-link-button-visit = ПОСЕТИТЬ
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

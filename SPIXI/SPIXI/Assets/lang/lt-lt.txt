@@ -246,6 +246,7 @@ lock-description = Spixi UŽRAKINTAS
 lock-placeholder = Įveskite ATRAKINIMO SLAPTAŽODĮ
 lock-error = Neteisingas slaptažodis
 lock-unlock = ATRAKINTA
+lock-change = CHANGE WALLET
 
 ; Settings Screen
 settings-title = Nustatymai
@@ -337,6 +338,8 @@ settings-lock-placeholder-2 = Įveskite naują užrakto slaptažodį
 settings-lock-placeholder-3 = Dar kartą įveskite naują užrakto slaptažodį
 settings-lock-info = Šis slaptažodis bus reikalingas kiekvieną kartą paleidus Spixi.
 settings-lock-save = NUSTATYKITE UŽRAKINIMO SLAPTAŽODĮ
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Mokėjimo užklausa
@@ -481,3 +484,8 @@ global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinki
 global-modal-external-link-title = Ketinate aplankyti išorinę nuorodą
 global-modal-external-link-body = Ketinate aplankyti išorinę nuorodą {0}. Išorinės nuorodos yra potencialiai pavojingos, tęskite savo pačių rizika.
 global-modal-external-link-button-visit = Tęsti
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
