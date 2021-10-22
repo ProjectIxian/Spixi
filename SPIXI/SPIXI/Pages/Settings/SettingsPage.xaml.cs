@@ -89,11 +89,15 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:delete", StringComparison.Ordinal))
             {
-                onDeleteWallet(sender, e);
+                var lockPage = new LockPage(true);
+                lockPage.authSucceeded += onDeleteWallet;
+                Navigation.PushModalAsync(lockPage);
             }
             else if (current_url.Equals("ixian:deletea", StringComparison.Ordinal))
             {
-                onDeleteAccount();
+                var lockPage = new LockPage(true);
+                lockPage.authSucceeded += onDeleteAccount;
+                Navigation.PushModalAsync(lockPage);
             }
             else if (current_url.Equals("ixian:deleteh", StringComparison.Ordinal))
             {
@@ -232,12 +236,14 @@ namespace SPIXI
             if (IxianHandler.getWalletStorage().deleteWallet())
             {
                 // Also delete the account
-                onDeleteAccount();
+                onDeleteAccount(sender, e);
 
                 // Stop network activity
                 Node.stop();
 
                 Application.Current.Properties.Remove("onboardingComplete");
+                Application.Current.Properties.Remove("lockenabled");
+                Application.Current.Properties.Remove("waletpass");
                 Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
 
                 SpixiLocalization.addCustomString("OnboardingComplete", "false");
@@ -261,7 +267,7 @@ namespace SPIXI
 
         }
 
-        public void onDeleteAccount()
+        public void onDeleteAccount(object sender, EventArgs e)
         {
             Node.localStorage.deleteAllAvatars();
             Node.localStorage.deleteAccountFile();
