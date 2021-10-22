@@ -1080,7 +1080,6 @@ namespace SPIXI
                     msg_received.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                     msg_received.recipient = friend.walletAddress;
                     msg_received.data = new SpixiMessage(SpixiMessageCode.msgRead, message.id, selectedChannel).getBytes();
-                    msg_received.encrypted = false;
 
                     StreamProcessor.sendMessage(friend, msg_received, true, true, false, true);
                 }
