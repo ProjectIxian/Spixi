@@ -338,6 +338,8 @@ settings-lock-placeholder-2 = Type in your new lock password
 settings-lock-placeholder-3 = Retype in your new lock password
 settings-lock-info = This password will be required every time you launch Spixi.
 settings-lock-save = SET LOCK PASSWORD
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Payment Request

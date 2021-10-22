@@ -150,6 +150,42 @@
             </div>
         </div>
 
+        <div class="spixi-holder-40"></div>
+
+        <hr class="spixi-separator-main" />
+        <div id="lockSwitch" class="spixi-switch off"></div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{settings-lock-title}
+        </div>
+
+
+        <hr class="spixi-separator" />
+
+        <div class="spixi-textsection-holder">
+            *SL{settings-lock-authinfo}
+        </div>
+
+        <div class="spixi-holder-40"></div>
+        <div id="lockModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+
+                <div class="spixi-modal-text">
+                    *SL{settings-lock-confirm-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+
+                    <div id="confirmlock" class="spixi-modal-confirm">*SL{settings-confirm}</div>
+
+                </div>
+
+            </div>
+        </div>
+
 
 
         <hr class="spixi-separator-main" />
@@ -178,7 +214,7 @@
                 <hr class="spixi-separator noheightmargins fullwidth" />
                 <div class="spixi-modal-footer">
                     <div class="spixi-modal-close">*SL{settings-cancel}</div>
-                    <a href="ixian:delete">
+                    <a href="confirmLock()">
                         <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
                     </a>
                 </div>
@@ -257,6 +293,10 @@
         var deleteAccountModal = document.getElementById('deleteAccountModal');
         var deleteHistoryModal = document.getElementById('deleteHistoryModal');
         var deleteDownloadsModal = document.getElementById('deleteDownloadsModal');
+        var lockModal = document.getElementById('lockModal');
+
+        var lockSwitch = document.getElementById("lockSwitch");
+
 
         document.getElementById("backbtn").onclick = function () {
             location.href = "ixian:back";
@@ -298,25 +338,32 @@
             else if (event.target == deleteDownloadsModal) {
                 deleteDownloadsModal.style.display = "none";
             }
+            else if (event.target == lockModal) {
+                lockModal.style.display = "none";
+            }
         }
 
         document.getElementsByClassName("spixi-modal-footer")[0].onclick = function () {
             deleteAccountModal.style.display = "none";
         }
         document.getElementsByClassName("spixi-modal-footer")[1].onclick = function () {
-            deleteWalletModal.style.display = "none";
+            lockModal.style.display = "none";
         }
         document.getElementsByClassName("spixi-modal-footer")[2].onclick = function () {
-            deleteHistoryModal.style.display = "none";
+            deleteWalletModal.style.display = "none";
         }
         document.getElementsByClassName("spixi-modal-footer")[3].onclick = function () {
+            deleteHistoryModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[4].onclick = function () {
             deleteDownloadsModal.style.display = "none";
         }
+
 
         document.getElementById("avatar").onclick = function () {
             location.href = "ixian:avatar";
         }
-
+        
         function loadAvatar(avatar_path) {
             avatar_path = avatar_path.replace(/&#92;/g, '\\');
 
@@ -368,6 +415,30 @@
             return false;
         }
 
+        function setLockEnabled(state) {
+            if (state == "True") {
+                lockSwitch.className = "spixi-switch";
+            }
+            else {
+                lockSwitch.className = "spixi-switch off";
+            }
+        }
+        
+        lockSwitch.onclick = function () {
+            if (lockSwitch.classList.contains("off")) {
+                lockModal.style.display = "block";
+
+                return;
+            }
+            lockSwitch.className = "spixi-switch off";
+            location.href = "ixian:lock:off";
+        }
+        document.getElementById("confirmlock").onclick = function () {
+            lockModal.style.display = "none";
+            lockSwitch.className = "spixi-switch";
+            location.href = "ixian:lock:on";
+        }
+                
 
     </script>
 </body>

@@ -140,10 +140,19 @@ namespace SPIXI
                     }
                     else
                     {
-                        // Wallet found, go to main page
-
-                        MainPage = new NavigationPage(HomePage.Instance());
-                        //MainPage = new NavigationPage(new SPIXI.LockPage());
+                        // Wallet found
+                        
+                        if(isLockEnabled())
+                        {
+                            // Show the lock screen
+                            MainPage = new NavigationPage(new SPIXI.LockPage());
+                        }
+                        else
+                        {
+                            // Show the home screen
+                            MainPage = new NavigationPage(HomePage.Instance());
+                        }
+                        
                     }
                 }
                 NavigationPage.SetHasNavigationBar(MainPage, false);
@@ -153,6 +162,17 @@ namespace SPIXI
                 // Already started before
                 node = Node.Instance;
             }
+        }
+
+        // Check if the lock is enabled
+        public bool isLockEnabled()
+        {
+            bool locked = false;
+            if (Application.Current.Properties.ContainsKey("lockenabled"))
+            {
+                locked = (bool)Current.Properties["lockenabled"];
+            }
+            return locked;
         }
 
         // Workaround for Android - sometimes the screen is empty when waking up for some Launch Modes
@@ -198,7 +218,15 @@ namespace SPIXI
             isInForeground = true;
             base.OnResume();
 
-            if(MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
+            if (isLockEnabled())
+            {
+                // Show the lock screen
+                OfflinePushMessages.lastUpdate = 0;
+                MainPage = new NavigationPage(new SPIXI.LockPage());
+                return;
+            }
+
+            if (MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
             {
                 SpixiContentPage p = (SpixiContentPage)((NavigationPage)MainPage).CurrentPage;
                 p.onResume();

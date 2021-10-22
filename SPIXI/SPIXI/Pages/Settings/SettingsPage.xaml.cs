@@ -20,6 +20,8 @@ namespace SPIXI
         string selectedLanguage = null;
         ThemeAppearance selectedAppearance = ThemeAppearance.automatic;
 
+        bool lockEnabled = false;
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -39,7 +41,14 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "setNickname", Node.localStorage.nickname);
             selectedAppearance = ThemeManager.getActiveAppearance();
             int activeAppearanceIdx = (int)selectedAppearance;
-            Utils.sendUiCommand(webView, "setAppearance", activeAppearanceIdx.ToString()); 
+            Utils.sendUiCommand(webView, "setAppearance", activeAppearanceIdx.ToString());
+
+            if (Application.Current.Properties.ContainsKey("lockenabled"))
+            {
+                lockEnabled = (bool)Application.Current.Properties["lockenabled"];
+            }
+            Utils.sendUiCommand(webView, "setLockEnabled", lockEnabled.ToString());
+
 
             var filePath = Node.localStorage.getOwnAvatarPath();
             if (filePath.Equals("img/spixiavatar.png", StringComparison.Ordinal))
@@ -117,19 +126,35 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:language:", StringComparison.Ordinal))
             {
                 string lang = current_url.Substring("ixian:language:".Length);
-                if(SpixiLocalization.loadLanguage(lang))
+                if (SpixiLocalization.loadLanguage(lang))
                 {
                     selectedLanguage = lang;
                     loadPage(webView, "settings.html");
-                }else
+                }
+                else
                 {
                     selectedLanguage = null;
+                }
+            }
+            else if (current_url.StartsWith("ixian:lock:", StringComparison.Ordinal))
+            {
+                string status = current_url.Substring("ixian:lock:".Length);
+                if (status.Equals("on", StringComparison.Ordinal))
+                {
+                    // Turn on lock
+                    lockEnabled = true;
+                }
+                else
+                {
+                    // Turn off lock
+                    // Show authentication screen
+                    lockEnabled = false;
                 }
             }
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
             {
                 string appearanceString = current_url.Substring("ixian:appearance:".Length);
-                selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);             
+                selectedAppearance = (ThemeAppearance)Convert.ToInt32(appearanceString);
             }
             else
             {
@@ -146,12 +171,14 @@ namespace SPIXI
             if (selectedLanguage != null)
             {
                 Application.Current.Properties["language"] = selectedLanguage;
-                Application.Current.SavePropertiesAsync();  // Force-save properties for compatibility with WPF
             }
             else
             {
                 resetLanguage();
             }
+
+            Application.Current.Properties["lockenabled"] = lockEnabled;
+            Application.Current.SavePropertiesAsync(); // Force-save properties for compatibility with WPF
 
             if (Node.localStorage.nickname != nick)
             {
