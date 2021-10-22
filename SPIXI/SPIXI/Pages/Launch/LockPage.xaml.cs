@@ -17,6 +17,9 @@ namespace SPIXI
     public partial class LockPage : SpixiContentPage
     {
         private CancellationTokenSource _cancel;
+        private bool justConfirmAction = false;
+        public event EventHandler<SPIXI.EventArgs<bool>> authSucceeded;
+
         public LockPage()
         {
             InitializeComponent();
@@ -25,8 +28,25 @@ namespace SPIXI
             loadPage(webView, "lock.html");
         }
 
-        private async void onNavigated(object sender, WebNavigatedEventArgs e)
+        public LockPage(bool justConfirm)
         {
+            justConfirmAction = justConfirm;
+            InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            loadPage(webView, "lock.html");
+        }
+
+        private void onNavigated(object sender, WebNavigatedEventArgs e)
+        {
+            // Deprecated due to WPF, use onLoad
+        }
+
+        private async void onLoad()
+        {
+            if(justConfirmAction)
+                Utils.sendUiCommand(webView, "setJustConfirm", "True");
+
             if (Device.RuntimePlatform == Device.WPF)
                 return;
 
@@ -38,7 +58,11 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:back", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
+            else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
                 // No back button for this screen
             }
@@ -52,9 +76,20 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:change", StringComparison.Ordinal))
             {
-                // Show the launch screen
-                Navigation.PushAsync(new SPIXI.LaunchPage(), Config.defaultXamarinAnimations);
-                Navigation.RemovePage(this);
+                if (justConfirmAction)
+                {
+                    if (authSucceeded != null)
+                    {
+                        authSucceeded(this, new SPIXI.EventArgs<bool>(false));
+                    }
+                    Navigation.PopModalAsync();
+                }
+                else
+                {
+                    // Show the launch screen
+                    Navigation.PushAsync(new SPIXI.LaunchPage(), Config.defaultXamarinAnimations);
+                    Navigation.RemovePage(this);
+                }
             }
             else
             {
@@ -82,6 +117,16 @@ namespace SPIXI
 
         private void performUnlock()
         {
+            if(justConfirmAction)
+            {
+                if (authSucceeded != null)
+                {
+                    authSucceeded(this, new SPIXI.EventArgs<bool>(true));
+                }
+                Navigation.PopModalAsync();
+                return;
+            }
+
             Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
             Navigation.RemovePage(this);
         }

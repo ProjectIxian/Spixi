@@ -148,7 +148,11 @@ namespace SPIXI
                 {
                     // Turn off lock
                     // Show authentication screen
-                    lockEnabled = false;
+                    var lockPage = new LockPage(true);
+                    lockPage.authSucceeded += HandleAuthSucceeded;
+                    Navigation.PushModalAsync(lockPage);
+
+                    
                 }
             }
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
@@ -163,8 +167,9 @@ namespace SPIXI
                 return;
             }
             e.Cancel = true;
-
         }
+
+
 
         public void onSaveSettings(string nick)
         {
@@ -208,6 +213,18 @@ namespace SPIXI
                 lang = Application.Current.Properties["language"] as string;
             }
             SpixiLocalization.loadLanguage(lang);
+        }
+
+        private void HandleAuthSucceeded(object sender, SPIXI.EventArgs<bool> e)
+        {
+            bool succeeded = e.Value;
+
+            if(succeeded)
+            {
+                lockEnabled = false;
+                Utils.sendUiCommand(webView, "setLockEnabled", lockEnabled.ToString());
+            }
+
         }
 
         public void onDeleteWallet(object sender, EventArgs e)

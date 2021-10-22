@@ -21,7 +21,7 @@
     <script src="js/spixi.js"></script>
 
 </head>
-<body>
+<body onload="ixian:onload()">
     <div id="wrap" class="container-fluid noselect">
 
         <div class="intro-logo-holder2">
@@ -109,6 +109,10 @@
 
         function showError() {
             errormessage.style.display = "block";
+        }
+
+        function setJustConfirm() {
+            changebtn.innerHTML = "*SL{global-dialog-cancel}";
         }
 
     </script>
