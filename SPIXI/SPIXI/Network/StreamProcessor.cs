@@ -483,7 +483,7 @@ namespace SPIXI
                     }
                 }
 
-                if (!friend.bot && message.requireRcvConfirmation)
+                if ((friend == null || !friend.bot) && message.requireRcvConfirmation)
                 {
                     switch(spixi_message.type)
                     {
