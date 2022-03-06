@@ -14,7 +14,7 @@ public class PlatformUtils : IPlatformUtils
 
     public string getAssetsBaseUrl()
     {
-        return "pack://siteoforigin:,,,/";
+        return "";
     }
 
     public string getAssetsPath()
@@ -24,7 +24,7 @@ public class PlatformUtils : IPlatformUtils
 
     public string getHtmlBaseUrl()
     {
-        return getAssetsBaseUrl() + "html/";
+        return "";
     }
 
     public string getHtmlPath()

@@ -546,7 +546,7 @@ function addText(id, address, nick, avatar, text, time, className) {
         avatar = avatar.replace(/&#92;/g, '\\');
 
         var avatarEl = document.createElement('img');
-        avatarEl.className = "avatar selectable";
+        avatarEl.className = "avatar";
         avatarEl.src = avatar;
         if(nick == "")
         {
