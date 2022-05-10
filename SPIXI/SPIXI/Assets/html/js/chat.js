@@ -1508,6 +1508,14 @@ function hideUserTyping()
 	}
 }
 
+function setUnreadIndicator(unread_count) {
+    if (unread_count != "0") {
+        document.getElementById("backbtn").className = "unread";
+    } else {
+        document.getElementById("backbtn").className = "";
+    }
+}
+
 // function getCaretPosition copied from https://stackoverflow.com/questions/3972014/get-contenteditable-caret-index-position
 function getCaretPosition(editableDiv) {
   var caretPos = 0,

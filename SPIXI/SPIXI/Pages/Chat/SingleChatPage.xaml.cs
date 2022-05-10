@@ -1251,10 +1251,10 @@ namespace SPIXI
 
             // Show the messages indicator
             int msgCount = FriendList.getUnreadMessageCount();
-            if(msgCount != lastMessageCount)
+            //if(msgCount != lastMessageCount)
             {
                 lastMessageCount = msgCount;
-                //webView.Eval(string.Format("showUnread({0})", lastMessageCount));
+                Utils.sendUiCommand(webView, "setUnreadIndicator", string.Format("{0}", lastMessageCount));
             }
         }
 

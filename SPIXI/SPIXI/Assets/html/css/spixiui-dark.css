@@ -241,6 +241,23 @@ img.emoji {
     font-size:9pt;
 }
 
+.spixi-toolbar-row-unread-indicator {
+    display: none;
+    border-radius: 10px;
+    width: 10px;
+    height: 10px;
+    box-sizing: border-box;
+    background: #65E2EA;
+    border: 1px solid #BFFBFF;
+    position: relative;
+    margin: -6px auto;
+    right: 2px;
+}
+
+.unread .spixi-toolbar-row-unread-indicator {
+    display: inline-block;
+}
+
 .spixi-toolbar-chat-body {
     text-align: left !important;
 }
