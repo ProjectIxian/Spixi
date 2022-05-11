@@ -9,46 +9,46 @@ public class PlatformUtils : IPlatformUtils
 {
     public Stream getAsset(string path)
     {
-        throw new NotImplementedException();
+        return new FileStream(path, FileMode.Open);
     }
 
     public string getAssetsBaseUrl()
     {
-        throw new NotImplementedException();
+        return "";
     }
 
     public string getAssetsPath()
     {
-        throw new NotImplementedException();
+        return System.AppDomain.CurrentDomain.BaseDirectory;
     }
 
     public string getHtmlBaseUrl()
     {
-        throw new NotImplementedException();
+        return "html/";
     }
 
     public string getHtmlPath()
     {
-        throw new NotImplementedException();
+        return Path.Combine(getAssetsPath(), "html");
     }
 
     public void startRinging()
     {
-        throw new NotImplementedException();
+
     }
 
     public void stopRinging()
     {
-        throw new NotImplementedException();
+
     }
 
     public void startDialtone(DialtoneType type)
     {
-        throw new NotImplementedException();
+
     }
 
     public void stopDialtone()
     {
-        throw new NotImplementedException();
+
     }
 }
