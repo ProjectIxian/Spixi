@@ -54,11 +54,11 @@ namespace SPIXI.WPF.Classes
         }
     }
 
-    public class CustomRequestHandler : RequestHandler
+    public class SpixiRequestHandler : RequestHandler
     {
         SpixiWebViewRenderer _renderer;
 
-        public CustomRequestHandler(SpixiWebViewRenderer renderer)
+        public SpixiRequestHandler(SpixiWebViewRenderer renderer)
         {
             if (renderer == null)
                 throw new ArgumentNullException("renderer");
@@ -89,6 +89,34 @@ namespace SPIXI.WPF.Classes
         }
 
         protected override bool OnOpenUrlFromTab(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, string targetUrl, WindowOpenDisposition targetDisposition, bool userGesture)
+        {
+            return false;
+        }
+    }
+
+    public class SpixiMenuHandler : IContextMenuHandler
+    {
+        public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+        {
+            //model.Clear();
+            model.Remove(CefMenuCommand.ViewSource); // Remove "View Source" option
+            model.Remove(CefMenuCommand.Print); // Remove "Print" option
+            model.Remove(CefMenuCommand.Back); // Remove "Back" option
+            model.Remove(CefMenuCommand.Forward); // Remove "Forward" option
+        }
+
+        public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
+        {
+
+            return false;
+        }
+
+        public void OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+        {
+
+        }
+
+        public bool RunContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model, IRunContextMenuCallback callback)
         {
             return false;
         }
@@ -133,7 +161,8 @@ namespace SPIXI.WPF.Classes
                     }
                     string aurl = "file://spixi/" + source.Url;
                     webView = new ChromiumWebBrowser(aurl);
-                    webView.RequestHandler = new CustomRequestHandler(this);
+                    webView.RequestHandler = new SpixiRequestHandler(this);
+                    //webView.MenuHandler = new SpixiMenuHandler(); // TODO fix menu not closing bug
                     webView.Visibility = System.Windows.Visibility.Visible;
                     webView.Loaded += onLoadFinished;
                     webView.LoadingStateChanged += onLoading;
