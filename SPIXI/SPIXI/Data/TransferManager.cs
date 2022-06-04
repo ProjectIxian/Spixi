@@ -15,7 +15,7 @@ namespace SPIXI
         public string fileName = null;
         public ulong fileSize = 0;
         public byte[] preview = null;       // Additional preview data
-        public byte[] sender = null;        // Additional sender address field
+        public Address sender = null;        // Additional sender address field
         public int packetSize = Config.packetDataSize;
 
         public bool incoming = false;       // Incoming or outgoing flag
@@ -285,7 +285,7 @@ namespace SPIXI
             return transfer;
         }
 
-        public static FileTransfer prepareIncomingFileTransfer(byte[] data, byte[] sender)
+        public static FileTransfer prepareIncomingFileTransfer(byte[] data, Address sender)
         {
             FileTransfer transfer = new FileTransfer(data);
             transfer.incoming = true;
@@ -389,7 +389,7 @@ namespace SPIXI
             return true;
         }
 
-        public static bool receiveFileData(byte[] data, byte[] sender)
+        public static bool receiveFileData(byte[] data, Address sender)
         {
             Logging.info("Received File Data");
 
@@ -492,7 +492,7 @@ namespace SPIXI
             return transfer;
         }
 
-        public static void completeFileTransfer(byte[] sender, string uid)
+        public static void completeFileTransfer(Address sender, string uid)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend == null)
@@ -555,7 +555,7 @@ namespace SPIXI
             }
         }
 
-        public static void sendFileTransferCompleted(byte[] sender, string uid)
+        public static void sendFileTransferCompleted(Address sender, string uid)
         {
             Friend friend = FriendList.getFriend(sender);
             if (friend == null)
@@ -572,7 +572,7 @@ namespace SPIXI
             StreamProcessor.sendMessage(friend, message, true, true, false);
         }
 
-        public static void requestFileData(byte[] sender, string uid, ulong packet_number)
+        public static void requestFileData(Address sender, string uid, ulong packet_number)
         {
             Logging.info("Requesting File Data, packet #{0}", packet_number);
             Friend friend = FriendList.getFriend(sender);

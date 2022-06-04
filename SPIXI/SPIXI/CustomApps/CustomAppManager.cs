@@ -1,4 +1,5 @@
-﻿using IXICore.Meta;
+﻿using IXICore;
+using IXICore.Meta;
 using IXICore.Utils;
 using System;
 using System.Collections.Generic;
@@ -243,7 +244,7 @@ namespace SPIXI.CustomApps
             }
         }
 
-        public CustomAppPage getAppPage(byte[] sender_address, string app_id)
+        public CustomAppPage getAppPage(Address sender_address, string app_id)
         {
             lock (appPages)
             {

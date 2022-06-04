@@ -204,8 +204,8 @@ namespace SPIXI
             }
             else if (current_url.StartsWith("ixian:sendContactRequest:"))
             {
-                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:sendContactRequest:".Length));
-                Friend new_friend = FriendList.addFriend(address, null, Base58Check.Base58CheckEncoding.EncodePlain(address), null, null, 0);
+                Address address = new Address(current_url.Substring("ixian:sendContactRequest:".Length));
+                Friend new_friend = FriendList.addFriend(address, null, address.ToString(), null, null, 0);
                 if (new_friend != null)
                 {
                     new_friend.save();
@@ -216,13 +216,13 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:kick:"))
             {
                 string str_address = current_url.Substring("ixian:kick:".Length);
-                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(str_address);
+                Address address = new Address(str_address);
                 onKickUser(address);
             }
             else if (current_url.StartsWith("ixian:ban:"))
             {
                 string str_address = current_url.Substring("ixian:ban:".Length);
-                byte[] address = Base58Check.Base58CheckEncoding.DecodePlain(current_url.Substring("ixian:ban:".Length));
+                Address address = new Address(current_url.Substring("ixian:ban:".Length));
                 onBanUser(address);
             }
             else if (current_url.StartsWith("ixian:typing"))
@@ -314,7 +314,7 @@ namespace SPIXI
             {
                 foreach (var contact in contacts)
                 {
-                    string address = Base58Check.Base58CheckEncoding.EncodePlain(contact.Key);
+                    string address = contact.Key.ToString();
                     string avatar = Node.localStorage.getAvatarPath(address);
                     if (avatar == null)
                     {
@@ -333,7 +333,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "onChatScreenReady", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            Utils.sendUiCommand(webView, "onChatScreenReady", friend.walletAddress.ToString());
 
             if (friend.bot)
             {
@@ -417,7 +417,7 @@ namespace SPIXI
                     IxiNumber message_cost = friend.getMessagePrice(str.Length);
                     if (message_cost > 0)
                     {
-                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, IxianHandler.getWalletStorage().getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
                         IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                         if (tx.amount + tx.fee > balance)
                         {
@@ -624,7 +624,7 @@ namespace SPIXI
 
         public void onApp(string app_id)
         {
-            byte[][] user_addresses = new byte[][] { friend.walletAddress };
+            Address[] user_addresses = new Address[] { friend.walletAddress };
             CustomAppPage custom_app_page = new CustomAppPage(app_id, IxianHandler.getWalletStorage().getPrimaryAddress(), user_addresses, Node.customAppManager.getAppEntryPoint(app_id));
             custom_app_page.accepted = true;
             Node.customAppManager.addAppPage(custom_app_page);
@@ -638,20 +638,20 @@ namespace SPIXI
             StreamProcessor.sendAppRequest(friend, app_id, custom_app_page.sessionId, null);
         }
 
-        private void onKickUser(byte[] address)
+        private void onKickUser(Address address)
         {
-            string str_address = Base58Check.Base58CheckEncoding.EncodePlain(address);
-            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, address, 0, true);
+            string str_address = address.ToString();
+            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.kickUser, address.addressWithChecksum, 0, true);
             string modal_title = String.Format(SpixiLocalization._SL("chat-modal-kicked-title"), str_address);
             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-kicked-body"), str_address);
             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
 
         }
 
-        private void onBanUser(byte[] address)
+        private void onBanUser(Address address)
         {
-            string str_address = Base58Check.Base58CheckEncoding.EncodePlain(address);
-            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, address, 0, true);
+            string str_address = address.ToString();
+            StreamProcessor.sendBotAction(friend, SpixiBotActionCode.banUser, address.addressWithChecksum, 0, true);
             string modal_title = String.Format(SpixiLocalization._SL("chat-modal-banned-title"), str_address);
             string modal_body = String.Format(SpixiLocalization._SL("chat-modal-banned-body"), str_address);
             displaySpixiAlert(modal_title, modal_body, SpixiLocalization._SL("global-dialog-ok"));
@@ -672,13 +672,13 @@ namespace SPIXI
             {
                 case "tip":
                     FriendMessage msg = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id));
-                    byte[] sender_address = msg.senderAddress;
+                    Address sender_address = msg.senderAddress;
                     if(!friend.bot)
                     {
                         sender_address = friend.walletAddress;
                     }
                     IxiNumber amount = new IxiNumber(data);
-                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, IxianHandler.getWalletStorage().getPrimaryPublicKey(), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
                     IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                     if(tx.amount <= 0)
                     {
@@ -714,8 +714,8 @@ namespace SPIXI
                     break;
 
                 case "sendContactRequest":
-                    byte[] new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
-                    Friend new_friend = FriendList.addFriend(new_friend_address, null, Base58Check.Base58CheckEncoding.EncodePlain(new_friend_address), null, null, 0);
+                    Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
+                    Friend new_friend = FriendList.addFriend(new_friend_address, null, new_friend_address.ToString(), null, null, 0);
                     if (new_friend != null)
                     {
                         new_friend.save();
@@ -835,7 +835,7 @@ namespace SPIXI
             string address = friend.nickname;
             if(address == "")
             {
-                address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
+                address = message.senderAddress.ToString();
             }
             string nick = "";
             if (!message.localSender)
@@ -844,7 +844,7 @@ namespace SPIXI
                 {
                     if (message.senderAddress != null)
                     {
-                        address = Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress);
+                        address = message.senderAddress.ToString();
                     }
 
                     nick = message.senderNick;
@@ -865,10 +865,10 @@ namespace SPIXI
                 prefix = "addThem";
                 if(message.senderAddress != null)
                 {
-                    avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(message.senderAddress));
+                    avatar = Node.localStorage.getAvatarPath(message.senderAddress.ToString());
                 }else
                 {
-                    avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 }
                 if (avatar == null)
                 {
@@ -1172,9 +1172,9 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "updateFile", uid, progress, complete.ToString());
         }
 
-        public void updateGroupChatNicks(byte[] address, string nick)
+        public void updateGroupChatNicks(Address address, string nick)
         {
-            Utils.sendUiCommand(webView, "updateGroupChatNicks", Base58Check.Base58CheckEncoding.EncodePlain(address), nick);
+            Utils.sendUiCommand(webView, "updateGroupChatNicks", address.ToString(), nick);
         }
 
         public void updateTransactionStatus(string txid, bool verified)
@@ -1200,7 +1200,7 @@ namespace SPIXI
                 status_icon = "fa-exclamation-circle";
                 enableView = false;
             }
-            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), Transaction.txIdV8ToLegacy(txid), status, status_icon, enableView.ToString());
+            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), Transaction.getTxIdString(txid), status, status_icon, enableView.ToString());
         }
 
         // Executed every second

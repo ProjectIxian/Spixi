@@ -140,7 +140,7 @@ namespace SPIXI
 
     public class Friend
     {
-        public byte[] walletAddress { get; private set; }
+        public Address walletAddress { get; private set; }
         public byte[] publicKey { get; private set; }
 
         private string _nick = "";
@@ -182,7 +182,7 @@ namespace SPIXI
 
         private object saveLock = new object();
 
-        public Friend(byte[] wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
+        public Friend(Address wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
             walletAddress = wallet;
             publicKey = public_key;
@@ -199,7 +199,7 @@ namespace SPIXI
         public void setBotMode()
         {
             bot = true;
-            string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+            string base_path = Path.Combine(FriendList.accountsPath, walletAddress.ToString());
             users = new BotUsers(Path.Combine(base_path, "contacts.dat"), null, true);
             users.loadContactsFromFile();
             groups = new BotGroups(Path.Combine(base_path, "groups.dat"));
@@ -221,7 +221,7 @@ namespace SPIXI
                     }
 
                     int wal_length = reader.ReadInt32();
-                    walletAddress = reader.ReadBytes(wal_length);
+                    walletAddress = new Address(reader.ReadBytes(wal_length));
 
                     int pkey_length = reader.ReadInt32();
                     if (pkey_length > 0)
@@ -286,8 +286,8 @@ namespace SPIXI
                 {
                     writer.Write(5);
 
-                    writer.Write(walletAddress.Length);
-                    writer.Write(walletAddress);
+                    writer.Write(walletAddress.addressNoChecksum.Length);
+                    writer.Write(walletAddress.addressNoChecksum);
                     if (publicKey != null)
                     {
                         writer.Write(publicKey.Length);
@@ -569,7 +569,7 @@ namespace SPIXI
             FriendMessage msg = tmp_messages.Find(x => x.id.SequenceEqual(id));
             if (msg == null)
             {
-                Logging.error("Error trying to set received indicator, message from {0} for channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
+                Logging.error("Error trying to set received indicator, message from {0} for channel {1} does not exist", walletAddress.ToString(), channel.ToString());
                 return false;
             }
 
@@ -601,7 +601,7 @@ namespace SPIXI
             FriendMessage msg = tmp_messages.Find(x => x.id.SequenceEqual(id));
             if (msg == null)
             {
-                Logging.error("Error trying to set sent indicator, message from {0} for channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
+                Logging.error("Error trying to set sent indicator, message from {0} for channel {1} does not exist", walletAddress.ToString(), channel.ToString());
                 return false;
             }
 
@@ -728,7 +728,7 @@ namespace SPIXI
             {
                 if (channels != null && !channels.hasChannel(channel))
                 {
-                    Logging.error("Error getting messages for {0}, channel {1} does not exist", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), channel.ToString());
+                    Logging.error("Error getting messages for {0}, channel {1} does not exist", walletAddress.ToString(), channel.ToString());
                     return null;
                 }
                 lock (messages)
@@ -743,7 +743,7 @@ namespace SPIXI
             }
             catch (Exception e)
             {
-                Logging.error("Error reading contact's {0} messages: {1}", Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), e);
+                Logging.error("Error reading contact's {0} messages: {1}", walletAddress.ToString(), e);
             }
             return null;
         }
@@ -777,7 +777,7 @@ namespace SPIXI
             return false;
         }
 
-        public bool addReaction(byte[] sender_address, SpixiMessageReaction reaction_data, int channel)
+        public bool addReaction(Address sender_address, SpixiMessageReaction reaction_data, int channel)
         {
             if(!reaction_data.reaction.StartsWith("tip:") && !reaction_data.reaction.StartsWith("like:"))
             {
@@ -836,7 +836,7 @@ namespace SPIXI
         {
             lock (saveLock)
             {
-                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                string base_path = Path.Combine(FriendList.accountsPath, walletAddress.ToString());
                 if (!Directory.Exists(base_path))
                 {
                     Directory.CreateDirectory(base_path);
@@ -850,7 +850,7 @@ namespace SPIXI
         {
             lock (saveLock)
             {
-                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                string base_path = Path.Combine(FriendList.accountsPath, walletAddress.ToString());
                 if (!Directory.Exists(base_path))
                 {
                     Directory.CreateDirectory(base_path);
@@ -862,7 +862,7 @@ namespace SPIXI
 
         public void loadMetaData()
         {
-            string path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress), "meta.ixi");
+            string path = Path.Combine(FriendList.accountsPath, walletAddress.ToString(), "meta.ixi");
             if (File.Exists(path))
             {
                 metaData = new FriendMetaData(File.ReadAllBytes(path));
@@ -882,7 +882,7 @@ namespace SPIXI
         {
             lock (saveLock)
             {
-                string base_path = Path.Combine(FriendList.accountsPath, Base58Check.Base58CheckEncoding.EncodePlain(walletAddress));
+                string base_path = Path.Combine(FriendList.accountsPath, walletAddress.ToString());
                 if (Directory.Exists(base_path))
                 {
                     Directory.Delete(base_path, true);

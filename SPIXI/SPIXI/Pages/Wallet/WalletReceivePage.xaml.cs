@@ -45,7 +45,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress()));
+            Utils.sendUiCommand(webView, "setAddress", IxianHandler.getWalletStorage().getPrimaryAddress().ToString());
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -54,7 +54,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "addRecipient", local_friend.nickname, Base58Check.Base58CheckEncoding.EncodePlain(local_friend.walletAddress));
+                Utils.sendUiCommand(webView, "addRecipient", local_friend.nickname, local_friend.walletAddress.ToString());
             }
         }
 
@@ -180,8 +180,8 @@ namespace SPIXI
 
         private void onRequest(string recipient, string amount)
         {
-            byte[] recipient_bytes = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
-            Friend friend = FriendList.getFriend(recipient_bytes);
+            Address recipient_address = new Address(recipient);
+            Friend friend = FriendList.getFriend(recipient_address);
             if (friend != null && (new IxiNumber(amount)) > 0)
             {
                 FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.requestFunds, friend.walletAddress, 0, amount, true);
@@ -190,7 +190,7 @@ namespace SPIXI
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;
-                message.recipient = Base58Check.Base58CheckEncoding.DecodePlain(recipient);
+                message.recipient = recipient_address;
                 message.sender = IxianHandler.getWalletStorage().getPrimaryAddress();
                 message.data = spixi_message.getBytes();
                 message.id = friend_message.id;
@@ -210,7 +210,7 @@ namespace SPIXI
 
             foreach (string wallet_to_send in wallet_arr)
             {
-                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
 
                 string nickname = wallet_to_send;
                 if (friend != null)

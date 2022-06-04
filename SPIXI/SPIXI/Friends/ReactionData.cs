@@ -1,13 +1,14 @@
-﻿using System.IO;
+﻿using IXICore;
+using System.IO;
 
 namespace SPIXI
 {
     public class ReactionData
     {
-        public byte[] sender = null;
+        public Address sender = null;
         public string data = null;
 
-        public ReactionData(byte[] sender, string data)
+        public ReactionData(Address sender, string data)
         {
             this.sender = sender;
             this.data = data;
@@ -20,7 +21,7 @@ namespace SPIXI
                 using (BinaryReader reader = new BinaryReader(m))
                 {
                     int sender_len = reader.ReadInt32();
-                    sender = reader.ReadBytes(sender_len);
+                    sender = new Address(reader.ReadBytes(sender_len));
                     data = reader.ReadString();
                     if(data == "")
                     {
@@ -36,8 +37,8 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    writer.Write(sender.Length);
-                    writer.Write(sender);
+                    writer.Write(sender.addressWithChecksum.Length);
+                    writer.Write(sender.addressWithChecksum);
                     if (data != null)
                     {
                         writer.Write(data);

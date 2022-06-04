@@ -53,7 +53,7 @@ namespace SPIXI
         // Interal cache object to store contact status items
         private struct contactStatusCacheItem
         {
-            public byte[] address;
+            public Address address;
             public bool online;
             public int unread;
             public string excerpt;
@@ -220,9 +220,8 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:details:" }, StringSplitOptions.None);
                 string id = split[1];
                 // TODO: handle exceptions
-                byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
 
-                Friend friend = FriendList.getFriend(id_bytes);
+                Friend friend = FriendList.getFriend(new Address(id));
 
                 if (friend == null)
                 {
@@ -325,7 +324,7 @@ namespace SPIXI
                 generatePage("index.html");
             }else if(current_url.StartsWith("ixian:joinBot"))
             {
-                Friend friend = FriendList.addFriend(Base58Check.Base58CheckEncoding.DecodePlain("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+                Friend friend = FriendList.addFriend(new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
                 if (friend != null)
                 {
                     friend.save();
@@ -386,7 +385,7 @@ namespace SPIXI
             {
                 try
                 {
-                    byte[] wallet_to_send = Base58Check.Base58CheckEncoding.DecodePlain(split[0]);
+                    Address wallet_to_send = new Address(split[0]);
                     Navigation.PushAsync(new WalletSendPage(wallet_to_send), Config.defaultXamarinAnimations);
                 }catch(Exception)
                 {
@@ -414,7 +413,7 @@ namespace SPIXI
             string id = e.Value;
 
 
-            byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(id);
+            Address id_bytes = new Address(id);
 
             Friend friend = FriendList.getFriend(id_bytes);
 
@@ -503,7 +502,7 @@ namespace SPIXI
 
         public void onChat(string friend_address, WebNavigatingEventArgs e)
         {
-            byte[] id_bytes = Base58Check.Base58CheckEncoding.DecodePlain(friend_address);
+            Address id_bytes = new Address(friend_address);
 
             Friend friend = FriendList.getFriend(id_bytes);
 
@@ -550,13 +549,13 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
                 if (avatar == null)
                 {
                     avatar = "img/spixiavatar.png";
                 }
 
-                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
+                Utils.sendUiCommand(webView, "addContact", friend.walletAddress.ToString(), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
             }
         }
 
@@ -668,13 +667,13 @@ namespace SPIXI
                         excerpt = SpixiLocalization._SL("index-excerpt-self") + " " + excerpt;
                     }
 
-                    string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
                     if(avatar == null)
                     {
                         avatar = "img/spixiavatar.png";
                     }
 
-                    FriendMessageHelper helper_msg = new FriendMessageHelper(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, friend.getUnreadMessageCount());
+                    FriendMessageHelper helper_msg = new FriendMessageHelper(friend.walletAddress.ToString(), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, friend.getUnreadMessageCount());
                     helper_msgs.Add(helper_msg);
                 }
             }
@@ -706,7 +705,7 @@ namespace SPIXI
             {
                 if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
                 {
-                    amount += entry.Value;
+                    amount += entry.Value.amount;
                 }
             }
             return amount;
@@ -729,7 +728,7 @@ namespace SPIXI
                     Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
                     string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                     IxiNumber amount = utransaction.amount;
-                    if (IxianHandler.getWalletStorage().isMyAddress((new Address(utransaction.pubKey).address)))
+                    if (IxianHandler.getWalletStorage().isMyAddress(utransaction.pubKey))
                     {
                         tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
                     }
@@ -738,7 +737,7 @@ namespace SPIXI
                         amount = calculateReceivedAmount(utransaction);
                     }
                     string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, amount.ToString(), "false");
+                    Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, amount.ToString(), "false");
                 }
             }
 
@@ -753,7 +752,7 @@ namespace SPIXI
                 Transaction transaction = TransactionCache.transactions[i];
                 string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = transaction.amount;
-                if (IxianHandler.getWalletStorage().isMyAddress((new Address(transaction.pubKey).address)))
+                if (IxianHandler.getWalletStorage().isMyAddress(transaction.pubKey))
                 {
                     tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
                 }
@@ -769,7 +768,7 @@ namespace SPIXI
                     confirmed = "error";
                 }
 
-                Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, amount.ToString(), confirmed);
+                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.getTxIdString(), tx_type, time, amount.ToString(), confirmed);
             }
         }
 
@@ -872,7 +871,7 @@ namespace SPIXI
 
         // Adds and filters a new contact status to the cache
         // Can be called from any thread
-        public void setContactStatus(byte[] address, bool online, int unread, string excerpt, long timestamp)
+        public void setContactStatus(Address address, bool online, int unread, string excerpt, long timestamp)
         {
             // Cache and filter contact status changes to reduce cpu usage with many notifications
             lock (contactStatusCache)
@@ -921,7 +920,7 @@ namespace SPIXI
                 // Go through each cache item and perform the status update
                 foreach (contactStatusCacheItem cacheItem in contactStatusCache)
                 {
-                    Utils.sendUiCommand(webView, "setContactStatus", Base58Check.Base58CheckEncoding.EncodePlain(cacheItem.address), 
+                    Utils.sendUiCommand(webView, "setContactStatus", cacheItem.address.ToString(), 
                         cacheItem.online.ToString(), cacheItem.unread.ToString(), cacheItem.excerpt, cacheItem.timestamp.ToString());
                 }
                 // Clear the contact status cache

@@ -21,8 +21,8 @@ namespace SPIXI
 
         public static bool sendPushMessage(StreamMessage msg, bool push)
         {
-            string receiver = Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient);
-            string sender = Base58Check.Base58CheckEncoding.EncodePlain(msg.sender);
+            string receiver = msg.recipient.ToString();
+            string sender = msg.sender.ToString();
             string data = HttpUtility.UrlEncode(Convert.ToBase64String(msg.getBytes()));
 
             string pub_key = "";
@@ -78,7 +78,7 @@ namespace SPIXI
 
             try
             {
-                string receiver = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
+                string receiver = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
 
                 nonce++;
 
@@ -122,7 +122,7 @@ namespace SPIXI
                                 if (str[2] != "")
                                 {
                                     byte[] pk = Convert.FromBase64String(str[2]);
-                                    Friend f = FriendList.getFriend(new Address(pk).address);
+                                    Friend f = FriendList.getFriend(new Address(pk));
                                     if (f != null && pk != null)
                                     {
                                         f.setPublicKey(pk);

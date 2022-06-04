@@ -45,7 +45,7 @@ namespace SPIXI.Network
                 {
                     try
                     {
-                        Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(Path.GetFileName(dir_path)));
+                        Friend friend = FriendList.getFriend(new Address(Path.GetFileName(dir_path)));
                         if (friend == null)
                         {
                             Directory.Delete(dir_path, true);
@@ -122,7 +122,7 @@ namespace SPIXI.Network
                 Friend friend = FriendList.getFriend(recipient.address);
                 if (friend == null)
                 {
-                    Directory.Delete(Path.Combine(storagePath, Base58Check.Base58CheckEncoding.EncodePlain(recipient.address)), true);
+                    Directory.Delete(Path.Combine(storagePath, recipient.address.ToString()), true);
                     lock (pendingRecipients)
                     {
                         pendingRecipients.Remove(recipient);
@@ -260,7 +260,7 @@ namespace SPIXI.Network
                     }
                     if (!msg.encrypt(friend.publicKey, friend.aesKey, friend.chachaKey))
                     {
-                        Logging.warn("Could not encrypt message for {0}!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                        Logging.warn("Could not encrypt message for {0}!", msg.recipient.ToString());
                         return false;
                     }
                     if (msg.version > 0 && msg.encryptionType == StreamMessageEncryptionCode.rsa)
@@ -278,13 +278,13 @@ namespace SPIXI.Network
                 }
                 if(!friend.bot)
                 {
-                    Logging.warn("Could not send message to {0}, due to missing encryption keys!", Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                    Logging.warn("Could not send message to {0}, due to missing encryption keys!", msg.recipient.ToString());
                     // Return true in case it has other messages in the queue that need to be processed and aren't encrypted
                     return true;
                 }else
                 {
                     // TODO TODO TODO perhaps it would be better to discard such message and notify the user
-                    Logging.warn("Tried sending encrypted message of type {0} without encryption keys to {1}, which is a bot, changing message encryption type to none!", msg.type, Base58Check.Base58CheckEncoding.EncodePlain(msg.recipient));
+                    Logging.warn("Tried sending encrypted message of type {0} without encryption keys to {1}, which is a bot, changing message encryption type to none!", msg.type, msg.recipient.ToString());
                     msg.encryptionType = StreamMessageEncryptionCode.none;
                 }
             }

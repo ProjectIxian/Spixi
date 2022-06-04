@@ -1,25 +1,23 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using IXICore.Network;
 using IXICore.Utils;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static IXICore.Transaction;
 
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WalletSend2Page : SpixiContentPage
     {
-        SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
+        SortedDictionary<Address, ToEntry> to_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
         IxiNumber totalAmount = 0;
         Transaction transaction = null;
 
@@ -63,7 +61,7 @@ namespace SPIXI
                     return;
                 }
 
-                to_list.AddOrReplace(_address, _amount);
+                to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.maxVersion, _amount));
                 totalAmount = totalAmount + _amount;
             }
 
@@ -78,10 +76,10 @@ namespace SPIXI
         private void onLoad()
         {
             IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = IxianHandler.getWalletStorage().getPrimaryAddress();
-            byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
+            Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
-            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, null, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
             IxiNumber total_amount = transaction.amount + transaction.fee;
 
@@ -155,7 +153,7 @@ namespace SPIXI
 
                 if (friend != null)
                 {
-                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, Transaction.txIdV8ToLegacy(transaction.id), true);
+                    FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.sentFunds, entry.Key, 0, transaction.getTxIdString(), true);
 
                     SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.sentFunds, transaction.id);
 

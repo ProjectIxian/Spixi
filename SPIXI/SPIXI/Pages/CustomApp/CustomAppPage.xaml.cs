@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Interfaces;
 using SPIXI.Meta;
 using System;
 using System.Linq;
@@ -17,17 +16,17 @@ namespace SPIXI
         public string appId = null;
         public byte[] sessionId = null; // App session ID
 
-        public byte[] myRequestAddress = null; // which address the app request was sent to
-        public byte[] requestedByAddress = null; // which address sent the app request to us
+        public Address myRequestAddress = null; // which address the app request was sent to
+        public Address requestedByAddress = null; // which address sent the app request to us
 
-        public byte[] hostUserAddress = null; // address of the user that initiated the app
-        private byte[][] userAddresses = null; // addresses of all users connected to/using the app
+        public Address hostUserAddress = null; // address of the user that initiated the app
+        private Address[] userAddresses = null; // addresses of all users connected to/using the app
 
         public bool accepted = false;
         public long requestReceivedTimestamp = 0;
 
 
-        public CustomAppPage(string app_id, byte[] host_user_address, byte[][] user_addresses, string app_entry_point)
+        public CustomAppPage(string app_id, Address host_user_address, Address[] user_addresses, string app_entry_point)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -115,7 +114,7 @@ namespace SPIXI
 
         private void onNetworkData(string data)
         {
-            foreach(byte[] address in userAddresses)
+            foreach(Address address in userAddresses)
             {
                 Friend f = FriendList.getFriend(address);
                 if(f != null)
@@ -124,7 +123,7 @@ namespace SPIXI
                     StreamProcessor.sendAppData(f, sessionId, UTF8Encoding.UTF8.GetBytes(data));
                 }else
                 {
-                    Logging.error("Friend {0} does not exist in the friend list.", Base58Check.Base58CheckEncoding.EncodePlain(address));
+                    Logging.error("Friend {0} does not exist in the friend list.", address.ToString());
                 }
             }
         }
@@ -135,33 +134,33 @@ namespace SPIXI
             Node.customAppManager.removeAppPage(sessionId);
         }
 
-        public void networkDataReceive(byte[] sender_address, byte[] data)
+        public void networkDataReceive(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
             Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
         }
 
-        public void appRequestAcceptReceived(byte[] sender_address, byte[] data)
+        public void appRequestAcceptReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onRequestAccept", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(webView, "onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
-        public void appRequestRejectReceived(byte[] sender_address, byte[] data)
+        public void appRequestRejectReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onRequestReject", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(webView, "onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
-        public void appEndSessionReceived(byte[] sender_address, byte[] data)
+        public void appEndSessionReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onAppEndSession", UTF8Encoding.UTF8.GetString(sender_address), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(webView, "onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
-        public bool hasUser(byte[] user)
+        public bool hasUser(Address user)
         {
-            if(userAddresses.Select(x => x.SequenceEqual(user)) != null)
+            if(userAddresses.Select(x => x.addressNoChecksum.SequenceEqual(user.addressNoChecksum)) != null)
             {
                 return true;
             }

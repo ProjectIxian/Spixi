@@ -38,7 +38,7 @@ namespace SPIXI
         public string filePath; // for file transfer
         public ulong fileSize; // for file transfer
 
-        public byte[] senderAddress;
+        public Address senderAddress;
         public string senderNick = "";
 
         public long receivedTimestamp; // timestamp of when the message was received; used for storage purposes
@@ -48,7 +48,7 @@ namespace SPIXI
 
         public Dictionary<string, List<ReactionData>> reactions = new Dictionary<string, List<ReactionData>>();
 
-        public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
+        public FriendMessage(byte[] id, string msg, long time, bool local_sender, FriendMessageType t, Address sender_address = null, string sender_nick = "")
         {
             _id = id;
             message = msg;
@@ -67,7 +67,7 @@ namespace SPIXI
             sent = false;
         }
 
-        public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, byte[] sender_address = null, string sender_nick = "")
+        public FriendMessage(string msg, long time, bool local_sender, FriendMessageType t, Address sender_address = null, string sender_nick = "")
         {
             message = msg;
             timestamp = time;
@@ -106,7 +106,7 @@ namespace SPIXI
                     int sender_address_len = reader.ReadInt32();
                     if (sender_address_len > 0)
                     {
-                        senderAddress = reader.ReadBytes(sender_address_len);
+                        senderAddress = new Address(reader.ReadBytes(sender_address_len));
                     }
 
                     senderNick = reader.ReadString();
@@ -174,8 +174,8 @@ namespace SPIXI
 
                     if (senderAddress != null)
                     {
-                        writer.Write(senderAddress.Length);
-                        writer.Write(senderAddress);
+                        writer.Write(senderAddress.addressWithChecksum.Length);
+                        writer.Write(senderAddress.addressWithChecksum);
                     }
                     else
                     {
@@ -234,7 +234,7 @@ namespace SPIXI
             }
         }
 
-        public bool addReaction(byte[] address, string reaction_data)
+        public bool addReaction(Address address, string reaction_data)
         {
             lock(reactions)
             {

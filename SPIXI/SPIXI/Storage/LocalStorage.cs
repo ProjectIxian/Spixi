@@ -51,7 +51,7 @@ namespace SPIXI.Storage
 
         private Thread storageThread = null;
 
-        Dictionary<byte[], Dictionary<int, WriteRequest>> writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
+        Dictionary<Address, Dictionary<int, WriteRequest>> writeMessagesRequests = new Dictionary<Address, Dictionary<int, WriteRequest>>(new AddressComparer());
 
         private object flushLock = new object();
 
@@ -148,7 +148,7 @@ namespace SPIXI.Storage
             }
             flush();
             stopped = true;
-            writeMessagesRequests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(new ByteArrayComparer());
+            writeMessagesRequests = new Dictionary<Address, Dictionary<int, WriteRequest>>(new AddressComparer());
             storageThread = null;
         }
         
@@ -170,10 +170,10 @@ namespace SPIXI.Storage
         public void writePendingMessages(bool flush = false)
         {
             // TODO TODO TODO message received should probably be sent when the message is written to storage instead of when received
-            Dictionary<byte[], Dictionary<int, WriteRequest>> tmp_requests;
+            Dictionary<Address, Dictionary<int, WriteRequest>> tmp_requests;
             lock (writeMessagesRequests)
             {
-                tmp_requests = new Dictionary<byte[], Dictionary<int, WriteRequest>>(writeMessagesRequests);
+                tmp_requests = new Dictionary<Address, Dictionary<int, WriteRequest>>(writeMessagesRequests, new AddressComparer());
             }
             long cur_time = Clock.getTimestampMillis();
             foreach (var request in tmp_requests)
@@ -211,7 +211,7 @@ namespace SPIXI.Storage
                     }
                     catch (Exception e)
                     {
-                        Logging.error("Exception occured while trying to write messages for {0}: {1}", Base58Check.Base58CheckEncoding.EncodePlain(request.Key), e);
+                        Logging.error("Exception occured while trying to write messages for {0}: {1}", request.Key.ToString(), e);
                     }
                     lock (writeMessagesRequests[request.Key])
                     {
@@ -323,7 +323,7 @@ namespace SPIXI.Storage
                             continue;
                         }
 
-                        string friend_path = Path.Combine(documentsPath, "Chats", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                        string friend_path = Path.Combine(documentsPath, "Chats", friend.walletAddress.ToString());
                         if (!Directory.Exists(friend_path))
                         {
                             Directory.CreateDirectory(friend_path);
@@ -414,8 +414,8 @@ namespace SPIXI.Storage
                     writer.Write(version);
 
                     // Write the address used for verification
-                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().Length);
-                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress());
+                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum.Length);
+                    writer.Write(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum);
 
                     // Write account information
                     writer.Write(nickname);
@@ -526,11 +526,11 @@ namespace SPIXI.Storage
         }
 
         // Reads the message archive for a given wallet
-        public List<FriendMessage> readLastMessages(byte[] wallet_bytes, int channel, long from_time_stamp = 0, int msg_count = 100, bool reverse = true)
+        public List<FriendMessage> readLastMessages(Address wallet_bytes, int channel, long from_time_stamp = 0, int msg_count = 100, bool reverse = true)
         {
             lock (messagesLock)
             {
-                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string wallet = wallet_bytes.ToString();
                 string messages_path = Path.Combine(documentsPath, "Chats", wallet, channel.ToString());
 
                 List<FriendMessage> messages = new List<FriendMessage>();
@@ -621,7 +621,7 @@ namespace SPIXI.Storage
             return null;
         }
 
-        public void requestWriteMessages(byte[] wallet_address, int channel)
+        public void requestWriteMessages(Address wallet_address, int channel)
         {
             if(!running)
             {
@@ -649,7 +649,7 @@ namespace SPIXI.Storage
         }
 
         // Writes the message archive for a given wallet
-        private bool writeMessages(byte[] wallet_bytes, int channel, List<FriendMessage> messages)
+        private bool writeMessages(Address address, int channel, List<FriendMessage> messages)
         {
             List<FriendMessage> local_messages = null;
             lock (messages)
@@ -658,7 +658,7 @@ namespace SPIXI.Storage
             }
             lock (messagesLock)
             {
-                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string wallet = address.ToString();
                 string messages_path = Path.Combine(documentsPath, "Chats", wallet, channel.ToString());
 
                 if (!Directory.Exists(messages_path))
@@ -747,11 +747,11 @@ namespace SPIXI.Storage
         }
 
         // Deletes the message archive if it exists for a given wallet
-        public bool deleteMessages(byte[] wallet_bytes)
+        public bool deleteMessages(Address wallet_address)
         {
             lock (messagesLock)
             {
-                string wallet = Base58Check.Base58CheckEncoding.EncodePlain(wallet_bytes);
+                string wallet = wallet_address.ToString();
                 string chats_path = Path.Combine(documentsPath, "Chats");
                 string messages_directory = Path.Combine(chats_path, wallet);
 

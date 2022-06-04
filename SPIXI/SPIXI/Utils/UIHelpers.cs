@@ -1,4 +1,5 @@
-﻿using SPIXI.Meta;
+﻿using IXICore;
+using SPIXI.Meta;
 using System.Linq;
 using Xamarin.Forms;
 
@@ -6,7 +7,7 @@ namespace SPIXI
 {
     public static class UIHelpers
     {
-        public static void setContactStatus(byte[] address, bool online, int unread, string excerpt, long timestamp)
+        public static void setContactStatus(Address address, bool online, int unread, string excerpt, long timestamp)
         {
             Page page = App.Current.MainPage.Navigation.NavigationStack.Last();
             if (page != null && page is HomePage)

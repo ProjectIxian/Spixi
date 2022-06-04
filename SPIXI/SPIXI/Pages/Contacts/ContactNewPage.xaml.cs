@@ -165,17 +165,18 @@ namespace SPIXI
 
         }
 
-        public void onRequest(byte[] recipient_address)
+        public void onRequest(byte[] recipient_address_bytes)
         {
             try
             {
-                if(Address.validateChecksum(recipient_address) == false)
+                if(Address.validateChecksum(recipient_address_bytes) == false)
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
                 }
 
-                if(recipient_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                Address recipient_address = new Address(recipient_address_bytes);
+                if (recipient_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("contact-new-invalid-address-self-text"), SpixiLocalization._SL("global-dialog-ok"));
                     return;
@@ -195,7 +196,7 @@ namespace SPIXI
                     }
                 }
 
-                Friend friend = FriendList.addFriend(recipient_address, null, Base58Check.Base58CheckEncoding.EncodePlain(recipient_address), null, null, 0);
+                Friend friend = FriendList.addFriend(recipient_address, null, recipient_address.ToString(), null, null, 0);
 
                 if (friend != null)
                 {

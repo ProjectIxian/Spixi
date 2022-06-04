@@ -81,7 +81,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
 
-                Utils.sendUiCommand(webView, "addContact", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), friend.nickname, "img/spixiavatar.png", str_online);
+                Utils.sendUiCommand(webView, "addContact", friend.walletAddress.ToString(), friend.nickname, "img/spixiavatar.png", str_online);
             }
         }
 

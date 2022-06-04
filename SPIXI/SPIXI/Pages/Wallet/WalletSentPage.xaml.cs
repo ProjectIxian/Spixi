@@ -95,7 +95,7 @@ namespace SPIXI
             // Convert unix timestamp
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
-            byte[] addr = new Address(ctransaction.pubKey).address;
+            Address addr = ctransaction.pubKey;
             if (addr.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
             {
                 // this is a sent payment
@@ -109,7 +109,7 @@ namespace SPIXI
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "addSender", Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString(), time);
+                        Utils.sendUiCommand(webView, "addSender", entry.Key.ToString() + ": " + entry.Value.ToString(), time);
                     }
                 }
             }
@@ -120,7 +120,7 @@ namespace SPIXI
                 amount = 0;
 
                 Utils.sendUiCommand(webView, "setReceivedMode");
-                byte[] sender_address = new Address(ctransaction.pubKey).address;
+                Address sender_address = ctransaction.pubKey;
                 Friend friend = FriendList.getFriend(sender_address);
                 if (friend != null)
                 {
@@ -128,7 +128,7 @@ namespace SPIXI
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addSender", Base58Check.Base58CheckEncoding.EncodePlain(sender_address), time);
+                    Utils.sendUiCommand(webView, "addSender", sender_address.ToString(), time);
                 }
                 foreach (var entry in ctransaction.toList)
                 {
@@ -136,13 +136,13 @@ namespace SPIXI
                     {
                         // TODO show this as well under sent to; also do the reverse for sent payment
                         //addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
-                        amount += entry.Value;
+                        amount += entry.Value.amount;
                     }
                 }
             }
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", Transaction.txIdV8ToLegacy(transaction.id));
+                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.getTxIdString());
             return;
         }
 

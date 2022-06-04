@@ -73,7 +73,7 @@ namespace SPIXI.Network
 
         public void save(string root_path)
         {
-            string friend_path = Path.Combine(root_path, Base58Check.Base58CheckEncoding.EncodePlain(streamMessage.recipient));
+            string friend_path = Path.Combine(root_path, streamMessage.recipient.ToString());
             if (filePath == null)
             {
                 filePath = Path.Combine(friend_path, Clock.getTimestampMillis() + "-" + Crypto.hashToString(streamMessage.id));

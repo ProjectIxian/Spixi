@@ -326,8 +326,7 @@ namespace CryptoLibs
             int salt_size = outCipher.GetBlockSize();
             if (use_GCM)
             {
-                // TODO TODO GCM mode requires 12 bytes salt, enable it after the next release
-                //salt_size = 12;
+                salt_size = 12;
             }
             byte[] salt = getSecureRandomBytes(salt_size);
 
@@ -363,32 +362,15 @@ namespace CryptoLibs
 
             IBufferedCipher inCipher = CipherUtilities.GetCipher(algo);
 
-            int block_size = inCipher.GetBlockSize();
-            int salt_size = block_size;
-            if (use_GCM)
-            {
-                // GCM mode requires 12 bytes salt
-                salt_size = 12;
-            }
-
             byte[] bytes = null;
             try
             {
                 try
                 {
-                    byte[] salt = new byte[block_size];
-
-                    Array.Copy(input, inOffset, salt, 0, salt.Length);
-
-                    ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
-                    inCipher.Init(false, withIV);
-                    bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
-                }catch(Exception)
-                {
-                    // TODO TODO reverse contents in try and catch after next version release
-                    // try again using 12 bytes salt
                     if (use_GCM)
                     {
+                        // GCM mode requires 12 bytes salt
+                        int salt_size = 12;
                         byte[] salt = new byte[salt_size];
 
                         Array.Copy(input, inOffset, salt, 0, salt.Length);
@@ -396,6 +378,32 @@ namespace CryptoLibs
                         ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
                         inCipher.Init(false, withIV);
                         bytes = inCipher.DoFinal(input, inOffset + salt_size, input.Length - inOffset - salt_size);
+                    }
+                    else
+                    {
+                        int block_size = inCipher.GetBlockSize();
+                        byte[] salt = new byte[block_size];
+
+                        Array.Copy(input, inOffset, salt, 0, salt.Length);
+
+                        ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
+                        inCipher.Init(false, withIV);
+                        bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
+                    }
+                }
+                catch(Exception)
+                {
+                    // try again using normal salt - backwards compatibility, TODO TODO can be removed later
+                    if (use_GCM)
+                    {
+                        int block_size = inCipher.GetBlockSize();
+                        byte[] salt = new byte[block_size];
+
+                        Array.Copy(input, inOffset, salt, 0, salt.Length);
+
+                        ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
+                        inCipher.Init(false, withIV);
+                        bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
                     }else
                     {
                         bytes = null;
