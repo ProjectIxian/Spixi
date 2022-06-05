@@ -365,6 +365,13 @@ namespace SPIXI.Network
                         }
                         break;
 
+                    case ProtocolMessageCode.blockHeaders3:
+                        {
+                            // Forward the block headers to the TIV handler
+                            Node.tiv.receivedBlockHeaders3(data, endpoint);
+                        }
+                        break;
+
                     case ProtocolMessageCode.pitData2:
                         {
                             Node.tiv.receivedPIT2(data, endpoint);
