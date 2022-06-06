@@ -372,7 +372,7 @@ namespace SPIXI.Meta
             }
         }
 
-        public override void receivedBlockHeader(BlockHeader block_header, bool verified)
+        public override void receivedBlockHeader(Block block_header, bool verified)
         {
             if (balance.blockChecksum != null && balance.blockChecksum.SequenceEqual(block_header.blockChecksum))
             {
@@ -420,7 +420,7 @@ namespace SPIXI.Meta
         public override Block getLastBlock()
         {
             // TODO handle this more elegantly
-            BlockHeader bh = tiv.getLastBlockHeader();
+            Block bh = tiv.getLastBlockHeader();
             return new Block()
             {
                 blockNum = bh.blockNum,
@@ -519,7 +519,7 @@ namespace SPIXI.Meta
             FriendList.onLowMemory();
         }
 
-        public override BlockHeader getBlockHeader(ulong blockNum)
+        public override Block getBlockHeader(ulong blockNum)
         {
             return BlockHeaderStorage.getBlockHeader(blockNum);
         }
