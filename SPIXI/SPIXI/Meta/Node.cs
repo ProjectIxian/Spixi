@@ -402,8 +402,10 @@ namespace SPIXI.Meta
 
         public override int getLastBlockVersion()
         {
-            if (tiv.getLastBlockHeader() == null || tiv.getLastBlockHeader().version < Block.maxVersion)
+            if (tiv.getLastBlockHeader() == null
+                || tiv.getLastBlockHeader().version < Block.maxVersion)
             {
+                // TODO Omega force to v10 after upgrade
                 return Block.maxVersion - 1;
             }
             return tiv.getLastBlockHeader().version;
@@ -419,24 +421,7 @@ namespace SPIXI.Meta
 
         public override Block getLastBlock()
         {
-            // TODO handle this more elegantly
-            Block bh = tiv.getLastBlockHeader();
-            return new Block()
-            {
-                blockNum = bh.blockNum,
-                blockChecksum = bh.blockChecksum,
-                lastBlockChecksum = bh.lastBlockChecksum,
-                lastSuperBlockChecksum = bh.lastSuperBlockChecksum,
-                lastSuperBlockNum = bh.lastSuperBlockNum,
-                difficulty = bh.difficulty,
-                superBlockSegments = bh.superBlockSegments,
-                timestamp = bh.timestamp,
-                transactions = bh.transactions,
-                version = bh.version,
-                walletStateChecksum = bh.walletStateChecksum,
-                signatureFreezeChecksum = bh.signatureFreezeChecksum,
-                compactedSigs = true
-            };
+            return tiv.getLastBlockHeader();
         }
 
         public override Wallet getWallet(Address id)

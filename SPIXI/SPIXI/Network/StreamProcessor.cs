@@ -1804,7 +1804,7 @@ namespace SPIXI
                     return;
                 }
 
-                to_list.Add(bot.walletAddress, new ToEntry(Transaction.maxVersion, sta.cost));
+                to_list.Add(bot.walletAddress, new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), sta.cost));
 
                 IxiNumber fee = ConsensusConfig.transactionPrice;
                 Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());

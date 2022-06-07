@@ -61,7 +61,7 @@ namespace SPIXI
                     return;
                 }
 
-                to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.maxVersion, _amount));
+                to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), _amount));
                 totalAmount = totalAmount + _amount;
             }
 

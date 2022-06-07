@@ -137,7 +137,7 @@ namespace SPIXI
             Address _address = new Address(Config.bridgeAddress);
             byte[] _txdata = Encoding.ASCII.GetBytes(ethaddress);
 
-            to_list.AddOrReplace(_address, new ToEntry(Transaction.maxVersion, amount, _txdata));
+            to_list.AddOrReplace(_address, new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), amount, _txdata));
 
 
             transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
