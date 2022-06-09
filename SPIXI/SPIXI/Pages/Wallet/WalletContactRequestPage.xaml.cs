@@ -44,7 +44,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setData", friend.walletAddress.ToString(), friend.nickname, amount, ConsensusConfig.transactionPrice.ToString(), date);
+            Utils.sendUiCommand(webView, "setData", friend.walletAddress.ToString(), friend.nickname, amount, ConsensusConfig.forceTransactionPrice.ToString(), date);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -125,7 +125,7 @@ namespace SPIXI
                 // Create an ixian transaction and send it to the dlt network
                 Address to = friend.walletAddress;
 
-                IxiNumber fee = ConsensusConfig.transactionPrice;
+                IxiNumber fee = ConsensusConfig.forceTransactionPrice;
                 Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
                 Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 

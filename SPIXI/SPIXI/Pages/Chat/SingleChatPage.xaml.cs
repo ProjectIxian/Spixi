@@ -417,7 +417,7 @@ namespace SPIXI
                     IxiNumber message_cost = friend.getMessagePrice(str.Length);
                     if (message_cost > 0)
                     {
-                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.transactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
+                        Transaction tx = new Transaction((int)Transaction.Type.Normal, message_cost, ConsensusConfig.forceTransactionPrice, friend.walletAddress, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
                         IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                         if (tx.amount + tx.fee > balance)
                         {
@@ -678,7 +678,7 @@ namespace SPIXI
                         sender_address = friend.walletAddress;
                     }
                     IxiNumber amount = new IxiNumber(data);
-                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.transactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
+                    Transaction tx = new Transaction((int)Transaction.Type.Normal, amount, ConsensusConfig.forceTransactionPrice, sender_address, IxianHandler.getWalletStorage().getPrimaryAddress(), null, new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey()), IxianHandler.getHighestKnownNetworkBlockHeight());
                     IxiNumber balance = IxianHandler.getWalletBalance(IxianHandler.getWalletStorage().getPrimaryAddress());
                     if(tx.amount <= 0)
                     {

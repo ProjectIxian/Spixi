@@ -75,7 +75,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            IxiNumber fee = ConsensusConfig.transactionPrice;
+            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
