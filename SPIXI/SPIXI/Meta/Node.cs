@@ -243,7 +243,7 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void mainLoop()
         {
-            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum;
+            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressWithChecksum;
             if (primaryAddress == null)
                 return;
 
