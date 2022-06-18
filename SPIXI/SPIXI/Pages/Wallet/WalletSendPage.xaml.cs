@@ -16,7 +16,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class WalletSendPage : SpixiContentPage
 	{
-        private byte[] recipient = null;
+        private Address recipient = null;
 
         public WalletSendPage ()
 		{
@@ -26,12 +26,12 @@ namespace SPIXI
             loadPage(webView, "wallet_send.html");
         }
 
-        public WalletSendPage(byte[] wal)
+        public WalletSendPage(Address wal)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
 
-            recipient = wal.ToArray();
+            recipient = wal;
 
             loadPage(webView, "wallet_send.html");
         }
@@ -48,14 +48,14 @@ namespace SPIXI
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
             {
-                string nickname = Base58Check.Base58CheckEncoding.EncodePlain(recipient);
+                string nickname = recipient.ToString();
 
                 Friend friend = FriendList.getFriend(recipient);
                 if (friend != null)
                     nickname = friend.nickname;
 
                 Utils.sendUiCommand(webView, "addRecipient", nickname, 
-                    Base58Check.Base58CheckEncoding.EncodePlain(recipient));
+                    recipient.ToString());
             }
         }
 
@@ -170,10 +170,10 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.balance.balance > ConsensusConfig.transactionPrice * 2)
+                if (Node.balance.balance > ConsensusConfig.forceTransactionPrice * 2)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(webView, "setAmount", (Node.balance.balance - (ConsensusConfig.transactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(webView, "setAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
                 }
             }
             else if (current_url.Contains("ixian:addrecipient"))
@@ -250,7 +250,7 @@ namespace SPIXI
                 string wallet_to_send = split[0];
                 string nickname = wallet_to_send;
 
-                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
                 if (friend != null)
                     nickname = friend.nickname;
                 Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
@@ -265,7 +265,7 @@ namespace SPIXI
                     string wallet_to_send = split[0];
                     string nickname = wallet_to_send;
 
-                    Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                    Friend friend = FriendList.getFriend(new Address(wallet_to_send));
                     if (friend != null)
                         nickname = friend.nickname;
                     Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
@@ -280,7 +280,7 @@ namespace SPIXI
                 {
                     string nickname = wallet_to_send;
 
-                    Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                    Friend friend = FriendList.getFriend(new Address(wallet_to_send));
                     if (friend != null)
                         nickname = friend.nickname;
 
@@ -300,7 +300,7 @@ namespace SPIXI
 
             foreach (string wallet_to_send in wallet_arr)
             {
-                Friend friend = FriendList.getFriend(Base58Check.Base58CheckEncoding.DecodePlain(wallet_to_send));
+                Friend friend = FriendList.getFriend(new Address(wallet_to_send));
 
                 string nickname = wallet_to_send;
                 if (friend != null)

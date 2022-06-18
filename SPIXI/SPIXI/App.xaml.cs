@@ -32,6 +32,9 @@ namespace SPIXI
 
         public static string startingScreen = ""; // Which screen to start on
 
+        private bool isLockScreenActive = false;
+        private DateTime unlockedDate = DateTime.Now; // Store the last time when the app was unlocked via lockscreen
+
 		private App ()
 		{
             InitializeComponent();
@@ -140,12 +143,14 @@ namespace SPIXI
                     }
                     else
                     {
-                        // Wallet found
-                        
+                        // Wallet found                     
                         if(isLockEnabled())
                         {
                             // Show the lock screen
-                            MainPage = new NavigationPage(new SPIXI.LockPage());
+                            isLockScreenActive = true;
+                            var lockPage = new LockPage();
+                            lockPage.authSucceeded += onUnlock;
+                            MainPage = new NavigationPage(lockPage);
                         }
                         else
                         {
@@ -212,19 +217,32 @@ namespace SPIXI
             base.OnSleep();
         }
 
+
+        public void onUnlock(object sender, EventArgs e)
+        {
+            isLockScreenActive = false;
+            unlockedDate = DateTime.Now;
+        }
+
         protected override void OnResume ()
 		{
             // Handle when your app resumes
             isInForeground = true;
             base.OnResume();
 
-            /*if (isLockEnabled())
+            // Popup the lockscreen if necessary
+            // Allow a 5 second cooldown after unlock
+            TimeSpan ts = DateTime.Now - unlockedDate;
+            if (isLockEnabled() && ts.Seconds > 5 && MainPage != null && ((NavigationPage)MainPage).CurrentPage.GetType() != typeof(LockPage) && !isLockScreenActive)
             {
                 // Show the lock screen
+                isLockScreenActive = true;
                 OfflinePushMessages.lastUpdate = 0;
-                MainPage = new NavigationPage(new SPIXI.LockPage());
+                var lockPage = new LockPage(true);
+                lockPage.authSucceeded += onUnlock;
+                MainPage.Navigation.PushModalAsync(lockPage);
                 return;
-            }*/
+            }
 
             if (MainPage != null && ((NavigationPage)MainPage).CurrentPage != null && ((NavigationPage)MainPage).CurrentPage is SpixiContentPage)
             {

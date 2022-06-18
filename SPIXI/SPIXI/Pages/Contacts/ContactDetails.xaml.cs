@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -36,7 +35,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            Utils.sendUiCommand(webView, "setAddress", friend.walletAddress.ToString());
 
             updateScreen();
         }
@@ -177,37 +176,37 @@ namespace SPIXI
             {
                 foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
                 {
-                    byte[] from_address = new Address(utransaction.pubKey).address;
+                    Address from_address = utransaction.pubKey;
                     // Filter out unrelated transactions
-                    if (from_address.SequenceEqual(friend.walletAddress) == false)
+                    if (from_address.addressNoChecksum.SequenceEqual(friend.walletAddress.addressNoChecksum) == false)
                     {
                         if (utransaction.toList.ContainsKey(friend.walletAddress) == false)
                             continue;
                     }
 
                     string tx_type = SpixiLocalization._SL("global-received");
-                    if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                    if (from_address.addressNoChecksum.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum))
                     {
                         tx_type = SpixiLocalization._SL("global-sent");
                     }
                     string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(utransaction.id), tx_type, time, utransaction.amount.ToString(), "false");
+                    Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, utransaction.amount.ToString(), "false");
                 }
 
                 for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
                 {
                     Transaction transaction = TransactionCache.transactions[i];
 
-                    byte[] from_address = new Address(transaction.pubKey).address;
+                    Address from_address = transaction.pubKey;
                     // Filter out unrelated transactions
-                    if (from_address.SequenceEqual(friend.walletAddress) == false)
+                    if (from_address.addressNoChecksum.SequenceEqual(friend.walletAddress.addressNoChecksum) == false)
                     {
                         if (transaction.toList.ContainsKey(friend.walletAddress) == false)
                             continue;
                     }
 
                     string tx_type = SpixiLocalization._SL("global-received");
-                    if (from_address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                    if (from_address.addressNoChecksum.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum))
                     {
                         tx_type = SpixiLocalization._SL("global-sent");
                     }
@@ -219,7 +218,7 @@ namespace SPIXI
                         confirmed = "error";
                     }
 
-                    Utils.sendUiCommand(webView, "addPaymentActivity", Transaction.txIdV8ToLegacy(transaction.id), tx_type, time, transaction.amount.ToString(), confirmed);
+                    Utils.sendUiCommand(webView, "addPaymentActivity", transaction.getTxIdString(), tx_type, time, transaction.amount.ToString(), confirmed);
                 }
             }
         }
@@ -229,7 +228,7 @@ namespace SPIXI
         {
             Utils.sendUiCommand(webView, "setNickname", friend.nickname);
 
-            string avatar = Node.localStorage.getAvatarPath(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress), false);
+            string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString(), false);
             if (avatar == null)
             {
                 avatar = "";

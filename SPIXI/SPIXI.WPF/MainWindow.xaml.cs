@@ -3,11 +3,14 @@ using System.Windows.Shell;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.WPF;
 
-// Disable DPI awareness for now
-[assembly: System.Windows.Media.DisableDpiAwareness]
-
 namespace SPIXI.WPF
 {
+
+    public class SpixiApplicationPage : FormsApplicationPage
+    {
+
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

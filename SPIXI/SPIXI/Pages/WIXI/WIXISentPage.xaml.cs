@@ -92,20 +92,19 @@ namespace SPIXI
             // Convert unix timestamp
             string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
 
-            byte[] addr = new Address(ctransaction.pubKey).address;
-            if (addr.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+            if (ctransaction.pubKey.addressNoChecksum.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress().addressNoChecksum))
             {
                 // this is a sent payment
 
                 foreach (var entry in ctransaction.toList)
                 {
                     //Utils.sendUiCommand(webView, "addSender", Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString(), time);
-                    Utils.sendUiCommand(webView, "addSender", Encoding.ASCII.GetString(ctransaction.data) + ": " + entry.Value.ToString(), time);
+                    Utils.sendUiCommand(webView, "addSender", Encoding.ASCII.GetString(entry.Value.data) + ": " + entry.Value.ToString(), time);
                 }
             }
            
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                time, confirmed_text, (ctransaction.fee / ctransaction.amount).ToString() + "%", Transaction.txIdV8ToLegacy(transaction.id));
+                time, confirmed_text, (ctransaction.fee / ctransaction.amount).ToString() + "%", transaction.getTxIdString());
             return;
         }
 

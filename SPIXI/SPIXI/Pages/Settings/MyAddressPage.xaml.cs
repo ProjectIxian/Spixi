@@ -26,7 +26,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            string address_string = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
+            string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             Utils.sendUiCommand(webView, "setAddress", address_string);
         }
 

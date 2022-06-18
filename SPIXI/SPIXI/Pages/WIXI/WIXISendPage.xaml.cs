@@ -9,19 +9,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
+using static IXICore.Transaction;
 
 namespace SPIXI
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WIXISendPage : SpixiContentPage
     {
-        SortedDictionary<byte[], IxiNumber> to_list = new SortedDictionary<byte[], IxiNumber>(new ByteArrayComparer());
+        SortedDictionary<Address, ToEntry> to_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
 
         Transaction transaction = null;
 
@@ -130,17 +129,18 @@ namespace SPIXI
 
         private void sendPayment(string ethaddress, IxiNumber amount)
         {
-            IxiNumber fee = ConsensusConfig.transactionPrice;
-            byte[] from = IxianHandler.getWalletStorage().getPrimaryAddress();
-            byte[] pubKey = IxianHandler.getWalletStorage().getPrimaryPublicKey();
+            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 
 
-            byte[] _address = Base58Check.Base58CheckEncoding.DecodePlain(Config.bridgeAddress);
-            to_list.AddOrReplace(_address, amount);
-
+            Address _address = new Address(Config.bridgeAddress);
             byte[] _txdata = Encoding.ASCII.GetBytes(ethaddress);
 
-            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, _txdata, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+            to_list.AddOrReplace(_address, new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), amount, _txdata));
+
+
+            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
             IxiNumber total_amount = transaction.amount + transaction.fee;
 

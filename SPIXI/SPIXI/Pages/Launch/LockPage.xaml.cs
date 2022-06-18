@@ -19,6 +19,7 @@ namespace SPIXI
         private CancellationTokenSource _cancel;
         private bool justConfirmAction = false;
         public event EventHandler<SPIXI.EventArgs<bool>> authSucceeded;
+        public event EventHandler<SPIXI.EventArgs<bool>> authWithPassword;
 
         public LockPage()
         {
@@ -111,18 +112,23 @@ namespace SPIXI
             }
             else
             {
+                if(authWithPassword != null)
+                {
+                    authWithPassword(this, new SPIXI.EventArgs<bool>(true));
+                }
                 performUnlock();
             }
         }
 
         private void performUnlock()
         {
-            if(justConfirmAction)
+            if (authSucceeded != null)
             {
-                if (authSucceeded != null)
-                {
-                    authSucceeded(this, new SPIXI.EventArgs<bool>(true));
-                }
+                authSucceeded(this, new SPIXI.EventArgs<bool>(true));
+            }
+
+            if (justConfirmAction)
+            {              
                 Navigation.PopModalAsync();
                 return;
             }

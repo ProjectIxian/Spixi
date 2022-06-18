@@ -1,4 +1,16 @@
-﻿using System;
+﻿// Copyright (C) 2017-2022 Ixian OU
+// This file is part of Spixi - www.github.com/ProjectIxian/Spixi
+//
+// Ixian Core is free software: you can redistribute it and/or modify
+// it under the terms of the MIT License as published
+// by the Open Source Initiative.
+//
+// Ixian Core is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Org.BouncyCastle.Crypto;
@@ -27,6 +39,9 @@ namespace CryptoLibs
         // Private variables used for Chacha
         private readonly int chacha_rounds = 20;
 
+        // Private variables used for SHA-3
+        [ThreadStatic]
+        static Org.BouncyCastle.Crypto.Digests.Sha3Digest sha3Algorithm512 = null;
 
         public BouncyCastleAndroid()
         {
@@ -48,16 +63,12 @@ namespace CryptoLibs
             return input;
         }
 
-        private byte[] rsaKeyToBytes(KeyPair rsaKey, bool includePrivateParameters, bool skip_header)
+        private byte[] rsaKeyToBytes(KeyPair rsaKey, bool includePrivateParameters, int version)
         {
             List<byte> bytes = new List<byte>();
 
-            // TODO TODO TODO TODO TODO skip header can be later removed after the upgrade/hard fork
-            if (!skip_header)
-            {
-                bytes.Add((byte)1); // add version
-                bytes.AddRange(BitConverter.GetBytes((int)0)); // prepend pub key version
-            }
+            bytes.Add((byte)version); // add version
+            bytes.AddRange(BitConverter.GetBytes((int)0)); // prepend pub key version
 
             KeyFactory kf = KeyFactory.GetInstance("RSA");
             // the ToByteArray() function returns big-endian bytes, we need little-endian
@@ -112,7 +123,7 @@ namespace CryptoLibs
             return bytes.ToArray();
         }
 
-        private KeyPair rsaKeyFromBytes(byte [] keyBytes)
+        private KeyPair rsaKeyFromBytes(byte[] keyBytes)
         {
             try
             {
@@ -185,9 +196,10 @@ namespace CryptoLibs
                 }
 
                 return new KeyPair(pubKey, privKey);
-            }catch(Exception)
+            }
+            catch (Exception)
             {
-                Logging.warn("An exception occured while trying to reconstruct PKI from bytes");
+                Logging.warn("An exception occurred while trying to reconstruct PKI from bytes");
             }
             return null;
         }
@@ -207,22 +219,22 @@ namespace CryptoLibs
 
             if (!decryptWithRSA(encrypted, key_pair.privateKeyBytes).SequenceEqual(plain))
             {
-                Logging.warn(string.Format("Error decrypting data while testing keys."));
+                Logging.warn("Error decrypting data while testing keys.");
                 return false;
             }
 
             if (!verifySignature(plain, key_pair.publicKeyBytes, signature))
             {
-                Logging.warn(string.Format("Error verifying signature while testing keys."));
+                Logging.warn("Error verifying signature while testing keys.");
                 return false;
             }
 
 
             return true;
         }
-        
+
         // Generates keys for RSA signing
-        public IxianKeyPair generateKeys(int keySize, bool skip_header = false)
+        public IxianKeyPair generateKeys(int keySize, int version)
         {
             KeyPair kp = null;
             try
@@ -231,8 +243,8 @@ namespace CryptoLibs
                 kpg.Initialize(keySize);
                 kp = kpg.GenKeyPair();
                 IxianKeyPair ixi_kp = new IxianKeyPair();
-                ixi_kp.privateKeyBytes = rsaKeyToBytes(kp, true, skip_header);
-                ixi_kp.publicKeyBytes = rsaKeyToBytes(kp, false, skip_header);
+                ixi_kp.privateKeyBytes = rsaKeyToBytes(kp, true, version);
+                ixi_kp.publicKeyBytes = rsaKeyToBytes(kp, false, version);
 
                 byte[] plain = Encoding.UTF8.GetBytes("Plain text string");
                 if (!testKeys(plain, ixi_kp))
@@ -243,7 +255,7 @@ namespace CryptoLibs
             }
             catch (Exception e)
             {
-                Logging.warn(string.Format("Exception while generating signature keys: {0}", e.ToString()));
+                Logging.warn("Exception while generating signature keys: {0}", e.ToString());
                 return null;
             }
         }
@@ -262,7 +274,7 @@ namespace CryptoLibs
             }
             catch (Exception e)
             {
-                Logging.warn(string.Format("Cannot generate signature: {0}", e.Message));
+                Logging.warn("Cannot generate signature: {0}", e.Message);
             }
             return null;
         }
@@ -276,7 +288,7 @@ namespace CryptoLibs
 
                 if (kp == null)
                 {
-                    Logging.warn("Error occured while verifying signature {0}, invalid public key {1}", Crypto.hashToString(signature), Crypto.hashToString(publicKey));
+                    Logging.warn("Error occurred while verifying signature {0}, invalid public key {1}", Crypto.hashToString(signature), Crypto.hashToString(publicKey));
                     return false;
                 }
 
@@ -287,7 +299,7 @@ namespace CryptoLibs
             }
             catch (Exception e)
             {
-                Logging.warn("Error occured while verifying signature {0} with public key {1}: {2}", Crypto.hashToString(signature), Crypto.hashToString(publicKey), e.Message);
+                Logging.warn("Error occurred while verifying signature {0} with public key {1}: {2}", Crypto.hashToString(signature), Crypto.hashToString(publicKey), e.Message);
             }
             return false;
         }
@@ -326,8 +338,7 @@ namespace CryptoLibs
             int salt_size = outCipher.GetBlockSize();
             if (use_GCM)
             {
-                // TODO TODO GCM mode requires 12 bytes salt, enable it after the next release
-                //salt_size = 12;
+                salt_size = 12;
             }
             byte[] salt = getSecureRandomBytes(salt_size);
 
@@ -345,15 +356,15 @@ namespace CryptoLibs
             }
             catch (Exception e)
             {
-                Logging.error(string.Format("Error initializing encryption. {0}", e.ToString()));
+                Logging.error("Error initializing encryption. {0}", e.ToString());
                 return null;
             }
 
-           return bytes;
+            return bytes;
         }
 
         // Decrypt data using AES
-        public byte[] decryptWithAES(byte[] input, byte [] key, bool use_GCM, int inOffset = 0)
+        public byte[] decryptWithAES(byte[] input, byte[] key, bool use_GCM, int inOffset = 0)
         {
             string algo = AES_algorithm;
             if (use_GCM)
@@ -363,32 +374,15 @@ namespace CryptoLibs
 
             IBufferedCipher inCipher = CipherUtilities.GetCipher(algo);
 
-            int block_size = inCipher.GetBlockSize();
-            int salt_size = block_size;
-            if (use_GCM)
-            {
-                // GCM mode requires 12 bytes salt
-                salt_size = 12;
-            }
-
             byte[] bytes = null;
             try
             {
                 try
                 {
-                    byte[] salt = new byte[block_size];
-
-                    Array.Copy(input, inOffset, salt, 0, salt.Length);
-
-                    ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
-                    inCipher.Init(false, withIV);
-                    bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
-                }catch(Exception)
-                {
-                    // TODO TODO reverse contents in try and catch after next version release
-                    // try again using 12 bytes salt
                     if (use_GCM)
                     {
+                        // GCM mode requires 12 bytes salt
+                        int salt_size = 12;
                         byte[] salt = new byte[salt_size];
 
                         Array.Copy(input, inOffset, salt, 0, salt.Length);
@@ -396,7 +390,34 @@ namespace CryptoLibs
                         ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
                         inCipher.Init(false, withIV);
                         bytes = inCipher.DoFinal(input, inOffset + salt_size, input.Length - inOffset - salt_size);
-                    }else
+                    }
+                    else
+                    {
+                        int block_size = inCipher.GetBlockSize();
+                        byte[] salt = new byte[block_size];
+
+                        Array.Copy(input, inOffset, salt, 0, salt.Length);
+
+                        ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
+                        inCipher.Init(false, withIV);
+                        bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
+                    }
+                }
+                catch (Exception)
+                {
+                    // try again using normal salt - backwards compatibility, TODO TODO can be removed later
+                    if (use_GCM)
+                    {
+                        int block_size = inCipher.GetBlockSize();
+                        byte[] salt = new byte[block_size];
+
+                        Array.Copy(input, inOffset, salt, 0, salt.Length);
+
+                        ParametersWithIV withIV = new ParametersWithIV(new KeyParameter(key), salt);
+                        inCipher.Init(false, withIV);
+                        bytes = inCipher.DoFinal(input, inOffset + block_size, input.Length - inOffset - block_size);
+                    }
+                    else
                     {
                         bytes = null;
                         throw;
@@ -406,7 +427,7 @@ namespace CryptoLibs
             catch (Exception e)
             {
                 bytes = null;
-                Logging.error(string.Format("Error initializing decryption. {0}", e.ToString()));
+                Logging.error("Error initializing decryption. {0}", e.ToString());
             }
 
             return bytes;
@@ -437,7 +458,7 @@ namespace CryptoLibs
         public byte[] decryptWithPassword(byte[] data, string password, bool use_GCM)
         {
             byte[] salt = new byte[16];
-            for(int i = 0; i < 16; i++)
+            for (int i = 0; i < 16; i++)
             {
                 salt[i] = data[i];
             }
@@ -457,7 +478,7 @@ namespace CryptoLibs
             // Prevent leading 0 to avoid edge cases
             if (nonce[0] == 0)
                 nonce[0] = 1;
-            
+
             // Generate the Chacha engine
             var parms = new ParametersWithIV(new KeyParameter(key), nonce);
             var chacha = new ChaChaEngine(chacha_rounds);
@@ -494,7 +515,7 @@ namespace CryptoLibs
             return outData;
         }
 
-        public byte[] generateChildKey(byte[] parentKey, int seed = 0)
+        public byte[] generateChildKey(byte[] parentKey, int version, int seed = 0)
         {
             /*RSACryptoServiceProvider origRsa = rsaKeyFromBytes(parentKey);
             if(origRsa.PublicOnly)
@@ -527,7 +548,7 @@ namespace CryptoLibs
             AsymmetricCipherKeyPair keyPair = keyGen.GenerateKeyPair();
             //
             RSACryptoServiceProvider newRsa = (RSACryptoServiceProvider)DotNetUtilities.ToRSA((RsaPrivateCrtKeyParameters)keyPair.Private);
-            return rsaKeyToBytes(newRsa, true);*/
+            return rsaKeyToBytes(newRsa, true, version);*/
             return null;
         }
 
@@ -536,6 +557,107 @@ namespace CryptoLibs
             byte[] random_data = new byte[length];
             rngCsp.GetBytes(random_data);
             return random_data;
+        }
+
+        /// <summary>
+        ///  Computes a SHA3-256 value of the given data. It is possible to calculate the hash for a subset of the input data by
+        ///  using the `offset` and `count` parameters.
+        /// </summary>
+        /// <param name="data">Source data for hashing.</param>
+        /// <param name="offset">Byte offset into the data. Default = 0</param>
+        /// <param name="count">Number of bytes to use in the calculation. Default, 0, means use all available bytes.</param>
+        /// <returns>SHA3-256 hash of the input data.</returns>
+        public byte[] sha3_256(byte[] input, int offset = 0, int count = 0)
+        {
+            if (count == 0)
+            {
+                count = input.Length - offset;
+            }
+
+            var hashAlgorithm = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(256);
+
+            hashAlgorithm.BlockUpdate(input, offset, count);
+
+            byte[] result = new byte[32]; // 256 / 8 = 32
+            hashAlgorithm.DoFinal(result, 0);
+            return result;
+        }
+
+        /// <summary>
+        ///  Computes a SHA3-512 value of the given data. It is possible to calculate the hash for a subset of the input data by
+        ///  using the `offset` and `count` parameters.
+        /// </summary>
+        /// <param name="data">Source data for hashing.</param>
+        /// <param name="offset">Byte offset into the data. Default = 0</param>
+        /// <param name="count">Number of bytes to use in the calculation. Default, 0, means use all available bytes.</param>
+        /// <returns>SHA3-512 hash of the input data.</returns>
+        public byte[] sha3_512(byte[] input, int offset = 0, int count = 0)
+        {
+            if (sha3Algorithm512 == null)
+            {
+                sha3Algorithm512 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(512);
+            }
+            if (count == 0)
+            {
+                count = input.Length - offset;
+            }
+
+            sha3Algorithm512.BlockUpdate(input, offset, count);
+
+            byte[] result = new byte[64]; // 512 / 8 = 64
+            sha3Algorithm512.DoFinal(result, 0);
+            return result;
+        }
+
+        /// <summary>
+        ///  Computes a (SHA3-512)^2 value of the given data. It is possible to calculate the hash for a subset of the input data by
+        ///  using the `offset` and `count` parameters.
+        /// </summary>
+        /// <remarks>
+        ///  The term (SHA3-512)^2 in this case means hashing the value twice - e.g. using SHA3-512 again on the computed hash value.
+        /// </remarks>
+        /// <param name="input">Source data for hashing.</param>
+        /// <param name="offset">Byte offset into the data. Default = 0</param>
+        /// <param name="count">Number of bytes to use in the calculation. Default, 0, means use all available bytes.</param>
+        /// <returns>SHA3-512 squared hash of the input data.</returns>
+        public byte[] sha3_512sq(byte[] input, int offset = 0, int count = 0)
+        {
+            if (sha3Algorithm512 == null)
+            {
+                sha3Algorithm512 = new Org.BouncyCastle.Crypto.Digests.Sha3Digest(512);
+            }
+            if (count == 0)
+            {
+                count = input.Length - offset;
+            }
+
+            sha3Algorithm512.BlockUpdate(input, offset, count);
+
+            byte[] result = new byte[64]; // 512 / 8 = 64
+            sha3Algorithm512.DoFinal(result, 0);
+            sha3Algorithm512.BlockUpdate(result, 0, result.Length);
+            sha3Algorithm512.DoFinal(result, 0);
+            return result;
+        }
+
+        /// <summary>
+        ///  Computes a trunc(N, (SHA3-512)^2) value of the given data. It is possible to calculate the hash for a subset of the input data by
+        ///  using the `offset` and `count` parameters.
+        /// </summary>
+        /// <remarks>
+        ///  The term (SHA3-512)^2 in this case means hashing the value twice - e.g. using SHA3-512 again on the computed hash value.
+        ///  The trunc(N, X) function represents taking only the first `N` bytes of the byte-field `X`.
+        /// </remarks>
+        /// <param name="input">Source data for hashing.</param>
+        /// <param name="offset">Byte offset into the data. Default = 0</param>
+        /// <param name="count">Number of bytes to use in the calculation. Default, 0, means use all available bytes.</param>
+        /// <param name="hash_length">Number of bytes to keep from the truncated hash.</param>
+        /// <returns>SHA3-512 squared and truncated hash of the input data.</returns>
+        public byte[] sha3_512sqTrunc(byte[] data, int offset = 0, int count = 0, int hashLength = 44)
+        {
+            byte[] shaTrunc = new byte[hashLength];
+            Array.Copy(sha3_512sq(data, offset, count), shaTrunc, hashLength);
+            return shaTrunc;
         }
     }
 }

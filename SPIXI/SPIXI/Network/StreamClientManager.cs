@@ -258,7 +258,7 @@ namespace SPIXI
         // Connects to a specified node, with the syntax host:port
         // Returns the connected stream client
         // Returns null if connection failed
-        public static NetworkClient connectTo(string host, byte[] wallet_address)
+        public static NetworkClient connectTo(string host, Address wallet_address)
         {
             if (host == null || host.Length < 3)
             {

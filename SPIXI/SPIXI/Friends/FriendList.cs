@@ -35,7 +35,7 @@ namespace SPIXI
         }
 
         // Retrieves a friend based on the wallet_address
-        public static Friend getFriend(byte[] wallet_address)
+        public static Friend getFriend(Address wallet_address)
         {
             foreach (Friend friend in friends)
             {
@@ -48,7 +48,7 @@ namespace SPIXI
         }
 
         // Set the nickname for a specific wallet address
-        public static void setNickname(byte[] wallet_address, string nick, byte[] real_sender_address)
+        public static void setNickname(Address wallet_address, string nick, Address real_sender_address)
         {
             Friend friend = getFriend(wallet_address);
             if (friend == null)
@@ -117,7 +117,7 @@ namespace SPIXI
             }
         }
         // Set the avatar for a specific wallet address
-        public static void setAvatar(byte[] wallet_address, byte[] avatar, byte[] real_sender_address)
+        public static void setAvatar(Address wallet_address, byte[] avatar, Address real_sender_address)
         {
             Friend friend = getFriend(wallet_address);
             if (friend == null)
@@ -128,11 +128,11 @@ namespace SPIXI
             string address;
             if (friend.bot && real_sender_address != null)
             {
-                address = Base58Check.Base58CheckEncoding.EncodePlain(real_sender_address);
+                address = real_sender_address.ToString();
             }
             else
             {
-                address = Base58Check.Base58CheckEncoding.EncodePlain(wallet_address);
+                address = wallet_address.ToString();
             }
             Node.localStorage.deleteAvatar(address);
             if (avatar != null)
@@ -143,12 +143,12 @@ namespace SPIXI
             Node.shouldRefreshContacts = true;
         }
 
-        public static FriendMessage addMessage(byte[] id, byte[] wallet_address, int channel, string message, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true)
+        public static FriendMessage addMessage(byte[] id, Address wallet_address, int channel, string message, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true)
         {
             return addMessageWithType(id, FriendMessageType.standard, wallet_address, channel, message, false, sender_address, timestamp, fire_local_notification);
         }
 
-        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, byte[] wallet_address, int channel, string message, bool local_sender = false, byte[] sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
+        public static FriendMessage addMessageWithType(byte[] id, FriendMessageType type, Address wallet_address, int channel, string message, bool local_sender = false, Address sender_address = null, long timestamp = 0, bool fire_local_notification = true, int payable_data_len = 0)
         {
             Friend friend = getFriend(wallet_address);
             if(friend == null)
@@ -170,8 +170,8 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(mw))
                     {
-                        writer.WriteIxiVarInt(wallet_address.Length);
-                        writer.Write(wallet_address);
+                        writer.WriteIxiVarInt(wallet_address.addressWithChecksum.Length);
+                        writer.Write(wallet_address.addressWithChecksum);
 
                         CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
@@ -254,7 +254,7 @@ namespace SPIXI
                 }
                 else if(!local_sender)
                 {
-                    Logging.error("Message id sent by {0} is null!", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                    Logging.error("Message id sent by {0} is null!", friend.walletAddress.ToString());
                     return null;
                 }
                 messages.Add(friend_message);
@@ -305,7 +305,7 @@ namespace SPIXI
                             if (friend.bot == false
                                 || (friend.metaData.botInfo != null && friend.metaData.botInfo.sendNotification))
                             {
-                                DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+                                DependencyService.Get<IPushService>().showLocalNotification("Spixi", "New Message", friend.walletAddress.ToString());
                             }
                         }
                     }
@@ -327,7 +327,7 @@ namespace SPIXI
             friends = friends.OrderBy(x => x.nickname).ToList();
         }
 
-        public static Friend addFriend(byte[] wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
+        public static Friend addFriend(Address wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
         {
             Friend new_friend = new Friend(wallet_address, public_key, name, aes_key, chacha_key, key_generated_time, approved);
             return addFriend(new_friend);
@@ -353,7 +353,7 @@ namespace SPIXI
             {
                 lock (friendMatcher)
                 {
-                    if (friendMatcher.Add(new_friend.walletAddress) == Cuckoo.CuckooStatus.NotEnoughSpace)
+                    if (friendMatcher.Add(new_friend.walletAddress.addressNoChecksum) == Cuckoo.CuckooStatus.NotEnoughSpace)
                     {
                         // rebuild cuckoo filter with a larger size
                         friendMatcher = new Cuckoo(friendMatcher.numItems * 2);
@@ -361,7 +361,7 @@ namespace SPIXI
                         {
                             foreach (Friend f in friends)
                             {
-                                friendMatcher.Add(f.walletAddress);
+                                friendMatcher.Add(f.walletAddress.addressNoChecksum);
                             }
                         }
                     }
@@ -391,7 +391,7 @@ namespace SPIXI
             Node.localStorage.deleteMessages(friend.walletAddress);
 
             // Delete avatar
-            Node.localStorage.deleteAvatar(Base58Check.Base58CheckEncoding.EncodePlain(friend.walletAddress));
+            Node.localStorage.deleteAvatar(friend.walletAddress.ToString());
 
             lock (friends)
             {
@@ -403,7 +403,7 @@ namespace SPIXI
 
             lock(friendMatcher)
             {
-                friendMatcher.Delete(friend.walletAddress);
+                friendMatcher.Delete(friend.walletAddress.addressNoChecksum);
             }
 
             // Write changes to storage
@@ -415,7 +415,7 @@ namespace SPIXI
         }
 
         // Finds a presence entry's pubkey
-        public static byte[] findContactPubkey(byte[] wallet_address)
+        public static byte[] findContactPubkey(Address wallet_address)
         {
             Friend f = getFriend(wallet_address);
             if(f != null && f.publicKey != null)
@@ -432,7 +432,7 @@ namespace SPIXI
         }
 
         // Retrieve a presence entry connected S2 node. Returns null if not found
-        public static string getRelayHostname(byte[] wallet_address)
+        public static string getRelayHostname(Address wallet_address)
         {
             string hostname = null;
             Presence presence = PresenceList.getPresenceByAddress(wallet_address);
@@ -442,8 +442,8 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(mw))
                     {
-                        writer.WriteIxiVarInt(wallet_address.Length);
-                        writer.Write(wallet_address);
+                        writer.WriteIxiVarInt(wallet_address.addressWithChecksum.Length);
+                        writer.Write(wallet_address.addressWithChecksum);
 
                         CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, mw.ToArray(), null);
                     }
@@ -574,8 +574,8 @@ namespace SPIXI
                 {
                     using (BinaryWriter writer = new BinaryWriter(m))
                     {
-                        writer.WriteIxiVarInt(entry.walletAddress.Length);
-                        writer.Write(entry.walletAddress);
+                        writer.WriteIxiVarInt(entry.walletAddress.addressWithChecksum.Length);
+                        writer.Write(entry.walletAddress.addressWithChecksum);
 
                         CoreProtocolMessage.broadcastProtocolMessageToSingleRandomNode(new char[] { 'M', 'H' }, ProtocolMessageCode.getPresence2, m.ToArray(), 0, null);
                     }

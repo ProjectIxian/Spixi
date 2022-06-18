@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.GTK;
+using Xamarin.Forms.PlatformConfiguration;
 
 namespace SPIXI.GTK
 {

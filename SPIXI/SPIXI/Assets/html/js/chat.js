@@ -546,7 +546,7 @@ function addText(id, address, nick, avatar, text, time, className) {
         avatar = avatar.replace(/&#92;/g, '\\');
 
         var avatarEl = document.createElement('img');
-        avatarEl.className = "avatar selectable";
+        avatarEl.className = "avatar";
         avatarEl.src = avatar;
         if(nick == "")
         {
@@ -1506,6 +1506,14 @@ function hideUserTyping()
         clearTimeout(userTypingTimeout);
         userTypingTimeout = null;
 	}
+}
+
+function setUnreadIndicator(unread_count) {
+    if (unread_count != "0") {
+        document.getElementById("backbtn").className = "unread";
+    } else {
+        document.getElementById("backbtn").className = "";
+    }
 }
 
 // function getCaretPosition copied from https://stackoverflow.com/questions/3972014/get-contenteditable-caret-index-position

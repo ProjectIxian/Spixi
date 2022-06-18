@@ -17,7 +17,7 @@ namespace SPIXI.Meta
 {
     class Balance
     {
-        public byte[] address = null;
+        public Address address = null;
         public IxiNumber balance = 0;
         public ulong blockHeight = 0;
         public byte[] blockChecksum = null;
@@ -176,7 +176,7 @@ namespace SPIXI.Meta
             mainLoopThread.Start();
 
             // Init push service
-            string tag = Base58Check.Base58CheckEncoding.EncodePlain(IxianHandler.getWalletStorage().getPrimaryAddress());
+            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             var push_service = DependencyService.Get<IPushService>();            
             push_service.setTag(tag);
             push_service.initialize();
@@ -243,7 +243,7 @@ namespace SPIXI.Meta
         // Handle timer routines
         static public void mainLoop()
         {
-            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress();
+            byte[] primaryAddress = IxianHandler.getWalletStorage().getPrimaryAddress().addressWithChecksum;
             if (primaryAddress == null)
                 return;
 
@@ -368,11 +368,11 @@ namespace SPIXI.Meta
             Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
             if (p.GetType() == typeof(SingleChatPage))
             {
-                ((SingleChatPage)p).updateTransactionStatus(Transaction.txIdV8ToLegacy(txid), verified);
+                ((SingleChatPage)p).updateTransactionStatus(Transaction.getTxIdString(txid), verified);
             }
         }
 
-        public override void receivedBlockHeader(BlockHeader block_header, bool verified)
+        public override void receivedBlockHeader(Block block_header, bool verified)
         {
             if (balance.blockChecksum != null && balance.blockChecksum.SequenceEqual(block_header.blockChecksum))
             {
@@ -402,8 +402,10 @@ namespace SPIXI.Meta
 
         public override int getLastBlockVersion()
         {
-            if (tiv.getLastBlockHeader() == null || tiv.getLastBlockHeader().version < Block.maxVersion)
+            if (tiv.getLastBlockHeader() == null
+                || tiv.getLastBlockHeader().version < Block.maxVersion)
             {
+                // TODO Omega force to v10 after upgrade
                 return Block.maxVersion - 1;
             }
             return tiv.getLastBlockHeader().version;
@@ -419,27 +421,10 @@ namespace SPIXI.Meta
 
         public override Block getLastBlock()
         {
-            // TODO handle this more elegantly
-            BlockHeader bh = tiv.getLastBlockHeader();
-            return new Block()
-            {
-                blockNum = bh.blockNum,
-                blockChecksum = bh.blockChecksum,
-                lastBlockChecksum = bh.lastBlockChecksum,
-                lastSuperBlockChecksum = bh.lastSuperBlockChecksum,
-                lastSuperBlockNum = bh.lastSuperBlockNum,
-                difficulty = bh.difficulty,
-                superBlockSegments = bh.superBlockSegments,
-                timestamp = bh.timestamp,
-                transactions = bh.transactions,
-                version = bh.version,
-                walletStateChecksum = bh.walletStateChecksum,
-                signatureFreezeChecksum = bh.signatureFreezeChecksum,
-                compactedSigs = true
-            };
+            return tiv.getLastBlockHeader();
         }
 
-        public override Wallet getWallet(byte[] id)
+        public override Wallet getWallet(Address id)
         {
             // TODO Properly implement this for multiple addresses
             if (balance.address != null && id.SequenceEqual(balance.address))
@@ -449,7 +434,7 @@ namespace SPIXI.Meta
             return new Wallet(id, 0);
         }
 
-        public override IxiNumber getWalletBalance(byte[] id)
+        public override IxiNumber getWalletBalance(Address id)
         {
             // TODO Properly implement this for multiple addresses
             if (balance.address != null && id.SequenceEqual(balance.address))
@@ -487,7 +472,7 @@ namespace SPIXI.Meta
                     // if transaction expired, remove it from pending transactions
                     if (last_block_height > ConsensusConfig.getRedactedWindowSize() && t.blockHeight < last_block_height - ConsensusConfig.getRedactedWindowSize())
                     {
-                        Console.WriteLine("Error sending the transaction {0}", Transaction.txIdV8ToLegacy(t.id));
+                        Console.WriteLine("Error sending the transaction {0}", t.getTxIdString());
                         PendingTransactions.pendingTransactions.RemoveAll(x => x.transaction.id.SequenceEqual(t.id));
                         continue;
                     }
@@ -519,9 +504,15 @@ namespace SPIXI.Meta
             FriendList.onLowMemory();
         }
 
-        public override BlockHeader getBlockHeader(ulong blockNum)
+        public override Block getBlockHeader(ulong blockNum)
         {
             return BlockHeaderStorage.getBlockHeader(blockNum);
+        }
+
+        public override IxiNumber getMinSignerPowDifficulty(ulong blockNum)
+        {
+            // TODO TODO implement this properly
+            return ConsensusConfig.minBlockSignerPowDifficulty;
         }
     }
 }

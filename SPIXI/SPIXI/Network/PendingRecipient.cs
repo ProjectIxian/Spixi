@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using IXICore;
+using System.Collections.Generic;
 
 namespace SPIXI.Network
 {
@@ -10,9 +11,9 @@ namespace SPIXI.Network
     }
     class PendingRecipient
     {
-        public byte[] address = null;
+        public Address address = null;
         public List<PendingMessageHeader> messageQueue = new List<PendingMessageHeader>();
-        public PendingRecipient(byte[] address)
+        public PendingRecipient(Address address)
         {
             this.address = address;
         }
