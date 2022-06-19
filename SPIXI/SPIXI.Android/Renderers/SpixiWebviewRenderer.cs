@@ -132,7 +132,9 @@ namespace SPIXI.Droid.Renderers
 
             if (Control != null)
             {
-                Control.SetWebViewClient(new SpixiWebViewClient(this));
+                var _webview = new SpixiWebViewClient(this);
+                Control.Settings.AllowFileAccess = true;
+                Control.SetWebViewClient(_webview);
             }
         }
 
