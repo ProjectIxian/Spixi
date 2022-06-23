@@ -89,6 +89,9 @@ namespace SPIXI.Meta
 
             FriendList.init(Config.spixiUserFolder);
 
+            // Prepare the stream processor
+            StreamProcessor.initialize(Config.spixiUserFolder);
+
             Logging.info("Node init done");
 
             string backup_file_name = Path.Combine(Config.spixiUserFolder, "spixi.account.backup.ixi");
@@ -151,9 +154,6 @@ namespace SPIXI.Meta
 
             // Start the network queue
             NetworkQueue.start();
-
-            // Prepare the stream processor
-            StreamProcessor.initialize(Config.spixiUserFolder);
 
             // Start the keepalive thread
             PresenceList.startKeepAlive();
