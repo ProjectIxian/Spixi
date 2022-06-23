@@ -144,7 +144,7 @@ namespace SPIXI.Meta
             }
 
             // Start TIV
-            tiv.start(headers_path, block_height, block_checksum);
+            tiv.start(headers_path, block_height, block_checksum, true);
 
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
