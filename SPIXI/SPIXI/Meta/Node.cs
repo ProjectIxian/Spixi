@@ -262,21 +262,21 @@ namespace SPIXI.Meta
             {
                 try
                 {
+                    if (Config.enablePushNotifications)
+                        OfflinePushMessages.fetchPushMessages();
+
                     // Update the friendlist
                     FriendList.Update();
+
+                    // Cleanup the presence list
+                    // TODO: optimize this by using a different thread perhaps
+                    PresenceList.performCleanup();
 
                     // Request initial wallet balance
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
                         CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, getBalanceBytes, null);
                     }
-
-                    if (Config.enablePushNotifications)
-                        OfflinePushMessages.fetchPushMessages();
-
-                    // Cleanup the presence list
-                    // TODO: optimize this by using a different thread perhaps
-                    PresenceList.performCleanup();
                 }
                 catch (Exception e)
                 {
