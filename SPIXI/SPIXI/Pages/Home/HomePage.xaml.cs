@@ -786,23 +786,29 @@ namespace SPIXI
             updateContactStatus();
             loadTransactions();
 
-            string new_version = checkForUpdate();
-            if (!new_version.StartsWith("(") && new_version.CompareTo(Config.version) > 0)
+            try
             {
-                Utils.sendUiCommand(webView, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
-            }
-            else
-            {
-                // Check the ixian dlt
-                if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+                string new_version = checkForUpdate();
+                if (!new_version.StartsWith("(") && Version.Parse(new_version.Substring(new_version.IndexOf('-') + 1)).CompareTo(Version.Parse(Config.version.Substring(Config.version.IndexOf('-') + 1))) > 0)
                 {
-                    Utils.sendUiCommand(webView, "showWarning", "");
+                    Utils.sendUiCommand(webView, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
-                }
+                    // Check the ixian dlt
+                    if (NetworkClientManager.getConnectedClients(true).Count() > 0)
+                    {
+                        Utils.sendUiCommand(webView, "showWarning", "");
+                    }
+                    else
+                    {
+                        Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                    }
 
+                }
+            }catch (Exception e)
+            {
+                Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
             }
 
             Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);

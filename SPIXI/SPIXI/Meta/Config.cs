@@ -28,7 +28,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.6.9"; // Spixi version
+        public static readonly string version = "spixi-0.6.10"; // Spixi version
 
         public static readonly string checkVersionUrl = "https://www.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
@@ -43,8 +43,8 @@ namespace SPIXI.Meta
 
         // Temporary variables for bh sync recovery
         // Note: Always round last block height to 1000 and subtract 1 (i.e. if last block height is 33234, the correct value is 32999)
-        public static ulong bakedRecoveryBlockHeight = 1999999;
-        public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("207395a2794d3b42098401aa83c7f6e13f61ecfea4fbfc483bc03ae305ac953186f890132f6bfbe50edcb7c3");
+        public static ulong bakedRecoveryBlockHeight = 2339999;
+        public static byte[] bakedRecoveryBlockChecksum = Crypto.stringToHash("86603ccb42d882631f659298cd4873303f1d29588fc15fc7c0b92094d9ce6f79c5370fa99124260fb77735db");
 
         // VoIP settings, don't change
         public static readonly int VoIP_sampleRate = 16000;
