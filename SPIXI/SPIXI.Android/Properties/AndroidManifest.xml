@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.6.10" package="io.ixian.spixi" android:installLocation="auto" android:versionCode="0160000691">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.6.11" package="io.ixian.spixi" android:installLocation="auto" android:versionCode="0160000692">
 	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.INTERNET" />

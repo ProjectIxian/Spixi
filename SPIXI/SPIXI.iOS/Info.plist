@@ -28,7 +28,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>io.ixian.spixi</string>
 	<key>CFBundleVersion</key>
-	<string>0.6.10</string>
+	<string>0.6.11</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
@@ -54,6 +54,6 @@
 	<key>XSAppIconAssets</key>
 	<string>Media.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.10</string>
+	<string>0.6.11</string>
 </dict>
 </plist>
