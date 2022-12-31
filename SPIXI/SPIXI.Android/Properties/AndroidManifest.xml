@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.6.11" package="io.ixian.spixi" android:installLocation="auto" android:versionCode="0160000692">
-	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.6.12" package="io.ixian.spixi" android:installLocation="auto" android:versionCode="0160000693">
+	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
 	<uses-permission android:name="android.permission.USE_FINGERPRINT" />
 	<uses-feature android:name="android.hardware.audio.low_latency" android:required="false" />
 	<uses-feature android:name="android.hardware.audio.pro" android:required="false" />
-	<application android:label="Spixi" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_round_launcher">
+	<application android:label="Spixi" android:icon="@mipmap/ic_launcher">
 		<provider android:name="android.support.v4.content.FileProvider" android:authorities="com.ixian.provider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/provider_paths" />
 		</provider>
