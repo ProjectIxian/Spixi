@@ -1,0 +1,493 @@
+﻿language-code = ru-ru
+language = Русский
+
+; Address Screen
+address-title = Ваш кошелёк Spixi
+address-description = Ваш Spixi адрес связан с Вашим аккаунтом.<br />Это Ваш основной ID, используя который, Вы можете общаться с другими пользователями.
+address-copied = Адрес скопирован в буфер обмена
+address-gen-1 = Создаётся
+address-gen-1b = Подготавливается
+address-gen-2 = Ваш SPIXI
+address-gen-2b = SPIXI
+address-gen-3 = адрес
+address-gen-4 = ...
+address-tooltip = нажмите чтобы скопировать в буфер обмена
+
+; App Details Screen
+app-details-title = Приложение Spixi
+app-details-publisher = Издатель:
+app-details-version = Версия:
+app-details-uninstall = Удалить
+app-details-dialog-title = Менеджер приложений Spixi 
+app-details-dialog-removed-text = Приложение успешно удалено.
+app-details-dialog-removefailed-text = При удалении возникла ошибка.
+
+; New App Screen
+app-new-title = Новое приложение
+app-new-description = Для добавления нового приложение Spixi, вставьте его URL. Приложение будет загружено и установлено.
+app-new-install = УСТАНОВИТЬ
+app-new-dialog-title = Менеджер приложений Spixi
+app-new-dialog-installed-text = Приложение '{0}' успешно установлено.
+app-new-dialog-installfailed-text = При установке возникла ошибка.
+
+; Apps Screen
+apps-title = Приложения Spixi
+apps-empty = У Вас пока нет установленных приложений.
+
+; Chat Screen
+chat-sent-contact-request = отправлен запрос на добавление в контакты
+chat-accept = ПРИНЯТЬ
+chat-ignore = ИГНОРИРОВАТЬ
+chat-type-placeholder = Введите текст...
+chat-send-file = Отправить файл
+chat-request-payment = Запросить платёж
+chat-send-payment = Отправить платёж
+chat-status = Статус
+chat-amount = Количество
+chat-view = Детали
+chat-payment-request-sent = Запрос платежа ОТПРАВЛЕН
+chat-payment-request-received = Запрос платежа ПОЛУЧЕН
+chat-payment-sent = Платёж ОТПРАВЛЕН
+chat-payment-received = Платёж ПОЛУЧЕН
+chat-payment-status-waiting-confirmation = ОЖИДАНИЕ ПОДТВЕРЖДЕНИЯ
+chat-payment-status-declined = ОТКЛОНЕНО
+chat-payment-status-pending = ОЖИДАЕТСЯ
+chat-payment-status-confirmed = ПОДТВЕРЖДЕНО
+chat-call-outgoing = Исходящий вызов
+chat-call-incoming = Входящий вызов
+chat-call-no-answer = Нет ответа
+chat-call-missed = Пропущеyный вызов
+chat-call-ended = Завершен
+chat-online = В сети
+chat-offline = Не в сети
+chat-text-too-long = Слишком длинное сообщение.
+chat-member-count = {0} участников
+chat-context-pin-message = Закрепить сообщение
+chat-context-copy-message = Скопировать сообщение
+chat-context-copy-selected = Скопировать выделенное
+chat-context-tip-user = Пожертвовать IXI пользователю
+chat-context-like-message = Поставить Like
+chat-context-user-info = О пользователе
+chat-context-send-contact-request = Отправить запрос контакта
+chat-context-kick-user = ВЫГНАТЬ
+chat-context-ban-user = ЗАБАНИТЬ
+chat-context-delete-message = Удалить сообщение
+chat-message-cost-bar = Послать сообщение стоит {0} за kB
+
+chat-modal-tip-title = Пожертвовать {0}?
+chat-modal-tip-body = Выберите, или введите сумму для пожертвования
+chat-modal-tip-custom = ВВЕСТИ
+chat-modal-tip-pay-button = ОПЛАТИТЬ
+chat-modal-tip-confirmation-body = Вы собираетесь пожертвовать '{0}' {1}. Сумма будет списана с Вашего счёта.
+chat-modal-tip-confirmed-body = Вы пожертвовали '{0}' с {1}. Сумма будет списана с Вашего счёта.
+chat-modal-tip-error-body = Неизвестная ошибка обнаружена при попытке перечисления пожертвования пользователю.
+
+chat-bot-details-info = О БОТе
+chat-bot-address = Адрес БОТа
+chat-bot-toggle-notifications = Управление уведомлениями
+chat-bot-invite = Пригласить контакт в БОТа
+chat-bot-leave = Покинуть БОТа
+
+chat-bot-user-address = Адрес пользователя
+chat-bot-user-send-contact-request = Отправить запрос на добавление в контакты
+
+chat-modal-kick-title = Выгнать {0}?
+chat-modal-kick-body = Вы уверены, что желаете выгнать '{0}' с этого сервера?
+chat-modal-kick-kick-button = ВЫГНАТЬ ПОЛЬЗОВАТЕЛЯ
+chat-modal-kicked-title = Выгнано {0}
+chat-modal-kicked-body = Вы выгнали'{0}' с этого сервера.
+
+chat-modal-ban-title = Заблокировать {0}?
+chat-modal-ban-body = Вы уверены, что желаете заблокировать '{0}' с этого сервера?
+chat-modal-ban-ban-button = ЗАБЛОКИРОВАТЬ ПОЛЬЗОВАТЕЛЯ 
+chat-modal-banned-title = Заблокировано {0}
+chat-modal-banned-body = Вы заблокировали доступ '{0}' к этому серверу.
+
+chat-bot-not-ready-title = БОТ не готов
+chat-bot-not-ready-body = БОТ всё ещё не готов, повторите попытку через несколько минут.
+
+chat-kicked = Вас выгнали из этого группового чата. 
+chat-banned = Вас забанили в этом групповом чате. 
+
+; Contact Details Screen
+contact-details-chat = чат
+contact-details-send = отправить
+contact-details-receive = получить
+contact-details-notifications = Уведомления
+contact-details-history = История
+contact-details-account-address = Адрес Spixi 
+contact-details-address-1 = Восстановление
+contact-details-address-2 = SPIXI
+contact-details-address-3 = адреса...
+contact-details-removecontact = УДАЛИТЬ
+contact-details-removedcontact-title = Удалено
+contact-details-removedcontact-text = Контакт удалён из списка.
+contact-details-deletehistory = УДАЛИТЬ ИСТОРИЮ
+contact-details-deletedhistory-title = Удалено
+contact-details-deletedhistory-text = История сообщений удалена.
+
+; New Contact Screen
+contact-new-title = Новый Контакт
+contact-new-description = Добавить новый контакт Spixi по адресу или сканирование QR кода. Вскоре пользователь получит Ваш запрос.
+contact-new-placeholder = Вставьте / введите адрес
+contact-new-send-request = ПОСЛАТЬ ЗАПРОС НА ДОБАВЛЕНИЕ В СПИСОК КОНТАКТОВ
+contact-new-invalid-address-self-text = Адрес, который Вы указали принадлежит ВАМ.
+contact-new-invalid-address-exists-text = Адрес уже в Вашем контакт-листе.
+
+; Downloads Screen
+downloads-title = Загрузки
+downloads-empty = У Вас нет загруженных файлов.
+
+; Index Screen
+index-balance = IxiCash Баланс
+index-balance-info = * Нажать и удерживать чтобы скрыть
+index-balance-info2 = * Нажать и удерживать чтобы отобразить
+index-notifications = Уведомления
+index-unread-chats = Не прочитанное
+index-no-conversations = У Вас нет чатов.
+index-send = отправить
+index-activity = действия
+index-receive = получить
+index-recent-activity = Недавние действия
+index-contacts-placeholder = Поиск контактов
+index-tab-home = главная
+index-tab-chats = чаты
+index-tab-wallet = кошелёк
+index-tab-contacts = контакты
+index-new-title = НОВЫЙ
+index-new-contact = Контакт
+index-new-chat = Чат
+index-new-send = Запрос на отправку IXI
+index-new-request = Запрос на получение IXI
+index-new-cancel = ОТМЕНА
+index-side-title = Пользователь Spixi 
+index-side-myaddress = Ваш адрес Spixi 
+index-side-apps = Приложения
+index-side-downloads = Загрузки
+index-side-settings = Настройки
+index-side-security = Безопасность
+index-side-backup = Резервное копирование
+index-side-password = Пароль
+index-side-wixi = Конвертировать IxiCash 
+index-side-about = О проекте
+index-side-howtouse = Как пользоваться Spixi
+index-side-sendlog = Отправить Отчёт
+index-devmode = Режим разработчика активирован
+index-excerpt-payment-request-sent = Запрос на оплату отправлен
+index-excerpt-payment-request-received = Запрос на оплату получен
+index-excerpt-payment-sent = Платёж отправлен
+index-excerpt-payment-received = Платёж получен
+index-excerpt-contact-accepted = Запрос на добавление в контакт-лист принят
+index-excerpt-contact-request = Запрос на добавление в контакт-лист
+index-excerpt-file = Файл
+index-excerpt-voice-call = Голосовой Вызов
+index-excerpt-self = Я:
+
+; Intro Screen
+intro-title = Добро пожаловать в Spixi,
+intro-subtitle = децентрализованный и безопасный Чат, Кошелёк, и не только.
+intro-language-text = Выберите язык
+intro-text = Создайте или восстановите Ваш<br/>аккаунт Spixi, чтобы продолжить
+intro-create-account = НОВЫЙ АККАУНТ
+intro-restore-account = ВОССТАНОВИТЬ АККАУНТ
+
+; Intro New Screen
+intro-new-description-1 = Создать новый аккаунт Spixi
+intro-new-description-2 = Введите Ваше имя и выберите аватар
+intro-new-name-placeholder = Ваше Имя
+intro-new-change-image = Нажмите чтобы изменить аватар
+intro-new-next = ДАЛЕЕ
+intro-new-step-1 = Шаг 1 из 2
+intro-new-step-2 = Шаг 2 из 2
+intro-new-description-3 = Создайте Ваш пароль шифрования
+intro-new-description-4 = Для завершения конфигурирования Вашего Spixi аккаунта<br />создайте Ваш пароль шифрования.
+intro-new-password = Введите новый пароль шифрования
+intro-new-finish = ЗАВЕРШИТЬ
+intro-new-create-title = Ваш аккаунт<br />Spixi создаётся...
+intro-new-create-description = Это может занять некоторое время
+intro-new-password10 = Пароль должен быть не менее 10 символов в длинну
+intro-new-passwordconf = Повторите введённый пароль
+intro-new-passwordnomatch = Пароли не совпадают
+intro-new-passwordmatch = Пароли совпадают
+intro-new-emptynick-title = Ошибка имени
+intro-new-emptynick-text = Введите Ваше имя.
+intro-new-avatarerror-title = Ошибка аватара
+intro-new-walleterror-title = Ошибка
+intro-new-walleterror-text = Невозможно создать кошелёк. Попробуйте ещё раз.
+
+; Intro Restore Screen
+intro-restore-description-1 = Восстановить доступ к Вашему аккаунту Spixi
+intro-restore-description-2 = Вам необходим Файл Восстановления и пароль шифрования для восстановления существующего аккаунта Spixi на этом устройстве.
+intro-restore-password = Введите Ваш пароль шифрования
+intro-restore-selectfile = Выберите файл восстановления
+intro-restore-backupdescription = Выберите файл восстановления, для которого предназначен пароль шифрования
+intro-restore-action = ВОССТАНОВИТЬ
+intro-restore-title = Восстановление доступа к <br />Вашему Аккаунту Spixi
+intro-restore-info = Это может занять некоторое время
+intro-restore-file-error-title = Ошибка Файла
+intro-restore-file-selecterror-text = Ошибка при выборе файла восстановления.
+intro-restore-file-readerror-text = Ошибка чтения файла кошелька.
+intro-restore-file-writeerror-text = Ошибка сохранения кошелька.
+intro-restore-file-invalidpassword-title = Пароль не верный
+intro-restore-file-invalidpassword-text = Невозможно расшифровать кошелёк, попробуйте ещё раз.
+
+; Intro Retry Screen
+intro-retry-description-1 = Введите пароль шифрования повторно
+intro-retry-description-2 = Обнаружена проблема при получении доступа к аккаунту. Введите пароль, чтобы продолжить.
+intro-retry-placeholder = Введите пароль шифрования
+intro-retry-proceed = В ПРОЦЕССЕ
+intro-retry-title = Восстанавливается доступ к<br />Вашему кошельку
+intro-retry-info = Это может занять некоторое время
+intro-retry-invalidpassword-title = Пароль не верный
+intro-retry-invalidpassword-text = Невозможно расшифровать кошелёк, попробуйте ещё раз.
+
+
+; Lock Screen
+lock-description = Spixi ЗАБЛОКИРОВАНО
+lock-placeholder = Введите Ваш пароль для разблокировки
+lock-error = Пароль не верный
+lock-unlock = РАЗБЛОКИРОВАТЬ
+lock-change = CHANGE WALLET
+
+; Settings Screen
+settings-title = Настройки
+settings-save = СОХРАНИТЬ
+settings-cancel = ОТМЕНА
+settings-confirm = ПОДТВЕРДИТЬ
+settings-description = Изменение настроек и управление данными на устройстве.
+settings-account-information = Основные настройки
+settings-account-description = Изменение языка, аватара и имени.
+settings-account-language-edit = Язык
+settings-account-appearance-edit = Appearance
+settings-account-appearance-automatic = Automatic
+settings-account-appearance-light = Light
+settings-account-appearance-dark = Dark
+settings-account-image-edit = Аватар
+settings-account-nick-edit = Имя
+settings-account-nick-placeholder = Введите новое имя
+settings-account-deleteinfo = Вы в любой момент можете удалить этот аккаунт Spixi и все данные, связанные с ним на этом устройстве.<br /><br />ВАЖНО: Вам придётся осздать новый или восстановить имеющийся аккаунт, чтобы продолжить использовать Spixi на этом устройстве.
+settings-account-delete = УДАЛИТЬ ВАШ АККАУНТ
+settings-deletea-title = Удалить Ваш аккаунт Spixi?
+settings-deletea-text = Вы уверены, что хотите удалить Ваш аккаунт Spixi?<br/><br/>Это действие невозможно отменить! Рекомендуем сделать резервную копию аккаунта перед удалением. Вам понадобится файл восстановления, если Вы захотите когда-либо восстановить этот аккаунт.
+settings-deleteda-title = Удалено
+settings-deleteda-text = Аккаунт Spixi удалён.
+settings-wallet-settings = Настройки кошелька
+settings-wallet-description = Ваш кошелёк связан с Вашим аккаунтом Spixi. Для удаления кошелька, аккаунта и всей истории платажей на этом устройстве, нажмите &quot;Удалить ваш кошелёк&quot; кнопку ниже.
+settings-wallet-delete = УДАЛИТЬ ВАШ КОШЕЛЁК
+settings-deletew-title = Удалить этот кошелёк?
+settings-deletew-text = Вы уверены, что хотите удалить Ваш кошелёк?<br/><br/>Это действие невозможно отменить! Удалив этот кошелёк, Вы потеряете доступ ко всем средствам на нём! Для восстановления кошелька, Вам понадобится файл восстановления и пароль шифрования!
+settings-deletew-error-title = Ошибка
+settings-deletew-error-text = Невозможно удалить файл кошелька.
+settings-history = История сообщений
+settings-history-description = Вся Ваша история сообщений и все загруженные файлы хранятся на данном устройстве. Вы можете удалить всю историю сообщений или загрузки в любой момент, нажав на соответствуюшую кнопку ниже.
+settings-history-delete = УДАЛИТЬ ИСТОРИЮ СООБЩЕНИЙ
+settings-downloads-delete = УДАЛИТЬ ВСЕ ЗАГРУЗКИ
+settings-deleteh-title = Удалить историю сообщений?
+settings-deleteh-text = Вы уверены, что хотите удалить ВСЮ историю сообщений? Это действие невозможно отменить!
+settings-deletedh-title = Удалено
+settings-deletedh-text = История сообщений очищена.
+settings-deleted-title = Удалить все загрузки?
+settings-deleted-text = Вы уверены, что хотите удалить ВСЕ загрузки? Все файлы, которые Вы загружали через Spixi, будут удалены! Это действие невозможно отменить!
+settings-deletedd-title = Удалено
+settings-deletedd-text = Удалено {0} загруженных файлов.
+settings-deleted-error-title = Ошибка
+settings-deleted-error-text = Обнаружена неизвестная ошибка.
+settings-emptynick-title = Неправильное имя
+settings-emptynick-text = Введите Ваше имя.
+
+; Settings Backup Screen
+settings-backup-title = Резервное копирование аккаунта
+settings-backup-description = Загрузить файл, который позволит восстановить Ваш аккаунт Spixi.
+settings-backup-save = СОХРАНИТЬ ФАЙЛ ВОССТАНОВЛЕНИЯ
+settings-backup-account-save = BACKUP ACCOUNT
+settings-backup-notice = Этот файл восстановления и связанный с ним пароль шифрования, потребуются для восстановления доступа в следующих случаях:
+settings-backup-notice2 = - потеря устройства<br />- удаление Spixi с Вашего устройства<br />- удаление Вашего аккаунта Spixi<br />- удаление кошелька
+settings-backup-invalidpassword-title = Неправильный пароль
+settings-backup-invalidpassword-text = Введите правильный пароль.
+
+; Settings Encryption Screen
+settings-encryption-title = Пароль
+settings-encryption-description = Пароль шифрования - самый важный пароль Вашего аккаунта и кошелька. Он Вам понадобится для каждого восстановления доступа к аккаунту Spixi или кошельку.
+settings-encryption-edit = Изменить Ваш пароль шифрования
+settings-encryption-type = Введите Ваш <b>ТЕКУЩИЙ</b> пароль.
+settings-encryption-placeholder = Ваш текущий пароль шифрования
+settings-encryption-typenew = Введите Ваш <b>НОВЫЙ</b> пароль.
+settings-encryption-placeholdernew = Ваш новый пароль шифрования
+settings-encryption-placeholderretype = Повторите Ваш новый пароль шифрования
+settings-encryption-change = ИЗМЕНИТЬ ПАРОЛЬ
+settings-encryption-password10 = Пароль должен содержать минимум 10 символов
+settings-encryption-passwordconf = Введите подтверждение пароля
+settings-encryption-passwordnomatch = Пароли не совпадают
+settings-encryption-passwordmatch = Пароли соответствуют
+settings-encryption-invalidpassword-title = Неправильный пароль
+settings-encryption-invalidpassword-text = Введите правильный пароль.
+settings-encryption-passwordchanged-title = Пароль шифрования
+settings-encryption-passwordchanged-text = Пароль успешно изменён.
+settings-encryption-invalidpassword-current-text = Текущий пароль неправильный, попробуйте ещё раз.
+
+; Settings Lock Screen
+settings-lock-title = Заблокировать Ваш Spixi
+settings-lock-description = Создайте пароль блокировки Вашего Spixi, чтобы ограничить доступ других пользователей устройства.
+settings-lock-status = Статус безопасности:
+settings-lock-unlocked = РАЗБЛОКИРОВАНО
+settings-lock-locked = ЗАБЛОКИРОВАНО
+settings-lock-passwordinfo = Создать или изменить пароль блокировки
+settings-lock-password = Введите ваш <b>ТЕКУЩИЙ</b> пароль блокировки.
+settings-lock-password-new = Введите Ваш <b>НОВЫЙ</b> пароль блокировки.
+settings-lock-placeholder-1 = Введите Ваш пароль блокировки
+settings-lock-placeholder-2 = Введите Ваш новый пароль блокировки
+settings-lock-placeholder-3 = Повторите Ваш новый пароль блокировки
+settings-lock-info = Этот пароль требуется вводить при каждом запуске Spixi.
+settings-lock-save = УСТАНОВИТЬ ПАРОЛЬ БЛОКИРОВКИ
+settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
+settings-lock-confirm-text = In order to take effect, you will need to save your settings
+
+; Wallet Contact Request Screen
+wallet-contact-request-title = Запрос платежа
+wallet-contact-request-subtitle = Запрос платежа от:
+wallet-contact-request-amount = Запрошенная сумма
+wallet-contact-request-info = Пользователь запросил платёж на сумму
+wallet-contact-request-respond = Ответить на запрос платежа
+wallet-contact-request-respondinfo = Вы можете ответить на этот запрос отправив платёж. Отправитель будет уведомлен о Вашем решении.
+wallet-contact-request-decline = ОТКЛОНИТЬ
+wallet-contact-request-proceed = ОТПРАВИТЬ ПЛАТЁЖ
+
+; Wallet Recipient Screen
+wallet-recipient-title = Выбрать получателя
+wallet-recipient-search-placeholder = Поиск контактов
+wallet-recipient-empty = 0 получатели/-ей выбрано
+wallet-recipient-add = Добавить получателя/-ей
+wallet-recipient-selected = Получатель/-ей выбран
+
+; Wallet Request Screen
+wallet-request-title = Запросить платёж
+wallet-request-subtitle = Запросить точную сумму
+wallet-request-amount-placeholder = Введите сумму
+wallet-request-address = Текущий адрес
+wallet-request-send-info = Направить запрос получателям:
+wallet-request-add = Вы можете направить этот запрос с одинаковой суммой нескольким пользователям.<br/>Добавить пользователя/адрес, которому будет послан запрос.
+wallet-request-placeholder = Вставить/написать адрес
+wallet-request-send = ПОСЛАТЬ ЗАПРОС
+wallet-request-error-title = ОШИБКА
+wallet-request-error-text = Введите корректные данные в соответствующие поля.
+
+; Wallet Send Screen
+wallet-send-title = Отправить платёж
+wallet-send-add = Добавить получателя/-ей
+wallet-send-placeholder = Вставить/написать адрес
+wallet-send-more = Вы можете добавить получателей для этой транзакции. Платёж будет выполнен всем адресатам, КАЖДОМУ из которых будет отправленная УКАЗАННАЯ сумма.
+wallet-send-recipients = Получатель/-и
+wallet-send-norecipients = Получатели не указаны
+wallet-send-next = ДАЛЕЕ
+wallet-send-max = Отправить всё.
+
+; Wallet Send 2 Screen
+wallet-send2-title = Подтвердить платёж
+wallet-send2-policy = Комиссия за транзакцию
+wallet-send2-info = Каждый платёж включает текущую комиссию перевода, которая вычитается из отправляемой суммы.
+wallet-send2-feeinfo = Установить комиссию для этой транзакции. Выбрать из предустановок СРЕДНИЙ или ВЫСОКИЙ. Вы можете указать точный размер транзакции за KB. В случае увеличения нагрузки на сеть, размер комисии может оказать влияние на скорость осуществления платежа.
+wallet-send2-normal = Средний
+wallet-send2-high = Высокий
+wallet-send2-custom = Выбрать
+wallet-send2-placeholder = Введите размер комисии
+wallet-send2-amount = Сумма для отправки
+wallet-send2-fee = Суммарная комиссия
+wallet-send2-total = Сумма будет оплачена с баланса
+wallet-send2-send = ОТПРАВИТЬ ПЛАТЁЖ
+
+; Wallet Sent Screen
+wallet-sent-title = Платёж отправлен
+wallet-sent-subtitle = Платёж направлен к:
+wallet-sent-amount = Отправленная сумма
+wallet-sent-status = Статус платежа
+wallet-sent-confirmed = ПОДТВЕРЖДЕНО
+wallet-sent-unconfirmed = НЕ ПОДТВЕРЖДЕНО
+wallet-sent-details = Сумма, которую Вы отправили, была вычтена с Вашего баланса.
+wallet-sent-fee = Комиссия платежа
+wallet-sent-feeinfo = Каждый отправленный платёж имеет свою комиссию, которая вычитается из отправленной суммы.
+wallet-sent-txid = TXID
+wallet-sent-dismiss = ЗАКРЫТЬ
+wallet-sentrecv-title = Платёж получен
+wallet-sentrecv-subtitle = Платёж получен от
+wallet-sentrecv-amount = Полученная сумма
+wallet-sentrecv-details = Полученная сумма добавлена к Вашему балансу.
+
+; Wixi Send Screen
+wixi-send-title = Конвертировать IxiCash
+wixi-send-eth = Ethereum Адрес
+wixi-send-placeholder = Введите/вставьте/отсканируйте Ваш Ethereum адрес...
+wixi-send-more = WIXI будут отправлены на указанный адрес.
+wixi-send-amounttext = Сумма IXI, которую Вы хотите конвертировать в WIXI. Минимум 5,000,000 IXI.
+wixi-send-wrap = Конвертировать Ваш IxiCash
+
+; Wixi Sent Screen
+wixi-sent-title = Конвертация IxiCash а WIXI
+wixi-sent-subtitle = WIXI будут отправлены на ETH адрес:
+wixi-sent-amount = Конвертированная сумма
+wixi-sent-status = Статус перевода IxiCash
+wixi-sent-details = Сумма будет вычтена из Вашего баланса IxiCash. Вы получите эквивалент WIXI на Ваш ETH адрес.
+wixi-sent-txid = IxiCash TXID
+
+
+; Global wallet errors
+wallet-error-amount-title = Неправильная число
+wallet-error-amount-text = Введите правильное число.
+wallet-error-amountdecimal-text = Введтите корректное десятичное число.
+wallet-error-balance-title = Недостаточно средств
+wallet-error-balance-text = Ваш баланс недостаточен для этой транзакции. Суммарная стоимость этой транзакции {0}, но Ваш баланс {1}.
+
+; Onboarding join official bot
+onboarding-bot-title = Хотите присоединиться официальному БОТу Ixian?
+onboarding-bot-text = Присоединяйтесь к нашему официальному БОТу, где Вы можете рассказать нам, что Вы думаете о Spixi, быть в курсе обновлений и общаться напрямую с разработчиками и другими пользователями.
+onboarding-bot-join-button = ПРИСОЕДИНИТЬСЯ
+onboarding-bot-dont-join-button = НЕ ПРИСОЕДИНЯТЬСЯ
+
+; Onboarding Meet Spixi
+onboarding-screen1-title = Встречайте Spixi!
+onboarding-screen1-text = Основанный на блокчейне децентрализованный мессенджер с интегрированным криптовалютным кошельком.
+
+; Onboarding Your Address
+onboarding-screen2-title = Ваш Адрес Spixi
+onboarding-screen2-text = Ваш Spixi адрес - единственный Ваш идентификатор. Используйте его для взаимодействия с другими пользователями Spixi. Вы можете найти его в меню.
+
+; Onboarding Connect with your friends
+onboarding-screen3-title = Добавить друзей
+onboarding-screen3-text = Вы можете добавить Ваших друзей в контакт-лист Spixi просто отсканировав их QR код, или по адресу. Нажмите на кнопку 'Действие' и выберите 'Новый контакт'.
+
+; Onboarding send and receive payments
+onboarding-screen4-title = Отправка и получение переводов
+onboarding-screen4-text = Используйте встроенный кошелёк для быстрой отправки и получения IxiCash переводов. Вы можете это делать через кошелёк или чат, что так же просто, как отправить сообщение!
+onboarding-skip = ПРОПУСТИТЬ
+onboarding-finish = ЗАВЕРШИТЬ
+
+; Global
+global-connecting-s2 = Соединение с Ixian S2...
+global-connecting-dlt = Соединение с Ixian Network...
+global-received = ПОЛУЧЕНО
+global-sent = ОТПРАВЛЕНО
+global-app-accept = Принять
+global-app-reject = Отколонить
+global-app-wants-to-use = {0} хочет использовать {1} с Вами.
+global-call-in-call = На связи
+global-call-dialing = Набор
+global-call-incoming = Входящий вызов
+
+global-dialog-error = Ошибка
+global-dialog-ok = OK
+global-dialog-cancel = ОТМЕНА
+
+global-invalid-address-title = Неправильный адрес
+global-invalid-address-text = Введите правильный адрес кошелька.
+
+global-friend-request-accepted = {0} принял ваш запрос дружбы.
+
+global-update-available = Новая версия Spixi ({0}) доступна к скачиванию. Обновите программу, для доступа к новым функциям.
+
+global-modal-external-link-title = Вы собираетесь перейти по внешней ссылке
+global-modal-external-link-body = Вы собираетесь перейти по внешней ссылки {0}. Внешние ресурсы могут нести угрозу, будьте внимательны.
+global-modal-external-link-button-visit = ПОСЕТИТЬ
+
+
+global-lock-auth-text = Authentication required
+global-lock-invalidpassword-title = Authentication failed
+global-lock-invalidpassword-text = Type your wallet password to unlock Spixi

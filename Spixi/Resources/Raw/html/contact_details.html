@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar Contact -->
+        <div class="spixi-toolbar-contact" id="avatar">
+            <div id="backbtn" class="col-2" style="padding-top: 10px; padding-left: 0px;">
+                <i class="fas fa-arrow-circle-left"></i>
+            </div>
+            <div class="col-10"></div>
+
+            <div class="spixi-toolbar-contact-name" id="nickname" onclick="editNick();"></div>
+            <div class="spixi-toolbar-contact-status" id="status"></div>
+
+            <!-- OptionBar -->
+            <div class="spixi-optionbar spixi-optionbar-contact-details">
+                <div class="spixi-optionbar-frame container">
+                    <div class="row" id="">
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:chat">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-chat}</div>
+                            </a>
+                        </div>
+
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:send">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-send}</div>
+                            </a>
+                        </div>
+
+                        <div class="col-4 spixi-optionbar-tab">
+                            <a href="ixian:request">
+                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
+                                <div class="spixi-optionbar-label">*SL{contact-details-receive}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End OptionBar -->
+        </div>
+        <!-- End Toolbar Contact -->
+
+
+
+        <div id="exp1" class="spixi-expansion">
+            <div id="exp1-left" class="spixi-expansion-left"></div>
+            <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
+            <div class="spixi-expansion-text">*SL{contact-details-notifications} (<span id="notification_count">0</span>)</div>
+            <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
+        </div>
+        <div id="exp1-contents" class="spixi-expansion-middle" style="display: none;">
+
+        </div>
+        <div class="spixi-expansion-bottom"></div>
+
+
+
+
+        <div id="exp2" class="spixi-expansion">
+            <div id="exp2-left" class="spixi-expansion-left"></div>
+            <div class="spixi-expansion-icon"><i class="fa fa-history"></i></div>
+            <div class="spixi-expansion-text">*SL{contact-details-history}</div>
+            <div class="spixi-expansion-right"><i id="exp2-icon" class="fa fa-caret-down"></i></div>
+        </div>
+        <div id="exp2-contents" class="spixi-expansion-middle" style="display: none;">
+
+        </div>
+        <div class="spixi-expansion-bottom"></div>
+
+
+        <div class="spixi-holder-20"></div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{contact-details-account-address}
+        </div>
+        <hr class="spixi-separator" />
+
+        <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
+            <div class="address_qr" id="qrcode"></div>
+
+            <div id="toastbar" class="spixi-toastbar"><i class="fa fa-paste"></i>&nbsp; *SL{address-copied}</div>
+
+            <hr class="spixi-separator" />
+
+            <div id="wal1" class="spixi-text-address">*SL{contact-details-address-1}</div>
+            <div id="wal2" class="spixi-text-address">*SL{contact-details-address-2}</div>
+            <div id="wal3" class="spixi-text-address">*SL{contact-details-address-3}</div>
+            <div id="wal4" class="spixi-text-address"></div>
+
+            <hr class="spixi-separator" />
+            <div class="spixi-center spixi-italic spixi-text-address"><i class="fa fa-info-circle"></i> *SL{address-tooltip}</div>
+            <div class="spixi-holder-20"></div>
+
+        </div>
+
+        <hr class="spixi-separator-full" />
+        <div class="spixi-holder-20"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <div class="spixi-button center small smallwidth" onclick="location.href = 'ixian:remove';">
+                        *SL{contact-details-removecontact}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="spixi-button center small smallwidth" onclick="location.href = 'ixian:removehistory';">
+                        *SL{contact-details-deletehistory}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="spixi-holder-40"></div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        var wal_id = "";
+
+        var clipboard = new ClipboardJS('.address_qr_holder', {
+            text: function () {
+                return wal_id;
+            }
+        });
+
+        clipboard.on('success', function (e) {
+            e.clearSelection();
+
+            var x = document.getElementById("toastbar");
+            x.className = "spixi-toastbar show";
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+        });
+
+        clipboard.on('error', function (e) {
+
+        });
+
+        var qrcode = new QRCode("qrcode", {
+            text: "",
+            width: 200,
+            height: 200,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        function generateQR() {
+            qrcode.clear(); // clear the code.
+            qrcode.makeCode(wal_id);
+        }
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+
+        function setAddress(addr) {
+            wal_id = addr;
+            var parts = addr.match(/.{1,17}/g) || [];
+            document.getElementById("wal1").innerHTML = parts[0];
+            document.getElementById("wal2").innerHTML = parts[1];
+            document.getElementById("wal3").innerHTML = parts[2];
+            document.getElementById("wal4").innerHTML = parts[3];
+            generateQR();
+        }
+
+        function setNickname(nick) {
+            var nickEl = document.getElementById("nickname");
+            nickEl.setAttribute("nick", nick);
+            if(nickEl.innerHTML.indexOf("<input ") != 0)
+            {
+                nickEl.innerHTML = nick;
+            }
+        }
+
+        function setAvatar(avatarPath) {
+            avatarPath = avatarPath.replace(/&#92;/g, '/');
+            var avatarEl = document.getElementById("avatar");
+            avatarEl.style.backgroundImage = "url('" + avatarPath + "')";
+
+            avatarEl.style.backgroundRepeat = "no-repeat";
+            avatarEl.style.backgroundPosition = "center center";
+            avatarEl.style.backgroundSize = "cover";
+        }
+
+        function showIndicator(ind) {
+            if (ind == "true") {
+                document.getElementById("status").innerHTML = "online";
+            } else {
+                document.getElementById("status").innerHTML = "offline";
+            }
+        }
+
+
+        // Clears payment activity from wallet page
+        function clearRecentActivity() {
+            var paymentsNode = document.getElementById("exp2-contents");
+            while (paymentsNode.firstChild) {
+                paymentsNode.removeChild(paymentsNode.firstChild);
+            }
+        }
+
+        // Adds a payment
+        function addPaymentActivity(txid, text, timestamp, amount, confirmed) {
+            var iconClass = "spixi-text-red";
+            var icon = '<i class="fa fa-circle-notch fa-spin"></i>';
+            if (confirmed == "true") {
+                iconClass = "spixi-text-green";
+                icon = '<i class="fa fa-check-circle"></i>';
+            }else if(confirmed == "error")
+            {
+                iconClass = "spixi-text-red";
+                icon = '<i class="fa fa-exclamation-circle"></i>';
+            }
+
+            var paymentsNode = document.getElementById("exp2-contents");
+
+            var paymentEntry = document.createElement("div");
+            paymentEntry.className = "spixi-list-item payment";
+            paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-timestamp">' + timestamp + '</div></div></div></a>';
+
+            paymentsNode.appendChild(paymentEntry);
+        }
+
+        document.getElementById("exp1").onclick = function () {
+            var x = document.getElementById("exp1-contents");
+            var eleft = document.getElementById("exp1-left");
+            var eicon = document.getElementById("exp1-icon");
+
+
+
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                eleft.className = "spixi-expansion-left active";
+                eicon.className = "fa fa-minus";
+            }
+            else {
+                x.style.display = "none";
+                eleft.className = "spixi-expansion-left";
+                eicon.className = "fa fa-caret-down";
+
+            }
+
+        }
+
+
+
+        document.getElementById("exp2").onclick = function () {
+            var x = document.getElementById("exp2-contents");
+            var eleft = document.getElementById("exp2-left");
+            var eicon = document.getElementById("exp2-icon");
+
+
+
+            if (x.style.display === "none") {
+                x.style.display = "block";
+                eleft.className = "spixi-expansion-left active";
+                eicon.className = "fa fa-minus";
+            }
+            else {
+                x.style.display = "none";
+                eleft.className = "spixi-expansion-left";
+                eicon.className = "fa fa-caret-down";
+
+            }
+        }
+
+        function editNick()
+        {
+            var nickEl = document.getElementById("nickname");
+            nickEl.innerHTML = "<input type=\"text\" value=\"\" onblur=\"setUserDefinedNick(this.value);\" onclick=\"event.stopPropagation();\"/>";
+            nickEl.firstElementChild.focus();
+        }
+
+        function setUserDefinedNick(nick)
+        {
+            var nickEl = document.getElementById("nickname");
+            if(nick == "")
+            {
+                nickEl.innerHTML = nickEl.getAttribute("nick");
+            }else
+            {
+                nickEl.innerHTML = nick;
+            }
+
+            location.href = "ixian:userdefinednick:" + nick;
+        }
+    </script>
+</body>
+</html>

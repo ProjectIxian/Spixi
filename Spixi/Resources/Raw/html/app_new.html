@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn" onclick="location.href = 'ixian:back';">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{app-new-title}
+                </div>
+                <div>
+                </div>
+            </div>
+
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div class="container">
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{app-new-description}</div>
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="addressInput" oninput="checkAddress()" placeholder="Paste / type address">
+        </div>
+
+        <hr class="spixi-separator-main" />
+
+        <div id="sendrequest" class="spixi-button large center disabled">
+            <i class="fas fa-check"></i>&nbsp; *SL{app-new-install}
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        var sendrequest = document.getElementById("sendrequest");
+
+        sendrequest.onclick = function () {
+            var url = document.getElementById("addressInput").value;
+            location.href = "ixian:install:" + url;
+        }
+
+        function checkAddress() {
+            sendrequest.className = "spixi-button large center disabled";
+
+            var address = $("#addressInput").val();
+            if (address.length > 5) {
+                sendrequest.className = "spixi-button large center";
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>

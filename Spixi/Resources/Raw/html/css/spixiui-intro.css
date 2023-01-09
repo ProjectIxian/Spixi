@@ -1,0 +1,429 @@
+/*
+ * SPIXI User Interface Kit
+ * https://ixian.io | https://spixi.io
+ */
+
+/* Fonts */
+@font-face {
+    font-family: 'roboto';
+    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'roboto';
+    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+/* General */
+body, html, * {
+    font-family: 'roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #d0acbe;
+  opacity: 1; /* Firefox */
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #d0acbe;
+}
+
+#wrap {
+    padding: 0 0;
+    /* Prevent overscroll bounce  */
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    color: #FFF;
+    background: linear-gradient(#291046, #ad1457);
+}
+
+.center {
+    text-align: center;
+}
+
+.intro-main
+{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.intro-top
+{
+    display: table-row;
+    height: auto;
+}
+
+.intro-top-wrapper
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.intro-bottom
+{
+    display: table-row;
+    height: 100px;
+}
+
+/* Misc */
+.noselect {
+    /* pointer-events: none; // for Android */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.selectable {
+    -webkit-touch-callout: initial; /* iOS Safari */
+    -webkit-user-select: auto; /* Safari */
+    -khtml-user-select: auto; /* Konqueror HTML */
+    -moz-user-select: all; /* Firefox */
+    -ms-user-select: text; /* Internet Explorer/Edge */
+    user-select: initial; /* Non-prefixed version, currently
+                    supported by Chrome and Opera */
+}
+
+/* Placeholders */
+.intro-holder-20 {
+    width: 100%;
+    height: 20px;
+}
+.intro-holder-70 {
+    width: 100%;
+    height: 70px;
+}
+.intro-holder-96 {
+    width: 100%;
+    height: 96px;
+}
+
+.intro-logo {
+    width: 85px;
+    height: 97px;
+}
+.intro-logo-holder {
+    text-align: center;
+}
+.intro-logo-holder2 {
+    text-align: center;
+    margin-top: 34px;
+}
+
+.intro-toolbar-logo {
+    width: 122px;
+    height: 40px;
+}
+
+.intro-title {
+    width: 100%;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 13pt;
+    padding: 0px 5%;
+    font-weight: bold;
+}
+.intro-subtitle {
+    width: 100%;
+    margin-top: 0px;
+    text-align: center;
+    font-size: 10pt;
+    padding: 0px 10%;
+}
+
+
+.intro-separator {
+    height: 1px;
+    color: rgba(0,0,0,0.12);
+    width: 85%;
+}
+
+.intro-text,
+.intro-language-text {
+    font-size: 10pt;
+}
+.intro-text.left {
+    margin-left: 24px;
+}
+
+.intro-textfield {
+    width: 100%;
+    height: 44px;
+    
+    background: #9d587d;
+    border: solid 1px #d0acbe;
+    outline: none;
+    border-radius: 64px;
+    
+    color: #d0acbe;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+.intro-textfield:focus {
+    border: solid 1px #FFF;
+    color: #fff;
+}
+.intro-textfield-holder {
+    width: 85%;
+    margin: auto;
+    padding-top: 14px;
+    padding-bottom: 6px;
+}
+
+/* Buttons */
+.intro-button {
+    
+    width: 180pt;
+    padding: 8pt;
+
+    text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+
+    
+    color: #ad1457;
+    background: #fefcfd;
+    border-radius: 360px;
+    box-shadow:11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+}
+.intro-button:hover {
+    background: #ffcbe5;
+    box-shadow: 0px 0px;
+}
+.intro-button:active {
+    background: #4e385b;
+    color: #fff;
+    box-shadow: 0px 0px;
+}
+.intro-button.ghost {
+    background-color: transparent;
+    color: #f7f7f7;
+    border: 2px solid #fff;
+}
+.intro-button.ghost:hover {
+    background: rgba(255, 255, 255, 0.24);
+}
+.intro-button.ghost:active {
+    background:  rgba(50, 15, 68, 0.24);
+    box-shadow: 0px 0px;
+}
+.intro-button.center {
+    margin: auto;
+}
+.intro-button.left {
+    margin-top: 10px;
+    margin-left: 24px;
+}
+.intro-button.disabled {
+    background: #c14c7f;
+    color: #ad1457;
+    box-shadow: 0px 0px;
+}
+
+.intro-button.round {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    box-shadow: 0px 0px;
+
+    padding: 0px;
+    padding-top: 14px;
+    font-size: 18pt;
+    color: #fff;
+    background: #2a1b22;
+}
+.intro-button.small {
+    height:36px;
+    border-radius: 18px;
+    padding-top: 8px;
+    font-size: 10pt;
+    width: 160px;
+    margin-left: 20px;
+}
+.intro-button.round:hover {
+    background: #73c1ee;
+}
+.intro-button.round:active {
+    background: #634e8e;
+}
+
+
+.language-selector
+{
+    position: relative;
+    text-align: left;
+    color: black;
+    padding-left: 14pt;
+    padding-right: 14pt;
+}
+
+.language-selector .fa-sort-down
+{
+    float: right;
+}
+
+.language-selector ul {
+    display: none;
+    position: absolute;
+    overflow: auto;
+    background: #ffcbe5;
+    border-radius: 20px;
+    list-style: none;
+    padding: 0px;
+    width: 100%;
+    margin: 0px;
+    margin-top: 15px;
+    margin-left: -14pt;
+    box-shadow: 11px 18px 21px 0px rgba(1, 1, 1, 0.18);
+}
+
+.language-selector ul li
+{
+    padding: 8pt 14pt;
+}
+
+.language-selector ul li:hover
+{
+    background: white;
+}
+
+.intro-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 64px;
+    margin-top: -14px;
+}
+
+.intro-backarrow {
+    position: absolute;
+    margin-left: 20px;
+    margin-top: 20px;
+    font-size: 16pt;
+}
+
+.intro-descriptionbar {
+    margin-top: 30px;
+}
+
+.intro-descriptionbar .row
+{
+    width: 100%;
+    padding: 0px 5%;
+}
+
+.intro-descriptionbar-icon {
+    font-size: 24pt;
+}
+
+.intro-passworddetails {
+    margin-left: 50px;
+}
+
+.intro-stepper-holder {
+    width: 55px;
+    height: 10px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.intro-stepper {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #e15887;
+    margin-left: 10px;
+    float: left;
+}
+.intro-stepper.right {
+    float: none;
+    margin-left: 35px;
+}
+.intro-stepper.active {
+    background-color: #fff;
+}
+
+.intro-stepper-text {
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 11pt;
+}
+
+.intro-overlay {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#951453, #2b0f45);
+    z-index: 99;
+    color: #FFFFFF;
+}
+.intro-overlay-title {
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12pt;
+}
+.intro-overlay-loading {
+    width: 107px;
+    height: 107px;
+    border-radius: 107px;
+    background-image: url('../img/introloading.png');
+    background-size: 107px 107px;
+    margin: auto;
+    margin-top: 30px;
+    animation: shadow-pulse 1s infinite;
+}
+.intro-overlay-info {
+    margin-top: 40px;
+    font-size: 10pt;
+    text-align: center;
+}
+.intro-overlay-ixian {
+    width: 148px;
+    height: 39px;
+    background-image: url('../img/poweredbyixian.png');
+    background-size: 148px 39px;
+    margin: auto;
+    margin-top: 15px;
+}
+
+#step1, #step2
+{
+    margin: 0 auto;
+    max-width: 300pt;
+    width: 100%;
+}
+
+@keyframes shadow-pulse
+{
+     0% {
+          box-shadow: 0 0 0 0px rgba(160, 0, 0, 0.4);
+     }
+     100% {
+          box-shadow: 0 0 0 55px rgba(0, 0, 0, 0);
+     }
+}

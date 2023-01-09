@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body>
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{settings-lock-title}
+                </div>
+                <div>
+                </div>
+            </div>
+
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div class="container">
+                <div class="row spixi-descriptionbar-row">
+                    <div class="col-2 spixi-center"><i class="fa fa-lock"></i></div>
+                    <div class="col-10 spixi-descriptionbar-row-details">*SL{settings-lock-description}</div>
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+
+        <div class="spixi-holder-20"></div>
+
+        <div class="spixi-textsection-holder ">
+            <div class="spixi-textsection-header">*SL{settings-lock-status}</div>
+        </div>
+
+        <div id="switchdescription" class="spixi-switch-description">*SL{settings-lock-unlocked}</div>
+        <div id="switch" class="spixi-switch off"></div>
+
+        <div class="spixi-holder-40"></div>
+
+        <div id="securitycontents" style="display: none;">
+            <hr class="spixi-separator-main" />
+
+
+            <div class="spixi-textsection-holder spixi-textsection-header">
+                *SL{settings-lock-passwordinfo}
+            </div>
+
+            <hr class="spixi-separator" />
+
+            <div class="spixi-textsection-holder">
+                *SL{settings-lock-password}
+            </div>
+            <div class="spixi-textfield-holder ">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-1}">
+            </div>
+
+            <hr class="spixi-separator" />
+
+            <div class="spixi-textsection-holder">
+                *SL{settings-lock-password-new}
+            </div>
+            <div class="spixi-textfield-holder ">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-2}">
+            </div>
+            <div class="spixi-textfield-holder smallpadding">
+                <input type="password" class="spixi-textfield" id="addressInput" onkeyup="" placeholder="*SL{settings-lock-placeholder-3}">
+            </div>
+            <hr class="spixi-separator" />
+            <div class="spixi-center spixi-text-address"><i class="fa fa-info-circle"></i> *SL{settings-lock-info}</div>
+
+            <div class="spixi-holder-20"></div>
+            <div class="spixi-holder-20"></div>
+
+            <div id="sendrequest" class="spixi-button disabled padding-left">
+                *SL{settings-lock-save}
+            </div>
+        </div>
+
+        <div class="spixi-holder-20"></div>
+
+
+    </div>
+
+
+    <script type="text/javascript">
+        var switchbtn = document.getElementById("switch");
+        var securitycontents = document.getElementById("securitycontents");
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        switchbtn.onclick = function () {
+            if (switchbtn.classList.contains("off")) {
+                securitycontents.style.display = "block";
+                switchbtn.className = "spixi-switch";
+                document.getElementById("switchdescription").innerHTML = "*SL{settings-lock-locked}";
+                return;
+            }
+            switchbtn.className = "spixi-switch off";
+            securitycontents.style.display = "none";
+            document.getElementById("switchdescription").innerHTML = "*SL{settings-lock-unlocked}";
+
+        }
+
+        document.getElementById("sendrequest").onclick = function () {
+            var wal = document.getElementById("addressInput").value;
+            if (isBlank(wal)) {
+                location.href = "ixian:error";
+                return;
+            }
+            location.href = "ixian:request:" + wal;
+        }
+
+        function setAddress(addr) {
+            document.getElementById("addressInput").value = addr;
+        }
+
+
+    </script>
+
+</body>
+</html>
