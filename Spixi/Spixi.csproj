@@ -36,41 +36,61 @@
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<MtouchLink>SdkOnly</MtouchLink>
+	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-ios'">
 	  <ProvisioningType>automatic</ProvisioningType>
 	  <CodesignKey>iPhone Developer</CodesignKey>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-ios|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android31.0|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android31.0|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>com.companyname.spixi</ApplicationId>
+	  <ApplicationId>io.ixian.spixi</ApplicationId>
+	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+	  <ApplicationVersion>0170000770</ApplicationVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
