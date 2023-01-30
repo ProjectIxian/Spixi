@@ -231,29 +231,10 @@ namespace SPIXI
                 string id = split[1];
                 byte[] b_txid = Transaction.txIdLegacyToV8(id);
 
-                Transaction transaction = null;
-                foreach (Transaction tx in TransactionCache.transactions)
-                {
-                    if (tx.id.SequenceEqual(b_txid))
-                    {
-                        transaction = tx;
-                        break;
-                    }
-                }
-
+                Transaction transaction = TransactionCache.getTransaction(b_txid);
                 if (transaction == null)
                 {
-                    lock (TransactionCache.unconfirmedTransactions)
-                    {
-                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
-                        {
-                            if (tx.id.SequenceEqual(b_txid))
-                            {
-                                transaction = tx;
-                                break;
-                            }
-                        }
-                    }
+                    transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
 
                     if (transaction == null)
                     {

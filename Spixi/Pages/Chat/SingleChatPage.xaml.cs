@@ -570,30 +570,10 @@ namespace SPIXI
                 }
                 byte[] b_id = Transaction.txIdLegacyToV8(id);
 
-                Transaction transaction = null;
-                foreach (Transaction tx in TransactionCache.transactions)
-                {
-                    if (tx.id.SequenceEqual(b_id))
-                    {
-                        transaction = tx;
-                        break;
-                    }
-                }
-
+                Transaction transaction = TransactionCache.getTransaction(b_id);
                 if (transaction == null)
                 {
-                    lock (TransactionCache.unconfirmedTransactions)
-                    {
-                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
-                        {
-                            if (tx.id.SequenceEqual(b_id))
-                            {
-                                transaction = tx;
-                                break;
-                            }
-                        }
-                    }
-
+                    transaction = TransactionCache.getUnconfirmedTransaction(b_id);
                     if (transaction == null)
                     {
                         return;

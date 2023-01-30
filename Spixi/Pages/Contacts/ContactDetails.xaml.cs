@@ -91,29 +91,10 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:txdetails:" }, StringSplitOptions.None);
                 byte[] id = Transaction.txIdLegacyToV8(split[1]);
 
-                Transaction transaction = null;
-                foreach (Transaction tx in TransactionCache.transactions)
-                {
-                    if (tx.id.SequenceEqual(id))
-                    {
-                        transaction = tx;
-                        break;
-                    }
-                }
-
+                Transaction transaction = TransactionCache.getTransaction(id);
                 if (transaction == null)
                 {
-                    lock (TransactionCache.unconfirmedTransactions)
-                    {
-                        foreach (Transaction tx in TransactionCache.unconfirmedTransactions)
-                        {
-                            if (tx.id.SequenceEqual(id))
-                            {
-                                transaction = tx;
-                                break;
-                            }
-                        }
-                    }
+                    transaction = TransactionCache.getUnconfirmedTransaction(id);
 
                     if (transaction == null)
                     {
