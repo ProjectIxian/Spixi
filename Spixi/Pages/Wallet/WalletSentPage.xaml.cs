@@ -103,11 +103,11 @@ namespace SPIXI
                     Friend friend = FriendList.getFriend(entry.Key);
                     if (friend != null)
                     {
-                        Utils.sendUiCommand(webView, "addSender", friend.nickname + ": " + entry.Value.ToString(), time);
+                        Utils.sendUiCommand(webView, "addSender", friend.nickname + ": " + entry.Value.amount.ToString(), time);
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "addSender", entry.Key.ToString() + ": " + entry.Value.ToString(), time);
+                        Utils.sendUiCommand(webView, "addSender", entry.Key.ToString() + ": " + entry.Value.amount.ToString(), time);
                     }
                 }
             }
