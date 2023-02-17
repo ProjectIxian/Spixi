@@ -1,6 +1,5 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using Microsoft.Maui.ApplicationModel;
 using SPIXI;
 using SPIXI.Lang;
 using SPIXI.Meta;
@@ -24,6 +23,8 @@ public partial class App : Application
     public static bool isInForeground { get; set; } = false;
 
     Node node = null;
+
+    public static Window appWindow { get; private set; } = null;
 
     public static string startingScreen = ""; // Which screen to start on
 
@@ -205,9 +206,26 @@ public partial class App : Application
         if (window != null)
         {
             window.Title = "Spixi IM";
+            if (appWindow == null)
+            {
+                window.Destroying += (s, e) =>
+                {
+                    Shutdown();
+                };
+                appWindow = window;
+            }
         }
         return window;
     }
 
+    public static void Shutdown()
+    {
+        IxianHandler.shutdown();
+        while (IxianHandler.status != NodeStatus.stopped)
+        {
+            Thread.Sleep(10);
+        }
+        Environment.Exit(0);
+    }
 
 }

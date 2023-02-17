@@ -52,7 +52,8 @@ namespace SPIXI
             // Force stopping of reconnect thread
             if (reconnectThread == null)
                 return;
-            reconnectThread.Abort();
+
+            reconnectThread.Interrupt();
             reconnectThread = null;
         }
 
@@ -170,34 +171,42 @@ namespace SPIXI
 
         private static void reconnectClients()
         {
-            Random rnd = new Random();
-
-            // Wait 5 seconds before starting the loop
-            Thread.Sleep(CoreConfig.networkClientReconnectInterval);
-
-            while (autoReconnect)
+            try
             {
-                try
+                Random rnd = new Random();
+
+                // Wait 5 seconds before starting the loop
+                Thread.Sleep(CoreConfig.networkClientReconnectInterval);
+
+                while (autoReconnect)
                 {
-                    handleDisconnectedClients();
-
-                    string[] netClients = getConnectedClients();
-
-                    // Check if we need to connect to more neighbors
-                    if (netClients.Length < 1 || !netClients.Contains(primaryS2Address))
+                    try
                     {
-                        // Scan for and connect to a new neighbor
-                        connectToRandomStreamNode();
+                        handleDisconnectedClients();
+
+                        string[] netClients = getConnectedClients();
+
+                        // Check if we need to connect to more neighbors
+                        if (netClients.Length < 1 || !netClients.Contains(primaryS2Address))
+                        {
+                            // Scan for and connect to a new neighbor
+                            connectToRandomStreamNode();
+                        }
+
+                        connectToBotNodes();
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Error trying to reconnect stream clients: " + e);
                     }
 
-                    connectToBotNodes();
-                }catch(Exception e)
-                {
-                    Logging.error("Error trying to reconnect stream clients: " + e);
+                    // Wait 5 seconds before rechecking
+                    Thread.Sleep(CoreConfig.networkClientReconnectInterval);
                 }
+            }
+            catch (ThreadInterruptedException)
+            {
 
-                // Wait 5 seconds before rechecking
-                Thread.Sleep(CoreConfig.networkClientReconnectInterval);
             }
         }
 

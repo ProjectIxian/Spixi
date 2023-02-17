@@ -7,6 +7,7 @@ using SPIXI.CustomApps;
 using SPIXI.Interfaces;
 using SPIXI.Network;
 using SPIXI.Storage;
+using System.Threading;
 
 namespace SPIXI.Meta
 {
@@ -162,7 +163,8 @@ namespace SPIXI.Meta
 
             if (mainLoopThread != null)
             {
-                mainLoopThread.Abort();
+                mainLoopThread.Interrupt();
+                mainLoopThread.Join();
                 mainLoopThread = null;
             }
 

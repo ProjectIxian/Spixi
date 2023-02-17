@@ -194,7 +194,8 @@ namespace SPIXI.VoIP
             {
                 try
                 {
-                    lastPacketReceivedCheckThread.Abort();
+                    lastPacketReceivedCheckThread.Interrupt();
+                    lastPacketReceivedCheckThread.Join();
                 }
                 catch (Exception)
                 {
@@ -334,8 +335,10 @@ namespace SPIXI.VoIP
             {
                 try
                 {
-                    lastPacketReceivedCheckThread.Abort();
-                }catch(Exception)
+                    lastPacketReceivedCheckThread.Interrupt();
+                    lastPacketReceivedCheckThread.Join();
+                }
+                catch(Exception)
                 { 
                 }
                 lastPacketReceivedCheckThread = null;
