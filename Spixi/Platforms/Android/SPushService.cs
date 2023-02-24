@@ -1,16 +1,9 @@
 ﻿using Android.App;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OneSignalSDK.DotNet.Core;
-using OneSignalSDK.DotNet;
 using AndroidX.Core.App;
 using Android.Graphics;
 using Android.Content;
 using Android.OS;
-using Com.OneSignal.Android;
 using IXICore.Meta;
 using SPIXI;
 
@@ -31,34 +24,48 @@ namespace Spixi
 
         public static void initialize()
         {
-            OneSignalSDK.DotNet.OneSignal.Default.LogLevel = LogLevel.VERBOSE;
+            OneSignalSDK.DotNet.OneSignal.Default.LogLevel = LogLevel.NONE;
             OneSignalSDK.DotNet.OneSignal.Default.AlertLevel = LogLevel.NONE;
-
-
             OneSignalSDK.DotNet.OneSignal.Default.RequiresPrivacyConsent = true;
+            OneSignalSDK.DotNet.OneSignal.Default.PrivacyConsent = true;
+            OneSignalSDK.DotNet.OneSignal.Default.ShareLocation = false;
+            OneSignalSDK.DotNet.OneSignal.Default.InAppMessagesArePaused = true;
+            OneSignalSDK.DotNet.OneSignal.Default.NotificationWillShow += _NotificationWillShow;
+            OneSignalSDK.DotNet.OneSignal.Default.NotificationOpened += _NotificationOpened;
 
             OneSignalSDK.DotNet.OneSignal.Default.Initialize(SPIXI.Meta.Config.oneSignalAppId);
             OneSignalSDK.DotNet.OneSignal.Default.PromptForPushNotificationsWithUserResponse();
-
-            OneSignalSDK.DotNet.OneSignal.Default.PrivacyConsent = true;
-
-            OneSignalSDK.DotNet.OneSignal.Default.InAppMessagesArePaused = true;
-            OneSignalSDK.DotNet.OneSignal.Default.InAppMessageWillDisplay += _inAppMessageWillDisplay;
-
-
-            /// TODO
-            /*OneSignal.Default.StartInit(SPIXI.Meta.Config.oneSignalAppId)
-    .InFocusDisplaying(Com.OneSignal.Abstractions.OSInFocusDisplayOption.None)
-    .HandleNotificationReceived(handleNotificationReceived)
-    .HandleNotificationOpened(handleNotificationOpened)
-    .EndInit();
-            OneSignal.Current.SetLocationShared(false);*/
         }
-        private static void _inAppMessageWillDisplay(InAppMessage message)
+
+        private static OneSignalSDK.DotNet.Core.Notification _NotificationWillShow(OneSignalSDK.DotNet.Core.Notification notification)
         {
+            if (App.isInForeground)
+                return null;
+
             if (OfflinePushMessages.fetchPushMessages(true))
             {
                 OneSignalSDK.DotNet.OneSignal.Default.ClearOneSignalNotifications();
+                return null;
+            }
+            return notification;
+        }
+
+        private static void _NotificationOpened(NotificationOpenedResult result)
+        {
+            if (result.notification.additionalData.ContainsKey("fa"))
+            {
+                var fa = result.notification.additionalData["fa"];
+                if (fa != null)
+                {
+                    try
+                    {
+                        App.startingScreen = Convert.ToString(fa);
+                    }
+                    catch (Exception e)
+                    {
+                        Logging.error("Exception occured in handleNotificationOpened: {0}", e);
+                    }
+                }
             }
         }
 
@@ -103,7 +110,6 @@ namespace Spixi
                 builder.SetGroup("NEWMSGL");
             }
 
-
             var notification = builder.Build();
             manager.Notify(messageId, notification);
         }
@@ -115,7 +121,7 @@ namespace Spixi
 
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
-                NotificationChannelGroup group = new NotificationChannelGroup("NEWMSGL", "New Message");
+                NotificationChannelGroup group = new("NEWMSGL", "New Message");
                 manager.CreateNotificationChannelGroup(group);
 
                 var channelNameJava = new Java.Lang.String(channelName);
@@ -130,33 +136,6 @@ namespace Spixi
             channelInitialized = true;
         }
 
-        static void handleNotificationReceived(OSNotification notification)
-        {
-            if (OfflinePushMessages.fetchPushMessages(true))
-            {
-                OneSignalSDK.DotNet.OneSignal.Default.ClearOneSignalNotifications();
-            }
-        }
-
-        static void handleNotificationOpened(OSNotificationOpenedResult inNotificationOpenedDelegate)
-        {
-           /* if (inNotificationOpenedDelegate.Notification.Payload.additionalData.ContainsKey("fa"))
-            {
-                var fa = inNotificationOpenedDelegate.Notification.payload.additionalData["fa"];
-                if (fa != null)
-                {
-                    try
-                    {
-                        App.startingScreen = Convert.ToString(fa);
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.error("Exception occured in handleNotificationOpened: {0}", e);
-                    }
-                }
-            }*/
-
-        }
     }
 
 }

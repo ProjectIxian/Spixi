@@ -200,6 +200,19 @@ public partial class App : Application
         unlockedDate = DateTime.Now;
     }
 
+    protected override void OnResume()
+    {
+        isInForeground = true;
+    }
+    protected override void OnSleep()
+    {
+        isInForeground = false;
+    }
+    protected override void OnStart()
+    {
+        isInForeground = true;
+    }
+
     protected override Window CreateWindow(IActivationState activationState)
     {
         var window = base.CreateWindow(activationState);
