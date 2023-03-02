@@ -1,12 +1,9 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Utils;
+using Spixi.Storage.Models;
 using SPIXI.Meta;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
+using Transaction = IXICore.Transaction;
 
 namespace SPIXI.Storage
 {  
@@ -787,12 +784,9 @@ namespace SPIXI.Storage
         {
             string tx_filename = Path.Combine(documentsPath, txCacheFileName);
 
-            if (File.Exists(tx_filename) == false)
-            {
-                // Return
+            if (!File.Exists(tx_filename))
                 return false;
-            }
-
+            
             BinaryReader reader;
             try
             {
@@ -806,34 +800,60 @@ namespace SPIXI.Storage
 
             TransactionCache.clearAllTransactions();
 
-            System.Int32 version = 0;
+            int version = 0;
             try
             {
                 version = reader.ReadInt32();
 
-                // Read confirmed transactions first
-                int num_tx = reader.ReadInt32();
-                for (int i = 0; i < num_tx; i++)
+                if (version < 3)
                 {
-                    int data_length = reader.ReadInt32();
-                    byte[] data = reader.ReadBytes(data_length);
+                    // Read confirmed transactions first
+                    int num_tx = reader.ReadInt32();
+                    for (int i = 0; i < num_tx; i++)
+                    {
+                        int data_length = reader.ReadInt32();
+                        byte[] data = reader.ReadBytes(data_length);
 
-                    Transaction transaction = new Transaction(data, true);
-                    TransactionCache.addTransaction(transaction, false);
+                        Transaction transaction = new(data, true);
+                        TransactionCache.addTransaction(transaction, false);
+                    }
+
+                    // Read unconfirmed transactions
+                    int num_utx = reader.ReadInt32();
+                    for (int i = 0; i < num_utx; i++)
+                    {
+                        int data_length = reader.ReadInt32();
+                        byte[] data = reader.ReadBytes(data_length);
+
+                        Transaction transaction = new(data, true);
+                        TransactionCache.addUnconfirmedTransaction(transaction, false);
+                        Node.tiv.receivedNewTransaction(transaction);
+                    }
                 }
-
-                // Read unconfirmed transactions
-                int num_utx = reader.ReadInt32();
-                for (int i = 0; i < num_utx; i++)
+                else
                 {
-                    int data_length = reader.ReadInt32();
-                    byte[] data = reader.ReadBytes(data_length);
+                    // Read confirmed transactions first
+                    int num_tx = reader.ReadInt32();
+                    for (int i = 0; i < num_tx; i++)
+                    {
+                        int data_length = reader.ReadInt32();
+                        byte[] data = reader.ReadBytes(data_length);
+                        StorageTransaction storageTransaction = new(data);
+                        TransactionCache.addTransaction(storageTransaction);
+                    }
 
-                    Transaction transaction = new Transaction(data, true);
-                    TransactionCache.addUnconfirmedTransaction(transaction, false);
-                    Node.tiv.receivedNewTransaction(transaction);
+                    // Read unconfirmed transactions
+                    int num_utx = reader.ReadInt32();
+                    for (int i = 0; i < num_utx; i++)
+                    {
+                        int data_length = reader.ReadInt32();
+                        byte[] data = reader.ReadBytes(data_length);
+                        StorageTransaction storageTransaction = new(data);
+
+                        TransactionCache.addUnconfirmedTransaction(storageTransaction);
+                        Node.tiv.receivedNewTransaction(storageTransaction.transaction);
+                    }
                 }
-
             }
             catch (Exception e)
             {
@@ -842,7 +862,7 @@ namespace SPIXI.Storage
 
             reader.Close();
 
-            if(version < 2)
+            if(version < 3)
             {
                 writeTransactionCacheFile();
             }
@@ -874,7 +894,7 @@ namespace SPIXI.Storage
                 try
                 {
                     // TODO: encrypt written data
-                    System.Int32 version = 2; // Set the tx cache file version
+                    int version = 3; // Set the tx cache file version
                     writer.Write(version);
 
                     // Write confirmed transaction
@@ -883,9 +903,9 @@ namespace SPIXI.Storage
                         int tx_num = TransactionCache.transactions.Count;
                         writer.Write(tx_num);
 
-                        foreach (Transaction transaction in TransactionCache.transactions)
+                        foreach (StorageTransaction transaction in TransactionCache.transactions)
                         {
-                            byte[] data = transaction.getBytes(true);
+                            byte[] data = transaction.getBytes();
                             int data_length = data.Length;
                             writer.Write(data_length);
                             writer.Write(data);
@@ -898,9 +918,9 @@ namespace SPIXI.Storage
                         int tx_num = TransactionCache.unconfirmedTransactions.Count;
                         writer.Write(tx_num);
 
-                        foreach (Transaction transaction in TransactionCache.unconfirmedTransactions)
+                        foreach (StorageTransaction transaction in TransactionCache.unconfirmedTransactions)
                         {
-                            byte[] data = transaction.getBytes(true);
+                            byte[] data = transaction.getBytes();
                             int data_length = data.Length;
                             writer.Write(data_length);
                             writer.Write(data);

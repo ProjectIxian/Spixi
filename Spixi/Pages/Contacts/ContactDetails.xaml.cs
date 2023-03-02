@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using Spixi.Storage.Models;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
@@ -153,8 +154,10 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "clearRecentActivity");
             lock(TransactionCache.unconfirmedTransactions)
             {
-                foreach (Transaction utransaction in TransactionCache.unconfirmedTransactions)
+                // TODOTEST
+                foreach (StorageTransaction transaction in TransactionCache.unconfirmedTransactions)
                 {
+                    Transaction utransaction = transaction.transaction;
                     Address from_address = utransaction.pubKey;
                     // Filter out unrelated transactions
                     if (from_address.addressNoChecksum.SequenceEqual(friend.walletAddress.addressNoChecksum) == false)
@@ -174,7 +177,7 @@ namespace SPIXI
 
                 for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
                 {
-                    Transaction transaction = TransactionCache.transactions[i];
+                    Transaction transaction = TransactionCache.transactions[i].transaction;
 
                     Address from_address = transaction.pubKey;
                     // Filter out unrelated transactions

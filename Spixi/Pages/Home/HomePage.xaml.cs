@@ -690,7 +690,7 @@ namespace SPIXI
             {
                 for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
                 {
-                    Transaction utransaction = TransactionCache.unconfirmedTransactions[i];
+                    Transaction utransaction = TransactionCache.unconfirmedTransactions[i].transaction;
                     string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                     IxiNumber amount = utransaction.amount;
                     if (IxianHandler.getWalletStorage().isMyAddress(utransaction.pubKey))
@@ -714,7 +714,7 @@ namespace SPIXI
 
             for (int i = TransactionCache.transactions.Count - 1; i >= max_tx_count; i--)
             {
-                Transaction transaction = TransactionCache.transactions[i];
+                Transaction transaction = TransactionCache.transactions[i].transaction;
                 string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
                 IxiNumber amount = transaction.amount;
                 if (IxianHandler.getWalletStorage().isMyAddress(transaction.pubKey))
