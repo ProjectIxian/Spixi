@@ -36,11 +36,7 @@ public partial class App : Application
 	{
         InitializeComponent();
  
-
-        // Fix for issue https://github.com/xamarin/Xamarin.Forms/issues/10712#issuecomment-629394090
-        //Device.SetFlags(new string[] { "anything" });
-
-        // check if already started
+        // Check if already started
         if (Node.Instance == null)
         {
             // Prepare the personal folder
@@ -55,28 +51,27 @@ public partial class App : Application
             Logging.info(string.Format("Starting Spixi {0} ({1})", Config.version, CoreConfig.version));
 
             // Init fatal exception handlers
-            //AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
-            //TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
             // Load or generate a device ID.
             if (Preferences.Default.ContainsKey("uid"))
             {
-                /*
-                byte[] uid = Preferences.Default.Get("uid", byte[]) as byte[];
+                byte[] uid = Preferences.Default.Get("uid", new byte[16]);
                 if (uid == null)
                 {
                     // Generate and save the device ID
-                    Application.Current.Properties["uid"] = CoreConfig.device_id;
+                    Preferences.Default.Set("uid", CoreConfig.device_id);
                 }
                 else
                 {
                     CoreConfig.device_id = uid;
-                }*/
+                }
             }
             else
             {
                 // Generate and save the device ID
-                //Application.Current.Properties["uid"] = CoreConfig.device_id;
+                Preferences.Default.Set("uid", CoreConfig.device_id);
             }
 
             if (Preferences.Default.ContainsKey("language"))
@@ -98,12 +93,12 @@ public partial class App : Application
             movePersonalFiles();
 
             // Load theme and appearance
-            //OSAppTheme currentTheme = Application.Current.RequestedTheme;
-            //Current.UserAppTheme = currentTheme;
+            AppTheme currentTheme = Current.RequestedTheme;
+            Current.UserAppTheme = currentTheme;
             ThemeAppearance themeAppearance = ThemeAppearance.automatic;
             if (Preferences.Default.ContainsKey("appearance"))
             {
-                //themeAppearance = (ThemeAppearance)Preferences.Default.Get("appearance");
+                themeAppearance = (ThemeAppearance)Preferences.Default.Get("appearance", (int)ThemeAppearance.automatic);
             }
             ThemeManager.loadTheme("spixiui", themeAppearance);
             Current.RequestedThemeChanged += (s, a) =>
@@ -125,7 +120,7 @@ public partial class App : Application
             if (!wallet_found)
             {
                 // Wallet not found, go to initial launch page
-                MainPage = new NavigationPage(new SPIXI.LaunchPage());
+                MainPage = new NavigationPage(new LaunchPage());
             }
             else
             {
@@ -138,7 +133,7 @@ public partial class App : Application
 
                 if (wallet_decrypted == false)
                 {
-                    MainPage = new NavigationPage(new SPIXI.LaunchRetryPage());
+                    MainPage = new NavigationPage(new LaunchRetryPage());
                 }
                 else
                 {
@@ -155,11 +150,6 @@ public partial class App : Application
                     {
                         // Show the home screen
                         MainPage = new NavigationPage(HomePage.Instance());
-                        //MainPage = new NavigationPage(new SPIXI.ScanPage());
-                        //MainPage = new NavigationPage(new SPIXI.LaunchPage());
-                        //MainPage = new MainFlyoutPage();
-
-
                     }
 
                 }
@@ -187,7 +177,7 @@ public partial class App : Application
 
     private void movePersonalFiles()
     {
-        string path = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+        string path = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         if (File.Exists(Path.Combine(path, "spixi.wal")) && !File.Exists(Path.Combine(Config.spixiUserFolder, Config.walletFile)))
         {
             File.Move(Path.Combine(path, "spixi.wal"), Path.Combine(Config.spixiUserFolder, Config.walletFile));
@@ -239,6 +229,33 @@ public partial class App : Application
             Thread.Sleep(10);
         }
         Environment.Exit(0);
+    }
+
+    private static void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs unobservedTaskExceptionEventArgs)
+    {
+        try
+        {
+            Logging.error(unobservedTaskExceptionEventArgs.Exception.ToString());
+            Logging.flush();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs unhandledExceptionEventArgs)
+    {
+        try
+        {
+            var e = unhandledExceptionEventArgs.ExceptionObject as Exception;
+            Logging.error(e.ToString());
+            Logging.flush();
+        }
+        catch
+        {
+
+        }
     }
 
 }
