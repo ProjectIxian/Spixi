@@ -1,14 +1,9 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.CustomApps;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Spixi;
 
 namespace SPIXI
@@ -21,9 +16,7 @@ namespace SPIXI
 
         public void loadPage(WebView web_view, string html_file_name)
         {
-
             _webView = web_view;
-
             _webView.Source = generatePage(html_file_name);
         }
 
@@ -184,6 +177,16 @@ namespace SPIXI
             base.OnAppearing();
             Node.refreshAppRequests = true;
             updateScreen();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            if (_webView != null)
+                _webView = null;
+            
+            GC.Collect();
         }
 
         protected bool onNavigatingGlobal(string url)
