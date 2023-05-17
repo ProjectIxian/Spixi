@@ -1,9 +1,5 @@
-using IXICore;
-using IXICore.Meta;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System.Linq.Expressions;
 using System.Web;
 
 namespace SPIXI;
@@ -50,6 +46,7 @@ public partial class ScanPage : SpixiContentPage
         else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
         {
             Navigation.PopModalAsync(Config.defaultXamarinAnimations);
+            GC.Collect();
         }
         else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
         {

@@ -74,10 +74,19 @@
             fps: 15,
             qrbox: 250,
             showTorchButtonIfSupported: true,
+            focusMode: "continuous",
+            showZoomSliderIfSupported: true,
             supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
         };
 
         html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+
+        setTimeout(function () {
+            html5QrCode.applyVideoConstraints({
+                focusMode: "continuous",
+                advanced: [{ zoom: 2.0 }],
+            });
+        }, 1000);
 
     </script>
 
