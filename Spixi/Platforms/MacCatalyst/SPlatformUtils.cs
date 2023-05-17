@@ -23,7 +23,7 @@ namespace Spixi
 
         public static string getAssetsPath()
         {
-            return NSBundle.MainBundle.BundlePath;
+            return NSBundle.MainBundle.BundlePath + "/Contents/Resources/";
         }
 
         public static string getHtmlBaseUrl()
