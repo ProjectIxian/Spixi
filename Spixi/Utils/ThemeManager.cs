@@ -1,10 +1,4 @@
-﻿using Microsoft.Maui.ApplicationModel;
-using SPIXI.Interfaces;
-using SPIXI.Lang;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using SPIXI.Lang;
 
 namespace SPIXI
 {
@@ -29,7 +23,7 @@ namespace SPIXI
             }
             else if(appearance == ThemeAppearance.automatic)
             {
-                //if(Application.Current.UserAppTheme == OSAppTheme.Dark)
+                if(Application.Current.UserAppTheme == AppTheme.Dark)
                     appearance_name = "dark";
             }
 

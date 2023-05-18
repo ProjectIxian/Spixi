@@ -54,24 +54,30 @@ public partial class App : Application
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
             TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
 
-            // Load or generate a device ID.
+            // Generate or load a device ID.
+            bool generate_uid = true;
+
             if (Preferences.Default.ContainsKey("uid"))
             {
-                byte[] uid = Preferences.Default.Get("uid", new byte[16]);
-                if (uid == null)
+                try
                 {
-                    // Generate and save the device ID
-                    Preferences.Default.Set("uid", CoreConfig.device_id);
+                    string uid = Preferences.Default.Get("uid", string.Empty);
+                    if (!string.IsNullOrEmpty(uid))
+                    {
+                        // Use the stored device id
+                        CoreConfig.device_id = Convert.FromBase64String(uid);
+                        generate_uid = false;
+                    }
                 }
-                else
-                {
-                    CoreConfig.device_id = uid;
+                catch {
+                    Logging.warn("Corrupted uid value in preferences.");
                 }
             }
-            else
+
+            if(generate_uid)
             {
                 // Generate and save the device ID
-                Preferences.Default.Set("uid", CoreConfig.device_id);
+                Preferences.Default.Set("uid", Convert.ToBase64String(CoreConfig.device_id));
             }
 
             if (Preferences.Default.ContainsKey("language"))
