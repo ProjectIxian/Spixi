@@ -1,13 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
-using SPIXI.Meta;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-//using ZXing.Net.Mobile.Forms;
 
 namespace SPIXI
 {
@@ -16,7 +10,9 @@ namespace SPIXI
 	{
         private string wallet_to_add = "";
 
-		public ContactNewPage ()
+        public event EventHandler<SPIXI.EventArgs<string>> pickSucceeded;
+
+        public ContactNewPage ()
 		{
 			InitializeComponent ();
             NavigationPage.SetHasNavigationBar(this, false);
@@ -60,7 +56,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                Navigation.PopModalAsync();
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {
@@ -135,6 +131,7 @@ namespace SPIXI
 
         public void onRequest(byte[] recipient_address_bytes)
         {
+            string contactName = null;
             try
             {
                 if(Address.validateChecksum(recipient_address_bytes) == false)
@@ -163,27 +160,34 @@ namespace SPIXI
                         return;
                     }
                 }
-
-                Friend friend = FriendList.addFriend(recipient_address, null, recipient_address.ToString(), null, null, 0);
+                contactName = recipient_address.ToString();
+                Friend friend = FriendList.addFriend(FriendState.RequestSent, recipient_address, null, contactName, null, null, 0);
 
                 if (friend != null)
                 {
                     friend.save();
 
                     StreamProcessor.sendContactRequest(friend);
+
+                    FriendList.addMessageWithType(null, FriendMessageType.requestAddSent, recipient_address, 0, "", true);
                 }
-            }catch(Exception)
+            }
+            catch(Exception)
             {
 
             }
 
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            if (pickSucceeded != null)
+            {
+                pickSucceeded(this, new SPIXI.EventArgs<string>(contactName));
+            }
+            Navigation.PopModalAsync(false);
+
         }
 
         protected override bool OnBackButtonPressed()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
-
+            Navigation.PopModalAsync();
             return true;
         }
     }

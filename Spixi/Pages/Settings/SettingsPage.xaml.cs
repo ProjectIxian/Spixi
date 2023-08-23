@@ -1,16 +1,10 @@
-﻿using IXICore;
-using IXICore.Meta;
+﻿using IXICore.Meta;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using SPIXI.Network;
 using SPIXI.Storage;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using System.Web;
-using IFilePicker = SPIXI.Interfaces.IFilePicker;
 
 namespace SPIXI
 {
@@ -200,12 +194,10 @@ namespace SPIXI
             if (ThemeManager.changeAppearance(selectedAppearance))
             {
                 UIHelpers.reloadAllPages();
-                if (Device.RuntimePlatform == Device.iOS)
-                    return; // iOS automatically pops the current page when reloading contents
             }
 
             // Pop the current page from the stack
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            Navigation.PopModalAsync();
         }
 
         private void resetLanguage()
@@ -250,11 +242,11 @@ namespace SPIXI
                 TransactionCache.clearAllTransactions();
                 Node.tiv.clearCache();
 
+                // Remove the settings page
+                Navigation.PopToRootAsync();
+
                 // Show the launch page
                 Navigation.PushAsync(new LaunchPage(), Config.defaultXamarinAnimations);
-
-                // Remove the settings page
-                Navigation.RemovePage(this);
 
                 // Todo: also remove the parent page without causing memory leaks
             }
@@ -386,7 +378,7 @@ namespace SPIXI
         {
             resetLanguage();
 
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            Navigation.PopModalAsync();
 
             return true;
         }

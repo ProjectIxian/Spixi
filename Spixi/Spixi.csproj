@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-ios;net6.0-maccatalyst;net6.0-android31.0</TargetFrameworks>
+		<TargetFrameworks>net6.0-ios;net6.0-maccatalyst;net6.0-android</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
@@ -15,12 +15,12 @@
 		<ApplicationTitle>Spixi</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.spixi</ApplicationId>
+		<ApplicationId>io.ixian.spixi</ApplicationId>
 		<ApplicationIdGuid>E698F56A-7179-4BE3-A6D7-1CF5114935A9</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
+		<ApplicationVersion>0170000770</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -38,64 +38,51 @@
 
 	<PropertyGroup>
 		<MtouchLink>SdkOnly</MtouchLink>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<PackageCertificateThumbprint>F717566193A65F722CF5A7BB994025D87E9FC5AC</PackageCertificateThumbprint>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0-ios'">
-	  <ProvisioningType>automatic</ProvisioningType>
+	  <ProvisioningType>manual</ProvisioningType>
 	  <CodesignKey>iPhone Developer</CodesignKey>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-ios|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-ios|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-maccatalyst|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-android31.0|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+	<PropertyGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) == true">
+<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android31.0|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-android|AnyCPU'">
+		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows10.0.19041.0|AnyCPU'">
-	  <ApplicationId>io.ixian.spixi</ApplicationId>
-	  <ApplicationDisplayVersion>0.7</ApplicationDisplayVersion>
-	  <ApplicationVersion>0170000770</ApplicationVersion>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -3542,7 +3529,6 @@
 	  <None Remove="Resources\Raw\html\js\home.js" />
 	  <None Remove="Resources\Raw\html\js\jquery.min.js" />
 	  <None Remove="Resources\Raw\html\js\jquery.touchSwipe.min.js" />
-	  <None Remove="Resources\Raw\html\js\onboarding.js" />
 	  <None Remove="Resources\Raw\html\js\qrcode.min.js" />
 	  <None Remove="Resources\Raw\html\js\spixi.js" />
 	  <None Remove="Resources\Raw\html\libs\emoji-button\index.min.js" />
@@ -3618,6 +3604,9 @@
 	  <MauiXaml Update="Pages\Home\MainFlyoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\Home\OnboardPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\Launch\LaunchCreatePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -3640,9 +3629,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\Settings\EncryptionPassword.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\Settings\MyAddressPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\Settings\SetLockPage.xaml">
@@ -3676,13 +3662,13 @@
 	</ItemGroup>
 
 	<!-- Android -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
+	<ItemGroup Condition="$(TargetFramework.Contains('-android')) != true">
 		<Compile Remove="**\Android\**\*.cs" />
 		<None Include="**\Android\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
 	
 	<!-- iOS -->
-	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-ios')) != true">
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios')) != true">
 		<Compile Remove="**\iOS\**\*.cs" />
 		<None Include="**\iOS\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
 	</ItemGroup>
@@ -3700,5 +3686,7 @@
 	</ItemGroup>
 
 	<Import Project="..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadWrongLinkerErrorInfoBarSpixiHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

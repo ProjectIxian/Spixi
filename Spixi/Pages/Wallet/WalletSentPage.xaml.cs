@@ -38,10 +38,10 @@ namespace SPIXI
 
         private void onLoad()
         {
-            //webView.Eval(string.Format("setBalance('{0}')", Node.balance));
             if (transaction == null)
             {
-                // This should never happen. Perhaps close this screen?
+                onDismiss();
+                return;
             }
             else
             {
@@ -67,6 +67,10 @@ namespace SPIXI
             {
                 onDismiss();
             }
+            else if (current_url.Equals("ixian:viewexplorer", StringComparison.Ordinal))
+            {
+                Browser.Default.OpenAsync(new Uri(String.Format("{0}?p=transaction&id={1}", Config.explorerUrl, transaction.getTxIdString())));
+            }
             else
             {
                 // Otherwise it's just normal navigation
@@ -80,18 +84,22 @@ namespace SPIXI
         // Retrieve the transaction from local cache storage
         private void checkTransaction()
         {
-            string confirmed_text = SpixiLocalization._SL("wallet-sent-confirmed");
+            Utils.sendUiCommand(webView, "clearEntries");
+
+            string confirmed = "true";
+
             Transaction ctransaction = TransactionCache.getTransaction(transaction.id);
             if (ctransaction == null || ctransaction.applied == 0)
             {
                 ctransaction = transaction;
-                confirmed_text = SpixiLocalization._SL("wallet-sent-unconfirmed");
+                confirmed = "false";
             }
 
             IxiNumber amount = ctransaction.amount;
 
-            // Convert unix timestamp
-            string time = Utils.UnixTimeStampToString(Convert.ToDouble(ctransaction.timeStamp));
+            string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(ctransaction.timeStamp));
+
+            string type = "send";
 
             Address addr = ctransaction.pubKey;
             if (addr.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
@@ -101,52 +109,56 @@ namespace SPIXI
                 foreach (var entry in ctransaction.toList)
                 {
                     Friend friend = FriendList.getFriend(entry.Key);
+                    IxiNumber entry_amount = entry.Value.amount;
+                    IxiNumber fiat_amount = entry_amount * Node.fiatPrice;
+
                     if (friend != null)
                     {
-                        Utils.sendUiCommand(webView, "addSender", friend.nickname + ": " + entry.Value.amount.ToString(), time);
+                        Utils.sendUiCommand(webView, "addEntry", friend.nickname, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "addSender", entry.Key.ToString() + ": " + entry.Value.amount.ToString(), time);
+                        Utils.sendUiCommand(webView, "addEntry", entry.Key.ToString(), Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                     }
                 }
             }
             else
             {
                 // this is a received payment
-
+                type = "receive";
                 amount = 0;
+
+                foreach (var entry in ctransaction.toList)
+                {
+                    if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
+                    {
+                        amount += entry.Value.amount;
+                    }
+                }
+                IxiNumber fiat_amount = amount * Node.fiatPrice;
 
                 Utils.sendUiCommand(webView, "setReceivedMode");
                 Address sender_address = ctransaction.pubKey;
                 Friend friend = FriendList.getFriend(sender_address);
                 if (friend != null)
                 {
-                    Utils.sendUiCommand(webView, "addSender", friend.nickname, time);
+                    Utils.sendUiCommand(webView, "addEntry", friend.nickname, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addSender", sender_address.ToString(), time);
+                    Utils.sendUiCommand(webView, "addEntry", sender_address.ToString(), Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                 }
-                foreach (var entry in ctransaction.toList)
-                {
-                    if (IxianHandler.getWalletStorage().isMyAddress(entry.Key))
-                    {
-                        // TODO show this as well under sent to; also do the reverse for sent payment
-                        //addresses += Base58Check.Base58CheckEncoding.EncodePlain(entry.Key) + ": " + entry.Value.ToString() + "|";
-                        amount += entry.Value.amount;
-                    }
-                }
+
             }
 
             Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
-                time, confirmed_text, (ctransaction.fee/ctransaction.amount).ToString() + "%", transaction.getTxIdString());
+                time, transaction.getTxIdString(), confirmed);
             return;
         }
 
         public override void updateScreen()
         {
-            checkTransaction();
+            //checkTransaction();
         }
 
         private void onDismiss()

@@ -950,7 +950,7 @@ namespace SPIXI
 
             Logging.info("In handle request add");
 
-            Friend new_friend = FriendList.addFriend(sender_wallet, pub_key, sender_wallet.ToString(), null, null, 0, false);
+            Friend new_friend = FriendList.addFriend(FriendState.RequestReceived, sender_wallet, pub_key, sender_wallet.ToString(), null, null, 0, false);
 
             if (new_friend != null)
             {
@@ -1014,6 +1014,8 @@ namespace SPIXI
 
             sendAvatar(friend);
 
+            friend.state = FriendState.Approved;
+            
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
@@ -1396,7 +1398,7 @@ namespace SPIXI
                 friend.chachaKey = null;
                 friend.generateKeys();
             }
-
+            friend.state = FriendState.Approved;
             friend.save();
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);

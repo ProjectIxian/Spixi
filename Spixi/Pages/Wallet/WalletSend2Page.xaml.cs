@@ -4,9 +4,6 @@ using IXICore.Utils;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using static IXICore.Transaction;
 
@@ -18,6 +15,24 @@ namespace SPIXI
         SortedDictionary<Address, ToEntry> to_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
         IxiNumber totalAmount = 0;
         Transaction transaction = null;
+
+        string toAddress = null;
+        byte[] _address;
+        public WalletSend2Page(string address)
+        {
+            InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
+
+            _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
+            if (Address.validateChecksum(_address) == false)
+            {
+                displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                return;
+            }
+            toAddress = address;
+
+            loadPage(webView, "wallet_send_2.html");
+        }
 
         public WalletSend2Page(string[] addresses_with_amounts)
         {
@@ -38,7 +53,7 @@ namespace SPIXI
                 string address = asplit[0];
                 string amount = asplit[1];
 
-                byte[] _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
+                _address = Base58Check.Base58CheckEncoding.DecodePlain(address);
                 if (Address.validateChecksum(_address) == false)
                 {
                     displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
@@ -73,24 +88,17 @@ namespace SPIXI
 
         private void onLoad()
         {
+            // Calculate tx fee
             IxiNumber fee = ConsensusConfig.forceTransactionPrice;
             Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
             Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
+            SortedDictionary<Address, ToEntry> tx_list = new SortedDictionary<Address, ToEntry>(new AddressComparer());
+            tx_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), 1));
+            Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, tx_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
-            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
-
-            IxiNumber total_amount = transaction.amount + transaction.fee;
-
-            if (Node.balance.balance < total_amount)
-            {
-                displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), string.Format(SpixiLocalization._SL("wallet-error-balance-text"), total_amount.ToString(), Node.balance.balance.ToString()), SpixiLocalization._SL("global-dialog-ok"));
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
-                return;
-            }
-
-            Utils.sendUiCommand(webView, "setFees", transaction.fee.ToString());
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
-            Utils.sendUiCommand(webView, "setTotalAmount", transaction.amount.ToString());
+            Utils.sendUiCommand(webView, "setRecipient", toAddress, toAddress, "img/spixiavatar.png");
+            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.fiatPrice.ToString());
+            Utils.sendUiCommand(webView, "setFees", tx.fee.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -117,7 +125,7 @@ namespace SPIXI
                 // Extract the fee
 
                 // Send the payment
-                sendPayment("");
+                sendPayment(split[1]);
             }
             else
             {
@@ -129,14 +137,28 @@ namespace SPIXI
 
         }
 
-
-        private void sendPayment(string txfee)
+        private void sendPayment(string amount)
         {
+            IxiNumber _amount = amount;
+
+            if (_amount < (long)0)
+            {
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                return;
+            }
+
+            to_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), _amount));
+            totalAmount += _amount;
+
+
+            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
+            Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
+
+            transaction = new Transaction((int)Transaction.Type.Normal, fee, to_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
+
             Logging.info("Preparing to send payment");
-            //Navigation.PopAsync(Config.defaultXamarinAnimations);
-
             Logging.info("Broadcasting tx");
-
             IxianHandler.addTransaction(transaction, true);
             Logging.info("Adding to cache");
 

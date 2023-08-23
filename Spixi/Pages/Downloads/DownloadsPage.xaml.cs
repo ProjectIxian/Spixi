@@ -116,7 +116,7 @@ namespace SPIXI
 
         private void onBack()
         {
-            Navigation.PopAsync(Config.defaultXamarinAnimations);
+            Navigation.PopModalAsync();
         }
 
         protected override bool OnBackButtonPressed()

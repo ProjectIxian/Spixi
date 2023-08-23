@@ -2,12 +2,13 @@
 using IXICore.Meta;
 using IXICore.Network;
 using IXICore.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Spixi;
 using SPIXI.CustomApps;
-using SPIXI.Interfaces;
 using SPIXI.Network;
 using SPIXI.Storage;
-using System.Threading;
+using System.Text;
 
 namespace SPIXI.Meta
 {
@@ -29,7 +30,9 @@ namespace SPIXI.Meta
         // Used to force reloading of some homescreen elements
         public static bool changedSettings = false;
 
-        public static Balance balance = new Balance();      // Stores the last known balance for this node
+        public static Balance balance = new();  // Stores the last known balance for this node
+
+        public static IxiNumber fiatPrice = 0;  // Stores the last known ixi fiat value
 
         public static int startCounter = 0;
 
@@ -54,6 +57,8 @@ namespace SPIXI.Meta
         public static Node Instance = null;
 
         private static bool running = false;
+
+        private static long lastPriceUpdate = 0;      
 
         public Node()
         {
@@ -272,6 +277,12 @@ namespace SPIXI.Meta
                     if (balance.blockHeight == 0 || balance.lastUpdate + 300 < Clock.getTimestamp())
                     {
                         CoreProtocolMessage.broadcastProtocolMessage(new char[] { 'M', 'H' }, ProtocolMessageCode.getBalance2, getBalanceBytes, null);
+                    }
+
+                    // Check price if enough time passed
+                    if (lastPriceUpdate + Config.checkPriceSeconds < Clock.getTimestamp())
+                    {
+                        checkPrice();
                     }
                 }
                 catch (Exception e)
@@ -509,6 +520,28 @@ namespace SPIXI.Meta
         {
             // TODO TODO implement this properly
             return ConsensusConfig.minBlockSignerPowDifficulty;
+        }
+
+        private static void checkPrice()
+        {
+            using (HttpClient client = new())
+            {
+                try
+                {
+                    HttpContent httpContent = new StringContent("", Encoding.UTF8, "application/x-www-form-urlencoded");
+                    var response = client.PostAsync(Config.priceServiceUrl, httpContent).Result;
+                    string body = response.Content.ReadAsStringAsync().Result;
+
+                    dynamic obj = JsonConvert.DeserializeObject(body);
+                    JObject jObject = (JObject)obj;
+                    fiatPrice = new IxiNumber((string)jObject["ixicash"]["usd"]);
+                }
+                catch (Exception e)
+                {
+                    Logging.error("Exception occured in checkPrice: " + e);
+                }
+            }
+            lastPriceUpdate = Clock.getTimestamp();
         }
     }
 }

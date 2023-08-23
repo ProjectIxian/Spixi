@@ -6,12 +6,7 @@ using SPIXI.Interfaces;
 using SPIXI.Meta;
 using SPIXI.Storage;
 using SPIXI.VoIP;
-using System;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
@@ -29,16 +24,15 @@ namespace SPIXI
 
         private int selectedChannel = 0;
 
+        private bool _waitingForContactConfirmation = false;
+
         public SingleChatPage(Friend fr)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-
-            Title = fr.nickname;
             friend = fr;
-
             friend.chat_page = this;
-
+            Title = friend.nickname;
             selectedChannel = friend.metaData.lastMessageChannel;
 
             loadPage(webView, "chat.html");
@@ -204,7 +198,7 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:sendContactRequest:"))
             {
                 Address address = new Address(current_url.Substring("ixian:sendContactRequest:".Length));
-                Friend new_friend = FriendList.addFriend(address, null, address.ToString(), null, null, 0);
+                Friend new_friend = FriendList.addFriend(FriendState.RequestSent, address, null, address.ToString(), null, null, 0);
                 if (new_friend != null)
                 {
                     new_friend.save();
@@ -227,7 +221,8 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:typing"))
             {
                 StreamProcessor.sendTyping(friend);
-            }else if(current_url.StartsWith("ixian:leave"))
+            }
+            else if(current_url.StartsWith("ixian:leave"))
             {
                 if(friend.bot)
                 {
@@ -252,8 +247,15 @@ namespace SPIXI
                     Logging.error("Exception occured while trying to open URL '{0}': {1}",  link, ex);
                 }
             }
-            else
+            else if (current_url.StartsWith("ixian:undorequest"))
             {
+                // Remove friend from list and go back to the main screen
+                FriendList.removeFriend(friend);
+                Navigation.PopAsync();
+                // TODO: send a notification to the other party
+            }
+            else
+            {               
                 // Otherwise it's just normal navigation
                 e.Cancel = false;
                 return;
@@ -378,7 +380,7 @@ namespace SPIXI
             {
                 Thread.CurrentThread.IsBackground = true;
 
-                if (SSpixiCodecInfo.getSupportedAudioCodecs().Count > 0)
+                if (SSpixiCodecInfo.getSupportedAudioCodecs().Count > 0 && friend.state == FriendState.Approved)
                 {
                     Utils.sendUiCommand(webView, "showCallButton", "");
                 }
@@ -396,6 +398,19 @@ namespace SPIXI
             if (FriendList.getUnreadMessageCount() == 0)
             {
                 SPushService.clearNotifications();
+            }
+
+            if (!friend.bot)
+            {
+                if (friend.state == FriendState.RequestSent)
+                {
+                    _waitingForContactConfirmation = true;
+                    Utils.sendUiCommand(webView, "showRequestSentModal", "1");
+                }
+                else if (friend.state == FriendState.RequestReceived)
+                {
+                    Utils.sendUiCommand(webView, "showContactRequest", "1");
+                }
             }
 
             Node.refreshAppRequests = true;
@@ -692,7 +707,7 @@ namespace SPIXI
 
                 case "sendContactRequest":
                     Address new_friend_address = friend.getMessages(selectedChannel).Find(x => x.id.SequenceEqual(msg_id)).senderAddress;
-                    Friend new_friend = FriendList.addFriend(new_friend_address, null, new_friend_address.ToString(), null, null, 0);
+                    Friend new_friend = FriendList.addFriend(FriendState.RequestSent, new_friend_address, null, new_friend_address.ToString(), null, null, 0);
                     if (new_friend != null)
                     {
                         new_friend.save();
@@ -751,6 +766,10 @@ namespace SPIXI
         public void loadMessages()
         {
             Utils.sendUiCommand(webView, "clearMessages");
+
+            if (friend.handshakeStatus < 2)
+                return;
+
             var messages = friend.getMessages(selectedChannel);
             lock (messages)
             {
@@ -784,14 +803,14 @@ namespace SPIXI
             {
                 return;
             }
-            if (friend.approved == false)
+            if(friend.state != FriendState.Approved)
             {
                 if (message.type == FriendMessageType.requestAdd)
                 {
 
                     // Call webview methods on the main UI thread only
+                    friend.state = FriendState.RequestReceived;
                     Utils.sendUiCommand(webView, "showContactRequest", "1");
-                    updateMessageReadStatus(message, channel);
                     return;
                 }
             }
@@ -1203,14 +1222,27 @@ namespace SPIXI
             }
             else
             {
-                if (friend.online)
+                if (friend.state == FriendState.Approved)
                 {
-                    Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                    if (friend.online)
+                    {
+                        Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                    }
+                    else
+                    {
+                        Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
+                    }
                 }
-                else
+                else if(friend.state == FriendState.RequestSent || friend.state == FriendState.RequestReceived)
                 {
-                    Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
+                    Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-waiting-for-response"));
                 }
+            }
+
+            if (_waitingForContactConfirmation && friend.state == FriendState.Approved)
+            {
+                _waitingForContactConfirmation = false;
+                Utils.sendUiCommand(webView, "showRequestSentModal", "0");
             }
 
             // Show connectivity warning bar
@@ -1230,7 +1262,7 @@ namespace SPIXI
                 Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
             }
             
-
+                
             // Show the messages indicator
             int msgCount = FriendList.getUnreadMessageCount();
             //if(msgCount != lastMessageCount)

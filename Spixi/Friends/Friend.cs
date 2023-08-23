@@ -3,10 +3,7 @@ using IXICore.Meta;
 using IXICore.SpixiBot;
 using IXICore.Utils;
 using SPIXI.Meta;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+
 
 namespace SPIXI
 {
@@ -137,6 +134,14 @@ namespace SPIXI
         }
     }
 
+    public enum FriendState
+    {
+        RequestSent,
+        RequestReceived,
+        Approved,
+        Ignored,
+        Unknown
+    }
 
     public class Friend
     {
@@ -182,8 +187,11 @@ namespace SPIXI
 
         private object saveLock = new object();
 
-        public Friend(Address wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
+        public FriendState state = FriendState.Unknown;
+
+        public Friend(FriendState friend_state, Address wallet, byte[] public_key, string nick, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approve = true)
         {
+            state = friend_state;
             walletAddress = wallet;
             publicKey = public_key;
             nickname = nick;
@@ -208,7 +216,7 @@ namespace SPIXI
             channels.loadChannelsFromFile();
         }
 
-        public Friend(byte[] bytes, int version = 4)
+        public Friend(byte[] bytes, int version = 5)
         {
 
             using (MemoryStream m = new MemoryStream(bytes))
@@ -274,6 +282,18 @@ namespace SPIXI
                     {
                         setBotMode();
                     }
+
+                    if (version >= 6)
+                    {
+                        state = (FriendState)reader.ReadInt32();
+                    }
+                    else
+                    {
+                        // "Upgrade" previous version friend state to approved if aes key is present
+                        if(aesKey != null)
+                            state = FriendState.Approved;
+                    }
+
                 }
             }
         }
@@ -284,7 +304,7 @@ namespace SPIXI
             {
                 using (BinaryWriter writer = new BinaryWriter(m))
                 {
-                    writer.Write(5);
+                    writer.Write(6);
 
                     writer.Write(walletAddress.addressNoChecksum.Length);
                     writer.Write(walletAddress.addressNoChecksum);
@@ -337,6 +357,9 @@ namespace SPIXI
                     writer.Write(userDefinedNick);
 
                     writer.Write(addedTimestamp);
+
+                    writer.Write((int)state); // current FriendState
+
                 }
                 return m.ToArray();
             }

@@ -19,6 +19,11 @@ namespace SPIXI
             loadPage(webView, "intro.html");
         }
 
+        private void onLoad()
+        {
+            Utils.sendUiCommand(webView, "setVersion", Config.version);
+        }
+
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
             
@@ -28,7 +33,11 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:create", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            {
+                onLoad();
+            }
+            else if (current_url.Equals("ixian:create", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new LaunchCreatePage(), Config.defaultXamarinAnimations);
             }

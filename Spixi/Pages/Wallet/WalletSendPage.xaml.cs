@@ -96,60 +96,72 @@ namespace SPIXI
             else if (current_url.Contains("ixian:send:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:send:" }, StringSplitOptions.None);
+                string address = split[1];
 
-                // Extract all addresses and amounts
-                string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
-
-                // Go through each entry
-                foreach (string address_and_amount in addresses_split)
+                if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
                 {
-                    if (address_and_amount.Length < 1)
-                        continue;
-
-                    // Extract the address and amount
-                    string[] asplit = address_and_amount.Split(new string[] { ":" }, StringSplitOptions.None);
-                    if (asplit.Count() < 2)
-                        continue;
-
-                    string address = asplit[0];
-                    string amount = asplit[1];
-
-                    if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
-                    {
-                        e.Cancel = true;
-                        displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
-                        return;
-                    }
-                    string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
-                    if (amount_split.Length > 2)
-                    {
-                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amountdecimal-text"), SpixiLocalization._SL("global-dialog-ok"));
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    // Add decimals if none found
-                    if (amount_split.Length == 1)
-                        amount = String.Format("{0}.0", amount);
-
-                    IxiNumber _amount = amount;
-
-                    if (_amount == 0)
-                    {
-                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    if (_amount < (long)0)
-                    {
-                        displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
-                        e.Cancel = true;
-                        return;
-                    }
+                    e.Cancel = true;
+                    displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                    return;
                 }
 
-                Navigation.PushAsync(new WalletSend2Page(addresses_split), Config.defaultXamarinAnimations);
+                Navigation.PushAsync(new WalletSend2Page(address), Config.defaultXamarinAnimations);
+
+                /*             // TODO re-enable in a future update  
+                 *             // Extract all addresses and amounts
+                               string[] addresses_split = split[1].Split(new string[] { "|" }, StringSplitOptions.None);
+
+                               // Go through each entry
+                               foreach (string address_and_amount in addresses_split)
+                               {
+                                   if (address_and_amount.Length < 1)
+                                       continue;
+
+                                   // Extract the address and amount
+                                   string[] asplit = address_and_amount.Split(new string[] { ":" }, StringSplitOptions.None);
+                                   if (asplit.Count() < 2)
+                                       continue;
+
+                                   string address = asplit[0];
+                                   string amount = asplit[1];
+
+                                   if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(address)) == false)
+                                   {
+                                       e.Cancel = true;
+                                       displaySpixiAlert(SpixiLocalization._SL("global-invalid-address-title"), SpixiLocalization._SL("global-invalid-address-text"), SpixiLocalization._SL("global-dialog-ok"));
+                                       return;
+                                   }
+                                   string[] amount_split = amount.Split(new string[] { "." }, StringSplitOptions.None);
+                                   if (amount_split.Length > 2)
+                                   {
+                                       displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amountdecimal-text"), SpixiLocalization._SL("global-dialog-ok"));
+                                       e.Cancel = true;
+                                       return;
+                                   }
+
+                                   // Add decimals if none found
+                                   if (amount_split.Length == 1)
+                                       amount = String.Format("{0}.0", amount);
+
+                                   IxiNumber _amount = amount;
+
+                                   if (_amount == 0)
+                                   {
+                                       displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                                       e.Cancel = true;
+                                       return;
+                                   }
+
+                                   if (_amount < (long)0)
+                                   {
+                                       displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                                       e.Cancel = true;
+                                       return;
+                                   }
+                               }
+                               Navigation.PushAsync(new WalletSend2Page(addresses_split), Config.defaultXamarinAnimations);
+                */
+
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {

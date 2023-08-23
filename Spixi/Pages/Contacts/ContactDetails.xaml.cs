@@ -60,7 +60,8 @@ namespace SPIXI
             else if (current_url.Equals("ixian:remove", StringComparison.Ordinal))
             {
                 onRemove();
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+
+                Navigation.PopToRootAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:removehistory", StringComparison.Ordinal))
             {
@@ -171,7 +172,7 @@ namespace SPIXI
                     {
                         tx_type = SpixiLocalization._SL("global-sent");
                     }
-                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
+                    string time = Utils.unixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
                     Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, utransaction.amount.ToString(), "false");
                 }
 
@@ -192,7 +193,7 @@ namespace SPIXI
                     {
                         tx_type = SpixiLocalization._SL("global-sent");
                     }
-                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
+                    string time = Utils.unixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
 
                     string confirmed = "true";
                     if (transaction.applied == 0)

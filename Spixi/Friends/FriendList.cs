@@ -326,9 +326,9 @@ namespace SPIXI
             friends = friends.OrderBy(x => x.nickname).ToList();
         }
 
-        public static Friend addFriend(Address wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
+        public static Friend addFriend(FriendState state, Address wallet_address, byte[] public_key, string name, byte[] aes_key, byte[] chacha_key, long key_generated_time, bool approved = true)
         {
-            Friend new_friend = new Friend(wallet_address, public_key, name, aes_key, chacha_key, key_generated_time, approved);
+            Friend new_friend = new Friend(state, wallet_address, public_key, name, aes_key, chacha_key, key_generated_time, approved);
             return addFriend(new_friend);
         }
 

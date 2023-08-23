@@ -1,6 +1,4 @@
-﻿using SPIXI.Interfaces;
-using System;
-using System.Web;
+﻿using System.Web;
 
 namespace SPIXI
 {
@@ -45,6 +43,12 @@ namespace SPIXI
             {
                 Navigation.PopModalAsync();
             }
+            else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
+            {
+                var recipientPage = new ContactNewPage();
+                recipientPage.pickSucceeded += HandleNewContactSucceeded;
+                Navigation.PushModalAsync(recipientPage);
+            }
             else if (current_url.Contains("ixian:select:"))
             {
                 string[] split = current_url.Split(new string[] { "ixian:select:|" }, StringSplitOptions.None);
@@ -61,6 +65,13 @@ namespace SPIXI
 
         }
 
+        private void HandleNewContactSucceeded(object sender, SPIXI.EventArgs<string> e)
+        {
+            string id = e.Value;
+            onPickSucceeded(id);
+            Navigation.PopModalAsync();
+        }
+
         private void onPickSucceeded(string id)
         {
             if (pickSucceeded != null)
@@ -71,6 +82,12 @@ namespace SPIXI
 
         public void loadContacts()
         {
+            if(FriendList.friends.Count == 0)
+            {
+                Utils.sendUiCommand(webView, "noContacts");
+                return;
+            }
+
             Utils.sendUiCommand(webView, "clearContacts");
 
             foreach (Friend friend in FriendList.friends)
@@ -78,7 +95,7 @@ namespace SPIXI
                 string str_online = "false";
                 if (friend.online)
                     str_online = "true";
-
+                
                 Utils.sendUiCommand(webView, "addContact", friend.walletAddress.ToString(), friend.nickname, "img/spixiavatar.png", str_online);
             }
         }
@@ -89,5 +106,11 @@ namespace SPIXI
 
             return true;
         }
+
+        protected override void OnAppearing()
+        {
+            loadContacts();
+        }
+
     }
 }

@@ -20,7 +20,8 @@ namespace SPIXI
         appSession,
         appSessionEnd,
         kicked,
-        banned
+        banned,
+        requestAddSent
     }
 
     public class FriendMessage
