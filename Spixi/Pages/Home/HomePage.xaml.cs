@@ -2,18 +2,11 @@
 using IXICore.Meta;
 using IXICore.Network;
 using Spixi;
-using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Threading;
 using System.Web;
-//using ZXing.Net.Mobile.Forms;
 
 namespace SPIXI
 {
@@ -41,6 +34,7 @@ namespace SPIXI
 
         // Temporary optimizations for native->js data transfer
         private ulong lastTransactionChange = 9999;
+        private ushort transactionFilter = 0; // 0-All 1-Sent 2-Received
 
         private string currentTab = "tab1";
 
@@ -69,12 +63,6 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
             this.Title = "SPIXI";
-            string onboarding_complete = "false";
-            if (Preferences.Default.ContainsKey("onboardingComplete"))
-            {
-                onboarding_complete = "true";
-            }
-            SpixiLocalization.addCustomString("OnboardingComplete", onboarding_complete);
 
             loadPage(webView, "index.html");
 
@@ -146,6 +134,14 @@ namespace SPIXI
                 e.Cancel = true;
                 return;
             }
+            else if (current_url.Contains("ixian:filter:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:filter:" }, StringSplitOptions.None);
+                string result = split[1];
+                filterTransactions(result);
+                e.Cancel = true;
+                return;
+            }
             else if (current_url.Equals("ixian:newchat", StringComparison.Ordinal))
             {
                 newChat();
@@ -170,10 +166,6 @@ namespace SPIXI
             {
                 onSettings(sender, e);
             }
-            else if (current_url.Equals("ixian:address", StringComparison.Ordinal))
-            {
-                Navigation.PushAsync(new MyAddressPage(), Config.defaultXamarinAnimations);
-            }
             else if (current_url.Equals("ixian:lock", StringComparison.Ordinal))
             {
                 //   prepBackground();
@@ -185,15 +177,11 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:about", StringComparison.Ordinal))
             {
-#pragma warning disable CS0618 // Type or member is obsolete
                 Browser.Default.OpenAsync(new Uri(Config.aboutUrl));
-#pragma warning restore CS0618 // Type or member is obsolete
             }
             else if (current_url.Equals("ixian:guide", StringComparison.Ordinal))
             {
-#pragma warning disable CS0618 // Type or member is obsolete
                 Browser.Default.OpenAsync(new Uri(Config.guideUrl));
-#pragma warning restore CS0618 // Type or member is obsolete
             }
             else if (current_url.Equals("ixian:backup", StringComparison.Ordinal))
             {
@@ -251,13 +239,18 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:apps", StringComparison.Ordinal))
             {
-                //   prepBackground();
                 Navigation.PushAsync(new AppsPage(), Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:downloads", StringComparison.Ordinal))
             {
-                //   prepBackground();
-                Navigation.PushAsync(new DownloadsPage(), Config.defaultXamarinAnimations);
+                Navigation.PushModalAsync(new DownloadsPage());
+            }
+            else if (current_url.Equals("ixian:share", StringComparison.Ordinal))
+            {
+                Share.RequestAsync(new ShareTextRequest
+                {
+                    Text = IxianHandler.getWalletStorage().getPrimaryAddress().ToString(),
+                });
             }
             else if(current_url.StartsWith("ixian:viewLog"))
             {
@@ -290,21 +283,14 @@ namespace SPIXI
                 }
 
                 SFileOperations.share(Path.Combine(Config.spixiUserFolder, "spixi.log.zip"), "Share Spixi Log File");
-            }else if(current_url.StartsWith("ixian:onboardingComplete"))
+            }
+            else if(current_url.StartsWith("ixian:onboardingComplete"))
             {
-                Preferences.Default.Set("onboardingComplete", true);
-
-                SpixiLocalization.addCustomString("OnboardingComplete", "true");
-                generatePage("index.html");
-            }else if(current_url.StartsWith("ixian:joinBot"))
+                completeOnboard();
+            }
+            else if(current_url.StartsWith("ixian:joinBot"))
             {
-                Friend friend = FriendList.addFriend(new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
-                if (friend != null)
-                {
-                    friend.save();
-
-                    StreamProcessor.sendContactRequest(friend);
-                }
+                joinBot();
             }
             else
             {
@@ -313,9 +299,7 @@ namespace SPIXI
                 return;
             }
             e.Cancel = true;
-
         }
-
 
         public async void quickScan()
         {
@@ -363,12 +347,8 @@ namespace SPIXI
 
         private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {
-            //MainPage = new MainPage();
             string id = e.Value;
-
-
             Address id_bytes = new Address(id);
-
             Friend friend = FriendList.getFriend(id_bytes);
 
             if (friend == null)
@@ -378,8 +358,25 @@ namespace SPIXI
 
             Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
             Navigation.PopModalAsync();
+        }
 
+        private void joinBot()
+        {
+            Friend friend = FriendList.addFriend(FriendState.RequestSent, new Address("419jmKRKVFcsjmwpDF1XSZ7j1fez6KWaekpiawHvrpyZ8TPVmH1v6bhT2wFc1uddV"), null, "Spixi Group Chat", null, null, 0);
+            if (friend != null)
+            {
+                friend.save();
 
+                StreamProcessor.sendContactRequest(friend);
+            }
+        }
+
+        private void completeOnboard()
+        {
+            Preferences.Default.Set("onboardingComplete", true);
+
+            SpixiLocalization.addCustomString("OnboardingComplete", "true");
+            generatePage("index.html");
         }
 
         // Workaround for Android - sometimes the order of the screens isn't correct
@@ -401,9 +398,25 @@ namespace SPIXI
                 Logging.error("Exception occured while setting HomePage as root: {0}", e);
             }
         }
-
+        private void handleOnboardDone(object sender, SPIXI.EventArgs<bool> e)
+        {
+            // Join official groupchat if specified
+            if (e.Value)
+                joinBot();
+            
+            completeOnboard();
+            Navigation.PopModalAsync();
+        }
         private void onLoaded()
-        {           
+        {
+            if (!Preferences.Default.ContainsKey("onboardingComplete"))
+            {
+                // Show onboarding screen
+                var onboardPage = new OnboardPage();
+                onboardPage.onboardDone += handleOnboardDone;
+                Navigation.PushModalAsync(onboardPage);
+            }
+
             setAsRoot();
 
             Node.shouldRefreshContacts = true;
@@ -415,6 +428,9 @@ namespace SPIXI
             Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
             Utils.sendUiCommand(webView, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
+
+            string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
+            Utils.sendUiCommand(webView, "setAddress", address_string);
 
             try
             {
@@ -433,8 +449,6 @@ namespace SPIXI
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
         {
-            //webView.Eval(string.Format("setBalance(\"{0}\")", "0.0000"));
-            //webView.Eval(string.Format("setAddress(\"{0}\")", IxianHandler.getWalletStorage().address));
         }
 
 
@@ -451,7 +465,7 @@ namespace SPIXI
         public void onSettings(object sender, EventArgs e)
         {
             fromSettings = true;
-            Navigation.PushAsync(new SettingsPage(), Config.defaultXamarinAnimations);
+            Navigation.PushModalAsync(new SettingsPage());
         }
 
         public void onChat(string friend_address, WebNavigatingEventArgs e)
@@ -557,7 +571,7 @@ namespace SPIXI
             }
 
             Utils.sendUiCommand(webView, "clearChats");
-            Utils.sendUiCommand(webView, "clearUnreadActivity");
+            //Utils.sendUiCommand(webView, "clearUnreadActivity");
 
             // Prepare a list of message helpers, to facilitate sorting and communication with the UI
             List<FriendMessageHelper> helper_msgs = new List<FriendMessageHelper>();
@@ -585,51 +599,62 @@ namespace SPIXI
 
                     // Generate the excerpt depending on message type
                     string excerpt = lastmsg.message;
-                    if (lastmsg.type == FriendMessageType.requestFunds)
+
+                    if (friend.state != FriendState.Approved)
                     {
+                        if (friend.bot == false)
+                        {
+                            excerpt = SpixiLocalization._SL("chat-waiting-for-response");
+                        }
+                    }
+                    else
+                    {
+                        if (lastmsg.type == FriendMessageType.requestFunds)
+                        {
+                            if (lastmsg.localSender)
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-payment-request-sent");
+                            }
+                            else
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-payment-request-received");
+                            }
+                        }
+                        else if (lastmsg.type == FriendMessageType.sentFunds)
+                        {
+                            if (lastmsg.localSender)
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-payment-sent");
+                            }
+                            else
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-payment-received");
+                            }
+                        }
+                        else if (lastmsg.type == FriendMessageType.requestAdd)
+                        {
+                            if (friend.approved)
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-contact-accepted");
+                            }
+                            else
+                            {
+                                excerpt = SpixiLocalization._SL("index-excerpt-contact-request");
+                            }
+                        }
+                        else if (lastmsg.type == FriendMessageType.fileHeader)
+                        {
+                            excerpt = SpixiLocalization._SL("index-excerpt-file");
+                        }
+                        else if (lastmsg.type == FriendMessageType.voiceCall || lastmsg.type == FriendMessageType.voiceCallEnd)
+                        {
+                            excerpt = SpixiLocalization._SL("index-excerpt-voice-call");
+                        }
+
                         if (lastmsg.localSender)
                         {
-                            excerpt = SpixiLocalization._SL("index-excerpt-payment-request-sent");
+                            excerpt = SpixiLocalization._SL("index-excerpt-self") + " " + excerpt;
                         }
-                        else
-                        {
-                            excerpt = SpixiLocalization._SL("index-excerpt-payment-request-received");
-                        }
-                    }
-                    else if (lastmsg.type == FriendMessageType.sentFunds)
-                    {
-                        if (lastmsg.localSender)
-                        {
-                            excerpt = SpixiLocalization._SL("index-excerpt-payment-sent");
-                        }
-                        else
-                        {
-                            excerpt = SpixiLocalization._SL("index-excerpt-payment-received");
-                        }
-                    }
-                    else if (lastmsg.type == FriendMessageType.requestAdd)
-                    {
-                        if (friend.approved)
-                        {
-                            excerpt = SpixiLocalization._SL("index-excerpt-contact-accepted");
-                        }
-                        else
-                        {
-                            excerpt = SpixiLocalization._SL("index-excerpt-contact-request");
-                        }
-                    }
-                    else if (lastmsg.type == FriendMessageType.fileHeader)
-                    {
-                        excerpt = SpixiLocalization._SL("index-excerpt-file");
-                    }
-                    else if(lastmsg.type == FriendMessageType.voiceCall || lastmsg.type == FriendMessageType.voiceCallEnd)
-                    {
-                        excerpt = SpixiLocalization._SL("index-excerpt-voice-call");
-                    }
-                    
-                    if (lastmsg.localSender)
-                    {
-                        excerpt = SpixiLocalization._SL("index-excerpt-self") + " " + excerpt;
                     }
 
                     string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString());
@@ -676,6 +701,46 @@ namespace SPIXI
             return amount;
         }
 
+        public void filterTransactions(string filter)
+        {
+            switch(filter)
+            {
+
+                case "sent":
+                    {
+                        transactionFilter = 1;
+                        break;
+                    }
+                case "received":
+                    {
+                        transactionFilter = 2;
+                        break;
+                    }
+                default:
+                case "all":
+                    {
+                        transactionFilter = 0;
+                        break;
+                    }
+
+            }
+            lastTransactionChange++;
+            loadTransactions();
+        }
+        public string filterToString(int filter)
+        {
+            switch(filter)
+            {
+                case 1:
+                    return "sent";
+                case 2:
+                    return "received";
+                case 0:
+                default:
+                    return "all";
+            }
+        }
+
         public void loadTransactions()
         {
             // Check if there are any changes
@@ -685,24 +750,38 @@ namespace SPIXI
             }
             lastTransactionChange = TransactionCache.lastChange;
 
-            Utils.sendUiCommand(webView, "clearPaymentActivity");
+            Utils.sendUiCommand(webView, "clearPaymentActivity", filterToString(transactionFilter));
+
+            void addPaymentActivity(Transaction tx)
+            {
+                string received = "1";
+                string tx_text = tx.pubKey.ToString();
+                IxiNumber amount = tx.amount;
+                if (IxianHandler.getWalletStorage().isMyAddress(tx.pubKey))
+                {
+                    tx_text = tx.toList.First().Key.ToString();
+                    received = "0";
+                    if (transactionFilter == 2)
+                        return;
+                }
+                else
+                {
+                    amount = calculateReceivedAmount(tx);
+                    if (transactionFilter == 1)
+                        return;
+                }
+                string amount_string = Utils.amountToHumanFormatString(amount);
+                string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
+
+                string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(tx.timeStamp));
+                Utils.sendUiCommand(webView, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, "false");
+            }
+
             lock (TransactionCache.unconfirmedTransactions)
             {
                 for (int i = TransactionCache.unconfirmedTransactions.Count - 1; i >= 0; i--)
                 {
-                    Transaction utransaction = TransactionCache.unconfirmedTransactions[i].transaction;
-                    string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
-                    IxiNumber amount = utransaction.amount;
-                    if (IxianHandler.getWalletStorage().isMyAddress(utransaction.pubKey))
-                    {
-                        tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
-                    }
-                    else
-                    {
-                        amount = calculateReceivedAmount(utransaction);
-                    }
-                    string time = Utils.UnixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                    Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, amount.ToString(), "false");
+                    addPaymentActivity(TransactionCache.unconfirmedTransactions[i].transaction);
                 }
             }
 
@@ -714,26 +793,7 @@ namespace SPIXI
 
             for (int i = TransactionCache.transactions.Count - 1; i >= max_tx_count; i--)
             {
-                Transaction transaction = TransactionCache.transactions[i].transaction;
-                string tx_type = SpixiLocalization._SL("index-excerpt-payment-received");
-                IxiNumber amount = transaction.amount;
-                if (IxianHandler.getWalletStorage().isMyAddress(transaction.pubKey))
-                {
-                    tx_type = SpixiLocalization._SL("index-excerpt-payment-sent");
-                }
-                else
-                {
-                    amount = calculateReceivedAmount(transaction);
-                }
-                string time = Utils.UnixTimeStampToString(Convert.ToDouble(transaction.timeStamp));
-
-                string confirmed = "true";
-                if(transaction.applied == 0)
-                {
-                    confirmed = "error";
-                }
-
-                Utils.sendUiCommand(webView, "addPaymentActivity", transaction.getTxIdString(), tx_type, time, amount.ToString(), confirmed);
+                addPaymentActivity(TransactionCache.transactions[i].transaction);                
             }
         }
 
@@ -775,8 +835,9 @@ namespace SPIXI
             {
                 Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
             }
-
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.localStorage.nickname);
+            string balance = Utils.amountToHumanFormatString(Node.balance.balance);
+            string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * Node.balance.balance);
+            Utils.sendUiCommand(webView, "setBalance", balance, fiatBalance, Node.localStorage.nickname);
 
             // Check if we should reload certain elements
             if(Node.changedSettings == true)
@@ -797,7 +858,7 @@ namespace SPIXI
                    // return;
                 }
                 Page page = Navigation.NavigationStack.Last();
-                if (page != null && page is SpixiContentPage)
+                if (page is not null and SpixiContentPage)
                 {
                     ((SpixiContentPage)page).updateScreen();
                 }
