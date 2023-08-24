@@ -5,7 +5,8 @@ var messageCost = "";
 
 var attachMode = false;
 
-var contactrequestbar = document.getElementById("contactrequestbar");
+var requestReceivedModal = document.getElementById("requestReceivedModal");
+var requestSentModal = document.getElementById("requestSentModal");
 
 var userNick = "";
 var userAddress = "";
@@ -238,24 +239,6 @@ document.getElementById("ca_sendfile").onclick = function () {
     }
 
     location.href = "ixian:sendfile";
-}
-
-document.getElementById("request_bar_ignore").onclick = function () {
-    location.href = "ixian:back";
-}
-document.getElementById("request_bar_accept").onclick = function () {
-    showContactRequest(false);
-    location.href = "ixian:accept";
-}
-function showContactRequest(show) {
-    if (show == true) {
-        contactrequestbar.style.display = "block";
-        document.getElementById("chat_input").disabled = true;
-    }
-    else {
-        contactrequestbar.style.display = "none";
-        document.getElementById("chat_input").disabled = false;
-    }
 }
 
 document.getElementById("chat_send").onclick = function () {
@@ -852,7 +835,10 @@ function updateTransactionStatus(txid, status, statusIcon) {
 function setNickname(nick) {
     userNick = nick;
     document.getElementById("title").innerHTML = nick;
-    document.getElementById("contactrequesttitle").innerHTML = nick + " " + SL_ChatSentContactRequest;
+}
+
+document.getElementById("undorequest").onclick = function () {
+    location.href = "ixian:undorequest";
 }
 
 // Handle 'attach' bar, allowing to send and request IXI
@@ -1334,6 +1320,7 @@ function showBotDetails()
 {
     if(!isBot)
     {
+        location.href = "ixian:details";
         return;
     }
     document.getElementById("BotDetails").style.display = "block";
@@ -1513,6 +1500,44 @@ function setUnreadIndicator(unread_count) {
         document.getElementById("backbtn").className = "unread";
     } else {
         document.getElementById("backbtn").className = "";
+    }
+}
+
+function showRequestSentModal(show) {
+    if (show == true) {
+        requestSentModal.style.display = "block";
+        document.getElementById("chatbar").style.display = "none";
+        document.getElementById("CallButton").style.display = "none";
+        document.getElementById("chat_input").disabled = true;
+    }
+    else {
+        requestSentModal.style.display = "none";
+        document.getElementById("chatbar").style.display = "block";
+        document.getElementById("CallButton").style.display = "block";
+        document.getElementById("chat_input").disabled = false;
+    }
+}
+
+
+document.getElementById("request_bar_ignore").onclick = function () {
+    location.href = "ixian:undorequest";
+}
+document.getElementById("request_bar_accept").onclick = function () {
+    showContactRequest(false);
+    location.href = "ixian:accept";
+}
+function showContactRequest(show) {
+    if (show == true) {
+        requestReceivedModal.style.display = "block";
+        document.getElementById("chatbar").style.display = "none";
+        document.getElementById("CallButton").style.display = "none";
+        document.getElementById("chat_input").disabled = true;
+    }
+    else {
+        requestReceivedModal.style.display = "none";
+        document.getElementById("chatbar").style.display = "block";
+        document.getElementById("CallButton").style.display = "block";
+        document.getElementById("chat_input").disabled = false;
     }
 }
 

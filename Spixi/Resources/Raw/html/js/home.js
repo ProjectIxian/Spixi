@@ -1,63 +1,10 @@
 ﻿var searchingContacts = false;
 var timeoutId = 0;
 var balance = "0";
+var fiatBalance = "0";
+var hideBalance = false;
 
 var homeModal = document.getElementById('homeMenuModal');
-
-function onboardingStart()
-{
-    onboardingLocalizedSkip = SL_Onboarding["onboardingSkip"];
-    onboardingLocalizedFinish = SL_Onboarding["onboardingFinish"];
-    createOnboardingFrame();
-    onboarding(100);
-}
-
-function onboarding(section)
-{
-    var title = "";
-    var text = "";
-    var showPager = true;
-    var showSkip = true;
-    switch(section)
-    {
-        case 1:
-            title = SL_Onboarding["screen1Title"];
-            text = SL_Onboarding["screen1Text"];
-            break;
-        case 2:
-            title = SL_Onboarding["screen2Title"];
-            text = SL_Onboarding["screen2Text"];
-            break;
-        case 3:
-            title = SL_Onboarding["screen3Title"];
-            text = SL_Onboarding["screen3Text"];
-            break;
-        case 4:
-            title = SL_Onboarding["screen4Title"];
-            text = SL_Onboarding["screen4Text"];
-            showSkip = false;
-            break;
-        case 100:
-            title = SL_Onboarding["botTitle"];
-            text = SL_Onboarding["botText"];
-            text += '<div class="spixi-holder-20"></div>';
-            text += '<div class="spixi-separator-white"></div>';
-            text += '<div class="spixi-holder-20"></div>';
-            text += "<div class=\"intro-button center\" onclick=\"location.href='ixian:joinBot'; onboarding(1);\">" + SL_Onboarding["botJoin"] + "</div>";
-            text += '<div class="spixi-holder-20"></div>';
-            text += "<div class=\"intro-button center\" onclick=\"onboarding(1);\">" + SL_Onboarding["botDontJoin"] + "</div>";
-            showPager = false;
-            showSkip = false;
-            break;
-    }
-	setOnboardingContents(title, text, section, showPager, showSkip);
-}
-
-if(SL_Onboarding["OnboardingComplete"] == "false")
-{
-    onboardingStart();
-}
-
 
 function htmlEscape(str) {
     return str
@@ -100,128 +47,59 @@ function setVersion(version) {
     document.getElementById("version").innerHTML = version;
 }
 
-$('#status_balance').on('mousedown touchstart', function() {
-    timeoutId = setTimeout(toggleBalance, 1000);
-}).on('mouseup mouseleave touchend', function() {
-    clearTimeout(timeoutId);
-});
-
-$('#wallet_balance').on('mousedown touchstart', function() {
-    timeoutId = setTimeout(toggleBalance, 1000);
-}).on('mouseup mouseleave touchend', function() {
-    clearTimeout(timeoutId);
-});
-
+document.getElementById("activity_balance_toggle").onclick = function () {
+    toggleBalance();
+}
 
 // Toolbar
 document.getElementById("MainMenu").onclick = function() {
     onMainMenuAction();
 }
 
-document.getElementById("exp1").onclick = function() {
-    var x = document.getElementById("exp1-contents");
-    var eleft = document.getElementById("exp1-left");
-    var eicon = document.getElementById("exp1-icon");
-
-
-
-    if (x.style.display === "none")
-    {
-        x.style.display = "block";
-        eleft.className = "spixi-expansion-left active";
-        eicon.className = "fa fa-minus";
-    }
-    else
-    {
-        x.style.display = "none";
-        eleft.className = "spixi-expansion-left";
-        eicon.className = "fa fa-caret-down";
-
-    }
-
+document.getElementById("filter-all").onclick = function () {
+    location.href = "ixian:filter:all";
+}
+document.getElementById("filter-sent").onclick = function () {
+    location.href = "ixian:filter:sent";
+}
+document.getElementById("filter-received").onclick = function () {
+    location.href = "ixian:filter:received";
 }
 
-document.getElementById("exp2").onclick = function() {
-    var x = document.getElementById("exp2-contents");
-    var eleft = document.getElementById("exp2-left");
-    var eicon = document.getElementById("exp2-icon");
-
-
-
-    if (x.style.display === "none")
-    {
-        x.style.display = "block";
-        eleft.className = "spixi-expansion-left active";
-        eicon.className = "fa fa-minus";
-    }
-    else
-    {
-        x.style.display = "none";
-        eleft.className = "spixi-expansion-left";
-        eicon.className = "fa fa-caret-down";
-
-    }
-
-}
-
-document.getElementById("exp3").onclick = function() {
-    var x = document.getElementById("exp3-contents");
-    var eleft = document.getElementById("exp3-left");
-    var eicon = document.getElementById("exp3-icon");
-
-
-
-    if (x.style.display === "none")
-    {
-        x.style.display = "block";
-        eleft.className = "spixi-expansion-left active";
-        eicon.className = "fa fa-minus";
-    }
-    else
-    {
-        x.style.display = "none";
-        eleft.className = "spixi-expansion-left";
-        eicon.className = "fa fa-caret-down";
-
-    }
-
-}
-
-
-function setBalance(theText, theNick) {
-    var balDiv = document.getElementById('activity_balance_number');
-    var balDiv2 = document.getElementById('wallet_balance_number');
-
-    balance = "<img class=\"ixicash-icon\" src=\"img/ixicash.svg\"/> <span>" + theText + "</span>";
-
-    if(balDiv.innerHTML != "&nbsp;")
-        balDiv.innerHTML = balance;
-
-    if(balDiv2.innerHTML != "&nbsp;")
-        balDiv2.innerHTML = balance;
-
+function setBalance(bal, fiatBal, theNick) {
     // Set the user nickname
     document.getElementById('menu_nickname').innerHTML = theNick;
+
+    bal = amountWithCommas(bal);
+    fiatBal = amountWithCommas(fiatBal);
+    balance = "<img class=\"ixicash-icon\" src=\"img/ixilogo.svg\"/> <span>" + bal + "</span>";
+    fiatBalance = "$" + fiatBal;
+
+    if (hideBalance == false) {
+        var balDiv = document.getElementById('activity_balance_number');
+        balDiv.innerHTML = balance;
+
+        var fiatBalDiv = document.getElementById('activity_balance_info');
+        fiatBalDiv.innerHTML = fiatBalance;
+    }
 }
 
 function toggleBalance()
 {
     var balDiv = document.getElementById('activity_balance_number');
-    if(balDiv.innerHTML == "&nbsp;")
+    if (hideBalance == true)
     {
         balDiv.innerHTML = balance;
-        document.getElementById('wallet_balance_number').innerHTML = balance;
-        document.getElementById('activity_balance_info').innerHTML = SL_IndexBalanceInfo;
-        document.getElementById('wallet_balance_info').innerHTML = SL_IndexBalanceInfo;
-
+        document.getElementById('activity_balance_info').innerHTML = fiatBalance;
+        document.getElementById('activity_balance_toggle').innerHTML = SL_IndexBalanceHide + " <i class='fa fa-eye'></i>";      
+        hideBalance = false;
     }
     else
     {
-        balDiv.innerHTML = "&nbsp;";
-        document.getElementById('wallet_balance_number').innerHTML = "&nbsp;";
-        document.getElementById('activity_balance_info').innerHTML = SL_IndexBalanceInfo2;
-        document.getElementById('wallet_balance_info').innerHTML = SL_IndexBalanceInfo2;
-
+        balDiv.innerHTML = "<img class=\"ixicash-icon\" src=\"img/ixilogo.svg\"/> <span>--</span>";
+        document.getElementById('activity_balance_info').innerHTML = SL_IndexBalanceInfo;
+        document.getElementById('activity_balance_toggle').innerHTML = SL_IndexBalanceShow + " <i class='fa fa-eye-slash'></i>";
+        hideBalance = true;
     }
 }
 
@@ -231,7 +109,6 @@ function selectFABOption(link) {
 }
 
 function selectMenuOption(link) {
-    onMainMenuClose();
     location.href = "ixian:" + link;
 }
 
@@ -341,7 +218,7 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     var unreadEl = document.getElementById("un_" + wal);
     if(chatEl != null)
     {
-        if((excerpt == "" && msgTimestamp == 0) || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
+        if((excerpt == "") || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
         {
             chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
             if(unreadEl != null)
@@ -373,19 +250,39 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
 
 
 // Clears payment activity from wallet page
-function clearPaymentActivity()
+function clearPaymentActivity(filter)
 {
     var paymentsNode = document.getElementById("paymentlist");
     while (paymentsNode.firstChild) {
         paymentsNode.removeChild(paymentsNode.firstChild);
     }
+
+    updateFilterButton("filter-all", "");
+    updateFilterButton("filter-sent", "");
+    updateFilterButton("filter-received", "");
+
+    if (filter == "all")
+        updateFilterButton("filter-all", "active");
+    else if (filter == "sent")
+        updateFilterButton("filter-sent", "active");
+    else if (filter == "received")
+        updateFilterButton("filter-received", "active");       
+}
+
+function updateFilterButton(btnid, filter)
+{
+    document.getElementById(btnid).className = "spixi-activity-filterbutton " + filter;
 }
 
 // Adds a payment
-function addPaymentActivity(txid, text, timestamp, amount, confirmed)
+function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, confirmed)
 {
+    document.getElementById("section_transactions").style = "display:block";
+    document.getElementById("section_no_transactions").style = "display:none";
+
+
     var iconClass = "spixi-text-red";
-    var icon = '<i class="fa fa-circle-notch fa-spin"></i>';
+    var icon = '<i class="fa fa-spinner fa-spin"></i>';
     if (confirmed == "true") {
         iconClass = "spixi-text-green";
         icon = '<i class="fa fa-check-circle"></i>';
@@ -395,11 +292,24 @@ function addPaymentActivity(txid, text, timestamp, amount, confirmed)
         icon = '<i class="fa fa-exclamation-circle"></i>';
     }
 
+
+    var arrow = '<i class="spixi-list-tx-icon spixi-tx-green fa fa-arrow-down"></i>';
+
+    amount = amountWithCommas(amount);
+
+    var amountText = "+ " + amount;
+    if (receive == "0") {
+        arrow = '<i class="spixi-list-tx-icon spixi-tx-red fa fa-arrow-up"></i>';
+        amountText = "- " + amount;
+    }
+
+    fiatAmount = amountWithCommas(fiatAmount);
+    var fiatAmountText = "$" + fiatAmount;
+
     var paymentsNode = document.getElementById("paymentlist");
 
     var paymentEntry = document.createElement("div");
-    paymentEntry.className = "spixi-list-item payment";
-    paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row"><div class="col-2 spixi-list-item-left"><div class="' + iconClass + '">' + icon + '</div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + text + '</div><div class="spixi-list-item-subtitle">' + amount + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-timestamp">' + timestamp + '</div></div></div></a>';
+    paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row no-gutters spixi-list-item-first-row"><div class="col"><div class="spixi-list-item-from"><i class="spixi-list-item-from-status spixi-status-yellow fa fa-spinner fa-spin"></i> ' + text + '</div></div> <div class="col spixi-list-item-right"><div class="spixi-list-item-amount">' + amountText + arrow + '</div></div></div><div class="row no-gutters spixi-list-item-second-row"><div class="col"><div class="spixi-list-item-timestamp">' + timestamp + '</div></div><div class="col spixi-list-item-right"><div class="spixi-list-item-amount-fiat">' + fiatAmountText + '</div></div></div></a>';
 
     paymentsNode.appendChild(paymentEntry);
 }
@@ -407,6 +317,8 @@ function addPaymentActivity(txid, text, timestamp, amount, confirmed)
 // Clears all chats from chats page
 function clearChats() {
     document.getElementById("chatlist").innerHTML = "";
+    document.getElementById("chat_no_activity").style.display = 'block';
+    document.getElementById("chat_action_button").style.display = 'none';
 }
 
 // Adds a chat
@@ -452,6 +364,7 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread, i
     }
     document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
+    document.getElementById("chat_action_button").style.display = 'block';
 }
 
 function setUnreadIndicator(unread_count) {
@@ -460,12 +373,11 @@ function setUnreadIndicator(unread_count) {
     } else {
         document.getElementById("tab2").firstElementChild.className = "spixi-tab-pad";
     }
-    document.getElementById("unread_count").innerHTML = unread_count;
 }
 
 // Clears all unread activity from main page
 function clearUnreadActivity() {
-    document.getElementById("exp2-contents").innerHTML = "";
+
 }
 
 function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg, insertToTop) {
@@ -488,20 +400,6 @@ function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg,
         timeClass = "spixi-timestamp spixi-rel-ts-active";
     }
 
-    var chatsNode = document.getElementById("exp2-contents");
-    var readmsg = document.createElement("div");
-    readmsg.href = "ixian:chat:" + wallet;
-    readmsg.id = "un_" + wallet;
-    readmsg.className = "spixi-list-item " + indicator;
-    readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
-
-    if(insertToTop)
-    {
-        chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
-    }else
-    {
-        chatsNode.appendChild(readmsg);
-    }
     document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
 }
@@ -513,13 +411,12 @@ function setNotificationCount(notification_count) {
 // Function to toggle tab's active color
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     // Not very elegant, but it works
-    document.getElementById("tab1").className = "col-3 spixi-tab";
-    document.getElementById("tab2").className = "col-3 spixi-tab";
-    document.getElementById("tab3").className = "col-3 spixi-tab";
-    document.getElementById("tab4").className = "col-3 spixi-tab";
+    document.getElementById("tab1").className = "col-4 spixi-tab";
+    document.getElementById("tab2").className = "col-4 spixi-tab";
+    document.getElementById("tab3").className = "col-4 spixi-tab";
 
     var cl = "active";
-    e.target.parentElement.className = "col-3 spixi-tab " + cl;
+    e.target.parentElement.className = "col-4 spixi-tab " + cl;
 
     var tabid = e.target.parentElement.id;
     location.href = "ixian:tab:" + tabid;
