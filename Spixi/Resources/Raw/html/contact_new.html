@@ -44,47 +44,92 @@
         <!-- End Toolbar -->
         <!-- DescriptionBar -->
         <div class="spixi-descriptionbar">
-            <div class="container">
+            <div>
                 <div class="row spixi-descriptionbar-row">
-                    <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">*SL{contact-new-description}</div>
+                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
+                    <div class="col spixi-descriptionbar-row-details">*SL{contact-new-description}</div>
                 </div>
             </div>
         </div>
         <!-- End DescriptionBar -->
 
-        <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}">
-        </div>
-
         <hr class="spixi-separator-main" />
 
-        <div id="sendrequest" class="spixi-button large center disabled">
-            <i class="fas fa-check"></i>&nbsp; *SL{contact-new-send-request}
+        <div class="spixi-textfield-holder multiline">
+            <textarea rows="3" class="spixi-textfield multiline" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}"></textarea>
         </div>
 
-        <a href="ixian:quickscan" class="action-button">
-            <div class="spixi-button round">
-                <i class="fas fa-qrcode"></i>
+        <div class="spixi-textsection-holder spixi-textsection-header text-center">*SL{contact-new-scan-help}</div>
+
+        <div id="quickscan" class="spixi-outline-button">
+            *SL{contact-new-scan} <i class="fas fa-qrcode"></i>
+        </div>
+
+        <!-- Modal menu -->
+        <div id="confirmationModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div class="spixi-modal-header">                    
+                    *SL{contact-new-confirm-title}
+                </div>
+
+                <div class="spixi-modal-details">
+                    *SL{contact-new-confirm-details}
+                    
+                </div>
+                <div id="confirm_address" class="spixi-modal-details-address">
+
+                </div>
+
+                <div class="spixi-modal-footer">
+                    <div class="row no-gutters" style="margin:16px;">
+                        <div class="col">
+                            <div id="cancel" class="spixi-flat-button outline modal-left">
+                                *SL{contact-new-cancel}
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div id="sendrequest" class="spixi-flat-button modal-right">
+                                *SL{contact-new-send}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </a>
+        </div>
 
     </div>
 
 
     <script type="text/javascript">
         var sendrequest = document.getElementById("sendrequest");
+        var confirmModal = document.getElementById('confirmationModal');
+        var confirmAddress = document.getElementById('confirm_address');
 
         document.getElementById("backbtn").onclick = function () {
             location.href = "ixian:back";
         }
 
+        document.getElementById("quickscan").onclick = function () {
+            location.href = "ixian:quickscan";
+        }
+
+        document.getElementById("cancel").onclick = function () {
+            onMenuClose();
+        }
         document.getElementById("sendrequest").onclick = function () {
             var wal = document.getElementById("addressInput").value;
             if (isBlank(wal)) {
                 location.href = "ixian:error";
                 return;
             }
+            onMenuClose();
             location.href = "ixian:request:" + wal;
         }
 
@@ -94,14 +139,21 @@
         }
 
         function checkAddress() {
-            sendrequest.className = "spixi-button large center disabled";
 
             var address = $("#addressInput").val();
-            if (address.length > 0) {
-                sendrequest.className = "spixi-button large center";
+            if (address.length >= 65) {
+                confirmAddress.innerText = address;
+                onValidAddress();
             }
         }
 
+        function onValidAddress() {
+            confirmModal.style.display = "block";
+        }
+
+        function onMenuClose() {
+            confirmModal.style.display = "none";
+        }
 
     </script>
 

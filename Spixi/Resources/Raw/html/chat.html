@@ -91,27 +91,69 @@
             <div class="spixi-errorbar-message"></div>
         </div>
         <!-- End ErrorBar-->
-        <!-- DescriptionBar -->
-        <div id="contactrequestbar" class="spixi-descriptionbar chat" style="display:none;">
-            <div class="container">
-                <div class="row spixi-descriptionbar-row">
-                    <div class="col-2 spixi-center"><i class="fa fa-user-plus"></i></div>
-                    <div class="col-10 spixi-descriptionbar-row-details">
-                        <div id="contactrequesttitle">*SL{chat-sent-contact-request}</div>
-                        <div class="row" style="margin-top: 5px;">
-                            <div class="col-6">
-                                <div id="request_bar_accept" class="spixi-button small extrasmallwidth darkshadow blue">*SL{chat-accept}</div>
-                            </div>
-                            <div class="col-6">
-                                <div id="request_bar_ignore" class="spixi-button small extrasmallwidth darkshadow ghost">*SL{chat-ignore}</div>
+        
+        <!-- Modal -->
+        <div id="requestReceivedModal" class="spixi-modal-soft" style="display:none;">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div class="spixi-modal-header">
+                    *SL{chat-request-received-title}
+                </div>
+
+                <div class="spixi-modal-details">
+                    *SL{chat-request-received-details}
+
+                </div>
+
+                <div class="spixi-modal-footer">
+                    <div class="row no-gutters" style="margin:16px;">
+                        <div class="col">
+                            <div id="request_bar_ignore" class="spixi-flat-button outline modal-left">
+                                *SL{chat-ignore}
                             </div>
                         </div>
 
+                        <div class="col">
+                            <div id="request_bar_accept" class="spixi-flat-button modal-right">
+                                *SL{chat-accept}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="requestSentModal" class="spixi-modal-soft" style="display:none;">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div class="spixi-modal-header">
+                    *SL{chat-request-sent-title}
+                </div>
+
+                <div class="spixi-modal-details">
+                    *SL{chat-request-sent-details}
+                </div>
+
+                <div class="spixi-modal-footer">
+                    <div class="row no-gutters" style="margin:16px;">
+                        <div class="col">
+                            <div id="undorequest" class="spixi-flat-button">
+                                <i class="fa-solid fa-xmark"></i> *SL{chat-request-sent-undo}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End DescriptionBar -->
 
         <div id="messages">
         </div>
@@ -148,9 +190,9 @@
                     *SL{chat-send-payment}
                 </div>
                 <!--<div class="col-3 chat_attach_tab" id="ca_app">
-                    <i class="fa fa-code chatattachsymbol"></i><br />
-                    Use App
-                </div>-->
+                <i class="fa fa-code chatattachsymbol"></i><br />
+                Use App
+            </div>-->
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>

@@ -42,28 +42,46 @@
         </div>
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
+        <div id="section_no_contacts" class="container" style="display:none">
+            <div class="spixi-list-placeholder-contacts-image"></div>
+            <div class="spixi-list-placeholder-title">No Contacts</div>
+            <div class="spixi-list-placeholder-subtitle">*SL{index-no-conversations}</div>
 
-        <div class="spixi-textfield-holder">
-            <input type="text" class="spixi-textfield" id="contactInput" oninput="contactSearch()" placeholder="*SL{wallet-recipient-search-placeholder}">
-            <span class="fa fa-search spixi-textfield-holder-icon"></span>
-        </div>
-        <hr class="spixi-separator-main" />
-
-        <div id="contactslist" class="container">
-        </div>
-
-        <hr class="spixi-separator-main" />
-
-        <div id="recipientslabel" class="spixi-textsection-holder">
-            *SL{wallet-recipient-empty}
-        </div>
-        <hr class="spixi-separator" />
-
-        <div id="sendrequest" class="spixi-button small center padding-top disabled">
-            *SL{wallet-recipient-add}            
+            <div class="d-flex justify-content-center spixi-list-placeholder-margintop">
+                <a href="ixian:newcontact" class="">
+                    <div class="spixi-list-placeholder-button">*SL{wallet-recipient-no-contact-button}</div>
+                </a>
+            </div>
         </div>
 
-        <div class="spixi-holder-20"></div>
+        <div id="section_contacts" style="display:none">
+            <div class="spixi-textfield-holder">
+                <input type="text" class="spixi-textfield" id="contactInput" oninput="contactSearch()" placeholder="*SL{wallet-recipient-search-placeholder}">
+                <span class="fa fa-search spixi-textfield-holder-icon"></span>
+            </div>
+
+            <div id="newcontact" class="spixi-flat-button margin">
+                <i class="fa-solid fa-plus"></i> *SL{wallet-recipient-new-contact-button}
+            </div>
+
+            <hr class="spixi-separator-main" />
+
+            <div id="contactslist" class="container">
+            </div>
+            <!--
+    <hr class="spixi-separator-main" />
+
+    <div id="recipientslabel" class="spixi-textsection-holder">
+        *SL{wallet-recipient-empty}
+    </div>
+    <hr class="spixi-separator" />
+
+    <div id="sendrequest" class="spixi-button small center padding-top disabled">
+        *SL{wallet-recipient-add}
+    </div>
+        -->
+            <div class="spixi-holder-20"></div>
+        </div>
 
     </div>
 
@@ -78,11 +96,15 @@
             location.href = "ixian:back";
         }
 
-        document.getElementById("sendrequest").onclick = function () {
+        /*document.getElementById("sendrequest").onclick = function () {
             if (document.getElementById("sendrequest").classList.contains("disabled")) {
                 return;
             }
             selectContacts();
+        }*/
+
+        document.getElementById("newcontact").onclick = function () {
+            location.href = "ixian:newcontact";
         }
 
         function selectContacts() {
@@ -123,11 +145,17 @@
             }
         }
 
+        // Shows empty state
+        function noContacts() {
+            document.getElementById("section_no_contacts").style.display = "block";
+        }
+
         // Clears all contacts from contacts page
         function clearContacts() {
             if (searchingContacts == true) {
                 return;
             }
+            document.getElementById("section_contacts").style.display = "block";
 
             var contactsNode = document.getElementById("contactslist");
             while (contactsNode.firstChild) {
@@ -136,10 +164,14 @@
         }
 
         // Adds a contact to the contacts page
-        function addContact(wal, name, avatar, online) {
+        function addContact(wal, name, avatar, online) {            
             if (searchingContacts == true) {
                 return;
             }
+
+            document.getElementById("section_no_contacts").style.display = "none";
+            document.getElementById("section_contacts").style.display = "block";
+
             var indicator = "none";
             if (online == true) {
                 indicator = "block";
@@ -149,9 +181,14 @@
 
             var contactEntry = document.createElement("div");
             contactEntry.className = "spixi-list-item";
-            contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
+            //contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
+            contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
 
             contactsNode.appendChild(contactEntry);
+        }
+
+        function selectSingleRecipient(rep) {
+            location.href = "ixian:select:|" + rep;
         }
 
         function selectRecipient(rep) {
