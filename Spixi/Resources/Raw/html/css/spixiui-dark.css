@@ -13,6 +13,7 @@
  * BalanceBar
  * OptionBar
  * DescriptionBar
+ * SectionBar
  * TabBar
  * ToastBar
  * ErrorBar
@@ -73,7 +74,7 @@ a:active {
     right: 0;
     overflow: auto;
     
-    background: #1C2B36;
+    background: #25282E;
 }
 
 img.emoji {
@@ -126,14 +127,12 @@ img.emoji {
 }
 
 .ixicash-icon {
-    object-fit: contain;
-    height: 16pt;
-    width: auto;
-    vertical-align: middle;
+    transform: scale(1.4);
+    width: 16px;
 }
 
 .spixi-external-link {
-    color: #65E2EA;
+    color: #66bced;
     display: inline-block;
     cursor: pointer;
     overflow-wrap: break-word;
@@ -142,7 +141,7 @@ img.emoji {
 
 .spixi-external-link:hover
 {
-    color: #24AFDB;
+    color: #35E8AD;
     text-decoration: underline;
 }
 
@@ -167,13 +166,9 @@ img.emoji {
     height: 56px;
     position: fixed;
     z-index: 100;
-    
     font-size: 20px;
-    background-image: linear-gradient(#2C3D4A, #2C3D4A);
-
+    background: #17181C;
     color: #FFF;
-
-    border-top: 1px solid #1F2C35;
     display: table;
 }
 
@@ -186,7 +181,7 @@ img.emoji {
 }
 
 .spixi-toolbar.shadow {
-    
+    box-shadow:0px 0px 0px #777;
 }
 
 .spixi-toolbar-row {
@@ -205,18 +200,19 @@ img.emoji {
     display: table-cell;
     vertical-align: middle;
     padding: 0px;
+    font-size: 24px;
 }
 
 .spixi-toolbar-row > div:nth-child(2) {
     z-index: 0;
     box-sizing: border-box;
-    text-align: center;
+    text-align: left;
     height: 56px;
     max-height: 56px;
-    overflow: hidden;
     display: table-cell;
     vertical-align: middle;
     padding: 0px;
+    max-width: 200px;
 }
 
 .spixi-toolbar-row > div:nth-child(3) {
@@ -247,8 +243,8 @@ img.emoji {
     width: 10px;
     height: 10px;
     box-sizing: border-box;
-    background: #65E2EA;
-    border: 1px solid #BFFBFF;
+    background: #8AC187;
+    border: 1px solid white;
     position: relative;
     margin: -6px auto;
     right: 2px;
@@ -257,6 +253,7 @@ img.emoji {
 .unread .spixi-toolbar-row-unread-indicator {
     display: inline-block;
 }
+
 
 .spixi-toolbar-chat-body {
     text-align: left !important;
@@ -278,13 +275,20 @@ img.emoji {
 }
 
 .spixi-toolbar-logo {
-    background-image: url('../img/spixitoolbarlogo.png');
-    width: 122px;
-    height: 56px;
-    background-size: 122px 40px;
+    background-image: url('../img/spixilogo.svg');
+    width: 80px;
+    background-size: 20px 24px;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: 0px 7px;
     margin: auto;
+    padding-left: 25px;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.spixi-toolbar-title {
+    display: inline-table;
 }
 
 .spixi-toolbar-option {
@@ -293,9 +297,8 @@ img.emoji {
     border: 1px solid white;
     border-radius: 10px;
     padding: 5px 10px;
-    position:absolute;
-
-	right:10px;
+    position: absolute;
+    right: 10px;
     top: 50%;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
@@ -310,8 +313,8 @@ img.emoji {
 .spixi-toolbar-chat-name {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     text-align: left;
-    word-break: break-all;
     display: block;
     font-size: 20px;
     height: 23px;
@@ -331,7 +334,7 @@ img.emoji {
     width: 100%;
     font-size: 16pt;
     color: #FFF; 
-    background-color: #2C3D4A;
+    background-color: #17181C;
     padding: 0px 20px;
 }
 
@@ -351,7 +354,7 @@ img.emoji {
     left: 0px;
     right: 0px;
     height: 32px;
-    background: #364957;
+    background: rgba(25, 41, 60, 0.95);
     z-index: 100;
     display: none;
     font-size: 12px;
@@ -392,7 +395,7 @@ img.emoji {
 .spixi-channel-selector .channel-name,
 .spixi-channel-bar .channel-name {
     display: table-cell;
-    color: #E5FBFB;
+    color: white;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
@@ -409,14 +412,14 @@ img.emoji {
     display: table-cell;
     width: 38px;
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     vertical-align: middle;
     text-align: left;
 }
 
 .spixi-channel-selector-sep
 {
-    background: rgba(0, 0, 0, 0.25);
+    background: #53647D;
     height: 1px;
 }
 
@@ -427,33 +430,59 @@ img.emoji {
 
 .spixi-channel-bar.unread .unread-indicator,
 .spixi-channel-selector .unread-indicator {
-    background: #65E2EA;
+    background: #8AC187;
     display: inline-block;
     margin-left: 10px;
-    border-radius: 10px;
-    width: 10px;
-    height: 10px;
+    border-radius: 80px;
+    width: 8px;
+    height: 8px;
 }
 
 /* BalanceBar */
 .spixi-balancebar {
-    width: 100%;
+    margin: 8px 8px 8px 8px;
+    padding-bottom: 16px;
     color: #fff;
-    background-color: #304250;
-    box-shadow: 0px 0px 0px #14242F;
-    padding: 10px 0px;
+    background: #15161C;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
 }
 .spixi-balancebar-label {
     font-size: 12pt;
     padding-left: 20px;
 }
+.spixi-balancebar-subtitle {
+    margin-bottom: 4px;
+    margin-top: 18px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.spixi-balancebar-hide {
+    margin-bottom: 4px;
+    margin-top: 16px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #FFFFFF;
+    text-align: right;
+    padding-right: 30px;
+}
 
 .spixi-balancebar-balance {
-    font-size: 14pt;
-    padding-left: 20px;
-    padding-top: 8px;
-    display: table-cell;
     vertical-align: middle;
+    text-align: center;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 45px;
+    color: #FFFFFF;
+    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 .spixi-balancebar-balance img
@@ -472,14 +501,15 @@ img.emoji {
     margin-top: 5px;
     width: 110px;
     height: 2px;
-    background-color: #70DDAF;
+    background-color: #1692d9;
 }
 .spixi-balancebar-info {
-    font-size: 8pt;
-    font-style: italic;
-    color: #92B4C2;
-    padding-left: 20px;
-    padding-top: 4px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 4px;
+    margin-bottom: 16px;
 }
 .spixi-balancebar-quickscan {
     float: right;
@@ -490,11 +520,11 @@ img.emoji {
 /* OptionBar */
 .spixi-optionbar {
     width: 100%;
-    color: #E5FBFB;
-    background: rgb(35, 50, 61);
+    color: #fff;
+    background: #19293C;
 }
 .spixi-optionbar-contact-details {
-    background: rgba(35, 50, 61, 0.5);
+    background: #19293C;
 }
 .spixi-optionbar-frame {
     width: 100%;
@@ -504,18 +534,18 @@ img.emoji {
     text-align: center;
     font-size: 10pt;
     font-weight: bold;
-    color: #92B4C2;
+    color: #25282E;
     padding: 10px 0px;
 }
 .spixi-optionbar-tab:hover {
-    background: #2C3D4A;
+    background: #3E424A;
 }
 .spixi-optionbar-tab:active {
-    color: #dc236c;
-    background: #192127;
+    color: #59C2A0;
+    background: #373B44;
 }
 .spixi-optionbar-tab:active a {
-    color: #364957;
+    color: #FFFFFF;
 }
 .spixi-optionbar-tab a {
     color: #FFFFFF; 
@@ -523,31 +553,148 @@ img.emoji {
 .spixi-optionbar-tab-icon {
     font-size: 20px;
     height: 26px;
-    color: #E5FBFB;
 }
 .spixi-optionbar-label {
     margin-top: 3px;
-    color: #E5FBFB;
+}
+
+.spixi-activity-title {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 40px;
+    color: #FFFFFF;
+    margin-left:16px;
+}
+
+.spixi-activity-filterbar {
+    margin-left: 16px;
+    margin-bottom: 16px;
+}
+
+.spixi-activity-filterbutton {
+    display: inline-block;
+    background: #3E424A;
+    padding: 4px 8px;
+    margin-right: 4px;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+.spixi-activity-filterbutton.active {
+    background: #59C2A0;
+    color: #17181C;
 }
 
 /* DescriptionBar */
 .spixi-descriptionbar {
     width: 100%;
     color: #fff;
-    background-color: #1B3439;
-    box-shadow:0px 0px 0px #14242F;    
+
 }
 .spixi-descriptionbar-row {
     padding: 10px;
-    font-size:16pt;
+    margin: 24px;
+    font-size: 16pt;
+    background: rgba(0, 111, 173, 0.15);
+    border: 1.5px solid rgba(0, 111, 173, 0.5);
+    border-radius: 12px;
+    color: #fff;
 }
+.spixi-descriptionbar-row.warning {
+    background: rgba(231, 158, 48, 0.15);
+    border: 1.5px solid #FDD57F;
+    border-radius: 8px;
+}
+.spixi-descriptionbar-row.maxwarning {
+    background: #CE483F;
+    border-radius: 8px;
+    border: 0;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.spixi-descriptionbar-row.nomargin {
+    margin: 0px;
+}
+.spixi-descriptionbar-row.smallmargin {
+    margin: 16px;
+}
+.spixi-descriptionbar-row-icon {
+    text-align: center;
+    width: 16px;
+    font-size: 16px;
+}
+
 .spixi-descriptionbar-row-details {
     padding-right: 30px;
-    font-size: 9pt;
+    font-size: 14px;
 }
 .spixi-descriptionbar.chat {
-    background-color: #425868;
+    background-color: #19293C;
     word-wrap: break-word;
+}
+
+/* SectionBar*/
+.spixi-sectionbar {
+    padding: 12px;
+    margin: 16px;
+
+    background: #17181C;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    color: #000;
+}
+
+.spixi-sectionbar-subtitle {
+    margin-bottom: 12px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #FFF;
+}
+
+.spixi-sectionbar-subtitle-balance {
+    margin-bottom: 12px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
+    text-align: right;
+}
+
+.spixi-sectionbar-txid {
+    word-break: break-word;
+    color: #fff;
+}
+
+/* Payment header */
+.spixi-payment-header-icon {
+    margin-top: 30px;
+    font-size: 48px;
+    text-align: center;
+}
+
+.spixi-payment-header-title {
+    margin-bottom: 40px;
+    margin-top: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    text-align: center;
+    color: #fff;
 }
 
 /* TabBar */
@@ -556,54 +703,55 @@ img.emoji {
     height: 64px;
     bottom: 0;
     width: 100%;
-    background-color: #2C3D4A;
-    border-top: 1px solid #1F2C35;
+    background-color: #17181C;
+    box-shadow: 0px -4px 12px rgba(16, 30, 51, 0.25);
 }
 
 .spixi-footer-row {
-    height: 64px;
+    height: 65px;
     text-decoration: none;
 }
 .spixi-footer-row a {
- /*   color:#FFF;*/
+ /*   color:#440024;*/
     text-decoration: none;
     display: block;
     width: 100%;
     height: 100%;
 }
 .spixi-footer-row a:hover {
-    color:#A5C3C5;
+    color:#fff;
 }
 
 .spixi-tab {
-    background: #2C3D4A;
+    /*background: #800E44;*/
     text-align: center;
     font-size: 13px;
     font-weight: bold;
-    color: #A5C3C5;
+    color: #FFF;
+    border-radius: 16px;
 }
 .spixi-tab-pad {
     padding-top: 11px;
 }
 .spixi-tab.active {
-    color: #A5C3C5;
-    background: #202A32;
+    color: #FFF;
 }
 .spixi-tab.active a {
-    color: #A5C3C5;
+    color: #35E8AD;
 }
 
 .spixi-tab:hover {
-    background: #202A32;
+
 }
 .spixi-tab a {
-    color: #7E9FB6; 
+    color: rgba(255, 255, 255, 0.8);
 }
 .spixi-tab-icon {
-    font-size: 20px;
+    font-size: 16px;
     height: 26px;
-    line-height: 26px;
+/*    line-height: 26px;
     max-height: 26px;
+*/
 }
 
 .spixi-tab-text {
@@ -618,8 +766,8 @@ img.emoji {
     width: 10px;
     height: 10px;
     box-sizing: border-box;
-    background: #65E2EA;
-    border: 1px solid #BFFBFF;
+    background: #35E8AD;
+    border: 1px solid white;
     position: relative;
     margin: -17px auto;
     right: -6px;
@@ -636,7 +784,7 @@ img.emoji {
     visibility: hidden;
     min-width: 250px; 
     margin-left: -125px; 
-    background-color: #2C3D4A; 
+    background-color: #444F55; 
     color: #fff; 
     text-align: center; 
     border-radius: 20px; 
@@ -659,10 +807,12 @@ img.emoji {
 .spixi-errorbar {
     width: 100%;
     min-height: 32px;
-    background-color: #FACA6E;
+    background-color: #FDD57F;
     color: #2C3D4A;
     padding: 3px 0px;
     font-size: 10pt;
+    padding-top: 2px;
+    border-bottom: solid 1px #EFBA55;
 }
 .spixi-errorbar.chat
 {
@@ -685,7 +835,7 @@ img.emoji {
     position: fixed;
     z-index: 101;
     font-size: 16pt;
-    background-color: #364754;
+    background-color: #443d54;
     color: #FFFFFF;
     padding-top: 3px;
     font-size: 12pt;
@@ -708,7 +858,7 @@ img.emoji {
     height: 2px;
 
     margin: 20px auto 10px auto;
-    background-color: #1F2C35;
+    background-color: #5b5569;
 }
 
 .spixi-callbar-actions
@@ -736,23 +886,24 @@ img.emoji {
     padding: 11px 4px;
     margin: 0px;
 
-    color: #fff;
-    background: #3A6B87;
+    color: #000;
+    background: #353F4F;
     border-radius: 50px;
+    box-shadow:0px 0px 0px #BBB;
 
     box-sizing: border-box;
 }
 
 .spixi-button:hover {
-    background: #4F87A6;
+    background: #4A586D;
 }
 .spixi-button:active {
-    background: #2F5971;
+    background: #212731;
     box-shadow: 0px 0px;
 }
 .spixi-button.disabled {
-    background: #65707D;
-    color: #48535E;
+    background: #d4d4d4;
+    color: #949494;
     box-shadow: 0px 0px;
 }
 
@@ -761,7 +912,7 @@ img.emoji {
 }
 
 .spixi-button.padding-left {
-    margin-left: 30px;
+    margin-left: 16px;
 }
 .spixi-button.padding-top {
     margin-top: 20px;
@@ -779,29 +930,29 @@ img.emoji {
     width: 140px;
 }
 .spixi-button.darkshadow {
-    box-shadow:0px 0px 0px #000;
+    box-shadow:0px 0px 0px #333;
 }
 
 .spixi-button.ghost {
-    background-color: #1C2B36;
+    background-color: #55516c;
     color: #f7f7f7;
-    border: 2px solid #3A6B87;
+    border: 2px solid #fff;
     padding: 6px 4px;
 }
 .spixi-button.ghost:hover {
-    background-color: #3A6B87;
+    background-color: #c14c7f;
 }
 .spixi-button.ghost:active {
-    background-color: #2F5971;
+    background-color: #901352;
     box-shadow: 0px 0px;
 }
 
 .spixi-button.blue {
-    background: #3A6B87;
+    background: #1692d9;
 }
 
 .spixi-button.blue:hover {
-    background: #4F87A6;
+    background: #771250;
 }
 
 .spixi-button.large {
@@ -812,10 +963,10 @@ img.emoji {
     width: 64px;
     height: 64px;
     border-radius: 64px;
-    box-shadow: 0px 0px 0px #000;
+    box-shadow: 0px 2px 2px #000;
 
     font-size: 18pt;
-    background: #3A6B87;
+    background: #59C2A0;
 
     padding: 0px;
 
@@ -831,10 +982,10 @@ img.emoji {
 }
 
 .spixi-button.round:hover {
-    background: #4F87A6;
+    background: #8FD6BF;
 }
 .spixi-button.round:active {
-    background: #2F5971;
+    background: #379577;
 }
 
 .spixi-button.smallround {
@@ -844,8 +995,8 @@ img.emoji {
     box-shadow: 0px 0px;
 
     font-size: 18pt;
-    background: #3A6B87;    
-    border: 2px solid #3A6B87;
+    background: #1692d9;    
+    border: 2px solid #fff;
 
     padding: 0px;
 
@@ -854,10 +1005,80 @@ img.emoji {
     text-align: center;
 }
 .spixi-button.smallround:hover {
-    background: #4F87A6;
+    background: #6abded;
 }
 .spixi-button.smallround:active {
-    background: #2F5971;
+    background: #543c83;
+}
+
+.spixi-outline-button {
+    margin: 24px;
+    height: 48px;
+    border: 1.5px solid #F7F7F7;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    padding-top: 12px;
+}
+
+.spixi-flat-button {
+    background: #353F4F;
+    color: #FFFFFF;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+}
+
+.spixi-flat-button:hover {
+    color: #FFFFFF;
+    background: #4A586D;
+}
+
+.spixi-flat-button:active {
+    color: #FFFFFF;
+    background: #212731;
+}
+
+.spixi-flat-button:active a {
+    color: #FFFFFF;
+}
+
+.spixi-flat-button a {
+    color: #FFFFFF;
+}
+
+.spixi-flat-button.outline {
+    background: transparent;
+    border: 1.5px solid #fff;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.spixi-flat-button.margin {
+    margin: 16px;
+}
+.spixi-flat-button.modal-left {
+    margin-left:0px; 
+    margin-right:4px;
+}
+.spixi-flat-button.modal-right {
+    margin-left:4px; 
+    margin-right:0px;
+}
+
+.spixi-flat-button.disabled {
+    background: #CCCCCC;
+    color: #656565;
 }
 
 .action-button {
@@ -881,19 +1102,19 @@ img.emoji {
     text-align: center;
     font-size: 12pt;
     font-weight: bold;
-    color: #3A6B87;
+    color: #ad1457;
     background: #fefcfd;
     border-radius: 360px;
-    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.18);
+    box-shadow: 0px 0px 0px 0px rgba(1, 1, 1, 0.18);
 }
 
 .intro-button:hover {
-    background: #3A6B87;
+    background: #243345;
     box-shadow: 0px 0px;
 }
 
 .intro-button:active {
-    background: #2F5971;
+    background: #4e385b;
     color: #fff;
     box-shadow: 0px 0px;
 }
@@ -906,24 +1127,36 @@ img.emoji {
 .spixi-textfield {
     width: 100%;
     height: 44px;
-    
-    background: #2C3D4A;
-    border: solid 1px #2C3D4A;
+    background: #17181C;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     outline: none;
-    border-radius: 64px;
-    
-    color: #7DB4BB;
+    border-radius: 8px;
+    color: #fff;
     padding-left: 12px;
     padding-right: 12px;
 }
+.spixi-textfield.multiline {
+    height: 88px;
+    padding: 12px;
+}
 .spixi-textfield:focus {
-    border: solid 1px #2C3D4A;
+    border: 1px solid #fff;
 }
 
 .spixi-textfield-holder {
-    width: 85%;
     margin: auto;
+    margin-left: 16px;
+    margin-right: 16px;
     padding-top: 20px;
+    padding-bottom: 6px;
+    color: #fff;
+}
+.spixi-textfield-holder.multiline {
+    margin: auto;
+    margin-top: 24px;
+    margin-left: 24px;
+    margin-right: 24px;
+    padding-top: 0px;
     padding-bottom: 6px;
 }
 .spixi-textfield-holder.smallpadding {
@@ -937,7 +1170,7 @@ img.emoji {
     margin-top: -30px;
     position: relative;
     z-index: 2;
-    color: #7DB4BB;
+    color: #fff;
 }
 .spixi-textfield-holder-text {
     float: right;
@@ -946,41 +1179,43 @@ img.emoji {
     margin-top: -37px;
     position: relative;
     z-index: 2;
-    color: #7E9FB6;
+    color: #fff;
 }
 
 .spixi-textsection-holder {
-    width: 85%;
-    margin: auto;   
+    margin-left: 16px;
+    margin-right: 16px;
     font-size: 10pt;
-    color: #92B4C2;
+    color: #fff;
 }
 
 .spixi-textsection-header {
     font-size: 14pt;
     font-weight: bold;
-    color: #92B4C2;
     padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 .spixi-textsection-header2 {
     font-weight: bold;
     padding-top: 0px;
     padding-bottom: 0px;
-    color: #E5FBFB;
+    color: #fff;
 }
 
 .spixi-text-address {
     text-align: center;
-    color: #E5FBFB;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #fff;
 }
 
 
 .language-selector {
     position: relative;
     text-align: left;
-    color: #E5FBFB;
+    color: #FFF;
     padding: 8pt 14pt;
     height: auto;
 }
@@ -993,7 +1228,7 @@ img.emoji {
     display: none;
     position: absolute;
     overflow: auto;
-    background: #1F2C35;
+    background: #17181C;
     border-radius: 20px;
     list-style: none;
     padding: 0px;
@@ -1006,7 +1241,7 @@ img.emoji {
 }
 
 .language-selector.settings ul {
-    background: #364957;
+    background: #243345;
 }
 
 .language-selector ul li {
@@ -1014,7 +1249,7 @@ img.emoji {
 }
 
 .language-selector ul li:hover {
-    background: #202A32;
+    background: #3E424A;
 }
 
 
@@ -1036,20 +1271,21 @@ img.emoji {
 .spixi-switch-description {
     float: left;
     margin-left: 20px;
-    color: #1692d9;
+    color: #fff;
     font-weight: bold;
 }
 
 
 /* Separators */
 .spixi-separator-main {
-    border-bottom: 6pt solid #2C3D4A;   
+    border-bottom: 1px solid #2C3D4A;
+    margin-left: 24px;
+    margin-right: 24px;
 }
 
 .spixi-separator {
     height: 1px;
-    color: #0D1317;
-    width: 85%;
+    color: rgba(0,0,0,0.12);
 }
 .spixi-separator.noheightmargins {
     margin-top: 0px;
@@ -1063,7 +1299,7 @@ img.emoji {
     width: 100%;
     margin-top: 5px;
     margin-bottom: 5px;
-    color: #0D1317;
+    color: rgba(0,0,0,0.12);
 }
 
 .spixi-separator-white {
@@ -1087,7 +1323,7 @@ img.emoji {
 
 .spixi-expansion-left {
     position: absolute;
-    width: 20px;
+    width: 6px;
     height: 50px;
     background-color: #385163;
     margin-right: 10px;
@@ -1098,10 +1334,10 @@ img.emoji {
 }
 
 .spixi-expansion-left.active {
-    background-color: #2C3D4A;
+    background-color: #59C2A0;
 }
 .spixi-expansion-icon {
-    color: #A5C3C5;
+    color: #59C2A0;
     float:left;
     font-size: 16pt;
     margin-top: 10px;
@@ -1110,23 +1346,22 @@ img.emoji {
 }
 
 .spixi-expansion-text {
-    color: #A5C3C5;
     float:left;
-    font-size: 12pt;
-    margin-top: 12px;
+    font-size: 14pt;
+    margin-top: 10px;
     margin-left: 15px;
 }
 .spixi-expansion-right {
-    color: #A5C3C5;
+    color: #59C2A0;
     float:right;
-    font-size: 12pt;
+    font-size: 10pt;
     margin-top:12px;
     margin-right: 15px;
 }
 
 .spixi-expansion-bottom {
     height: 7px;
-    background-color: #364754;
+    background-color: #dbdee1;
 }
 
 
@@ -1136,7 +1371,7 @@ img.emoji {
     height: 50px;
     padding-top: 13px;
     
-    background-color: #1C2B36;
+    background-color: #17181C;
     border-radius: 10px;
     box-shadow:0px 0px 0px #777;
 }
@@ -1149,7 +1384,7 @@ img.emoji {
     margin-left: 16px;
     margin-top: -2px;
     font-size: 18px;
-    color: #3A6B87;
+    color: #59C2A0;
 }
 
 .spixi-expansion-box-middle {
@@ -1157,13 +1392,13 @@ img.emoji {
     margin-left: 18px;
     font-size: 12pt;
     font-weight: bold;
-    color: #FFF;
+    color: #000;
 }
 
 .spixi-expansion-box-right {
     float:right;
     margin-right: 18px;
-    color: #3A6B87;
+    color: #59C2A0;
 }
 
 /* Sidebar */
@@ -1182,7 +1417,7 @@ img.emoji {
     overflow: auto;
     box-sizing: border-box;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
-    background-color: #1B272B;
+    background-color: #17181C;
     -webkit-animation-name: animateleft;
     -webkit-animation-duration: 0.4s;
     animation-name: animateleft;
@@ -1191,7 +1426,7 @@ img.emoji {
 
 .spixi-sidebar-header {
     padding: 38px 24px;
-    background-color: #2C3D4A;
+    background-color: #25282E;
     color: white;
     height: 204px;
     font-size: 16px;
@@ -1227,10 +1462,10 @@ img.emoji {
 
 .spixi-sidebar-item {
     height: 52px;
-    color: #A5C3C5;
+    color: #EFEFEF;
 }
 .spixi-sidebar-item:hover {
-    background-color: #364754;
+    background-color: #3E424A;
 }
 
 .spixi-sidebar-item-text {
@@ -1238,17 +1473,17 @@ img.emoji {
     margin-left: 64px;
     font-size: 16px;    
     height: 52px;
-    color: #A5C3C5;
+    color: #EFEFEF;
     text-decoration: none;
-    border-bottom: 1px solid rgba(165,195,197,0.2);
+    border-bottom: 1px solid #40404b;
 }
 .spixi-sidebar-item-icon {
     float: left;
-    color: #A5C3C5;
+    color: #EFEFEF;
     font-size: 18pt;
     margin-left: 8px;
     margin-top: 14px;
-    width: 40px;
+    width: 32px;
     text-align: center;
 }
 
@@ -1263,33 +1498,33 @@ img.emoji {
     width: 75%;
     text-align: center;
     vertical-align: middle;
-    color: #A5C3C5;
+    color: #EFEFEF;
     font-size: 9pt;
-    background-color: #1F2C35;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.89);
+    background-color: #27343C;
+    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2),0 0px 0px 0 rgba(0,0,0,0.89);
 }
 
 /* ListItems */
 .spixi-list-item {
     width: 100%;
-    background-color: #1C2B36;
+    background-color: #25282E;
     overflow: hidden;
-    border-bottom: 1px solid rgba(165,195,197,0.1);
+    border-bottom: 1px solid #3e424a;
     padding: 10px;
     box-sizing: border-box;
     position: relative;
 }
 .spixi-list-item:hover
 {
-    background-color: #2C3D4A;
+    background-color: #393D47;
 }
 .spixi-list-item:active {
-    background-color: #2C3D4A;
+    background-color: #393D47;
 }
 
 .address .spixi-list-item:hover,
 .address .spixi-list-item:active {
-    background-color: #1C2B36;
+    background-color: #25282E;
 }
 
 .spixi-list-item .read {
@@ -1304,7 +1539,75 @@ img.emoji {
 }
 
 .spixi-list-item-avatar.selected {
-    border: 2px solid #7DB4BB;
+    border: 2px solid #59C2A0;
+}
+
+.spixi-list-item-from {
+    display: inline-block;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #eef2f5;
+    margin-left: 5px;
+    text-overflow: ellipsis;
+    width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.spixi-list-item-from-status {
+    font-size: 12px;
+}
+
+.spixi-list-item-timestamp {
+    display: inline-block;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    color: #fefefe;
+    margin-left: 5px;
+}
+
+
+.spixi-list-item-amount {
+    display: inline-block;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: right;
+    color: #eef2f5;
+    margin-right: 5px;
+}
+
+.spixi-list-tx-icon {
+    width: 20px;
+}
+
+.spixi-list-item-amount-fiat {
+    display: inline-block;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    text-align: right;
+    color: #eef2f5;
+    margin-right: 25px;
+}
+
+.spixi-list-item-first-row {
+    margin-left: 15px;
+    margin-right: 15px;
+
+}
+.spixi-list-item-second-row {
+    margin-top: -10px;
+    margin-bottom: 12px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 10px;
 }
 
 .spixi-list-item-left {
@@ -1326,7 +1629,7 @@ img.emoji {
 }
 
 .spixi-list-item-title {
-    color: #A5C3C5;
+    color: #fff;
     font-size: 10pt;
     font-weight: bold;
     overflow: hidden;
@@ -1334,7 +1637,7 @@ img.emoji {
 	text-overflow: ellipsis;
 }
 .spixi-list-item-title-center {
-    color: #A5C3C5;
+    color: #eef2f5;
     font-size: 10pt;
     width: 100%;
     overflow: hidden;
@@ -1349,7 +1652,7 @@ img.emoji {
 }
 
 .spixi-list-item-subtitle {
-    color: #E5FBFB;
+    color: #eef2f5;
     font-size: 9pt;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1357,12 +1660,7 @@ img.emoji {
 }
 
 .spixi-list-item-right {
-    display: inline-block;
-    color: #A5C3C5;
-    font-size: 9pt;
     text-align: right;
-    width: 50pt;
-    vertical-align: middle;
 }
 
 .spixi-list-item-right .spixi-timestamp
@@ -1376,12 +1674,13 @@ img.emoji {
     top: 50%;
     transform: translateY(-50%);
     right: 15px;
+    color: #fefefe;
 }
 
 .spixi-list-item-action-icon {
     font-size: 14pt;
     z-index: 2;
-    color: #3A6B87;
+    color: #59C2A0;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1399,6 +1698,88 @@ img.emoji {
     font-style: italic;   
 }
 
+.spixi-list-placeholder-title {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    color: #EFEFEF;
+}
+.spixi-list-placeholder-title.topoffset {
+    margin-top: 24px;
+}
+
+.spixi-list-placeholder-subtitle {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #EFEFEF;
+    margin-top: 8px;
+}
+
+.spixi-list-placeholder-button {
+    margin-top: 0px;
+    margin-left: 4px;
+    margin-right: 4px;
+    text-align: center;
+    color: #FFFFFF;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    gap: 8px;
+    width: 99px;
+    height: 40px;
+    background: #041120;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.spixi-list-placeholder-chat-image {
+    background-image: url("../img/chats_es_dark.svg");
+    background-repeat: no-repeat;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    width: 192px;
+    height: 154px;
+    border: 0;
+}
+
+.spixi-list-placeholder-contacts-image {
+    background-image: url("../img/contacts_es_dark.svg");
+    background-repeat: no-repeat;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    width: 192px;
+    height: 154px;
+    border: 0;
+}
+
+.spixi-list-placeholder-transactions-image {
+    background-image: url("../img/transactions_es_dark.svg");
+    background-repeat: no-repeat;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    width: 192px;
+    height: 154px;
+    border: 0;
+}
+
+.spixi-list-placeholder-margintop {
+    margin-top: 24px;
+}
+
 /* Chat */
 #messages {
     padding-top: 20px;
@@ -1408,10 +1789,9 @@ img.emoji {
 {
     font-size: 10pt;
     position:relative;
-    background:#425868;
+    background:#3E424A;
     border-radius:16px;
-    border: 0px solid #425868;
-    color: #E5FBFB;
+    color: #fff;
     
     margin-left: 56px;
     margin-right: 85px;
@@ -1433,8 +1813,7 @@ img.emoji {
 .spixi-bubble.myself {
     margin-left: 125px;
     margin-right: 11px;
-    background: #385B6D;
-    border: 0px solid #3A6C77;
+    background: #314456;
 }
 
 .spixi-bubble .text img
@@ -1444,7 +1823,7 @@ img.emoji {
 }
 
 .spixi-bubble.file {
-    font-size: 12pt;
+    font-size: 14pt;
 }
 
 .spixi-bubble.spixi-payment-request {
@@ -1465,10 +1844,10 @@ img.emoji {
 .spixi-bubble .time
 {
     padding-right: 15px;
-    font-size: 10px;
+    font-size: 8px;
     height: 20px;
     max-height: 20px;
-    color: #92B4C2;
+    color: #DAE2E9;
     z-index: 4;
 }
 .spixi-bubble.myself .time {
@@ -1500,7 +1879,7 @@ img.emoji {
     z-index: 2;
     color: #FFF;
     
-    background: #364754 none repeat scroll 0 0;
+    background: #7E7F94 none repeat scroll 0 0;
     border: medium none;
     border-radius: 50%;
     width: 40px;
@@ -1538,7 +1917,7 @@ img.emoji {
     margin-right: 40px;
     margin-left: 10px;
     display: table-cell;
-    color: #E5FBFB;
+    color: #efefef;
     text-decoration: none;
     word-wrap: break-word;
     word-break: break-all;
@@ -1566,12 +1945,12 @@ img.emoji {
 }
 
 .spixi-bubble.confirmed .statusIndicator {
-    color: #a7a7a7;
+    color: #E1E1E1;
     display: inline-block;
 }
 
 .spixi-bubble.read .statusIndicator {
-    color: #97F5CE;
+    color: #35E8AD;
     display: inline-block;
 }
 
@@ -1592,9 +1971,10 @@ img.emoji {
 
 .spixi-bubble .title {
     background-color: #2C3D4A;
-    color: #A5C3C5;
+    color: white;
     padding: 10px;
     border-radius: 16px 16px 0px 0px;
+    border-bottom: 1px solid #3A6B87;
     font-size: 12pt;
 }
 
@@ -1606,31 +1986,30 @@ img.emoji {
 .spixi-bubble .status {
     padding: 10px;
     background-color: #2C3D4A;
-    color: #7E9FB6;
-    border-bottom: 1px solid #3A6B87;
+    color: #EEF2F5;
     font-size: 10pt;
 }
 
 .spixi-bubble .status .content {
-    color: #7E9FB6;
+    color: #FFF;
     font-size: 14pt;
     font-weight: bold;
 }
 
 .spixi-bubble .status .fa-exclamation-circle {
-    color: #FD64A1;
+    color: #CE483F;
     font-size: 16pt;
     float: right;
 }
 
 .spixi-bubble .status .fa-check-circle {
-    color: #97F5CE;
+    color: #35E8AD;
     font-size: 16pt;
     float: right;
 }
 
 .spixi-bubble .status .fa-clock {
-    color: #7E9FB6;
+    color: #FDD57F;;
     font-size: 16pt;
     float: right;
 }
@@ -1638,19 +2017,20 @@ img.emoji {
 .spixi-bubble .amount {
     padding: 10px;
     background-color: #2C3D4A;
-    color: #A5C3C5;
-    border-bottom: 0px solid #e0e0e0;
+    color: #EEF2F5;
+    border-bottom: 1px solid #3A6B87M;
     font-size: 10pt;
     vertical-align: middle;
 }
 
 .spixi-bubble .amount .content
 {
-    color: #A5C3C5;
+    color: #FFF;
     font-size: 15pt;
     font-weight: bold;
     margin-top: 5px;
     vertical-align: middle;
+    border-bottom: 1px solid #3A6B87M;
     display: table-cell;
 }
 
@@ -1665,7 +2045,7 @@ img.emoji {
 .spixi-bubble .view {
     padding: 10px;
     background-color: #2C3D4A;
-    color: #A5C3C5;
+    color: #fff;
     border-radius: 0px 0px 16px 16px;
     font-size: 12pt;
     font-weight: bold;
@@ -1681,7 +2061,7 @@ img.emoji {
 }
 
 .spixi-bubble .reactions {
-    background: #2C3D4A;
+    background: #17191C;
     font-size: 10px;
     border-radius: 0px 0px 16px 16px;
     border: 0px solid #c1d3e0;
@@ -1716,7 +2096,7 @@ img.emoji {
 }
 
 .spixi-bubble .reactions .reaction i.fa-heart {
-    color: #FD64A1;
+    color: red;
 }
 
 .spixi-callbubble
@@ -1724,7 +2104,7 @@ img.emoji {
     display: table;
     font-size: 10pt;
     position:relative;
-    background:#2C3D4A;
+    background:#444F55;
     border-radius:32px;
     color: black;
     
@@ -1746,11 +2126,11 @@ img.emoji {
     font-size: 18pt;
     position: relative;
     z-index: 2;
-    color: #65E2EA;
+    color: #2fd63b;
 }
 
 .spixi-callbubble-declined .icon {
-    color: #FD64A1;
+    color: #de0a61;
 }
 
 .spixi-call-data {
@@ -1761,12 +2141,12 @@ img.emoji {
 .spixi-callbubble .text {
     font-size: 12pt;
     font-weight: bold;
-    color: #A5C3C5;
+    color: #EEF2F5;
 }
 
 .spixi-callbubble .time {
     font-size: 10pt;
-    color: #A5C3C5;
+    color: #EEF2F5;
     z-index: 4;
 }
 
@@ -1795,8 +2175,8 @@ img.emoji {
     width: 100%;
     bottom: 0;   
     height: 60px;
-    background-color: #2C3D4A;
-    border-top: 2px solid #1F2C35;
+    background-color: #3E424A;
+    border-top: 1px solid #17181C;
     
 }
 
@@ -1805,6 +2185,7 @@ img.emoji {
     width: 100%;
     height: 100%;
     margin: auto;
+    color: #fff;
 }
 
 .chatbar-sendbutton-wrapper {
@@ -1819,14 +2200,14 @@ img.emoji {
 .chatbar-sendbutton {
     display: table-cell;
     font-size: 16pt;
-    color: #141E25;
+    color: #17181C;
 
     padding: 0px;
 
     vertical-align: middle;
     text-align: center;
 
-    background: #A5C3C5 none repeat scroll 0 0;
+    background: #BABABA none repeat scroll 0 0;
     border: medium none;
     border-radius: 50%;
     width: 40px;
@@ -1835,7 +2216,7 @@ img.emoji {
 }
 
 .chatbar-sendbutton-active {
-    background: #C1185B none repeat scroll 0 0;
+    background: #35E8AD none repeat scroll 0 0;
 }
 
 .chatbar-input-wrapper {
@@ -1851,10 +2232,9 @@ img.emoji {
     max-height: 60px;
     margin-top: 0px;
     border: 0px;
-    background-color: #2C3D4A;
-    caret-color: #65E2EA;
+    background-color: #3E424A;
+    caret-color: #35E8AD;
     font-size: 16px;
-    color: #E5FBFB;
     outline: none;
     vertical-align: middle;
     -ms-word-break: break-all;
@@ -1878,9 +2258,9 @@ img.emoji {
     width: 100%;
     bottom: -100px;
     min-height: 60px;
-    background-color: #2C3D4A;
-    border-top: 1px solid #1F2C35;
-    color: #A5C3C5;
+    background-color: #25282E;
+    border-top: 1px solid #25282E;
+    color: #E1E1E1;
 }
 
 #chat_attach {
@@ -1888,7 +2268,7 @@ img.emoji {
     width: 35px;
     font-size: 18pt;
     text-align: left;
-    color: #A5C3C5;
+    color: #BABABA;
     vertical-align: middle;
     padding-top: 4px;
     padding-left: 17px;
@@ -1902,12 +2282,12 @@ img.emoji {
 
     font-size: 18pt;
     text-align: left;
-    color: #A5C3C5;
+    color: #BABABA;
     padding-top: 4px;
     vertical-align: middle;
 }
 .chatattachsymbol {
-    color: #A5C3C5;
+    color: #E1E1E1;
     font-size: 18pt;
     padding-top: 9px;
     padding-bottom: 5px;
@@ -1918,19 +2298,19 @@ img.emoji {
     width: 120px;
     font-size: 10pt;
     text-align: center;
-    font-weight: bold;
+    font-weight: regular;
     white-space: nowrap;
     overflow: visible;
-    color: #A5C3C5;
+    color: #E1E1E1;
 }
 
 .spixi-friend-status-indicator {
     display: none;
-    border: 1px solid #1C2B36 !important;
+    border: 1px solid #3e424a !important;
     border-radius: 18px;
     width: 18px !important;
     height: 18px !important;
-    background: #5CFBB8;
+    background: #59c2a0;
     position: relative;
     margin-top: -17px;
     margin-left: 30px;
@@ -1942,7 +2322,7 @@ img.emoji {
 }
 
 /*.online .spixi-list-item-avatar {
-    border: 4px solid #65E2EA !important;
+    border: 4px solid #28ec23 !important;
 }*/
 
 .spixi-chat-unread-indicator {
@@ -1950,7 +2330,7 @@ img.emoji {
     border-radius: 10pt;
     width: 8pt;
     height: 8pt;
-    background: #65E2EA;
+    background: #35E8AD;
     vertical-align: middle;
     right: 65pt;
     margin-right: 25px;
@@ -1973,7 +2353,7 @@ img.emoji {
     font-size: 10px;
     line-height: 24px;
     color: white;
-    background: #364957;
+    background: #FD287C;
     position: fixed;
     left: 0px;
     bottom: 60px;
@@ -2043,7 +2423,7 @@ img.emoji {
     top: 56px;
     bottom: 0px;
     right: 0px;
-    background: #1C2B36;
+    background: #25282E;
     overflow: auto;
     z-index: 2000;
     padding: 0px 20px;
@@ -2064,7 +2444,7 @@ img.emoji {
 {
     font-size: 9pt;
     font-weight: bold;
-    color: #E5FBFB;
+    color: #E5E5E5;
     line-height: 32px;
     white-space: nowrap;
     overflow: hidden;
@@ -2086,8 +2466,8 @@ img.emoji {
 
 .chat-context-menu {
     position: fixed;
-    background: #364957;
-    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.25);
+    background: #EBEBEB;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 7px;
     z-index: 10000;
     overflow: auto;
@@ -2097,7 +2477,7 @@ img.emoji {
     font-size: 10pt;
     font-weight: bold;
     padding: 6pt 10px;
-    color: #E5FBFB;
+    color: #646565;
 }
 
 .chat-context-menu > div .icon
@@ -2106,11 +2486,11 @@ img.emoji {
 }
 
 .chat-context-menu > div:hover {
-    background: #364957;
+    background: #D8D8D8;
 }
 
 .chat-context-menu > div:active {
-    color: #54899A;
+    color: #EC196C;
 }
 
 .spixi-bot-details,
@@ -2122,7 +2502,7 @@ img.emoji {
     bottom: 0px;
     overflow: auto;
     display: none;
-    background: #364957;
+    background: #25282E;
     z-index: 2001;
 
     -webkit-animation-name: animatetop;
@@ -2143,7 +2523,7 @@ img.emoji {
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background: #364957;
+    background: #25282E;
     overflow: auto;
     padding: 15px 0px;
 }
@@ -2174,6 +2554,7 @@ img.emoji {
     line-height: 30px;
     width: auto;
     padding: 0 20px;
+    color: #fff;
 }
 
 .spixi-bot-user-details .spixi-bot-user-nick {
@@ -2200,7 +2581,7 @@ img.emoji {
 }
 
 .typing-indicator {
-    background-color: #364957;
+    background-color: black;
     will-change: transform;
     width: auto;
     border-radius: 12px;
@@ -2220,7 +2601,7 @@ img.emoji {
     height: 6px;
     width: 6px;
     border-radius: 50%;
-    background-color: #364957;
+    background-color: black;
 }
 
 .typing-indicator::after {
@@ -2235,7 +2616,7 @@ img.emoji {
     width: 4px;
     float: left;
     margin: 0 1px;
-    background-color: #E5FBFB;
+    background-color: white;
     display: block;
     border-radius: 50%;
     opacity: 0.4;
@@ -2404,44 +2785,60 @@ img.emoji {
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.75); /* Black w/ opacity */
+    backdrop-filter: blur(1px);
+}
+
+.spixi-modal-soft {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    /*z-index: 2001;*/
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
 }
 
 .modal-content {
     position: relative;
-
-    background-color: #364957;
+    background: #25282E;
     margin: auto; /* 15% from the top and centered */
-    border: 0px solid #888;
-    border-radius: 12px;
-    width: 250px; /* Could be more or less, depending on screen size */
-    box-shadow: 0 0px 0px 0 rgba(0,0,0,0.2),0 0px 0px 0 rgba(0,0,0,0.19);
+    border-radius: 16px;
+    width: 258px; /* Could be more or less, depending on screen size */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     -webkit-animation-name: animatetop;
     -webkit-animation-duration: 0.4s;
     animation-name: animatetop;
     animation-duration: 0.4s;
-    
     font-size: 12pt;
-
     top: 50%;
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
-
     max-height: 80%;
+}
+
+.modal-content.wide {
+    width: 342px;
+}
+
+.spixi-modal-header-icon {
+    color: #B1B1B1;
+    padding-top: 12px;
+    text-align: center;
+    font-size: 24px;
 }
 
 .spixi-modal-header {
     font-weight: bold;
-    color: #E5FBFB;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 12px;
+    color: #fff;
+    padding-top: 16px;
     word-break: break-all;
+    text-align: center;
 }
 .spixi-modal-header.warn {
-    color: #2C3D4A;
+    color: #ad1457;
 }
 
 .spixi-modal-text {
@@ -2450,26 +2847,41 @@ img.emoji {
     padding-right: 15px;
     padding-top: 10px;
     min-height: 100px;
-    color: #A5C3C5;
+    color: #fff;
     overflow: auto;
     word-break: break-all;
 }
 
+.spixi-modal-details {
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    padding: 12px;
+}
+
+.spixi-modal-details-address {
+    font-size: 12px;
+    text-align: center;
+    color: #687786;
+    word-break: break-all;
+    padding-left: 42px;
+    padding-right: 42px;
+}
+
 .spixi-modal-item {
     width: 100%;
-    color: #A5C3C5;
+    color: #6a6a6a;
     height: 50px;
     padding-left: 15px;
     padding-top: 10px;
-    
 }
 .spixi-modal-item:hover {
-    color: #A5C3C5;
-    background-color: #202A32;
+    color: #000;
+    background-color: #dae2e9;
 }
 .spixi-modal-item:active {
-    color: #A5C3C5;
-    background-color: #202A32;
+    color: #000;
+    background-color: #dae2e9;
 }
 
 .spixi-modal-close,
@@ -2482,7 +2894,7 @@ img.emoji {
     vertical-align: middle;
     font-size: 12px;
     font-weight: bold;
-    color: #65E2EA;
+    color: #ad1457;
     box-sizing: border-box;
     margin: 0px;
     padding: 12px 0px;
@@ -2506,13 +2918,13 @@ img.emoji {
 }
 
 .spixi-modal-tip-item.selected {
-    color: #3A6B87;
+    color: #1692D9;
 }
 
 .spixi-modal-tip-item.selected .fa-check
 {
     display: inline-block;
-    color: #3A6B87;
+    color: #1692D9;
 }
 
 .spixi-modal-tip-item .spixi-textfield
@@ -2521,6 +2933,36 @@ img.emoji {
     float: right;
     height: 32px;
     box-sizing: border-box;
+}
+
+.spixi-modal-text-reject {
+    color: #D14F82;
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.spixi-modal-text-primary {
+    color: #66bced;
+    text-align: right;
+    margin-right: 10px;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+}
+.spixi-modal-text-primary.disabled {
+    color: #A0A0A0;
+}
+
+.spixi-modal-text-maxamount {
+    color: #fff;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 24px;
+    margin-right: 10px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 /* Misc Controls */
@@ -2545,8 +2987,8 @@ img.emoji {
 }
 .address_qr {
     margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 40px;
+    margin-bottom: 32px;
     box-sizing: border-box;
     padding: 15px;
     width: 230px;
@@ -2556,14 +2998,19 @@ img.emoji {
     border: 1px solid #AAA;
 }
 
+.address_actionbuttons 
+{
+    margin: 74px;
+}
+
 .spixi-leftswipe-helper {
-    display: block; 
+    display: block;
     position: fixed;
-    z-index: 5000; 
+    z-index: 5000;
     left: 0;
     top: 54px;
-    width: 30px; 
-    height: 100%; 
+    width: 30px;
+    height: 100%;
     overflow: auto;
 }
 
@@ -2611,10 +3058,30 @@ img.emoji {
 
 /* Color combos */
 .spixi-text-green {
-    color: #5CFBB8;
+    color: #5bbb0e;
 }
 .spixi-text-red {
-    color: #92B4C2;
+    color: #19293C;
+}
+
+.spixi-tx-red {
+    color: #F76E89;
+}
+
+.spixi-tx-green {
+    color: #59C2A0;
+}
+
+.spixi-status-red {
+    color: #F76E89;
+}
+
+.spixi-status-yellow {
+    color: #CF9E55;
+}
+
+.spixi-status-green {
+    color: #59C2A0;
 }
 
 /* Animations */

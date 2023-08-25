@@ -5,12 +5,12 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity Name="maui-package-name-placeholder" Publisher="CN=User Name" Version="0.7.1.0" />
+  <Identity Name="io.ixian.spixi" Publisher="CN=ixiandev" Version="0.7.1.0" />
 
   <Properties>
     <DisplayName>Spixi</DisplayName>
     <PublisherDisplayName>User Name</PublisherDisplayName>
-    <Logo>$placeholder$.png</Logo>
+    <Logo>Platforms\Windows\icon\$placeholder$.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -27,11 +27,10 @@
       <uap:VisualElements
         DisplayName="Spixi"
         Description="$placeholder$"
-        Square150x150Logo="$placeholder$.png"
-        Square44x44Logo="$placeholder$.png"
+        Square150x150Logo="Platforms\Windows\icon\$placeholder$.png"
+        Square44x44Logo="Platforms\Windows\icon\appicon.png"
         BackgroundColor="transparent">
-        <uap:DefaultTile Square71x71Logo="$placeholder$.png" Wide310x150Logo="$placeholder$.png" Square310x310Logo="$placeholder$.png" />
-        <uap:SplashScreen Image="$placeholder$.png" />
+        <uap:DefaultTile Square71x71Logo="Platforms\Windows\icon\$placeholder$.png" Wide310x150Logo="Platforms\Windows\icon\$placeholder$.png" Square310x310Logo="Platforms\Windows\icon\$placeholder$.png"  ShortName="Spixi"/>
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait"/></uap:InitialRotationPreference>
       </uap:VisualElements>
