@@ -36,8 +36,8 @@ apps-empty = You have no existing applications installed.
 
 ; Chat Screen
 chat-sent-contact-request = has sent a contact request
-chat-accept = ACCEPT
-chat-ignore = IGNORE
+chat-accept = Accept
+chat-ignore = Decline
 chat-type-placeholder = Type your message...
 chat-send-file = Send File
 chat-request-payment = Request Payment
@@ -60,6 +60,7 @@ chat-call-missed = Missed call
 chat-call-ended = Ended
 chat-online = Online
 chat-offline = Offline
+chat-waiting-for-response = Waiting for response
 chat-text-too-long = Text too long.
 chat-member-count = {0} members
 chat-context-pin-message = Pin message
@@ -73,6 +74,11 @@ chat-context-kick-user = Kick user
 chat-context-ban-user = Ban user
 chat-context-delete-message = Delete message
 chat-message-cost-bar = Sending messages costs {0} per kB
+chat-request-sent-title = Friend Request Sent
+chat-request-sent-details = Once they accept it, you will be able to chat securely with them.
+chat-request-sent-undo = Undo
+chat-request-received-title = Friend Request Received
+chat-request-received-details = Somebody wants to connect with you! Once you accept, you will be able to chat securely with them.
 
 chat-modal-tip-title = Tip {0}?
 chat-modal-tip-body = Tap on the amount you want to tip or set a custom tip.
@@ -128,32 +134,44 @@ contact-details-deletedhistory-text = Message history deleted.
 
 ; New Contact Screen
 contact-new-title = New Contact
-contact-new-description = Add a new Spixi contact by pasting their address or scanning the QR code. The user will receive a request shortly after.
+contact-new-description = To add a new contact, paste or type their address. You can also scan their QR Code.
 contact-new-placeholder = Paste / type address
 contact-new-send-request = SEND CONTACT REQUEST
 contact-new-invalid-address-self-text = The address you have entered is your own address.
 contact-new-invalid-address-exists-text = This contact is already in your contacts list.
+contact-new-scan = Scan
+contact-new-scan-help = Or scan the QR code
+contact-new-send = Send
+contact-new-cancel = Cancel
+contact-new-confirm-title = Send a Friend Request?
+contact-new-confirm-details = You are about to send a friend request to the following Spixi Address:
 
 ; Downloads Screen
 downloads-title = Downloads
 downloads-empty = You have no downloaded files.
 
 ; Index Screen
-index-balance = My IxiCash Balance
-index-balance-info = * Tap and hold to hide
-index-balance-info2 = * Tap and hold to show
+index-balance = My IXI Balance
+index-balance-show = Show
+index-balance-hide = Hide
+index-balance-info = Balance Hidden
 index-notifications = Notifications
 index-unread-chats = Unread chats
-index-no-conversations = You have no existing conversations.
+index-no-conversations-title = No Chats
+index-no-conversations = Start a new chat with one of your contacts.<br/>All chats will appear here.
+index-new-chat-button = New Chat
+index-no-transactions-title = No Transactions
+index-no-transactions = Your transactions will appear here, once you start using your IXI Wallet.
 index-send = send
-index-activity = activity
+index-activity = Activity
 index-receive = receive
 index-recent-activity = Recent Activity
 index-contacts-placeholder = Search contacts
 index-tab-home = home
-index-tab-chats = chats
-index-tab-wallet = wallet
-index-tab-contacts = contacts
+index-tab-chats = Chats
+index-tab-wallet = Wallet
+index-tab-contacts = Contacts
+index-tab-address = My Address
 index-new-title = NEW
 index-new-contact = Contact
 index-new-chat = Chat
@@ -185,26 +203,35 @@ index-excerpt-self = Me:
 
 ; Intro Screen
 intro-title = Welcome to Spixi,
-intro-subtitle = the decentralized and secure Chat, Wallet and more.
-intro-language-text = Please select a language
+intro-subtitle = Welcome to one of the most secure chat apps in the world.
+intro-headline = Let’s get you started!
+intro-language-text = What language do you speak?
 intro-text = Please create or restore your<br/>Spixi account to proceed
-intro-create-account = NEW ACCOUNT
-intro-restore-account = RESTORE ACCOUNT
+intro-create-account = New Account
+intro-restore-account = Already have an account?
+intro-restore-link = Click here to restore. 
+intro-tip-title = Did you know?
+intro-tip-body = Spixi doesn’t use servers, all messages are sent directly to your peers, while being fully encrypted.
+intro-continue = Continue
+intro-step-1 = Step 1 of 2
+intro-step-2 = Step 2 of 2
 
 ; Intro New Screen
-intro-new-description-1 = Create New Spixi Account
-intro-new-description-2 = Enter your Nickname and Picture
+intro-new-description-1 = Set your nickname and photo
+intro-new-description-2 = Your nickname and profile image will be displayed to your contacts.
 intro-new-name-placeholder = Your Nickname
-intro-new-change-image = Tap to change your picture
+intro-new-change-image = Tap on the avatar to change your profile image.
 intro-new-next = NEXT
 intro-new-step-1 = Step 1 of 2
 intro-new-step-2 = Step 2 of 2
-intro-new-description-3 = Create your Encryption Password
-intro-new-description-4 = Please create your 'Encryption Password' to finish setting up your Spixi account 
-intro-new-password = Enter new encryption password
+intro-new-description-3 = You’re Almost there.
+intro-new-description-4 = This is your primary password. If you ever need to regain access to your account, you will need this password and use it with the backup file.
+intro-new-description-5 = Your password is very important as it will allow you to log back in to your Spixi account in case you need to restore access to it.
+intro-new-password = Type in your password...
+intro-new-password-2 = Re-type your password...
 intro-new-finish = FINISH
-intro-new-create-title = Creating your<br />Spixi account...
-intro-new-create-description = This may take a while
+intro-new-create-title = Creating your Spixi Account...
+intro-new-create-description = This process might take a while on slower devices.
 intro-new-password10 = Password needs to contain at least 10 characters
 intro-new-passwordconf = Enter password confirmation
 intro-new-passwordnomatch = Passwords do not match
@@ -217,12 +244,12 @@ intro-new-walleterror-text = Cannot generate wallet. Please try again.
 
 ; Intro Restore Screen
 intro-restore-description-1 = Restore access to your Spixi account
-intro-restore-description-2 = You need the Backup File and the Encryption Password to restore your existing Spixi account on this device.
-intro-restore-password = Enter your Encryption Password
-intro-restore-selectfile = Select Backup File
+intro-restore-description-2 = You need the Spixi backup file and your password to continue.
+intro-restore-password = Type in your password...
+intro-restore-selectfile = Select backup file
 intro-restore-backupdescription = Set the Backup File that is associated with the Encryption Password
-intro-restore-action = RESTORE
-intro-restore-title = Restoring Access to<br />your Spixi Account
+intro-restore-action = Restore my account
+intro-restore-title = Restoring Access to your Spixi Account
 intro-restore-info = This may take a while
 intro-restore-file-error-title = File Error
 intro-restore-file-selecterror-text = Error occurred while selecting restore file.
@@ -357,6 +384,8 @@ wallet-recipient-search-placeholder = Search contacts
 wallet-recipient-empty = 0 Recipient/-s selected
 wallet-recipient-add = Add Recipient/-s
 wallet-recipient-selected = Recipient/-s selected
+wallet-recipient-new-contact-button = Add a New Contact
+wallet-recipient-no-contact-button = New Contact
 
 ; Wallet Request Screen
 wallet-request-title = Request Payment
@@ -371,7 +400,9 @@ wallet-request-error-title = Error
 wallet-request-error-text = Please enter valid information into the input fields.
 
 ; Wallet Send Screen
-wallet-send-title = Send Payment
+wallet-send-title = Send IXI
+wallet-send-details = Paste or type the address you want to send payment to. You can browse your contacts or scan a QR code.
+wallet-send-subdetails = Send IXI to
 wallet-send-add = Add Recipient/-s
 wallet-send-placeholder = Paste/type address
 wallet-send-more = You can add additional recipients for this transaction. These recipients will receive a payment with the same amount.
@@ -379,35 +410,49 @@ wallet-send-recipients = Recipient/-s
 wallet-send-norecipients = No recipients selected
 wallet-send-next = NEXT
 wallet-send-max = Send maximum amount
+wallet-send-select = Select Contact
+wallet-send-or = Or
 
 ; Wallet Send 2 Screen
 wallet-send2-title = Confirm Payment
 wallet-send2-policy = Transaction fee policy
-wallet-send2-info = Every payment sent has a certain payment fee which is deducted from the amount that is transferred.
-wallet-send2-feeinfo = Set your transaction fee for this transaction. Choose from pre-set NORMAL or HIGH. You can set a custom transaction fee per KB. In cases when there is increased traffic, the transaction fee size can influence which payments are processed faster.
+wallet-send2-info = IXI Payments can’t be reversed. 
+wallet-send2-feeinfo = IXI network fee is included in the payment.
 wallet-send2-normal = Normal
 wallet-send2-high = High
 wallet-send2-custom = Custom
-wallet-send2-placeholder = Enter transaction fee
-wallet-send2-amount = Amount to send
+wallet-send2-placeholder = How much would you like to send?
+wallet-send2-amount = Amount
+wallet-send2-max-amount = Send Maximum Amount
+wallet-send2-max-amount-warning = You are about to send the entire balance of your wallet!
 wallet-send2-fee = Total transaction fee
 wallet-send2-total = Total amount to be paid from balance
-wallet-send2-send = SEND PAYMENT
+wallet-send2-send = Send IXI
+wallet-send2-confirm-title = You are about to send
+wallet-send2-confirm = Confirm
+wallet-send2-cancel = Cancel
 
 ; Wallet Sent Screen
-wallet-sent-title = Payment Sent
-wallet-sent-subtitle = Payment Sent to:
+wallet-sent-title = Payment Details
+wallet-sent-subtitle = Payment sent to:
+wallet-status-sent-pending = Payment is Being Sent!
+wallet-status-receive-pending = Payment Incoming!
+wallet-status-sent = Payment Successfully Sent!
+wallet-status-receive = Payment Received!
+wallet-status-failed = Payment Failed!
 wallet-sent-amount = Amount Sent
 wallet-sent-status = Payment Status
 wallet-sent-confirmed = CONFIRMED
 wallet-sent-unconfirmed = UNCONFIRMED
 wallet-sent-details = The amount you sent has been deducted from your balance.
 wallet-sent-fee = Payment fee
-wallet-sent-feeinfo = Every payment sent has a certain payment fee which is deducted from the amount transferred.
-wallet-sent-txid = TXID
+wallet-sent-feeinfo = This payment has a Network Fee of
+wallet-sent-txid = Transaction ID
+wallet-sent-view-explorer = View in Explorer
 wallet-sent-dismiss = DISMISS
+wallet-sent-unconfirmed-details = The payment has been sent, but is not yet confirmed by the network. Once confirmed, you will see the transaction ID and a link to view it on the explorer.
 wallet-sentrecv-title = Payment Received
-wallet-sentrecv-subtitle = Payment Received from
+wallet-sentrecv-subtitle = Payment received from:
 wallet-sentrecv-amount = Amount Received
 wallet-sentrecv-details = The amount received has been added to your wallet balance.
 
@@ -436,28 +481,32 @@ wallet-error-balance-title = Insufficient balance
 wallet-error-balance-text = Your balance is too low for this transaction. Total cost of the transaction is {0}, while your balance is {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Would you like to join Ixian's Official Bot?
-onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
-onboarding-bot-join-button = JOIN
-onboarding-bot-dont-join-button = DON'T JOIN
+onboarding-bot-title = Join our official Spixi Community
+onboarding-bot-text = A group chat, where you can tell us what you think about Spixi and keep up with the updates.
+onboarding-bot-join-button = Join now
+onboarding-bot-dont-join-button = Skip for now
 
-; Onboarding Meet Spixi
-onboarding-screen1-title = Meet Spixi!
-onboarding-screen1-text = A blockchain based decentralized messenger with an integrated cryptocurrency wallet.
+; Onboarding 1
+onboarding-screen1-title = Connect with Confidence
+onboarding-screen1-text = Take Control of Your Communication and Finances with One of the Most Secure and Private Chat Apps in the World.
+onboarding-screen1-get-started = Get started
+onboarding-screen1-skip = Skip onboarding
 
-; Onboarding Your Address
-onboarding-screen2-title = Your Spixi Address
-onboarding-screen2-text = Your Spixi Address is your only ID. Use it to interact with others on Spixi. You can find yours in the menu.
+; Onboarding 2
+onboarding-screen2-title = Your address is your only ID.
+onboarding-screen2-text = Spixi doesn’t need your phone number or email. Instead it creates your address which is you only ID on the app. You can add contacts by using their address.
 
-; Onboarding Connect with your friends
-onboarding-screen3-title = Connect with your friends
-onboarding-screen3-text = You can add a friend on Spixi by scanning their QR code, or by entering their address. Tap on the Action Button and select “New Contact”.
+; Onboarding 3
+onboarding-screen3-title = Send and receive IXI payments.
+onboarding-screen3-text = By using the wallet, you can quickly send or receive IXI payments. It’s as simple as sending a message.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Send and Receive Payments
 onboarding-screen4-text = Use the integrated wallet to quickly send and receive IxiCash payments. You can do this in your wallet or in chat as easy as sending a message!
 onboarding-skip = SKIP
-onboarding-finish = FINISH
+onboarding-back = Back
+onboarding-next = Next
+onboarding-finish = Finish
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...

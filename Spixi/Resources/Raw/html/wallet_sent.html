@@ -26,13 +26,25 @@
 <body onload="onload()">
     <div id="templates" style="display: none;">
         <div class="address">
-            <div class="row spixi-list-item padded">
-                <div class="col-2 spixi-list-item-left spixi-list-item-noborder"><img class="spixi-list-item-avatar" src="img/spixiavatar.png" /></div>
-                <div class="col-7 spixi-list-item-center spixi-list-item-noborder">
-                    <div class="spixi-list-item-title-center wallet_from_text selectable"></div>
+            <div class="row no-gutters spixi-list-item-first-row">
+                <div class="col">
+                    <div class="spixi-list-item-from"></div>
                 </div>
-                <div class="col-3 spixi-list-item-right spixi-list-item-noborder time_sent"></div>
+
+                <div class="col spixi-list-item-right">
+                    <div class="spixi-list-item-amount"></div>
+                </div>
             </div>
+
+            <div class="row no-gutters spixi-list-item-second-row">
+                <div class="col">
+                    <div class="spixi-list-item-timestamp">2 days ago</div>
+                </div>
+                <div class="col spixi-list-item-right">
+                    <div class="spixi-list-item-amount-fiat"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -55,100 +67,134 @@
         <div class="spixi-toolbar-holder"></div>
         <!-- End Toolbar -->
 
-        <div id="subtitle" class="spixi-textsection-holder spixi-textsection-header">
+        <div id="titleicon" class="spixi-payment-header-icon">
+            <i class="fa-solid fa-spinner"></i>
+        </div>
+
+        <div id="subtitle" class="spixi-payment-header-title">
             *SL{wallet-sent-subtitle}
         </div>
 
-        <hr class="spixi-separator" />
-        <div class="container" id="address_container">
-        </div>
-        <hr class="spixi-separator" />
-
-        <div id="amount_label" class="spixi-textsection-holder spixi-textsection-header">
-            *SL{wallet-sent-amount}
-        </div>
-        <div id="sent_amount" class="spixi-textsection-holder spixi-textsection-header">
-            0.00000000
-        </div>
-        <hr class="spixi-separator" />
-
-        <div class="spixi-textsection-holder spixi-textsection-header">
-            *SL{wallet-sent-status}
-        </div>
-        <div id="sent_status" class="spixi-textsection-holder spixi-textsection-header spixi-text-red">
-            *SL{wallet-sent-unconfirmed}
-        </div>
-        <div id="paymentdetail_label" class="spixi-textsection-holder">
-            *SL{wallet-sent-details}
-        </div>
-        <hr class="spixi-separator" />
-
-        <div class="spixi-textsection-holder spixi-textsection-header">
-            *SL{wallet-sent-fee}
+        <div id="unconfirmed_warning" class="row spixi-descriptionbar-row smallmargin warning" style="display: none;">
+            <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
+            <div class="col spixi-descriptionbar-row-details">*SL{wallet-sent-unconfirmed-details}</div>
         </div>
 
-        <div id="sent_fee_percent" class="spixi-textsection-holder">
-            %
-        </div>
-        <div id="sent_fee" class="spixi-textsection-holder spixi-textsection-header">
-            0.00000000
-        </div>
-        <div class="spixi-textsection-holder">
-            *SL{wallet-sent-feeinfo}
-        </div>
+        <div class="spixi-sectionbar">
+            <div>
+                <div id="subtitle-type" class="spixi-sectionbar-subtitle">
+                    *SL{wallet-sent-subtitle}
+                </div>
 
-        <div class="spixi-textsection-holder spixi-textsection-header">
-            *SL{wallet-sent-txid}
+                <div id="address_container">
+                </div>
+
+                <div class="row spixi-descriptionbar-row nomargin">
+                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
+                    <div class="col spixi-descriptionbar-row-details">*SL{wallet-sent-feeinfo} <span id="sent_fee"></span> IXI.</div>
+                </div>
+
+                <hr class="spixi-separator fullwidth" />
+
+                <div class="spixi-sectionbar-subtitle">
+                    *SL{wallet-sent-txid}
+                </div>
+                <div class="spixi-sectionbar-txid" id="sent_txid">
+
+                </div>
+                <hr class="spixi-separator fullwidth" />
+                <div id="viewexplorer" class="spixi-flat-button">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> *SL{wallet-sent-view-explorer}
+                </div>
+            </div>
         </div>
-
-        <div id="sent_txid" class="spixi-textsection-holder break-word selectable">
-
-        </div>
-
-        <div class="spixi-holder-20"></div>
-        <hr class="spixi-separator-main" />
-
-        <div id="sendrequest" class="spixi-button large center">
-            *SL{wallet-sent-dismiss}
-        </div>
-
-        <div class="spixi-holder-20"></div>
 
     </div>
 
 
     <script type="text/javascript">
+        var address_container = document.getElementById('address_container');
+        var titleIcon = document.getElementById("titleicon");
+        var received = false;
+
         document.getElementById("backbtn").onclick = function () {
             location.href = "ixian:dismiss";
         }
 
-        document.getElementById("sendrequest").onclick = function () {
-            location.href = "ixian:dismiss";
+        document.getElementById("viewexplorer").onclick = function () {
+            location.href = "ixian:viewexplorer";
         }
 
         function setReceivedMode() {
-            document.getElementById('title').innerHTML = "*SL{wallet-sentrecv-title}";
-            document.getElementById('subtitle').innerHTML = "*SL{wallet-sentrecv-subtitle}";
+            received = true;
+            document.getElementById('subtitle-type').innerHTML = "*SL{wallet-sentrecv-subtitle}";
             document.getElementById('amount_label').innerHTML = "*SL{wallet-sentrecv-amount}";
             document.getElementById('paymentdetail_label').innerHTML = "*SL{wallet-sentrecv-details}";
         }
 
-        function addSender(address, time)
-        {
-            var address_container = document.getElementById('address_container');
+        function clearEntries() {
             address_container.innerHTML = "";
+        }
+
+        function addEntry(address, amount, fiat_amount, time, type, confirmed)
+        {
+            var icon = '<i class="spixi-list-tx-icon fa fa-spinner spixi-status-yellow"></i>';
+            if (received == true) {
+                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive-pending}";
+            }
+            else {
+                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent-pending}";
+            }
+
+            if (confirmed == "true") {
+                iconClass = "spixi-text-green";
+                icon = '<i class="spixi-list-tx-icon fa fa-check-circle spixi-status-green"></i>';
+                if (received == true) {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-receive}";
+                }
+                else {
+                    document.getElementById('subtitle').innerHTML = "*SL{wallet-status-sent}";
+                }
+
+            } else if (confirmed == "error") {
+                iconClass = "spixi-text-red";
+                icon = '<i class="spixi-list-tx-icon fa fa-exclamation-circle spixi-status-red"></i>';
+                document.getElementById('subtitle').innerHTML = "*SL{wallet-status-failed}";
+            }
+
+            var arrow = '<i class="spixi-list-tx-icon spixi-tx-green fa fa-arrow-down"></i>';
+            amount = amountWithCommas(amount);
+            var amountText = "+ " + amount;
+            if (type == "send") {
+                arrow = '<i class="spixi-list-tx-icon spixi-tx-red fa fa-arrow-up"></i>';
+                amountText = "- " + amount;
+            }
+
 
             var address_html = document.getElementById("templates").getElementsByClassName("address")[0].outerHTML;
             address_container.innerHTML += address_html;
 
-            address_container.lastElementChild.getElementsByClassName("wallet_from_text")[0].innerHTML = address;
-            address_container.lastElementChild.getElementsByClassName("time_sent")[0].innerHTML = time;
+            address_container.lastElementChild.getElementsByClassName("spixi-list-item-from")[0].innerHTML = icon + " " + address;
+            address_container.lastElementChild.getElementsByClassName("spixi-list-item-amount")[0].innerHTML = amountText + " " + arrow;
+            address_container.lastElementChild.getElementsByClassName("spixi-list-item-amount-fiat")[0].innerHTML = "$" + fiat_amount;
+            address_container.lastElementChild.getElementsByClassName("spixi-list-item-timestamp")[0].innerHTML = time;
         }
 
-        function setData(amount, fee, time, confirmedText, feePercentage, txid) {
-            document.getElementById('sent_amount').innerHTML = amount;
+        function setData(amount, fee, time, txid, confirmed) {
+
+            titleIcon.innerHTML = "<i class='fa-solid fa-spinner fa-spin spixi-status-yellow'></i>";
+            document.getElementById("unconfirmed_warning").style.display = "inline-flex";
+            if (confirmed == "true") {
+                document.getElementById("unconfirmed_warning").style.display = "none";
+                titleIcon.innerHTML = '<i class="fa fa-check-circle spixi-status-green"></i>';
+
+
+            } else if (confirmed == "error") {
+                document.getElementById("unconfirmed_warning").style.display = "none";
+                titleIcon.innerHTML = '<i class="fa fa-exclamation-circle spixi-status-red"></i>';
+            }
+
             document.getElementById('sent_fee').innerHTML = fee;
-            document.getElementById("sent_fee_percent").innerHTML = feePercentage;
             document.getElementById("sent_txid").innerHTML = txid;
 
             document.getElementById('sent_status').innerHTML = confirmedText;
