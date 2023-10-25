@@ -94,7 +94,7 @@ namespace Spixi
             intent.PutExtra(MessageKey, message);
             intent.PutExtra("fa", data);
 
-            PendingIntent pendingIntent = PendingIntent.GetActivity(Android.App.Application.Context, pendingIntentId, intent, PendingIntentFlags.OneShot);
+            PendingIntent pendingIntent = PendingIntent.GetActivity(Android.App.Application.Context, pendingIntentId, intent, PendingIntentFlags.Immutable);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(Android.App.Application.Context, channelId)
                 .SetContentIntent(pendingIntent)
