@@ -1,11 +1,13 @@
 ﻿using Android.App;
-using OneSignalSDK.DotNet.Core;
 using AndroidX.Core.App;
 using Android.Graphics;
 using Android.Content;
 using Android.OS;
 using IXICore.Meta;
 using SPIXI;
+using OneSignalSDK.DotNet;
+using OneSignalSDK.DotNet.Core;
+using OneSignalSDK.DotNet.Core.Debug;
 
 namespace Spixi
 {
@@ -24,60 +26,27 @@ namespace Spixi
 
         public static void initialize()
         {
-            OneSignalSDK.DotNet.OneSignal.Default.LogLevel = LogLevel.NONE;
-            OneSignalSDK.DotNet.OneSignal.Default.AlertLevel = LogLevel.NONE;
-            OneSignalSDK.DotNet.OneSignal.Default.RequiresPrivacyConsent = true;
-            OneSignalSDK.DotNet.OneSignal.Default.PrivacyConsent = true;
-            OneSignalSDK.DotNet.OneSignal.Default.ShareLocation = false;
-            OneSignalSDK.DotNet.OneSignal.Default.InAppMessagesArePaused = true;
-            OneSignalSDK.DotNet.OneSignal.Default.NotificationWillShow += _NotificationWillShow;
-            OneSignalSDK.DotNet.OneSignal.Default.NotificationOpened += _NotificationOpened;
+            OneSignal.Debug.LogLevel = LogLevel.VERBOSE;
+            OneSignal.Debug.AlertLevel = LogLevel.NONE;
 
-            OneSignalSDK.DotNet.OneSignal.Default.Initialize(SPIXI.Meta.Config.oneSignalAppId);
-            OneSignalSDK.DotNet.OneSignal.Default.PromptForPushNotificationsWithUserResponse();
-        }
+            OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
-        private static OneSignalSDK.DotNet.Core.Notification _NotificationWillShow(OneSignalSDK.DotNet.Core.Notification notification)
-        {
-            if (App.isInForeground)
-                return null;
+            // RequestPermissionAsync will show the notification permission prompt.
+            OneSignal.Notifications.RequestPermissionAsync(true);
 
-            if (OfflinePushMessages.fetchPushMessages(true))
-            {
-                OneSignalSDK.DotNet.OneSignal.Default.ClearOneSignalNotifications();
-                return null;
-            }
-            return notification;
-        }
-
-        private static void _NotificationOpened(NotificationOpenedResult result)
-        {
-            if (result.notification.additionalData.ContainsKey("fa"))
-            {
-                var fa = result.notification.additionalData["fa"];
-                if (fa != null)
-                {
-                    try
-                    {
-                        App.startingScreen = Convert.ToString(fa);
-                    }
-                    catch (Exception e)
-                    {
-                        Logging.error("Exception occured in handleNotificationOpened: {0}", e);
-                    }
-                }
-            }
+            OneSignal.Notifications.Clicked += handleNotificationOpened;
+            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
         }
 
         public static void setTag(string tag)
         {
-            OneSignalSDK.DotNet.OneSignal.Default.SendTag("ixi", tag);
+            OneSignal.User.AddTag("ixi", tag);
         }
 
         public static void clearNotifications()
         {
             var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
-            notificationManager.CancelAll();
+            notificationManager.CancelAll();          
         }
 
         public static void showLocalNotification(string title, string message, string data)
@@ -134,6 +103,40 @@ namespace Spixi
             }
 
             channelInitialized = true;
+        }
+
+        static void handleNotificationReceived(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
+        {
+            e.PreventDefault();
+
+            if (App.isInForeground)
+                return;
+
+            if (OfflinePushMessages.fetchPushMessages(true))
+            {
+                //OneSignal.Current.ClearAndroidOneSignalNotifications();
+                //return;
+            }
+            e.Notification.display();
+        }
+
+        static void handleNotificationOpened(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
+        {
+            if(e.Notification.AdditionalData.ContainsKey("fa"))
+            {
+                var fa = e.Notification.AdditionalData["fa"];
+                if (fa != null)
+                {
+                    try
+                    {
+                        App.startingScreen = Convert.ToString(fa);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.error("Exception occured in handleNotificationOpened: {0}", ex);
+                    }
+                }
+            }
         }
 
     }

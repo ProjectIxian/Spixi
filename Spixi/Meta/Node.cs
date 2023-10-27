@@ -64,13 +64,12 @@ namespace SPIXI.Meta
         {
 #if DEBUG
             Logging.warn("Testing language files");
-          //  Lang.SpixiLocalization.testLanguageFiles("en-us");
+            //  Lang.SpixiLocalization.testLanguageFiles("en-us");
 #endif
-
-
             Logging.info("Initing node constructor");
-
             Instance = this;
+
+            SPushService.initialize();
 
             CoreConfig.simultaneousConnectedNeighbors = 6;
 
@@ -178,9 +177,8 @@ namespace SPIXI.Meta
             mainLoopThread.Start();
 
             // Init push service
-            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
+            string tag = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();          
             SPushService.setTag(tag);
-            SPushService.initialize();
             SPushService.clearNotifications();
 
             Logging.info("Node started");

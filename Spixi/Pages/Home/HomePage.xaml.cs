@@ -252,6 +252,9 @@ namespace SPIXI
                     Text = IxianHandler.getWalletStorage().getPrimaryAddress().ToString(),
                 });
             }
+            else if (current_url.Equals("ixian:copy", StringComparison.Ordinal))
+            {
+            }
             else if(current_url.StartsWith("ixian:viewLog"))
             {
                 // TODO perhaps move this whole functionality to Logging class and delete spixi.log.zip on start if exists
@@ -855,7 +858,7 @@ namespace SPIXI
             {
                 if (!webView.IsEnabled || !App.isInForeground)
                 {
-                   // return;
+                    return;
                 }
                 Page page = Navigation.NavigationStack.Last();
                 if (page is not null and SpixiContentPage)
