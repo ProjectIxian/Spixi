@@ -44,7 +44,7 @@ namespace SPIXI
 
         public static async Task<bool> winUIFix(WebView webView)
         {
-#if WINDOWS
+#if WINDOWS_UIFIX
             var result = true;
             await  MainThread.InvokeOnMainThreadAsync(async () =>
             {
