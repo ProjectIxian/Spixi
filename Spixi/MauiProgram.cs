@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.Controls.Compatibility.Hosting;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Maui.Controls.Compatibility.Hosting;
 using Microsoft.Maui.Handlers;
 
 namespace Spixi;
@@ -11,6 +12,7 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
             .UseMauiCompatibility()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
