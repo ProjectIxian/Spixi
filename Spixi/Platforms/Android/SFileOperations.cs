@@ -22,7 +22,7 @@ namespace Spixi
             Intent shareIntent = new Intent();
             shareIntent.SetAction(Intent.ActionSend);
             shareIntent.SetType("application/octet-stream");
-            Android.Net.Uri uriShare = FileProvider.GetUriForFile(context, "com.ixian.provider", file);
+            Android.Net.Uri uriShare = FileProvider.GetUriForFile(context, "io.ixian.spixi.provider", file);
             shareIntent.PutExtra(Intent.ExtraStream, uriShare);
 
             var chooserIntent = Intent.CreateChooser(shareIntent, title ?? string.Empty);
