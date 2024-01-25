@@ -72,7 +72,7 @@ namespace Spixi
 
             try
             {
-                Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixian.provider", f);
+                Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "io.ixian.spixi.provider", f);
 
                 string mime_type = getMimeType(file_uri);
 
