@@ -26,7 +26,7 @@ namespace Spixi
 
         public static void initialize()
         {
-            OneSignal.Debug.LogLevel = LogLevel.VERBOSE;
+            OneSignal.Debug.LogLevel = LogLevel.WARN;
             OneSignal.Debug.AlertLevel = LogLevel.NONE;
 
             OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
