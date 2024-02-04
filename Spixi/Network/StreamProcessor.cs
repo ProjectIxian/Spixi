@@ -1414,6 +1414,9 @@ namespace SPIXI
             sendMessage(friend, message);
 
             ProtocolMessage.resubscribeEvents();
+
+            FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
+
         }
 
         public static void sendNickname(Friend friend)
