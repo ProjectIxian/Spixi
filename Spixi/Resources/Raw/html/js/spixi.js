@@ -1,5 +1,10 @@
 // SPIXI helper script
 
+// Disable drag
+document.addEventListener('dragstart', (event) => {
+    event.preventDefault();
+});
+
 function onload()
 {
     location.href = "ixian:onload";
