@@ -1511,10 +1511,13 @@ img.emoji {
     box-sizing: border-box;
     position: relative;
 }
-.spixi-list-item:hover
-{
-    background-color: #dae2e9;
+
+@media(pointer:fine) {
+    .spixi-list-item:hover {
+        background-color: #dae2e9;
+    }
 }
+
 .spixi-list-item:active {
     background-color: #dae2e9;
 }
