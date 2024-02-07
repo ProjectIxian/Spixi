@@ -131,9 +131,9 @@ namespace SPIXI
 
                 IxianHandler.addTransaction(transaction, true);
                 
-                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.id));
+                SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.requestFundsResponse, Encoding.UTF8.GetBytes(msg_id + ":" + transaction.getTxIdString()));
 
-                requestMsg.message = ":" + transaction.id;
+                requestMsg.message = ":" + transaction.getTxIdString();
 
                 StreamMessage message = new StreamMessage();
                 message.type = StreamMessageCode.info;

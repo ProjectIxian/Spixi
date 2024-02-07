@@ -877,7 +877,7 @@ namespace SPIXI
                 string status = SpixiLocalization._SL("chat-payment-status-waiting-confirmation");
                 string status_icon = "fa-clock";
 
-                string amount = message.message;
+                string amount = message.message.Trim(':');
 
                 string txid = "";
 
@@ -892,7 +892,6 @@ namespace SPIXI
                 {
                     status = SpixiLocalization._SL("chat-payment-status-declined");
                     status_icon = "fa-exclamation-circle";
-                    amount = message.message.Substring(2);
                     txid = Crypto.hashToString(message.id);
                     enableView = false;
                 }else if(message.message.StartsWith(":"))
