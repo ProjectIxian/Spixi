@@ -37,6 +37,7 @@ namespace SPIXI
         private ushort transactionFilter = 0; // 0-All 1-Sent 2-Received
 
         private string currentTab = "tab1";
+        private bool hideBalance = false;
 
         private bool running = false;
 
@@ -63,6 +64,11 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
             this.Title = "SPIXI";
+
+            if (Preferences.Default.ContainsKey("hidebalance"))
+            {
+                hideBalance = (bool)Preferences.Default.Get("hidebalance", false);
+            }
 
             loadPage(webView, "index.html");
 
@@ -139,6 +145,17 @@ namespace SPIXI
                 string[] split = current_url.Split(new string[] { "ixian:filter:" }, StringSplitOptions.None);
                 string result = split[1];
                 filterTransactions(result);
+                e.Cancel = true;
+                return;
+            }
+            else if (current_url.Contains("ixian:balance:"))
+            {
+                string[] split = current_url.Split(new string[] { "ixian:balance:" }, StringSplitOptions.None);
+                if (split.Length > 1)
+                {
+                    hideBalance = split[1] == "hide";
+                }
+                Preferences.Default.Set("hidebalance", hideBalance);
                 e.Cancel = true;
                 return;
             }
@@ -434,6 +451,8 @@ namespace SPIXI
 
             string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             Utils.sendUiCommand(webView, "setAddress", address_string);
+
+            Utils.sendUiCommand(webView, "setHideBalance", hideBalance.ToString());
 
             try
             {

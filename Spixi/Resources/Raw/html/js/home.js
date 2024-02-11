@@ -66,6 +66,22 @@ document.getElementById("filter-received").onclick = function () {
     location.href = "ixian:filter:received";
 }
 
+function displayBalance(hideBalance) {
+    const balanceElement = document.getElementById('activity_balance_number');
+    const fiatBalanceElement = document.getElementById('activity_balance_info');
+    const toggleElement = document.getElementById('activity_balance_toggle');
+
+    if (!hideBalance) {
+        balanceElement.innerHTML = balance;
+        fiatBalanceElement.innerHTML = fiatBalance;
+        toggleElement.innerHTML = SL_IndexBalanceHide + " <i class='fa fa-eye'></i>";
+    } else {
+        balanceElement.innerHTML = "<img class=\"ixicash-icon\" src=\"img/ixilogo.svg\"/> <span>--</span>";
+        fiatBalanceElement.innerHTML = SL_IndexBalanceInfo;
+        toggleElement.innerHTML = SL_IndexBalanceShow + " <i class='fa fa-eye-slash'></i>";
+    }
+}
+
 function setBalance(bal, fiatBal, theNick) {
     // Set the user nickname
     document.getElementById('menu_nickname').innerHTML = theNick;
@@ -76,31 +92,21 @@ function setBalance(bal, fiatBal, theNick) {
     fiatBalance = "$" + fiatBal;
 
     if (hideBalance == false) {
-        var balDiv = document.getElementById('activity_balance_number');
-        balDiv.innerHTML = balance;
-
-        var fiatBalDiv = document.getElementById('activity_balance_info');
-        fiatBalDiv.innerHTML = fiatBalance;
+        displayBalance(false);
     }
 }
 
 function toggleBalance()
 {
-    var balDiv = document.getElementById('activity_balance_number');
-    if (hideBalance == true)
-    {
-        balDiv.innerHTML = balance;
-        document.getElementById('activity_balance_info').innerHTML = fiatBalance;
-        document.getElementById('activity_balance_toggle').innerHTML = SL_IndexBalanceHide + " <i class='fa fa-eye'></i>";      
-        hideBalance = false;
-    }
-    else
-    {
-        balDiv.innerHTML = "<img class=\"ixicash-icon\" src=\"img/ixilogo.svg\"/> <span>--</span>";
-        document.getElementById('activity_balance_info').innerHTML = SL_IndexBalanceInfo;
-        document.getElementById('activity_balance_toggle').innerHTML = SL_IndexBalanceShow + " <i class='fa fa-eye-slash'></i>";
-        hideBalance = true;
-    }
+    hideBalance = !hideBalance;
+    displayBalance(hideBalance);
+    location.href = `ixian:balance:${hideBalance ? 'hide' : 'show'}`;
+}
+
+function setHideBalance(hide)
+{
+    hideBalance = hide === "True";
+    displayBalance(hideBalance);
 }
 
 function selectFABOption(link) {
