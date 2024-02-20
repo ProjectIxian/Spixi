@@ -159,6 +159,7 @@ namespace SPIXI
         public byte[] relayWallet = null;
 
         public bool online = false;
+        public bool isTyping = false;
 
         public bool forcePush = false; // on error - for bypassing trying to resend to the same S2 and sending directly to push server
 
@@ -567,6 +568,7 @@ namespace SPIXI
                 {
                     msg.read = true;
                     Node.localStorage.requestWriteMessages(walletAddress, channel);
+                    Node.shouldRefreshContacts = true;
                 }
 
                 if(chat_page != null)
@@ -602,6 +604,7 @@ namespace SPIXI
                 {
                     msg.confirmed = true;
                     Node.localStorage.requestWriteMessages(walletAddress, channel);
+                    Node.shouldRefreshContacts = true;
                 }
 
                 if (chat_page != null)

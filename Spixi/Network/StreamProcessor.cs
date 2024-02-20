@@ -25,6 +25,8 @@ namespace SPIXI
 
         private static PendingMessageProcessor pendingMessageProcessor = null;
 
+        private static List<Timer> _typingTimers = new();
+
         // Initialize the global stream processor
         public static void initialize(string root_storage_path)
         {
@@ -819,11 +821,8 @@ namespace SPIXI
                         if(friend.bot)
                         {
                             return;
-                        }
-                        if(friend.chat_page != null)
-                        {
-                            friend.chat_page.showTyping();
-                        }
+                        }                                             
+                        handleFriendIsTyping(friend);                      
                         return;
 
                     case SpixiMessageCode.leaveConfirmed:
@@ -1981,5 +1980,24 @@ namespace SPIXI
 
             sendMessage(friend, message);
         }
+      
+        private static void handleFriendIsTyping(Friend friend)
+        {
+            friend.isTyping = true;
+            Node.shouldRefreshContacts = true;
+
+            Timer? timer = null;
+            timer = new(_ =>
+            {
+                friend.isTyping = false;
+                Node.shouldRefreshContacts = true;
+                _typingTimers.Remove(_typingTimers.FirstOrDefault());
+            }, timer, 5000, Timeout.Infinite);
+
+            _typingTimers.Add(timer);
+
+            friend.chat_page?.showTyping();
+        }
+
     }
 }

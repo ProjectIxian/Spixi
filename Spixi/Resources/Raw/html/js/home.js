@@ -328,7 +328,7 @@ function clearChats() {
 }
 
 // Adds a chat
-function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread, insertToTop)
+function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unread, insertToTop)
 {
     from = htmlEscape(from);
     timestamp = htmlEscape(timestamp);
@@ -346,6 +346,18 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread, i
     if (unread > 0) {
         unreadIndicator = " unread";
     }
+    var readIndicator = "";
+
+    switch (type) {
+        case "read":
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-read fas fa-check"></i>';
+            break;
+        case "confirmed":
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
+            break;
+    }
+
+    var excerpt_style = type === "typing" ? "typing" : "";
 
     var timeClass = "spixi-timestamp";
     var relativeTime = getRelativeTime(timestamp);
@@ -359,7 +371,8 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, unread, i
     readmsg.id = "ch_" + wallet;
     readmsg.className = "spixi-list-item" + indicator + unreadIndicator;
     readmsg.href = "ixian:chat:" + wallet;
-    readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle excerpt">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div><div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
+
+    readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle ' + excerpt_style + '">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>' + readIndicator + '<div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
 
     if(insertToTop)
     {

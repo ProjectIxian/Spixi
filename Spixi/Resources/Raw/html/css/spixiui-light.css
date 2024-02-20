@@ -1664,6 +1664,10 @@ img.emoji {
     white-space: nowrap;
 }
 
+.spixi-list-item-subtitle.typing {
+    font-style: italic;
+}
+
 .spixi-list-item-right {
     text-align: right;
 }
@@ -2349,6 +2353,25 @@ img.emoji {
 
 .unread .spixi-chat-unread-indicator {
     display: block;
+}
+
+.spixi-chat-read-indicator {
+    width: 12pt;
+    height: 8pt;
+    vertical-align: middle;
+    right: 65pt;
+    margin-right: 16px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.spixi-chat-read-indicator-read {
+    color: #06D491;
+}
+
+.spixi-chat-read-indicator-confirmed {
+    color: #A7A7A7;
 }
 
 .spixi-chat-payable-bar {

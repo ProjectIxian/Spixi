@@ -605,14 +605,12 @@ namespace SPIXI
                     continue;
                 }
 
-                FriendMessage lastmsg = friend.metaData.lastMessage;
-                if(lastmsg == null)
+                FriendMessage? lastmsg = null;// TODO friend.metaData.lastMessage;
+                if(friend.getMessages(0).Count > 0)
                 {
-                    if(friend.getMessages(0).Count > 0)
-                    {
-                        lastmsg = friend.getMessages(0).Last();
-                    }
+                    lastmsg = friend.getMessages(0).Last();
                 }
+                
                 if (lastmsg != null)
                 {
                     string str_online = "false";
@@ -685,7 +683,26 @@ namespace SPIXI
                         avatar = "img/spixiavatar.png";
                     }
 
-                    FriendMessageHelper helper_msg = new FriendMessageHelper(friend.walletAddress.ToString(), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, friend.getUnreadMessageCount());
+                    string type = "";
+
+                    if (friend.isTyping)
+                    {
+                        excerpt = "...";
+                        type = "typing";
+                    }
+                    else if (lastmsg.localSender)
+                    {
+                        if (lastmsg.read)
+                        {
+                            type = "read";
+                        }
+                        else if (lastmsg.confirmed)
+                        {
+                            type = "confirmed";
+                        }
+                    }
+
+                    FriendMessageHelper helper_msg = new(friend.walletAddress.ToString(), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, type, friend.getUnreadMessageCount());
                     helper_msgs.Add(helper_msg);
                 }
             }
@@ -702,7 +719,7 @@ namespace SPIXI
 
                 }
 
-                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.unreadCount.ToString());
+                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.type, helper_msg.unreadCount.ToString());
             }
 
             // Clear the lists so they will be collected by the GC

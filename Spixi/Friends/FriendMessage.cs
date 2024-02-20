@@ -274,9 +274,10 @@ namespace SPIXI
         public string avatar;
         public string onlineString;
         public string excerpt;
+        public string type;
         public int unreadCount;
 
-        public FriendMessageHelper(string wa, string nick, long time, string av, string online, string ex, int unread)
+        public FriendMessageHelper(string wa, string nick, long time, string av, string online, string ex, string t, int unread)
         {
             walletAddress = wa;
             nickname = nick;
@@ -284,6 +285,7 @@ namespace SPIXI
             avatar = av;
             onlineString = online;
             excerpt = ex;
+            type = t;
             unreadCount = unread;
         }
 
