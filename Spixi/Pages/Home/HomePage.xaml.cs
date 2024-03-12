@@ -687,7 +687,7 @@ namespace SPIXI
 
                     if (friend.isTyping)
                     {
-                        excerpt = "...";
+                        excerpt = SpixiLocalization._SL("index-excerpt-typing");
                         type = "typing";
                     }
                     else if (lastmsg.localSender)

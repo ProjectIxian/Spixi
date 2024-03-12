@@ -200,6 +200,7 @@ index-excerpt-contact-request = Contact Request
 index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
 index-excerpt-self = Me:
+index-excerpt-typing = Typing...
 
 ; Intro Screen
 intro-title = Welcome to Spixi,
