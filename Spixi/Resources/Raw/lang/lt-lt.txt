@@ -1,5 +1,5 @@
 ﻿language-code = lt-lt
-language = Lietuviškai
+language = Lietuvių
 
 ; Address Screen
 address-title = Mano Spixi piniginė
@@ -60,6 +60,7 @@ chat-call-missed = Praleistas skambutis
 chat-call-ended = Baigtas
 chat-online = Prisijungęs
 chat-offline = Neprisijungęs
+chat-waiting-for-response = Laukiama atsakymo
 chat-text-too-long = Tekstas per ilgas.
 chat-member-count = {0} nariai
 chat-context-pin-message = Prisegti pranešimą
@@ -73,20 +74,25 @@ chat-context-kick-user = Išmesti vartotoją
 chat-context-ban-user = Uždrausti vartotoją
 chat-context-delete-message = Ištrinti pranešimą
 chat-message-cost-bar = Pranešimų siuntimas kainuoja {0} už kB
+chat-request-sent-title = Draugo užklausa išsiųsta
+chat-request-sent-details = Kai jie tai priims, galėsite saugiai su jais bendrauti
+chat-request-sent-undo = Atšaukti
+chat-request-received-title = Gauta užklausa draugauti
+chat-request-received-details = Kažkas nori susisiekti su tavimi! Kai priimsi, galėsi saugiai su jais bendrauti.
 
 chat-modal-tip-title = Dovanoti {0}?
 chat-modal-tip-body = Bakstelėkite ant sumos, kurią norite dovanoti, arba patys nustatykite dovanojama sumą.
 chat-modal-tip-custom = NUSTATYTI
 chat-modal-tip-pay-button = MOKĖTI
-chat-modal-tip-confirmation-body = Jus ketinate padovanoti „{0}“ {1}. Ši suma bus išskaičiuota iš jūsų piniginės.
-chat-modal-tip-confirmed-body = Jus ką tik apdovanojot „{0}“ su {1}. Suma buvo išskaičiuota iš jūsų piniginės.
+chat-modal-tip-confirmation-body = Jus ketinate padovanoti „{0}“ {1}. Ši suma bus nurašyta iš jūsų piniginės.
+chat-modal-tip-confirmed-body = Jus ką tik apdovanojot „{0}“ su {1}. Suma buvo nurašyta iš jūsų piniginės.
 chat-modal-tip-error-body = Bandant apdovanot naudotoją įvyko nežinoma klaida.
 
-chat-bot-details-info = Informacija apie robotą
-chat-bot-address = Roboto adresas
+chat-bot-details-info = Informacija apie botą
+chat-bot-address = Boto adresas
 chat-bot-toggle-notifications = Perjungti pranešimus
-chat-bot-invite = Pakvieskite kontaktą į šį robotą
-chat-bot-leave = Palikite robotą
+chat-bot-invite = Pakvieskite kontaktą į šį botą
+chat-bot-leave = Palikite botą
 
 chat-bot-user-address = Vartotojo adresas
 chat-bot-user-send-contact-request = Siųsti kontaktinę užklausą
@@ -97,14 +103,14 @@ chat-modal-kick-kick-button = IŠMESTI VARTOTOJĄ
 chat-modal-kicked-title = Išmestas {0}
 chat-modal-kicked-body = Jūs esate išmestas „{0}“ iš šio serverio.
 
-chat-modal-ban-title = Uždrausti {0}?
-chat-modal-ban-body = Ar tikrai norite uždrausti „{0}“ šiame serveryje?
-chat-modal-ban-ban-button = UŽDRAUSTI VARTOTOJĄ
-chat-modal-banned-title = Uždrausta {0}
-chat-modal-banned-body = Jums uždrausta prieigą „{0}“ iš šio serverio.
+chat-modal-ban-title = Užblokuoti {0}?
+chat-modal-ban-body = Ar tikrai norite užblokuoti „{0}“ šiame serveryje?
+chat-modal-ban-ban-button = UŽBLOKUOTI VARTOTOJĄ
+chat-modal-banned-title = Užblokuotas {0}
+chat-modal-banned-body = Jud esate užblokuotas „{0}“ šiame serveryje.
 
-chat-bot-not-ready-title = Robotas nėra pasirengęs
-chat-bot-not-ready-body = Robotas dar neparuoštas, bandykite dar kartą po kelių minučių.
+chat-bot-not-ready-title = Botas nėra pasirengęs
+chat-bot-not-ready-body = Botas dar ne pasiruošęs, bandykite dar kartą po kelių minučių.
 
 chat-kicked = Jūs buvote išmestas iš šio grupės pokalbio.
 chat-banned = Jums buvo uždrausta dalyvauti šiame grupės pokalbyje.
@@ -128,23 +134,34 @@ contact-details-deletedhistory-text = Pranešimų istorija pašalinta.
 
 ; New Contact Screen
 contact-new-title = Naujas kontaktas
-contact-new-description = Pridėkite nauja Spixi kontaktą nukopijavęs jo adresą arba nuskaitęs jo QR kodą. Netrukus vartotojas gaus jūsų užklausą.
+contact-new-description = Pridėkite nauja Spixi kontaktą nukopijavęs jo adresą arba nuskaitęs jo QR kodą.
 contact-new-placeholder = Įklijuoti / įvesti adresą
 contact-new-send-request = SIŲSTI KONTAKTUI UŽKLAUSĄ
 contact-new-invalid-address-self-text = Jūsų įvestas adresas yra jūsų paties adresas.
 contact-new-invalid-address-exists-text = Šis kontaktas jau yra jūsų kontaktų sarašę.
+contact-new-scan = Nuskaityti
+contact-new-scan-help = Arba nuskaitykite QR kodą
+contact-new-send = Siųsti
+contact-new-cancel = Atšaukti
+contact-new-confirm-title = Siųsti užklausą draugauti ?
+contact-new-confirm-details = Jūs ketinate išsiųsti užklausą draugauti į šį Spixi adresą:
 
 ; Downloads Screen
 downloads-title = Parsisiųsti
 downloads-empty = Jūs neturite atsiųstų failų.
 
 ; Index Screen
-index-balance = Mano IxiCash Balansas
-index-balance-info = * Norėdami paslėpti, palieskite ir palaikykite
-index-balance-info2 = * Palieskite ir palaikykite, jei norite parodyti
+index-balance = Mano IXI Balansas
+index-balance-show = Rodyti
+index-balance-hide = Slėpti
+index-balance-info = Balansas paslėptas
 index-notifications = Pranešimai
 index-unread-chats = Neskaityti pokalbiai
-index-no-conversations = Šiuo metu neturite jokių pokalbių.
+index-no-conversations-title = Nėra pokalbių
+index-no-conversations = Pradėkite naują pokalbį su vienu iš jūsų kontaktų.<br/>Visi pokalbiai bus rodomi čia.
+index-new-chat-button = Naujas pokalbis
+index-no-transactions-title = Nėra operacijų
+index-no-transactions = Jūsų operacijos pasirodys čia, kai pradėsite naudoti savo IXI piniginę.
 index-send = siųsti
 index-activity = veikla
 index-receive = gauti
@@ -154,6 +171,7 @@ index-tab-home = pagrindinis
 index-tab-chats = pokalbiai
 index-tab-wallet = piniginė
 index-tab-contacts = kontaktai
+index-tab-address = Mano adresas
 index-new-title = NAUJAS
 index-new-contact = kontaktas
 index-new-chat = Pokalbis
@@ -168,7 +186,6 @@ index-side-settings = Nustatymai
 index-side-security = Saugumas
 index-side-backup = Atsarginė kopija
 index-side-password = Slaptažodis
-index-side-wixi = Wrap IxiCash
 index-side-about = Apie
 index-side-howtouse = Kap naudoti Spixi
 index-side-sendlog = Siųsti Log
@@ -181,30 +198,40 @@ index-excerpt-contact-accepted = Kontaktas priimtas
 index-excerpt-contact-request = Bendravimo užklausa
 index-excerpt-file = Byla
 index-excerpt-voice-call = Balso skambutis
-index-excerpt-self = Tu:
+index-excerpt-self = Aš:
+index-excerpt-typing = Rašo...
 
 ; Intro Screen
 intro-title = Sveiki atvykę į Spixi,
-intro-subtitle = Decentralizuoti ir saugus pokalbiai, piniginė ir dar daugiau
+intro-subtitle = Sveiki atvykę į vieną iš saugiausių pokalbių programų pasaulyje.
+intro-headline = Pradėkime!
 intro-language-text = Pasirinkite kalbą
 intro-text = Norėdami testi sukurkite arba atkurkite savo<br/>Spixi paskyrą
 intro-create-account = Nauja paskyra
-intro-restore-account = Atkurkite savo paskyrą
+intro-restore-account = Jau turite paskyrą?
+intro-restore-link = Spustelėkite čia, norėdami atkurti.
+intro-tip-title = Ar žinojai?
+intro-tip-body = Spixi nenaudoja serverių, visi pranešimai siunčiami tiesiai į jūsų mazgus ir yra visiškai užšifruoti.
+intro-continue = Tęsti
+intro-step-1 = Žingsnis 1 iš 2
+intro-step-2 = Žingsnis 2 iš 2
 
 ; Intro New Screen
-intro-new-description-1 = Sukurti naują Spixi paskyrą
-intro-new-description-2 = Įveskit savo slapyvardį ir paveikslėlį
+intro-new-description-1 = Nustatykite savo slapyvardį ir nuotrauką
+intro-new-description-2 = Jūsų slapyvardis ir profilio nuotrauka bus rodomi jūsų kontaktams.
 intro-new-name-placeholder = Jūsų slapyvardis
 intro-new-change-image = Palieskite, norėdami pakeisti paveikslėlį
 intro-new-next = KITAS
 intro-new-step-1 = 1 žingsnis iš 2
 intro-new-step-2 = 2 žingsnis iš 2
-intro-new-description-3 = Sukurkite savo užšifruotą slaptažodį
-intro-new-description-4 = Norėdami užbaigti Spixi paskyros nustatymą<br />įveskite savo šifravimo slaptažodį.
-intro-new-password = Įveskite slaptažodį
+intro-new-description-3 = Tu jau beveik ten.
+intro-new-description-4 = Tai jūsų pagrindinis slaptažodis. Jei kada nors prireiks atkurti prieigą prie savo paskyros, jums prireiks šio slaptažodžio kad galėtume pasinaudoti atsargine kopija.
+intro-new-description-5 = Jūsų slaptažodis labai svarbus, nes jis leis jums vėl prisijungti prie savo Spixi paskyros ir prireikus atkurti prieigą prie jos.
+intro-new-password = Įveskite savo slaptažodį...
+intro-new-password-2 = Iš naujo įveskite savo slaptažodį
 intro-new-finish = BAIGTI
 intro-new-create-title = Kūriama jūsų <br />Spixi paskyra...
-intro-new-create-description = Tai gali užtrukti
+intro-new-create-description = Šis procesas gali užtrukti ilgesnį laiką lėtesniuose įrenginiuose.
 intro-new-password10 = Slaptažodis turėtu būti bent 10 simbolių ilgio
 intro-new-passwordconf = Pakartokite slaptažodį
 intro-new-passwordnomatch = Slaptažodis nesutampa
@@ -246,7 +273,7 @@ lock-description = Spixi UŽRAKINTAS
 lock-placeholder = Įveskite ATRAKINIMO SLAPTAŽODĮ
 lock-error = Neteisingas slaptažodis
 lock-unlock = ATRAKINTA
-lock-change = CHANGE WALLET
+lock-change = Pakeisti piniginę
 
 ; Settings Screen
 settings-title = Nustatymai
@@ -257,14 +284,14 @@ settings-description = Redaguokite nustatymus ir tvarkykite šiame įrenginyje s
 settings-account-information = Pagrindiniai nustatymai
 settings-account-description = Pakeiskite numatytąją kalbą, paveikslėlį ir redaguokite slapyvardį
 settings-account-language-edit = Kalba
-settings-account-appearance-edit = Appearance
-settings-account-appearance-automatic = Automatic
-settings-account-appearance-light = Light
-settings-account-appearance-dark = Dark
+settings-account-appearance-edit = Išvaizda
+settings-account-appearance-automatic = Automatinis
+settings-account-appearance-light = Šviesus
+settings-account-appearance-dark = Tamsus
 settings-account-image-edit = Jūsų paveikslėlis
 settings-account-nick-edit = Slapyvardis
 settings-account-nick-placeholder = Įveskite savo naują slapyvardį
-settings-account-deleteinfo = Galite bet kada ištrinti šią Spixi paskyrą ir visą su ja susietą turinį iš šio įrenginio. <br /> <br /> Svarbus pranešimas: norėdami toliau naudoti Spixi šiame įrenginyje, turėsite sukurti naują arba atkurti esamą paskyrą.
+settings-account-deleteinfo = Galite bet kada ištrinti šią Spixi paskyrą ir visą susietą turinį iš šio įrenginio. <br /> <br /> Svarbus pranešimas: norėdami toliau naudoti Spixi šiame įrenginyje, turėsite sukurti naują arba atkurti esamą paskyrą.
 settings-account-delete = PAŠALINTI MANO PASKYRĄ
 settings-deletea-title = Ištrinti jūsų Spixi paskyrą?
 settings-deletea-text = Ar tikrai norite ištrinti „Spixi“ paskyrą? <br/> <br/> Šis veiksmas negrįžtamas! Prieš ištrinant, rekomenduojama sukurti atsarginę paskyros kopiją. Jums reikės atsarginės kopijos failo, jei kada nors norėsite atkurti prieigą prie šios paskyros.
@@ -298,7 +325,7 @@ settings-emptynick-text = Įveskite savo slapyvardį.
 settings-backup-title = Paskyros atsarginė kopija
 settings-backup-description = Atsisiųskite specialų failą, kuris leidžia atkurti „Spixi“ paskyrą.
 settings-backup-save = IŠSAUGOTI ATSARGINĮ FAILĄ
-settings-backup-account-save = BACKUP ACCOUNT
+settings-backup-account-save = ATSAUGA PASKYRA
 settings-backup-notice = Šis atsarginės kopijos failas ir su juo susietas šifravimo slaptažodis bus reikalingas atkuriant jūsų informaciją šiais atvejais:
 settings-backup-notice2 = - pametus šį įrenginį<br />- pašalinus Spixi iš savo įrenginio<br />- Pašalinus savo Paskyrą<br />- Pašalinus savo piniginę
 settings-backup-invalidpassword-title = Neteisingas slaptažodis
@@ -338,8 +365,8 @@ settings-lock-placeholder-2 = Įveskite naują užrakto slaptažodį
 settings-lock-placeholder-3 = Dar kartą įveskite naują užrakto slaptažodį
 settings-lock-info = Šis slaptažodis bus reikalingas kiekvieną kartą paleidus Spixi.
 settings-lock-save = NUSTATYKITE UŽRAKINIMO SLAPTAŽODĮ
-settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
-settings-lock-confirm-text = In order to take effect, you will need to save your settings
+settings-lock-authinfo = Norėdami atrakinti „Spixi“, jums reikės savo biometrinio autentifikavimo arba piniginės slaptažodžio.
+settings-lock-confirm-text = Norint, kad pakeitimai įsigaliotų, jums reikės išsaugoti savo nustatymus.
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Mokėjimo užklausa
@@ -347,7 +374,7 @@ wallet-contact-request-subtitle = Mokėjimo užklausa iš:
 wallet-contact-request-amount = Prašoma suma
 wallet-contact-request-info = Vartotojas paprašė sumokėti šią sumą
 wallet-contact-request-respond = Atsakykite į mokėjimo užklausą
-wallet-contact-request-respondinfo = Atsakykite atsisakydami mokėjimo užklausos arba pereikite į mokėjimo ekraną, kad sumokėtumėte prašomą sumą.
+wallet-contact-request-respondinfo = Jus galite atsakyti į šia užklausą atmesdami ją arba išsiųsdami mokėjimą. Užklausą atsiuntęs vartotojas bus informuotas apie jūsų sprendimą.
 wallet-contact-request-decline = ATSISAKYTI
 wallet-contact-request-proceed = SIŲSTI MOKĖJIMĄ
 
@@ -357,6 +384,8 @@ wallet-recipient-search-placeholder = Ieškoti kontaktų
 wallet-recipient-empty = Pasirinkta 0 gavėjų
 wallet-recipient-add = Pridėti gavėją / -us
 wallet-recipient-selected = Gavėjai pasirinkti
+wallet-recipient-new-contact-button = Pridėti naują kontaktą
+wallet-recipient-no-contact-button = Naujas kontaktas
 
 ; Wallet Request Screen
 wallet-request-title = Gauti mokėjimą
@@ -364,7 +393,7 @@ wallet-request-subtitle = Prašyti konkrečios sumos
 wallet-request-amount-placeholder = Įveskite sumą
 wallet-request-address = Dabartinis adresas
 wallet-request-send-info = Siųsti užklausą gavėjams:
-wallet-request-add = Jus galite šią užklausą su tą pačia suma išsiųsti daugiau nei 1 vartotojui. <br/> Pridėkite papildomų vartotojų / adresų, kuriems norite siųsti šią užklausą.
+wallet-request-add = Jus galite šią užklausą su tą pačia suma išsiųsti daugiau nei 1 vartotojui. <br/> Pridėkite papildomus vartotojus / adresus, kuriems norite siųsti šią užklausą.
 wallet-request-placeholder = Įklijuoti / įvesti adresą
 wallet-request-send = IŠSIŲSTI UŽKLAUSĄ
 wallet-request-error-title = Klaida
@@ -372,6 +401,8 @@ wallet-request-error-text = Įvesties laukuose įveskite galiojančią informaci
 
 ; Wallet Send Screen
 wallet-send-title = Siųsti mokėjimą
+wallet-send-details = Įklijuokite arba įveskite adresą, į kurį norite siųsti mokėjimą. Galite paieškoti kontaktą arba nuskaityti QR kodą.
+wallet-send-subdetails = Siųsti IXI į
 wallet-send-add = Pridėti gavėją / -us
 wallet-send-placeholder = Įklijuoti / įvesti adresą
 wallet-send-more = Galite pridėti papildomų šios operacijos gavėjų. Šie gavėjai gaus mokėjimą su ta pačia suma.
@@ -379,83 +410,85 @@ wallet-send-recipients = Gavėjas (-ai)
 wallet-send-norecipients = Nepasirinktas nė vienas gavėjas
 wallet-send-next = KITAS
 wallet-send-max = Siųsti maksimalią sumą
+wallet-send-select = Pasirinkite kontaktą
+wallet-send-or = Arba
 
 ; Wallet Send 2 Screen
 wallet-send2-title = Mokėjimo patvirtinimas
 wallet-send2-policy = Pervedimo operacijos mokesčio politika
-wallet-send2-info = Kiekvienas išsiųstas mokėjimas turi tam tikrą mokėjimo mokestį, kuris išskaičiuojamas iš jūsų pervestos sumos.
-wallet-send2-feeinfo = Nustatykite savo operacijos mokestį. Pasirinkite iš anksto nustatytą NORMALŲ arba AUKŠTĄ. Galite nustatyti pasirinktinį operacijos mokestį už KB. Tais atvejais, kai padidėja srautas, operacijos mokesčio dydis gali turėti įtakos mokėjimams, kurie apdorojami greičiau .
+wallet-send2-info = IXI mokėjimai negali būti atšaukti.
+wallet-send2-feeinfo = IXI tinklo mokestis įtrauktas į mokėjimą.
 wallet-send2-normal = Normalus
 wallet-send2-high = Aukštas
 wallet-send2-custom = Pasirinktinis
-wallet-send2-placeholder = Įveskite operacijos mokestį
-wallet-send2-amount = Siunčiama suma
-wallet-send2-fee = Visas pervedimo operacijos mokestis
+wallet-send2-placeholder = Kiek norite siųsti?
+wallet-send2-amount = Suma
+wallet-send2-max-amount = Siųsti maksimalią sumą
+wallet-send2-max-amount-warning = Jūs ketinate išsiųsti visą savo piniginės likučio sumą!
+wallet-send2-fee = Visas sandorio mokestis
 wallet-send2-total = Bendra suma, mokėtina iš balanso
-wallet-send2-send = Siųsti mokėjimą
+wallet-send2-send = Siųsti IXI
+wallet-send2-confirm-title = Jūs ketinate išsiųsti
+wallet-send2-confirm = Patvirtinti
+wallet-send2-cancel = Atšaukti
 
 ; Wallet Sent Screen
-wallet-sent-title = Mokėjimas išsiųstas
-wallet-sent-subtitle = Mokėjimas išsiųstas į
+wallet-sent-title = Mokėjimo Detalės
+wallet-sent-subtitle = Mokėjimas išsiųstas:
+wallet-status-sent-pending = Mokėjimas siunčiamas!
+wallet-status-receive-pending = Įeinantis mokėjimas
+wallet-status-sent = Mokėjimas sėkmingai išsiųstas
+wallet-status-receive = Mokėjimas gautas
+wallet-status-failed = Mokėjimas nepavyko
 wallet-sent-amount = Išsiųsta suma
 wallet-sent-status = Mokėjimo būsena
 wallet-sent-confirmed = PATVIRTINTAS
 wallet-sent-unconfirmed = NEPATVIRTINTAS
 wallet-sent-details = Išsiųsta suma buvo išskaičiuota iš jūsų balanso.
 wallet-sent-fee = Mokėjimo mokestis
-wallet-sent-feeinfo = Kiekvienas išsiųstas mokėjimas turi tam tikrą mokėjimo mokestį, kuris išskaičiuojamas iš pervedamos sumos.
-wallet-sent-txid = TXID
+wallet-sent-feeinfo = Šis mokėjimas turi tinklo mokestį
+wallet-sent-txid = Transakcijos ID
+wallet-sent-view-explorer = Peržiūrėti naršyklėje
 wallet-sent-dismiss = Atsisakyti
+wallet-sent-unconfirmed-details = Mokėjimas buvo išsiųstas, bet dar nebuvo patvirtintas tinkle. Kai patvirtins, pamatysite transakcijos ID ir nuorodą, skirtą peržiūrėti jį naršyklėje.
 wallet-sentrecv-title = Apmokėjimas gautas
 wallet-sentrecv-subtitle = Mokėjimas gautas iš
 wallet-sentrecv-amount = Gauta suma
 wallet-sentrecv-details = Gauta suma buvo pridėta prie jūsų balanso.
 
-; Wixi Send Screen
-wixi-send-title = Apvyniokite IxiCash
-wixi-send-eth = Ethereum Adresas
-wixi-send-placeholder = Įveskite / įklijuokite / nuskaitykite savo Ethereum adresą...
-wixi-send-more = WIXI žetonai bus išsiųsti aukščiau nurodytu adresu.
-wixi-send-amounttext = IXI kiekis, kurį norite įtraukti į WIXI. Mažiausias yra 5 000 000 IXI.
-wixi-send-wrap = Apvyniokite mano IxiCash
-
-; Wixi Sent Screen
-wixi-sent-title = Pakeisti IxiCash į WIXI
-wixi-sent-subtitle = WIXI bus išsiųstas ETH adresu:
-wixi-sent-amount = Apvyniota suma
-wixi-sent-status = IxiCash Perkėlimo Būsena
-wixi-sent-details = Suma buvo išskaičiuota iš IxiCash balanso. Savo ETH adresu gausite lygiaverčius WIXI žetonus.
-wixi-sent-txid = IxiCash TXID
-
 ; Global wallet errors
 wallet-error-amount-title = Neteisinga suma
-wallet-error-amount-text = Įveskite galiojančią sumą.
-wallet-error-amountdecimal-text = Įveskite teisingą skaičių sumą.
+wallet-error-amount-text = Įveskite teisingą sumą.
+wallet-error-amountdecimal-text = Įveskite teisingą skaičių po kablelio.
 wallet-error-balance-title = Nepakankamas balanso likutis
 wallet-error-balance-text = Balanso likutis nepakankamas šiai operacijai. Bendras operacijos mokestis yra {0}, o balansę yra {1}.
 
 ; Onboarding join official bot
-onboarding-bot-title = Ar norėtumėte prisijungti prie Ixian's oficialaus roboto?
-onboarding-bot-text = Prisijunkite prie mūsų oficialaus roboto, kur galite papasakoti, ką manote apie Spixi, neatsilikti nuo naujinių ir aptarti dalykus tiesiogiai su kūrėjais ir kitais vartotojais.
+onboarding-bot-title = Prisijunkite prie mūsų oficialios Spixi bendruomenės
+onboarding-bot-text = Grupės pokalbis, kuriame galite pasakyti, ką manote apie Spixi, ir sekti naujienas.
 onboarding-bot-join-button = PRISIJUNGTI
 onboarding-bot-dont-join-button = NESIJUNGTI
 
-; Onboarding Meet Spixi
-onboarding-screen1-title = Susipažink su Spixi!
-onboarding-screen1-text = Blockchain pagrindu veikianti decentralizuota pranešimų programėlė su integruota kriptovaliutos pinigine.
+; Onboarding 1
+onboarding-screen1-title = Jungtis su pasitikėjimu
+onboarding-screen1-text = Valdykite savo bendravimą ir finansus su viena iš saugiausių ir privačiausių pokalbių programų pasaulyje.
+onboarding-screen1-get-started = Pradėti
+onboarding-screen1-skip = Praleisti įvadinimą
 
-; Onboarding Your Address
-onboarding-screen2-title = Jūsų Spixi adresas
-onboarding-screen2-text = Jūsų Spixi adresas yra vienintelis jūsų ID. Naudokite jį bendraujant su kitais Spixi. Savo adresą galite rasti meniu lange.
+; Onboarding 2
+onboarding-screen2-title = Jūsų adresas yra jūsų vienintelis ID
+onboarding-screen2-text = Spixi rnereikia jūsų telefono numerio ar el. pašto. Vietoj to, jis sukuria jūsų adresą, kuris yra vienintelis ID programoje. Galite pridėti kontaktus, naudodami jų adresus.
 
-; Onboarding Connect with your friends
-onboarding-screen3-title = Susisiekite su savo draugais
-onboarding-screen3-text = Spixi galite pridėti draugą nuskaitydami jo QR kodą arba įvesdami jo adresą. Bakstelėkite veiksmo mygtuką ir pasirinkite „Naujas kontaktas“.
+; Onboarding 3
+onboarding-screen3-title = Siųskite ir gaukite IXI mokėjimus.
+onboarding-screen3-text = Naudodamiesi pinigine, galite greitai siųsti ar gauti IXI mokėjimus. Tai taip paprasta kaip žinutės siuntimas.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Siųskite ir gaukite mokėjimus
-onboarding-screen4-text = Norėdami greitai siųsti ir gauti IxiCash mokėjimus, naudokite integruotą piniginę. Tai galite padaryti savo piniginėje ar pokalbyje taip pat lengvai, kaip siųsti žinutę!
+onboarding-screen4-text = Norėdami greitai išsiųsti ir gauti IXI mokėjimus, naudokite integruotą piniginę. Tai galite padaryti savo piniginėje arba pokalbyje taip pat lengvai, kaip išsiųsti žinutę!
 onboarding-skip = PRALEISTI
+onboarding-back = Atgal
+onboarding-next = Kitas
 onboarding-finish = BAIGTI
 
 ; Global
@@ -467,25 +500,22 @@ global-app-accept = Priimti
 global-app-reject = Atmesti
 global-app-wants-to-use = {0} nori naudoti {1} su jumis..
 global-call-in-call = Skambina
-global-call-dialing = Sujunginėja
+global-call-dialing = Sujunginėjama
 global-call-incoming = Įeinantis skambutis
 
 global-dialog-error = Klaida
 global-dialog-ok = Gerai
 global-dialog-cancel = ATŠAUKTI
-
 global-invalid-address-title = Neteisingas adresas
 global-invalid-address-text = Įveskite galiojantį piniginės adresą.
 
-global-friend-request-accepted = {0} priėmė jūsų draugo užklausą.
+global-friend-request-accepted = {0} priėmė jūsų užklausą draugauti.
 
-global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinkite, kad gautumėt naujas funkcijas ir galimybes.
-
-global-modal-external-link-title = Ketinate aplankyti išorinę nuorodą
-global-modal-external-link-body = Ketinate aplankyti išorinę nuorodą {0}. Išorinės nuorodos yra potencialiai pavojingos, tęskite savo pačių rizika.
+global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinkite, kad gautumėte naudotis naujomis funkcijomis ir galimybėmis.
+global-modal-external-link-title = Ketinate atidaryti išorinę nuorodą
+global-modal-external-link-body = Ketinate atidaryti išorinę nuorodą {0}. Išorinės nuorodos yra potencialiai pavojingos, tęskite savo pačių rizika.
 global-modal-external-link-button-visit = Tęsti
 
-
-global-lock-auth-text = Authentication required
-global-lock-invalidpassword-title = Authentication failed
-global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
+global-lock-auth-text = Reikalinga autentikacija
+global-lock-invalidpassword-title = Autentifikacija nepavyko
+global-lock-invalidpassword-text = Įveskite savo piniginės slaptažodį, kad atrakintumėte Spixi

@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using IXICore.Network;
+using IXICore.RegNames;
 using IXICore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -540,6 +541,16 @@ namespace SPIXI.Meta
                 }
             }
             lastPriceUpdate = Clock.getTimestamp();
+        }
+
+        public override byte[] calculateRegNameChecksumFromUpdatedDataRecords(byte[] name, List<RegisteredNameDataRecord> dataRecords, ulong sequence, Address nextPkHash)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] calculateRegNameChecksumForRecovery(byte[] name, Address recoveryHash, ulong sequence, Address nextPkHash)
+        {
+            throw new NotImplementedException();
         }
     }
 }

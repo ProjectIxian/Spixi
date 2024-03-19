@@ -60,6 +60,7 @@ chat-call-missed = Zgrešen klic
 chat-call-ended = Klic končan
 chat-online = Na voljo
 chat-offline = Ni na voljo
+chat-waiting-for-response = Čakam odgovor
 chat-text-too-long = Sporočilo je predolgo.
 chat-member-count = {0} Član/-ov
 chat-context-pin-message = Pripni sporočilo
@@ -73,6 +74,11 @@ chat-context-kick-user = Odstrani uporabnika
 chat-context-ban-user = Prepovej uporabnika
 chat-context-delete-message = Izbriši sporočilo
 chat-message-cost-bar = Cena sporočila je {0} za poslan kB
+chat-request-sent-title = Poslan je zahtevek za stik
+chat-request-sent-details = Ko ga sprejmejo, boste z njimi lahko varno klepetali
+chat-request-sent-undo = Razveljavi
+chat-request-received-title = Prejet zahtevek za stik
+chat-request-received-details = Nekdo želi z vami vzpostaviti stik! Ko sprejmete, boste lahko varno klepetali z njimi.
 
 chat-modal-tip-title = Nagradi {0}?
 chat-modal-tip-body = Izberite znesek nagrade ali pa vnesite poljuben znesek.
@@ -133,18 +139,29 @@ contact-new-placeholder = Prilepite ali vtipkajte naslov
 contact-new-send-request = POŠLJI ZAHTEVO
 contact-new-invalid-address-self-text = Naslov, ki ste ga vnesli je vaš Spixi naslov.
 contact-new-invalid-address-exists-text = Stik, ki ga želite dodati je že v vaših stikih.
+contact-new-scan = Skeniraj
+contact-new-scan-help = Ali skenirajte QR kodo
+contact-new-send = Pošlji
+contact-new-cancel = Prekliči
+contact-new-confirm-title = Pošlji zahtevo za stik?
+contact-new-confirm-details = Pošiljate zahtevo za stik na Spixi naslov:
 
 ; Downloads Screen
 downloads-title = Moji Prenosi
 downloads-empty = Nimate prenešenih datotek.
 
 ; Index Screen
-index-balance = Moje IxiCash Stanje
-index-balance-info = * Da bi skrili stanje se dotaknite in držite
-index-balance-info2 = * Da bi prikazali stanje se dotaknite in držite
+index-balance = Moje IXI Stanje
+index-balance-show = prikaži
+index-balance-hide = skrij
+index-balance-info = Skrito
 index-notifications = Obvestila
 index-unread-chats = Neprebrana sporočila
+index-no-conversations-title = Ni klepetov
 index-no-conversations = Nimate obstoječih klepetov. Izberite obstoječ stik in pričnite klepet.
+index-new-chat-button = Nov klepet
+index-no-transactions-title = Ni transakcij
+index-no-transactions = Ko začnete uporabljati svojo IXI denarnico, se bodo vaše transakcije se bodo prikazale tukaj.
 index-send = pošlji
 index-activity = dejavnost
 index-receive = prejmi
@@ -154,6 +171,7 @@ index-tab-home = domov
 index-tab-chats = klepet
 index-tab-wallet = denarnica
 index-tab-contacts = stiki
+index-tab-address = moj naslov
 index-new-title = Nov
 index-new-contact = Stik
 index-new-chat = Klepet
@@ -168,7 +186,6 @@ index-side-settings = Nastavitve
 index-side-security = Varnost
 index-side-backup = Varnostna kopija
 index-side-password = Geslo
-index-side-wixi = Pretvori IxiCash
 index-side-about = O aplikaciji Spixi
 index-side-howtouse = Navodila za uporabo
 index-side-sendlog = Pošlji dnevnik 
@@ -182,42 +199,36 @@ index-excerpt-contact-request = Zahtevek za stik
 index-excerpt-file = Datoteka
 index-excerpt-voice-call = Glasovni Klic
 index-excerpt-self = Jaz:
-
-; Wixi Send Screen
-wixi-send-title = Pretvori IxiCash
-wixi-send-eth = Ethereum Naslove
-wixi-send-placeholder = Vpišite/prilepite/skenirajte vaš Ethereum naslov...
-wixi-send-more = WIXI žetoni bodo poslani na naslov, ki ste ga navedli zgoraj...
-wixi-send-amounttext = Znesek IXI-jev, ki jih želite pretvoriti. Minimalen znesek je 5.000.000 IXI.
-wixi-send-wrap = Pretvori moj IxiCash
-
-; Wixi Sent Screen
-wixi-sent-title = Pretvarajm IXI v WIXI
-wixi-sent-subtitle = WIXI žetoni bodo poslani na ETH naslov:
-wixi-sent-amount = Znesek pretvorjenih žetonov
-wixi-sent-status = IxiCash Status Nakazila
-wixi-sent-details = Znesek je bil odvzet z vašega IxiCash stanja. Na vaš ETH naslov boste prejeli enako število WIXI žetonov.
-wixi-sent-txid = IxiCash TXID
+index-excerpt-typing = Tipka...
 
 ; Intro Screen
 intro-title = Dobrodošli v Spixi-ju,
-intro-subtitle = sem decentralizirana in varna aplikacija za klepet, denarnica in še veliko več.
+intro-subtitle = Dobrodošli v eno izmed najbolj varnih aplikacij za klepet.
+intro-headline = Začnimo!
 intro-language-text = Izberite željeni jezik
 intro-text = Za nadaljevanje vas prosim, da ustvarite<br/>ali obnovite vaš Spixi račun 
 intro-create-account = USTVARI NOV RAČUN
-intro-restore-account = OBNOVI OBSTOJEČ RAČUN
+intro-restore-account = Že imate račun?
+intro-restore-link = Potem ga obnovite tu.
+intro-tip-title = Ste vedeli?
+intro-tip-body = Spixi ne uporablja strežnikov, vsa sporočila so poslana neposredno vašim stikom, vs sporčila pa so šifrirana.
+intro-continue = Nadaljuj
+intro-step-1 = Korak 1 od 2
+intro-step-2 = Korak 2 od 2
 
 ; Intro New Screen
-intro-new-description-1 = Ustvarite nov Spixi račun
-intro-new-description-2 = Vnesite vaš vzdevek in sliko
-intro-new-name-placeholder = Vaš vzdevek
+intro-new-description-1 = Nastavite ime in sliko
+intro-new-description-2 = Ime in profilna slika bosta prikazana vašim stikom.
+intro-new-name-placeholder = Vaše ime
 intro-new-change-image = Da bi spremenili vašo prikazano sliko se dotaknite
 intro-new-next = NAPREJ
 intro-new-step-1 = Korak 1 od 2
 intro-new-step-2 = Korak 2 od 2
-intro-new-description-3 = Določite svoje enkripcijsko geslo
-intro-new-description-4 = Da bi uspešno ustvarili svoj Spixi račun<br />morate ustvariti novo enkripcijsko geslo
-intro-new-password = Vnesite novo geslo
+intro-new-description-3 = Skoraj smo končali.
+intro-new-description-4 = To je vaše primarno geslo. Če boste kdaj potrebovali ponoven dostop do svojega računa, boste to geslo uporabili z varnostno kopijo.
+intro-new-description-5 = Vaše geslo je zelo pomembno, saj vam bo omogočilo, da se ponovno prijavite v svoj račun Spixi, če boste morali obnoviti dostop do njega.
+intro-new-password = Vnesite geslo...
+intro-new-password-2 = Ponovno vnesite geslo
 intro-new-finish = ZAKLJUČI
 intro-new-create-title = Ustvarjam vaš<br />Spixi račun...
 intro-new-create-description = Ta postopek lahko traja nekaj trenutkov
@@ -273,10 +284,10 @@ settings-description = Nastavite vaš Spixi in upravljajte s podatki, ki so shra
 settings-account-information = Osnovne nastavitve
 settings-account-description = Tu lahko spremenite izbrani jezik, spremenite ali odstranite prikazano sliko in spremenite vaš vzdevek.
 settings-account-language-edit = Jezik
-settings-account-appearance-edit = Appearance
-settings-account-appearance-automatic = Automatic
-settings-account-appearance-light = Light
-settings-account-appearance-dark = Dark
+settings-account-appearance-edit = Videz
+settings-account-appearance-automatic = Samodejno
+settings-account-appearance-light = Svetla
+settings-account-appearance-dark = Temna
 settings-account-image-edit = Prikazana slika
 settings-account-nick-edit = Vzdevek
 settings-account-nick-placeholder = Vpišite nov vzdevek
@@ -354,8 +365,8 @@ settings-lock-placeholder-2 = Vpišite novo varnostno geslo
 settings-lock-placeholder-3 = Ponovno vpišite novo varnostno geslo
 settings-lock-info = To geslo boste morali vnesti ob vsakem zagonu Spixi-ja.
 settings-lock-save = NASTAVI VARNOSTNO GESLO
-settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
-settings-lock-confirm-text = In order to take effect, you will need to save your settings
+settings-lock-authinfo = Za odklepanje Spixi aplikacije, boste potrebovali vašo biometrično avtentikacijo ali geslo vaše denarnice.
+settings-lock-confirm-text = Shranite vaše nastavitve 
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Zahtevek za Plačilo
@@ -373,6 +384,8 @@ wallet-recipient-search-placeholder = Preišči stike
 wallet-recipient-empty = 0 izbranih prejemnikov
 wallet-recipient-add = DODAJ PREJEMNIKE
 wallet-recipient-selected = prejemnik/-ov izbran/-ih
+wallet-recipient-new-contact-button = Dodaj nov stik
+wallet-recipient-no-contact-button = Nov stik
 
 ; Wallet Request Screen
 wallet-request-title = Zahtevaj Plačilo
@@ -384,10 +397,12 @@ wallet-request-add = Če želite poslati zahtevek za plačilo v enakem znesku ve
 wallet-request-placeholder = Prilepite ali vpišite naslov
 wallet-request-send = POŠLJI ZAHTEVEK ZA PLAČILO
 wallet-request-error-title = Napaka
-wallet-request-error-text = Za nadaljevanje morate vnesti pravilne podatke.
+wallet-request-error-text = Za nadaljevanje morate vnesti veljavne podatke.
 
 ; Wallet Send Screen
 wallet-send-title = Pošlji Plačilo
+wallet-send-details = Prilepite ali vnesite naslov, kamor želite poslati plačilo. Lahko prebrskate svoje stike ali skenirate QR kodo.
+wallet-send-subdetails = Pošlji IXI
 wallet-send-add = Izberite prejemnike
 wallet-send-placeholder = Prilepite ali vpišite naslov
 wallet-send-more = Za to plačilo lahko določite dodatne prejemnike, ki bodo prejeli enak znesek.
@@ -395,24 +410,36 @@ wallet-send-recipients = Prejemniki
 wallet-send-norecipients = Ni izbranih prejemnikov
 wallet-send-next = NADALJUJ
 wallet-send-max = Pošlji maksimalen znesek 
+wallet-send-select = Izberite stik
+wallet-send-or = Ali
 
 ; Wallet Send 2 Screen
 wallet-send2-title = Potrdite Plačilo
 wallet-send2-policy = Provizija plačila
-wallet-send2-info = Vsako plačilo na verigi blokov ima določen strošek obdelave - provizijo. Ta strošek se odšteje od zneska, ki je poslan.
-wallet-send2-feeinfo = Določite provizijo za to transakcijo. Izbirate lahko med običajno ali visoko. V nasprotnem primeru lahko tudi določite poljuben znesek, ki se obračuna glede na velikost (po KB). Višina provizije lahko v trenutkih povečanega števila plačil vpliva na to katera plačila se izvedejo prej. 
+wallet-send2-info = IXI plačila ni mogoče razveljaviti.
+wallet-send2-feeinfo = Pristojbina za omrežje IXI je vključena v plačilo.
 wallet-send2-normal = Običajno
 wallet-send2-high = Visoko
 wallet-send2-custom = Poljubno
-wallet-send2-placeholder = Vnesite željeno provizijo
+wallet-send2-placeholder = Koliko želite poslati?
 wallet-send2-amount = Znesek plačila
+wallet-send2-max-amount = Pošlji največji znesek
+wallet-send2-max-amount-warning = Opozorilo, pošiljate celotno vsoto z vaše denarnice!
 wallet-send2-fee = Znesek provizije
 wallet-send2-total = Skupni znesek, ki bo odštet z vašega računa 
 wallet-send2-send = POŠLJI PLAČILO
+wallet-send2-confirm-title = Poslali boste plačilo
+wallet-send2-confirm = Potrdi
+wallet-send2-cancel = Prekliči
 
 ; Wallet Sent Screen
 wallet-sent-title = Plačilo Poslano
-wallet-sent-subtitle = Plačilo ste prejemniku:
+wallet-sent-subtitle = Poslano prejemniku:
+wallet-status-sent-pending =  Plačilo se pošilja.
+wallet-status-receive-pending = Prejeto plačilo
+wallet-status-sent = Plačilo uspešno poslano
+wallet-status-receive = Prejeto plačilo
+wallet-status-failed = Neuspešno plačilo
 wallet-sent-amount = Znesek
 wallet-sent-status = Status plačila
 wallet-sent-confirmed = POTRJENO
@@ -421,7 +448,9 @@ wallet-sent-details = Znesek, ki ste ga poslali je bil odštet iz vaše denarnic
 wallet-sent-fee = Provizija
 wallet-sent-feeinfo = Vsako plačilo na verigi blokov ima določen strošek obdelave - provizijo. Ta strošek se odšteje od zneska, ki je poslan.
 wallet-sent-txid = Identifikacija transakcije - TXID
+wallet-sent-view-explorer = Ogled v brskalniku
 wallet-sent-dismiss = NAPREJ
+wallet-sent-unconfirmed-details = Plačilo je bilo poslano, vendar ga mreža še ni potrdila. Ko bo potrjeno, boste videli ID transakcije in povezavo za ogled na raziskovalcu
 wallet-sentrecv-title = Plačilo Prejeto
 wallet-sentrecv-subtitle = Plačilo vam je poslal/-a
 wallet-sentrecv-amount = Prejeti znesek
@@ -435,29 +464,31 @@ wallet-error-balance-title = Stanje v vaši denarnici je prenizko.
 wallet-error-balance-text = Stanje vaše denarnice je prenizko za izvedbo te transakcije. Trenutno stanje vaše denarnice je {1}, za izvedbo plačilo pa morate imeti vsaj {0}.
 
 ; Onboarding join official bot
-; TODO Translate
 onboarding-bot-title = Ali želite vstopiti v uradno Spixi skupino?
 onboarding-bot-text = Vstopite v našo uradno Spixi skupino, kjer nam lahko poveste kaj menite o Spixi-ju, dobite informacije o prihajajočih posodobitvah ali pa se pogovarjate neposredno z razvijalci in ostalimi uporabniki.
 onboarding-bot-join-button = VSTOPI
 onboarding-bot-dont-join-button = ZAVRNI
-; End of TODO translate
 
-; Onboarding Meet Spixi
-onboarding-screen1-title = Pozravljeni, jaz sem Spixi!
-onboarding-screen1-text = Za moje delovanje skrbi tehnologija veriženja podatkovnih blokov ali &quot;Blockchain&quot;. Sem decentralizirana in varna aplikacija za klepet, z denarnico za kriptovalute.
+; Onboarding 1
+onboarding-screen1-title = Povežite se z zaupanjem
+onboarding-screen1-text = Prevzemite nadzor nad komunikacijo in financami z eno najbolj varnih in zasebnih klepetalnih aplikacij na svetu.
+onboarding-screen1-get-started = Začni
+onboarding-screen1-skip = Preskoči 
 
-; Onboarding Your Address
+; Onboarding 2
 onboarding-screen2-title = Vaš Spixi naslov
-onboarding-screen2-text = Vaš Spixi naslov je vaša edina izkaznica, ki jo uporabljate za interakcijo z drugimi uporabniki Spixi-ja. Svoj Spixi naslov lahko najdete v meniju.
+onboarding-screen2-text = Spixi ne potrebuje vaše telefonske številke ali e-pošte. Namesto tega ustvari vaš naslov, ki je vaša edina identifikacija v aplikaciji. Stike lahko dodajate z njihovim naslovom.
 
-; Onboarding Connect with your friends
-onboarding-screen3-title = Povežite se s prijatelji
-onboarding-screen3-text = Da bi dodali nov stik vpišite njihov Spixi naslov ali ga pa kar poskenirajte. Pritisnite na gumb &quot;+&quot; in izberite &quot;Nov Stik&quot;.
+; Onboarding 3
+onboarding-screen3-title = Pošljite in prejemajte IXI plačila
+onboarding-screen3-text = Z uporabo denarnice lahko hitro pošiljate ali prejemate IXI plačila. Tako preprosto kot pošiljanje sporočila.
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Pošiljajte in prejemajte plačila
-onboarding-screen4-text = Pošiljanje in prejemanje plačil je enostavno, kot bi poslali prijatelju sporočilo. S pomočjo vključene denarnice enostavno in hitro pošiljajte in sprejemajte IxiCash plačila, kar v klepetu!
+onboarding-screen4-text = Pošiljanje in prejemanje plačil je enostavno, kot bi poslali prijatelju sporočilo. S pomočjo vključene denarnice enostavno in hitro pošiljajte in sprejemajte IXI plačila, kar v klepetu!
 onboarding-skip = PRESKOČI
+onboarding-back = Nazaj
+onboarding-next = Nadaljuj
 onboarding-finish = ZAKLJUČI
 
 ; Global
@@ -475,19 +506,16 @@ global-call-incoming = Dohodni klic
 global-dialog-error = Napaka
 global-dialog-ok = OK
 global-dialog-cancel = PREKLIČI
-
 global-invalid-address-title = Neveljaven naslov
 global-invalid-address-text = Prosim, da vnesete veljaven naslov.
 
 global-friend-request-accepted = {0} je sprejel/-a vaš zahtevek za stik.
 
 global-update-available = Novejša različica Spixi-ja ({0}) je na voljo. Prosimo vas, da posodobite aplikacijo za boljšo uporabniško izkušnjo.
-
 global-modal-external-link-title = Želite odpreti zunanjo povezavo?
 global-modal-external-link-body = S tem boste obiskali zunanjo povezavo {0}. Zunanje povezave so lahko nevarne in lahko vsebujejo nevarno vsebino. Nadaljujte le v primeru, če to razumete in ste pripravljeni sprejeti tveganja.
 global-modal-external-link-button-visit = NADALJUJ
 
-
-global-lock-auth-text = Authentication required
-global-lock-invalidpassword-title = Authentication failed
-global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
+global-lock-auth-text = Zahtevana avtentikacija
+global-lock-invalidpassword-title = Avtentikacija ni uspela
+global-lock-invalidpassword-text = Vnesite vaše Spixi geslo

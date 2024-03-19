@@ -56,6 +56,7 @@ chat-call-missed = 不在着信
 chat-call-ended = 終了
 chat-online = オンライン
 chat-offline = オフライン
+chat-waiting-for-response = 返答を待っています
 chat-text-too-long = テキストが長すぎますchat-member-count = {0} メンバー
 chat-context-pin-message = メッセージをピン留め
 chat-context-copy-message = メッセージをコピー
@@ -68,6 +69,11 @@ chat-context-kick-user = Kick
 chat-context-ban-user = Ban
 chat-context-delete-message = メッセージを削除
 chat-message-cost-bar = メッセージ送信コスト {0} per kB
+chat-request-sent-title = 友達リクエストを送信しました
+chat-request-sent-details = 彼らがそれを受け入れると、安全に彼らとチャットできます
+chat-request-sent-undo = 取り消す
+chat-request-received-title = 友達リクエストを受信しました
+chat-request-received-details = 誰かがあなたとつながりたいです！受け入れると、安全に彼らとチャットできます。
 
 chat-modal-tip-title = Tip {0}?
 chat-modal-tip-body = チップする額を選択するか、カスタムチップを設定してください。
@@ -124,17 +130,28 @@ contact-new-description = アドレスを貼り付けるかQRコードをスキ�
 contact-new-placeholder = ペースト / 入力
 contact-new-send-request = リクエストを送信
 contact-new-invalid-address-self-text = 入力されたアドレスはご自身のアドレスです
-contact-new-invalid-address-exists-text = このアドレスは既に登録されています
+contact-new-invalid-address-exists-text = このアドレスは既に登録されていますcontact-new-scan = スキャンする
+contact-new-scan-help = またはQRコードをスキャンする
+contact-new-send = 送信する
+contact-new-cancel = キャンセルする
+contact-new-confirm-title = フレンドリクエストを送りますか？
+contact-new-confirm-details = 以下の Spixi アドレスにフレンドリクエストを送信しようとしています：
+
 ; Downloads Screen
 downloads-title = ダウンロード
 downloads-empty = ダウンロードファイルはありません
 ; Index Screen
-index-balance = My IxiCash Balance
-index-balance-info = * タップして非表示
-index-balance-info2 = * タップして表示
+index-balance = My IXI Balance
+index-balance-show = 表示する
+index-balance-hide = 非表示にする
+index-balance-info = 残高非表示
 index-notifications = 通知
 index-unread-chats = 未読メッセージ
-index-no-conversations = メッセージはありません
+index-no-conversations-title = チャットなし
+index-no-conversations = 連絡先の一人と新しいチャットを開始します。<br/>すべてのチャットはここに表示されます。
+index-new-chat-button = 新しいチャット
+index-no-transactions-title = 取引なし 
+index-no-transactions = IXIウォレットを使用し始めると、ここに取引が表示されます。
 index-send = 送信
 index-activity = アクティビティ
 index-receive = 受信
@@ -144,6 +161,7 @@ index-tab-home = home
 index-tab-chats = chats
 index-tab-wallet = wallet
 index-tab-contacts = contacts
+index-tab-address = 私の住所
 index-new-title = NEW
 index-new-contact = 連絡先
 index-new-chat = チャット
@@ -158,7 +176,6 @@ index-side-settings = Settings
 index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
-index-side-wixi = Wrap IxiCash
 index-side-about = About
 index-side-howtouse = Spixiの使い方
 index-side-sendlog = ログを送信
@@ -171,28 +188,38 @@ index-excerpt-contact-accepted = Contact Accepted
 index-excerpt-contact-request = Contact Request
 index-excerpt-file = File
 index-excerpt-voice-call = Voice Call
-index-excerpt-self = You:
+index-excerpt-self = You:index-excerpt-typing = 入力中...
+
 ; Intro Screen
 intro-title = Welcome to Spixi,
-intro-subtitle = the decentralized and secure Chat, Wallet and more
+intro-subtitle = 世界で最も安全なチャットアプリのひとつへようこそ。
+intro-headline = さあ、始めましょう！
 intro-language-text = 言語を選択してください
 intro-text = アカウントを作成または復元
 intro-create-account = 新しいアカウントを作成
-intro-restore-account = アカウントを復元
+intro-restore-account =  アカウントをお持ちですか？intro-restore-link = 復元するにはここをクリックしてください。
+intro-tip-title = 知ってましたか？
+intro-tip-body = Spixiはサーバーを使用しません。すべてのメッセージは完全に暗号化されたまま、直接あなたのピアに送信されます。
+intro-continue =  続ける
+intro-step-1 = ステップ1/2 
+intro-step-2 = ステップ2/2
+
 ; Intro New Screen
-intro-new-description-1 = 新しいアカウントを作成
-intro-new-description-2 = ユーザーネームを入力
+intro-new-description-1 = ニックネームと写真を設定してください 
+intro-new-description-2 = あなたのニックネームとプロフィール画像はあなたの連絡先に表示されます。
 intro-new-name-placeholder = ユーザーネーム
 intro-new-change-image = タップして表示する画像を選択
 intro-new-next = NEXT
 intro-new-step-1 = Step 1 of 2
 intro-new-step-2 = Step 2 of 2
-intro-new-description-3 = パスワードを作成
-intro-new-description-4 = アカウントの設定を完了するために<br />パスワードを入力してください
-intro-new-password = パスワードを入力
+intro-new-description-3 = もうすぐそこです。
+intro-new-description-4 = これがあなたの主なパスワードです。いつでもアカウントにアクセスを回復する必要がある場合は、このパスワードとバックアップファイルを使用する必要があります。
+intro-new-description-5 = あなたのパスワードは非常に重要です。なぜなら、Spixiアカウントへのアクセスを回復する必要がある場合に、再びログインすることができるからです。
+intro-new-password = パスワードを入力してください...
+intro-new-password-2 = パスワードを再入力してください
 intro-new-finish = FINISH
 intro-new-create-title = アカウントを作成中...
-intro-new-create-description = これは時間がかかる場合があります
+intro-new-create-description = このプロセスは、遅いデバイスでは少し時間がかかる場合があります。
 intro-new-password10 = パスワードは10文字以上必要です
 intro-new-passwordconf = パスワードを再度入力してください
 intro-new-passwordnomatch = パスワードが一致していません
@@ -230,7 +257,7 @@ intro-retry-invalidpassword-text = アカウントの復元に失敗しました
 lock-description = ロックされています
 lock-placeholder = パスワードを入力してください
 lock-error = パスワードが間違っています
-lock-unlock = 解除されましたlock-change = CHANGE WALLET
+lock-unlock = 解除されましたlock-change = ウォレットを変更する
 
 ; Settings Screen
 settings-title = Settings
@@ -241,10 +268,10 @@ settings-description = アカウントデータを編集し、このデバイス
 settings-account-information = アカウント情報
 settings-account-description = これは、他のユーザーに表示される情報です。<br />ユーザーネームと画像を変更できます。
 settings-account-language-edit = 言語
-settings-account-appearance-edit = Appearance
-settings-account-appearance-automatic = Automatic
-settings-account-appearance-light = Light
-settings-account-appearance-dark = Dark
+settings-account-appearance-edit = 外観 
+settings-account-appearance-automatic = 自動的
+settings-account-appearance-light = ライトモード
+settings-account-appearance-dark = ダークモード
 settings-account-image-edit = 画像を編集
 settings-account-nick-edit = ユーザーネームを編集
 settings-account-nick-placeholder = ユーザーネームを入力
@@ -281,7 +308,7 @@ settings-emptynick-text = ユーザーネームを入力してください
 settings-backup-title = Backup Account
 settings-backup-description = 復元に使用できる特別なファイルをダウンロードして、アカウントをバックアップします。
 settings-backup-save = バックアップファイルを保存
-settings-backup-account-save = BACKUP ACCOUNT
+settings-backup-account-save = バックアップアカウント
 settings-backup-notice = このバックアップファイルとそれに関連付けられているパスワードは、次の場合に情報を復元するために必要になります。
 settings-backup-notice2 = - 端末を紛失した場合<br />- アプリをアンインストールした場合<br />- アカウントを削除した場合<br />- ウォレットを削除した場合
 settings-backup-invalidpassword-title = 無効なパスワード
@@ -318,8 +345,8 @@ settings-lock-placeholder-1 = ロックパスワードを入力
 settings-lock-placeholder-2 = 新しいロックパスワードを入力
 settings-lock-placeholder-3 = 再度新しいロックパスワードを入力
 settings-lock-info = このパスワードは、アプリを起動するたびに必要になります
-settings-lock-save = ロックパスワードを保存settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
-settings-lock-confirm-text = In order to take effect, you will need to save your settings
+settings-lock-save = ロックパスワードを保存settings-lock-authinfo = Spixiをロック解除するには、生体認証またはウォレットパスワードが必要です。
+settings-lock-confirm-text = 効果を発揮するためには、設定を保存する必要があります。
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = 支払い請求
@@ -335,7 +362,9 @@ wallet-recipient-title = 送信先を選択
 wallet-recipient-search-placeholder = 連絡先を検索
 wallet-recipient-empty = 送信先が選択されていません
 wallet-recipient-add = 送信先を追加
-wallet-recipient-selected = 選択済
+wallet-recipient-selected = 選択済wallet-recipient-new-contact-button = 新しい連絡先を追加する
+wallet-recipient-no-contact-button = 新しい連絡先
+
 ; Wallet Request Screen
 wallet-request-title = 支払い請求
 wallet-request-subtitle = 請求額
@@ -349,29 +378,43 @@ wallet-request-error-title = エラー
 wallet-request-error-text = 有効な情報を入力してください
 ; Wallet Send Screen
 wallet-send-title = 送金
+wallet-send-details = 送金先のアドレスを貼り付けるか入力してください。連絡先を検索するかQRコードをスキャンできます。
+wallet-send-subdetails = IXI を送信する
 wallet-send-add = 送金先を追加
 wallet-send-placeholder = ペースト/入力
 wallet-send-more = 複数の送金先を選択できます。 これらの受取人は、同じ金額の支払いを受け取ります。
 wallet-send-recipients = 送金先
 wallet-send-norecipients = 送金先が選択されていません
 wallet-send-next = Next
-wallet-send-max = 最大送金額を送金
+wallet-send-max = 最大送金額を送金wallet-send-select = 連絡先を選択する
+wallet-send-or = または 
+
 ; Wallet Send 2 Screen
 wallet-send2-title = 送金を確認
 wallet-send2-policy = トランザクションフィー
-wallet-send2-info = 送金総額には、トランザクションフィーが含まれています
-wallet-send2-feeinfo = 取引のトランザクションフィーを設定します。 事前設定された Normal または High から選択するか、Custom でKBごとにトランザクションフィーを設定できます。 トラフィックが増加した場合、トランザクションフィーのサイズは、処理の速度に影響を与える可能性があります。
+wallet-send2-info = IXI支払いは取り消すことができません
+wallet-send2-feeinfo = IXIネットワーク料金は支払いに含まれています。。
 wallet-send2-normal = Normal
 wallet-send2-high = High
 wallet-send2-custom = Custom
-wallet-send2-placeholder = トランザクションフィーを入力
-wallet-send2-amount = 送金額
-wallet-send2-fee = トランザクションフィー
+wallet-send2-placeholder = いくら送りたいですか？
+wallet-send2-amount = 金額
+wallet-send2-max-amount = 最大金額を送信する
+wallet-send2-max-amount-warning = あなたは今、財布の残高全額を送信しようとしています！
+wallet-send2-fee = 合計取引手数料
 wallet-send2-total = 送金総額
-wallet-send2-send = 送金
+wallet-send2-send = IXI を送信するwallet-send2-confirm-title = あなたは送るつもりです
+wallet-send2-confirm = 確認する
+wallet-send2-cancel = キャンセルする
+
 ; Wallet Sent Screen
 wallet-sent-title = 送金履歴
 wallet-sent-subtitle = 送金先
+wallet-status-sent-pending = 支払いが送信中です！
+wallet-status-receive-pending = 支払い受信中
+wallet-status-sent = 支払いが成功裏に送信されました
+wallet-status-receive = 支払い受け取り済み
+wallet-status-failed = 支払いが失敗しました
 wallet-sent-amount = 送金額
 wallet-sent-status = ステータス
 wallet-sent-confirmed = CONFIRMED
@@ -380,27 +423,13 @@ wallet-sent-details = 送金した金額が残高から差し引かれました
 wallet-sent-fee = トランザクションフィー
 wallet-sent-feeinfo = 上記の金額にトランザクションフィーは含まれていません
 wallet-sent-txid = TXID
+wallet-sent-view-explorer = エクスプローラーで表示する
 wallet-sent-dismiss = 閉じる
+wallet-sent-unconfirmed-details = 支払いは送信されましたが、まだネットワークによって確認されていません。確認されると、トランザクションIDとそれをエクスプローラーで表示するリンクが表示されます。
 wallet-sentrecv-title = 入金履歴
 wallet-sentrecv-subtitle = 入金元
 wallet-sentrecv-amount = 入金額
 wallet-sentrecv-details = 受け取った金額が残高に追加されました
-; Wixi Send Screen
-wixi-send-title = Wrap IxiCash
-wixi-send-eth = Ethereum Address
-wixi-send-placeholder = Type/paste/scan your Ethereum address...
-wixi-send-more = WIXI tokens will be sent to the above address.
-wixi-send-amounttext = Amount of IXI you want to wrap to WIXI. Minimum is 5,000,000 IXI.
-wixi-send-wrap = Wrap my IxiCash
-
-; Wixi Sent Screen
-wixi-sent-title = Swapping IxiCash to WIXI
-wixi-sent-subtitle = WIXI will be sent to ETH Address:
-wixi-sent-amount = Amount Wrapped
-wixi-sent-status = IxiCash Transfer Status
-wixi-sent-details = The amount has been deducted from your IxiCash balance. You will receive the equivalent WIXI tokens on your ETH address.
-wixi-sent-txid = IxiCash TXID
-
 ; Global wallet errors
 wallet-error-amount-title = 無効な金額
 wallet-error-amount-text = 有効な金額を入力してください
@@ -408,26 +437,28 @@ wallet-error-amountdecimal-text = 適切な小数を入力してください
 wallet-error-balance-title = 残高不足
 wallet-error-balance-text = 残高が不足しています。 トランザクションの必要残高は {0}, 現在の残高は {1}。
 ; Onboarding join official bot
-; TODO Translate
 onboarding-bot-title = Would you like to join Ixian's Official Bot?
 onboarding-bot-text = Join our official bot, where you can tell us what you think about Spixi, keep up with the updates and discuss things directly with the developers and other users.
 onboarding-bot-join-button = JOIN
 onboarding-bot-dont-join-button = DON'T JOIN
-; End of TODO translate
 
-; Onboarding Meet Spixi
-onboarding-screen1-title = Meet Spixi!
-onboarding-screen1-text = 暗号通貨ウォレットが統合されたブロックチェーンベースの分散メッセンジャー
-; Onboarding Your Address
-onboarding-screen2-title = Your Address
-onboarding-screen2-text = Spixiアドレスはあなた固有のIDです。 Spixiで他の人と対話するために使用し、メニューで確認することができます。
-; Onboarding Connect with your friends
-onboarding-screen3-title = Connect with your friends
-onboarding-screen3-text = QRコードをスキャンするか、アドレスを入力することで、Spixiに友達を追加できます。 アクションボタンをタップし、新しい連絡先 を選択します。
+; Onboarding 1
+onboarding-screen1-title = 自信を持って接続する
+onboarding-screen1-text = 世界で最も安全でプライベートなチャットアプリの1つで、コミュニケーションと財務をコントロールしましょう。
+onboarding-screen1-get-started = 開始する onboarding-screen1-skip = オンボーディングをスキップする
+
+; Onboarding 2
+onboarding-screen2-title = あなたの住所はあなた唯一のIDです
+onboarding-screen2-text = Spixiはあなたの電話番号やメールアドレスを必要としません。代わりに、アプリ内で唯一のIDであるあなたのアドレスを作成します。彼らのアドレスを使用して連絡先を追加することができます。
+; Onboarding 3
+onboarding-screen3-title = IXI 支払いを送受信する。
+onboarding-screen3-text = ウォレットを使用することで、IXI 支払いを迅速に送受信することができます。メッセージを送信するのと同じくらい簡単です。
 ; Onboarding send and receive payments
 onboarding-screen4-title = Send and Receive Payments
-onboarding-screen4-text = 統合されたウォレットを使用して、IxiCashの支払いを素早く行えます。 これは、メッセージを送信するのと同じくらい簡単に、ウォレットやチャットで実行できます。
+onboarding-screen4-text = 統合されたウォレットを使用して、IXI の支払いを素早く行えます。 これは、メッセージを送信するのと同じくらい簡単に、ウォレットやチャットで実行できます。
 onboarding-skip = SKIP
+onboarding-back = 戻る
+onboarding-next = 次へ 
 onboarding-finish = FINISH
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
@@ -443,18 +474,15 @@ global-call-incoming = 着信中
 
 global-dialog-error = Error
 global-dialog-ok = OKglobal-dialog-cancel = CANCEL
-
 global-invalid-address-title = 無効なアドレス
 global-invalid-address-text = 有効なアドレスを入力してください
 global-friend-request-accepted = {0} がリクエストを承認しました
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
-
 global-modal-external-link-title = You are about to visit an external link
 global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
 global-modal-external-link-button-visit = VISIT
 
-
-global-lock-auth-text = Authentication required
-global-lock-invalidpassword-title = Authentication failed
-global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
+global-lock-auth-text = 認証が必要です
+global-lock-invalidpassword-title =  認証に失敗しました
+global-lock-invalidpassword-text = を解除するためにウォレットのパスワードを入力してください

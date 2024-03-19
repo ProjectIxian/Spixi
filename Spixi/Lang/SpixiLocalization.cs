@@ -16,6 +16,7 @@ namespace SPIXI.Lang
             "es-co",
             "de-de",
             "fr-fr",
+            "it-it",
             "ja-jp",
             "lt-lt",
             "pt-br",
@@ -33,7 +34,7 @@ namespace SPIXI.Lang
         {
             loaded = false;
 
-            Stream file_stream = null;
+            Stream? file_stream = null;
             try
             {
                 string lang_file_path = "";
@@ -44,7 +45,7 @@ namespace SPIXI.Lang
                 else
                 {
                     string lang_part = lang.Substring(0, lang.IndexOf('-'));
-                    string found_lang_part = languages.Find(x => x.StartsWith(lang_part));
+                    string found_lang_part = languages.Find(x => x.StartsWith(lang_part))!;
                     if (found_lang_part != null)
                     {
                         lang_file_path = Path.Combine("lang", found_lang_part + ".txt");
@@ -65,16 +66,16 @@ namespace SPIXI.Lang
                 return false;
             }
 
-            Dictionary<string, string> localized_strings = new Dictionary<string, string>(customStrings);
+            Dictionary<string, string> localized_strings = new(customStrings);
 
-            StreamReader sr = new StreamReader(file_stream);
+            StreamReader sr = new(file_stream);
             string last_key = "";
 
             bool success = true;
 
             while(!sr.EndOfStream)
             {
-                string line = sr.ReadLine().Trim();
+                string line = sr.ReadLine()!.Trim();
                 if(line == "" || line.StartsWith(";"))
                 {
                     continue;

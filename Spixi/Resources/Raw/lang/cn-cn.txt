@@ -60,9 +60,8 @@ chat-call-missed = 未接来电
 chat-call-ended = 通话结束
 chat-online = 在线
 chat-offline = 离线
+chat-waiting-for-response = 等待回复 
 chat-text-too-long = 文字太长。
-
-; TODO translate
 chat-member-count = {0} 位成员
 chat-context-pin-message = 置顶消息
 chat-context-copy-message = 复制消息
@@ -75,6 +74,11 @@ chat-context-kick-user = 删除用户
 chat-context-ban-user = 拉黑用户
 chat-context-delete-message = 删除消息
 chat-message-cost-bar = 发送消息，消耗{0}每kB
+chat-request-sent-title = 好友请求已发送
+chat-request-sent-details = 旦他们接受，您将能够与他们安全聊天
+chat-request-sent-undo = 撤消
+chat-request-received-title = 收到好友请求
+chat-request-received-details = 有人想要与您连接！一旦您接受，您将能够与他们安全聊天。
 
 chat-modal-tip-title = 给小费 {0}?
 chat-modal-tip-body = 点击你想要给的小费额度或者自定义小费。
@@ -110,7 +114,6 @@ chat-bot-not-ready-body = 机器人还未准备好，请在几分钟后重试。
 
 chat-kicked = 你已被移除出本群。
 chat-banned = 你已被本群拉黑。
-; End of TODO translate
 
 ; Contact Details Screen
 contact-details-chat = 对话
@@ -136,18 +139,29 @@ contact-new-placeholder = 贴上 / 输入
 contact-new-send-request = 发送联系请求
 contact-new-invalid-address-self-text = 输入的地址是你個人的地址。
 contact-new-invalid-address-exists-text = 此联系人已经在你的联系人列表中。
+contact-new-scan = 扫描 
+contact-new-scan-help = 或扫描二维码 
+contact-new-send = 发送
+contact-new-cancel = 取消
+contact-new-confirm-title = 发送好友请求吗？
+contact-new-confirm-details = 您将要发送好友请求到以下 Spixi 地址
 
 ; Downloads Screen
 downloads-title = 下载
 downloads-empty = 你没有可下载的文件。
 
 ; Index Screen
-index-balance = 我的IxiCash结余
-index-balance-info = * 保持点击以隐藏
-index-balance-info2 = * 保持点击以显示
+index-balance = 我的IXI 结余
+index-balance-show = 显示
+index-balance-hide = 隐藏
+index-balance-info = 余额隐藏
 index-notifications = 通知
 index-unread-chats = 未读的对话內容
-index-no-conversations = 您没有未读的对话。
+index-no-conversations-title = 暂无聊天
+index-no-conversations = 与您的联系人开始新的聊天。<br/>所有聊天都将显示在此处。
+index-new-chat-button = 新建聊天
+index-no-transactions-title = 暂无交易
+index-no-transactions = 您的交易将在您开始使用 IXI 钱包后显示在这里。
 index-send = 发送
 index-activity = 活动
 index-receive = 接收
@@ -157,6 +171,7 @@ index-tab-home = 主畫面
 index-tab-chats = 对话
 index-tab-wallet = 钱包
 index-tab-contacts = 联系人
+index-tab-address = 我的地址
 index-new-title = 新
 index-new-contact = 联系
 index-new-chat = 对话
@@ -171,7 +186,6 @@ index-side-settings = 设定
 index-side-security = 安全性
 index-side-backup = 备份
 index-side-password = 密码
-index-side-wixi = Wrap IxiCash
 index-side-about = 关于
 index-side-howtouse = 如何使用Spixi
 index-side-sendlog = 发送记录
@@ -185,29 +199,39 @@ index-excerpt-contact-request = 请求联系人
 index-excerpt-file = 档案
 index-excerpt-voice-call = 语音通话
 index-excerpt-self = 我的:
+index-excerpt-typing = 正在输入...
 
 ; Intro Screen
 intro-title = 欢迎来到Spixi,
-intro-subtitle = 一個安全和无关键中心化的聊天室,钱包以至更多。
+intro-subtitle = 欢迎来到世界上最安全的聊天应用之一。
+intro-headline = 让我们开始吧！
 intro-language-text = 请选择语言
 intro-text = 请新增或还原你的<br/>Spixi账戶以继续
 intro-create-account = 建立新账户
-intro-restore-account = 恢复帐户
+intro-restore-account = 已经有账号了吗？
+intro-restore-link = 点击此处进行恢复。
+intro-tip-title = 你知道吗？
+intro-tip-body = Spixi不使用服务器，所有消息直接发送给您的对等方，同时进行完全加密。
+intro-continue = 继续
+intro-step-1 = 第一步，共两步 
+intro-step-2 = 第二步，共两步
 
 ; Intro New Screen
-intro-new-description-1 = 建立新的Spixi账户
-intro-new-description-2 = 输入您的昵称和照片
+intro-new-description-1 = 设置您的昵称和照片
+intro-new-description-2 = 您的昵称和头像将显示给您的联系人。
 intro-new-name-placeholder = 您的昵称
 intro-new-change-image = 点按即可更改照片
 intro-new-next = 下一步
 intro-new-step-1 = 兩個步骤之一
 intro-new-step-2 = 兩個步骤之二
-intro-new-description-3 = 建立你的加密密码
-intro-new-description-4 = 建立你的Spixi账户<br />請建立你的加密密码
+intro-new-description-3 = 您就快到了。
+intro-new-description-4 = 这是您的主密码。如果您需要重新访问您的帐户，您将需要此密码，并与备份文件一起使用。
+intro-new-description-5 = 您的密码非常重要，因为它将允许您在需要恢复对Spixi帐户的访问时重新登录。
 intro-new-password = 输入新的加密密码
+intro-new-password-2 = 输入您的密码...
 intro-new-finish = 完成
-intro-new-create-title = 建立你的<br />Spixi账户...
-intro-new-create-description = 请稍候
+intro-new-create-title = 建立你的Spixi账户...
+intro-new-create-description = 在较慢的设备上，这个过程可能需要一段时间。
 intro-new-password10 = 密码必须至少包含10个字符
 intro-new-passwordconf = 确认密码
 intro-new-passwordnomatch = 密码不符
@@ -249,7 +273,7 @@ lock-description = Spixi已锁定
 lock-placeholder = 請输入密码
 lock-error = 密码不符
 lock-unlock = 已解除锁定
-lock-change = CHANGE WALLET
+lock-change = 更换钱包
 
 ; Settings Screen
 settings-title = 设定
@@ -260,10 +284,10 @@ settings-description = 更改设定并管理此裝置上储存的数据。
 settings-account-information = 基本设定
 settings-account-description = 更改预设语言，你的头像并编辑您​​的昵称。
 settings-account-language-edit = 语言
-settings-account-appearance-edit = Appearance
-settings-account-appearance-automatic = Automatic
-settings-account-appearance-light = Light
-settings-account-appearance-dark = Dark
+settings-account-appearance-edit = 外观 
+settings-account-appearance-automatic = 自动
+settings-account-appearance-light = 浅色模式
+settings-account-appearance-dark = 暗黑模式
 settings-account-image-edit = 你的头像
 settings-account-nick-edit = 昵称
 settings-account-nick-placeholder = 输入新的昵称
@@ -301,7 +325,7 @@ settings-emptynick-text = 请输入你的昵称。
 settings-backup-title = 备用帐户
 settings-backup-description = 下载特別档案，用以还原Spixi帐户。
 settings-backup-save = 储存备份档案
-settings-backup-account-save = BACKUP ACCOUNT
+settings-backup-account-save = 备份账户
 settings-backup-notice = 在以下情况，需要此备份档案和与密码来恢复登入权限：
 settings-backup-notice2 = - 丢失此装置 <br />- 从装置上卸载Spixi <br />- 删除你的Spixi帐户 <br />- 删除你的钱包
 settings-backup-invalidpassword-title = 密码无效
@@ -341,8 +365,8 @@ settings-lock-placeholder-2 = 输入你的 新密码锁
 settings-lock-placeholder-3 = 重新输入你的新密码锁
 settings-lock-info = 每次启动Spixi时都需要此密码。
 settings-lock-save = 设置密码
-settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
-settings-lock-confirm-text = In order to take effect, you will need to save your settings
+settings-lock-authinfo = 您需要使用生物识别验证或您的钱包密码来解锁Spixi。
+settings-lock-confirm-text = 您需要保存您的设置。
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = 请求付款
@@ -360,6 +384,8 @@ wallet-recipient-search-placeholder = 搜寻联系人
 wallet-recipient-empty = 选择了0位收件人
 wallet-recipient-add = 添加收件人
 wallet-recipient-selected = 选择收件人
+wallet-recipient-new-contact-button = 添加新联系人
+wallet-recipient-no-contact-button = 新联系人
 
 ; Wallet Request Screen
 wallet-request-title = 请求付款
@@ -375,6 +401,8 @@ wallet-request-error-text = 请输入有效信息。
 
 ; Wallet Send Screen
 wallet-send-title = 发送款项
+wallet-send-details = 粘贴或输入要发送付款的地址。您可以浏览您的联系人或扫描二维码。
+wallet-send-subdetails = 发送 IXI 到
 wallet-send-add = 添加收件人
 wallet-send-placeholder = 贴上/输入地址
 wallet-send-more = 你可以为此交易添加其他收件人。 这些收件人将收到相同金额的款项。
@@ -382,24 +410,36 @@ wallet-send-recipients = 收件人
 wallet-send-norecipients = 未选择收件人
 wallet-send-next = 下一步
 wallet-send-max = 发送最大金额
+wallet-send-select = 选择联系人
+wallet-send-or = 或者
 
 ; Wallet Send 2 Screen
 wallet-send2-title = 确认付款
 wallet-send2-policy = 交易费用条款
-wallet-send2-info = 每笔付款都有一定的付款费用，该费用将从转帐金额中扣除。
-wallet-send2-feeinfo = 设置此交易的交易费用。 从预设的 标准 或 高 內选择。 你可以设置每KB的自定义交易费。 如果用量增加，交易费用的多小会影响付款处理速度。
+wallet-send2-info = IXI支付无法撤销。
+wallet-send2-feeinfo = IXI网络费已包含在支付中。
 wallet-send2-normal = 正常
 wallet-send2-high = 高
 wallet-send2-custom = 自订
-wallet-send2-placeholder = 输入交易费用
-wallet-send2-amount = 金额
+wallet-send2-placeholder = 您想发送多少IXI币？
+wallet-send2-amount = 数额
+wallet-send2-max-amount = 发送最大金额
+wallet-send2-max-amount-warning = 您即将发送您钱包的全部余额！
 wallet-send2-fee = 总交易费
 wallet-send2-total = 从余额中支付的总金额
-wallet-send2-send = 发送款项
+wallet-send2-send = 发送 IXI
+wallet-send2-confirm-title = 您即将发送
+wallet-send2-confirm = 确认
+wallet-send2-cancel = 取消 
 
 ; Wallet Sent Screen
 wallet-sent-title = 已发送款项
 wallet-sent-subtitle = 款项已发送至：
+wallet-status-sent-pending = 付款正在发送中
+wallet-status-receive-pending = 收到付款
+wallet-status-sent = 付款成功发送
+wallet-status-receive = 收到付款 
+wallet-status-failed = 付款失败
 wallet-sent-amount = 发送金额
 wallet-sent-status = 状态
 wallet-sent-confirmed = 已确认
@@ -408,27 +448,13 @@ wallet-sent-details = 发送金额已从余额中扣除。
 wallet-sent-fee = 费用
 wallet-sent-feeinfo = 每笔付款都有一定的付款费用，该费用将从转帐金额中扣除。
 wallet-sent-txid = TXID
-wallet-sent-dismiss = DISMISS
+wallet-sent-view-explorer = 在资源管理器中查看
+wallet-sent-dismiss = 忽略
+wallet-sent-unconfirmed-details = 付款已发送，但尚未被网络确认。一旦确认，您将看到交易ID和在资源管理器上查看它的链接。
 wallet-sentrecv-title = 已收到付款
 wallet-sentrecv-subtitle = 款项来自
 wallet-sentrecv-amount = 收到金额
 wallet-sentrecv-details = 收到的金额已添加到你的钱包余额中。
-
-; Wixi Send Screen
-wixi-send-title = 包装 IxiCash
-wixi-send-eth = Ethereum地址
-wixi-send-placeholder = 输入/粘贴/扫描你的Ethereum地址...
-wixi-send-more = WIXI 代币将转帐到以上地址。
-wixi-send-amounttext = 你希望把IXI包装成WIXI的数量。 最少为 5,000,000 IXI.
-wixi-send-wrap = 包装我的IxiCash
-
-; Wixi Sent Screen
-wixi-sent-title = 交换 IxiCash 为 WIXI
-wixi-sent-subtitle = WIXI 将发送到 ETH 地址:
-wixi-sent-amount = 金额交换成功
-wixi-sent-status = IxiCash 转帐状况
-wixi-sent-details = 该金额已从您的IxiCash余额中扣除。你将在你的ETH地址上收到等值的WIXI代币。
-wixi-sent-txid = IxiCash 转帐ID(TXID)
 
 ; Global wallet errors
 wallet-error-amount-title = 金额无效
@@ -438,29 +464,31 @@ wallet-error-balance-title = 余额不足
 wallet-error-balance-text = 余额太低，无法完成此交易。 交易总费用为 {0}, 你的余额为 {1}.
 
 ; Onboarding join official bot
-; TODO Translate
 onboarding-bot-title = 你想要加入Ixian的官方机器人吗？
 onboarding-bot-text = 加入我们的官方机器人，在这里你可以告诉我们你对Spixi的看法，及时了解更新，并直接与开发者和其他用户讨论。
 onboarding-bot-join-button = 加入
 onboarding-bot-dont-join-button = 不加入
-; End of TODO translate
 
-; Onboarding Meet Spixi
-onboarding-screen1-title = 遇上 Spixi!
-onboarding-screen1-text = 带有集成加密货币钱包与无关键中心化的区块链。
+; Onboarding 1
+onboarding-screen1-title = 坦然连接
+onboarding-screen1-text = 使用世界上最安全和私密的聊天应用程序掌控您的通讯和财务。
+onboarding-screen1-get-started = 开始
+onboarding-screen1-skip = 跳过引导
 
-; Onboarding Your Address
-onboarding-screen2-title = 你的Spixi地址
-onboarding-screen2-text = 你的Spixi地址是你唯一的ID。 用它与Spixi上的其他人互动。你可以在画面中找到。
+; Onboarding 2
+onboarding-screen2-title = 您的地址是您唯一的身份证明 
+onboarding-screen2-text = Spixi 不需要您的电话号码或电子邮件。相反，它创建了您的地址，这是您在应用程序中唯一的身份标识。您可以通过使用他们的地址来添加联系人。
 
-; Onboarding Connect with your friends
-onboarding-screen3-title = 联系朋友
-onboarding-screen3-text = 你可以扫他们的QR码在Spixi上添加朋友，或输入他们的地址。 点击操作按钮，然后选择“新联系人”。
+; Onboarding 3
+onboarding-screen3-title = 发送和接收 IXI 支付。
+onboarding-screen3-text = 通过使用钱包，您可以快速发送或接收 IXI 支付。就像发送消息一样简单。
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = 发送和接收款项
-onboarding-screen4-text = 使用集成的钱包可以快速发送和接收IxiCash付款。 你可以在钱包中或在聊天中完成此操作，就像发送消息一样简单！
+onboarding-screen4-text = 使用集成的钱包可以快速发送和接收IXI付款。 你可以在钱包中或在聊天中完成此操作，就像发送消息一样简单！
 onboarding-skip = 略过
+onboarding-back = 返回
+onboarding-next = 下一个 
 onboarding-finish = 完成
 
 ; Global
@@ -477,20 +505,17 @@ global-call-incoming = 来电
 
 global-dialog-error = 错误
 global-dialog-ok = 好
-; TODO translate
 global-dialog-cancel = CANCEL
-
 global-invalid-address-title = 地址无效
 global-invalid-address-text = 请输入有效的钱包地址
 
 global-friend-request-accepted = {0} 已接受您的朋友请求。
 
 global-update-available = 有新版本 ({0}) 可用。 请更新以获得最佳体验。
-
 global-modal-external-link-title = 你即将访问的是一个外部链接。
 global-modal-external-link-body = 您即将访问的是一个外部链接 {0}。外部链接具有潜在的危险性，继续得话则风险自担。
 global-modal-external-link-button-visit = 访问
 
-global-lock-auth-text = Authentication required
-global-lock-invalidpassword-title = Authentication failed
-global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
+global-lock-auth-text = 需要验证
+global-lock-invalidpassword-title = 验证失败
+global-lock-invalidpassword-text = 输入您的钱包密码以解锁 Spixi 

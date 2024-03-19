@@ -186,7 +186,6 @@ index-side-settings = Settings
 index-side-security = Security
 index-side-backup = Backup
 index-side-password = Password
-index-side-wixi = Wrap IxiCash
 index-side-about = About
 index-side-howtouse = How to use Spixi
 index-side-sendlog = Send Log
@@ -367,7 +366,7 @@ settings-lock-placeholder-3 = Retype in your new lock password
 settings-lock-info = This password will be required every time you launch Spixi.
 settings-lock-save = SET LOCK PASSWORD
 settings-lock-authinfo = You will need your biometric authentication or your wallet password to unlock Spixi
-settings-lock-confirm-text = In order to take effect, you will need to save your settings
+settings-lock-confirm-text = You will need to save your settings for them to take effect.
 
 ; Wallet Contact Request Screen
 wallet-contact-request-title = Payment Request
@@ -436,11 +435,11 @@ wallet-send2-cancel = Cancel
 ; Wallet Sent Screen
 wallet-sent-title = Payment Details
 wallet-sent-subtitle = Payment sent to:
-wallet-status-sent-pending = Payment is Being Sent!
-wallet-status-receive-pending = Payment Incoming!
-wallet-status-sent = Payment Successfully Sent!
-wallet-status-receive = Payment Received!
-wallet-status-failed = Payment Failed!
+wallet-status-sent-pending = Payment is Being Sent
+wallet-status-receive-pending = Payment Incoming
+wallet-status-sent = Payment Successfully Sent
+wallet-status-receive = Payment Received
+wallet-status-failed = Payment Failed
 wallet-sent-amount = Amount Sent
 wallet-sent-status = Payment Status
 wallet-sent-confirmed = CONFIRMED
@@ -456,23 +455,6 @@ wallet-sentrecv-title = Payment Received
 wallet-sentrecv-subtitle = Payment received from:
 wallet-sentrecv-amount = Amount Received
 wallet-sentrecv-details = The amount received has been added to your wallet balance.
-
-; Wixi Send Screen
-wixi-send-title = Wrap IxiCash
-wixi-send-eth = Ethereum Address
-wixi-send-placeholder = Type/paste/scan your Ethereum address...
-wixi-send-more = WIXI tokens will be sent to the above address.
-wixi-send-amounttext = Amount of IXI you want to wrap to WIXI. Minimum is 5,000,000 IXI.
-wixi-send-wrap = Wrap my IxiCash
-
-; Wixi Sent Screen
-wixi-sent-title = Swapping IxiCash to WIXI
-wixi-sent-subtitle = WIXI will be sent to ETH Address:
-wixi-sent-amount = Amount Wrapped
-wixi-sent-status = IxiCash Transfer Status
-wixi-sent-details = The amount has been deducted from your IxiCash balance. You will receive the equivalent WIXI tokens on your ETH address.
-wixi-sent-txid = IxiCash TXID
-
 
 ; Global wallet errors
 wallet-error-amount-title = Invalid amount
@@ -503,7 +485,7 @@ onboarding-screen3-text = By using the wallet, you can quickly send or receive I
 
 ; Onboarding send and receive payments
 onboarding-screen4-title = Send and Receive Payments
-onboarding-screen4-text = Use the integrated wallet to quickly send and receive IxiCash payments. You can do this in your wallet or in chat as easy as sending a message!
+onboarding-screen4-text = Use the integrated wallet to quickly send and receive IXI payments. You can do this in your wallet or in chat as easy as sending a message!
 onboarding-skip = SKIP
 onboarding-back = Back
 onboarding-next = Next
@@ -524,14 +506,12 @@ global-call-incoming = Incoming Call
 global-dialog-error = Error
 global-dialog-ok = OK
 global-dialog-cancel = CANCEL
-
 global-invalid-address-title = Invalid address
 global-invalid-address-text = Please enter a valid wallet address.
 
 global-friend-request-accepted = {0} has accepted your friend request.
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
-
 global-modal-external-link-title = You are about to visit an external link
 global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
 global-modal-external-link-button-visit = VISIT
