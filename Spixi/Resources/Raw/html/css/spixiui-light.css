@@ -85,31 +85,6 @@ img.emoji {
     vertical-align: -0.5em;
 }
 
-.lsx-emojipicker-appender {
-    width: 220px;
-    left: -58px;
-    bottom: 25px;
-    position: absolute !important;
-}
-
-.lsx-emojipicker-emoji span img.emoji {
-    max-width: 25px;
-    max-height: 25px;
-}
-
-.lsx-emojipicker-tabs {
-    padding:0px !important;
-}
-
-.lsx-emojipicker-tabs img.emoji {
-    width: 22px;
-    height: 22px;
-}
-
-.lsx-emojipicker-container::after {
-    left: 35px;
-}
-
 .break-word {
     word-wrap: break-word;
 }
@@ -2282,17 +2257,6 @@ img.emoji {
     padding-right: 9px;
 }
 
-#chat_emoji {
-    display: table-cell;
-    width: 35px;
-    position: relative;
-
-    font-size: 18pt;
-    text-align: left;
-    color: #BABABA;
-    padding-top: 4px;
-    vertical-align: middle;
-}
 .chatattachsymbol {
     color: #1693da;
     font-size: 18pt;

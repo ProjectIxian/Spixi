@@ -43,7 +43,7 @@
 		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-		<Platforms>AnyCPU;x64</Platforms> 
+		<Platforms>AnyCPU;x64;arm64</Platforms> 
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -105,7 +105,6 @@
 		<MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding2.png" />
 		<MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding3.png" />
 		<MauiAsset Remove="Resources\Raw\html\img\xxhdpi\onboarding4.png" />
-		<MauiAsset Remove="Resources\Raw\html\libs\twemoji\72x72\*" />
 		<MauiAsset Remove="Resources\Raw\lang\TRANSLATORS-README.md" />
 	</ItemGroup>
 
@@ -117,7 +116,6 @@
 		<MauiCss Remove="Resources\Raw\html\css\spixiui-light.css" />
 		<MauiCss Remove="Resources\Raw\html\libs\fontawesome\css\fontawesome.min.css" />
 		<MauiCss Remove="Resources\Raw\html\libs\fontawesome\css\solid.min.css" />
-		<MauiCss Remove="Resources\Raw\html\libs\lsxemojipicker\jquery.lsxemojipicker.css" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -168,11 +166,7 @@
 		<None Remove="Resources\Raw\html\js\jquery.touchSwipe.min.js" />
 		<None Remove="Resources\Raw\html\js\qrcode.min.js" />
 		<None Remove="Resources\Raw\html\js\spixi.js" />
-		<None Remove="Resources\Raw\html\libs\emoji-button\index.min.js" />
 		<None Remove="Resources\Raw\html\libs\fontawesome\webfonts\fa-solid-900.ttf" />
-		<None Remove="Resources\Raw\html\libs\lsxemojipicker\jquery.lsxemojipicker.min.js" />
-		<None Remove="Resources\Raw\html\libs\lsxemojipicker\jquery.lsxemojipicker.min.js.map" />
-		<None Remove="Resources\Raw\html\libs\twemoji\twemoji.min.js" />
 		<None Remove="Resources\Raw\html\lock.html" />
 		<None Remove="Resources\Raw\html\scan.html" />
 		<None Remove="Resources\Raw\html\settings.html" />

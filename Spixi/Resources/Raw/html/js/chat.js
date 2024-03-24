@@ -14,8 +14,7 @@ var userAddress = "";
 function onChatScreenLoad()
 {
     document.getElementById("chat_input").focus();
-    twemoji.base = "libs/twemoji/";
-    twemoji.size = "72x72";
+
     if(SL_Platform == "Xamarin-WPF")
     {
         messagesEl.oncontextmenu = function(e)
@@ -62,14 +61,7 @@ function onChatScreenLoad()
     {
         hideContextMenus();
 	};
-    document.body.addEventListener("click", function(e){
-        var emoji_picker = $('.lsx-emojipicker-container');
-        if(emoji_picker != null && emoji_picker.length > 0)
-        {
-            emoji_picker.hide();
-        }
-        hideContextMenus();
-	});
+
     onload();
 }
 
@@ -152,20 +144,6 @@ function setSelectedChannel(id, icon, name)
 function onChatScreenLoaded()
 {
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
-    $('#chat_emoji').lsxEmojiPicker({
-        twemoji: false,
-        onSelect: function (emoji) {
-            var chatInput = document.getElementById("chat_input");
-            if(chatInput.innerHTML == "<br>")
-            {
-                chatInput.innerHTML = emoji.value + " ";
-            }else
-            {
-                chatInput.innerHTML += emoji.value + " ";
-            }
-            chatInput.focus();
-        }
-    });
     document.getElementById("chat_input").focus();
 }
 
@@ -483,10 +461,7 @@ function addText(id, address, nick, avatar, text, time, className) {
     textEl.className = "text selectable";
 
     text = parseMessageText(text);
-            
     textEl.innerHTML = text;
-    twemoji.parse(textEl);
-
 
     var timeClass = "spixi-timestamp";
     var relativeTime = getRelativeTime(time);
@@ -766,8 +741,6 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
             if (textEls.length > 0) {
                 var textEl = textEls[0];
                 textEl.innerHTML = message;
-
-                twemoji.parse(textEl);
             }
         }
     }
@@ -842,7 +815,10 @@ document.getElementById("undorequest").onclick = function () {
 }
 
 // Handle 'attach' bar, allowing to send and request IXI
-document.getElementById("chat_attach").onclick = function () {
+document.getElementById("chat_attach").onclick = function (event) {
+    event.stopPropagation();
+    event.preventDefault();
+
     if (attachMode == true) {
         attachMode = false;
         hideAttach();
@@ -851,6 +827,8 @@ document.getElementById("chat_attach").onclick = function () {
         attachMode = true;
         showAttach();
     }
+
+    document.getElementById("chat_input").focus();
 }
 
 function hideAttach() {
