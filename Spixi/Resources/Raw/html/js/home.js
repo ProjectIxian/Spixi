@@ -355,6 +355,12 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         case "confirmed":
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
             break;
+        case "pending":
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-pending-indicator fas fa-clock"></i>';
+            break;
+        case "default":
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-default-indicator fas fa-comment-slash"></i>';
+            break;
     }
 
     var excerpt_style = type === "typing" ? "typing" : "";

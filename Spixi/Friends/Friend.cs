@@ -637,6 +637,7 @@ namespace SPIXI
                 {
                     msg.sent = true;
                     Node.localStorage.requestWriteMessages(walletAddress, channel);
+                    Node.shouldRefreshContacts = true;
                 }
 
                 if (chat_page != null)

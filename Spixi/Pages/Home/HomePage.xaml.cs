@@ -700,6 +700,14 @@ namespace SPIXI
                         {
                             type = "confirmed";
                         }
+                        else if (lastmsg.sent)
+                        {
+                            type = "pending";
+                        }
+                        else
+                        {
+                            type = "default";
+                        }
                     }
 
                     FriendMessageHelper helper_msg = new(friend.walletAddress.ToString(), friend.nickname, lastmsg.timestamp, avatar, str_online, excerpt, type, friend.getUnreadMessageCount());

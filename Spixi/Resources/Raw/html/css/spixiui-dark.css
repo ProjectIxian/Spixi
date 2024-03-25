@@ -1932,15 +1932,25 @@ img.emoji {
     float: right;
 }
 
-.spixi-bubble.confirmed .statusIndicator {
-    color: #E1E1E1;
-    display: inline-block;
-}
+    .spixi-bubble.default .statusIndicator {
+        color: #F76E89;
+        display: inline-block;
+    }
 
-.spixi-bubble.read .statusIndicator {
-    color: #35E8AD;
-    display: inline-block;
-}
+    .spixi-bubble.sent .statusIndicator {
+        color: #979797;
+        display: inline-block;
+    }
+
+    .spixi-bubble.confirmed .statusIndicator {
+        color: #979797;
+        display: inline-block;
+    }
+
+    .spixi-bubble.read .statusIndicator {
+        color: #4FFBA9;
+        display: inline-block;
+    }
 
 .spixi-bubble .statusIndicator.paid {
     display: none;
@@ -2337,11 +2347,19 @@ img.emoji {
 }
 
 .spixi-chat-read-indicator-read {
-    color: #35E8AD;
+    color: #4FFBA9;
 }
 
 .spixi-chat-read-indicator-confirmed {
-    color: #E1E1E1;
+    color: #979797;
+}
+
+.spixi-chat-pending-indicator {
+    color: #979797;
+}
+
+.spixi-chat-default-indicator {
+    color: #F76E89;
 }
 
 .spixi-chat-payable-bar {

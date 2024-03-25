@@ -454,7 +454,8 @@ function parseMessageText(text)
     return text;
 }
 
-function addText(id, address, nick, avatar, text, time, className) {
+// TODO optimize this function
+function addText(id, address, nick, avatar, text, time, className) {    
     text = text.replace(/\n/g, "<br>");
 
     var textEl = document.createElement('div');
@@ -491,7 +492,17 @@ function addText(id, address, nick, avatar, text, time, className) {
 
     bubbleContentWrapEl.appendChild(textEl);
     bubbleContentWrapEl.appendChild(timeEl);
-    bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
+    if (className.includes("spixi-bubble myself")) {
+        if (className.includes("sent")) {
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-clock\"></i>";
+        }
+        else if (className.includes("default")) {
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-comment-slash\"></i>";
+        }       
+        else {
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
+        }
+    }
     bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator paid fas fa-wallet\"></i>";
 
     var bubbleEl = document.createElement("div");
@@ -538,11 +549,14 @@ function addText(id, address, nick, avatar, text, time, className) {
 
 function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid) {
     var additionalClasses = "";
-    if (sent == "True") {
-        additionalClasses = " sent";
-    }
     if (confirmed == "True") {
         additionalClasses = " confirmed";
+    } 
+    else if (sent == "True") {
+        additionalClasses = " sent";
+    }
+    else {
+        additionalClasses = " default";
     }
     if (read == "True") {
         additionalClasses += " read";
@@ -721,7 +735,7 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
         if(paid == "True")
         {
             additionalClasses += " paid";
-    		}
+    	}
 
         if (msgEl.className.indexOf("spixi-payment-request") > -1) {
             additionalClasses += " spixi-payment-request";
@@ -731,6 +745,23 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
         if (msgEl.className.indexOf("file") > -1) {
             additionalClasses += " file";
             isFile = true;
+        }
+
+        var statusEls = msgEl.getElementsByClassName("statusIndicator");
+        if (statusEls.length > 0) {
+            var statusEl = statusEls[0];
+
+            if (msgEl.className.includes("spixi-bubble myself")) {
+                if (additionalClasses.includes("sent")) {
+                    statusEl.className = "statusIndicator fas fa-clock";
+                }
+                else if (additionalClasses.includes("default")) {
+                    statusEl.className = "statusIndicator fas fa-comment-slash";
+                }
+                else {
+                    statusEl.className = "statusIndicator fas fa-check";
+                }
+            }
         }
 
         msgEl.className = "spixi-bubble myself" + additionalClasses;
