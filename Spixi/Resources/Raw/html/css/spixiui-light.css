@@ -2332,6 +2332,7 @@ img.emoji {
 .spixi-chat-read-indicator {
     width: 12pt;
     height: 8pt;
+    font-size: 12px;
     vertical-align: middle;
     right: 65pt;
     margin-right: 16px;
