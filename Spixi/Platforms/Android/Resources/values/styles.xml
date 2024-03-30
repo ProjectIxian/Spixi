@@ -11,7 +11,7 @@
     <item name="windowActionBar">false</item>
     <!-- Set theme colors from http://www.google.com/design/spec/style/color.html#color-color-palette -->
     <!-- colorPrimary is used for the default action bar background -->
-    <item name="colorPrimary">#CD003F</item>
+    <item name="colorPrimary">#144576</item>
     <!-- colorPrimaryDark is used for the status bar -->
     <item name="colorPrimaryDark">@android:color/background_dark</item>
     <!-- colorAccent is used as the default value for colorControlActivated
@@ -32,11 +32,11 @@
     <item name="android:windowBackground">@layout/splash_screen</item>
     <item name="android:windowNoTitle">true</item>
     <item name="android:windowFullscreen">true</item>
-    <item name="android:navigationBarColor">#951453</item>
+    <item name="android:navigationBarColor">#144576</item>
     <item name="android:windowLightNavigationBar">false</item>
   </style>
   
   <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Dialog">
-    <item name="colorAccent">#FF4081</item>
+    <item name="colorAccent">#144576</item>
   </style>
 </resources>
