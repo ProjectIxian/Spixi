@@ -87,7 +87,7 @@
                         <div class="row">
                             <div class="col-4"></div>
                             <div class="col-4 spixi-balancebar-subtitle">*SL{index-balance}</div>
-                            <div class="col-4 spixi-balancebar-hide" id="activity_balance_toggle">Hide <i class="fa fa-eye"></i></div>
+                            <div class="col-4 spixi-balancebar-hide" id="activity_balance_toggle">*SL{index-balance-hide} <i class="fa fa-eye"></i></div>
                         </div>
 
                         <div class="row">
@@ -104,9 +104,9 @@
 
 
                         <div class="row">
-                            <div class="col-4 text-center" style="padding-left: 16px; padding-right: 4px;"><a href="ixian:sendixi" class="spixi-flat-button">Send <i class="fa fa-arrow-up"></i></a></div>
-                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 4px;"><a href="ixian:receiveixi" class="spixi-flat-button">Receive <i class="fa fa-arrow-down"></i></a></div>
-                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 16px;"><a href="ixian:quickscan" class="spixi-flat-button">Scan <i class="fa fa-qrcode"></i></a></div>
+                            <div class="col-4 text-center" style="padding-left: 16px; padding-right: 4px;"><a href="ixian:sendixi" class="spixi-flat-button">*SL{index-send} <i class="fa fa-arrow-up"></i></a></div>
+                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 4px;"><a href="ixian:receiveixi" class="spixi-flat-button">*SL{index-receive} <i class="fa fa-arrow-down"></i></a></div>
+                            <div class="col-4 text-center" style="padding-left: 4px; padding-right: 16px;"><a href="ixian:quickscan" class="spixi-flat-button">*SL{index-scan} <i class="fa fa-qrcode"></i></a></div>
                         </div>
                     </div>
 
@@ -124,9 +124,9 @@
                         *SL{index-activity}
                     </div>
                     <div class="spixi-activity-filterbar">
-                        <div id="filter-all" class="spixi-activity-filterbutton active">All</div>
-                        <div id="filter-sent" class="spixi-activity-filterbutton">Sent</div>
-                        <div id="filter-received" class="spixi-activity-filterbutton">Received</div>
+                        <div id="filter-all" class="spixi-activity-filterbutton active">*SL{index-all}</div>
+                        <div id="filter-sent" class="spixi-activity-filterbutton">*SL{index-sent}</div>
+                        <div id="filter-received" class="spixi-activity-filterbutton">*SL{index-received}</div>
                     </div>
 
                     <div id="exp3-contents" style="display: block;">
@@ -161,7 +161,7 @@
             <!-- MYADDRESS -->
             <div id="myaddress" class="tab-pane ">
                 <div class="container">
-                    <div class="spixi-list-placeholder-title topoffset">Your Spixi Address</div>
+                    <div class="spixi-list-placeholder-title topoffset">*SL{address-title}</div>
                     <div class="spixi-list-placeholder-subtitle">*SL{address-description}</div>
 
                     <div class="address_qr_holder" data-clipboard-text="SPIXI RULES">
@@ -176,11 +176,11 @@
                         <div class="col">
                             <div class="d-flex justify-content-center">
                                 <a href="ixian:copy" class="">
-                                    <div id="copyaddressbutton" class="spixi-list-placeholder-button d-inline-block"><i class="fas fa-copy"></i> Copy</div>
+                                    <div id="copyaddressbutton" class="spixi-list-placeholder-button d-inline-block"><i class="fas fa-copy"></i> *SL{address-copy}</div>
                                 </a>
                                 &nbsp;
                                 <a href="ixian:share" class="">
-                                    <div class="spixi-list-placeholder-button d-inline-block"><i class="fa-solid fa-share-nodes"></i> Share</div>
+                                    <div class="spixi-list-placeholder-button d-inline-block"><i class="fa-solid fa-share-nodes"></i> *SL{address-share}</div>
                                 </a>
                             </div>
                         </div>

@@ -2,7 +2,7 @@
 language = English
 
 ; Address Screen
-address-title = My Spixi Wallet
+address-title = Your Spixi Address
 address-description = Your Spixi address is tied to your Spixi account.<br />It is your primary ID, with which you can interact with other users.
 address-copied = Address copied to clipboard
 address-gen-1 = Generating
@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = address
 address-gen-4 = ...
 address-tooltip = tap to copy to clipboard
+address-copy = Copy
+address-share = Share
 
 ; App Details Screen
 app-details-title = Spixi App
@@ -162,9 +164,12 @@ index-no-conversations = Start a new chat with one of your contacts.<br/>All cha
 index-new-chat-button = New Chat
 index-no-transactions-title = No Transactions
 index-no-transactions = Your transactions will appear here, once you start using your IXI Wallet.
-index-send = send
-index-activity = Activity
-index-receive = receive
+index-send = Send
+index-scan = Scan
+index-receive = Receive
+index-all = All
+index-sent = Sent
+index-received = Received
 index-recent-activity = Recent Activity
 index-contacts-placeholder = Search contacts
 index-tab-home = home

@@ -552,5 +552,14 @@ namespace SPIXI.Meta
         {
             throw new NotImplementedException();
         }
+        public override RegisteredNameRecord getRegName(byte[] name, bool useAbsoluteId = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override byte[] getBlockHash(ulong blockNum)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
