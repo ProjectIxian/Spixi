@@ -436,6 +436,9 @@ wallet-send2-send = Send IXI
 wallet-send2-confirm-title = You are about to send
 wallet-send2-confirm = Confirm
 wallet-send2-cancel = Cancel
+wallet-send2-edit = Edit payment
+wallet-send2-remove-recipient = Remove Recipient
+wallet-send2-done = Done
 
 ; Wallet Sent Screen
 wallet-sent-title = Payment Details
@@ -524,3 +527,7 @@ global-modal-external-link-button-visit = VISIT
 global-lock-auth-text = Authentication required
 global-lock-invalidpassword-title = Authentication failed
 global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
+
+global-time-justnow = just now
+global-time-aminuteago = a minute ago
+global-time-minutesago = minutes ago

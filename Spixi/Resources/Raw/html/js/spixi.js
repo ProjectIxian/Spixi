@@ -68,13 +68,13 @@ function getRelativeTime(unixTimestamp)
     var delta = getTimeDifference(unixTimestamp);
 
     if (delta < 30)
-        return "just now";
+        return SL_TimeJustNow;
 
     if (delta < 90)
-        return "a minute ago";
+        return SL_AMinuteAgo;
 
     if (delta < 3600)
-        return Math.floor(delta / 60) + " minutes ago";
+        return Math.floor(delta / 60) + " " + SL_MinutesAgo;
 
     var fullDate = new Date(unixTimestamp * 1000);
     return fullDate.toLocaleString();

@@ -94,7 +94,7 @@
                     <hr class="spixi-separator fullwidth" />
 
                     <div class="row">
-                        <div id="remove" class="col spixi-modal-text-reject"><i class="fa-solid fa-xmark"></i> Remove Recipient</div>
+                        <div id="remove" class="col spixi-modal-text-reject"><i class="fa-solid fa-xmark"></i> *SL{wallet-send2-remove-recipient}</div>
                         <div id="done" class="col spixi-modal-text-primary disabled">Done <i class="fa-solid fa-check"></i></div>
                     </div>
 
@@ -202,7 +202,7 @@
 
             if (paymentDetails.style.display != "none") {
                 paymentDetails.style.display = "none";
-                document.getElementById("done").innerHTML = "Edit payment" + " <i class='fa-solid fa-chevron-right'></i>";
+                document.getElementById("done").innerHTML = "*SL{wallet-send2-edit}" + " <i class='fa-solid fa-chevron-right'></i>";
                 sendIxiBtn.className = "spixi-flat-button margin";
 
                 if (Number(total_amount) >= Number(balance_amount)) {
@@ -214,7 +214,7 @@
             }
             else {
                 paymentDetails.style.display = "block";
-                document.getElementById("done").innerHTML = "Done" + " <i class='fa-solid fa-check''></i>";
+                document.getElementById("done").innerHTML = "*SL{wallet-send2-done}" + " <i class='fa-solid fa-check''></i>";
                 sendIxiBtn.className = "spixi-flat-button margin disabled";
 
                 document.getElementById("recipient_amount").innerHTML = "";

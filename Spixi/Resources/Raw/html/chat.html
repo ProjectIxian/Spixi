@@ -21,7 +21,6 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/qrcode.min.js"></script>
     <script src="js/clipboard.min.js"></script>
-    <script src="js/spixi.js"></script>
 </head>
 <body onload="onChatScreenLoad();" style="position:fixed;width:100%;height:100%;">
     <div id="templates" style="display: none;">
@@ -88,7 +87,6 @@
             <div class="spixi-errorbar-message"></div>
         </div>
         <!-- End ErrorBar-->
-        
         <!-- Modal -->
         <div id="requestReceivedModal" class="spixi-modal-soft" style="display:none;">
             <!-- Modal content -->
@@ -184,9 +182,9 @@
                     *SL{chat-send-payment}
                 </div>
                 <!--<div class="col-3 chat_attach_tab" id="ca_app">
-                <i class="fa fa-code chatattachsymbol"></i><br />
-                Use App
-            </div>-->
+                    <i class="fa fa-code chatattachsymbol"></i><br />
+                    Use App
+                </div>-->
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>
@@ -323,7 +321,11 @@
             "externalLinkBody": "*SL{global-modal-external-link-body}",
             "externalLinkButtonVisit": "*SL{global-modal-external-link-button-visit}"
         };
+        var SL_TimeJustNow = "*SL{global-time-justnow}";
+        var SL_AMinuteAgo = "*SL{global-time-aminuteago}";
+        var SL_MinutesAgo = "*SL{global-time-minutesago}";
     </script>
+    <script src="js/spixi.js"></script>
     <script src="js/chat.js"></script>
 </body>
 </html>
