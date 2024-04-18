@@ -1597,6 +1597,7 @@ img.emoji {
 .spixi-list-item-left {
     display: inline-block;
     width: 50pt;
+    max-width: 64px;
     vertical-align: middle;
 }
 
@@ -2814,6 +2815,18 @@ img.emoji {
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
 }
+
+    .spixi-modal-soft::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dim the background. Adjust color/opacity as needed */
+        backdrop-filter: blur(5px); /* Apply the blur effect */
+        z-index: -1; /* Ensure it's behind the modal content */
+    }
 
 .modal-content {
     position: relative;

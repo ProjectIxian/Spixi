@@ -316,7 +316,7 @@ namespace SPIXI
             }
             // Write to chat history
             Node.localStorage.requestWriteMessages(wallet_address, channel);
-
+            Node.shouldRefreshContacts = true;
             return friend_message;
         }
 

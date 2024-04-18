@@ -1593,6 +1593,7 @@ img.emoji {
 .spixi-list-item-left {
     display: inline-block;
     width: 50pt;
+    max-width: 64px;
     vertical-align: middle;
 }
 

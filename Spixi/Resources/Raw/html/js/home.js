@@ -287,37 +287,53 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
     document.getElementById("section_no_transactions").style = "display:none";
 
 
-    var iconClass = "spixi-text-red";
-    var icon = '<i class="fa fa-spinner fa-spin"></i>';
-    if (confirmed == "true") {
-        iconClass = "spixi-text-green";
-        icon = '<i class="fa fa-check-circle"></i>';
-    }else if(confirmed == "error")
-    {
-        iconClass = "spixi-text-red";
-        icon = '<i class="fa fa-exclamation-circle"></i>';
+    let iconClass, icon;
+    switch (confirmed) {
+        case "true":
+            iconClass = "spixi-status-green";
+            icon = 'fa fa-check-circle';
+            break;
+        case "error":
+            iconClass = "spixi-status-red";
+            icon = 'fa fa-exclamation-circle';
+            break;
+        default:
+            iconClass = "spixi-status-yellow";
+            icon = 'fa fa-spinner fa-spin';
     }
 
 
-    var arrow = '<i class="spixi-list-tx-icon spixi-tx-green fa fa-arrow-down"></i>';
+    const isReceived = receive === "1";
+    const arrow = `<i class="spixi-list-tx-icon ${isReceived ? "spixi-tx-green" : "spixi-tx-red"} fa fa-arrow-${isReceived ? "down" : "up"}"></i>`;
+    const signedAmount = `${isReceived ? '+' : '-'} ${amountWithCommas(amount)}`;
 
-    amount = amountWithCommas(amount);
 
-    var amountText = "+ " + amount;
-    if (receive == "0") {
-        arrow = '<i class="spixi-list-tx-icon spixi-tx-red fa fa-arrow-up"></i>';
-        amountText = "- " + amount;
-    }
+    const fiatAmountText = `$${amountWithCommas(fiatAmount)}`;
 
-    fiatAmount = amountWithCommas(fiatAmount);
-    var fiatAmountText = "$" + fiatAmount;
 
-    var paymentsNode = document.getElementById("paymentlist");
+    const paymentEntry = document.createElement("div");
+    paymentEntry.innerHTML = `
+        <a href="ixian:txdetails:${txid}">
+            <div class="row no-gutters spixi-list-item-first-row flex-nowrap">
+                <div class="col">
+                    <div class="spixi-list-item-from"><i class="spixi-list-item-from-status ${iconClass} ${icon}"></i> ${text}</div>
+                </div>
+                <div class="col spixi-list-item-right">
+                    <div class="spixi-list-item-amount">${signedAmount} ${arrow}</div>
+                </div>
+            </div>
+            <div class="row no-gutters spixi-list-item-second-row flex-nowrap">
+                <div class="col">
+                    <div class="spixi-list-item-timestamp">${timestamp}</div>
+                </div>
+                <div class="col spixi-list-item-right">
+                    <div class="spixi-list-item-amount-fiat">${fiatAmountText}</div>
+                </div>
+            </div>
+        </a>`;
 
-    var paymentEntry = document.createElement("div");
-    paymentEntry.innerHTML = '<a href="ixian:txdetails:' + txid + '"><div class="row no-gutters spixi-list-item-first-row"><div class="col"><div class="spixi-list-item-from"><i class="spixi-list-item-from-status spixi-status-yellow fa fa-spinner fa-spin"></i> ' + text + '</div></div> <div class="col spixi-list-item-right"><div class="spixi-list-item-amount">' + amountText + arrow + '</div></div></div><div class="row no-gutters spixi-list-item-second-row"><div class="col"><div class="spixi-list-item-timestamp">' + timestamp + '</div></div><div class="col spixi-list-item-right"><div class="spixi-list-item-amount-fiat">' + fiatAmountText + '</div></div></div></a>';
 
-    paymentsNode.appendChild(paymentEntry);
+    document.getElementById("paymentlist").appendChild(paymentEntry);
 }
 
 // Clears all chats from chats page
@@ -337,15 +353,9 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     var excerpt = excerpt_msg;
 
-    var indicator = " offline";
-    if (online == "true") {
-        indicator = " online";
-    }
+    let indicator = online === "true" ? " online" : " offline";
 
     var unreadIndicator = "";
-    if (unread > 0) {
-        unreadIndicator = " unread";
-    }
     var readIndicator = "";
 
     switch (type) {
@@ -363,6 +373,11 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
             break;
     }
 
+    if (unread > 0) {
+        unreadIndicator = " unread";
+        readIndicator = "";
+    }
+    
     var excerpt_style = type === "typing" ? "typing" : "";
 
     var timeClass = "spixi-timestamp";
@@ -372,14 +387,29 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         timeClass = "spixi-timestamp spixi-rel-ts-active";
     }
 
-    var chatsNode = document.getElementById("chatlist");
     var readmsg = document.createElement("div");
     readmsg.id = "ch_" + wallet;
     readmsg.className = "spixi-list-item" + indicator + unreadIndicator;
-    readmsg.href = "ixian:chat:" + wallet;
+    readmsg.innerHTML = `
+        <a href="ixian:chat:${wallet}">
+            <div class="row flex-nowrap">
+                <div class="col-2 spixi-list-item-left">
+                    <img class="spixi-list-item-avatar" src="${avatar}"/>
+                    <div class="spixi-friend-status-indicator"></div>
+                </div>
+                <div class="col-6 spixi-list-item-center">
+                    <div class="spixi-list-item-title">${from}</div>
+                    <div class="spixi-list-item-subtitle ${excerpt_style}">${excerpt_msg}</div>
+                </div>
+                <div class="col-4 spixi-list-item-right">
+                    <div class="spixi-chat-unread-indicator"></div>
+                    ${readIndicator}
+                    <div class="${timeClass}" data-timestamp="${timestamp}">${relativeTime}</div>
+                </div>
+            </div>
+        </a>`;
 
-    readmsg.innerHTML = '<a href="ixian:chat:' + wallet + '"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/><div class="spixi-friend-status-indicator"></div></div><div class="col-6 spixi-list-item-center"><div class="spixi-list-item-title">' + from + '</div><div class="spixi-list-item-subtitle ' + excerpt_style + '">' + excerpt + '</div></div><div class="col-4 spixi-list-item-right"><div class="spixi-chat-unread-indicator"></div>' + readIndicator + '<div class="' + timeClass + '" data-timestamp="' + timestamp + '">' + relativeTime + '</div></div></div></a>';
-
+    var chatsNode = document.getElementById("chatlist");
     if(insertToTop)
     {
         chatsNode.insertBefore(readmsg, chatsNode.firstElementChild);
@@ -387,6 +417,7 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
     {
         chatsNode.appendChild(readmsg);
     }
+
     document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
     document.getElementById("chat_action_button").style.display = 'block';

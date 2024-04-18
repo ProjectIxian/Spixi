@@ -820,8 +820,10 @@ namespace SPIXI
                 string amount_string = Utils.amountToHumanFormatString(amount);
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
+                string confirmed = tx.applied == 0 ? "false" : "true";
+
                 string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(tx.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, "false");
+                Utils.sendUiCommand(webView, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, confirmed);
             }
 
             lock (TransactionCache.unconfirmedTransactions)

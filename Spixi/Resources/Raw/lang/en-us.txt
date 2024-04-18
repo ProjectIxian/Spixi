@@ -439,6 +439,7 @@ wallet-send2-cancel = Cancel
 wallet-send2-edit = Edit payment
 wallet-send2-remove-recipient = Remove Recipient
 wallet-send2-done = Done
+wallet-send2-yourbalance = Your balance
 
 ; Wallet Sent Screen
 wallet-sent-title = Payment Details
@@ -498,6 +499,12 @@ onboarding-skip = SKIP
 onboarding-back = Back
 onboarding-next = Next
 onboarding-finish = Finish
+
+; Ixinames
+ixinames-request-title = IXI Names Wants to Connect
+ixinames-request-details = Are you sure you want to connect your Spixi to IXI Names? The service will receive access to your Spixi address.
+ixinames-request-decline = Decline
+ixinames-request-connect = Connect
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
