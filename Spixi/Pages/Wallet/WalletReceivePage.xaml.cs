@@ -43,7 +43,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", IxianHandler.getWalletStorage().getPrimaryAddress().ToString());
+            Utils.sendUiCommand(this, "setAddress", IxianHandler.getWalletStorage().getPrimaryAddress().ToString());
 
             // Check if this page is accessed from the home wallet
             if (local_friend == null)
@@ -52,7 +52,7 @@ namespace SPIXI
             }
             else
             {
-                Utils.sendUiCommand(webView, "addRecipient", local_friend.nickname, local_friend.walletAddress.ToString());
+                Utils.sendUiCommand(this, "addRecipient", local_friend.nickname, local_friend.walletAddress.ToString());
             }
         }
 
@@ -154,7 +154,7 @@ namespace SPIXI
                     string[] split = current_url.Split(new string[] { "ixian:addrecipient:" }, StringSplitOptions.None);
                     if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
                     {
-                        Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
+                        Utils.sendUiCommand(this, "addRecipient", split[1], split[1]);
                     }
                     else
                     {
@@ -214,7 +214,7 @@ namespace SPIXI
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
             }
             Navigation.PopModalAsync();
         }

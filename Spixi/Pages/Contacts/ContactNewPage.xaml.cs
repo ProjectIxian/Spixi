@@ -37,7 +37,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", wallet_to_add);
+            Utils.sendUiCommand(this, "setAddress", wallet_to_add);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -116,7 +116,7 @@ namespace SPIXI
                 if (split.Count() < 1)
                     return;
                 string wal = split[0];
-                Utils.sendUiCommand(webView, "setAddress", wal);
+                Utils.sendUiCommand(this, "setAddress", wal);
 
             }
             else
@@ -124,7 +124,7 @@ namespace SPIXI
                 string wal = result;
                 // TODO: enter exact Ixian address length
                 if (wal.Length > 20 && wal.Length < 128)
-                    Utils.sendUiCommand(webView, "setAddress", wal);
+                    Utils.sendUiCommand(this, "setAddress", wal);
             }
 
         }

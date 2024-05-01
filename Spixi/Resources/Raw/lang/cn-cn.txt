@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = 地址
 address-gen-4 = ...
 address-tooltip = 点击即可复制至剪贴板
+address-copy = 复制 
+address-share = 分享 
 
 ; App Details Screen
 app-details-title = Spixi应用程式
@@ -163,8 +165,11 @@ index-new-chat-button = 新建聊天
 index-no-transactions-title = 暂无交易
 index-no-transactions = 您的交易将在您开始使用 IXI 钱包后显示在这里。
 index-send = 发送
-index-activity = 活动
-index-receive = 接收
+index-scan = 扫描
+index-receive = 收到
+index-all = 所有 
+index-sent = 已发送
+index-received = 已收到
 index-recent-activity = 近期活动
 index-contacts-placeholder = 搜索联系人
 index-tab-home = 主畫面
@@ -431,6 +436,10 @@ wallet-send2-send = 发送 IXI
 wallet-send2-confirm-title = 您即将发送
 wallet-send2-confirm = 确认
 wallet-send2-cancel = 取消 
+wallet-send2-edit = 编辑付款
+wallet-send2-remove-recipient = 删除收件人
+wallet-send2-done = 完成
+wallet-send2-yourbalance = 您的余额
 
 ; Wallet Sent Screen
 wallet-sent-title = 已发送款项
@@ -490,6 +499,11 @@ onboarding-skip = 略过
 onboarding-back = 返回
 onboarding-next = 下一个 
 onboarding-finish = 完成
+; Ixinames
+ixinames-request-title = IXI Names 想要连接
+ixinames-request-details = 您确定要将您的 Spixi 连接到 IXI Names 吗？服务将获得您的 Spixi 地址访问权限。
+ixinames-request-decline = 拒绝
+ixinames-request-connect = 连接
 
 ; Global
 global-connecting-s2 = 连接到 Ixian S2...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = 访问
 global-lock-auth-text = 需要验证
 global-lock-invalidpassword-title = 验证失败
 global-lock-invalidpassword-text = 输入您的钱包密码以解锁 Spixi 
+
+global-time-justnow = 刚才
+global-time-aminuteago = 分钟前 
+global-time-minutesago = 几分钟前

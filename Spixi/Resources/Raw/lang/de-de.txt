@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = Adresse
 address-gen-4 = ...
 address-tooltip = Drücken um in die Zwischenablage zu kopieren
+address-copy = Kopieren
+address-share = Teilen
 
 ; App Details Screen
 app-details-title = Spixi App
@@ -162,9 +164,12 @@ index-no-conversations = Starten Sie einen neuen Chat mit einem Ihrer Kontakte.<
 index-new-chat-button = Neuer Chat
 index-no-transactions-title = Keine Transaktionen
 index-no-transactions = Ihre Transaktionen werden hier angezeigt, sobald Sie Ihre IXI-Brieftasche verwenden.
-index-send = senden
-index-activity = Aktivitäten
-index-receive = empfangen
+index-send = Senden
+index-scan = Scannen
+index-receive = Erhalten
+index-all = Alle
+index-sent = Gesendet
+index-received = Empfangen
 index-recent-activity = Neueste Aktivitäten
 index-contacts-placeholder = Durchsuche deine Kontakte
 index-tab-home = Home
@@ -431,6 +436,10 @@ wallet-send2-send = IXI senden
 wallet-send2-confirm-title = Sie sind dabei zu senden
 wallet-send2-confirm = Bestätigen
 wallet-send2-cancel = Abbrechen
+wallet-send2-edit = Zahlung bearbeiten
+wallet-send2-remove-recipient = Empfänger entfernen
+wallet-send2-done = Fertig
+wallet-send2-yourbalance = Ihr Kontostand
 
 ; Wallet Sent Screen
 wallet-sent-title = Zahlung gesendet
@@ -490,6 +499,11 @@ onboarding-skip = Überspringen
 onboarding-back = Zurück
 onboarding-next = Weiter
 onboarding-finish = Fertig
+; Ixinames
+ixinames-request-title = IXI Names Möchte Verbinden
+ixinames-request-details = Sind Sie sicher, dass Sie Ihre Spixi mit IXI Names verbinden möchten? Der Dienst erhält Zugriff auf Ihre Spixi-Adresse.
+ixinames-request-decline = Ablehnen
+ixinames-request-connect = Verbinden
 
 ; Global
 global-connecting-s2 = Verbinde zum Ixian S2 Netzwerk...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = Aufrufen
 global-lock-auth-text = Authentifizierung erforderlich
 global-lock-invalidpassword-title = Authentifizierung fehlgeschlagen
 global-lock-invalidpassword-text = Geben Sie Ihr Brieftaschenpasswort ein, um Spixi zu entsperren
+
+global-time-justnow = gerade eben
+global-time-aminuteago = vor einer Minute
+global-time-minutesago = Minuten

@@ -23,7 +23,7 @@ namespace SPIXI
         private void onLoad()
         {
             //webView.Eval(string.Format("setNickname(\"{0}\")", Node.localStorage.nickname));
-            Utils.sendUiCommand(webView, "unlock");
+            Utils.sendUiCommand(this, "unlock");
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -46,7 +46,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:unlock", StringComparison.Ordinal))
             {
-                Utils.sendUiCommand(webView, "unlock");
+                Utils.sendUiCommand(this, "unlock");
             }
             else
             {

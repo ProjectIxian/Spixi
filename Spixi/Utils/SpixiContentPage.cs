@@ -11,24 +11,89 @@ namespace SPIXI
 	public class SpixiContentPage : ContentPage
 	{
         public bool CancelsTouchesInView = true;
-
-        protected WebView _webView = null;
+        public bool pageLoaded = false;
+        private Queue<string> messageQueue = new Queue<string>();
+        protected WebView? _webView = null;
+        public WebView WebView
+        {
+            get
+            {
+                return _webView!;
+            }
+        }
 
         public void loadPage(WebView web_view, string html_file_name)
         {
+            pageLoaded = false;
             _webView = web_view;
             _webView.Source = generatePage(html_file_name);
+            _webView.Navigated += webViewNavigated;
+        }
+
+
+        private async void webViewNavigated(object? sender, WebNavigatedEventArgs e)
+        {
+            if (pageLoaded = await checkIfPageLoaded())
+            {
+                processMessageQueue();
+            }
+        }
+
+        private void evaluateJavascript(string script)
+        {
+            if (_webView == null)
+                return;
+
+            MainThread.BeginInvokeOnMainThread(() => {
+                _webView.EvaluateJavaScriptAsync("try { " + script + " }catch(e){  }");
+            });
+        }
+
+        private void processMessageQueue()
+        {
+            if (_webView == null)
+                return;
+
+            while (messageQueue.Count > 0)
+            {
+                var message = messageQueue.Dequeue();
+                evaluateJavascript(message);
+            }
+        }
+
+        public void sendMessage(string msg)
+        {
+            if (pageLoaded && _webView != null)
+            {
+                evaluateJavascript(msg);
+            }
+            else
+            {
+                messageQueue.Enqueue(msg);
+            }
+        }
+
+        private async Task<bool> checkIfPageLoaded()
+        {
+            if (_webView == null)
+                return false;
+
+            var readyState = await _webView.EvaluateJavaScriptAsync("document.readyState");
+            return readyState.Trim('\"') == "complete";
         }
 
         public void reload()
         {
-            if(_webView != null)
+            if (_webView != null)
+            {
+                pageLoaded = false;
                 _webView.Reload();
+            }
         }
 
         public WebViewSource generatePage(string html_file_name)
         {
-            if (Device.RuntimePlatform == Device.Android)
+            if (OperatingSystem.IsAndroid())
             {
                 var source = new HtmlWebViewSource();
                 Stream stream = SPlatformUtils.getAsset(Path.Combine("html", html_file_name));
@@ -43,9 +108,10 @@ namespace SPIXI
                 string assets_file_path = Path.Combine(SPlatformUtils.getAssetsPath(), "html", html_file_name);
                 string localized_file_path = Path.Combine(SPlatformUtils.getHtmlPath(), "ll_" + html_file_name);
                 SpixiLocalization.localizeHtml(assets_file_path, localized_file_path);
-                var source = new UrlWebViewSource();
-                source.Url = SPlatformUtils.getHtmlBaseUrl() + "ll_" + html_file_name;
-                return source;
+                return new UrlWebViewSource
+                {
+                    Url = SPlatformUtils.getHtmlBaseUrl() + "ll_" + html_file_name
+                };
             }
         }
 
@@ -58,9 +124,6 @@ namespace SPIXI
         public Task displaySpixiAlert(string title, string message, string cancel)
         {
             try { 
-                //TODO
-                //SSystemAlert.displayAlert(title, message, cancel);
-                
                 return DisplayAlert(title, message, cancel);
             }catch(Exception e)
             {
@@ -75,7 +138,7 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "displayCallBar", Crypto.hashToString(session_id), text, "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>", call_started_time.ToString());
+            Utils.sendUiCommand(this, "displayCallBar", Crypto.hashToString(session_id), text, "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>", call_started_time.ToString());
         }
 
         public void hideCallBar()
@@ -84,7 +147,7 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "hideCallBar");
+            Utils.sendUiCommand(this, "hideCallBar");
         }
 
         public void displayAppRequests()
@@ -93,7 +156,7 @@ namespace SPIXI
             {
                 return;
             }
-            Utils.sendUiCommand(_webView, "clearAppRequests");
+            Utils.sendUiCommand(this, "clearAppRequests");
             var app_pages = Node.customAppManager.getAppPages();
             lock (app_pages)
             {
@@ -106,7 +169,7 @@ namespace SPIXI
                     Friend f = FriendList.getFriend(page.hostUserAddress);
                     CustomApp app = Node.customAppManager.getApp(page.appId);
                     string text = string.Format(SpixiLocalization._SL("global-app-wants-to-use"), f.nickname, app.name);
-                    Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));
+                    Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(page.sessionId), text, SpixiLocalization._SL("global-app-accept"), SpixiLocalization._SL("global-app-reject"));
                 }
                 if(VoIPManager.isInitiated())
                 {
@@ -126,7 +189,7 @@ namespace SPIXI
                         string text = SpixiLocalization._SL("global-call-incoming") + " - " + f.nickname;
                         string accept_html = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
                         string reject_html = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
-                        Utils.sendUiCommand(_webView, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);
+                        Utils.sendUiCommand(this, "addAppRequest", Crypto.hashToString(VoIPManager.currentCallSessionId), text, accept_html, reject_html);
                     }
                 }
             }
@@ -183,8 +246,17 @@ namespace SPIXI
         {
             base.OnDisappearing();
 
-            if (_webView != null)
-                _webView = null;
+            if (!Navigation.NavigationStack.Contains(this))
+            {
+                pageLoaded = false;
+                messageQueue.Clear();
+
+                if (_webView != null)
+                {
+                    _webView.Navigated -= webViewNavigated;
+                    _webView = null;
+                }
+            }
             
             GC.Collect();
         }

@@ -11,6 +11,8 @@ address-gen-2b = SPIXI
 address-gen-3 = アドレス
 address-gen-4 = ...
 address-tooltip = タップしてコピー
+address-copy = コピーする
+address-share = 共有する
 
 ; App Details Screen
 app-details-title = Spixi App
@@ -152,9 +154,12 @@ index-no-conversations = 連絡先の一人と新しいチャットを開始し�
 index-new-chat-button = 新しいチャット
 index-no-transactions-title = 取引なし 
 index-no-transactions = IXIウォレットを使用し始めると、ここに取引が表示されます。
-index-send = 送信
-index-activity = アクティビティ
-index-receive = 受信
+index-send = 送信する
+index-scan = スキャンする
+index-receive = 受け取る
+index-all = すべて
+index-sent = 送信済み
+index-received = 受信済み
 index-recent-activity = 最近のアクティビティ
 index-contacts-placeholder = 連絡先を検索
 index-tab-home = home
@@ -406,6 +411,10 @@ wallet-send2-total = 送金総額
 wallet-send2-send = IXI を送信するwallet-send2-confirm-title = あなたは送るつもりです
 wallet-send2-confirm = 確認する
 wallet-send2-cancel = キャンセルする
+wallet-send2-edit = 支払いを編集する
+wallet-send2-remove-recipient = 受取人を削除する
+wallet-send2-done = 完了
+wallet-send2-yourbalance = あなたの残高
 
 ; Wallet Sent Screen
 wallet-sent-title = 送金履歴
@@ -459,7 +468,12 @@ onboarding-screen4-text = 統合されたウォレットを使用して、IXI �
 onboarding-skip = SKIP
 onboarding-back = 戻る
 onboarding-next = 次へ 
-onboarding-finish = FINISH
+onboarding-finish = FINISH; Ixinames
+ixinames-request-title = IXI Names 接続したがっています
+ixinames-request-details = Spixi を IXI Names に接続してもよろしいですか？サービスはあなたの Spixi アドレスにアクセスします。
+ixinames-request-decline = 辞退する
+ixinames-request-connect = 接続する
+
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
 global-connecting-dlt = Connecting to Ixian Network...
@@ -486,3 +500,7 @@ global-modal-external-link-button-visit = VISIT
 global-lock-auth-text = 認証が必要です
 global-lock-invalidpassword-title =  認証に失敗しました
 global-lock-invalidpassword-text = を解除するためにウォレットのパスワードを入力してください
+
+global-time-justnow = たった今
+global-time-aminuteago = 1分前
+global-time-minutesago = 分前

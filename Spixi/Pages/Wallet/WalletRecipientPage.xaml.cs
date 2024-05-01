@@ -84,11 +84,11 @@ namespace SPIXI
         {
             if(FriendList.friends.Count == 0)
             {
-                Utils.sendUiCommand(webView, "noContacts");
+                Utils.sendUiCommand(this, "noContacts");
                 return;
             }
 
-            Utils.sendUiCommand(webView, "clearContacts");
+            Utils.sendUiCommand(this, "clearContacts");
 
             foreach (Friend friend in FriendList.friends)
             {
@@ -96,7 +96,7 @@ namespace SPIXI
                 if (friend.online)
                     str_online = "true";
                 
-                Utils.sendUiCommand(webView, "addContact", friend.walletAddress.ToString(), friend.nickname, "img/spixiavatar.png", str_online);
+                Utils.sendUiCommand(this, "addContact", friend.walletAddress.ToString(), friend.nickname, "img/spixiavatar.png", str_online);
             }
         }
 

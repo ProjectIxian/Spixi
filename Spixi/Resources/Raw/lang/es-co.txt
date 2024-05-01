@@ -12,6 +12,8 @@ address-gen-2b = dirección
 address-gen-3 = SPIXI
 address-gen-4 = ...
 address-tooltip = toque para copiar al portapapeles
+address-copy = Copiar
+address-share = Compartir
 
 ; App Details Screen
 app-details-title = Spixi App
@@ -162,9 +164,12 @@ index-no-conversations = Inicie un nuevo chat con uno de sus contactos.<br/>Todo
 index-new-chat-button = Nuevo chat 
 index-no-transactions-title = Sin transacciones
 index-no-transactions = Sus transacciones aparecerán aquí, una vez que comience a usar su billetera IXI.
-index-send = enviar
-index-activity = actividad
-index-receive = recibir
+index-send = Enviar
+index-scan = Escanear
+index-receive = Recibir
+index-all = Todos
+index-sent = Enviado
+index-received = Recibido
 index-recent-activity = Actividad reciente
 index-contacts-placeholder = Buscar contactos
 index-tab-home = home
@@ -431,6 +436,10 @@ wallet-send2-send = Enviar IXI
 wallet-send2-confirm-title = Está a punto de enviar
 wallet-send2-confirm = Confirmar
 wallet-send2-cancel = Cancelar
+wallet-send2-edit = Editar pago
+wallet-send2-remove-recipient = Eliminar destinatario
+wallet-send2-done = Hecho
+wallet-send2-yourbalance = Su saldo
 
 ; Wallet Sent Screen
 wallet-sent-title = Pago enviado
@@ -490,6 +499,11 @@ onboarding-skip = OMITIR
 onboarding-back = Atrás
 onboarding-next = Siguiente
 onboarding-finish = FINALIZAR
+; Ixinames
+ixinames-request-title = IXI Names Quiere Conectarse
+ixinames-request-details = ¿Estás seguro de que quieres conectar tu Spixi a IXI Names? El servicio recibirá acceso a tu dirección de Spixi.
+ixinames-request-decline = Rechazar
+ixinames-request-connect = Conectar
 
 ; Global
 global-connecting-s2 = Conectando con Ixian S2...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = VISITA
 global-lock-auth-text = Autenticación requerida
 global-lock-invalidpassword-title = Autenticación fallida
 global-lock-invalidpassword-text = Escriba su contraseña de billetera para desbloquear Spixi
+
+global-time-justnow = justo ahora
+global-time-aminuteago = hace un minuto
+global-time-minutesago = minutos

@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = naslov
 address-gen-4 = ...
 address-tooltip = Dotaknite se naslova, da ga kopirate v odložišče
+address-copy = Kopiraj
+address-share = Deli
 
 ; App Details Screen
 app-details-title = Spixi Aplikacija
@@ -162,9 +164,12 @@ index-no-conversations = Nimate obstoječih klepetov. Izberite obstoječ stik in
 index-new-chat-button = Nov klepet
 index-no-transactions-title = Ni transakcij
 index-no-transactions = Ko začnete uporabljati svojo IXI denarnico, se bodo vaše transakcije se bodo prikazale tukaj.
-index-send = pošlji
-index-activity = dejavnost
-index-receive = prejmi
+index-send = Pošlji
+index-scan = Skeniraj
+index-receive = Prejmi
+index-all = Vse
+index-sent = Poslano
+index-received = Prejeto
 index-recent-activity = Pretekla plačila
 index-contacts-placeholder = Preišči stike
 index-tab-home = domov
@@ -431,6 +436,10 @@ wallet-send2-send = POŠLJI PLAČILO
 wallet-send2-confirm-title = Poslali boste plačilo
 wallet-send2-confirm = Potrdi
 wallet-send2-cancel = Prekliči
+wallet-send2-edit = Uredi plačilo
+wallet-send2-remove-recipient = Odstrani prejemnika
+wallet-send2-done = Dokončaj
+wallet-send2-yourbalance = Stanje v denarnici
 
 ; Wallet Sent Screen
 wallet-sent-title = Plačilo Poslano
@@ -490,6 +499,11 @@ onboarding-skip = PRESKOČI
 onboarding-back = Nazaj
 onboarding-next = Nadaljuj
 onboarding-finish = ZAKLJUČI
+; Ixinames
+ixinames-request-title = IXI Names se želi povezati
+ixinames-request-details = Ste prepričani, da želite povezati svoj Spixi z IXI Names? Storitev bo prejela dostop do vašega Spixi naslova.
+ixinames-request-decline = Zavrni 
+ixinames-request-connect = Poveži se
 
 ; Global
 global-connecting-s2 = Povezujem se z Ixian S2 omrežjem...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = NADALJUJ
 global-lock-auth-text = Zahtevana avtentikacija
 global-lock-invalidpassword-title = Avtentikacija ni uspela
 global-lock-invalidpassword-text = Vnesite vaše Spixi geslo
+
+global-time-justnow = pravkar
+global-time-aminuteago = pred minuto
+global-time-minutesago = minut

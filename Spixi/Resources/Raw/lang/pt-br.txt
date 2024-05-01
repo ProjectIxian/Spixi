@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = endereço
 address-gen-4 = ...
 address-tooltip = toque para copiar para a área de transferência
+address-copy = Copiar
+address-share = Compartilhar
 
 ; App Details Screen
 app-details-title = Aplicativo Spixi
@@ -162,9 +164,12 @@ index-no-conversations = Inicie uma nova conversa com um dos seus contatos.<br/>
 index-new-chat-button = Novo chat
 index-no-transactions-title = Sem transações
 index-no-transactions = Suas transações aparecerão aqui, assim que começar a usar sua carteira IXI.
-index-send = enviar
-index-activity = atividade
-index-receive = receber
+index-send = Enviar
+index-scan = Digitalizar
+index-receive = Receber
+index-all = Todos
+index-sent = Enviado
+index-received = Recebido
 index-recent-activity = Atividades recentes
 index-contacts-placeholder = Localizar contatos
 index-tab-home = página principal
@@ -431,6 +436,10 @@ wallet-send2-send = Enviar IXI
 wallet-send2-confirm-title = Você está prestes a enviar
 wallet-send2-confirm = Confirmar
 wallet-send2-cancel = Cancelar
+wallet-send2-edit = Editar pagamento
+wallet-send2-remove-recipient = Remover destinatário
+wallet-send2-done = Feito
+wallet-send2-yourbalance = Seu saldo
 
 ; Wallet Sent Screen
 wallet-sent-title = Pagamento Enviado
@@ -490,6 +499,11 @@ onboarding-skip = PULAR
 onboarding-back = Voltar
 onboarding-next = Próximo
 onboarding-finish = CONCLUIR
+; Ixinames
+ixinames-request-title = IXI Names Quer se Conectar
+ixinames-request-details = Tem certeza de que deseja conectar seu Spixi ao IXI Names? O serviço receberá acesso ao seu endereço Spixi.
+ixinames-request-decline = Recusar
+ixinames-request-connect = Conectar
 
 ; Global
 global-connecting-s2 = Conectanto à Ixian S2...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = VISITAR
 global-lock-auth-text = Autenticação necessária
 global-lock-invalidpassword-title = Autenticação falhou
 global-lock-invalidpassword-text = Digite sua senha da carteira para desbloquear Spixi
+
+global-time-justnow = agora mesmo
+global-time-aminuteago = há um minuto
+global-time-minutesago = minutos atrás

@@ -41,7 +41,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString());
+            Utils.sendUiCommand(this, "setBalance", Node.balance.balance.ToString());
 
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
@@ -52,7 +52,7 @@ namespace SPIXI
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(webView, "addRecipient", nickname, 
+                Utils.sendUiCommand(this, "addRecipient", nickname, 
                     recipient.ToString());
             }
         }
@@ -168,7 +168,7 @@ namespace SPIXI
                 if (Node.balance.balance > ConsensusConfig.forceTransactionPrice * 2)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(webView, "setAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(this, "setAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
                 }
             }
             else if (current_url.Contains("ixian:addrecipient"))
@@ -178,7 +178,7 @@ namespace SPIXI
                     string[] split = current_url.Split(new string[] { "ixian:addrecipient:" }, StringSplitOptions.None);
                     if (Address.validateChecksum(Base58Check.Base58CheckEncoding.DecodePlain(split[1])))
                     {
-                        Utils.sendUiCommand(webView, "addRecipient", split[1], split[1]);
+                        Utils.sendUiCommand(this, "addRecipient", split[1], split[1]);
                     }
                     else
                     {
@@ -226,7 +226,7 @@ namespace SPIXI
                 Friend friend = FriendList.getFriend(new Address(wallet_to_send));
                 if (friend != null)
                     nickname = friend.nickname;
-                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
                 return;
             }
             else if (result.Contains(":send"))
@@ -241,7 +241,7 @@ namespace SPIXI
                     Friend friend = FriendList.getFriend(new Address(wallet_to_send));
                     if (friend != null)
                         nickname = friend.nickname;
-                    Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                    Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
                     return;
                 }
             }
@@ -257,7 +257,7 @@ namespace SPIXI
                     if (friend != null)
                         nickname = friend.nickname;
 
-                    Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                    Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
                     return;
                 }
             }
@@ -279,7 +279,7 @@ namespace SPIXI
                 if (friend != null)
                     nickname = friend.nickname;
 
-                Utils.sendUiCommand(webView, "addRecipient", nickname, wallet_to_send);
+                Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
             }
             Navigation.PopModalAsync();
         }

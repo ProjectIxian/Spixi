@@ -21,7 +21,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setVersion", Config.version);
+            Utils.sendUiCommand(this, "setVersion", Config.version);
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)

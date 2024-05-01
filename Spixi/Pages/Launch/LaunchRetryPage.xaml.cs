@@ -75,7 +75,7 @@ namespace SPIXI
                 }
 
                 // Remove overlay
-                Utils.sendUiCommand(webView, "removeLoadingOverlay");
+                Utils.sendUiCommand(this, "removeLoadingOverlay");
 
                 return;
             }

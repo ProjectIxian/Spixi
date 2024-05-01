@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = адрес
 address-gen-4 = ...
 address-tooltip = нажмите чтобы скопировать в буфер обмена
+address-copy = Копировать
+address-share = Поделиться 
 
 ; App Details Screen
 app-details-title = Приложение Spixi
@@ -162,9 +164,12 @@ index-no-conversations = Начните новый чат с одним из в�
 index-new-chat-button = Новый чат
 index-no-transactions-title = Нет транзакций
 index-no-transactions = Ваши транзакции появятся здесь, как только вы начнете использовать свой кошелек IXI. 
-index-send = отправить
-index-activity = Действия
-index-receive = получить
+index-send = Отправить
+index-scan = Сканировать
+index-receive = Получить
+index-all = Все
+index-sent = Получено
+index-received = Received
 index-recent-activity = Недавние действия
 index-contacts-placeholder = Поиск контактов
 index-tab-home = главная
@@ -431,6 +436,10 @@ wallet-send2-send = Отправить IXI
 wallet-send2-confirm-title = Вы собираетесь отправить
 wallet-send2-confirm = Подтвердить 
 wallet-send2-cancel = Отменить 
+wallet-send2-edit = Редактировать платеж
+wallet-send2-remove-recipient = Удалить получателя
+wallet-send2-done = Готово
+wallet-send2-yourbalance = Ваш баланс
 
 ; Wallet Sent Screen
 wallet-sent-title = Подробнее о платеже
@@ -490,6 +499,11 @@ onboarding-skip = ПРОПУСТИТЬ
 onboarding-back = Назад 
 onboarding-next = Далее 
 onboarding-finish = ЗАВЕРШИТЬ
+; Ixinames
+ixinames-request-title = IXI Names Хочет подключиться
+ixinames-request-details = Вы уверены, что хотите подключить свой Spixi к IXI Names? Сервис получит доступ к вашему адресу Spixi.
+ixinames-request-decline = Отклонить 
+ixinames-request-connect = Подключить 
 
 ; Global
 global-connecting-s2 = Соединение с Ixian S2...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = ПЕРЕЙТИ
 global-lock-auth-text = Требуется аутентификация
 global-lock-invalidpassword-title = Аутентификация не удалась
 global-lock-invalidpassword-text = Введите пароль кошелька, чтобы разблокировать Spixi
+
+global-time-justnow = только что
+global-time-aminuteago = минуту назад
+global-time-minutesago = минуты назад

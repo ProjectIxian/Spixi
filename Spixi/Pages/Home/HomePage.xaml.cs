@@ -443,16 +443,16 @@ namespace SPIXI
             Node.refreshAppRequests = true;
             lastTransactionChange = 0;
 
-            Utils.sendUiCommand(webView, "selectTab", currentTab);
+            Utils.sendUiCommand(this, "selectTab", currentTab);
 
-            Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+            Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
-            Utils.sendUiCommand(webView, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
+            Utils.sendUiCommand(this, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
             string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
-            Utils.sendUiCommand(webView, "setAddress", address_string);
+            Utils.sendUiCommand(this, "setAddress", address_string);
 
-            Utils.sendUiCommand(webView, "setHideBalance", hideBalance.ToString());
+            Utils.sendUiCommand(this, "setHideBalance", hideBalance.ToString());
 
             try
             {
@@ -541,7 +541,7 @@ namespace SPIXI
             }
 
             // Clear everything
-            Utils.sendUiCommand(webView, "clearContacts");
+            Utils.sendUiCommand(this, "clearContacts");
 
             // Add contacts one-by-one
             foreach(Friend friend in FriendList.friends)
@@ -556,7 +556,7 @@ namespace SPIXI
                     avatar = "img/spixiavatar.png";
                 }
 
-                Utils.sendUiCommand(webView, "addContact", friend.walletAddress.ToString(), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
+                Utils.sendUiCommand(this, "addContact", friend.walletAddress.ToString(), friend.nickname, avatar, str_online, friend.getUnreadMessageCount().ToString());
             }
         }
 
@@ -580,10 +580,10 @@ namespace SPIXI
 
             if(unread > 0)
             {
-                Utils.sendUiCommand(webView, "setUnreadIndicator", unread.ToString());
+                Utils.sendUiCommand(this, "setUnreadIndicator", unread.ToString());
             }else
             {
-                Utils.sendUiCommand(webView, "setUnreadIndicator", "0");
+                Utils.sendUiCommand(this, "setUnreadIndicator", "0");
             }
 
             if (!Node.shouldRefreshContacts)
@@ -592,7 +592,7 @@ namespace SPIXI
                 return;
             }
 
-            Utils.sendUiCommand(webView, "clearChats");
+            Utils.sendUiCommand(this, "clearChats");
             //Utils.sendUiCommand(webView, "clearUnreadActivity");
 
             // Prepare a list of message helpers, to facilitate sorting and communication with the UI
@@ -723,11 +723,11 @@ namespace SPIXI
             {
                 if(helper_msg.unreadCount > 0)
                 {
-                    Utils.sendUiCommand(webView, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
+                    Utils.sendUiCommand(this, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
 
                 }
 
-                Utils.sendUiCommand(webView, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.type, helper_msg.unreadCount.ToString());
+                Utils.sendUiCommand(this, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.type, helper_msg.unreadCount.ToString());
             }
 
             // Clear the lists so they will be collected by the GC
@@ -797,7 +797,7 @@ namespace SPIXI
             }
             lastTransactionChange = TransactionCache.lastChange;
 
-            Utils.sendUiCommand(webView, "clearPaymentActivity", filterToString(transactionFilter));
+            Utils.sendUiCommand(this, "clearPaymentActivity", filterToString(transactionFilter));
 
             void addPaymentActivity(Transaction tx)
             {
@@ -823,7 +823,7 @@ namespace SPIXI
                 string confirmed = tx.applied == 0 ? "false" : "true";
 
                 string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(tx.timeStamp));
-                Utils.sendUiCommand(webView, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, confirmed);
+                Utils.sendUiCommand(this, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, confirmed);
             }
 
             lock (TransactionCache.unconfirmedTransactions)
@@ -865,18 +865,18 @@ namespace SPIXI
                 string new_version = checkForUpdate();
                 if (!new_version.StartsWith("(") && Version.Parse(new_version.Substring(new_version.IndexOf('-') + 1)).CompareTo(Version.Parse(Config.version.Substring(Config.version.IndexOf('-') + 1))) > 0)
                 {
-                    Utils.sendUiCommand(webView, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
+                    Utils.sendUiCommand(this, "showWarning", String.Format(SpixiLocalization._SL("global-update-available"), new_version));
                 }
                 else
                 {
                     // Check the ixian dlt
                     if (NetworkClientManager.getConnectedClients(true).Count() > 0)
                     {
-                        Utils.sendUiCommand(webView, "showWarning", "");
+                        Utils.sendUiCommand(this, "showWarning", "");
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                        Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
                     }
 
                 }
@@ -886,12 +886,12 @@ namespace SPIXI
             }
             string balance = Utils.amountToHumanFormatString(Node.balance.balance);
             string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * Node.balance.balance);
-            Utils.sendUiCommand(webView, "setBalance", balance, fiatBalance, Node.localStorage.nickname);
+            Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, Node.localStorage.nickname);
 
             // Check if we should reload certain elements
             if(Node.changedSettings == true)
             {
-                Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+                Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
                 Node.changedSettings = false;
             }
 
@@ -1001,7 +1001,7 @@ namespace SPIXI
                 // Go through each cache item and perform the status update
                 foreach (contactStatusCacheItem cacheItem in contactStatusCache)
                 {
-                    Utils.sendUiCommand(webView, "setContactStatus", cacheItem.address.ToString(), 
+                    Utils.sendUiCommand(this, "setContactStatus", cacheItem.address.ToString(), 
                         cacheItem.online.ToString(), cacheItem.unread.ToString(), cacheItem.excerpt, cacheItem.timestamp.ToString());
                 }
                 // Clear the contact status cache

@@ -101,7 +101,7 @@ namespace SPIXI
                 return;
             }
 
-            Utils.sendUiCommand(webView, "loadAvatar", file_path);
+            Utils.sendUiCommand(this, "loadAvatar", file_path);
         }
 
         public void onCreateAccount(string nick, string pass)

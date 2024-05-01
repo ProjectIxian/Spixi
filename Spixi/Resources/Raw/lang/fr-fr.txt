@@ -13,7 +13,8 @@ address-gen-2b = SPIXI
 address-gen-3 = Addresse
 address-gen-4 = ...
 address-tooltip = Cliquez pour copier dans le presse-papiers
-
+address-copy = Copier
+address-share = Partager
 
 ; App Details Screen
 app-details-title = Application Spixi
@@ -24,7 +25,6 @@ app-details-dialog-title = Manageur de l'application Spixi
 app-details-dialog-removed-text = L'application a bien été supprimée.
 app-details-dialog-removefailed-text = Une erreur s'est produite pendant la désinstallation de l'application.
 
-
 ; New App Screen
 app-new-title = Nouvelle application
 app-new-description = Ajoutez l'application Spixi en collant son URL. L'application va être téléchargée puis installée.
@@ -33,11 +33,9 @@ app-new-dialog-title = Manageur de l'application Spixi
 app-new-dialog-installed-text = L'application '{0}' a bien été installée.
 app-new-dialog-installfailed-text = Une erreur s'est produite pendant l'installation de l'application.
 
-
 ; Apps Screen
 apps-title = Applications Spixi
 apps-empty = Vous n'avez aucunes applications installées.
-
 
 ; Chat Screen
 chat-sent-contact-request = A ENVOYE UNE DEMANDE DE CONTACT
@@ -85,7 +83,6 @@ chat-request-sent-undo = Annuler
 chat-request-received-title = Demande d'ami reçue
 chat-request-received-details = Quelqu'un veut se connecter avec vous ! Une fois que vous accepterez, vous pourrez discuter en toute sécurité avec eux.
 
-
 chat-modal-tip-title = Donner {0} ?
 chat-modal-tip-body = Appuyez sur le montant que vous souhaitez donner ou définissez un pourboire personnalisé.
 chat-modal-tip-custom = CUSTOM
@@ -94,17 +91,14 @@ chat-modal-tip-confirmation-body = Vous êtes sur le point de donner un pourboi
 chat-modal-tip-confirmed-body = Vous avez donné '{0}' avec {1}. Le montant a bien été déduit de votre portefeuille.
 chat-modal-tip-error-body = Erreur inconnu pendant la tentative de donation à l'utilisateur.
 
-
 chat-bot-details-info = Informations sur le Bot
 chat-bot-address = Addresse du Bot
 chat-bot-toggle-notifications = Basculer les notifications
 chat-bot-invite = Inviter un contact dans ce Bot
 chat-bot-leave = Quitter le Bot
 
-
 chat-bot-user-address = Addresse de l'utilisateur
 chat-bot-user-send-contact-request = Envoyer une demande de contact
-
 
 chat-modal-kick-title = Éjecter {0} ?
 chat-modal-kick-body = Êtes vous sûr de vouloir éjecter '{0}' de ce serveur ?
@@ -112,21 +106,17 @@ chat-modal-kick-kick-button = KICK L'UTILISATEUR
 chat-modal-kicked-title = {0} a été éjecté
 chat-modal-kicked-body = Vous avez éjecté '{0}' de ce serveur
 
-
 chat-modal-ban-title = Bannir {0} ?
 chat-modal-ban-body = Êtes vous sûr de vouloir bannir '{0}' de ce serveur ?
 chat-modal-ban-ban-button = BANNIR L'UTILISATEUR
 chat-modal-banned-title = Banni(e) {0}
 chat-modal-banned-body = Vous avez banni(e) '{0}' de ce serveur
 
-
 chat-bot-not-ready-title = Le bot n'est pas prêt
 chat-bot-not-ready-body = Le bot n'est pas encore prêt, veuillez réessayer dans quelques minutes
 
-
 chat-kicked = Vous avez été exclu du serveur.
 chat-banned = Vous avez été banni(e) du serveur.
-
 
 ; Contact Details Screen
 contact-details-chat = Chat
@@ -145,7 +135,6 @@ contact-details-deletehistory = SUPPRIMER L'HISTORIQUE
 contact-details-deletedhistory-title = Supprimé
 contact-details-deletedhistory-text = Historique des messages supprimé.
 
-
 ; New Contact Screen
 contact-new-title = Nouveau Contact
 contact-new-description = Ajouter un nouveau contact Spixi en collant leur addresse ou en scannant leur QR Code. L'utilisateur recevra une demande peu après.
@@ -160,11 +149,9 @@ contact-new-cancel = Annuler
 contact-new-confirm-title = Envoyer une demande d'ami ?
 contact-new-confirm-details = Vous êtes sur le point d'envoyer une demande d'ami à l'adresse Spixi suivante :
 
-
 ; Downloads Screen
 downloads-title = Téléchargements
 downloads-empty = Vous n'avez pas de fichiers téléchargés.
-
 
 ; Index Screen
 index-balance = Mon Solde IXI
@@ -178,9 +165,12 @@ index-no-conversations = Démarrez une nouvelle conversation avec l'un de vos c
 index-new-chat-button = Nouveau chat
 index-no-transactions-title = Aucune transaction
 index-no-transactions = Vos transactions apparaîtront ici, une fois que vous commencerez à utiliser votre portefeuille IXI.
-index-send = Envoyer
-index-activity = Activité
-index-receive = Recevoir
+index-send = Envoyer
+index-scan = Scanner
+index-receive = Recevoir
+index-all = Tous
+index-sent = Envoyé
+index-received = Reçu
 index-recent-activity = Activités récentes
 index-contacts-placeholder = Rechercher des contacts
 index-tab-home = Home
@@ -217,7 +207,6 @@ index-excerpt-voice-call = Appel vocal
 index-excerpt-self = Vous :
 index-excerpt-typing = En train d'écrire...
 
-
 ; Intro Screen
 intro-title = Bienvenue sur Spixi,
 intro-subtitle = Bienvenue sur l'une des applications de messagerie les plus sécurisées au monde.
@@ -232,7 +221,6 @@ intro-tip-body = Spixi n'utilise pas de serveurs, tous les messages sont envoy�
 intro-continue = Continuer
 intro-step-1 = Étape 1 sur 2
 intro-step-2 = Étape 2 sur 2
-
 
 ; Intro New Screen
 intro-new-description-1 = Définissez votre pseudo et votre photo
@@ -260,7 +248,6 @@ intro-new-avatarerror-title = Erreur d'avatar
 intro-new-walleterror-title = Erreur
 intro-new-walleterror-text = Impossible de generer votre portefeuille. Veuillez réessayer.
 
-
 ; Intro Restore Screen
 intro-restore-description-1 = Restaurer l'accès à votre compte Spixi
 intro-restore-description-2 = Vous avez besoin du fichier de sauvegarde et de votre mot de passe d'encryption pour restaurer votre compte Spixi existant.
@@ -277,7 +264,6 @@ intro-restore-file-writeerror-text = Une erreur a eu lieu pendant la sauvegarde
 intro-restore-file-invalidpassword-title = Mauvais mot de passe
 intro-restore-file-invalidpassword-text = Il est impossible de décrypter le portefeuille, veuillez réessayer.
 
-
 ; Intro Retry Screen
 intro-retry-description-1 = Ré entrez votre mot de passe d'encryption.
 intro-retry-description-2 = Il semble qu'il y a un problème d'accès à votre compte. Veuillez saisir le mot de passe pour continuer.
@@ -288,14 +274,12 @@ intro-retry-info = Cela peut prendre un peu de temps
 intro-retry-invalidpassword-title = Mauvais mot de passe
 intro-retry-invalidpassword-text = Il est impossible de déchiffrer le portefeuille, veuillez réessayer.
 
-
 ; Lock Screen
 lock-description = Spixi est verrouillé
 lock-placeholder = Entrez votre mot de passe de verrouillage
 lock-error = Mot de passe incorrect
 lock-unlock = Débloquer
 lock-change = Changer de portefeuille
-
 
 ; Settings Screen
 settings-title = Paramètres
@@ -343,7 +327,6 @@ settings-deleted-error-text = Une erreur inconnue s'est produite.
 settings-emptynick-title = Pseudo invalide
 settings-emptynick-text = Veuillez, entrez votre pseudo.
 
-
 ; Settings Backup Screen
 settings-backup-title = Compte de sauvegarde
 settings-backup-description = Télécharger un fichier spécial qui vous permet de restaurer votre compte Spixi.
@@ -353,7 +336,6 @@ settings-backup-notice = Cette sauvegarde et le mot de passe de cryptage qui lu
 settings-backup-notice2 = - Perdre cet appareil < br />- Désinstaller Spixi et votre appareil < br />- Supprimer votre compte Spixi < br />- Supprimer votre portefeuille.
 settings-backup-invalidpassword-title = Mot de passe invalide
 settings-backup-invalidpassword-text = Veuillez entrez un mot de passe valide.
-
 
 ; Settings Encryption Screen
 settings-encryption-title = Mot de passe
@@ -374,7 +356,6 @@ settings-encryption-invalidpassword-text = S'il vous plaît entrez un mot de pa
 settings-encryption-passwordchanged-title = Mot de passe d'encryption
 settings-encryption-passwordchanged-text = Le mot de passe a bien été changé.
 settings-encryption-invalidpassword-current-text = Le mot de passe actuel est incorrect, veuillez réessayer.
-
 
 ; Settings Lock Screen
 settings-lock-title = Vérouiller mon Spixi
@@ -461,7 +442,10 @@ wallet-send2-send = Envoyer IXI
 wallet-send2-confirm-title = Vous êtes sur le point d'envoyer
 wallet-send2-confirm = Confirmer
 wallet-send2-cancel = Annuler
-
+wallet-send2-edit = Modifier le paiement
+wallet-send2-remove-recipient = Supprimer le destinataire
+wallet-send2-done = Terminé
+wallet-send2-yourbalance = Votre solde
 
 ; Wallet Sent Screen
 wallet-sent-title = Paiement envoyé
@@ -528,6 +512,11 @@ onboarding-back = Retour
 onboarding-next = Suivant
 onboarding-finish = FINIR
 
+; Ixinames
+ixinames-request-title = IXI Names Veut se Connecter
+ixinames-request-details = Êtes-vous sûr de vouloir connecter votre Spixi à IXI Names ? Le service recevra l'accès à votre adresse Spixi.
+ixinames-request-decline = Refuser
+ixinames-request-connect = Connecter
 
 ; Global
 global-connecting-s2 = Connexion à un nœud Ixian S2...
@@ -541,24 +530,23 @@ global-call-in-call = En appel
 global-call-dialing = Composition
 global-call-incoming = Appel entrant
 
-
 global-dialog-error = Erreur
 global-dialog-ok = OK
 global-dialog-cancel = ANNULER
 global-invalid-address-title = Addresse invalide
 global-invalid-address-text = Veuillez entrez une addresse valide.
 
-
 global-friend-request-accepted = {0} a accepté votre demade d'ami.
-
 
 global-update-available = Une nouvelle version de Spixi ({0}) est disponible. Veuillez vous mettre à jour pour une meilleure expérience.
 global-modal-external-link-title = Vous êtes sur le point de visiter un lien externe
 global-modal-external-link-body = Vous êtes sur le point de visiter un lien externe {0}. Les liens externes sont potentiellement dangereux, continuez à vos propres risques.
 global-modal-external-link-button-visit = CONTINUER
 
-
 global-lock-auth-text = Authentification requise
 global-lock-invalidpassword-title = Authentification échouée
 global-lock-invalidpassword-text = Tapez votre mot de passe de portefeuille pour déverrouiller Spixi
 
+global-time-justnow = à l'instant
+global-time-aminuteago = il y a une minute
+global-time-minutesago = minutes

@@ -1,9 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
-#if WINDOWS
-using Microsoft.Web.WebView2.Core;
-#endif
-using System;
+using System.Text;
 
 namespace SPIXI
 {
@@ -42,67 +39,33 @@ namespace SPIXI
             return amount_string;
         }
 
-        public static async Task<bool> winUIFix(WebView webView)
-        {
-#if WINDOWS_UIFIX
-            var result = true;
-            await  MainThread.InvokeOnMainThreadAsync(async () =>
-            {
-                try {
-                //await (webView.Handler.PlatformView as Microsoft.Maui.Platform.MauiWebView).EnsureCoreWebView2Async();
-                CoreWebView2 cr = (webView.Handler.PlatformView as Microsoft.Maui.Platform.MauiWebView).CoreWebView2;
-                if (cr == null)
-                {              
-                    result =  false;
-                }
-                //cr.Settings.AreWebSpecificContextMenuOptionsEnabled = false;
-                }
-                catch (Exception ex) {
-                    result =  false;
-                }
-                
-            });
-            return result;
-#endif
-            return true;
-
-        }
-
-        public static void sendUiCommand(WebView webView, string command, params string[] arguments)
+        public static void sendUiCommand(SpixiContentPage contentPage, string command, params string[] arguments)
         {
             try
             {
-                if(!webView.IsEnabled && !webView.IsLoaded)
-                {
-                    return;
-                }
-
-                if (!winUIFix(webView).Result)
-                {
-                    Logging.warn("Webview error for: " + command);
-                    return;
-                }
-
                 string cmd_str = command + "(";
+                StringBuilder sb = new StringBuilder(cmd_str);
                 bool first = true;
+
                 foreach (string arg in arguments)
                 {
                     if (!first)
                     {
-                        cmd_str += ",";
+                        sb.Append(",");
                     }
-                    cmd_str += "'" + escapeHtmlParameter(arg) + "'";
+                    sb.Append("'");
+                    sb.Append(escapeHtmlParameter(arg));
+                    sb.Append("'");
                     first = false;
                 }
-                cmd_str += ");";
 
+                sb.Append(");");
+                cmd_str = sb.ToString();
 
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    webView.Eval("try { " + cmd_str + " }catch(e){  }");
-                });
+                contentPage.sendMessage(cmd_str);
 
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 Logging.error("Exception occured in sendUiCommand " + e);
             }

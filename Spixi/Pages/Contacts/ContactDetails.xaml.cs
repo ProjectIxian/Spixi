@@ -34,7 +34,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setAddress", friend.walletAddress.ToString());
+            Utils.sendUiCommand(this, "setAddress", friend.walletAddress.ToString());
 
             updateScreen();
         }
@@ -152,7 +152,7 @@ namespace SPIXI
 
         public void loadTransactions()
         {
-            Utils.sendUiCommand(webView, "clearRecentActivity");
+            Utils.sendUiCommand(this, "clearRecentActivity");
             lock(TransactionCache.unconfirmedTransactions)
             {
                 // TODOTEST
@@ -173,7 +173,7 @@ namespace SPIXI
                         tx_type = SpixiLocalization._SL("global-sent");
                     }
                     string time = Utils.unixTimeStampToString(Convert.ToDouble(utransaction.timeStamp));
-                    Utils.sendUiCommand(webView, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, utransaction.amount.ToString(), "false");
+                    Utils.sendUiCommand(this, "addPaymentActivity", utransaction.getTxIdString(), tx_type, time, utransaction.amount.ToString(), "false");
                 }
 
                 for (int i = TransactionCache.transactions.Count - 1; i >= 0; i--)
@@ -201,7 +201,7 @@ namespace SPIXI
                         confirmed = "error";
                     }
 
-                    Utils.sendUiCommand(webView, "addPaymentActivity", transaction.getTxIdString(), tx_type, time, transaction.amount.ToString(), confirmed);
+                    Utils.sendUiCommand(this, "addPaymentActivity", transaction.getTxIdString(), tx_type, time, transaction.amount.ToString(), confirmed);
                 }
             }
         }
@@ -209,7 +209,7 @@ namespace SPIXI
         // Executed every second
         public override void updateScreen()
         {
-            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
+            Utils.sendUiCommand(this, "setNickname", friend.nickname);
 
             string avatar = Node.localStorage.getAvatarPath(friend.walletAddress.ToString(), false);
             if (avatar == null)
@@ -217,15 +217,15 @@ namespace SPIXI
                 avatar = "";
             }
 
-            Utils.sendUiCommand(webView, "setAvatar", avatar);
+            Utils.sendUiCommand(this, "setAvatar", avatar);
 
             if (friend.online)
             {
-                Utils.sendUiCommand(webView, "showIndicator", "true");
+                Utils.sendUiCommand(this, "showIndicator", "true");
             }
             else
             {
-                Utils.sendUiCommand(webView, "showIndicator", "false");
+                Utils.sendUiCommand(this, "showIndicator", "false");
             }
 
             loadTransactions();

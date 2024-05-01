@@ -32,16 +32,16 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setNickname", Node.localStorage.nickname);
+            Utils.sendUiCommand(this, "setNickname", Node.localStorage.nickname);
             selectedAppearance = ThemeManager.getActiveAppearance();
             int activeAppearanceIdx = (int)selectedAppearance;
-            Utils.sendUiCommand(webView, "setAppearance", activeAppearanceIdx.ToString());
+            Utils.sendUiCommand(this, "setAppearance", activeAppearanceIdx.ToString());
 
             if (Preferences.Default.ContainsKey("lockenabled"))
             {
                 lockEnabled = (bool)Preferences.Default.Get("lockenabled",false);
             }
-            Utils.sendUiCommand(webView, "setLockEnabled", lockEnabled.ToString());
+            Utils.sendUiCommand(this, "setLockEnabled", lockEnabled.ToString());
 
 
             var filePath = Node.localStorage.getOwnAvatarPath();
@@ -52,10 +52,10 @@ namespace SPIXI
             else
             {
                 // A custom avatar has been chosen previously
-                Utils.sendUiCommand(webView, "showRemoveAvatar", "1");
+                Utils.sendUiCommand(this, "showRemoveAvatar", "1");
             }
 
-            Utils.sendUiCommand(webView, "loadAvatar", filePath);
+            Utils.sendUiCommand(this, "loadAvatar", filePath);
 
         }
 
@@ -217,7 +217,7 @@ namespace SPIXI
             if(succeeded)
             {
                 lockEnabled = false;
-                Utils.sendUiCommand(webView, "setLockEnabled", lockEnabled.ToString());
+                Utils.sendUiCommand(this, "setLockEnabled", lockEnabled.ToString());
             }
 
         }
@@ -331,7 +331,7 @@ namespace SPIXI
                 return;
             }
 
-            Utils.sendUiCommand(webView, "loadAvatar", file_path);
+            Utils.sendUiCommand(this, "loadAvatar", file_path);
             Node.changedSettings = true;
         }
 
@@ -368,8 +368,8 @@ namespace SPIXI
         {
             if (Node.localStorage.deleteOwnAvatar())
             {
-                Utils.sendUiCommand(webView, "showRemoveAvatar", "0");
-                Utils.sendUiCommand(webView, "loadAvatar", Node.localStorage.getOwnAvatarPath());
+                Utils.sendUiCommand(this, "showRemoveAvatar", "0");
+                Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
                 Node.changedSettings = true;
             }
         }

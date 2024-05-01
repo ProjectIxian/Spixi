@@ -84,7 +84,7 @@ namespace SPIXI
                 icon = "";
             }
 
-            Utils.sendUiCommand(webView, "init", app.name, icon, app.publisher, app.version);
+            Utils.sendUiCommand(this, "init", app.name, icon, app.publisher, app.version);
 
             // Execute timer-related functionality immediately
             updateScreen();

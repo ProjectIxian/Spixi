@@ -44,7 +44,7 @@ namespace SPIXI
         private async void onLoad()
         {
             if(justConfirmAction)
-                Utils.sendUiCommand(webView, "setJustConfirm", "True");
+                Utils.sendUiCommand(this, "setJustConfirm", "True");
 
             if (Device.RuntimePlatform == Device.WinUI)
                 return;

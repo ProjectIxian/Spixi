@@ -84,7 +84,7 @@ namespace SPIXI
         // Retrieve the transaction from local cache storage
         private void checkTransaction()
         {
-            Utils.sendUiCommand(webView, "clearEntries");
+            Utils.sendUiCommand(this, "clearEntries");
 
             string confirmed = "true";
 
@@ -114,11 +114,11 @@ namespace SPIXI
 
                     if (friend != null)
                     {
-                        Utils.sendUiCommand(webView, "addEntry", friend.nickname, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                        Utils.sendUiCommand(this, "addEntry", friend.nickname, Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "addEntry", entry.Key.ToString(), Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                        Utils.sendUiCommand(this, "addEntry", entry.Key.ToString(), Utils.amountToHumanFormatString(entry_amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                     }
                 }
             }
@@ -137,21 +137,21 @@ namespace SPIXI
                 }
                 IxiNumber fiat_amount = amount * Node.fiatPrice;
 
-                Utils.sendUiCommand(webView, "setReceivedMode");
+                Utils.sendUiCommand(this, "setReceivedMode");
                 Address sender_address = ctransaction.pubKey;
                 Friend friend = FriendList.getFriend(sender_address);
                 if (friend != null)
                 {
-                    Utils.sendUiCommand(webView, "addEntry", friend.nickname, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                    Utils.sendUiCommand(this, "addEntry", friend.nickname, Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addEntry", sender_address.ToString(), Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
+                    Utils.sendUiCommand(this, "addEntry", sender_address.ToString(), Utils.amountToHumanFormatString(amount), Utils.amountToHumanFormatString(fiat_amount), time, type, confirmed);
                 }
 
             }
 
-            Utils.sendUiCommand(webView, "setData", amount.ToString(), ctransaction.fee.ToString(),
+            Utils.sendUiCommand(this, "setData", amount.ToString(), ctransaction.fee.ToString(),
                 time, transaction.getTxIdString(), confirmed);
             return;
         }

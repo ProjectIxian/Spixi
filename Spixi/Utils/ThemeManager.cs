@@ -16,16 +16,12 @@ namespace SPIXI
 
         public static bool loadTheme(string name, ThemeAppearance appearance)
         {
-            string appearance_name = "light";
-            if(appearance == ThemeAppearance.dark)
+            string appearance_name = appearance switch
             {
-                appearance_name = "dark";
-            }
-            else if(appearance == ThemeAppearance.automatic)
-            {
-                if(Application.Current.UserAppTheme == AppTheme.Dark)
-                    appearance_name = "dark";
-            }
+                ThemeAppearance.dark => "dark",
+                ThemeAppearance.automatic => Application.Current!.UserAppTheme == AppTheme.Dark ? "dark" : "light",
+                _ => "light"
+            };
 
             activeTheme = name;
             activeAppearance = appearance;

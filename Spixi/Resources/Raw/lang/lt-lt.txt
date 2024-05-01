@@ -12,6 +12,8 @@ address-gen-2b = SPIXI
 address-gen-3 = adresas
 address-gen-4 = ...
 address-tooltip = palieskite norėdami nukopijuoti į mainų sritį
+address-copy = Kopijuoti
+address-share = Bendrinti
 
 ; App Details Screen
 app-details-title = Spixi programa
@@ -162,9 +164,12 @@ index-no-conversations = Pradėkite naują pokalbį su vienu iš jūsų kontakt�
 index-new-chat-button = Naujas pokalbis
 index-no-transactions-title = Nėra operacijų
 index-no-transactions = Jūsų operacijos pasirodys čia, kai pradėsite naudoti savo IXI piniginę.
-index-send = siųsti
-index-activity = veikla
-index-receive = gauti
+index-send = Siųsti
+index-scan = Skenavimas
+index-receive = Gauti
+index-all = Visi
+index-sent = Išsiųsta
+index-received = Gauta
 index-recent-activity = Paskutiniai veiksmai
 index-contacts-placeholder = Ieškokite kontaktų
 index-tab-home = pagrindinis
@@ -431,6 +436,10 @@ wallet-send2-send = Siųsti IXI
 wallet-send2-confirm-title = Jūs ketinate išsiųsti
 wallet-send2-confirm = Patvirtinti
 wallet-send2-cancel = Atšaukti
+wallet-send2-edit = Redaguoti mokėjimą
+wallet-send2-remove-recipient = Pašalinti gavėją
+wallet-send2-done = Atlikta
+wallet-send2-yourbalance = Jūsų likutis
 
 ; Wallet Sent Screen
 wallet-sent-title = Mokėjimo Detalės
@@ -490,6 +499,11 @@ onboarding-skip = PRALEISTI
 onboarding-back = Atgal
 onboarding-next = Kitas
 onboarding-finish = BAIGTI
+; Ixinames
+ixinames-request-title = IXI Names Nori Prisijungti
+ixinames-request-details = Ar tikrai norite prijungti savo Spixi prie IXI Names? Paslauga gaus prieigą prie jūsų Spixi adreso.
+ixinames-request-decline = Atmesti
+ixinames-request-connect = Prisijungti
 
 ; Global
 global-connecting-s2 = Prisijungiama prie „Ixian S2“ ...
@@ -519,3 +533,7 @@ global-modal-external-link-button-visit = Tęsti
 global-lock-auth-text = Reikalinga autentikacija
 global-lock-invalidpassword-title = Autentifikacija nepavyko
 global-lock-invalidpassword-text = Įveskite savo piniginės slaptažodį, kad atrakintumėte Spixi
+
+global-time-justnow = vos dabar
+global-time-aminuteago = prieš minutę
+global-time-minutesago = minutes

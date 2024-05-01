@@ -136,25 +136,25 @@ namespace SPIXI
         public void networkDataReceive(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "networkData", UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(this, "networkData", UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appRequestAcceptReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(this, "onRequestAccept", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appRequestRejectReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(this, "onRequestReject", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
         public void appEndSessionReceived(Address sender_address, byte[] data)
         {
             // TODO TODO TODO probably a different encoding should be used for data
-            Utils.sendUiCommand(webView, "onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
+            Utils.sendUiCommand(this, "onAppEndSession", sender_address.ToString(), UTF8Encoding.UTF8.GetString(data));
         }
 
         public bool hasUser(Address user)

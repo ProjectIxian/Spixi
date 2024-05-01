@@ -16,6 +16,8 @@ public partial class App : MauiWinUIApplication
 {
     const int WindowWidth = 450*2;
     const int WindowHeight = 700*2;
+    const int MinWidth = 300*2;
+    const int MinHeight = 420*2;
 
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
@@ -34,8 +36,25 @@ public partial class App : MauiWinUIApplication
             WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
             AppWindow appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
             appWindow.Resize(new SizeInt32(WindowWidth, WindowHeight));
+
+            appWindow.Changed += (sender, args) =>
+            {
+                if (appWindow.Size.Width < MinWidth || appWindow.Size.Height < MinHeight)
+                {
+                    var newSize = new SizeInt32
+                    {
+                        Width = Math.Max(appWindow.Size.Width, MinWidth),
+                        Height = Math.Max(appWindow.Size.Height, MinHeight)
+                    };
+                    appWindow.Resize(newSize);
+                }
+            };
         });
+
         SpixiLocalization.addCustomString("Platform", "Xamarin-WPF");
+
+        // Add prepare storage (copy/overwrite html folder with embedded one)
+        copyResources();
     }
 
     protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
@@ -46,6 +65,30 @@ public partial class App : MauiWinUIApplication
 
     }
 
+    public void copyResources()
+    {
+        string sourceDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "html");
+        string targetDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Spixi", "html");
+
+        copyContents(sourceDirectory, targetDirectory);
+    }
+
+    private void copyContents(string sourceDirectory, string targetDirectory)
+    {
+        Directory.CreateDirectory(targetDirectory);
+
+        foreach (string file in Directory.GetFiles(sourceDirectory))
+        {
+            string destFile = Path.Combine(targetDirectory, Path.GetFileName(file));
+            File.Copy(file, destFile, true); // overwrite existing files
+        }
+
+        foreach (string subdir in Directory.GetDirectories(sourceDirectory))
+        {
+            string destSubdir = Path.Combine(targetDirectory, Path.GetFileName(subdir));
+            copyContents(subdir, destSubdir);
+        }
+    }
 
 }
 

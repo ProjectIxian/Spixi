@@ -96,9 +96,9 @@ namespace SPIXI
             tx_list.AddOrReplace(new Address(_address), new ToEntry(Transaction.getExpectedVersion(IxianHandler.getLastBlockVersion()), 1));
             Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, tx_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
-            Utils.sendUiCommand(webView, "setRecipient", toAddress, toAddress, "img/spixiavatar.png");
-            Utils.sendUiCommand(webView, "setBalance", Node.balance.balance.ToString(), Node.fiatPrice.ToString());
-            Utils.sendUiCommand(webView, "setFees", tx.fee.ToString());
+            Utils.sendUiCommand(this, "setRecipient", toAddress, toAddress, "img/spixiavatar.png");
+            Utils.sendUiCommand(this, "setBalance", Node.balance.balance.ToString(), Node.fiatPrice.ToString());
+            Utils.sendUiCommand(this, "setFees", tx.fee.ToString());
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

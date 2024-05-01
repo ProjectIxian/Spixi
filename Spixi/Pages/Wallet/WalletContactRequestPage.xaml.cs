@@ -42,7 +42,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "setData", friend.walletAddress.ToString(), friend.nickname, amount, ConsensusConfig.forceTransactionPrice.ToString(), date);
+            Utils.sendUiCommand(this, "setData", friend.walletAddress.ToString(), friend.nickname, amount, ConsensusConfig.forceTransactionPrice.ToString(), date);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

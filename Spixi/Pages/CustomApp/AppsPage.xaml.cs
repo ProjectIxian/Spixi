@@ -93,7 +93,7 @@ namespace SPIXI
 
         private void loadApps()
         {
-            Utils.sendUiCommand(webView, "clearApps");
+            Utils.sendUiCommand(this, "clearApps");
 
             var apps = Node.customAppManager.getInstalledApps();
             lock (apps)
@@ -106,7 +106,7 @@ namespace SPIXI
                     {
                         icon = "";
                     }
-                    Utils.sendUiCommand(webView, "addApp", app.id, app.name, icon);
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
                 }
             }
         }

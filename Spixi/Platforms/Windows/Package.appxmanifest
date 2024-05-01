@@ -9,7 +9,7 @@
 
   <Properties>
     <DisplayName>Spixi</DisplayName>
-    <PublisherDisplayName>User Name</PublisherDisplayName>
+    <PublisherDisplayName>Ixian</PublisherDisplayName>
     <Logo>Platforms\Windows\icon\appicon.png</Logo>
   </Properties>
 
@@ -44,6 +44,7 @@
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
     <Capability Name="internetClient"/>
+    <uap:Capability Name="removableStorage"/>
     <DeviceCapability Name="microphone"/>
     <DeviceCapability Name="webcam"/>
   </Capabilities>

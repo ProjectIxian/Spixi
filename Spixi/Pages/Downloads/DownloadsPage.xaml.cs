@@ -92,11 +92,11 @@ namespace SPIXI
 
         private void loadFiles()
         {
-            Utils.sendUiCommand(webView, "clearFiles");
+            Utils.sendUiCommand(this, "clearFiles");
 
             foreach (var path in Directory.EnumerateFiles(TransferManager.downloadsPath))
             {
-                Utils.sendUiCommand(webView, "addFile", Path.GetFileName(path), File.GetCreationTime(path).ToString());
+                Utils.sendUiCommand(this, "addFile", Path.GetFileName(path), File.GetCreationTime(path).ToString());
             }
         }
 

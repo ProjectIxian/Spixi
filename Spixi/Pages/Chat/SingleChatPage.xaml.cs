@@ -76,7 +76,18 @@ namespace SPIXI
             {
                 friend.chat_page = null;
 
-                Navigation.PopAsync(Config.defaultXamarinAnimations);
+                if (Navigation.NavigationStack.Count > 1)
+                {
+                    try
+                    {
+                        Navigation.PopAsync(Config.defaultXamarinAnimations);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logging.error($"Error during navigation: {ex.Message}");
+                        return;
+                    }
+                }
 
             }
             else if (current_url.Equals("ixian:request", StringComparison.Ordinal))
@@ -170,7 +181,7 @@ namespace SPIXI
                 BotChannel channel = friend.channels.getChannel(sel_channel);
                 if (channel != null)
                 {
-                    Utils.sendUiCommand(webView, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
+                    Utils.sendUiCommand(this, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
                     selectedChannel = sel_channel;
                     loadMessages();
                 }
@@ -277,7 +288,7 @@ namespace SPIXI
                     {
                         unread = true;
                     }
-                    Utils.sendUiCommand(webView, "addChannelToSelector", channel.index.ToString(), channel.channelName, icon, unread.ToString());
+                    Utils.sendUiCommand(this, "addChannelToSelector", channel.index.ToString(), channel.channelName, icon, unread.ToString());
                 }
             }
         }
@@ -302,7 +313,7 @@ namespace SPIXI
                     }
                     if(unread)
                     {
-                        Utils.sendUiCommand(webView, "setChannelSelectorStatus", "");
+                        Utils.sendUiCommand(this, "setChannelSelectorStatus", "");
                     }
                 }
             }
@@ -322,7 +333,7 @@ namespace SPIXI
                         avatar = "img/spixiavatar.png";
                     }
                     int role = contact.Value.getPrimaryRole();
-                    Utils.sendUiCommand(webView, "addContact",  address, contact.Value.getNick(), avatar, role.ToString());
+                    Utils.sendUiCommand(this, "addContact",  address, contact.Value.getNick(), avatar, role.ToString());
                 }
             }
         }
@@ -334,7 +345,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(webView, "onChatScreenReady", friend.walletAddress.ToString());
+            Utils.sendUiCommand(this, "onChatScreenReady", friend.walletAddress.ToString());
 
             if (friend.bot)
             {
@@ -354,7 +365,7 @@ namespace SPIXI
                 string cost_text = String.Format(SpixiLocalization._SL("chat-message-cost-bar"), friend.metaData.botInfo.cost.ToString() + " IXI");
                 bool send_notification = friend.metaData.botInfo.sendNotification;
                     
-                Utils.sendUiCommand(webView, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
+                Utils.sendUiCommand(this, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 setChannelSelectorUnread();
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
@@ -365,7 +376,7 @@ namespace SPIXI
                     BotChannel channel = friend.channels.getChannel(selectedChannel);
                     if (channel != null)
                     {
-                        Utils.sendUiCommand(webView, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
+                        Utils.sendUiCommand(this, "setSelectedChannel", channel.index.ToString(), "fa-globe-africa", channel.channelName);
                     }
                 }
                 else
@@ -374,7 +385,7 @@ namespace SPIXI
                 }
             }else
             {
-                Utils.sendUiCommand(webView, "setBotMode", "False", "0.00000000", "", "False");
+                Utils.sendUiCommand(this, "setBotMode", "False", "0.00000000", "", "False");
             }
             new Thread(() =>
             {
@@ -382,7 +393,7 @@ namespace SPIXI
 
                 if (SSpixiCodecInfo.getSupportedAudioCodecs().Count > 0 && friend.state == FriendState.Approved)
                 {
-                    Utils.sendUiCommand(webView, "showCallButton", "");
+                    Utils.sendUiCommand(this, "showCallButton", "");
                 }
 
                 loadApps();
@@ -393,7 +404,7 @@ namespace SPIXI
 
             loadMessages();
 
-            Utils.sendUiCommand(webView, "onChatScreenLoaded");
+            Utils.sendUiCommand(this, "onChatScreenLoaded");
 
             if (FriendList.getUnreadMessageCount() == 0)
             {
@@ -405,11 +416,11 @@ namespace SPIXI
                 if (friend.state == FriendState.RequestSent)
                 {
                     _waitingForContactConfirmation = true;
-                    Utils.sendUiCommand(webView, "showRequestSentModal", "1");
+                    Utils.sendUiCommand(this, "showRequestSentModal", "1");
                 }
                 else if (friend.state == FriendState.RequestReceived)
                 {
-                    Utils.sendUiCommand(webView, "showContactRequest", "1");
+                    Utils.sendUiCommand(this, "showContactRequest", "1");
                 }
             }
 
@@ -451,7 +462,7 @@ namespace SPIXI
             FriendMessage friend_message = FriendList.addMessageWithType(null, FriendMessageType.standard, friend.walletAddress, selectedChannel, str, true, null, 0, true, spixi_msg_bytes.Length);
 
             // Finally, clear the input field
-            Utils.sendUiCommand(webView, "clearInput");
+            Utils.sendUiCommand(this, "clearInput");
 
 
             StreamMessage message = new StreamMessage();
@@ -758,14 +769,14 @@ namespace SPIXI
                     {
                         icon = "";
                     }
-                    Utils.sendUiCommand(webView, "addApp", app.id, app.name, icon);
+                    Utils.sendUiCommand(this, "addApp", app.id, app.name, icon);
                 }
             }
         }
 
         public void loadMessages()
         {
-            Utils.sendUiCommand(webView, "clearMessages");
+            Utils.sendUiCommand(this, "clearMessages");
 
             if (friend.handshakeStatus < 2)
                 return;
@@ -810,7 +821,7 @@ namespace SPIXI
 
                     // Call webview methods on the main UI thread only
                     friend.state = FriendState.RequestReceived;
-                    Utils.sendUiCommand(webView, "showContactRequest", "1");
+                    Utils.sendUiCommand(this, "showContactRequest", "1");
                     return;
                 }
             }
@@ -931,11 +942,11 @@ namespace SPIXI
 
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
+                    Utils.sendUiCommand(this, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
+                    Utils.sendUiCommand(this, "addPaymentRequest", Crypto.hashToString(message.id), txid, address, nick, avatar, SpixiLocalization._SL("chat-payment-request-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), enableView.ToString());
                 }
             }
 
@@ -979,11 +990,11 @@ namespace SPIXI
                 // Call webview methods on the main UI thread only
                 if (message.localSender)
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), "True");
+                    Utils.sendUiCommand(this, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-sent"), amount, status, status_icon, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), "True");
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), "True");
+                    Utils.sendUiCommand(this, "addPaymentRequest", Crypto.hashToString(message.id), message.message, address, nick, avatar, SpixiLocalization._SL("chat-payment-received"), amount, status, status_icon, message.timestamp.ToString(), "", message.confirmed.ToString(), message.read.ToString(), "True");
                 }
             }
 
@@ -1001,7 +1012,7 @@ namespace SPIXI
                     {
                         progress = "100";
                     }
-                    Utils.sendUiCommand(webView, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), paid.ToString());
+                    Utils.sendUiCommand(this, "addFile", Crypto.hashToString(message.id), address, nick, avatar, uid, name, message.timestamp.ToString(), message.localSender.ToString(), message.confirmed.ToString(), message.read.ToString(), progress, message.completed.ToString(), paid.ToString());
                 }
             }
             
@@ -1009,7 +1020,7 @@ namespace SPIXI
             {
                 // Normal chat message
                 // Call webview methods on the main UI thread only
-                Utils.sendUiCommand(webView, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+                Utils.sendUiCommand(this, prefix, Crypto.hashToString(message.id), address, nick, avatar, message.message, message.timestamp.ToString(), message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
             }
 
             if(message.type == FriendMessageType.voiceCall || message.type == FriendMessageType.voiceCallEnd)
@@ -1044,7 +1055,7 @@ namespace SPIXI
                     seconds = seconds % 60;
                     text = string.Format("{0} ({1}:{2})", text, minutes, seconds < 10 ? "0" + seconds : seconds.ToString());
                 }
-                Utils.sendUiCommand(webView, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
+                Utils.sendUiCommand(this, "addCall", Crypto.hashToString(message.id), text, declined.ToString(), message.timestamp.ToString());
             }
 
             updateMessageReadStatus(message, channel);
@@ -1121,13 +1132,13 @@ namespace SPIXI
         {
             if (channel == selectedChannel)
             {
-                Utils.sendUiCommand(webView, "deleteMessage", Crypto.hashToString(msg_id));
+                Utils.sendUiCommand(this, "deleteMessage", Crypto.hashToString(msg_id));
             }
         }
 
         public void showTyping()
         {
-            Utils.sendUiCommand(webView, "showUserTyping");
+            Utils.sendUiCommand(this, "showUserTyping");
         }
 
         public void updateReactions(byte[] msg_id, int channel)
@@ -1149,7 +1160,7 @@ namespace SPIXI
             {
                 reactions_str += reaction.Key + ":" + reaction.Value.Count() + ";";
             }
-            Utils.sendUiCommand(webView, "addReactions", Crypto.hashToString(fm.id), reactions_str);
+            Utils.sendUiCommand(this, "addReactions", Crypto.hashToString(fm.id), reactions_str);
         }
 
         public void updateMessage(FriendMessage message)
@@ -1159,17 +1170,17 @@ namespace SPIXI
             {
                 paid = true;
             }
-            Utils.sendUiCommand(webView, "updateMessage", Crypto.hashToString(message.id), message.message, message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
+            Utils.sendUiCommand(this, "updateMessage", Crypto.hashToString(message.id), message.message, message.sent.ToString(), message.confirmed.ToString(), message.read.ToString(), paid.ToString());
         }
 
         public void updateFile(string uid, string progress, bool complete)
         {
-            Utils.sendUiCommand(webView, "updateFile", uid, progress, complete.ToString());
+            Utils.sendUiCommand(this, "updateFile", uid, progress, complete.ToString());
         }
 
         public void updateGroupChatNicks(Address address, string nick)
         {
-            Utils.sendUiCommand(webView, "updateGroupChatNicks", address.ToString(), nick);
+            Utils.sendUiCommand(this, "updateGroupChatNicks", address.ToString(), nick);
         }
 
         public void updateTransactionStatus(string txid, bool verified)
@@ -1183,7 +1194,7 @@ namespace SPIXI
                 status_icon = "fa-check-circle";
             }
 
-            Utils.sendUiCommand(webView, "updateTransactionStatus", txid, status, status_icon);
+            Utils.sendUiCommand(this, "updateTransactionStatus", txid, status, status_icon);
         }
 
         public void updateRequestFundsStatus(byte[] msg_id, byte[] txid, string status)
@@ -1200,7 +1211,7 @@ namespace SPIXI
             if (txid != null)
                 txid_string = Transaction.getTxIdString(txid);
 
-            Utils.sendUiCommand(webView, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), txid_string, status, status_icon, enableView.ToString());
+            Utils.sendUiCommand(this, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), txid_string, status, status_icon, enableView.ToString());
         }
 
         // Executed every second
@@ -1208,7 +1219,7 @@ namespace SPIXI
         {
             base.updateScreen();
 
-            Utils.sendUiCommand(webView, "setNickname", friend.nickname);
+            Utils.sendUiCommand(this, "setNickname", friend.nickname);
 
             if(friend.bot)
             {
@@ -1217,7 +1228,7 @@ namespace SPIXI
                 {
                     userCount = friend.metaData.botInfo.userCount;
                 }
-                Utils.sendUiCommand(webView, "setOnlineStatus", String.Format(SpixiLocalization._SL("chat-member-count"), userCount));
+                Utils.sendUiCommand(this, "setOnlineStatus", String.Format(SpixiLocalization._SL("chat-member-count"), userCount));
             }
             else
             {
@@ -1225,23 +1236,23 @@ namespace SPIXI
                 {
                     if (friend.online)
                     {
-                        Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
+                        Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-online"));
                     }
                     else
                     {
-                        Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
+                        Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
                     }
                 }
                 else if(friend.state == FriendState.RequestSent || friend.state == FriendState.RequestReceived)
                 {
-                    Utils.sendUiCommand(webView, "setOnlineStatus", SpixiLocalization._SL("chat-waiting-for-response"));
+                    Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-waiting-for-response"));
                 }
             }
 
             if (_waitingForContactConfirmation && friend.state == FriendState.Approved)
             {
                 _waitingForContactConfirmation = false;
-                Utils.sendUiCommand(webView, "showRequestSentModal", "0");
+                Utils.sendUiCommand(this, "showRequestSentModal", "0");
             }
 
             // Show connectivity warning bar
@@ -1249,16 +1260,16 @@ namespace SPIXI
             {
                 if (!Config.enablePushNotifications && (friend.relayIP == null || StreamClientManager.isConnectedTo(friend.relayIP, true) == null))
                 {
-                    Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
+                    Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-s2"));
                 }
                 else
                 {
-                    Utils.sendUiCommand(webView, "showWarning", "");
+                    Utils.sendUiCommand(this, "showWarning", "");
                 }
             }
             else
             {
-                Utils.sendUiCommand(webView, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
+                Utils.sendUiCommand(this, "showWarning", SpixiLocalization._SL("global-connecting-dlt"));
             }
             
                 
@@ -1267,7 +1278,7 @@ namespace SPIXI
             //if(msgCount != lastMessageCount)
             {
                 lastMessageCount = msgCount;
-                Utils.sendUiCommand(webView, "setUnreadIndicator", string.Format("{0}", lastMessageCount));
+                Utils.sendUiCommand(this, "setUnreadIndicator", string.Format("{0}", lastMessageCount));
             }
         }
 
