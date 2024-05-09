@@ -32,57 +32,42 @@
             <div id="backbtn" class="col-2" style="padding-top: 10px; padding-left: 0px;">
                 <i class="fas fa-arrow-circle-left"></i>
             </div>
-            <div class="col-10"></div>
+            <div class="col-10" style="height: 200px;"></div>
 
             <div class="spixi-toolbar-contact-name" id="nickname" onclick="editNick();"></div>
-            <div class="spixi-toolbar-contact-status" id="status"></div>
+            <div class="spixi-toolbar-contact-status" id="status" style="padding-bottom: 20px;"></div>
 
-            <!-- OptionBar -->
-            <div class="spixi-optionbar spixi-optionbar-contact-details">
-                <div class="spixi-optionbar-frame container">
-                    <div class="row" id="">
-                        <div class="col-4 spixi-optionbar-tab">
-                            <a href="ixian:chat">
-                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-comment"></i></div>
-                                <div class="spixi-optionbar-label">*SL{contact-details-chat}</div>
-                            </a>
-                        </div>
-
-                        <div class="col-4 spixi-optionbar-tab">
-                            <a href="ixian:send">
-                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-up"></i></div>
-                                <div class="spixi-optionbar-label">*SL{contact-details-send}</div>
-                            </a>
-                        </div>
-
-                        <div class="col-4 spixi-optionbar-tab">
-                            <a href="ixian:request">
-                                <div class="spixi-optionbar-tab-icon"><i class="fa fa-angle-double-down"></i></div>
-                                <div class="spixi-optionbar-label">*SL{contact-details-receive}</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End OptionBar -->
         </div>
         <!-- End Toolbar Contact -->
 
+        <!-- OptionBar -->
+        <div class="spixi-optionbar spixi-optionbar-contact-details">
+            <div class="spixi-optionbar-frame container">
+                <div class="row" id="">
+                    <div class="col-4 spixi-optionbar-tab">
+                        <a href="ixian:chat">
+                            <div class="spixi-optionbar-tab-icon"><i class="fa-solid fa-message"></i></div>
+                            <div class="spixi-optionbar-label">*SL{contact-details-chat}</div>
+                        </a>
+                    </div>
 
+                    <div class="col-4 spixi-optionbar-tab">
+                        <a href="ixian:send">
+                            <div class="spixi-optionbar-tab-icon"><i class="fa-solid fa-arrow-up"></i></div>
+                            <div class="spixi-optionbar-label">*SL{contact-details-send}</div>
+                        </a>
+                    </div>
 
-        <div id="exp1" class="spixi-expansion">
-            <div id="exp1-left" class="spixi-expansion-left"></div>
-            <div class="spixi-expansion-icon"><i class="fa fa-flag"></i></div>
-            <div class="spixi-expansion-text">*SL{contact-details-notifications} (<span id="notification_count">0</span>)</div>
-            <div class="spixi-expansion-right"><i id="exp1-icon" class="fa fa-caret-down"></i></div>
+                    <div class="col-4 spixi-optionbar-tab">
+                        <a href="ixian:request">
+                            <div class="spixi-optionbar-tab-icon"><i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="spixi-optionbar-label">*SL{contact-details-receive}</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="exp1-contents" class="spixi-expansion-middle" style="display: none;">
-
-        </div>
-        <div class="spixi-expansion-bottom"></div>
-
-
-
+        <!-- End OptionBar -->
 
         <div id="exp2" class="spixi-expansion">
             <div id="exp2-left" class="spixi-expansion-left"></div>
@@ -251,29 +236,6 @@
 
             paymentsNode.appendChild(paymentEntry);
         }
-
-        document.getElementById("exp1").onclick = function () {
-            var x = document.getElementById("exp1-contents");
-            var eleft = document.getElementById("exp1-left");
-            var eicon = document.getElementById("exp1-icon");
-
-
-
-            if (x.style.display === "none") {
-                x.style.display = "block";
-                eleft.className = "spixi-expansion-left active";
-                eicon.className = "fa fa-minus";
-            }
-            else {
-                x.style.display = "none";
-                eleft.className = "spixi-expansion-left";
-                eicon.className = "fa fa-caret-down";
-
-            }
-
-        }
-
-
 
         document.getElementById("exp2").onclick = function () {
             var x = document.getElementById("exp2-contents");

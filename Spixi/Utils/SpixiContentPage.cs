@@ -82,7 +82,7 @@ namespace SPIXI
             return readyState.Trim('\"') == "complete";
         }
 
-        public void reload()
+        public virtual void reload()
         {
             if (_webView != null)
             {

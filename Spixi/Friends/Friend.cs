@@ -749,7 +749,7 @@ namespace SPIXI
             return true;
         }
 
-        public List<FriendMessage> getMessages(int channel)
+        public List<FriendMessage> getMessages(int channel, int msg_count = 100)
         {
             try
             {
@@ -760,10 +760,10 @@ namespace SPIXI
                 }
                 lock (messages)
                 {
-                    if (!messages.ContainsKey(channel))
+                    if (!messages.ContainsKey(channel) || msg_count != 100)
                     {
                         // Read messages from chat history
-                        messages[channel] = Node.localStorage.readLastMessages(walletAddress, channel);
+                        messages[channel] = Node.localStorage.readLastMessages(walletAddress, channel, 0, msg_count);
                     }
                     return messages[channel];
                 }
