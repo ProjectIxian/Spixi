@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
-
     <title>Spixi</title>
 
     <link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -22,7 +21,7 @@
     <script src="js/qrcode.min.js"></script>
     <script src="js/clipboard.min.js"></script>
 </head>
-<body onload="onChatScreenLoad();" style="position:fixed;width:100%;height:100%;">
+<body onload="onChatScreenLoad();" style="position:fixed;width:100%;height:100%;background-color:#000;">
     <div id="templates" style="display: none;">
         <div class="channel-selector-template">
             <div class="channel-selector-row">
@@ -87,6 +86,10 @@
             <div class="spixi-errorbar-message"></div>
         </div>
         <!-- End ErrorBar-->
+
+        <div id="messages" class="scrollable-div">
+        </div>
+
         <!-- Modal -->
         <div id="requestReceivedModal" class="spixi-modal-soft" style="display:none;">
             <!-- Modal content -->
@@ -150,9 +153,6 @@
             </div>
         </div>
 
-        <div id="messages">
-        </div>
-
         <div id="UserTyping"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
 
         <div id="chatholder" class="chatholder"></div>
@@ -164,27 +164,27 @@
                 <div class="chatbar-input-wrapper">
                     <div contenteditable="true" id="chat_input" placeholder="*SL{chat-type-placeholder}"></div>
                 </div>
-                <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa fa-paper-plane"></i></div></div>
+                <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa-solid fa-arrow-right"></i></div></div>
             </div>
         </div>
         <div id="chatattachbar">
             <div class="row ">
                 <div class="col-4 chat_attach_tab" id="ca_sendfile">
-                    <i class="fa fa-file-alt chatattachsymbol"></i><br />
+                    <i class="fa-solid fa-file-export chatattachsymbol"></i><br />
                     *SL{chat-send-file}
                 </div>
                 <div class="col-4 chat_attach_tab" id="ca_request">
-                    <i class="fa fa-angle-double-down chatattachsymbol"></i><br />
+                    <i class="fa-solid fa-arrow-down chatattachsymbol"></i><br />
                     *SL{chat-request-payment}
                 </div>
                 <div class="col-4 chat_attach_tab" id="ca_send">
-                    <i class="fa fa-angle-double-up chatattachsymbol"></i><br />
+                    <i class="fa-solid fa-arrow-up chatattachsymbol"></i><br />
                     *SL{chat-send-payment}
                 </div>
                 <!--<div class="col-3 chat_attach_tab" id="ca_app">
-                    <i class="fa fa-code chatattachsymbol"></i><br />
-                    Use App
-                </div>-->
+                <i class="fa fa-code chatattachsymbol"></i><br />
+                Use App
+            </div>-->
             </div>
         </div>
         <div id="AppsMenu"><div class="close" onclick="this.parentNode.style.display = 'none';"><i class="fa fa-times-circle"></i></div></div>

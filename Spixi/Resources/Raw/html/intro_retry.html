@@ -49,7 +49,7 @@
 
             <div class="intro-holder-70"></div>
 
-            <div id="proceedbtn" class="intro-button center disabled">
+            <div id="proceedbtn" class="spixi-flat-button center disabled">
                 *SL{intro-retry-proceed}
             </div>
 
@@ -86,12 +86,12 @@
 
         function checkPassword() {
             var password = $("#password").val();
-            proceedbtn.className = "intro-button center disabled";
+            proceedbtn.className = "spixi-flat-button center disabled";
 
             if (password.length < 1)
                 return false;
 
-            proceedbtn.className = "intro-button center";
+            proceedbtn.className = "spixi-flat-button center";
             return true;
         }
 

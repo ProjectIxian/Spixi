@@ -1,12 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
-using SPIXI.Interfaces;
-using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.Storage;
-using System;
-using System.IO;
-using System.Linq;
 using System.Web;
 
 namespace SPIXI
@@ -18,17 +13,22 @@ namespace SPIXI
 
         private bool viewOnly = true;
 
-        public WalletSentPage(Transaction tx, bool view_only = true)
+        private HomePage? homePage;
+
+        public WalletSentPage(Transaction tx, bool view_only = true, HomePage? home = null)
         {
             viewOnly = view_only;
 
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-
+            webView.Opacity = 0;
+            Content.BackgroundColor = ThemeManager.getBackgroundColor();
 
             transaction = tx;
 
             loadPage(webView, "wallet_sent.html");
+
+            homePage = home;
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -47,6 +47,12 @@ namespace SPIXI
             {
                 checkTransaction();
             }
+            if (homePage != null)
+            {
+                Utils.sendUiCommand(this, "hideBackButton");
+            }
+
+            webView.FadeTo(1, 150);
         }
 
         private void onNavigating(object sender, WebNavigatingEventArgs e)

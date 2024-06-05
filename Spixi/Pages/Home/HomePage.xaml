@@ -5,12 +5,20 @@
              x:Class="SPIXI.HomePage">
     <ContentPage.Content>
 
-        <Grid>
+        <Grid x:Name="mainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="0" />
+                <ColumnDefinition Width="0" />
+            </Grid.ColumnDefinitions>
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
-            <WebView x:Name="webView" Navigating="onNavigating" Navigated="onNavigated" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+            <WebView x:Name="webView" Navigating="onNavigating" Navigated="onNavigated" VerticalOptions="Fill" HorizontalOptions="Fill"  Grid.Column="0"/>
+            <BoxView x:Name="separator" Color="#17181C" Grid.Column="1" VerticalOptions="FillAndExpand" />
+            <ContentView x:Name="rightContent" Grid.Column="2"/>
         </Grid>
         
     </ContentPage.Content>

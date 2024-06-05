@@ -33,13 +33,6 @@ a:active {
     text-decoration: none;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #d0acbe;
-  opacity: 1; /* Firefox */
-}
-::-ms-input-placeholder { /* Microsoft Edge */
-  color: #d0acbe;
-}
 
 #wrap {
     padding: 0 0;
@@ -52,7 +45,7 @@ a:active {
     right: 0;
     overflow: auto;
     color: #FFF;
-    background: linear-gradient(#291046, #ad1457);
+    background: #144576;
 }
 
 .center {
@@ -113,7 +106,7 @@ a:active {
 }
 .intro-holder-70 {
     width: 100%;
-    height: 70px;
+    height: 5px;
 }
 .intro-holder-96 {
     width: 100%;
@@ -129,7 +122,7 @@ a:active {
 }
 .intro-logo-holder2 {
     text-align: center;
-    margin-top: 34px;
+    margin-top: 84px;
 }
 
 .intro-toolbar-logo {
@@ -171,20 +164,17 @@ a:active {
 .intro-textfield {
     width: 100%;
     height: 44px;
-    
-    background: #9d587d;
-    border: solid 1px #d0acbe;
+    background: #FEFEFE;
+    border: 1px solid rgba(25, 41, 60, 0.25);
     outline: none;
-    border-radius: 64px;
-    
-    color: #d0acbe;
+    border-radius: 8px;
+    color: #000;
     padding-left: 12px;
     padding-right: 12px;
 }
 .intro-textfield:focus {
-    border: solid 1px #FFF;
-    color: #fff;
-}
+    border: 1px solid #17334F;
+ }
 .intro-textfield-holder {
     width: 85%;
     margin: auto;
@@ -411,8 +401,91 @@ a:active {
     margin-top: 15px;
 }
 
-#step1, #step2
-{
+.spixi-toolbar-logo {
+    background-image: url(../img/spixilogo.svg);
+    width: 180px;
+    background-size: 60px 60px;
+    background-repeat: no-repeat;
+    background-position: 0px 14px;
+    margin: auto;
+    padding-left: 58px;
+    font-size: 56px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.spixi-lock-row-details {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+
+.spixi-flat-button {
+    background: #353F4F;
+    color: #FFFFFF;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    width: 280px;
+    margin: auto;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+}
+
+    .spixi-flat-button:hover {
+        color: #FFFFFF;
+        background: #4A586D;
+    }
+
+    .spixi-flat-button:active {
+        color: #FFFFFF;
+        background: #212731;
+    }
+
+        .spixi-flat-button:active a {
+            color: #FFFFFF;
+        }
+
+    .spixi-flat-button a {
+        color: #FFFFFF;
+    }
+
+    .spixi-flat-button.outline {
+        background: transparent;
+        border: 1.5px solid #fff;
+        border-radius: 8px;
+        color: #fff;
+    }
+
+    .spixi-flat-button.margin {
+        margin: 16px;
+    }
+
+    .spixi-flat-button.modal-left {
+        margin-left: 0px;
+        margin-right: 4px;
+    }
+
+    .spixi-flat-button.modal-right {
+        margin-left: 4px;
+        margin-right: 0px;
+    }
+
+    .spixi-flat-button.disabled {
+        background: #CCCCCC;
+        color: #656565;
+    }
+
+#step1, #step2 {
     margin: 0 auto;
     max-width: 300pt;
     width: 100%;

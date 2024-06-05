@@ -28,7 +28,7 @@ namespace SPIXI
 
         public static string escapeHtmlParameter(string str)
         {
-            return str.Replace("\"", "&#34;").Replace("'", "&#39;").Replace("\\", "&#92;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\r\n", "\\n").Replace("\n", "\\n");
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
         }
 
         public static string amountToHumanFormatString(IxiNumber amount)
@@ -43,25 +43,19 @@ namespace SPIXI
         {
             try
             {
-                string cmd_str = command + "(";
+                string cmd_str = "executeUiCommand(" + command;
                 StringBuilder sb = new StringBuilder(cmd_str);
-                bool first = true;
 
                 foreach (string arg in arguments)
                 {
-                    if (!first)
-                    {
-                        sb.Append(",");
-                    }
-                    sb.Append("'");
+                    sb.Append(",'");
                     sb.Append(escapeHtmlParameter(arg));
                     sb.Append("'");
-                    first = false;
                 }
 
                 sb.Append(");");
                 cmd_str = sb.ToString();
-
+                // Logging.info("JS {0}", cmd_str);
                 contentPage.sendMessage(cmd_str);
 
             }

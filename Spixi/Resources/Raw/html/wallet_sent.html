@@ -38,7 +38,7 @@
 
             <div class="row no-gutters spixi-list-item-second-row">
                 <div class="col">
-                    <div class="spixi-list-item-timestamp">2 days ago</div>
+                    <div class="spixi-list-item-timestamp"></div>
                 </div>
                 <div class="col spixi-list-item-right">
                     <div class="spixi-list-item-amount-fiat"></div>
@@ -125,11 +125,13 @@
             location.href = "ixian:viewexplorer";
         }
 
+        function hideBackButton() {
+            document.getElementById("backbtn").style.display = "none";
+        }
+
         function setReceivedMode() {
             received = true;
             document.getElementById('subtitle-type').innerHTML = "*SL{wallet-sentrecv-subtitle}";
-            document.getElementById('amount_label').innerHTML = "*SL{wallet-sentrecv-amount}";
-            document.getElementById('paymentdetail_label').innerHTML = "*SL{wallet-sentrecv-details}";
         }
 
         function clearEntries() {
@@ -196,11 +198,6 @@
 
             document.getElementById('sent_fee').innerHTML = fee;
             document.getElementById("sent_txid").innerHTML = txid;
-
-            document.getElementById('sent_status').innerHTML = confirmedText;
-            if (confirmedText != "*SL{wallet-sent-unconfirmed}") {
-                document.getElementById('sent_status').className = "spixi-textsection-holder spixi-textsection-header spixi-text-green";
-            }
         }
     </script>
 </body>

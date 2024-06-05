@@ -65,7 +65,7 @@
             <div id="wal4" class="spixi-text-address">*SL{address-gen-4}</div>
 
             <hr class="spixi-separator" />
-            <div class="spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
+            <div class="spixi-sectionbar-txid spixi-center spixi-italic "><i class="spixi-text-address fa fa-info-circle"></i> *SL{address-tooltip}</div>
         </div>
 
         <hr class="spixi-separator-main" />
@@ -257,7 +257,7 @@
             var recipientsContainer = document.getElementById("recipients");
             var c_items = recipientsContainer.getElementsByClassName('recipient');
 
-            nextbtn.className = "spixi-button large center disabled";
+            nextbtn.className = "spixi-flat-button margin center disabled";
 
             // If there are no recipients, do not enable the next button
             if (c_items.length < 1) {
@@ -269,7 +269,7 @@
             }
 
             // Enable the next button if we reach this point
-            nextbtn.className = "spixi-button large center";
+            nextbtn.className = "spixi-flat-button margin center";
 
             return true;
         }

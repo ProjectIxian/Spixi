@@ -25,18 +25,17 @@
     <div id="wrap" class="container-fluid noselect">
 
         <div class="intro-logo-holder2">
-            <img class="intro-toolbar-logo" src="img/spixitoolbarlogo.png" />
+            <div class="spixi-toolbar-title">
+                <div class="spixi-toolbar-logo">Spixi</div>
+            </div>
         </div>
         <div class="intro-holder-70"></div>
 
         <!-- DescriptionBar -->
         <div class="intro-descriptionbar">
-            <div class="row spixi-descriptionbar-row">
-                <div class="col-2 intro-descriptionbar-icon"><i class="fa fa-lock"></i></div>
-                <div class="col-10 spixi-descriptionbar-row-details">
+                <div class="spixi-lock-row-details">
                     <div>*SL{lock-description}</div>
                 </div>
-            </div>
         </div>
         <!-- End DescriptionBar -->
         <hr class="intro-separator" />
@@ -52,12 +51,12 @@
 
         <div class="intro-holder-70"></div>
 
-        <div id="unlockbtn" class="intro-button center disabled">
+        <div id="unlockbtn" class="spixi-flat-button center disabled" style="margin-top:50px">
             *SL{lock-unlock}
         </div>
 
         <div class="intro-holder-70"></div>
-        <div id="changebtn" class="intro-button center">
+        <div id="changebtn" class="spixi-flat-button outline center" style="margin-top:14px">
             *SL{lock-change}
         </div>
 
@@ -71,6 +70,15 @@
         var changebtn = document.getElementById("changebtn");
         var errormessage = document.getElementById("errormessage");
 
+        $(document).ready(function () {
+            $('#password').focus();
+
+            $('#password').on('keypress', function (event) {
+                if (event.which === 13) {
+                    unlock();
+                }
+            });
+        });
 
         unlockbtn.onclick = function () {
             if (unlockbtn.classList.contains("disabled")) {
@@ -87,12 +95,12 @@
         function checkPassword() {
             var password = $("#password").val();
             errormessage.style.display = "none";
-            unlockbtn.className = "intro-button center disabled";
+            unlockbtn.className = "spixi-flat-button center disabled";
 
             if (password.length < 1)
                 return false;
 
-            unlockbtn.className = "intro-button center";
+            unlockbtn.className = "spixi-flat-button center";
             return true;
         }
 

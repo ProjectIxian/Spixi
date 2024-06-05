@@ -28,6 +28,7 @@ namespace SPIXI
 
             Preferences.Default.Set("appearance", (int)activeAppearance);
             SpixiLocalization.addCustomString("SpixiThemeMode", name + "-" + appearance_name + ".css");
+
             return true;
         }
 
@@ -55,6 +56,13 @@ namespace SPIXI
             }
 
             return "spixiui-light";
+        }
+
+        public static Color getBackgroundColor()
+        {
+            if (getActiveAppearanceString() == "spixiui-light")
+                return Color.FromArgb("#FFFFFF");
+            return Color.FromArgb("#000000");
         }
 
     }

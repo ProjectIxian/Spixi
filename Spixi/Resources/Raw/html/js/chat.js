@@ -39,8 +39,8 @@ function onChatScreenLoad()
 
 	if(SL_Platform == "Xamarin-iOS")
 	{
-		setInterval('iosFixer();', 500);
-	}
+        	setInterval('iosFixer();', 500);
+   }
 	
     messagesEl.addEventListener("click", function (e) {
         if (e.target.className.indexOf("nick") != -1) {
@@ -98,12 +98,10 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         msgEl.innerHTML = "<span><i class='fa fa-info-circle'></i></span> " + costText;
 
         document.body.appendChild(msgEl);
-        document.getElementById("chatholder").style.height = "94px";
         document.getElementById("chat_send").innerHTML = '<i class="fa fa-wallet"></i>';
     }else
     {
-        document.getElementById("chatholder").style.height = "70px";    
-        document.getElementById("chat_send").innerHTML = '<i class="fa fa-paper-plane"></i>';
+        document.getElementById("chat_send").innerHTML = '<i class="fa-solid fa-arrow-right"></i>';
 	}
 
     if(bot == "True")
@@ -154,6 +152,10 @@ function onChatScreenReady(address)
     setBotAddress(address);
 }
 
+function hideBackButton() {
+    document.getElementById("backbtn").style.display = "none";
+}
+
 document.getElementById("backbtn").onclick = function () {
     if(document.getElementById("ContactsBox"))
     {
@@ -194,7 +196,6 @@ function test() {
 
     setTimeout(function () { updateMessage(12, "50", "True", "True"); }, 5000);*/
 }
-
 
 document.getElementById("ca_request").onclick = function () {
     location.href = "ixian:request";
@@ -295,9 +296,12 @@ $("#chat_input").focus(function (event) {
     if (shouldScroll()) {
         setTimeout(function () {			
             document.getElementById("chatholder").scrollIntoView(false);
+            var messagesDiv = document.getElementById('messages');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
             // Hack for slow devices
             setTimeout(function () {
                 document.getElementById("chatholder").scrollIntoView(false);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }, 800);
         }, 200);
     }
@@ -498,6 +502,9 @@ function addText(id, address, nick, avatar, text, time, className) {
         }
         else if (className.includes("default")) {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-comment-slash\"></i>";
+        }
+        else if (className.includes("read")) {
+            bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check-double\"></i>";
         }       
         else {
             bubbleContentWrapEl.innerHTML += "<i class=\"statusIndicator fas fa-check\"></i>";
@@ -544,6 +551,8 @@ function addText(id, address, nick, avatar, text, time, className) {
 
     if (scroll) {
         chatHolderEl.scrollIntoView(false);
+        var messagesDiv = document.getElementById('messages');
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
 }
 
@@ -758,6 +767,9 @@ function updateMessage(id, message, sent, confirmed, read, paid) {
                 else if (additionalClasses.includes("default")) {
                     statusEl.className = "statusIndicator fas fa-comment-slash";
                 }
+                else if (additionalClasses.includes("read")) {
+                    statusEl.className = "statusIndicator fas fa-check-double";
+                }
                 else {
                     statusEl.className = "statusIndicator fas fa-check";
                 }
@@ -864,13 +876,11 @@ document.getElementById("chat_attach").onclick = function (event) {
 
 function hideAttach() {
     document.getElementById("chatbar").style.bottom = "0px";
-    document.getElementById("chatholder").style.height = "70px";
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     var payBar = document.getElementById("SpixiPayableBar");
     if(payBar != null)
     {
         payBar.style.bottom = "60px";
-        document.getElementById("chatholder").style.height = "88px";
 	}
 }
 
@@ -881,13 +891,11 @@ function showAttach() {
 	}
     var attachBarHeight = document.getElementById("chatattachbar").offsetHeight;
     document.getElementById("chatbar").style.bottom = attachBarHeight + "px";
-    document.getElementById("chatholder").style.height = (attachBarHeight + 70) + "px";
     document.getElementById("chatattachbar").style.bottom = "0px";
     var payBar = document.getElementById("SpixiPayableBar");
     if(payBar != null)
     {
         payBar.style.bottom = (attachBarHeight + 60) + "px";
-        document.getElementById("chatholder").style.height = (attachBarHeight + 60 + 28) + "px";
 	}
     setTimeout(function () {
                 document.getElementById("chatholder").scrollIntoView(false);
@@ -1071,10 +1079,29 @@ function hideChannelSelector()
     channelSelectorEl = null;
 }
 
-function clearMessages()
+function clearMessages(showMore)
 {
     messagesEl.innerHTML = "";
+
+    if (showMore == "true") {
+        const loadMoreDiv = document.createElement('div');
+        loadMoreDiv.id = "load_more";
+        loadMoreDiv.className = "spixi-outline-button";
+        loadMoreDiv.style.width = "200px";
+        loadMoreDiv.style.height = "40px";
+        loadMoreDiv.style.paddingTop = "8px";
+        loadMoreDiv.style.marginTop = "30px";
+        loadMoreDiv.style.marginBottom = "30px";
+        loadMoreDiv.style.marginLeft = "auto";
+        loadMoreDiv.style.marginRight = "auto";
+        loadMoreDiv.innerHTML = "<i class='fa-solid fa-arrow-rotate-right'></i> Show older messages";
+        messagesEl.appendChild(loadMoreDiv);
+        document.getElementById("load_more").onclick = function () {
+            location.href = "ixian:loadmore";
+        }
+    }
 }
+
 
 function displayContextMenu(e)
 {
@@ -1169,8 +1196,14 @@ function displayContextMenu(e)
     {
         contextMenuEl.style.left = e.clientX + "px";
 	}
-
+    document.addEventListener('click', handleContextMenuOutsideClick, true);
     return true;
+}
+function handleContextMenuOutsideClick(event) {
+    const contextMenuEl = document.getElementById('ContextMenu');
+    if (contextMenuEl && !contextMenuEl.contains(event.target)) {
+        hideContextMenus();
+    }
 }
 
 function hideContextMenu()
@@ -1178,6 +1211,7 @@ function hideContextMenu()
     var contextMenuEl = document.getElementById("ContextMenu");
     if(contextMenuEl != null)
     {
+        document.removeEventListener('click', handleContextMenuOutsideClick, true);
         contextMenuEl.parentNode.removeChild(contextMenuEl);
 	}
 }
@@ -1583,12 +1617,12 @@ function iosFixer() {
 				
 	if(newOffset > initialOffset)
 	{
-		var diff = newOffset - initialOffset;
-		document.getElementById("chattoolbar").style.top = diff+"px";
+        var diff = newOffset - initialOffset;
+        document.getElementById("wrap").style.top = diff + "px";
 	}
 	else if (newOffset < initialOffset)
-	{
-		document.getElementById("chattoolbar").style.top = "0px";
-	}
+    {
+        document.getElementById("wrap").style.top = "0px";
+    }    
 	initialOffset = newOffset;			
 }

@@ -150,7 +150,7 @@ namespace SPIXI
                     lockPage.authSucceeded += HandleAuthSucceeded;
                     Navigation.PushModalAsync(lockPage);
 
-                    
+
                 }
             }
             else if (current_url.StartsWith("ixian:appearance:", StringComparison.Ordinal))
@@ -378,7 +378,7 @@ namespace SPIXI
         {
             resetLanguage();
 
-            Navigation.PopModalAsync();
+            Navigation.PopAsync();
 
             return true;
         }

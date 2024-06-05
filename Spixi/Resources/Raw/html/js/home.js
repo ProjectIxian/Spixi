@@ -3,17 +3,9 @@ var timeoutId = 0;
 var balance = "0";
 var fiatBalance = "0";
 var hideBalance = false;
+var selectedItemId = null;
 
 var homeModal = document.getElementById('homeMenuModal');
-
-function htmlEscape(str) {
-    return str
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\//g, '&#x2F;');
-}
 
 function onMainMenuAction() {
     leftSidebar.style.display = "block";
@@ -171,9 +163,6 @@ function clearContacts()
 // Adds a contact to the contacts page
 function addContact(wal, name, avatar, online, unread)
 {
-    name = htmlEscape(name);
-    avatar = avatar.replace(/&#92;/g, '\\');
-
     if (searchingContacts == true) {
         return;
     }
@@ -200,7 +189,7 @@ function addContact(wal, name, avatar, online, unread)
 
 function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
 {
-    // ipdate for contacts
+    // Update for contacts
     var el = document.getElementById("c_" + wal);
     if(el == null)
     {
@@ -221,24 +210,12 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     
     // update for chats
     var chatEl = document.getElementById("ch_" + wal);
-    var unreadEl = document.getElementById("un_" + wal);
     if(chatEl != null)
     {
-        if((excerpt == "") || chatEl.getElementsByClassName("excerpt")[0].innerHTML == excerpt)
-        {
-            chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
-            if(unreadEl != null)
-            {
-                unreadEl.className = "spixi-list-item" + indicator + unreadIndicator;
-            }
-            return;
+        chatEl.className = "spixi-list-item" + indicator + unreadIndicator;
+        if (selectedItemId == chatEl.id) {
+            chatEl.className += " selected";
         }
-        chatEl.parentElement.removeChild(chatEl);
-    }
-
-    if(unreadEl != null)
-    {
-        unreadEl.parentElement.removeChild(unreadEl);
     }
 
     var nickEl = el.getElementsByClassName("nick");
@@ -246,12 +223,6 @@ function setContactStatus(wal, online, unread, excerpt, msgTimestamp)
     var avatarEl = el.getElementsByClassName("spixi-list-item-avatar");
     var avatarSrc = avatarEl[0].src;
 
-    addChat(wal, nick, msgTimestamp, avatarSrc, online, excerpt, unread, true);
-
-    if(unread > 0)
-    {
-        addUnreadActivity(wal, nick, msgTimestamp, avatarSrc, online, excerpt, true);
-    }
 }
 
 
@@ -312,6 +283,7 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
 
     const paymentEntry = document.createElement("div");
+    paymentEntry.id = "tx_" + txid;
     paymentEntry.innerHTML = `
         <a href="ixian:txdetails:${txid}">
             <div class="row no-gutters spixi-list-item-first-row flex-nowrap">
@@ -336,21 +308,80 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
     document.getElementById("paymentlist").appendChild(paymentEntry);
 }
 
+
+function setupCloneNode(element) {
+    if (element.id) {
+        element.id = element.id + '-clone';
+    }
+    for (let i = 0; i < element.children.length; i++) {
+        setupCloneNode(element.children[i]);
+    }
+}
+
 // Clears all chats from chats page
 function clearChats() {
-    document.getElementById("chatlist").innerHTML = "";
-    document.getElementById("chat_no_activity").style.display = 'block';
-    document.getElementById("chat_action_button").style.display = 'none';
+    // Get the original chatlist div
+    const chatlist = document.getElementById('chatlist');
+    const chatlistClone = chatlist.cloneNode(true);
+    setupCloneNode(chatlistClone);
+    chatlist.parentNode.insertBefore(chatlistClone, chatlist.nextSibling);
+    //chatlist.style.visibility = 'hidden';
+    chatlist.style.display = 'none';
+    chatlist.innerHTML = '';
+}
+
+
+function clearChatsDone() {
+    const chatlist = document.getElementById('chatlist');
+    const chatlistClone = document.getElementById('chatlist-clone');
+
+    if (chatlistClone) {
+        chatlistClone.style.display = 'none';
+        chatlistClone.style.visibility = 'hidden';
+        chatlistClone.parentNode.removeChild(chatlistClone);
+    }
+    //chatlist.style.visibility = 'visible';
+    chatlist.style.display = 'block';
+
+    if (!chatlist.hasChildNodes()) {
+        document.getElementById("chat_no_activity").style.display = 'block';
+        document.getElementById("chat_action_button").style.display = 'none';
+    }
+}
+
+function selectChat(wallet) {
+    var id = "ch_" + wallet;
+    selectedItemId = id;
+
+    var items = document.querySelectorAll('.spixi-list-item');
+    items.forEach(function (item) {
+        item.classList.remove('selected');
+    });
+
+    const item = document.getElementById(selectedItemId);
+    if (item) {
+        item.classList.add('selected');
+    }
+}
+
+function selectTx(wallet) {
+    var id = "tx_" + wallet;
+    selectedItemId = id;
+
+    var items = document.querySelectorAll('.spixi-list-item');
+    items.forEach(function (item) {
+        item.classList.remove('selected');
+    });
+    /*
+    const item = document.getElementById(selectedItemId);
+    if (item) {
+        item.classList.add('selected');
+    }*/
 }
 
 // Adds a chat
 function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unread, insertToTop)
 {
-    from = htmlEscape(from);
-    timestamp = htmlEscape(timestamp);
-    avatar = avatar.replace(/&#92;/g, '\\');
-    excerpt_msg = htmlEscape(excerpt_msg);
-
     var excerpt = excerpt_msg;
 
     let indicator = online === "true" ? " online" : " offline";
@@ -360,7 +391,7 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
 
     switch (type) {
         case "read":
-            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-read fas fa-check"></i>';
+            readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-read fas fa-check-double"></i>';
             break;
         case "confirmed":
             readIndicator = '<i class="spixi-chat-read-indicator spixi-chat-read-indicator-confirmed fas fa-check"></i>';
@@ -390,6 +421,10 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
     var readmsg = document.createElement("div");
     readmsg.id = "ch_" + wallet;
     readmsg.className = "spixi-list-item" + indicator + unreadIndicator;
+    if (selectedItemId == readmsg.id) {
+        readmsg.className += " selected";
+    }
+
     readmsg.innerHTML = `
         <a href="ixian:chat:${wallet}">
             <div class="row flex-nowrap">
@@ -418,16 +453,16 @@ function addChat(wallet, from, timestamp, avatar, online, excerpt_msg, type, unr
         chatsNode.appendChild(readmsg);
     }
 
-    document.getElementById("chatlist").style.display = 'block';
     document.getElementById("chat_no_activity").style.display = 'none';
     document.getElementById("chat_action_button").style.display = 'block';
 }
 
 function setUnreadIndicator(unread_count) {
+    var dot = document.getElementById("unread-dot");
     if (unread_count != "0") {
-        document.getElementById("tab2").firstElementChild.className = "spixi-tab-pad unread";
+        dot.style.display = "block";
     } else {
-        document.getElementById("tab2").firstElementChild.className = "spixi-tab-pad";
+        dot.style.display = "none";
     }
 }
 
@@ -437,11 +472,6 @@ function clearUnreadActivity() {
 }
 
 function addUnreadActivity(wallet, from, timestamp, avatar, online, excerpt_msg, insertToTop) {
-    from = htmlEscape(from);
-    timestamp = htmlEscape(timestamp);
-    avatar = avatar.replace(/&#92;/g, '\\');
-    excerpt_msg = htmlEscape(excerpt_msg);
-
     var excerpt = excerpt_msg;
 
     var indicator = " offline";

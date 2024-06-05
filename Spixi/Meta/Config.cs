@@ -41,6 +41,7 @@ namespace SPIXI.Meta
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;
+        public static uint messagesToLoad = 100; // Number of chat messages to load in each chunk
 
         // Push notifications OneSignal AppID
         public static string oneSignalAppId = "44d96ce3-5d33-4e8b-997d-d1ad786b96a1";

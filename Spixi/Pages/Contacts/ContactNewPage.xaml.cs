@@ -1,6 +1,7 @@
 ﻿using IXICore;
 using IXICore.Meta;
 using SPIXI.Lang;
+using SPIXI.Meta;
 using System.Web;
 
 namespace SPIXI
@@ -56,7 +57,7 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopModalAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
             {

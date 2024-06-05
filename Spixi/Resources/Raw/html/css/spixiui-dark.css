@@ -240,7 +240,6 @@ img.emoji {
 }
 .spixi-toolbar-holder.bot {
     width: 100%;
-    height: 88px;
 }
 .spixi-toolbar-holder.extended {
     height: 128px;
@@ -742,10 +741,9 @@ img.emoji {
     height: 10px;
     box-sizing: border-box;
     background: #35E8AD;
-    border: 1px solid white;
     position: relative;
-    margin: -17px auto;
-    right: -6px;
+    margin: -28px auto;
+    right: -12px;
 }
 
 .unread .spixi-footer-chat-unread-indicator {
@@ -894,9 +892,10 @@ img.emoji {
 }
 
 .spixi-button.small {
-    border-radius: 18px;
-    font-size: 14px;
-    padding: 8px 4px;
+        border-radius: 18px;
+        font-size: 14px;
+        padding: 8px 4px;
+        color: #FFFFFF;
 }
 .spixi-button.smallwidth {
     width: 160px;
@@ -1496,6 +1495,10 @@ img.emoji {
     }
 }
 
+.spixi-list-item.selected {
+    background-color: #2C3D4E;
+}
+
 .spixi-list-item:active {
     background-color: #393D47;
 }
@@ -1535,7 +1538,7 @@ img.emoji {
     color: #eef2f5;
     margin-left: 5px;
     text-overflow: ellipsis;
-    width: 150px;
+    width: 200px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -1769,9 +1772,41 @@ img.emoji {
     margin-top: 24px;
 }
 
+.maintabholder {
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 120px);
+    position: relative;
+}
+
 /* Chat */
 #messages {
-    padding-top: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 120px);
+    position: relative;
+}
+
+.scrollable-div {
+    overflow-y: auto;
+}
+
+.scrollable-div::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+    background-color: #545A60;
+    border-radius: 10px;
+    border: 2px solid #2E343C;
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: #2E343C;
+    width: 10px;
+}
+.scrollable-div:empty::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .spixi-bubble
@@ -2158,8 +2193,6 @@ img.emoji {
     
     width: 100%;
     height: 60px;
-   /* background-color: aqua;*/
-
 }
 #chatbar {
     -moz-transition: all 0.6s ease-in-out;
@@ -2173,7 +2206,7 @@ img.emoji {
     
     width: 100%;
     bottom: 0;   
-    height: 60px;
+    height: 64px;
     background-color: #3E424A;
     border-top: 1px solid #17181C;
     
@@ -2256,7 +2289,7 @@ img.emoji {
     z-index: 99;    
     width: 100%;
     bottom: -100px;
-    min-height: 60px;
+    min-height: 64px;
     background-color: #25282E;
     border-top: 1px solid #25282E;
     color: #E1E1E1;

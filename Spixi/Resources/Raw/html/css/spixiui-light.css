@@ -240,7 +240,6 @@ img.emoji {
 }
 .spixi-toolbar-holder.bot {
     width: 100%;
-    height: 88px;
 }
 .spixi-toolbar-holder.extended {
     height: 128px;
@@ -740,11 +739,10 @@ img.emoji {
     width: 10px;
     height: 10px;
     box-sizing: border-box;
-    background: #66bced;
-    border: 1px solid white;
+    background: #35E8AD;
     position: relative;
-    margin: -17px auto;
-    right: -6px;
+    margin: -28px auto;
+    right: -12px;
 }
 
 .unread .spixi-footer-chat-unread-indicator {
@@ -893,7 +891,7 @@ img.emoji {
 }
 
 .spixi-button.small {
-    border-radius: 8px;
+    border-radius: 18px;
     font-size: 14px;
     padding: 8px 4px;
 }
@@ -1493,6 +1491,10 @@ img.emoji {
     }
 }
 
+.spixi-list-item.selected {
+    background-color: #DAE7EB;
+}
+
 .spixi-list-item:active {
     background-color: #dae2e9;
 }
@@ -1531,7 +1533,7 @@ img.emoji {
     color: #1E2E40;
     margin-left: 5px;
     text-overflow: ellipsis;
-    width: 150px;
+    width: 200px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -1765,9 +1767,42 @@ img.emoji {
     margin-top: 24px;
 }
 
+.maintabholder {
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 120px);
+    position: relative;
+}
+
 /* Chat */
 #messages {
-    padding-top: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 120px);
+    position: relative;
+}
+
+.scrollable-div {
+    overflow-y: scroll;
+}
+
+.scrollable-div::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+    background-color: #B3C6CE;
+    border-radius: 10px;
+    border: 2px solid #E2EAEE;
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: #E2EAEE;
+    width: 10px;
+}
+
+.scrollable-div:empty::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .spixi-bubble
@@ -2152,10 +2187,9 @@ img.emoji {
     transition: all 0.6s;    
     
     width: 100%;
-    height: 60px;
-   /* background-color: aqua;*/
-
+    height: 0px;
 }
+
 #chatbar {
     -moz-transition: all 0.6s ease-in-out;
     -ms-transition: all 0.6s ease-in-out;
@@ -2168,7 +2202,7 @@ img.emoji {
     
     width: 100%;
     bottom: 0;   
-    height: 60px;
+    height: 64px;
     background-color: #FFF;
     border-top: 2px solid #E0E4E6;
     
@@ -2250,7 +2284,7 @@ img.emoji {
     z-index: 99;    
     width: 100%;
     bottom: -100px;
-    min-height: 60px;
+    min-height: 64px;
     background-color: #FFF;
     border-top: 1px solid #CBCBCB;
     color: #BABABA;

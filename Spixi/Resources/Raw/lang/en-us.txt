@@ -500,6 +500,12 @@ onboarding-back = Back
 onboarding-next = Next
 onboarding-finish = Finish
 
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi is a decentralized chat app with integrated wallet.
+empty-state-detail-2 = All messages are encrypted with state of the art encryption methods and exchanged directly between you and your contact.
+
+
 ; Ixinames
 ixinames-request-title = IXI Names Wants to Connect
 ixinames-request-details = Are you sure you want to connect your Spixi to IXI Names? The service will receive access to your Spixi address.

@@ -9,12 +9,7 @@ using SPIXI.Meta;
 using SPIXI.Network;
 using SPIXI.Storage;
 using SPIXI.VoIP;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
 using static IXICore.Transaction;
 
 namespace SPIXI
@@ -1982,7 +1977,7 @@ namespace SPIXI
         }
       
         private static void handleFriendIsTyping(Friend friend)
-        {
+        {       
             friend.isTyping = true;
             Node.shouldRefreshContacts = true;
 

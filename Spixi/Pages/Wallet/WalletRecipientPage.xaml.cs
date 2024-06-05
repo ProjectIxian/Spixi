@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using SPIXI.Meta;
+using System.Web;
 
 namespace SPIXI
 {
@@ -41,13 +42,13 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
             {
-                Navigation.PopModalAsync();
+                Navigation.PopAsync(Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:newcontact", StringComparison.Ordinal))
             {
                 var recipientPage = new ContactNewPage();
                 recipientPage.pickSucceeded += HandleNewContactSucceeded;
-                Navigation.PushModalAsync(recipientPage);
+                Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
             }
             else if (current_url.Contains("ixian:select:"))
             {

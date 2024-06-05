@@ -14,8 +14,8 @@ namespace Spixi.WinUI;
 /// </summary>
 public partial class App : MauiWinUIApplication
 {
-    const int WindowWidth = 450*2;
-    const int WindowHeight = 700*2;
+    const int WindowWidth = 800*2;
+    const int WindowHeight = 600*2;
     const int MinWidth = 300*2;
     const int MinHeight = 420*2;
 

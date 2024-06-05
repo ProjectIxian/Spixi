@@ -1812,3 +1812,215 @@ textarea.w-select {
 .wf-layout-layout {
   display: grid;
 }
+
+.spixi-modal-soft {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2001;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    position: relative;
+    background: #FFFFFF;
+    margin: auto; /* 15% from the top and centered */
+    border-radius: 16px;
+    width: 380px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    font-size: 12pt;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    max-height: 80%;
+    min-height: 470px;
+}
+
+.spixi-modal-header-icon {
+    color: #B1B1B1;
+    padding-top: 12px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.spixi-modal-header {
+    font-weight: bold;
+    color: #0A1726;
+    padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 8px;
+    word-break: normal;
+    overflow-wrap: break-word;
+    text-align: center;
+}
+
+    .spixi-modal-header.warn {
+        color: #313131;
+    }
+
+.spixi-modal-text {
+    font-size: 10pt;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 8px;
+    min-height: 100px;
+    color: #6a6a6a;
+    overflow: break-all;
+    overflow-wrap: anywhere;
+}
+
+.spixi-modal-details {
+    font-size: 12px;
+    text-align: center;
+    color: #0A1726;
+    padding: 12px;
+    max-height: 300px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.spixi-modal-details-address {
+    font-size: 12px;
+    text-align: center;
+    color: #687786;
+    word-break: break-all;
+    padding-left: 42px;
+    padding-right: 42px;
+}
+
+.spixi-modal-footer {
+    padding-bottom: 5px;
+
+}
+
+.spixi-modal-item {
+    width: 100%;
+    color: #6a6a6a;
+    height: 50px;
+    padding-left: 15px;
+    padding-top: 10px;
+}
+
+    .spixi-modal-item:hover {
+        color: #000;
+        background-color: #dae2e9;
+    }
+
+    .spixi-modal-item:active {
+        color: #000;
+        background-color: #dae2e9;
+    }
+
+.spixi-modal-close,
+.spixi-modal-button-right,
+.spixi-modal-confirm,
+.spixi-modal-button-left {
+    width: 50%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    font-weight: bold;
+    color: #313131;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 12px 0px;
+    float: right;
+}
+
+.spixi-modal-confirm,
+.spixi-modal-button-left {
+    float: left;
+}
+
+.spixi-flat-button {
+    background: #041120;
+    color: #FFFFFF;
+    border-radius: 8px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+}
+
+.spixi-flat-button:hover {
+    color: #FFFFFF;
+    background: #0A284D;
+}
+
+.spixi-flat-button:active {
+    color: #FFFFFF;
+    background: #25193c;
+}
+
+.spixi-flat-button:active a {
+    color: #FFFFFF;
+}
+
+.spixi-flat-button a {
+    color: #FFFFFF;
+}
+
+.spixi-flat-button.outline {
+    background: transparent;
+    border: 1.5px solid #041120;
+    border-radius: 8px;
+    color: #041120;
+}
+
+.spixi-flat-button.margin {
+    margin: 16px;
+}
+.spixi-flat-button.modal-left {
+    margin-left:0px; 
+    margin-right:4px;
+}
+.spixi-flat-button.modal-right {
+    margin-left:4px; 
+    margin-right:0px;
+}
+
+.spixi-flat-button.disabled {
+    background: #CCCCCC;
+    color: #656565;
+}
+
+.scrollable-div {
+    overflow-y: scroll;
+}
+
+.scrollable-div::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+    background-color: #B3C6CE;
+    border-radius: 10px;
+    border: 2px solid #E2EAEE;
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: #E2EAEE;
+    width: 10px;
+}
+
+.scrollable-div:empty::-webkit-scrollbar-track {
+    background: transparent;
+}

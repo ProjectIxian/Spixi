@@ -79,7 +79,7 @@ namespace SPIXI
             {
                 var recipientPage = new WalletRecipientPage();
                 recipientPage.pickSucceeded += HandlePickSucceeded;
-                Navigation.PushModalAsync(recipientPage);
+                Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
             }
             else if (current_url.Equals("ixian:quickscan", StringComparison.Ordinal))
             {
@@ -265,7 +265,7 @@ namespace SPIXI
 
 
 
-        private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {
             string wallets_to_send = e.Value;
 
@@ -281,7 +281,7 @@ namespace SPIXI
 
                 Utils.sendUiCommand(this, "addRecipient", nickname, wallet_to_send);
             }
-            Navigation.PopModalAsync();
+            await Navigation.PopAsync(Config.defaultXamarinAnimations);
         }
 
         protected override bool OnBackButtonPressed()

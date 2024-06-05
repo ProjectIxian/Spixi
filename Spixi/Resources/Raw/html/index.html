@@ -51,7 +51,7 @@
         </div>
         <!-- End ErrorBar-->
 
-        <div id="tabholder" class="tab-content">
+        <div id="tabholder" class="tab-content scrollable-div maintabholder">
             <!-- CHATS -->
             <div id="chats" class="tab-pane in active">
                 <div id="chat_no_activity" class="container">
@@ -73,7 +73,7 @@
 
                 <a id="chat_action_button" href="ixian:newchat" class="action-button" style="display: none;">
                     <div class="spixi-button center round">
-                        <i class="fas fa-comment-dots"></i>
+                        <i class="fa-regular fa-pen-to-square"></i>
                     </div>
                 </a>
             </div>
@@ -199,7 +199,7 @@
             <ul class="nav nav-tabs row no-gutters spixi-footer-row">
                 <li id="tab1" class="col-4 spixi-tab">
                     <a data-toggle="tab" href="#chats" class="spixi-tab-pad">
-                        <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i><div class="spixi-footer-chat-unread-indicator"></div></div>
+                        <div class="spixi-tab-icon"><i class="fa-solid fa-message"></i><div id="unread-dot" class="spixi-footer-chat-unread-indicator"></div></div>
                         <div class="spixi-tab-text">*SL{index-tab-chats}</div>
                     </a>
                 </li>
@@ -219,6 +219,41 @@
         </div>
     </div>
 
+    <!-- Ixinames modal -->
+    <div id="ixinamesModal" class="spixi-modal-soft" style="display:none;">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="spixi-modal-header-icon">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <div class="spixi-modal-header">
+                *SL{ixinames-request-title}
+            </div>
+
+            <div class="spixi-modal-details">
+                *SL{ixinames-request-details}
+
+            </div>
+
+            <div class="spixi-modal-footer">
+                <div class="row no-gutters" style="margin:16px;">
+                    <div class="col">
+                        <div id="request_bar_ignore" class="spixi-flat-button outline modal-left">
+                            *SL{ixinames-request-decline}
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div id="request_bar_accept" class="spixi-flat-button modal-right">
+                            *SL{ixinames-request-connect}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <!-- Modal menu -->
     <div id="homeMenuModal" class="spixi-modal">

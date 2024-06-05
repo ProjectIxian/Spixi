@@ -11,6 +11,7 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LaunchPage : SpixiContentPage
 	{
+        private bool acceptedTerms = false;
 		public LaunchPage ()
 		{
 			InitializeComponent ();
@@ -22,6 +23,10 @@ namespace SPIXI
         private void onLoad()
         {
             Utils.sendUiCommand(this, "setVersion", Config.version);
+            if(!acceptedTerms)
+            {
+                Utils.sendUiCommand(this, "showTerms");
+            }
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -33,7 +38,7 @@ namespace SPIXI
         {
             string current_url = HttpUtility.UrlDecode(e.Url);
 
-            if (current_url.Equals("ixian:onload", StringComparison.Ordinal))
+            if (current_url.Equals("ixian:introload", StringComparison.Ordinal))
             {
                 onLoad();
             }
@@ -44,6 +49,10 @@ namespace SPIXI
             else if (current_url.Equals("ixian:restore", StringComparison.Ordinal))
             {
                 Navigation.PushAsync(new LaunchRestorePage(), Config.defaultXamarinAnimations);
+            }
+            else if (current_url.Equals("ixian:accept", StringComparison.Ordinal))
+            {
+                acceptedTerms = true;
             }
             else if (current_url.StartsWith("ixian:language:", StringComparison.Ordinal))
             {

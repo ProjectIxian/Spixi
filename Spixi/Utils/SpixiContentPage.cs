@@ -5,6 +5,9 @@ using SPIXI.Lang;
 using SPIXI.Meta;
 using SPIXI.VoIP;
 using Spixi;
+#if WINDOWS
+using Microsoft.Web.WebView2.Core;
+#endif
 
 namespace SPIXI
 {
@@ -28,8 +31,17 @@ namespace SPIXI
             _webView = web_view;
             _webView.Source = generatePage(html_file_name);
             _webView.Navigated += webViewNavigated;
+            _webView.Navigating += webViewNavigating;
         }
 
+        private void webViewNavigating(object? sender, WebNavigatingEventArgs e)
+        {
+#if WINDOWS
+            if (_webView == null) return;
+            CoreWebView2 coreWebView2 = (_webView.Handler.PlatformView as Microsoft.Maui.Platform.MauiWebView).CoreWebView2;
+            coreWebView2.Settings.IsStatusBarEnabled = false;
+#endif
+        }
 
         private async void webViewNavigated(object? sender, WebNavigatedEventArgs e)
         {
@@ -45,7 +57,7 @@ namespace SPIXI
                 return;
 
             MainThread.BeginInvokeOnMainThread(() => {
-                _webView.EvaluateJavaScriptAsync("try { " + script + " }catch(e){  }");
+                _webView.EvaluateJavaScriptAsync("try{ " + script + " }catch(e){  }");
             });
         }
 

@@ -13,7 +13,10 @@ namespace SPIXI
     [XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class HomePage : SpixiContentPage
 	{
-        private static HomePage _singletonInstance;
+        private static HomePage? _singletonInstance;
+
+        private SpixiContentPage? detailContent = null;
+        private SpixiContentPage defaultDetailContent = new EmptyDetail();
 
         public static HomePage Instance(bool force_new = false)
         {
@@ -64,6 +67,7 @@ namespace SPIXI
             NavigationPage.SetHasBackButton(this, false);
             NavigationPage.SetHasNavigationBar(this, false);
             this.Title = "SPIXI";
+            webView.Opacity = 0;
 
             if (Preferences.Default.ContainsKey("hidebalance"))
             {
@@ -71,6 +75,11 @@ namespace SPIXI
             }
 
             loadPage(webView, "index.html");
+
+            rightContent.Content = defaultDetailContent.Content;
+
+            this.SizeChanged += OnPageSizeChanged;
+            separator.Color = Color.FromArgb("#17181C");
 
             if (!running)
             {
@@ -100,6 +109,27 @@ namespace SPIXI
                         timer.Stop();
                 };
                 timer.Start();
+            }
+        }
+
+        private void OnPageSizeChanged(object sender, EventArgs e)
+        {
+            if (Width < 700)
+            {
+                // Show only main pane
+                mainGrid.ColumnDefinitions[0].Width = GridLength.Star;
+                mainGrid.ColumnDefinitions[1].Width = new GridLength(0);
+                mainGrid.ColumnDefinitions[2].Width = new GridLength(0);
+                rightContent.IsVisible = false;
+                removeDetailContent();
+            }
+            else
+            {
+                // Show both panes
+                mainGrid.ColumnDefinitions[0].Width = new GridLength(400);
+                mainGrid.ColumnDefinitions[1].Width = new GridLength(2);
+                mainGrid.ColumnDefinitions[2].Width = GridLength.Star;
+                rightContent.IsVisible = true;
             }
         }
 
@@ -169,11 +199,11 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:sendixi", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage(), Config.defaultXamarinAnimations);
+                onSendIxi(null);
             }
             else if (current_url.Equals("ixian:receiveixi", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletReceivePage(), Config.defaultXamarinAnimations);
+                onReceiveIxi(null);
             }
             else if (current_url.Equals("ixian:avatar", StringComparison.Ordinal))
             {
@@ -236,19 +266,7 @@ namespace SPIXI
                 string id = split[1];
                 byte[] b_txid = Transaction.txIdLegacyToV8(id);
 
-                Transaction transaction = TransactionCache.getTransaction(b_txid);
-                if (transaction == null)
-                {
-                    transaction = TransactionCache.getUnconfirmedTransaction(b_txid);
-
-                    if (transaction == null)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-                }
-
-                Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+                onTransaction(b_txid, e);
             }
             else if (current_url.Contains("ixian:tab:"))
             {
@@ -321,6 +339,32 @@ namespace SPIXI
             e.Cancel = true;
         }
 
+        public void onSendIxi(Address? wallet)
+        {
+            if (wallet == null)
+            {
+                Navigation.PushAsync(new WalletSendPage(), Config.defaultXamarinAnimations);
+                return;
+            }
+            Navigation.PushAsync(new WalletSendPage(wallet), Config.defaultXamarinAnimations);
+        }
+
+        public void onReceiveIxi(Friend? friend)
+        {
+            if (friend == null)
+            {
+                Navigation.PushAsync(new WalletReceivePage(), Config.defaultXamarinAnimations);
+                return;
+            }
+
+            Navigation.PushAsync(new WalletReceivePage(friend), Config.defaultXamarinAnimations);
+        }
+
+        public void onContactDetails(Friend friend)
+        {
+            Navigation.PushAsync(new ContactDetails(friend, true), Config.defaultXamarinAnimations);
+        }
+
         public async void quickScan()
         {
             var scanPage = new ScanPage();
@@ -362,10 +406,10 @@ namespace SPIXI
         {
             var recipientPage = new WalletRecipientPage();
             recipientPage.pickSucceeded += HandlePickSucceeded;
-            Navigation.PushModalAsync(recipientPage);
+            Navigation.PushAsync(recipientPage, Config.defaultXamarinAnimations);
         }
 
-        private void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
+        private async void HandlePickSucceeded(object sender, SPIXI.EventArgs<string> e)
         {
             string id = e.Value;
             Address id_bytes = new Address(id);
@@ -376,8 +420,15 @@ namespace SPIXI
                 return;
             }
 
-            Navigation.PushAsync(new SingleChatPage(friend), Config.defaultXamarinAnimations);
-            Navigation.PopModalAsync();
+            try
+            {
+                await Navigation.PopAsync(Config.defaultXamarinAnimations);
+                onChat(id, null);
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Navigation failed: " + ex.Message);
+            }
         }
 
         private void joinBot()
@@ -467,6 +518,8 @@ namespace SPIXI
                 onChat(App.startingScreen, null);
                 App.startingScreen = "";
             }
+
+            webView.FadeTo(1, 250);
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -487,10 +540,44 @@ namespace SPIXI
         public void onSettings(object sender, EventArgs e)
         {
             fromSettings = true;
-            Navigation.PushModalAsync(new SettingsPage());
+            Navigation.PushAsync(new SettingsPage());
         }
 
-        public void onChat(string friend_address, WebNavigatingEventArgs e)
+        public async void onTransaction(byte[] txid, WebNavigatingEventArgs e)
+        {
+
+            Transaction transaction = TransactionCache.getTransaction(txid);
+            if (transaction == null)
+            {
+                transaction = TransactionCache.getUnconfirmedTransaction(txid);
+
+                if (transaction == null)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            if (rightContent.IsVisible)
+            {
+                await rightContent.Content.FadeTo(0, 50);
+                removeDetailContent();
+                detailContent = new WalletSentPage(transaction, true, this);
+                rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
+
+                rightContent.Content.Opacity = 0;
+                rightContent.Content = detailContent.Content;
+                await rightContent.Content.FadeTo(1, 150);
+
+                Utils.sendUiCommand(this, "selectTx", transaction.getTxIdString());
+                return;
+            }
+
+
+            Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
+        }
+
+        public async void onChat(string friend_address, WebNavigatingEventArgs e)
         {
             Address id_bytes = new Address(friend_address);
 
@@ -504,11 +591,29 @@ namespace SPIXI
                 }
                 return;
             }
-            bool animated = Config.defaultXamarinAnimations;
-            if(e == null)
+
+
+            if (rightContent.IsVisible)
             {
-                animated = false;
+                
+                await rightContent.Content.FadeTo(0, 50);
+                removeDetailContent();
+                detailContent = new SingleChatPage(friend, this);
+                rightContent.Content.BackgroundColor = ThemeManager.getBackgroundColor();
+
+                rightContent.Content.Opacity = 0;
+                rightContent.Content = detailContent.Content;               
+                await rightContent.Content.FadeTo(1, 150);
+
+                Utils.sendUiCommand(this, "selectChat", friend.walletAddress.ToString());
+                return;
             }
+
+
+            clearChatPages();
+           
+            bool animated = e != null && Config.defaultXamarinAnimations;
+
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 if (Navigation.NavigationStack.Count > 1)
@@ -726,13 +831,14 @@ namespace SPIXI
                     Utils.sendUiCommand(this, "addUnreadActivity", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt);
 
                 }
-
                 Utils.sendUiCommand(this, "addChat", helper_msg.walletAddress, helper_msg.nickname, helper_msg.timestamp.ToString(), helper_msg.avatar, helper_msg.onlineString, helper_msg.excerpt, helper_msg.type, helper_msg.unreadCount.ToString());
             }
 
             // Clear the lists so they will be collected by the GC
             helper_msgs = null;
             sorted_msgs = null;
+
+            Utils.sendUiCommand(this, "clearChatsDone");
         }
 
         public static IxiNumber calculateReceivedAmount(Transaction tx)
@@ -807,12 +913,23 @@ namespace SPIXI
                 if (IxianHandler.getWalletStorage().isMyAddress(tx.pubKey))
                 {
                     tx_text = tx.toList.First().Key.ToString();
+                    Friend friend = FriendList.getFriend(tx.toList.First().Key);
+                    if (friend != null)
+                    {
+                        tx_text = friend.nickname;
+                    }
+
                     received = "0";
                     if (transactionFilter == 2)
                         return;
                 }
                 else
                 {
+                    Friend friend = FriendList.getFriend(tx.pubKey);
+                    if (friend != null)
+                    {
+                        tx_text = friend.nickname;
+                    }
                     amount = calculateReceivedAmount(tx);
                     if (transactionFilter == 1)
                         return;
@@ -926,12 +1043,16 @@ namespace SPIXI
                 loadPage(webView, "index.html");
             }
             base.OnAppearing();
+        }
+
+        private void clearChatPages()
+        {
             lock (FriendList.friends)
             {
                 var tmp_list = FriendList.friends.FindAll(x => x.chat_page != null);
                 foreach (var friend in tmp_list)
                 {
-                    if(friend.chat_page != null)
+                    if (friend.chat_page != null)
                     {
                         friend.chat_page = null;
                     }
@@ -1008,5 +1129,25 @@ namespace SPIXI
                 contactStatusCache.Clear();
             }
         }
+
+        public override void reload()
+        {
+            base.reload();
+            removeDetailContent();
+        }
+
+        public void removeDetailContent()
+        {
+            detailContent = null;
+            defaultDetailContent = new EmptyDetail();
+            rightContent.Content = defaultDetailContent.Content;
+
+            Utils.sendUiCommand(this, "selectChat", "");
+            clearChatPages();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
     }
 }

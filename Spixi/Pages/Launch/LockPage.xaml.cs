@@ -118,7 +118,7 @@ namespace SPIXI
             }
         }
 
-        private void performUnlock()
+        private async void performUnlock()
         {
             if (authSucceeded != null)
             {
@@ -130,9 +130,9 @@ namespace SPIXI
                 Navigation.PopModalAsync();
                 return;
             }
+            Navigation.InsertPageBefore(HomePage.Instance(true), this);
 
-            Navigation.PushAsync(HomePage.Instance(true), Config.defaultXamarinAnimations);
-            Navigation.RemovePage(this);
+            Navigation.RemovePage(this);           
         }
 
         protected override bool OnBackButtonPressed()

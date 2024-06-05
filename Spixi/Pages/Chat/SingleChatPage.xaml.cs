@@ -10,7 +10,6 @@ using System.Text;
 using System.Web;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
-using IFilePicker = SPIXI.Interfaces.IFilePicker;
 using Spixi;
 
 namespace SPIXI
@@ -20,22 +19,35 @@ namespace SPIXI
     {
         private Friend friend = null;
 
+        private uint messagesToShow = Config.messagesToLoad;
+
         private int lastMessageCount = 0;
 
         private int selectedChannel = 0;
 
         private bool _waitingForContactConfirmation = false;
 
-        public SingleChatPage(Friend fr)
+        private HomePage? homePage;
+
+        public SingleChatPage(Friend fr) : this(fr, null)
+        {
+        }
+
+        public SingleChatPage(Friend fr, HomePage? home)
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+            webView.Opacity = 0;
+            Content.BackgroundColor = ThemeManager.getBackgroundColor();
+
             friend = fr;
             friend.chat_page = this;
             Title = friend.nickname;
             selectedChannel = friend.metaData.lastMessageChannel;
 
             loadPage(webView, "chat.html");
+
+            homePage = home;
         }
 
         public override void recalculateLayout()
@@ -80,7 +92,7 @@ namespace SPIXI
                 {
                     try
                     {
-                        Navigation.PopAsync(Config.defaultXamarinAnimations);
+                        Navigation.PopToRootAsync(false);
                     }
                     catch (Exception ex)
                     {
@@ -92,19 +104,23 @@ namespace SPIXI
             }
             else if (current_url.Equals("ixian:request", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletReceivePage(friend), Config.defaultXamarinAnimations);
+                onRequestIxi();
             }
             else if (current_url.Equals("ixian:details", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new ContactDetails(friend, true), Config.defaultXamarinAnimations);
+                onContactDetails();
             }
             else if (current_url.Equals("ixian:send", StringComparison.Ordinal))
             {
-                Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
+                onSendIxi();
             }
             else if (current_url.Equals("ixian:accept", StringComparison.Ordinal))
             {
                 onAcceptFriendRequest();
+            }
+            else if (current_url.Equals("ixian:loadmore", StringComparison.Ordinal))
+            {
+                onLoadMore();
             }
             else if (current_url.Equals("ixian:call", StringComparison.Ordinal))
             {
@@ -248,6 +264,11 @@ namespace SPIXI
             else if (current_url.StartsWith("ixian:openLink:", StringComparison.Ordinal))
             {
                 string link = current_url.Substring("ixian:openLink:".Length);
+                if (!link.Contains("://"))
+                {
+                    link = "http://" + link;
+                }
+
                 try
                 {
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -272,6 +293,46 @@ namespace SPIXI
                 return;
             }
             e.Cancel = true;
+        }
+
+        private void onLoadMore()
+        {
+            messagesToShow += Config.messagesToLoad;
+            loadMessages();
+
+        }
+
+        private void onContactDetails()
+        {
+            if (homePage != null)
+            {
+                homePage.onContactDetails(friend);
+                return;
+            }
+
+            Navigation.PushAsync(new ContactDetails(friend, true), Config.defaultXamarinAnimations);
+        }
+
+        private void onSendIxi()
+        {
+            if(homePage != null)
+            {
+                homePage.onSendIxi(friend.walletAddress);
+                return;
+            }
+
+            Navigation.PushAsync(new WalletSendPage(friend.walletAddress), Config.defaultXamarinAnimations);
+        }
+
+        private void onRequestIxi()
+        {
+            if (homePage != null)
+            {
+                homePage.onReceiveIxi(friend);
+                return;
+            }
+
+            Navigation.PushAsync(new WalletReceivePage(friend), Config.defaultXamarinAnimations);
         }
 
         private void populateChannelSelector()
@@ -346,6 +407,11 @@ namespace SPIXI
         private void onLoad()
         {
             Utils.sendUiCommand(this, "onChatScreenReady", friend.walletAddress.ToString());
+
+            if(homePage != null)
+            {
+                Utils.sendUiCommand(this, "hideBackButton");
+            }
 
             if (friend.bot)
             {
@@ -425,6 +491,8 @@ namespace SPIXI
             }
 
             Node.refreshAppRequests = true;
+
+            webView.FadeTo(1, 150);
         }
 
 
@@ -776,18 +844,22 @@ namespace SPIXI
 
         public void loadMessages()
         {
-            Utils.sendUiCommand(this, "clearMessages");
+            var messages = friend.getMessages(selectedChannel, (int)messagesToShow);
+            string show_more = "true";
+            if (messages.Count < messagesToShow)
+                show_more = "false";
+            Utils.sendUiCommand(this, "clearMessages", show_more);
 
             if (friend.handshakeStatus < 2)
                 return;
 
-            var messages = friend.getMessages(selectedChannel);
+            
             lock (messages)
             {
                 int skip_messages = 0;
-                if(messages.Count > 100)
+                if(messages.Count > messagesToShow)
                 {
-                    skip_messages = messages.Count() - 100;
+                    skip_messages = messages.Count() - (int)messagesToShow;
                 }
                 foreach (FriendMessage message in messages)
                 {

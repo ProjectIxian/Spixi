@@ -15,6 +15,23 @@ function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 
+function base64ToBytes(base64) {
+    const binString = atob(base64);
+    return new TextDecoder().decode(Uint8Array.from(binString, (m) => m.codePointAt(0)));
+}
+
+function executeUiCommand(cmd) {
+    try {
+        var decodedArgs = new Array();
+        for (var i = 1; i < arguments.length; i++) {
+            decodedArgs.push(escapeParameter(base64ToBytes(arguments[i])));
+        }
+        cmd.apply(null, decodedArgs);
+    } catch (e) {
+        var alertMessage = "Arguments: " + decodedArgs.join(", ") + "\nError: " + e + "\nStack: " + e.stack; alert(alertMessage);
+    }
+}
+
 function unescapeParameter(str)
 {
     return str.replace(/&gt;/g, ">")
