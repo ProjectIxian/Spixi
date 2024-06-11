@@ -2,21 +2,21 @@
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 using System.Net;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Android.Content;
 using Android.Webkit;
 using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
-using Microsoft.Maui.Graphics;
 using AWebView = Android.Webkit.WebView;
 using MixedContentHandling = Android.Webkit.MixedContentHandling;
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Microsoft.Maui.Platform;
 using Android.Annotation;
-using Android.App;
 using IXICore.Meta;
+using Android.Views.InputMethods;
+using AndroidX.Core.View.InputMethod;
+using Android.OS;
+using AInputMethods = Android.Views.InputMethods;
 
 namespace Spixi.Platforms.Android.Renderers;
 
@@ -101,7 +101,72 @@ public class SpixiWebViewClient : WebViewClient
         }
 }
 
-public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebView, AWebView>, IWebViewDelegate
+public class SpixiWebview(Context context) : AWebView(context), InputConnectionCompat.IOnCommitContentListener
+{
+    public bool OnCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle? opts)
+    {
+        bool permission_requested = false;
+        bool processed = false;
+
+        // read and display inputContentInfo asynchronously
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.NMr1
+            && (flags & InputConnectionCompat.InputContentGrantReadUriPermission) != 0)
+        {
+            try
+            {
+                inputContentInfo.RequestPermission();
+                permission_requested = true;
+            }
+            catch (Exception)
+            {
+                return processed;
+            }
+        }
+
+        if (inputContentInfo.LinkUri != null)
+        {
+            string url = inputContentInfo.LinkUri.ToString();
+
+            Page p = App.Current.MainPage.Navigation.NavigationStack.Last();
+            if (p != null && p.GetType() == typeof(SingleChatPage))
+            {
+                string rx_pattern = @"^https://[A-Za-z0-9]+\.(tenor|giphy)\.com/[A-Za-z0-9_/=%\?\-\.\&]+$";
+
+                if (Regex.IsMatch(url, rx_pattern))
+                {
+                    ((SingleChatPage)p).onSend(url);
+                    processed = true;
+                }
+            }
+        }
+        else
+        {
+            Logging.error("Error adding keyboard content, LinkUri is null");
+        }
+
+        if (permission_requested)
+        {
+            inputContentInfo.ReleasePermission();
+        }
+
+        return processed;
+    }
+
+    public override IInputConnection OnCreateInputConnection(EditorInfo? outAttrs)
+    {
+        var inputConnection = base.OnCreateInputConnection(outAttrs);
+        outAttrs.ImeOptions = outAttrs.ImeOptions | AInputMethods.ImeFlags.NoPersonalizedLearning;
+        if (inputConnection != null)
+        {
+            EditorInfoCompat.SetContentMimeTypes(outAttrs, new string[] { "image/gif" });
+            inputConnection = InputConnectionCompat.CreateWrapper(inputConnection, outAttrs, this);
+        }
+
+        return inputConnection;
+    }
+}
+
+public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebView, SpixiWebview>, IWebViewDelegate
 {
     public const string AssetBaseUrl = "file:///android_asset/";
 
@@ -203,9 +268,9 @@ public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebVie
     }
 
     [PortHandler]
-    protected override AWebView CreateNativeControl()
+    protected override SpixiWebview CreateNativeControl()
     {
-        var webView = new AWebView(Context);
+        var webView = new SpixiWebview(Context);
         webView.Settings.SetSupportMultipleWindows(true);
         return webView;
     }
@@ -232,13 +297,25 @@ public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebVie
             webView.SetWebViewClient(_webViewClient);
 
             _webChromeClient = GetFormsWebChromeClient();
-            //_webChromeClient.SetContext(Context);
             webView.SetWebChromeClient(_webChromeClient);
             webView.Settings.JavaScriptEnabled = true;
-            webView.Settings.DomStorageEnabled = true;
             webView.Settings.AllowFileAccess = true;
             webView.Settings.AllowFileAccessFromFileURLs = true;
             webView.Settings.MediaPlaybackRequiresUserGesture = false;
+
+            webView.Settings.SetAppCacheEnabled(false);
+            webView.Settings.CacheMode = CacheModes.NoCache;
+            webView.Settings.DatabaseEnabled = false;
+            webView.Settings.DomStorageEnabled = false;
+
+            webView.FocusChange += (sender, args) =>
+            {
+                if (args.HasFocus)
+                {
+                    webView.RequestFocus();
+                }
+            };
+
             SetNativeControl(webView);
         }
 
