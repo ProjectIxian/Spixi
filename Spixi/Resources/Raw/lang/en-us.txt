@@ -512,6 +512,12 @@ ixinames-request-details = Are you sure you want to connect your Spixi to IXI Na
 ixinames-request-decline = Decline
 ixinames-request-connect = Connect
 
+; Rating
+rating-request-title = Are you enjoying Spixi?
+rating-request-details = Your feedback helps us make it better.
+rating-request-no = Not so much...
+rating-request-yes = Yes, I am loving it
+
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
 global-connecting-dlt = Connecting to Ixian Network...

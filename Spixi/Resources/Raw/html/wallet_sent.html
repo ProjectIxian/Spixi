@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div id="wrap" class="container-fluid noselect">
+    <div id="wrap" class="container-fluid noselect scrollable-div">
 
         <!-- Toolbar -->
         <div class="spixi-toolbar shadow">
@@ -126,7 +126,12 @@
         }
 
         function hideBackButton() {
-            document.getElementById("backbtn").style.display = "none";
+            var backBtn = document.getElementById("backbtn");
+            var placeholder = document.createElement("div");
+            placeholder.id = "backbtn";
+            placeholder.style.width = "12px";
+            placeholder.style.minWidth = "12px";
+            backBtn.parentNode.replaceChild(placeholder, backBtn);
         }
 
         function setReceivedMode() {

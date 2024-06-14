@@ -240,6 +240,7 @@ img.emoji {
 }
 .spixi-toolbar-holder.bot {
     width: 100%;
+    height: 88px;
 }
 .spixi-toolbar-holder.extended {
     height: 128px;
@@ -1586,11 +1587,10 @@ img.emoji {
 .spixi-list-item-first-row {
     margin-left: 15px;
     margin-right: 15px;
-
+    padding-top: 12px;
 }
 .spixi-list-item-second-row {
     margin-top: -10px;
-    margin-bottom: 12px;
     margin-left: 15px;
     margin-right: 15px;
     border-bottom: 0.5px solid rgba(255, 255, 255, 0.10);
@@ -1785,6 +1785,9 @@ img.emoji {
     overflow-y: scroll;
     height: calc(100vh - 120px);
     position: relative;
+    background-image: url('../img/pattern_dark.svg');
+    background-repeat: repeat;
+    background-size: 324px 509px;
 }
 
 .scrollable-div {
@@ -1837,7 +1840,7 @@ img.emoji {
 .spixi-bubble.myself {
     margin-left: 125px;
     margin-right: 12px;
-    background: #314456;
+    background: #305171;
 }
 
 .spixi-bubble .text img
@@ -1969,7 +1972,7 @@ img.emoji {
 }
 
     .spixi-bubble.default .statusIndicator {
-        color: #F76E89;
+        color: #979797;
         display: inline-block;
     }
 
@@ -2278,6 +2281,12 @@ img.emoji {
     user-select: text;
 }
 
+#chat_input.placeholder::before {
+    content: attr(data-placeholder);
+    color: #96A5B0;
+    pointer-events: none;
+}
+
 #chatattachbar {
     -moz-transition: all 0.6s ease-in-out;
     -ms-transition: all 0.6s ease-in-out;
@@ -2394,7 +2403,7 @@ img.emoji {
 }
 
 .spixi-chat-default-indicator {
-    color: #F76E89;
+    color: #979797;
 }
 
 .spixi-chat-payable-bar {
@@ -2841,7 +2850,7 @@ img.emoji {
 .spixi-modal-soft {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    /*z-index: 2001;*/
+    z-index: 9001;
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -2900,7 +2909,7 @@ img.emoji {
     padding-bottom: 8px;
     word-break: normal;
     overflow-wrap: break-word;
-    text-align: left;
+    text-align: center;
 }
 .spixi-modal-header.warn {
     color: #fff;
@@ -3120,6 +3129,10 @@ img.emoji {
 {
     padding: 15px;
     box-sizing: border-box;
+}
+
+.nopad {
+    padding: 0px;
 }
 
 /* Color combos */

@@ -284,6 +284,10 @@ function addPaymentActivity(txid, receive, text, timestamp, amount, fiatAmount, 
 
     const paymentEntry = document.createElement("div");
     paymentEntry.id = "tx_" + txid;
+    paymentEntry.className = "spixi-list-item nopad";
+    if (selectedItemId == paymentEntry.id) {
+        paymentEntry.className += " selected";
+    }
     paymentEntry.innerHTML = `
         <a href="ixian:txdetails:${txid}">
             <div class="row no-gutters spixi-list-item-first-row flex-nowrap">
@@ -372,11 +376,11 @@ function selectTx(wallet) {
     items.forEach(function (item) {
         item.classList.remove('selected');
     });
-    /*
+    
     const item = document.getElementById(selectedItemId);
     if (item) {
         item.classList.add('selected');
-    }*/
+    }
 }
 
 // Adds a chat

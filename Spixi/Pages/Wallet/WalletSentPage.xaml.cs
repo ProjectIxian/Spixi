@@ -101,6 +101,13 @@ namespace SPIXI
                 confirmed = "false";
             }
 
+
+            if (Node.networkBlockHeight > ctransaction.blockHeight + Config.txConfirmationBlocks)
+            {
+                ctransaction.applied = ctransaction.blockHeight + Config.txConfirmationBlocks;
+                confirmed = "true";
+            }
+
             IxiNumber amount = ctransaction.amount;
 
             string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(ctransaction.timeStamp));

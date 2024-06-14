@@ -594,7 +594,7 @@ namespace SPIXI
 
 
             if (rightContent.IsVisible)
-            {
+            {        
                 
                 await rightContent.Content.FadeTo(0, 50);
                 removeDetailContent();
@@ -936,6 +936,11 @@ namespace SPIXI
                 }
                 string amount_string = Utils.amountToHumanFormatString(amount);
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
+
+                if(Node.networkBlockHeight > tx.blockHeight + Config.txConfirmationBlocks)
+                {
+                    tx.applied = tx.blockHeight + Config.txConfirmationBlocks;
+                }
 
                 string confirmed = tx.applied == 0 ? "false" : "true";
 

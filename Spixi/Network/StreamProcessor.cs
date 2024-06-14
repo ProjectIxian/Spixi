@@ -1004,12 +1004,12 @@ namespace SPIXI
 
             friend.sendKeys(2);
 
+            friend.state = FriendState.Approved;
+            friend.save();
+
             sendNickname(friend);
 
             sendAvatar(friend);
-
-            friend.state = FriendState.Approved;
-            
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
         }
 
@@ -1039,6 +1039,14 @@ namespace SPIXI
             sendGetBotInfo(friend);
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
+
+            if(friend.chat_page != null)
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    friend.chat_page.convertToBot();
+                });
+            }
         }
 
 

@@ -51,7 +51,7 @@ namespace SPIXI.Meta
 
         private static Thread mainLoopThread;
 
-        private static ulong networkBlockHeight = 0;
+        public static ulong networkBlockHeight = 0;
         private static byte[] networkBlockChecksum = null;
         private static int networkBlockVersion = 0;
 
@@ -147,9 +147,10 @@ namespace SPIXI.Meta
                 }
             }
 
+            // TODO: replace the TIV with a liteclient-optimized implementation
             // Start TIV
-            tiv.start(headers_path, block_height, block_checksum, true);
-
+            //tiv.start(headers_path, block_height, block_checksum, true);
+            
             // Generate presence list
             PresenceList.init(IxianHandler.publicIP, 0, 'C');
 

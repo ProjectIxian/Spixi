@@ -11,6 +11,7 @@ using System.Web;
 using SPIXI.Lang;
 using IXICore.SpixiBot;
 using Spixi;
+using System.Net;
 
 namespace SPIXI
 {
@@ -259,6 +260,7 @@ namespace SPIXI
                     StreamProcessor.sendLeave(friend, null);
                     displaySpixiAlert(SpixiLocalization._SL("contact-details-removedcontact-title"), SpixiLocalization._SL("contact-details-removedcontact-text"), SpixiLocalization._SL("global-dialog-ok"));
                     Navigation.PopAsync();
+                    homePage?.removeDetailContent();
                 }
             }
             else if (current_url.StartsWith("ixian:openLink:", StringComparison.Ordinal))
@@ -271,8 +273,9 @@ namespace SPIXI
 
                 try
                 {
+                    string decoded_link = WebUtility.HtmlDecode(link);
 #pragma warning disable CS0618 // Type or member is obsolete
-                    Browser.Default.OpenAsync(new Uri(link));
+                    Browser.Default.OpenAsync(new Uri(decoded_link));
 #pragma warning restore CS0618 // Type or member is obsolete
                 }catch(Exception ex)
                 {
@@ -284,6 +287,8 @@ namespace SPIXI
                 // Remove friend from list and go back to the main screen
                 FriendList.removeFriend(friend);
                 Navigation.PopAsync();
+                homePage?.removeDetailContent();
+
                 // TODO: send a notification to the other party
             }
             else
@@ -433,6 +438,9 @@ namespace SPIXI
                     
                 Utils.sendUiCommand(this, "setBotMode", friend.bot.ToString(), friend.metaData.botInfo.cost.ToString(), cost_text, friend.metaData.botInfo.admin.ToString(), friend.metaData.botInfo.serverDescription, send_notification.ToString());
                 setChannelSelectorUnread();
+
+                selectedChannel = 0; // TODO: remove this after groupchat UI improvements
+
                 if (selectedChannel == 0 && friend.channels.channels.Count > 0)
                 {
                     selectedChannel = friend.metaData.botInfo.defaultChannel;
@@ -493,6 +501,8 @@ namespace SPIXI
             Node.refreshAppRequests = true;
 
             webView.FadeTo(1, 150);
+
+            webView.Focus();
         }
 
 
@@ -1286,6 +1296,17 @@ namespace SPIXI
             Utils.sendUiCommand(this, "updatePaymentRequestStatus", Crypto.hashToString(msg_id), txid_string, status, status_icon, enableView.ToString());
         }
 
+        public void convertToBot()
+        {
+            if (homePage != null)
+            {
+                Navigation.PopToRootAsync();
+                friend.chat_page = null;
+                homePage.removeDetailContent();
+                homePage.onChat(friend.walletAddress.ToString(), null);
+            }
+        }
+        
         // Executed every second
         public override void updateScreen()
         {
@@ -1314,17 +1335,18 @@ namespace SPIXI
                     {
                         Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-offline"));
                     }
+
+                    if(_waitingForContactConfirmation)
+                    {
+                        _waitingForContactConfirmation = false;
+                        Utils.sendUiCommand(this, "showRequestSentModal", "0");
+                    }
                 }
                 else if(friend.state == FriendState.RequestSent || friend.state == FriendState.RequestReceived)
                 {
                     Utils.sendUiCommand(this, "setOnlineStatus", SpixiLocalization._SL("chat-waiting-for-response"));
                 }
-            }
 
-            if (_waitingForContactConfirmation && friend.state == FriendState.Approved)
-            {
-                _waitingForContactConfirmation = false;
-                Utils.sendUiCommand(this, "showRequestSentModal", "0");
             }
 
             // Show connectivity warning bar

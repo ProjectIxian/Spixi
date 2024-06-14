@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div id="wrap" class="container-fluid noselect">
+    <div id="wrap" class="container-fluid noselect" style="overflow:hidden;">
 
         <!-- Toolbar Chat -->
         <div id="chattoolbar" class="spixi-toolbar shadow">
@@ -162,7 +162,7 @@
                     <i class="fa fa-plus-circle"></i>
                 </div>
                 <div class="chatbar-input-wrapper">
-                    <div contenteditable="true" id="chat_input" placeholder="*SL{chat-type-placeholder}"></div>
+                    <div contenteditable="true" id="chat_input"></div>
                 </div>
                 <div class="chatbar-sendbutton-wrapper"><div id="chat_send" class="chatbar-sendbutton"><i class="fa-solid fa-arrow-right"></i></div></div>
             </div>
@@ -287,6 +287,7 @@
         var SL_ChatStatus = "*SL{chat-status}";
         var SL_ChatAmount = "*SL{chat-amount}";
         var SL_ChatView = "*SL{chat-view}";
+        var SL_ChatPlaceholder = "*SL{chat-type-placeholder}";
         var SL_ChatSentContactRequest = "*SL{chat-sent-contact-request}";
         var SL_ContextMenu = {
             "pinMessage": "*SL{chat-context-pin-message}",

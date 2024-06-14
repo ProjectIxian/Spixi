@@ -37,11 +37,7 @@ function onChatScreenLoad()
 	    };
     }
 
-	if(SL_Platform == "Xamarin-iOS")
-	{
-        	setInterval('iosFixer();', 500);
-   }
-	
+
     messagesEl.addEventListener("click", function (e) {
         if (e.target.className.indexOf("nick") != -1) {
             var nickEl = e.target;
@@ -73,6 +69,7 @@ function hideContextMenus()
 
 function setBotMode(bot, cost, costText, admin, botDescription, notificationsString)
 {
+    var isPaid = false;
     if(admin == "True")
     {
          isAdmin = true;
@@ -98,17 +95,28 @@ function setBotMode(bot, cost, costText, admin, botDescription, notificationsStr
         msgEl.innerHTML = "<span><i class='fa fa-info-circle'></i></span> " + costText;
 
         document.body.appendChild(msgEl);
-        document.getElementById("chat_send").innerHTML = '<i class="fa fa-wallet"></i>';
-    }else
-    {
-        document.getElementById("chat_send").innerHTML = '<i class="fa-solid fa-arrow-right"></i>';
-	}
+        isPaid = true;
+    }
 
     if(bot == "True")
     {
         isBot = true;
         document.getElementsByClassName("spixi-toolbar-holder")[0].className = "spixi-toolbar-holder bot";
         document.getElementsByClassName("spixi-channel-bar")[0].style.display = "table";
+
+        if (isPaid) {
+            document.getElementById("messages").style.height = "calc(100vh - 175px)";
+        }
+        else {
+            document.getElementById("messages").style.height = "calc(100vh - 150px)";
+        }
+        var chatAttach = document.getElementById("chat_attach");
+        var placeholder = document.createElement("div");
+        placeholder.style.width = "12px";
+        placeholder.style.minWidth = "12px";
+        placeholder.style.display = "table-cell";
+        chatAttach.parentNode.replaceChild(placeholder, chatAttach);
+
 	}else
     {
         isBot = false;
@@ -143,6 +151,7 @@ function onChatScreenLoaded()
 {
     document.getElementById("chatattachbar").style.bottom = -document.getElementById("chatattachbar").offsetHeight + "px";
     document.getElementById("chat_input").focus();
+    updateChatInputPlaceholder();
 }
 
 function onChatScreenReady(address)
@@ -153,7 +162,12 @@ function onChatScreenReady(address)
 }
 
 function hideBackButton() {
-    document.getElementById("backbtn").style.display = "none";
+    var backBtn = document.getElementById("backbtn");
+    var placeholder = document.createElement("div");
+    placeholder.id = "backbtn";
+    placeholder.style.width = "12px";
+    placeholder.style.minWidth = "12px";
+    backBtn.parentNode.replaceChild(placeholder, backBtn);
 }
 
 document.getElementById("backbtn").onclick = function () {
@@ -284,41 +298,51 @@ $("#chat_input").keyup(function (event) {
 
 });
 
+// TODO: check when this doesn't work correctly
 function shouldScroll() {
-    var el = document.getElementById("wrap");
-    if (el.scrollTop >= el.scrollHeight - el.clientHeight - 20) {
-        return true;
+    return true;
+}
+var chatInput = document.getElementById("chat_input");
+
+function scrollToBottom() {
+    if (shouldScroll()) {
+        var messagesDiv = document.getElementById('messages');
+        requestAnimationFrame(function () {
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
     }
-    return false;
 }
 
 $("#chat_input").focus(function (event) {
+    scrollToBottom();
+    /*
     if (shouldScroll()) {
         setTimeout(function () {			
-            document.getElementById("chatholder").scrollIntoView(false);
+            //document.getElementById("chatholder").scrollIntoView(false);
             var messagesDiv = document.getElementById('messages');
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
             // Hack for slow devices
             setTimeout(function () {
-                document.getElementById("chatholder").scrollIntoView(false);
+                //document.getElementById("chatholder").scrollIntoView(false);
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             }, 800);
         }, 200);
-    }
+    }*/
 });
 
-
-$("#chat_input").click(function (event) {
-    if (shouldScroll()) {		
-        setTimeout(function () {
-            document.getElementById("chatholder").scrollIntoView(false);
-            // Hack for slow devices
-            setTimeout(function () {
-                document.getElementById("chatholder").scrollIntoView(false);
-            }, 800);
-        }, 200);
-    }
+chatInput.addEventListener("blur", function () {
+    updateChatInputPlaceholder();
 });
+function updateChatInputPlaceholder() {
+    if (chatInput.textContent.trim() === "") {
+        chatInput.classList.add("placeholder");
+        chatInput.setAttribute("data-placeholder", SL_ChatPlaceholder);
+    } else {
+        chatInput.classList.remove("placeholder");
+        chatInput.removeAttribute("data-placeholder");
+    }
+}
+chatInput.addEventListener("input", updateChatInputPlaceholder);
 
 $("#chat_input").on('paste', function (e) {
     var data = e.clipboardData || window.clipboardData;
@@ -367,8 +391,6 @@ function addReactions(id, reactions)
         return;
 	}
 
-    var scroll = shouldScroll();
-
     var reactionsEls = msgEl.getElementsByClassName("reactions");
     var reactionsEl = null;
     if(reactionsEls.length == 0)
@@ -407,9 +429,7 @@ function addReactions(id, reactions)
         reactionsEl.parentNode.removeChild(reactionsEl);
 	}
 
-    if (scroll) {
-        chatHolderEl.scrollIntoView(false);
-    }
+    scrollToBottom();
 }
 
 function deleteMessage(id)
@@ -424,15 +444,21 @@ function deleteMessage(id)
 
 function linkify(text)
 {
-   text = text.replace(/((http:\/\/|https:\/\/|ftp:\/\/|www\.)[^'"\,\s]+[^\.])/g, function(){
+    text = text.replace(/((http:\/\/|https:\/\/|ftp:\/\/|www\.)[^'"\,\s]+[^\.])/g, function () {
         if(text.match(/^https:\/\/[A-Za-z0-9]+\.(tenor|giphy)\.com\/[A-Za-z0-9_\/=%\?\-\.\&]+$/))
         {
             // Giphy/Tenor image
             return "<img src=\"" + escapeParameter(arguments[0]) + "\"/>";
         }
-        return "<div class=\"spixi-external-link\" onclick=\"onExternalLink(event, '" + escapeParameter(arguments[0]) + "')\">" + arguments[0] + "</div> ";
+        var link = arguments[0].trim();
+        return "<div class=\"spixi-external-link\" onclick=\"onExternalLink(event, '" + escapeParameter(link) + "')\">" + link + "</div> ";
         });
     return text;
+}
+
+function visitLink(url) {
+    location.href = "ixian:openLink:" + escapeParameter(url);
+    hideModalDialog();
 }
 
 function onExternalLink(e, url)
@@ -440,7 +466,7 @@ function onExternalLink(e, url)
     var title = SL_Modals["externalLinkTitle"];
     var body = SL_Modals["externalLinkBody"];
     body = body.replace("{0}", "<b>" + url + "</b>");
-    var visitButtonHtml = "<div onclick=\"location.href='ixian:openLink:" + escapeParameter(url) + "';\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
+    var visitButtonHtml = "<div onclick=\"visitLink('" + url + "');\">" + SL_Modals["externalLinkButtonVisit"] + "</div>";
     var cancelBtnHtml = "<div onclick='hideModalDialog();'>" + SL_Modals["cancel"] + "</div>";
     showModalDialog(title, body, cancelBtnHtml, visitButtonHtml);
     e.stopPropagation();
@@ -543,17 +569,11 @@ function addText(id, address, nick, avatar, text, time, className) {
         bubbleEl.appendChild(avatarEl);
     }
 
-    var scroll = shouldScroll();
-
     hideUserTyping();
 
     messagesEl.appendChild(bubbleEl);
 
-    if (scroll) {
-        chatHolderEl.scrollIntoView(false);
-        var messagesDiv = document.getElementById('messages');
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
+    scrollToBottom();
 }
 
 function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid) {
@@ -681,15 +701,12 @@ function addCall(id, message, declined, time) {
     bubbleEl.appendChild(dataEl);
 
 
-    var scroll = shouldScroll();
     if(append)
     {
         document.getElementById("messages").appendChild(bubbleEl);
     }
 
-    if (scroll) {
-        document.getElementById("chatholder").scrollIntoView(false);
-    }
+    scrollToBottom();
 }
 
 function updateFile(id, progress, complete) {
@@ -1612,17 +1629,39 @@ function getCaretPosition(editableDiv) {
 
 // Fix for iOS toolbar offscreen issue when soft keyboard is shown
 var initialOffset = window.outerHeight - window.innerHeight;
+var msgHeight = document.getElementById("messages").style.height;
 function iosFixer() {
-	var newOffset = window.outerHeight - window.innerHeight;
-				
-	if(newOffset > initialOffset)
-	{
+    var newOffset = window.outerHeight - window.innerHeight;
+
+    if (newOffset > initialOffset) {
         var diff = newOffset - initialOffset;
+        document.getElementById("wrap").style.maxHeight = "${window.innerHeight}px";
         document.getElementById("wrap").style.top = diff + "px";
-	}
-	else if (newOffset < initialOffset)
-    {
+        msgHeight = document.getElementById("messages").style.height;
+
+        document.getElementById("messages").style.height = (window.innerHeight - 120) + "px"; // ${newDiff}px";// (msgHeight - diff + 20) + "px";
+
+        scrollToBottom();
+    }
+    else if (newOffset < initialOffset) {
+        document.getElementById("wrap").style.maxHeight = '';
         document.getElementById("wrap").style.top = "0px";
-    }    
-	initialOffset = newOffset;			
+        document.getElementById("messages").style.height = msgHeight;
+    }
+    initialOffset = newOffset;
+}
+
+
+// Mobile only logic
+if (SL_Platform != "Xamarin-WPF") {
+
+    if (SL_Platform == "Xamarin-iOS") {
+        window.visualViewport.addEventListener('resize', () => {
+            iosFixer();
+        });
+    }
+
+    window.addEventListener('resize', function () {
+        scrollToBottom();
+    });
 }
