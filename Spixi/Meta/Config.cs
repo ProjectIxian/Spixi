@@ -37,7 +37,11 @@ namespace SPIXI.Meta
         public static readonly string checkVersionUrl = "https://www.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
 
-        public static readonly string bridgeAddress = ""; // IxiCash to WIXI bridge address
+        public static readonly string supportEmailUrl = "mailto://support@spixi.io?subject=Spixi%20Feedback";
+        public static readonly string ratingAndroidUrl = "https://play.google.com/store/apps/details?id=io.ixian.spixi&reviewId=0";
+        public static readonly string ratingiOSUrl = "https://apps.apple.com/app/id1506931056?action=write-review";
+
+
 
         // Default SPIXI settings
         public static bool defaultXamarinAnimations = false;

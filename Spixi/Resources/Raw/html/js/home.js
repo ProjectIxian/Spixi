@@ -561,6 +561,18 @@ $("#leftSidebar").swipe( {
     allowPageScroll:"vertical"
 });
 
+function showRatingPrompt() {
+    document.getElementById("ratingModal").style.display = "block";
+}
+
+document.getElementById("rating_no").onclick = function () {
+    document.getElementById("ratingModal").style.display = "none";
+    location.href = "ixian:rating:no";
+}
+document.getElementById("rating_yes").onclick = function () {
+    document.getElementById("ratingModal").style.display = "none";
+    location.href = "ixian:rating:yes";
+}
 
 
 function selectTab(tab) {

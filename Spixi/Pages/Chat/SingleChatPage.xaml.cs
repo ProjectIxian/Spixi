@@ -498,6 +498,11 @@ namespace SPIXI
                 }
             }
 
+            if (!Preferences.Default.ContainsKey("rating_action"))
+            {
+                Preferences.Default.Set("rating_action", "show");
+            }
+
             Node.refreshAppRequests = true;
 
             webView.FadeTo(1, 150);

@@ -45,7 +45,7 @@ namespace SPIXI
         private bool running = false;
 
         private bool fromSettings = false;
-
+        private bool fromChat = false;
 
         // Interal cache object to store contact status items
         private struct contactStatusCacheItem
@@ -287,6 +287,36 @@ namespace SPIXI
                     Text = IxianHandler.getWalletStorage().getPrimaryAddress().ToString(),
                 });
             }
+            else if (current_url.Contains("ixian:rating:"))
+            {
+                string result = current_url.Split(new string[] { "ixian:rating:" }, StringSplitOptions.None)[1];
+                string? action_url = null;
+
+                if (result.Equals("yes", StringComparison.Ordinal))
+                {
+                    if (DeviceInfo.Platform == DevicePlatform.Android)
+                    {
+                        action_url = Config.ratingAndroidUrl;
+                    }
+                    else if (DeviceInfo.Platform == DevicePlatform.iOS)
+                    {
+                        action_url = Config.ratingiOSUrl;
+                    }
+                }
+                else if (result.Equals("no", StringComparison.Ordinal))
+                {
+                    action_url = Config.supportEmailUrl;
+                }
+
+                if (action_url != null)
+                {
+                    Preferences.Default.Set("rating_action", "done");
+                    Browser.Default.OpenAsync(new Uri(action_url));
+                }
+
+                e.Cancel = true;
+                return;
+            }
             else if (current_url.Equals("ixian:copy", StringComparison.Ordinal))
             {
             }
@@ -520,6 +550,8 @@ namespace SPIXI
             }
 
             webView.FadeTo(1, 250);
+
+            checkForRating();
         }
 
         private void onNavigated(object sender, WebNavigatedEventArgs e)
@@ -611,7 +643,8 @@ namespace SPIXI
 
 
             clearChatPages();
-           
+
+            fromChat = true;
             bool animated = e != null && Config.defaultXamarinAnimations;
 
             MainThread.BeginInvokeOnMainThread(async () =>
@@ -1047,6 +1080,11 @@ namespace SPIXI
                 fromSettings = false;
                 loadPage(webView, "index.html");
             }
+            else if(fromChat)
+            {
+                fromChat = false;
+                checkForRating();
+            }
             base.OnAppearing();
         }
 
@@ -1074,6 +1112,21 @@ namespace SPIXI
                 return UpdateVerify.serverVersion;
             }
             return "(not checked)";
+        }
+
+        private void checkForRating()
+        {
+            if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                if (Preferences.Default.ContainsKey("rating_action"))
+                {
+                    string resp = Preferences.Default.Get("rating_action", "show");
+                    if (resp.Equals("show", StringComparison.Ordinal))
+                    {
+                        Utils.sendUiCommand(this, "showRatingPrompt");
+                    }
+                }
+            }
         }
 
         // Adds and filters a new contact status to the cache
