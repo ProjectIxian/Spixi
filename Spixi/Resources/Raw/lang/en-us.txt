@@ -511,6 +511,8 @@ ixinames-request-title = IXI Names Wants to Connect
 ixinames-request-details = Are you sure you want to connect your Spixi to IXI Names? The service will receive access to your Spixi address.
 ixinames-request-decline = Decline
 ixinames-request-connect = Connect
+ixinames-message-connected = Your Spixi is now connected to IXI Names.
+ixinames-message-error = Spixi couldn't connect to IXI Names. Please try again.
 
 ; Rating
 rating-request-title = Are you enjoying Spixi?

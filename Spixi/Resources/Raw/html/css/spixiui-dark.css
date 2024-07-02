@@ -776,6 +776,29 @@ img.emoji {
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
 
+.spixi-toastbar-ixinames {
+    visibility: hidden;
+    min-width: 320px;
+    width: 320px;
+    margin-left: -160px;
+    background-color: #006FAD;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 12px;
+    position: fixed;
+    z-index: 2001;
+    left: 50%;
+    bottom: 80px;
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.spixi-toastbar-ixinames.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
 
 /* ErrorBar */
 .spixi-errorbar {
