@@ -499,11 +499,26 @@ onboarding-skip = PRALEISTI
 onboarding-back = Atgal
 onboarding-next = Kitas
 onboarding-finish = BAIGTI
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi yra decentralizuota pokalbių programa su integruota pinigine.
+empty-state-detail-2 = Visi pranešimai yra užšifruoti naudojant pažangiausius šifravimo metodus ir tiesiogiai keičiami tarp jūsų ir jūsų kontakto.
+
+
 ; Ixinames
 ixinames-request-title = IXI Names Nori Prisijungti
 ixinames-request-details = Ar tikrai norite prijungti savo Spixi prie IXI Names? Paslauga gaus prieigą prie jūsų Spixi adreso.
 ixinames-request-decline = Atmesti
 ixinames-request-connect = Prisijungti
+ixinames-message-connected = Jūsų Spixi dabar prijungtas prie IXI Names.
+ixinames-message-error = Spixi nepavyko prisijungti prie IXI Names. Bandykite dar kartą.
+
+; Rating
+rating-request-title = Ar jums patinka Spixi?
+rating-request-details = Jūsų atsiliepimai padeda mums tobulinti.
+rating-request-no = Nelabai...
+rating-request-yes = Taip, man labai patinka
 
 ; Global
 global-connecting-s2 = Prisijungiama prie „Ixian S2“ ...

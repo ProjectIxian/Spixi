@@ -499,11 +499,26 @@ onboarding-skip = ПРОПУСТИТЬ
 onboarding-back = Назад 
 onboarding-next = Далее 
 onboarding-finish = ЗАВЕРШИТЬ
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = это децентрализованное приложение для чата с интегрированным кошельком.
+empty-state-detail-2 = Все сообщения шифруются с использованием передовых методов шифрования и обмениваются напрямую между вами и вашим контактом.
+
+
 ; Ixinames
 ixinames-request-title = IXI Names Хочет подключиться
 ixinames-request-details = Вы уверены, что хотите подключить свой Spixi к IXI Names? Сервис получит доступ к вашему адресу Spixi.
 ixinames-request-decline = Отклонить 
 ixinames-request-connect = Подключить 
+ixinames-message-connected = Ваш Spixi теперь подключен к IXI Names.
+ixinames-message-error = Spixi не удалось подключиться к IXI Names. Пожалуйста, попробуйте еще раз.
+
+; Rating
+rating-request-title = Вам нравится Spixi? 
+rating-request-details = Ваши отзывы помогают нам сделать его лучше.
+rating-request-no = Не очень...
+rating-request-yes = Да
 
 ; Global
 global-connecting-s2 = Соединение с Ixian S2...

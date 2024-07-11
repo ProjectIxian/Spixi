@@ -499,11 +499,26 @@ onboarding-skip = PRESKOČI
 onboarding-back = Nazaj
 onboarding-next = Nadaljuj
 onboarding-finish = ZAKLJUČI
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi je decentralizirana aplikacija za klepet z integrirano denarnico.
+empty-state-detail-2 = Vsa sporočila so poslana varno z uporabo najsodobnejše enkripcije in izmenjana neposredno med uporabniki.
+
+
 ; Ixinames
 ixinames-request-title = IXI Names se želi povezati
 ixinames-request-details = Ste prepričani, da želite povezati svoj Spixi z IXI Names? Storitev bo prejela dostop do vašega Spixi naslova.
 ixinames-request-decline = Zavrni 
 ixinames-request-connect = Poveži se
+ixinames-message-connected = Your Spixi is now connected to IXI Names.
+ixinames-message-error = Spixi couldn't connect to IXI Names. Please try again.
+
+; Rating
+rating-request-title = Vam je Spixi všeč?
+rating-request-details = Pomagajte nam ga izboljšati.
+rating-request-no = Ne preveč...
+rating-request-yes = Da, zelo mi je všeč
 
 ; Global
 global-connecting-s2 = Povezujem se z Ixian S2 omrežjem...

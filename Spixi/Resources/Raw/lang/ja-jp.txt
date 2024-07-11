@@ -468,11 +468,26 @@ onboarding-screen4-text = 統合されたウォレットを使用して、IXI �
 onboarding-skip = SKIP
 onboarding-back = 戻る
 onboarding-next = 次へ 
-onboarding-finish = FINISH; Ixinames
+onboarding-finish = FINISH
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi は統合ウォレットを備えた分散型チャットアプリです。
+empty-state-detail-2 = すべてのメッセージは最新の暗号化方法で暗号化され、あなたと連絡先の間で直接交換されます。
+
+
+; Ixinames
 ixinames-request-title = IXI Names 接続したがっています
 ixinames-request-details = Spixi を IXI Names に接続してもよろしいですか？サービスはあなたの Spixi アドレスにアクセスします。
 ixinames-request-decline = 辞退する
 ixinames-request-connect = 接続する
+ixinames-message-connected = あなたの Spixi は IXI Names に接続されました。
+ixinames-message-error = Spixi は IXI Names に接続できませんでした。再試行してください。
+
+; Rating
+rating-request-title = Spixi を楽しんでいますか？
+rating-request-details = あなたのフィードバックは私たちがそれを改善するのに役立ちます。
+rating-request-no = あまり...
+rating-request-yes = はい、大好きです
 
 ; Global
 global-connecting-s2 = Connecting to Ixian S2...
@@ -493,8 +508,8 @@ global-invalid-address-text = 有効なアドレスを入力してください
 global-friend-request-accepted = {0} がリクエストを承認しました
 
 global-update-available = New version of Spixi ({0}) is available. Please update for best experience.
-global-modal-external-link-title = You are about to visit an external link
-global-modal-external-link-body = You are about to visit an external link {0}. External links are potentially dangerous, continue at your own risk.
+global-modal-external-link-title = 外部リンクにアクセスしようとしています
+global-modal-external-link-body = 外部リンク {0} にアクセスしようとしています。外部リンクは潜在的に危険ですので、自己責任で続行してください。
 global-modal-external-link-button-visit = VISIT
 
 global-lock-auth-text = 認証が必要です

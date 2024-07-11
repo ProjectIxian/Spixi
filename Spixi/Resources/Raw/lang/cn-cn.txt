@@ -499,11 +499,25 @@ onboarding-skip = 略过
 onboarding-back = 返回
 onboarding-next = 下一个 
 onboarding-finish = 完成
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi 是一个带有集成钱包的去中心化聊天应用。
+empty-state-detail-2 = 所有消息都使用最先进的加密方法进行加密，并直接在您和您的联系人之间交换。
+
+
 ; Ixinames
 ixinames-request-title = IXI Names 想要连接
 ixinames-request-details = 您确定要将您的 Spixi 连接到 IXI Names 吗？服务将获得您的 Spixi 地址访问权限。
 ixinames-request-decline = 拒绝
 ixinames-request-connect = 连接
+ixinames-message-connected = 您的 Spixi 现在已连接到 IXI Names。
+ixinames-message-error = Spixi 无法连接到 IXI Names。请重试。
+
+; Rating
+rating-request-title = 您喜欢使用 Spixi 吗？
+rating-request-details = 您的反馈帮助我们改进。
+rating-request-no = 并不是很喜欢...
+rating-request-yes = 是的，我很喜欢
 
 ; Global
 global-connecting-s2 = 连接到 Ixian S2...

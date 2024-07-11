@@ -499,11 +499,26 @@ onboarding-skip = PULAR
 onboarding-back = Voltar
 onboarding-next = Próximo
 onboarding-finish = CONCLUIR
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi é um aplicativo de chat descentralizado com carteira integrada.
+empty-state-detail-2 = Todas as mensagens são criptografadas com métodos de criptografia de última geração e trocadas diretamente entre você e seu contato.
+
+
 ; Ixinames
 ixinames-request-title = IXI Names Quer se Conectar
 ixinames-request-details = Tem certeza de que deseja conectar seu Spixi ao IXI Names? O serviço receberá acesso ao seu endereço Spixi.
 ixinames-request-decline = Recusar
 ixinames-request-connect = Conectar
+ixinames-message-connected = Seu Spixi está agora conectado ao IXI Names.
+ixinames-message-error = O Spixi não conseguiu se conectar ao IXI Names. Por favor, tente novamente.
+
+; Rating
+rating-request-title = Você está gostando do Spixi?
+rating-request-details = Seu feedback nos ajuda a melhorar.
+rating-request-no = Não muito...
+rating-request-yes = Sim, estou adorando
 
 ; Global
 global-connecting-s2 = Conectanto à Ixian S2...

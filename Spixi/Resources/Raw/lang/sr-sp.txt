@@ -500,11 +500,25 @@ onboarding-back = Nazad
 onboarding-next = Napred
 onboarding-finish = NASTAVI
 
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi je decentralizovana aplikacija za razmenjivanje poruka sa integrisanim novčanikom.
+empty-state-detail-2 = Sve poruke su šifrovane pomoću najmodernijih metoda i razmenjuju se direktno između vas i vašeg kontakta.
+
+
 ; Ixinames
 ixinames-request-title = IXI Želi da se poveže
 ixinames-request-details = Da li ste sigurni da želite da povežete svoj Spixi sa IXI Names? Usluga će dobiti pristup vašoj Spixi adresi.
 ixinames-request-decline = Odbij
 ixinames-request-connect = Poveži
+ixinames-message-connected = Your Spixi is now connected to IXI Names.
+ixinames-message-error = Spixi couldn't connect to IXI Names. Please try again.
+
+; Rating
+rating-request-title = Da li vam se dopada Spixi?
+rating-request-details = Vaše mišljenje nam je važno.
+rating-request-no = Ne baš...
+rating-request-yes = Da, oduševljen sam
 
 ; Global
 global-connecting-s2 = Povezujem se sa Ixian S2 mrežom...
