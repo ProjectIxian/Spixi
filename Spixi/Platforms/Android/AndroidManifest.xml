@@ -3,7 +3,7 @@
 	<application android:allowBackup="true" android:supportsRtl="true">
 		<provider
 		   android:name="androidx.core.content.FileProvider"
-		   android:authorities="io.ixian.spixi.provider"
+		   android:authorities="com.ixilabs.spixi.provider"
 		   android:exported="false"
 		   android:grantUriPermissions="true">
 			<meta-data

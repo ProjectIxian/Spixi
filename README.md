@@ -74,6 +74,7 @@ cd Spixi
      dotnet build -t:Run -f net8.0-android              # For Android
      dotnet build -t:Run -f net8.0-ios                  # For iOS
      dotnet build -t:Run -f net8.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
+     dotnet build -t:Run -f net8.0-maccatalyst          # For macOS
      ```
    - Ensure you have the appropriate SDKs and emulators/simulators installed for the target platform.
 
@@ -83,6 +84,7 @@ cd Spixi
      dotnet build --configuration Release -f net8.0-android # For Android
      dotnet build --configuration Release -f net8.0-ios # For iOS
      dotnet build --configuration Release -f net8.0-windows10.0.19041.0 -p:Platform=x64  # For Windows
+     dotnet build --configuration Release -f net8.0-maccatalyst # For macOS
      ```
 
 ### Additional Notes

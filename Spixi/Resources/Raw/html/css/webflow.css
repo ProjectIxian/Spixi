@@ -1828,7 +1828,7 @@ textarea.w-select {
 .modal-content {
     position: relative;
     background: #FFFFFF;
-    margin: auto; /* 15% from the top and centered */
+    margin: auto;
     border-radius: 16px;
     width: 380px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);

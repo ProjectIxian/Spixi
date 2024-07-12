@@ -22,7 +22,7 @@ namespace Spixi
             Intent shareIntent = new Intent();
             shareIntent.SetAction(Intent.ActionSend);
             shareIntent.SetType("application/octet-stream");
-            Android.Net.Uri uriShare = FileProvider.GetUriForFile(context, "io.ixian.spixi.provider", file);
+            Android.Net.Uri uriShare = FileProvider.GetUriForFile(context, "com.ixilabs.spixi.provider", file);
             shareIntent.PutExtra(Intent.ExtraStream, uriShare);
 
             var chooserIntent = Intent.CreateChooser(shareIntent, title ?? string.Empty);
@@ -72,7 +72,7 @@ namespace Spixi
 
             try
             {
-                Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "io.ixian.spixi.provider", f);
+                Android.Net.Uri file_uri = FileProvider.GetUriForFile(context, "com.ixilabs.spixi.provider", f);
 
                 string mime_type = getMimeType(file_uri);
 
