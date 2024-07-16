@@ -267,6 +267,8 @@ namespace SPIXI
             FriendList.deleteAccounts();
             FriendList.clear();
 
+            onLoad();
+
             displaySpixiAlert(SpixiLocalization._SL("settings-deleteda-title"), SpixiLocalization._SL("settings-deleteda-text"), SpixiLocalization._SL("global-dialog-ok"));
         }
 

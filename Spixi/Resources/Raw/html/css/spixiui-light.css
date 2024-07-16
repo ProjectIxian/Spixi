@@ -831,7 +831,7 @@ img.emoji {
     position: fixed;
     z-index: 101;
     font-size: 16pt;
-    background-color: #443d54;
+    background-color: #345279;
     color: #FFFFFF;
     padding-top: 3px;
     font-size: 12pt;
@@ -854,7 +854,7 @@ img.emoji {
     height: 2px;
 
     margin: 20px auto 10px auto;
-    background-color: #5b5569;
+    background-color: #888;
 }
 
 .spixi-callbar-actions
@@ -1806,6 +1806,7 @@ img.emoji {
     background-image: url('../img/pattern.svg');
     background-repeat: repeat;
     background-size: 324px 509px;
+    padding-top: 10px;
 }
 
 .scrollable-div {
@@ -2869,7 +2870,7 @@ img.emoji {
 .spixi-modal-soft {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 9001;
+    z-index: 99;
     left: 0;
     top: 0;
     width: 100%; /* Full width */

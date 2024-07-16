@@ -37,7 +37,7 @@
                         <input type="text" class="input-master w-input" autofocus="true" maxlength="256" placeholder="*SL{intro-new-name-placeholder}" id="nicknameInput" oninput="onCheckStep1()">
                     </div>
                     <div class="input-avatar">
-                        <img id="avatar" class="avatar" src=""/>
+                        <img id="avatar" class="avatar" src="" />
 
                     </div>
                 </div>
@@ -80,13 +80,13 @@
                     <div class="subtitle">*SL{intro-new-description-4}</div>
                     <div class="div-block-2">
                         <div class="inputs-password w-form">
-                            <input type="text" class="input-master w-input" autofocus="true" maxlength="256" placeholder="*SL{intro-new-password}" id="password" oninput="checkPasswordMatch()">
+                            <input type="password" class="input-master w-input" autofocus="true" maxlength="256" placeholder="*SL{intro-new-password}" id="password" oninput="checkPasswordMatch()">
                             <div id="passwordError" class="error-message" style="display: none">
                                 <div>*SL{intro-new-password10}</div>
                             </div>
                         </div>
                         <div class="inputs-password w-form">
-                            <input type="text" class="input-master w-input" autofocus="true" maxlength="256" placeholder="*SL{intro-new-password-2}" id="passwordConfirm" oninput="checkPasswordMatch()">
+                            <input type="password" class="input-master w-input" autofocus="true" maxlength="256" placeholder="*SL{intro-new-password-2}" id="passwordConfirm" oninput="checkPasswordMatch()">
                             <div id="passwordError2" class="error-message" style="display: none">
                                 <div>*SL{intro-new-passwordconf}</div>
                             </div>
@@ -135,7 +135,7 @@
 
     <script src="js/jquery.min.js"></script>
     <script src="js/webflow.js" type="text/javascript"></script>
-
+    <script src="js/spixi.js"></script>
     <script type="text/javascript">
         var second_step = false;
 
@@ -217,12 +217,12 @@
         function createAccount() {
             var nick = document.getElementById("nicknameInput").value;
             var pass = $("#password").val();
-            
+
             // Check that the passwords are correct
             if (checkPasswordMatch() == false) {
                 return;
             }
-            
+
             location.href = "ixian:create:" + nick + ":" + pass;
         }
 

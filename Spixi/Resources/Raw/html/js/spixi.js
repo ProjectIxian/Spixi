@@ -155,6 +155,24 @@ function startCallTimeUpdate(className)
     }, 500);
 }
 
+function addCallAppRequest(sessionId, text) {
+    removeAppRequest(sessionId);
+
+    var el = document.createElement("div");
+    el.id = "AppReq_" + sessionId;
+    el.className = "spixi-callbar";
+
+    var acceptAction = "appAccept('" + sessionId + "');";
+    var rejectAction = "appReject('" + sessionId + "');";
+
+    var acceptHtml = "<div style='background:#2fd63b;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone'></i></div>";
+    var rejectHtml = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
+
+    el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6"><div onclick="' + acceptAction + '" style="display:inline-block;">' + acceptHtml + '</div></div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + rejectHtml + '</div></div></div>';
+
+    document.body.appendChild(el);
+}
+
 function addAppRequest(sessionId, text, acceptHtml, rejectHtml) {
     removeAppRequest(sessionId);
 
@@ -200,7 +218,7 @@ function appReject(sessionId) {
     location.href = 'ixian:appReject:' + sessionId;
 }
 
-function displayCallBar(sessionId, text, hangUpHtml, displayTime)
+function displayCallBar(sessionId, text, displayTime)
 {
     var el = document.getElementById("CallBar");
     if(el == null)
@@ -216,14 +234,12 @@ function displayCallBar(sessionId, text, hangUpHtml, displayTime)
 
     var rejectAction = "hangUp('" + sessionId + "');";
 
-    hangUpHtml = unescapeParameter(hangUpHtml);
-
     var timeHtml = "";
     if(displayTime != "0")
     {
         timeHtml = '<div class="spixi-callbar-duration" data-start-timestamp="' + (displayTime * 1000) + '"></div>';
-	}
-
+    }
+    hangUpHtml = "<div style='background:#de0a61;border-radius:16px;width:64px;height:64px;display:table-cell;vertical-align:middle;text-align:center;'><i class='fas fa-phone-slash'></i></div>";
     el.innerHTML = '<div class="spixi-callbar-title">' + text + '</div><div class="spixi-callbar-separator"></div><div class="row spixi-callbar-actions"><div class="col-6">' + timeHtml + '</div><div class="col-6" style="text-align:right;"><div onclick="' + rejectAction + '" style="display:inline-block;">' + hangUpHtml + '</div></div></div>';
     if(displayTime != "0")
     {
@@ -238,7 +254,10 @@ function hangUp(sessionId)
 
 function hideCallBar()
 {
-    document.getElementById("CallBar").style.display = "none";
+    var callBarElement = document.getElementById("CallBar");
+    if (callBarElement) {
+        callBarElement.style.display = "none";
+    }
 }
 
 function showWarning(text) {

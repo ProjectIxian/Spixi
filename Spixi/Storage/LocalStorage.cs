@@ -444,6 +444,8 @@ namespace SPIXI.Storage
                 }
 
                 File.Delete(account_filename);
+                nickname = "";
+
                 return true;
             }
         }
