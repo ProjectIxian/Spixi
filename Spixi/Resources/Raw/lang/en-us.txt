@@ -486,7 +486,7 @@ onboarding-screen1-skip = Skip onboarding
 
 ; Onboarding 2
 onboarding-screen2-title = Your address is your only ID.
-onboarding-screen2-text = Spixi doesn’t need your phone number or email. Instead it creates your address which is you only ID on the app. You can add contacts by using their address.
+onboarding-screen2-text = Spixi doesn’t need your phone number or email. It uses your address which is your unique ID. You can add others by using the address.
 
 ; Onboarding 3
 onboarding-screen3-title = Send and receive IXI payments.
@@ -552,3 +552,7 @@ global-lock-invalidpassword-text = Type your wallet password to unlock Spixi
 global-time-justnow = just now
 global-time-aminuteago = a minute ago
 global-time-minutesago = minutes ago
+
+global-share-choose = Choose action
+global-share-savefile = Save File
+global-share-sharefile = Share File

@@ -21,7 +21,7 @@ namespace SPIXI.Meta
 
         // Read-only values
         public static readonly string aboutUrl = "https://www.spixi.io";
-        public static readonly string guideUrl = "https://www.spixi.io/guide.html";
+        public static readonly string guideUrl = "https://www.spixi.io/howitworks";
         public static readonly string explorerUrl = "https://explorer.ixian.io/";
 
         public static readonly string pushServiceUrl = "https://ipn.ixian.io/v1";
@@ -32,12 +32,12 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.7.0"; // Spixi version
+        public static readonly string version = "spixi-0.9.0"; // Spixi version
 
         public static readonly string checkVersionUrl = "https://www.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour
 
-        public static readonly string supportEmailUrl = "mailto://support@spixi.io?subject=Spixi%20Feedback";
+        public static readonly string supportEmailUrl = "mailto:support@spixi.io?subject=Spixi%20Feedback";
         public static readonly string ratingAndroidUrl = "https://play.google.com/store/apps/details?id=io.ixian.spixi&reviewId=0";
         public static readonly string ratingiOSUrl = "https://apps.apple.com/app/id1506931056?action=write-review";
 

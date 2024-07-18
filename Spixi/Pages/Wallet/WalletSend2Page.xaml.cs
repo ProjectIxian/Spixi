@@ -127,6 +127,14 @@ namespace SPIXI
                 // Send the payment
                 sendPayment(split[1]);
             }
+            else if (current_url.Contains("ixian:getMaxAmount"))
+            {
+                if (Node.balance.balance > ConsensusConfig.forceTransactionPrice * 2)
+                {
+                    // TODO needs to be improved and pubKey length needs to be taken into account
+                    Utils.sendUiCommand(this, "setMaxAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
+                }
+            }
             else
             {
                 // Otherwise it's just normal navigation

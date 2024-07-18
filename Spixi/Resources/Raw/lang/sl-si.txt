@@ -552,3 +552,6 @@ global-lock-invalidpassword-text = Vnesite vaše Spixi geslo
 global-time-justnow = pravkar
 global-time-aminuteago = pred minuto
 global-time-minutesago = minut
+global-share-choose = Kako želite nadaljevati
+global-share-savefile = Shrani datoteko
+global-share-sharefile = Deli datoteko

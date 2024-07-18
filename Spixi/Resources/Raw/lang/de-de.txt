@@ -485,7 +485,7 @@ onboarding-screen1-get-started = Loslegen
 onboarding-screen1-skip = Onboarding überspringen
 
 ; Onboarding 2
-onboarding-screen2-title = Ihre Adresse ist Ihre einzige ID
+onboarding-screen2-title = Ihre Adresse ist Ihre einzige ID.
 onboarding-screen2-text = Spixi benötigt keine Telefonnummer oder E-Mail. Stattdessen erstellt es Ihre Adresse, die Ihre einzige ID in der App ist. Sie können Kontakte hinzufügen, indem Sie ihre Adresse verwenden.
 
 ; Onboarding 3
@@ -549,3 +549,6 @@ global-lock-invalidpassword-text = Geben Sie Ihr Brieftaschenpasswort ein, um Sp
 global-time-justnow = gerade eben
 global-time-aminuteago = vor einer Minute
 global-time-minutesago = Minuten
+global-share-choose = Aktion wählen
+global-share-savefile = Datei speichern
+global-share-sharefile = Datei teilen

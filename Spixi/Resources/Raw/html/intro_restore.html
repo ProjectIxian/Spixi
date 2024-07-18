@@ -33,7 +33,7 @@
                         <div class="restore-button button-small w-inline-block" id="selectbtn">
                             <div class="button-text">*SL{intro-restore-selectfile}</div>
                         </div>
-                        <input type="text" oninput="checkPassword()" class="input-master w-input" autofocus="true" maxlength="256" name="field" data-name="Field" placeholder="*SL{intro-restore-password}" id="password">
+                        <input type="password" oninput="checkPassword()" class="input-master w-input" autofocus="true" maxlength="256" name="field" data-name="Field" placeholder="*SL{intro-restore-password}" id="password">
                     </div>
                 </div>
                 <div class="info-cell">
@@ -42,7 +42,7 @@
                 </div>
             </section>
             <section class="bot-area wf-section">
-                <div id="restorebtn" class="restore-button button-small w-inline-block" style="display:block;">
+                <div id="restorebtn" class="restore-button button-small w-inline-block" style="display:flex;">
                     <div class="button-text">*SL{intro-restore-action}</div><img src="img/arrowright.svg" loading="lazy" alt="">
                 </div>
             </section>
@@ -72,6 +72,7 @@
 
         <script src="js/jquery.min.js"></script>
         <script src="js/webflow.js" type="text/javascript"></script>
+        <script src="js/spixi.js"></script>
         <script type="text/javascript">
             var restorebtn = document.getElementById("restorebtn");
             var selectbtn = document.getElementById("selectbtn");
@@ -93,7 +94,7 @@
 
             restorebtn.onclick = function () {
 
-                document.getElementById("restorepage").style.display = "none";               
+                document.getElementById("restorepage").style.display = "none";
                 document.getElementById("overlay").style.display = "table";
 
                 setTimeout(function () { restoreAccount(); }, 400);
@@ -109,7 +110,7 @@
             }
 
             function removeLoadingOverlay() {
-                document.getElementById("restorepage").style.display = "table";  
+                document.getElementById("restorepage").style.display = "table";
                 document.getElementById("overlay").style.display = "none";
             }
 

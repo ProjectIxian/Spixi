@@ -3,19 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Net.Wifi;
 using Android.OS;
 using Android.Webkit;
 using IXICore.Meta;
 using Java.IO;
+using SPIXI.Lang;
 using File = Java.IO.File;
 
 namespace Spixi
 {
     public class SFileOperations
     {
-        public static Task share(string filepath, string title)
+
+        public static async Task share(string filepath, string title)
+        {
+            var action = await Microsoft.Maui.Controls.Application.Current!.MainPage!.DisplayActionSheet(
+                            SpixiLocalization._SL("global-share-choose"),
+                            SpixiLocalization._SL("global-dialog-cancel"),
+                            null,
+                            SpixiLocalization._SL("global-share-sharefile"),
+                            SpixiLocalization._SL("global-share-savefile"));
+
+            if (action.Equals(SpixiLocalization._SL("global-share-sharefile")))
+            {
+                shareFile(filepath, title);
+            }
+            else if(action.Equals(SpixiLocalization._SL("global-share-savefile")))
+            {
+                saveFile(filepath, title);
+            }
+        }
+
+        public static void shareFile(string filepath, string title)
         {
             var context = MainActivity.Instance;
             File file = new File(filepath);
@@ -28,10 +51,19 @@ namespace Spixi
             var chooserIntent = Intent.CreateChooser(shareIntent, title ?? string.Empty);
             chooserIntent.SetFlags(ActivityFlags.ClearTop | ActivityFlags.NewTask);
             context.StartActivity(chooserIntent);
-
-            return Task.FromResult(true);
         }
+        public static void saveFile(string filepath, string title)
+        {
+            var context = MainActivity.Instance;
+            Intent saveIntent = new Intent(Intent.ActionCreateDocument);
+            saveIntent.AddCategory(Intent.CategoryOpenable);
+            saveIntent.SetType("application/octet-stream");
+            saveIntent.PutExtra(Intent.ExtraTitle, Path.GetFileName(filepath));
+            saveIntent.AddFlags(ActivityFlags.GrantWriteUriPermission);
 
+            context.SaveFilePath = filepath;
+            context.StartActivityForResult(saveIntent, MainActivity.SaveFileId);
+        }
         public static string getMimeType(Android.Net.Uri uri)
         {
             string mime_type = null;

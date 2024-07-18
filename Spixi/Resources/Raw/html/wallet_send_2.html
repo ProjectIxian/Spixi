@@ -225,15 +225,18 @@
             if (sendMaxBtn.style.display != "none") {
                 sendMaxBtn.style.display = "none";
                 sendMaxWarning.style.display = "block";
-                document.getElementsByClassName("amount-input")[0].value = balance_amount;
-                updateAmount();
+                location.href = "ixian:getMaxAmount";
             }
             else {
                 sendMaxBtn.style.display = "block";
                 sendMaxWarning.style.display = "none";
             }
         }
-        
+        function setMaxAmount(amount) {
+            document.getElementsByClassName("amount-input")[0].value = amount;
+            updateAmount();
+        }
+
         sendIxiBtn.onclick = function () {
             if (sendIxiBtn.classList.contains("disabled")) {
                 return;

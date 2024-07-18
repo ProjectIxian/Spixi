@@ -546,3 +546,6 @@ global-lock-invalidpassword-text = Digita la tua Password Wallet per sbloccare S
 global-time-justnow = proprio ora
 global-time-aminuteago = un minuto fa
 global-time-minutesago = minuti fa
+global-share-choose = Scegli un'azione
+global-share-savefile = Salva il file
+global-share-sharefile = Condividi il file

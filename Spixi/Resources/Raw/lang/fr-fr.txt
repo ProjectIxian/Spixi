@@ -562,3 +562,7 @@ global-lock-invalidpassword-text = Tapez votre mot de passe de portefeuille pour
 global-time-justnow = à l'instant
 global-time-aminuteago = il y a une minute
 global-time-minutesago = minutes
+
+global-share-choose = Choisissez une action
+global-share-savefile = Enregistrer le fichier
+global-share-sharefile = Partager le fichier
