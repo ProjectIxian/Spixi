@@ -3,30 +3,26 @@ using IXICore.Meta;
 using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
-using SPIXI.Meta;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading;
 
 namespace SPIXI.VoIP
 {
 
     public class VoIPManager
     {
-        public static byte[] currentCallSessionId { get; private set; }
+        public static byte[]? currentCallSessionId { get; private set; }
         public static Friend currentCallContact { get; private set; }
         public static bool currentCallAccepted { get; private set; }
         public static bool currentCallCalleeAccepted { get; private set; }
-        public static string currentCallCodec { get; private set; }
+        public static string? currentCallCodec { get; private set; }
         public static long currentCallStartedTime { get; private set; }
 
-        static IAudioPlayer audioPlayer = null;
-        static IAudioRecorder audioRecorder = null;
+        static IAudioPlayer? audioPlayer = null;
+        static IAudioRecorder? audioRecorder = null;
 
         static long lastPacketReceivedTime = 0;
-        static Thread lastPacketReceivedCheckThread = null;
+        static Thread? lastPacketReceivedCheckThread = null;
+        private static readonly object lastPacketReceivedLock = new object();
 
         static bool currentCallInitiator = false;
 
@@ -123,14 +119,20 @@ namespace SPIXI.VoIP
 
         private static void startVoIPSession()
         {
+            if (currentCallCodec == null)
+            {
+                Logging.error("No current call codec!");
+                return;
+            }
+
             SPlatformUtils.stopDialtone();
             SPlatformUtils.stopRinging();
             try
             {
-                audioPlayer = SAudioPlayer.Instance(); //DependencyService.Get<IAudioPlayer>(DependencyFetchTarget.NewInstance);
+                audioPlayer = SAudioPlayer.Instance();
                 audioPlayer.start(currentCallCodec);
 
-                audioRecorder = SAudioRecorder.Instance(); //DependencyService.Get<IAudioRecorder>(DependencyFetchTarget.NewInstance);
+                audioRecorder = SAudioRecorder.Instance();
                 audioRecorder.start(currentCallCodec);
                 audioRecorder.setOnSoundDataReceived((data) =>
                 {
@@ -189,20 +191,21 @@ namespace SPIXI.VoIP
             currentCallAccepted = false;
             currentCallCodec = null;
             currentCallStartedTime = 0;
-            lastPacketReceivedTime = 0;
-            if (lastPacketReceivedCheckThread != null)
+            lock (lastPacketReceivedLock)
             {
-                try
+                lastPacketReceivedTime = 0;
+                if (lastPacketReceivedCheckThread != null)
                 {
-                    lastPacketReceivedCheckThread.Interrupt();
-                    lastPacketReceivedCheckThread.Join();
+                    try
+                    {
+                        lastPacketReceivedCheckThread.Interrupt();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    lastPacketReceivedCheckThread = null;
                 }
-                catch (Exception)
-                {
-                }
-                lastPacketReceivedCheckThread = null;
             }
-
             try
             {
                 releasePowerLocks();
@@ -330,32 +333,55 @@ namespace SPIXI.VoIP
 
         private static void startLastPacketReceivedCheck()
         {
-            lastPacketReceivedTime = Clock.getTimestamp();
-            if(lastPacketReceivedCheckThread != null)
+            lock (lastPacketReceivedLock)
             {
-                try
+                lastPacketReceivedTime = Clock.getTimestamp();
+                if (lastPacketReceivedCheckThread != null)
                 {
-                    lastPacketReceivedCheckThread.Interrupt();
-                    lastPacketReceivedCheckThread.Join();
+                    try
+                    {
+                        lastPacketReceivedCheckThread.Interrupt();
+                        lastPacketReceivedCheckThread.Join();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    lastPacketReceivedCheckThread = null;
                 }
-                catch(Exception)
-                { 
-                }
-                lastPacketReceivedCheckThread = null;
+                lastPacketReceivedCheckThread = new Thread(lastPacketReceivedCheck);
+                lastPacketReceivedCheckThread.IsBackground = true;
+                lastPacketReceivedCheckThread.Start();
             }
-            lastPacketReceivedCheckThread = new Thread(lastPacketReceivedCheck);
-            lastPacketReceivedCheckThread.IsBackground = true;
-            lastPacketReceivedCheckThread.Start();
         }
 
         private static void lastPacketReceivedCheck()
         {
-            while(currentCallStartedTime != 0 && lastPacketReceivedTime + 10 > Clock.getTimestamp())
+            try
             {
-                Thread.Sleep(1000);
+                while (true)
+                {
+                    lock (lastPacketReceivedLock)
+                    {
+                        if (currentCallStartedTime == 0 || lastPacketReceivedTime + 10 <= Clock.getTimestamp())
+                        {
+                            break;
+                        }
+                    }
+                    Thread.Sleep(1000);
+                }
             }
-            lastPacketReceivedCheckThread = null;
-            hangupCall(currentCallSessionId, true);
+            catch (ThreadInterruptedException)
+            {
+
+            }
+            finally
+            {
+                lock (lastPacketReceivedLock)
+                {
+                    lastPacketReceivedCheckThread = null;
+                }
+                hangupCall(currentCallSessionId, true);
+            }
         }
 
         public static void setVolume(float volume)
