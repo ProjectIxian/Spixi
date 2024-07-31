@@ -689,6 +689,12 @@ namespace SPIXI
                     }
                 }
 
+                if (homePage != null)
+                {
+                    homePage.onTransaction(b_id, null);
+                    return;
+                }
+
                 Navigation.PushAsync(new WalletSentPage(transaction), Config.defaultXamarinAnimations);
 
                 return;
@@ -1055,6 +1061,13 @@ namespace SPIXI
 
                 if (transaction != null)
                 {
+                    if (Node.networkBlockHeight > transaction.blockHeight + Config.txConfirmationBlocks)
+                    {
+                        transaction.applied = transaction.blockHeight + Config.txConfirmationBlocks;
+                    }
+
+                    confirmed = transaction.applied != 0;
+
                     if (confirmed)
                     {
                         status = SpixiLocalization._SL("chat-payment-status-confirmed");
