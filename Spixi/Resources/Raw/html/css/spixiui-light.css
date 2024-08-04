@@ -1810,7 +1810,7 @@ img.emoji {
 }
 
 .scrollable-div {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .scrollable-div::-webkit-scrollbar {

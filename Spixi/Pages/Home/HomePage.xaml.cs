@@ -970,12 +970,13 @@ namespace SPIXI
                 string amount_string = Utils.amountToHumanFormatString(amount);
                 string fiat_amount_string = Utils.amountToHumanFormatString(amount * Node.fiatPrice);
 
+                string confirmed = "false";
                 if(Node.networkBlockHeight > tx.blockHeight + Config.txConfirmationBlocks)
                 {
                     tx.applied = tx.blockHeight + Config.txConfirmationBlocks;
+                    confirmed = "true";
                 }
 
-                string confirmed = tx.applied == 0 ? "false" : "true";
 
                 string time = Utils.unixTimeStampToHumanFormatString(Convert.ToDouble(tx.timeStamp));
                 Utils.sendUiCommand(this, "addPaymentActivity", tx.getTxIdString(), received, tx_text, time, amount_string, fiat_amount_string, confirmed);

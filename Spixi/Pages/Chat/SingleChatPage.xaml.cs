@@ -1064,9 +1064,8 @@ namespace SPIXI
                     if (Node.networkBlockHeight > transaction.blockHeight + Config.txConfirmationBlocks)
                     {
                         transaction.applied = transaction.blockHeight + Config.txConfirmationBlocks;
+                        confirmed = true;
                     }
-
-                    confirmed = transaction.applied != 0;
 
                     if (confirmed)
                     {
