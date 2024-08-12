@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="ixian:onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar Settings-->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{settings-title}
+                </div>
+                <div id="savebtn">
+                    <div class="spixi-toolbar-option">*SL{settings-save}</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-cog"></i></div>
+                    <div class="col spixi-descriptionbar-row-details">*SL{settings-description}</div>
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{settings-account-information}
+        </div>
+        <div class="spixi-textsection-holder">
+            *SL{settings-account-description}
+        </div>
+        <hr class="spixi-separator" />
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-language-edit}
+        </div>
+        <div class="spixi-textfield-holder">
+            <div class="spixi-textfield language-selector settings" onmousedown="document.getElementById('LanguageDropDown').style.display='block';">
+                <span class="fa fa-sort-down"></span>
+                <div id="SelectedLanguage">*SL{language}</div>
+                <ul id="LanguageDropDown">
+                    <li onmouseup="changeLanguage(this);" lang-data="cn-cn">中文</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="en-us">English</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="es-co">Español</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="de-de">Deutsch</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="fr-fr">Français</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="it-it">Italiano</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="ja-jp">日本語</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="lt-lt">Lietuvių</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="pt-br">Português (Brasil)</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="ru-ru">Русский</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="sl-si">Slovenščina</li>
+                    <li onmouseup="changeLanguage(this);" lang-data="sr-sp">Srpski</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-appearance-edit}
+        </div>
+        <div class="spixi-textfield-holder">
+            <div class="spixi-textfield language-selector settings" onmousedown="document.getElementById('AppearanceDropDown').style.display='block';">
+                <span class="fa fa-sort-down"></span>
+                <div id="SelectedAppearance">*SL{settings-account-appearance-edit}</div>
+                <ul id="AppearanceDropDown">
+                    <li onmouseup="changeAppearance(this);" app-data="0">*SL{settings-account-appearance-automatic}</li>
+                    <li onmouseup="changeAppearance(this);" app-data="1">*SL{settings-account-appearance-light}</li>
+                    <li onmouseup="changeAppearance(this);" app-data="2">*SL{settings-account-appearance-dark}</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="spixi-separator" />
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-image-edit}
+        </div>
+
+        <div id="avatar" class="spixi-button round padding-left padding-top" style="display: block;">
+            <i id="avatar_icon" class="fas fa-image"></i>
+            <img id="avatar_image" class="spixi-avatar" src="" style="display: none" />
+        </div>
+
+        <hr class="spixi-separator" />
+        <div class="spixi-textsection-holder spixi-textsection-header2">
+            *SL{settings-account-nick-edit}
+        </div>
+        <div class="spixi-textfield-holder">
+            <input type="text" class="spixi-textfield" id="nicknameInput" onkeyup="" placeholder="*SL{settings-account-nick-placeholder}">
+            <span class="fa fa-pencil-alt spixi-textfield-holder-icon"></span>
+        </div>
+
+        <hr class="spixi-separator" />
+        <div class="spixi-textsection-holder">
+            *SL{settings-account-deleteinfo}
+        </div>
+        <div id="deleteaccount" class="spixi-flat-button margin">
+            *SL{settings-account-delete}
+        </div>
+
+        <div id="deleteAccountModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    *SL{settings-deletea-title}
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-modal-text">
+                    *SL{settings-deletea-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+
+                    <a href="ixian:deletea">
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="spixi-holder-40"></div>
+
+        <hr class="spixi-separator-main" />
+        <div id="lockSwitch" class="spixi-switch off"></div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{settings-lock-title}
+        </div>
+
+
+        <hr class="spixi-separator" />
+
+        <div class="spixi-textsection-holder">
+            *SL{settings-lock-authinfo}
+        </div>
+
+        <div class="spixi-holder-40"></div>
+        <div id="lockModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+
+                <div class="spixi-modal-text">
+                    *SL{settings-lock-confirm-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+
+                    <div id="confirmlock" class="spixi-modal-confirm">*SL{settings-confirm}</div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <hr class="spixi-separator-main" />
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{settings-wallet-settings}
+        </div>
+        <div class="spixi-textsection-holder">
+            *SL{settings-wallet-description}
+        </div>
+        <div id="deletewallet" class="spixi-flat-button margin">
+            *SL{settings-wallet-delete}
+        </div>
+
+        <div id="deleteWalletModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    *SL{settings-deletew-title}
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-modal-text">
+                    *SL{settings-deletew-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+                    <a href="ixian:delete">
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="spixi-separator-main" />
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{settings-history}
+        </div>
+        <div class="spixi-textsection-holder">
+            *SL{settings-history-description}
+        </div>
+        <div id="deletehistory" class="spixi-flat-button margin">
+            *SL{settings-history-delete}
+        </div>
+        <div id="deletedownloads" class="spixi-flat-button margin">
+            *SL{settings-downloads-delete}
+        </div>
+
+        <div id="deleteHistoryModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    *SL{settings-deleteh-title}
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-modal-text">
+                    *SL{settings-deleteh-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+
+                    <a href="ixian:deleteh">
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="deleteDownloadsModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header warn">
+                    *SL{settings-deleted-title}
+                </div>
+                <hr class="spixi-separator noheightmargins fullwidth" />
+
+                <div class="spixi-modal-text">
+                    *SL{settings-deleted-text}
+                </div>
+
+                <hr class="spixi-separator noheightmargins fullwidth" />
+                <div class="spixi-modal-footer">
+                    <div class="spixi-modal-close">*SL{settings-cancel}</div>
+
+                    <a href="ixian:deleted">
+                        <div class="spixi-modal-confirm">*SL{settings-confirm}</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="spixi-holder-40"></div>
+
+    </div>
+
+    <script type="text/javascript">
+        var deleteWalletModal = document.getElementById('deleteWalletModal');
+        var deleteAccountModal = document.getElementById('deleteAccountModal');
+        var deleteHistoryModal = document.getElementById('deleteHistoryModal');
+        var deleteDownloadsModal = document.getElementById('deleteDownloadsModal');
+        var lockModal = document.getElementById('lockModal');
+
+        var lockSwitch = document.getElementById("lockSwitch");
+
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        document.getElementById("savebtn").onclick = function () {
+            var nick = document.getElementById("nicknameInput").value;
+            if (isBlank(nick)) {
+                location.href = "ixian:error";
+                return;
+            }
+            location.href = "ixian:save:" + nick;
+        }
+
+        document.getElementById("deletewallet").onclick = function () {
+            deleteWalletModal.style.display = "block";
+        }
+        document.getElementById("deleteaccount").onclick = function () {
+            deleteAccountModal.style.display = "block";
+        }
+        document.getElementById("deletehistory").onclick = function () {
+            deleteHistoryModal.style.display = "block";
+        }
+        document.getElementById("deletedownloads").onclick = function () {
+            deleteDownloadsModal.style.display = "block";
+        }
+
+        // Handle modals outside tap
+        window.onclick = function (event) {
+            if (event.target == deleteWalletModal) {
+                deleteWalletModal.style.display = "none";
+            }
+            else if (event.target == deleteAccountModal) {
+                deleteAccountModal.style.display = "none";
+            }
+            else if (event.target == deleteHistoryModal) {
+                deleteHistoryModal.style.display = "none";
+            }
+            else if (event.target == deleteDownloadsModal) {
+                deleteDownloadsModal.style.display = "none";
+            }
+            else if (event.target == lockModal) {
+                lockModal.style.display = "none";
+            }
+        }
+
+        document.getElementsByClassName("spixi-modal-footer")[0].onclick = function () {
+            deleteAccountModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[1].onclick = function () {
+            lockModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[2].onclick = function () {
+            deleteWalletModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[3].onclick = function () {
+            deleteHistoryModal.style.display = "none";
+        }
+        document.getElementsByClassName("spixi-modal-footer")[4].onclick = function () {
+            deleteDownloadsModal.style.display = "none";
+        }
+
+
+        document.getElementById("avatar").onclick = function () {
+            location.href = "ixian:avatar";
+        }
+        
+        function loadAvatar(avatar_path) {
+            avatar_path = avatar_path.replace(/&#92;/g, '\\');
+
+            document.getElementById("avatar_image").src = avatar_path + "?t=" + new Date().getTime();
+            document.getElementById("avatar_icon").style.display = "none";
+            document.getElementById("avatar_image").style.display = "block";
+        }
+
+        function setNickname(nick) {
+            document.getElementById("nicknameInput").value = nick;
+        }
+
+        function showRemoveAvatar(show) {
+            if (show == true) {
+                //document.getElementById("remove_avatar").style = "display:block";
+            }
+            else {
+                //document.getElementById("remove_avatar").style = "display:none";
+            }
+        }
+
+        function setLanguage(lang)
+        {
+            document.getElementById("SelectedLanguage").innerHTML = lang;
+        }
+
+        function changeLanguage(langEl)
+        {
+            document.getElementById('LanguageDropDown').style.display='none';
+            setLanguage(langEl.innerHTML);
+            location.href = "ixian:language:" + langEl.getAttribute("lang-data");
+            return false;
+        }
+
+        function setAppearance(num) {
+            var content = "*SL{settings-account-appearance-automatic}";
+            if (num == 1)
+                content = "*SL{settings-account-appearance-light}";
+            else if (num == 2)
+                content = "*SL{settings-account-appearance-dark}";
+            document.getElementById("SelectedAppearance").innerHTML = content;
+        }
+
+        function changeAppearance(appEl) {
+            document.getElementById('AppearanceDropDown').style.display = 'none';
+            var attr = appEl.getAttribute("app-data");
+            setAppearance(attr);
+            location.href = "ixian:appearance:" + attr;
+            return false;
+        }
+
+        function setLockEnabled(state) {
+            if (state == "True") {
+                lockSwitch.className = "spixi-switch";
+            }
+            else {
+                lockSwitch.className = "spixi-switch off";
+            }
+        }
+        
+        lockSwitch.onclick = function () {
+            if (lockSwitch.classList.contains("off")) {
+                lockModal.style.display = "block";
+
+                return;
+            }
+            location.href = "ixian:lock:off";
+        }
+        document.getElementById("confirmlock").onclick = function () {
+            lockModal.style.display = "none";
+            lockSwitch.className = "spixi-switch";
+            location.href = "ixian:lock:on";
+        }
+                
+
+    </script>
+</body>
+</html>

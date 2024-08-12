@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{wallet-recipient-title}
+                </div>
+                <div>
+                </div>
+            </div>
+
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <div id="section_no_contacts" class="container" style="display:none">
+            <div class="spixi-list-placeholder-contacts-image"></div>
+            <div class="spixi-list-placeholder-title">No Contacts</div>
+            <div class="spixi-list-placeholder-subtitle">*SL{index-no-conversations}</div>
+
+            <div class="d-flex justify-content-center spixi-list-placeholder-margintop">
+                <a href="ixian:newcontact" class="">
+                    <div class="spixi-list-placeholder-button">*SL{wallet-recipient-no-contact-button}</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="section_contacts" style="display:none">
+            <div class="spixi-textfield-holder">
+                <input type="text" class="spixi-textfield" id="contactInput" oninput="contactSearch()" placeholder="*SL{wallet-recipient-search-placeholder}">
+                <span class="fa fa-search spixi-textfield-holder-icon"></span>
+            </div>
+
+            <div id="newcontact" class="spixi-flat-button margin">
+                <i class="fa-solid fa-plus"></i> *SL{wallet-recipient-new-contact-button}
+            </div>
+
+            <hr class="spixi-separator-main" />
+
+            <div id="contactslist" class="container">
+            </div>
+            <!--
+    <hr class="spixi-separator-main" />
+
+    <div id="recipientslabel" class="spixi-textsection-holder">
+        *SL{wallet-recipient-empty}
+    </div>
+    <hr class="spixi-separator" />
+
+    <div id="sendrequest" class="spixi-button small center padding-top disabled">
+        *SL{wallet-recipient-add}
+    </div>
+        -->
+            <div class="spixi-holder-20"></div>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        var recipients = [];
+        var searchingContacts = false;
+
+        //var sendrequest = document.getElementById("sendrequest");
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        /*document.getElementById("sendrequest").onclick = function () {
+            if (document.getElementById("sendrequest").classList.contains("disabled")) {
+                return;
+            }
+            selectContacts();
+        }*/
+
+        document.getElementById("newcontact").onclick = function () {
+            location.href = "ixian:newcontact";
+        }
+
+        function selectContacts() {
+            var suffix = "";
+            var i;
+            for (i = 0; i < recipients.length; i++) {
+                suffix = suffix + "|" + recipients[i];
+            }
+            location.href = "ixian:select:" + suffix;
+        }
+
+        // Filter in the CONTACTS tab
+        function contactSearch() {
+            var a, b, i, row;
+            var input = document.getElementById('contactInput');
+            var filter = input.value.toUpperCase();
+            var c_contactlist = document.getElementById("contactslist");
+            var c_items = c_contactlist.getElementsByClassName('spixi-list-item');
+
+            if (isBlank(filter) == true) {
+                searchingContacts = false;
+            }
+            else {
+                searchingContacts = true;
+            }
+
+            // Go through each element and filter out non-matching elements
+            for (i = 0; i < c_items.length; i++) {
+                row = c_items[i].getElementsByTagName("div")[0];
+                b = row.getElementsByTagName("div")[1];
+                a = b.getElementsByTagName("div")[0];
+
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    c_items[i].style.display = "";
+                } else {
+                    c_items[i].style.display = "none";
+                }
+            }
+        }
+
+        // Shows empty state
+        function noContacts() {
+            document.getElementById("section_no_contacts").style.display = "block";
+        }
+
+        // Clears all contacts from contacts page
+        function clearContacts() {
+            if (searchingContacts == true) {
+                return;
+            }
+            document.getElementById("section_contacts").style.display = "block";
+
+            var contactsNode = document.getElementById("contactslist");
+            while (contactsNode.firstChild) {
+                contactsNode.removeChild(contactsNode.firstChild);
+            }
+        }
+
+        // Adds a contact to the contacts page
+        function addContact(wal, name, avatar, online) {            
+            if (searchingContacts == true) {
+                return;
+            }
+
+            document.getElementById("section_no_contacts").style.display = "none";
+            document.getElementById("section_contacts").style.display = "block";
+
+            var indicator = "none";
+            if (online == true) {
+                indicator = "block";
+            }
+
+            var contactsNode = document.getElementById("contactslist");
+
+            var contactEntry = document.createElement("div");
+            contactEntry.className = "spixi-list-item";
+            //contactEntry.innerHTML = '<a href="javascript:selectRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div><div class="col-2 spixi-list-item-right"><i class="fa fa-square spixi-list-item-action-icon"></i></div></div></a>';
+            contactEntry.innerHTML = '<a href="javascript:selectSingleRecipient(\'' + wal + '\')"><div class="row" id="row' + wal + '"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="' + avatar + '"/></div><div class="col-10 spixi-list-item-center"><div class="spixi-list-item-title-center">' + name + '</div></div></div></a>';
+
+            contactsNode.appendChild(contactEntry);
+        }
+
+        function selectSingleRecipient(rep) {
+            location.href = "ixian:select:|" + rep;
+        }
+
+        function selectRecipient(rep) {
+            var recipientNode = document.getElementById("row" + rep);
+            col_left = recipientNode.getElementsByTagName("div")[0];
+            avatar = col_left.getElementsByTagName("img")[0];
+            avatar.className = "spixi-list-item-avatar";
+
+            col_middle = recipientNode.getElementsByTagName("div")[2];
+            col_middle.className = "spixi-list-item-title-center";
+
+            col_right = recipientNode.getElementsByTagName("div")[3];
+            check = col_right.firstElementChild;
+            check.className = "fa fa-square spixi-list-item-action-icon";
+
+
+            var i;
+            for (i = 0; i < recipients.length; i++) {
+                if (rep == recipients[i]) {
+                    recipients.splice(i, 1);
+                    updateRecipientsLabel();
+                    return;
+                }
+            }
+            avatar.className = "spixi-list-item-avatar selected";
+            col_middle.className = "spixi-list-item-title-center selected";
+            check.className = "fa fa-check-square spixi-list-item-action-icon";
+
+            recipients.push(rep);
+            updateRecipientsLabel();
+        }
+
+        function updateRecipientsLabel() {
+            var label = document.getElementById("recipientslabel");
+            var rLen = recipients.length;
+
+            label.innerHTML = rLen + " *SL{wallet-recipient-selected}";
+
+            if (rLen > 0)
+                document.getElementById("sendrequest").className = "spixi-button small center padding-top";
+            else
+                document.getElementById("sendrequest").className = "spixi-button small center padding-top disabled";
+        }
+
+
+        function test() {
+            clearContacts();
+            addContact("1000", "TestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestmeTestme", "img/spixiavatar.png", false);
+            addContact("2000", "Abc", "img/spixiavatar.png", true);
+            addContact("3000", "ZAbc", "img/spixiavatar.png", true);
+            addContact("4000", "XAbc", "img/spixiavatar.png", false);
+            addContact("5000", "CAbc", "img/spixiavatar.png", true);
+            addContact("6000", "VAbc", "img/spixiavatar.png", false);
+            addContact("7000", "BAbc", "img/spixiavatar.png", false);
+            addContact("8000", "NAbc", "img/spixiavatar.png", false);
+            addContact("9000", "MAbc", "img/spixiavatar.png", false);
+        }
+
+    </script>
+
+</body>
+</html>

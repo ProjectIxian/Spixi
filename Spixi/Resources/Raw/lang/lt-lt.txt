@@ -1,0 +1,557 @@
+﻿language-code = lt-lt
+language = Lietuvių
+
+; Address Screen
+address-title = Mano Spixi piniginė
+address-description = Jūsų Spixi adresas yra susietas su jūsų paskyra.<br />Tai yra jūsų pagrindinis identifikacinis numeris, kurio pagalba galite bendrauti su kitais vartotojais.
+address-copied = Adresas nukopijuotas į mainų sritį
+address-gen-1 = Generuojama
+address-gen-1b = Ruošiama
+address-gen-2 = tavo SPIXI
+address-gen-2b = SPIXI
+address-gen-3 = adresas
+address-gen-4 = ...
+address-tooltip = palieskite norėdami nukopijuoti į mainų sritį
+address-copy = Kopijuoti
+address-share = Bendrinti
+
+; App Details Screen
+app-details-title = Spixi programa
+app-details-publisher = Leidėjas:
+app-details-version = Versija:
+app-details-uninstall = Išdiegti
+app-details-dialog-title = Spixi programos tvarkyklė
+app-details-dialog-removed-text = Programa sėkmingai pašalinta.
+app-details-dialog-removefailed-text = Programos šalinimo metu įvyko klaida.
+
+; New App Screen
+app-new-title = Nauja programa
+app-new-description = Pridėkite naują Spixi programą įklijuodami jos URL adresą. Programa bus atsiustą ir įdiegta.
+app-new-install = ĮDIEGTI
+app-new-dialog-title = Spixi programos tvarkyklė
+app-new-dialog-installed-text = Programa '{0}' buvo sėkmingai įdiegta.
+app-new-dialog-installfailed-text = Programos diegimo metu įvyko klaida.
+
+; Apps Screen
+apps-title = Spixi programa
+apps-empty = Neįdiegėte esamos programos.
+
+; Chat Screen
+chat-sent-contact-request = išsiuntė prašymą pridėti prie kontaktų
+chat-accept = PRIIMTI
+chat-ignore = IGNORUOTI
+chat-type-placeholder = Rašykite savo žinutę...
+chat-send-file = Siųsti failą
+chat-request-payment = Užklausti Mokėjimo
+chat-send-payment = Siųsti Mokėjimą
+chat-status = Statusas
+chat-amount = Kiekis
+chat-view = Peržiūra
+chat-payment-request-sent = Mokėjimo užklausa IŠSIŲSTA
+chat-payment-request-received = Mokėjimo užklausa GAUTA
+chat-payment-sent = Mokėjimas IŠSIŲSTAS
+chat-payment-received = Mokėjimas GAUTAS
+chat-payment-status-waiting-confirmation = LAUKIAMA PATVIRTINIMO
+chat-payment-status-declined = ATMESTA
+chat-payment-status-pending = LAUKIAMA
+chat-payment-status-confirmed = PATVIRTINTA
+chat-call-outgoing = Išeinantis skambutis
+chat-call-incoming = Įeinantis skambutis
+chat-call-no-answer = Ne atsako
+chat-call-missed = Praleistas skambutis
+chat-call-ended = Baigtas
+chat-online = Prisijungęs
+chat-offline = Neprisijungęs
+chat-waiting-for-response = Laukiama atsakymo
+chat-text-too-long = Tekstas per ilgas.
+chat-member-count = {0} nariai
+chat-context-pin-message = Prisegti pranešimą
+chat-context-copy-message = Kopijuoti pranešimą
+chat-context-copy-selected = Pasirinkta kopija
+chat-context-tip-user = Apdovanok vartotoją
+chat-context-like-message = Patinka pranešimas
+chat-context-user-info = Vartotojo informacija
+chat-context-send-contact-request = Siųsti užklausą draugauti
+chat-context-kick-user = Išmesti vartotoją
+chat-context-ban-user = Uždrausti vartotoją
+chat-context-delete-message = Ištrinti pranešimą
+chat-message-cost-bar = Pranešimų siuntimas kainuoja {0} už kB
+chat-request-sent-title = Draugo užklausa išsiųsta
+chat-request-sent-details = Kai jie tai priims, galėsite saugiai su jais bendrauti
+chat-request-sent-undo = Atšaukti
+chat-request-received-title = Gauta užklausa draugauti
+chat-request-received-details = Kažkas nori susisiekti su tavimi! Kai priimsi, galėsi saugiai su jais bendrauti.
+
+chat-modal-tip-title = Dovanoti {0}?
+chat-modal-tip-body = Bakstelėkite ant sumos, kurią norite dovanoti, arba patys nustatykite dovanojama sumą.
+chat-modal-tip-custom = NUSTATYTI
+chat-modal-tip-pay-button = MOKĖTI
+chat-modal-tip-confirmation-body = Jus ketinate padovanoti „{0}“ {1}. Ši suma bus nurašyta iš jūsų piniginės.
+chat-modal-tip-confirmed-body = Jus ką tik apdovanojot „{0}“ su {1}. Suma buvo nurašyta iš jūsų piniginės.
+chat-modal-tip-error-body = Bandant apdovanot naudotoją įvyko nežinoma klaida.
+
+chat-bot-details-info = Informacija apie botą
+chat-bot-address = Boto adresas
+chat-bot-toggle-notifications = Perjungti pranešimus
+chat-bot-invite = Pakvieskite kontaktą į šį botą
+chat-bot-leave = Palikite botą
+
+chat-bot-user-address = Vartotojo adresas
+chat-bot-user-send-contact-request = Siųsti kontaktinę užklausą
+
+chat-modal-kick-title = Išmesti {0}?
+chat-modal-kick-body = Ar tikrai norite išmesti „{0}“ iš šio serverio?
+chat-modal-kick-kick-button = IŠMESTI VARTOTOJĄ
+chat-modal-kicked-title = Išmestas {0}
+chat-modal-kicked-body = Jūs esate išmestas „{0}“ iš šio serverio.
+
+chat-modal-ban-title = Užblokuoti {0}?
+chat-modal-ban-body = Ar tikrai norite užblokuoti „{0}“ šiame serveryje?
+chat-modal-ban-ban-button = UŽBLOKUOTI VARTOTOJĄ
+chat-modal-banned-title = Užblokuotas {0}
+chat-modal-banned-body = Jud esate užblokuotas „{0}“ šiame serveryje.
+
+chat-bot-not-ready-title = Botas nėra pasirengęs
+chat-bot-not-ready-body = Botas dar ne pasiruošęs, bandykite dar kartą po kelių minučių.
+
+chat-kicked = Jūs buvote išmestas iš šio grupės pokalbio.
+chat-banned = Jums buvo uždrausta dalyvauti šiame grupės pokalbyje.
+
+; Contact Details Screen
+contact-details-chat = pokalbis
+contact-details-send = siųsti
+contact-details-receive = gauti
+contact-details-notifications = Pranešimai
+contact-details-history = Istorija
+contact-details-account-address = Spixi adresas
+contact-details-address-1 = Gaunamas
+contact-details-address-2 = SPIXI
+contact-details-address-3 = adresas...
+contact-details-removecontact = PAŠALINTI
+contact-details-removedcontact-title = Pašalintas
+contact-details-removedcontact-text = Kontaktas pašalintas iš sąrašo.
+contact-details-deletehistory = PAŠALINTI ISTORIJĄ
+contact-details-deletedhistory-title = Pašalinta
+contact-details-deletedhistory-text = Pranešimų istorija pašalinta.
+
+; New Contact Screen
+contact-new-title = Naujas kontaktas
+contact-new-description = Pridėkite nauja Spixi kontaktą nukopijavęs jo adresą arba nuskaitęs jo QR kodą.
+contact-new-placeholder = Įklijuoti / įvesti adresą
+contact-new-send-request = SIŲSTI KONTAKTUI UŽKLAUSĄ
+contact-new-invalid-address-self-text = Jūsų įvestas adresas yra jūsų paties adresas.
+contact-new-invalid-address-exists-text = Šis kontaktas jau yra jūsų kontaktų sarašę.
+contact-new-scan = Nuskaityti
+contact-new-scan-help = Arba nuskaitykite QR kodą
+contact-new-send = Siųsti
+contact-new-cancel = Atšaukti
+contact-new-confirm-title = Siųsti užklausą draugauti ?
+contact-new-confirm-details = Jūs ketinate išsiųsti užklausą draugauti į šį Spixi adresą:
+
+; Downloads Screen
+downloads-title = Parsisiųsti
+downloads-empty = Jūs neturite atsiųstų failų.
+
+; Index Screen
+index-balance = Mano IXI Balansas
+index-balance-show = Rodyti
+index-balance-hide = Slėpti
+index-balance-info = Balansas paslėptas
+index-notifications = Pranešimai
+index-unread-chats = Neskaityti pokalbiai
+index-no-conversations-title = Nėra pokalbių
+index-no-conversations = Pradėkite naują pokalbį su vienu iš jūsų kontaktų.<br/>Visi pokalbiai bus rodomi čia.
+index-new-chat-button = Naujas pokalbis
+index-no-transactions-title = Nėra operacijų
+index-no-transactions = Jūsų operacijos pasirodys čia, kai pradėsite naudoti savo IXI piniginę.
+index-send = Siųsti
+index-scan = Skenavimas
+index-receive = Gauti
+index-all = Visi
+index-sent = Išsiųsta
+index-received = Gauta
+index-recent-activity = Paskutiniai veiksmai
+index-contacts-placeholder = Ieškokite kontaktų
+index-tab-home = pagrindinis
+index-tab-chats = pokalbiai
+index-tab-wallet = piniginė
+index-tab-contacts = kontaktai
+index-tab-address = Mano adresas
+index-new-title = NAUJAS
+index-new-contact = kontaktas
+index-new-chat = Pokalbis
+index-new-send = Siųsti IXI
+index-new-request = Gauti IXI
+index-new-cancel = ATŠAUKTI
+index-side-title = Spixi Vartotojas
+index-side-myaddress = Mano Spixi Adresas
+index-side-apps = Programos
+index-side-downloads = Parsisiuntimai
+index-side-settings = Nustatymai
+index-side-security = Saugumas
+index-side-backup = Atsarginė kopija
+index-side-password = Slaptažodis
+index-side-about = Apie
+index-side-howtouse = Kap naudoti Spixi
+index-side-sendlog = Siųsti Log
+index-devmode = Kūrėjo rėžimas suaktyvintas
+index-excerpt-payment-request-sent = Mokėjimo užklausa išsiųsta
+index-excerpt-payment-request-received = Gauta mokėjimo užklausa
+index-excerpt-payment-sent = Mokėjimas išsiųstas
+index-excerpt-payment-received = Mokėjimas gautas
+index-excerpt-contact-accepted = Kontaktas priimtas
+index-excerpt-contact-request = Bendravimo užklausa
+index-excerpt-file = Byla
+index-excerpt-voice-call = Balso skambutis
+index-excerpt-self = Aš:
+index-excerpt-typing = Rašo...
+
+; Intro Screen
+intro-title = Sveiki atvykę į Spixi,
+intro-subtitle = Sveiki atvykę į vieną iš saugiausių pokalbių programų pasaulyje.
+intro-headline = Pradėkime!
+intro-language-text = Pasirinkite kalbą
+intro-text = Norėdami testi sukurkite arba atkurkite savo<br/>Spixi paskyrą
+intro-create-account = Nauja paskyra
+intro-restore-account = Jau turite paskyrą?
+intro-restore-link = Spustelėkite čia, norėdami atkurti.
+intro-tip-title = Ar žinojai?
+intro-tip-body = Spixi nenaudoja serverių, visi pranešimai siunčiami tiesiai į jūsų mazgus ir yra visiškai užšifruoti.
+intro-continue = Tęsti
+intro-step-1 = Žingsnis 1 iš 2
+intro-step-2 = Žingsnis 2 iš 2
+
+; Intro New Screen
+intro-new-description-1 = Nustatykite savo slapyvardį ir nuotrauką
+intro-new-description-2 = Jūsų slapyvardis ir profilio nuotrauka bus rodomi jūsų kontaktams.
+intro-new-name-placeholder = Jūsų slapyvardis
+intro-new-change-image = Palieskite, norėdami pakeisti paveikslėlį
+intro-new-next = KITAS
+intro-new-step-1 = 1 žingsnis iš 2
+intro-new-step-2 = 2 žingsnis iš 2
+intro-new-description-3 = Tu jau beveik ten.
+intro-new-description-4 = Tai jūsų pagrindinis slaptažodis. Jei kada nors prireiks atkurti prieigą prie savo paskyros, jums prireiks šio slaptažodžio kad galėtume pasinaudoti atsargine kopija.
+intro-new-description-5 = Jūsų slaptažodis labai svarbus, nes jis leis jums vėl prisijungti prie savo Spixi paskyros ir prireikus atkurti prieigą prie jos.
+intro-new-password = Įveskite savo slaptažodį...
+intro-new-password-2 = Iš naujo įveskite savo slaptažodį
+intro-new-finish = BAIGTI
+intro-new-create-title = Kūriama jūsų <br />Spixi paskyra...
+intro-new-create-description = Šis procesas gali užtrukti ilgesnį laiką lėtesniuose įrenginiuose.
+intro-new-password10 = Slaptažodis turėtu būti bent 10 simbolių ilgio
+intro-new-passwordconf = Pakartokite slaptažodį
+intro-new-passwordnomatch = Slaptažodis nesutampa
+intro-new-passwordmatch = Slaptažodis sutampa
+intro-new-emptynick-title = Netinkamas slapyvardis
+intro-new-emptynick-text = Įveskite savo slapyvardį.
+intro-new-avatarerror-title = Avataro klaida
+intro-new-walleterror-title = Klaida
+intro-new-walleterror-text = Nepavyksta sugeneruoti piniginės. Prašau, pabandytu dar kartą.
+
+; Intro Restore Screen
+intro-restore-description-1 = Atkurkite prieigą prie savo Spixi paskyros
+intro-restore-description-2 = Norint atkurti esama Spixi paskyrą šiame įrenginyje, jums reikės atsarginio failo kopijos ir šifravimo slaptažodžio.
+intro-restore-password = Įveskite savo šifravimo slaptažodį
+intro-restore-selectfile = pasirinkite atsarginę failo kopiją
+intro-restore-backupdescription = Nustatykite atsarginį failą, kuris susietas su šifravimo slaptažodžiu
+intro-restore-action = ATKURTI
+intro-restore-title = Atkūriama prieigą prie<br />jūsų Spixi paskyros
+intro-restore-info = Tai gali užtrukti
+intro-restore-file-error-title = Failo klaida
+intro-restore-file-selecterror-text = Įvyko klaida besirenkant atkūrimo failą.
+intro-restore-file-readerror-text = Įvyko klaida skaitant piniginės failą.
+intro-restore-file-writeerror-text = Įvyko klaida išsaugant piniginę.
+intro-restore-file-invalidpassword-title = Neteisingas slaptažodis
+intro-restore-file-invalidpassword-text = Negalim iššifruoti piniginės, bandykite dar kartą.
+
+; Intro Retry Screen
+intro-retry-description-1 = Dar kartą įveskite savo šifravimo slaptažodį
+intro-retry-description-2 = Panašu, kad kilo problemų bandant pasiekti jūsų paskyrą. Norėdami tęsti, įveskite dar kartą slaptažodį.
+intro-retry-placeholder = Įveskite savo šifravimo slaptažodį
+intro-retry-proceed = TĘSTI
+intro-retry-title = Atkūriama prieiga prie<br />jūsų piniginės
+intro-retry-info = Tai gali užtrukti
+intro-retry-invalidpassword-title = Neteisingas slaptažodis
+intro-retry-invalidpassword-text = Nepavyksta iššifruoti piniginės, pabandykite dar kartą.
+
+; Lock Screen
+lock-description = Spixi UŽRAKINTAS
+lock-placeholder = Įveskite ATRAKINIMO SLAPTAŽODĮ
+lock-error = Neteisingas slaptažodis
+lock-unlock = ATRAKINTA
+lock-change = Pakeisti piniginę
+
+; Settings Screen
+settings-title = Nustatymai
+settings-save = IŠSAUGOTI
+settings-cancel = ATŠAUKTI
+settings-confirm = PATVIRTINTI
+settings-description = Redaguokite nustatymus ir tvarkykite šiame įrenginyje saugomus duomenys.
+settings-account-information = Pagrindiniai nustatymai
+settings-account-description = Pakeiskite numatytąją kalbą, paveikslėlį ir redaguokite slapyvardį
+settings-account-language-edit = Kalba
+settings-account-appearance-edit = Išvaizda
+settings-account-appearance-automatic = Automatinis
+settings-account-appearance-light = Šviesus
+settings-account-appearance-dark = Tamsus
+settings-account-image-edit = Jūsų paveikslėlis
+settings-account-nick-edit = Slapyvardis
+settings-account-nick-placeholder = Įveskite savo naują slapyvardį
+settings-account-deleteinfo = Galite bet kada ištrinti šią Spixi paskyrą ir visą susietą turinį iš šio įrenginio. <br /> <br /> Svarbus pranešimas: norėdami toliau naudoti Spixi šiame įrenginyje, turėsite sukurti naują arba atkurti esamą paskyrą.
+settings-account-delete = PAŠALINTI MANO PASKYRĄ
+settings-deletea-title = Ištrinti jūsų Spixi paskyrą?
+settings-deletea-text = Ar tikrai norite ištrinti „Spixi“ paskyrą? <br/> <br/> Šis veiksmas negrįžtamas! Prieš ištrinant, rekomenduojama sukurti atsarginę paskyros kopiją. Jums reikės atsarginės kopijos failo, jei kada nors norėsite atkurti prieigą prie šios paskyros.
+settings-deleteda-title = Pašalinta
+settings-deleteda-text = Spixi paskyra pašalinta.
+settings-wallet-settings = Piniginės nustatymai
+settings-wallet-description = Jūsų piniginė susieta su jūsų „Spixi“ paskyra. Norėdami ištrinti savo piniginę ir visą mokėjimų istoriją šiame įrenginyje, palieskite žemiau esantį mygtuką &quot;Ištrinti mano piniginę&quot;.
+settings-wallet-delete = IŠTRINTI MANO PINIGINĘ
+settings-deletew-title = Ištrinti šią piniginę?
+settings-deletew-text = Ar tikrai norite ištrinti savo piniginę? <br/> <br/> Šis veiksmas negrįžtamas! Ištrynę šią piniginę prarasite prieigą prie visų joje esančių lėšų! Norėdami atkurti šią piniginę, jums reikės atsarginės kopijos failo ir šifravimo slaptažodžio!
+settings-deletew-error-title = Klaida
+settings-deletew-error-text = Nepavyko ištrinti piniginės failo.
+settings-history = Pranešimų istorija
+settings-history-description = Visa jūsų pranešimų istorija ir visi atsisiųsti failai saugomi šiame įrenginyje. Galite bet kada ištrinti visą pranešimų istoriją ar atsisiuntimus, paspausdami atitinkamą mygtuką žemiau.
+settings-history-delete = IŠTRINTI PRANEŠIMŲ ISTORIJĄ
+settings-downloads-delete = IŠTRINTI VISUS ATSISIUNTIMUS
+settings-deleteh-title = Ištrinti pranešimų istoriją?
+settings-deleteh-text = Ar tikrai norite ištrinti VISĄ pranešimų istoriją? Šis veiksmas nėra grįžtamas!
+settings-deletedh-title = Ištrinta
+settings-deletedh-text = Pranešimų istorija ištrinta.
+settings-deleted-title = Ištrinti visus atsisiuntimus?
+settings-deleted-text = Ar tikrai norite ištrinti VISUS atsisiuntimus? Visi failai, kuriuos atsisiuntėte iš Spixi, bus ištrinti! Šis veiksmas nėra grįžtamas!
+settings-deletedd-title = Ištrinta
+settings-deletedd-text = Ištrinti {0} atsisiųsti failai.
+settings-deleted-error-title = Klaida
+settings-deleted-error-text = Įvyko nežinoma klaida.
+settings-emptynick-title = Netinkamas slapyvardis
+settings-emptynick-text = Įveskite savo slapyvardį.
+
+; Settings Backup Screen
+settings-backup-title = Paskyros atsarginė kopija
+settings-backup-description = Atsisiųskite specialų failą, kuris leidžia atkurti „Spixi“ paskyrą.
+settings-backup-save = IŠSAUGOTI ATSARGINĮ FAILĄ
+settings-backup-account-save = ATSAUGA PASKYRA
+settings-backup-notice = Šis atsarginės kopijos failas ir su juo susietas šifravimo slaptažodis bus reikalingas atkuriant jūsų informaciją šiais atvejais:
+settings-backup-notice2 = - pametus šį įrenginį<br />- pašalinus Spixi iš savo įrenginio<br />- Pašalinus savo Paskyrą<br />- Pašalinus savo piniginę
+settings-backup-invalidpassword-title = Neteisingas slaptažodis
+settings-backup-invalidpassword-text = Įveskite galiojantį slaptažodį.
+
+; Settings Encryption Screen
+settings-encryption-title = Slaptažodis
+settings-encryption-description = Šifravimo slaptažodis yra svarbiausias jūsų paskyros ir piniginės slaptažodis. Jums reikės šio slaptažodžio, jei kada nors bandysite atkurti prieigą prie savo Spixi paskyros ar piniginės.
+settings-encryption-edit = Redaguokite savo šifravimo slaptažodį
+settings-encryption-type = Įveskite savo <b> DABARTINĮ </b> slaptažodį
+settings-encryption-placeholder = Dabartinis jūsų šifravimo slaptažodis
+settings-encryption-typenew = Įveskite savo <b> NAUJĄ </b> slaptažodį
+settings-encryption-placeholdernew = Jūsų naujas šifravimo slaptažodis
+settings-encryption-placeholderretype = Dar kartą įveskite naują šifravimo slaptažodį
+settings-encryption-change = PAKEISTI SLAPTAŽODĮ
+settings-encryption-password10 = Slaptažodį turi sudaryti bent 10 simbolių
+settings-encryption-passwordconf = Įveskite slaptažodžio patvirtinimą
+settings-encryption-passwordnomatch = Slaptažodžiai nesutampa
+settings-encryption-passwordmatch = Slaptažodžiai sutampa
+settings-encryption-invalidpassword-title = Neteisingas slaptažodis
+settings-encryption-invalidpassword-text = Įveskite galiojantį slaptažodį.
+settings-encryption-passwordchanged-title = Šifravimo slaptažodis
+settings-encryption-passwordchanged-text = Slaptažodis sėkmingai pakeistas.
+settings-encryption-invalidpassword-current-text = Dabartinis slaptažodis neteisingas, bandykite dar kartą ..
+
+; Settings Lock Screen
+settings-lock-title = Užrakinti mano Spixi
+settings-lock-description = Sukurkite Spixi užrakto slaptažodį, kad būtumėte tikri, jog tik jūs naudojate savo paskyrą šiame įrenginyje.
+settings-lock-status = Apsaugos būsena:
+settings-lock-unlocked = ATRAKINTA
+settings-lock-locked = UŽRAKINTA
+settings-lock-passwordinfo = Sukurkite arba redaguokite savo užrakto slaptažodį
+settings-lock-password = Įveskite <b> dabartinį </b> užrakto slaptažodį
+settings-lock-password-new = Įveskite <b> NAUJĄ </b> užrakto slaptažodį
+settings-lock-placeholder-1 = Įveskite užrakto slaptažodį
+settings-lock-placeholder-2 = Įveskite naują užrakto slaptažodį
+settings-lock-placeholder-3 = Dar kartą įveskite naują užrakto slaptažodį
+settings-lock-info = Šis slaptažodis bus reikalingas kiekvieną kartą paleidus Spixi.
+settings-lock-save = NUSTATYKITE UŽRAKINIMO SLAPTAŽODĮ
+settings-lock-authinfo = Norėdami atrakinti „Spixi“, jums reikės savo biometrinio autentifikavimo arba piniginės slaptažodžio.
+settings-lock-confirm-text = Norint, kad pakeitimai įsigaliotų, jums reikės išsaugoti savo nustatymus.
+
+; Wallet Contact Request Screen
+wallet-contact-request-title = Mokėjimo užklausa
+wallet-contact-request-subtitle = Mokėjimo užklausa iš:
+wallet-contact-request-amount = Prašoma suma
+wallet-contact-request-info = Vartotojas paprašė sumokėti šią sumą
+wallet-contact-request-respond = Atsakykite į mokėjimo užklausą
+wallet-contact-request-respondinfo = Jus galite atsakyti į šia užklausą atmesdami ją arba išsiųsdami mokėjimą. Užklausą atsiuntęs vartotojas bus informuotas apie jūsų sprendimą.
+wallet-contact-request-decline = ATSISAKYTI
+wallet-contact-request-proceed = SIŲSTI MOKĖJIMĄ
+
+; Wallet Recipient Screen
+wallet-recipient-title = Pasirinkite gavėją
+wallet-recipient-search-placeholder = Ieškoti kontaktų
+wallet-recipient-empty = Pasirinkta 0 gavėjų
+wallet-recipient-add = Pridėti gavėją / -us
+wallet-recipient-selected = Gavėjai pasirinkti
+wallet-recipient-new-contact-button = Pridėti naują kontaktą
+wallet-recipient-no-contact-button = Naujas kontaktas
+
+; Wallet Request Screen
+wallet-request-title = Gauti mokėjimą
+wallet-request-subtitle = Prašyti konkrečios sumos
+wallet-request-amount-placeholder = Įveskite sumą
+wallet-request-address = Dabartinis adresas
+wallet-request-send-info = Siųsti užklausą gavėjams:
+wallet-request-add = Jus galite šią užklausą su tą pačia suma išsiųsti daugiau nei 1 vartotojui. <br/> Pridėkite papildomus vartotojus / adresus, kuriems norite siųsti šią užklausą.
+wallet-request-placeholder = Įklijuoti / įvesti adresą
+wallet-request-send = IŠSIŲSTI UŽKLAUSĄ
+wallet-request-error-title = Klaida
+wallet-request-error-text = Įvesties laukuose įveskite galiojančią informaciją.
+
+; Wallet Send Screen
+wallet-send-title = Siųsti mokėjimą
+wallet-send-details = Įklijuokite arba įveskite adresą, į kurį norite siųsti mokėjimą. Galite paieškoti kontaktą arba nuskaityti QR kodą.
+wallet-send-subdetails = Siųsti IXI į
+wallet-send-add = Pridėti gavėją / -us
+wallet-send-placeholder = Įklijuoti / įvesti adresą
+wallet-send-more = Galite pridėti papildomų šios operacijos gavėjų. Šie gavėjai gaus mokėjimą su ta pačia suma.
+wallet-send-recipients = Gavėjas (-ai)
+wallet-send-norecipients = Nepasirinktas nė vienas gavėjas
+wallet-send-next = KITAS
+wallet-send-max = Siųsti maksimalią sumą
+wallet-send-select = Pasirinkite kontaktą
+wallet-send-or = Arba
+
+; Wallet Send 2 Screen
+wallet-send2-title = Mokėjimo patvirtinimas
+wallet-send2-policy = Pervedimo operacijos mokesčio politika
+wallet-send2-info = IXI mokėjimai negali būti atšaukti.
+wallet-send2-feeinfo = IXI tinklo mokestis įtrauktas į mokėjimą.
+wallet-send2-normal = Normalus
+wallet-send2-high = Aukštas
+wallet-send2-custom = Pasirinktinis
+wallet-send2-placeholder = Kiek norite siųsti?
+wallet-send2-amount = Suma
+wallet-send2-max-amount = Siųsti maksimalią sumą
+wallet-send2-max-amount-warning = Jūs ketinate išsiųsti visą savo piniginės likučio sumą!
+wallet-send2-fee = Visas sandorio mokestis
+wallet-send2-total = Bendra suma, mokėtina iš balanso
+wallet-send2-send = Siųsti IXI
+wallet-send2-confirm-title = Jūs ketinate išsiųsti
+wallet-send2-confirm = Patvirtinti
+wallet-send2-cancel = Atšaukti
+wallet-send2-edit = Redaguoti mokėjimą
+wallet-send2-remove-recipient = Pašalinti gavėją
+wallet-send2-done = Atlikta
+wallet-send2-yourbalance = Jūsų likutis
+
+; Wallet Sent Screen
+wallet-sent-title = Mokėjimo Detalės
+wallet-sent-subtitle = Mokėjimas išsiųstas:
+wallet-status-sent-pending = Mokėjimas siunčiamas!
+wallet-status-receive-pending = Įeinantis mokėjimas
+wallet-status-sent = Mokėjimas sėkmingai išsiųstas
+wallet-status-receive = Mokėjimas gautas
+wallet-status-failed = Mokėjimas nepavyko
+wallet-sent-amount = Išsiųsta suma
+wallet-sent-status = Mokėjimo būsena
+wallet-sent-confirmed = PATVIRTINTAS
+wallet-sent-unconfirmed = NEPATVIRTINTAS
+wallet-sent-details = Išsiųsta suma buvo išskaičiuota iš jūsų balanso.
+wallet-sent-fee = Mokėjimo mokestis
+wallet-sent-feeinfo = Šis mokėjimas turi tinklo mokestį
+wallet-sent-txid = Transakcijos ID
+wallet-sent-view-explorer = Peržiūrėti naršyklėje
+wallet-sent-dismiss = Atsisakyti
+wallet-sent-unconfirmed-details = Mokėjimas buvo išsiųstas, bet dar nebuvo patvirtintas tinkle. Kai patvirtins, pamatysite transakcijos ID ir nuorodą, skirtą peržiūrėti jį naršyklėje.
+wallet-sentrecv-title = Apmokėjimas gautas
+wallet-sentrecv-subtitle = Mokėjimas gautas iš
+wallet-sentrecv-amount = Gauta suma
+wallet-sentrecv-details = Gauta suma buvo pridėta prie jūsų balanso.
+
+; Global wallet errors
+wallet-error-amount-title = Neteisinga suma
+wallet-error-amount-text = Įveskite teisingą sumą.
+wallet-error-amountdecimal-text = Įveskite teisingą skaičių po kablelio.
+wallet-error-balance-title = Nepakankamas balanso likutis
+wallet-error-balance-text = Balanso likutis nepakankamas šiai operacijai. Bendras operacijos mokestis yra {0}, o balansę yra {1}.
+
+; Onboarding join official bot
+onboarding-bot-title = Prisijunkite prie mūsų oficialios Spixi bendruomenės
+onboarding-bot-text = Grupės pokalbis, kuriame galite pasakyti, ką manote apie Spixi, ir sekti naujienas.
+onboarding-bot-join-button = PRISIJUNGTI
+onboarding-bot-dont-join-button = NESIJUNGTI
+
+; Onboarding 1
+onboarding-screen1-title = Jungtis su pasitikėjimu
+onboarding-screen1-text = Valdykite savo bendravimą ir finansus su viena iš saugiausių ir privačiausių pokalbių programų pasaulyje.
+onboarding-screen1-get-started = Pradėti
+onboarding-screen1-skip = Praleisti įvadinimą
+
+; Onboarding 2
+onboarding-screen2-title = Jūsų adresas yra jūsų vienintelis ID
+onboarding-screen2-text = Spixi rnereikia jūsų telefono numerio ar el. pašto. Vietoj to, jis sukuria jūsų adresą, kuris yra vienintelis ID programoje. Galite pridėti kontaktus, naudodami jų adresus.
+
+; Onboarding 3
+onboarding-screen3-title = Siųskite ir gaukite IXI mokėjimus.
+onboarding-screen3-text = Naudodamiesi pinigine, galite greitai siųsti ar gauti IXI mokėjimus. Tai taip paprasta kaip žinutės siuntimas.
+
+; Onboarding send and receive payments
+onboarding-screen4-title = Siųskite ir gaukite mokėjimus
+onboarding-screen4-text = Norėdami greitai išsiųsti ir gauti IXI mokėjimus, naudokite integruotą piniginę. Tai galite padaryti savo piniginėje arba pokalbyje taip pat lengvai, kaip išsiųsti žinutę!
+onboarding-skip = PRALEISTI
+onboarding-back = Atgal
+onboarding-next = Kitas
+onboarding-finish = BAIGTI
+
+; Empty State
+empty-state-title = Spixi
+empty-state-detail-1 = Spixi yra decentralizuota pokalbių programa su integruota pinigine.
+empty-state-detail-2 = Visi pranešimai yra užšifruoti naudojant pažangiausius šifravimo metodus ir tiesiogiai keičiami tarp jūsų ir jūsų kontakto.
+
+
+; Ixinames
+ixinames-request-title = IXI Names Nori Prisijungti
+ixinames-request-details = Ar tikrai norite prijungti savo Spixi prie IXI Names? Paslauga gaus prieigą prie jūsų Spixi adreso.
+ixinames-request-decline = Atmesti
+ixinames-request-connect = Prisijungti
+ixinames-message-connected = Jūsų Spixi dabar prijungtas prie IXI Names.
+ixinames-message-error = Spixi nepavyko prisijungti prie IXI Names. Bandykite dar kartą.
+
+; Rating
+rating-request-title = Ar jums patinka Spixi?
+rating-request-details = Jūsų atsiliepimai padeda mums tobulinti.
+rating-request-no = Nelabai...
+rating-request-yes = Taip, man labai patinka
+
+; Global
+global-connecting-s2 = Prisijungiama prie „Ixian S2“ ...
+global-connecting-dlt = Prisijungiama prie „Ixian“ tinklo ...
+global-received = GAUTA
+global-sent = IŠSIŲSTA
+global-app-accept = Priimti
+global-app-reject = Atmesti
+global-app-wants-to-use = {0} nori naudoti {1} su jumis..
+global-call-in-call = Skambina
+global-call-dialing = Sujunginėjama
+global-call-incoming = Įeinantis skambutis
+
+global-dialog-error = Klaida
+global-dialog-ok = Gerai
+global-dialog-cancel = ATŠAUKTI
+global-invalid-address-title = Neteisingas adresas
+global-invalid-address-text = Įveskite galiojantį piniginės adresą.
+
+global-friend-request-accepted = {0} priėmė jūsų užklausą draugauti.
+
+global-update-available = Pasiekiama nauja „Spixi“ ({0}) versija. Atnaujinkite, kad gautumėte naudotis naujomis funkcijomis ir galimybėmis.
+global-modal-external-link-title = Ketinate atidaryti išorinę nuorodą
+global-modal-external-link-body = Ketinate atidaryti išorinę nuorodą {0}. Išorinės nuorodos yra potencialiai pavojingos, tęskite savo pačių rizika.
+global-modal-external-link-button-visit = Tęsti
+
+global-lock-auth-text = Reikalinga autentikacija
+global-lock-invalidpassword-title = Autentifikacija nepavyko
+global-lock-invalidpassword-text = Įveskite savo piniginės slaptažodį, kad atrakintumėte Spixi
+
+global-time-justnow = vos dabar
+global-time-aminuteago = prieš minutę
+global-time-minutesago = minutes
+global-share-choose = Pasirinkite veiksmą
+global-share-savefile = Išsaugoti failą
+global-share-sharefile = Bendrinti failą

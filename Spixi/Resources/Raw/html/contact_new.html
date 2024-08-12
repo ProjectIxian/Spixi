@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{contact-new-title}
+                </div>
+                <div>
+                </div>
+            </div>
+
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
+                    <div class="col spixi-descriptionbar-row-details">*SL{contact-new-description}</div>
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+
+        <hr class="spixi-separator-main" />
+
+        <div class="spixi-textfield-holder multiline">
+            <textarea rows="3" class="spixi-textfield multiline" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}"></textarea>
+        </div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header text-center">*SL{contact-new-scan-help}</div>
+
+        <div id="quickscan" class="spixi-outline-button">
+            *SL{contact-new-scan} <i class="fas fa-qrcode"></i>
+        </div>
+
+        <!-- Modal menu -->
+        <div id="confirmationModal" class="spixi-modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="spixi-modal-header-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+
+                <div class="spixi-modal-header">                    
+                    *SL{contact-new-confirm-title}
+                </div>
+
+                <div class="spixi-modal-details">
+                    *SL{contact-new-confirm-details}
+                    
+                </div>
+                <div id="confirm_address" class="spixi-modal-details-address">
+
+                </div>
+
+                <div class="spixi-modal-footer">
+                    <div class="row no-gutters" style="margin:16px;">
+                        <div class="col">
+                            <div id="cancel" class="spixi-flat-button outline modal-left">
+                                *SL{contact-new-cancel}
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div id="sendrequest" class="spixi-flat-button modal-right">
+                                *SL{contact-new-send}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        var sendrequest = document.getElementById("sendrequest");
+        var confirmModal = document.getElementById('confirmationModal');
+        var confirmAddress = document.getElementById('confirm_address');
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        document.getElementById("quickscan").onclick = function () {
+            location.href = "ixian:quickscan";
+        }
+
+        document.getElementById("cancel").onclick = function () {
+            onMenuClose();
+        }
+        document.getElementById("sendrequest").onclick = function () {
+            var wal = document.getElementById("addressInput").value;
+            if (isBlank(wal)) {
+                location.href = "ixian:error";
+                return;
+            }
+            onMenuClose();
+            location.href = "ixian:request:" + wal;
+        }
+
+        function setAddress(addr) {
+            document.getElementById("addressInput").value = addr;
+            checkAddress();
+        }
+
+        function checkAddress() {
+
+            var address = $("#addressInput").val();
+            if (address.length >= 65) {
+                confirmAddress.innerText = address;
+                onValidAddress();
+            }
+        }
+
+        function onValidAddress() {
+            confirmModal.style.display = "block";
+        }
+
+        function onMenuClose() {
+            confirmModal.style.display = "none";
+        }
+
+    </script>
+
+</body>
+</html>

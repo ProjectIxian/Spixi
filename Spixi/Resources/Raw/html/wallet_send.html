@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+<!-- saved from url=(0016)http://localhost -->
+
+<head lang="en">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no">
+
+    <title>Spixi</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/*SL{SpixiThemeMode}">
+
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="libs/fontawesome/css/solid.min.css">
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <script src="js/clipboard.min.js"></script>
+    <script src="js/spixi.js"></script>
+
+</head>
+<body onload="ixian:onload()">
+    <div id="wrap" class="container-fluid noselect">
+
+        <!-- Toolbar -->
+        <div class="spixi-toolbar shadow">
+            <div class="spixi-toolbar-row">
+                <div id="backbtn">
+                    <i class="fas fa-arrow-left"></i>
+                </div>
+                <div>
+                    *SL{wallet-send-title}
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        <div class="spixi-toolbar-holder"></div>
+        <!-- End Toolbar -->
+        <!-- DescriptionBar -->
+        <div class="spixi-descriptionbar">
+            <div>
+                <div class="row spixi-descriptionbar-row">
+                    <div class="spixi-descriptionbar-row-icon"><i class="fa fa-info-circle"></i></div>
+                    <div class="col spixi-descriptionbar-row-details">*SL{wallet-send-details}</div>
+                </div>
+            </div>
+        </div>
+        <!-- End DescriptionBar -->
+        <hr class="spixi-separator-main" />
+        <div class="spixi-textsection-holder spixi-textsection-header">
+            *SL{wallet-send-subdetails}
+        </div>
+        <div class="spixi-textfield-holder multiline">
+            <textarea rows="3" class="spixi-textfield multiline" id="addressInput" oninput="checkAddress()" placeholder="*SL{contact-new-placeholder}"></textarea>
+        </div>
+
+        <div class="spixi-textsection-holder spixi-textsection-header text-center">*SL{wallet-send-or}</div>
+
+        <div class="row no-gutters">
+            <div class="col">
+                <div id="pickcontact" class="spixi-outline-button" style="margin-right:8px">*SL{wallet-send-select} <i class="fa-solid fa-address-book"></i></div>
+            </div>
+            <div class="col">
+                <div id="quickscan" class="spixi-outline-button" style="margin-left:8px">*SL{contact-new-scan} <i class="fas fa-qrcode"></i></div>
+            </div>
+        </div>
+
+        <div class="spixi-holder-20"></div>
+
+
+
+    </div>
+
+
+    <script type="text/javascript">
+
+        document.getElementById("backbtn").onclick = function () {
+            location.href = "ixian:back";
+        }
+
+        document.getElementById("pickcontact").onclick = function () {
+            location.href = "ixian:pick";
+        }
+
+        document.getElementById("quickscan").onclick = function () {
+            location.href = "ixian:quickscan";
+        }
+
+        /*
+        nextbtn.onclick = function () {
+            if (nextbtn.classList.contains("disabled")) {
+                return;
+            }
+
+            var params = "";
+
+            var recipientsContainer = document.getElementById("recipients");
+            var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+            for (i = 0; i < c_items.length; i++) {
+                var addr = c_items[i].id;
+
+                var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+                params = params + addr + ":" + input.value + "|";
+            }
+
+            location.href = "ixian:send:" + params;
+        }
+        */
+        function setAddress(addr) {
+            document.getElementById("addressInput").value = addr;
+            checkAddress();
+        }
+
+        function checkAddress() {
+
+            var address = $("#addressInput").val();
+            if (address.length >= 65) {
+                onValidAddress(address);
+            }
+        }
+        function onValidAddress(addr) {
+            location.href = "ixian:send:" + addr;
+        }
+
+        // Assign enter/return event to the address input
+/*        var input = document.getElementById("addressInput");
+        input.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+
+                location.href = "ixian:addrecipient:" + input.value;
+
+                input.value = "";
+            }
+        });*/
+
+        // Add a named recipient with address
+        function addRecipient(rep, addr) {
+            // Check for empty values
+            if (addr.length < 1 || rep.length < 1)
+                return;
+            /*
+            // Multiple recipients will be enabled in the future
+            // Check for duplicates
+            if (recipientExists(addr) == true)
+                return;
+
+            var contactsNode = document.getElementById("recipients");
+
+            var contactEntry = document.createElement("div");
+            contactEntry.className = "recipient";
+            contactEntry.setAttribute("id", addr);
+
+            contactEntry.innerHTML = '<div class="spixi-list-item"><div class="row"><div class="col-2 spixi-list-item-left"><img class="spixi-list-item-avatar" src="img/spixiavatar.png"/></div><div class="col-8 spixi-list-item-center"><div class="spixi-list-item-title-center">' + rep + '</div></div><div class="col-2 spixi-list-item-right"><a href="javascript:removeRecipient(\'' + addr + '\')"><i class="fa fa-minus-circle spixi-list-item-action-icon"></i></a></div></div></div><div class="spixi-holder-20"></div><div class="spixi-textsection-holder">Amount to send to recipient</div><div class="spixi-textfield-holder"><input type="text" class="spixi-textfield amount-input" oninput="validate()" placeholder="0.00000000"></div>';
+
+            if (document.getElementsByClassName("amount-input").length == 0) {
+                contactEntry.innerHTML += '<a class="max-amount" style="display:block; text-align:center;" href="ixian:getMaxAmount();">' + "*SL{wallet-send-max}" + '</a>';
+            }
+
+            contactEntry.innerHTML += '<hr class="spixi-separator-full"/>';
+
+            contactsNode.appendChild(contactEntry);
+
+            validate();
+            */
+
+            document.getElementById("addressInput").value = addr;
+            checkAddress();
+        }
+        /*
+        // Remove a specified recipient
+        function removeRecipient(addr) {
+            var element = document.getElementById(addr);
+            element.parentNode.removeChild(element);
+            validate();
+        }
+        */
+        // Set the account wallet balance
+        function setBalance(theText) {
+        }
+
+        // Validate all the amounts and enable the next button
+        function validate() {
+            /*    
+            var recipientsContainer = document.getElementById("recipients");
+            var c_items = recipientsContainer.getElementsByClassName('recipient');
+
+            nextbtn.className = "spixi-button large center disabled";
+
+            // If there are no recipients, do not enable the next button
+            if (c_items.length < 1) {
+                return;
+            }
+
+            for (i = 0; i < c_items.length; i++) {
+                var addr = c_items[i].id;
+
+                var input = c_items[i].getElementsByClassName("spixi-textfield")[0];
+                if (input.value.length < 1) {
+                    return;
+                }
+            }
+
+            // Enable the next button if we reach this point
+            nextbtn.className = "spixi-button large center";*/
+        }
+        /*
+        // Check if an address is already in the recipients list
+        function recipientExists(repaddr) {
+            var recipientsContainer = document.getElementById("recipients");
+            var c_items = recipientsContainer.getElementsByClassName('recipient');
+            // If there are no recipients
+            if (c_items.length < 1) {
+                return false;
+            }
+
+            for (i = 0; i < c_items.length; i++) {
+                var addr = c_items[i].id;
+                if (repaddr == addr) {
+                    // Address found
+                    return true;
+                }
+            }
+            return false;
+        }
+        */
+        function setAmount(amount) {
+        //    document.getElementsByClassName("amount-input")[0].value = amount;
+            validate();
+        }
+
+    </script>
+</body>
+</html>
