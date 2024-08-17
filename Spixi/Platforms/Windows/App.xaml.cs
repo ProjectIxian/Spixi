@@ -1,7 +1,10 @@
-﻿using Microsoft.UI;
+﻿using Microsoft.Maui.LifecycleEvents;
+using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using SPIXI.Lang;
+using System.Diagnostics;
 using Windows.Graphics;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -25,7 +28,20 @@ public partial class App : MauiWinUIApplication
     /// </summary>
     public App()
 	{
-		this.InitializeComponent();
+        var singleInstance = AppInstance.FindOrRegisterForKey("SpixiDesktopApp");
+        if (!singleInstance.IsCurrent)
+        {
+            var currentInstance = AppInstance.GetCurrent();
+            var args = currentInstance.GetActivatedEventArgs();
+            singleInstance.RedirectActivationToAsync(args).GetAwaiter().GetResult();
+
+            Process.GetCurrentProcess().Kill();
+            return;
+        }
+
+        singleInstance.Activated += OnAppInstanceActivated;
+
+        InitializeComponent();
 
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
@@ -63,6 +79,11 @@ public partial class App : MauiWinUIApplication
     {
         base.OnLaunched(args);
 
+    }
+
+    private void OnAppInstanceActivated(object? sender, AppActivationArguments e)
+    {
+        Services.GetRequiredService<ILifecycleEventService>().OnAppInstanceActivated(sender, e);
     }
 
     public void copyResources()
