@@ -81,7 +81,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#144576" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -190,6 +190,7 @@
 		<None Remove="Resources\Raw\lang\ru-ru.txt" />
 		<None Remove="Resources\Raw\lang\sl-si.txt" />
 		<None Remove="Resources\Raw\lang\sr-sp.txt" />
+		<None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
 	<ItemGroup>

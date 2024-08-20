@@ -40,6 +40,8 @@ namespace SPIXI
             if (_webView == null) return;
             CoreWebView2 coreWebView2 = (_webView.Handler.PlatformView as Microsoft.Maui.Platform.MauiWebView).CoreWebView2;
             coreWebView2.Settings.IsStatusBarEnabled = false;
+            coreWebView2.Settings.AreDevToolsEnabled = false;
+
 #endif
         }
 
