@@ -869,7 +869,18 @@ namespace SPIXI
                     Directory.CreateDirectory(base_path);
                 }
 
-                File.WriteAllBytes(Path.Combine(base_path, "account.ixi"), getBytes());
+                string tmp_file = Path.Combine(base_path, "account.ixi.temp");
+                File.WriteAllBytes(tmp_file, getBytes());
+
+                string acc_file = Path.Combine(base_path, "account.ixi");
+                if (File.Exists(acc_file))
+                {
+                    File.Replace(tmp_file, acc_file, null);
+                }
+                else
+                {
+                    File.Move(tmp_file, acc_file);
+                }
             }
         }
 
@@ -883,7 +894,18 @@ namespace SPIXI
                     Directory.CreateDirectory(base_path);
                 }
 
-                File.WriteAllBytes(Path.Combine(base_path, "meta.ixi"), metaData.getBytes());
+                string tmp_file = Path.Combine(base_path, "meta.ixi.temp");
+                File.WriteAllBytes(tmp_file, getBytes());
+
+                string meta_file = Path.Combine(base_path, "meta.ixi");
+                if (File.Exists(meta_file))
+                {
+                    File.Replace(tmp_file, meta_file, null);
+                }
+                else
+                {
+                    File.Move(tmp_file, meta_file);
+                }
             }
         }
 

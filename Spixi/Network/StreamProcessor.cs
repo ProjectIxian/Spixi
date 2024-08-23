@@ -956,6 +956,8 @@ namespace SPIXI
                 new_friend.handshakeStatus = 1;
                 FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, 0, "");
                 requestNickname(new_friend);
+                new_friend.save();
+                new_friend.saveMetaData();
             }else
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
@@ -974,6 +976,8 @@ namespace SPIXI
                 {
                     sendAcceptAdd(friend, reset_keys);
                 }
+                friend.save();
+                friend.saveMetaData();
             }
         }
 
@@ -1006,6 +1010,7 @@ namespace SPIXI
 
             friend.state = FriendState.Approved;
             friend.save();
+            friend.saveMetaData();
 
             sendNickname(friend);
 
@@ -1401,7 +1406,7 @@ namespace SPIXI
                 friend.generateKeys();
             }
             friend.state = FriendState.Approved;
-            friend.save();
+
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
 
@@ -1418,7 +1423,9 @@ namespace SPIXI
             ProtocolMessage.resubscribeEvents();
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
-
+            
+            friend.save();
+            friend.saveMetaData();
         }
 
         public static void sendNickname(Friend friend)

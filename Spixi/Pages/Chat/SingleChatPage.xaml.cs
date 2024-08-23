@@ -168,6 +168,16 @@ namespace SPIXI
                 {
                     SFileOperations.open(fm.filePath);
                 }
+                else
+                {
+                    // Handle special case for iOS
+                    string filename = Path.GetFileName(fm.filePath);
+                    string path = Path.Combine(TransferManager.downloadsPath, filename);
+                    if (File.Exists(path))
+                    {
+                        SFileOperations.open(path);
+                    }
+                }
             }
             else if (current_url.StartsWith("ixian:chat:"))
             {
@@ -870,9 +880,14 @@ namespace SPIXI
             if (messages.Count < messagesToShow)
                 show_more = "false";
             Utils.sendUiCommand(this, "clearMessages", show_more);
-
             if (friend.handshakeStatus < 2)
+            {
+                if (friend.handshakeStatus == 1 && friend.state == FriendState.Approved)
+                {
+                    Utils.sendUiCommand(this, "showContactRequest", "1");
+                }
                 return;
+            }
 
             
             lock (messages)

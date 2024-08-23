@@ -688,10 +688,11 @@ namespace SPIXI.Storage
                         messages_full_path = Path.Combine(messages_path, local_messages[i].receivedTimestamp + ".ixi");
                     }
                     first = false;
+                    string tempFilePath = messages_full_path + ".temp";
                     try
                     {
                         // Prepare the file for writing
-                        fs = new FileStream(messages_full_path, FileMode.Create);
+                        fs = new FileStream(tempFilePath, FileMode.Create);
                         writer = new BinaryWriter(fs);
                     }
                     catch (Exception e)
@@ -739,6 +740,16 @@ namespace SPIXI.Storage
 
                     fs.Close();
                     fs.Dispose();
+
+
+                    if (File.Exists(messages_full_path))
+                    {
+                        File.Replace(tempFilePath, messages_full_path, null);
+                    }
+                    else
+                    {
+                        File.Move(tempFilePath, messages_full_path);
+                    }
                 }
 
                 return true;
