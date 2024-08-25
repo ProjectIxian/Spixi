@@ -1400,8 +1400,6 @@ namespace SPIXI
                 friend.generateKeys();
             }
             friend.state = FriendState.Approved;
-            friend.save();
-
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
 
@@ -1418,6 +1416,8 @@ namespace SPIXI
             ProtocolMessage.resubscribeEvents();
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
+            friend.save();
+            friend.saveMetaData();
         }
 
         public static void sendNickname(Friend friend)
