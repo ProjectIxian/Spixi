@@ -195,7 +195,7 @@ namespace SPIXI
             state = friend_state;
             walletAddress = wallet;
             publicKey = public_key;
-            nickname = nick;
+            _nick = nick;
             approved = approve;
 
             chachaKey = chacha_key;
@@ -688,8 +688,11 @@ namespace SPIXI
 
         public void setUserDefinedNick(string nick)
         {
-            userDefinedNick = nick;
-            save();
+            if (userDefinedNick != nick)
+            {
+                userDefinedNick = nick;
+                save();
+            }
         }
 
         public void endCall(byte[] session_id, bool call_accepted, long call_duration, bool local_sender)
@@ -895,7 +898,7 @@ namespace SPIXI
                 }
 
                 string tmp_file = Path.Combine(base_path, "meta.ixi.temp");
-                File.WriteAllBytes(tmp_file, getBytes());
+                File.WriteAllBytes(tmp_file, metaData.getBytes());
 
                 string meta_file = Path.Combine(base_path, "meta.ixi");
                 if (File.Exists(meta_file))

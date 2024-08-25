@@ -251,6 +251,7 @@ namespace SPIXI
                     }else
                     {
                         friend.metaData.setLastReceivedMessageIds(friend_message.id, channel);
+                        friend.saveMetaData();
                     }
                 }
                 else if(!local_sender)

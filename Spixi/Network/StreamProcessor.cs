@@ -228,7 +228,7 @@ namespace SPIXI
                         if (friend.handshakeStatus == 0)
                         {
                             friend.handshakeStatus = 1;
-                            Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                            Logging.info("Set handshake status to {0} for {1}", friend.handshakeStatus, friend.walletAddress.ToString());
                         }
                         return;
                     }
@@ -244,7 +244,7 @@ namespace SPIXI
                         if (friend.handshakeStatus == 2)
                         {
                             friend.handshakeStatus = 3;
-                            Logging.info("Set handshake status to {0}", friend.handshakeStatus);
+                            Logging.info("Set handshake status to {0} for {1}", friend.handshakeStatus, friend.walletAddress.ToString());
                         }
                         return;
                     }
@@ -954,14 +954,13 @@ namespace SPIXI
                 }
                 new_friend.lastReceivedHandshakeMessageTimestamp = received_timestamp;
                 new_friend.handshakeStatus = 1;
+                new_friend.saveMetaData();
                 FriendList.addMessageWithType(id, FriendMessageType.requestAdd, sender_wallet, 0, "");
                 requestNickname(new_friend);
-                new_friend.save();
-                new_friend.saveMetaData();
             }else
             {
                 Friend friend = FriendList.getFriend(sender_wallet);
-                if(friend.lastReceivedHandshakeMessageTimestamp >= received_timestamp)
+                if (friend.lastReceivedHandshakeMessageTimestamp >= received_timestamp)
                 {
                     return;
                 }
@@ -976,8 +975,6 @@ namespace SPIXI
                 {
                     sendAcceptAdd(friend, reset_keys);
                 }
-                friend.save();
-                friend.saveMetaData();
             }
         }
 
@@ -1004,13 +1001,10 @@ namespace SPIXI
 
             friend.generateKeys();
 
+            friend.state = FriendState.Approved;
             friend.handshakeStatus = 2;
 
             friend.sendKeys(2);
-
-            friend.state = FriendState.Approved;
-            friend.save();
-            friend.saveMetaData();
 
             sendNickname(friend);
 
@@ -1406,6 +1400,7 @@ namespace SPIXI
                 friend.generateKeys();
             }
             friend.state = FriendState.Approved;
+            friend.save();
 
 
             SpixiMessage spixi_message = new SpixiMessage(SpixiMessageCode.acceptAdd, friend.aesKey);
@@ -1423,9 +1418,6 @@ namespace SPIXI
             ProtocolMessage.resubscribeEvents();
 
             FriendList.addMessage(new byte[] { 1 }, friend.walletAddress, 0, string.Format(SpixiLocalization._SL("global-friend-request-accepted"), friend.nickname));
-            
-            friend.save();
-            friend.saveMetaData();
         }
 
         public static void sendNickname(Friend friend)
