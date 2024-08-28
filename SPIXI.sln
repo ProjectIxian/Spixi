@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spixi", "Spixi\Spixi.csproj
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "IXICore", "..\Ixian-Core\IXICore.shproj", "{80487C64-619A-4B60-97BD-ED7670BF45B3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spixi-PushService", "Spixi-PushService\Spixi-PushService.csproj", "{A3DD869B-F356-433B-87B9-589FE5C1A283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
