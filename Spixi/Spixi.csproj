@@ -338,6 +338,14 @@
 
 	<Import Project="..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
 
+	<!-- iOS Push Service-->
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios')) == true">
+		<ProjectReference Include="../Spixi-PushService/Spixi-PushService.csproj">
+			<IsAppExtension>true</IsAppExtension>
+			<IsWatchApp>false</IsWatchApp>
+		</ProjectReference>
+	</ItemGroup>
+	
 	<ProjectExtensions>
 		<VisualStudio>
 			<UserProperties XamarinHotReloadWrongLinkerErrorInfoBarSpixiHideInfoBar="True" />
