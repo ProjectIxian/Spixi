@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Spixi_PushService</string>
+	<string>Spixi-PushService</string>
 	<key>CFBundleExecutable</key>
-	<string>Spixi_PushService</string>
+	<string>Spixi-PushService</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.ixilabs.spixi.Spixi_PushService</string>
+	<string>com.ixilabs.spixi.Spixi-PushService</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>com.ixilabs.spixi.Spixi_PushService</string>
+	<string>Spixi-PushService</string>
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>

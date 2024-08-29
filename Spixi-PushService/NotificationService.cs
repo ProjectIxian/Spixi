@@ -10,9 +10,9 @@ namespace OneSignalNotificationServiceExtension
     [Register("NotificationService")]
     public class NotificationService : UNNotificationServiceExtension
     {
-        Action<UNNotificationContent> ContentHandler { get; set; }
-        UNMutableNotificationContent BestAttemptContent { get; set; }
-        UNNotificationRequest ReceivedRequest { get; set; }
+        Action<UNNotificationContent>? ContentHandler { get; set; }
+        UNMutableNotificationContent? BestAttemptContent { get; set; }
+        UNNotificationRequest? ReceivedRequest { get; set; }
 
         protected NotificationService(IntPtr handle) : base(handle)
         {
@@ -35,7 +35,7 @@ namespace OneSignalNotificationServiceExtension
 
             NotificationServiceExtension.ServiceExtensionTimeWillExpireRequest(ReceivedRequest, BestAttemptContent);
 
-            ContentHandler(BestAttemptContent);
+            if (BestAttemptContent != null) ContentHandler?.Invoke(BestAttemptContent);
         }
     }
 }
