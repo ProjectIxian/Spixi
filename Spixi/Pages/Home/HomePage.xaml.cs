@@ -528,7 +528,7 @@ namespace SPIXI
 
             Utils.sendUiCommand(this, "loadAvatar", Node.localStorage.getOwnAvatarPath());
 
-            Utils.sendUiCommand(this, "setVersion", Config.version + " RC (" + Node.startCounter + ")");
+            Utils.sendUiCommand(this, "setVersion", Config.version + " BETA (" + Node.startCounter + ")");
 
             string address_string = IxianHandler.getWalletStorage().getPrimaryAddress().ToString();
             Utils.sendUiCommand(this, "setAddress", address_string);
