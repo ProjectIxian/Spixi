@@ -92,8 +92,20 @@ namespace SPIXI
             if (_webView == null)
                 return false;
 
-            var readyState = await _webView.EvaluateJavaScriptAsync("document.readyState");
-            return readyState.Trim('\"') == "complete";
+            var tcs = new TaskCompletionSource<string>();
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    var result = await _webView.EvaluateJavaScriptAsync("document.readyState");
+                    tcs.TrySetResult(result);
+                }
+                catch (Exception ex)
+                {
+                    tcs.TrySetException(ex);
+                }
+            });
+            return (await tcs.Task).Trim('\"') == "complete";
         }
 
         public virtual void reload()
@@ -101,7 +113,10 @@ namespace SPIXI
             if (_webView != null)
             {
                 pageLoaded = false;
-                _webView.Reload();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    _webView.Reload();
+                });
             }
         }
 
