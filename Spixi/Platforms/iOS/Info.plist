@@ -43,8 +43,10 @@
 	<string>Microphone usage is needed for voice calls</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Biometric authentication for unlocking the app</string>
+	<key>CFBundleVersion</key>
+	<string>0.9.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1</string>
+	<string>0.9.0</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
