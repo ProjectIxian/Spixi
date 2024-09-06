@@ -20,8 +20,9 @@ namespace Spixi
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             try
             {
+                string fileName = Path.GetFileName(filepath);
                 using FileStream fileStream = File.OpenRead(filepath);
-                var fileSaverResult = await FileSaver.Default.SaveAsync("Ixian.wal", fileStream, cancellationTokenSource.Token);
+                var fileSaverResult = await FileSaver.Default.SaveAsync(fileName, fileStream, cancellationTokenSource.Token);
                 if (!fileSaverResult.IsSuccessful)
                 {
                     await Toast.Make($"The file was not saved. Error: {fileSaverResult.Exception.Message}").Show(cancellationTokenSource.Token);
