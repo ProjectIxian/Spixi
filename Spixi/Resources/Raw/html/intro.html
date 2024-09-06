@@ -121,7 +121,7 @@
                 </div>
                 <div class="version-div">
                     <div class="versionid">
-                        <div id="version" class="caption-03">v0.7.0</div>
+                        <div id="version" class="caption-03"></div>
                     </div>
                 </div>
             </div>
@@ -183,7 +183,10 @@
         }
 
         function setVersion(version) {
-
+            if (version.startsWith("spixi-")) {
+                version = "v" + version.substring(6);
+            }
+            document.getElementById("version").innerHTML = version;
         }
 
         function prepareIntro() {
