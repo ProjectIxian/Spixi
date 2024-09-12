@@ -1807,6 +1807,10 @@ img.emoji {
     background-repeat: repeat;
     background-size: 324px 509px;
     padding-top: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .scrollable-div {
@@ -1841,7 +1845,6 @@ img.emoji {
     color: black;
     
     margin-left: 56px;
-    margin-right: 85px;
     margin-bottom: 10px;
     min-width: 80px;
     
@@ -1849,6 +1852,8 @@ img.emoji {
     animation-duration: 0.3s;
 
     word-wrap: break-word;
+    word-break: break-word;
+    display: inline-block;
 }
 
 .spixi-bubble > div
@@ -1858,8 +1863,8 @@ img.emoji {
 }
 
 .spixi-bubble.myself {
-    margin-left: 125px;
-    margin-right: 11px;
+    align-self: flex-end;
+    margin-right: 12px;
     background: #AAD7F0;
 }
 

@@ -1,29 +1,23 @@
-﻿using Microsoft.VisualBasic;
-using SPIXI.VoIP;
+﻿using SPIXI.VoIP;
 using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using IXICore.Meta;
 
 namespace Spixi
 {
     public class SAudioPlayer : IAudioPlayer, IAudioDecoderCallback
     {
-        private WaveOut audioPlayer = null;
-        private IAudioDecoder audioDecoder = null;
+        private WaveOut? audioPlayer = null;
+        private IAudioDecoder? audioDecoder = null;
 
         private bool running = false;
 
-        private BufferedWaveProvider provider = null;
+        private BufferedWaveProvider? provider = null;
 
         int sampleRate = SPIXI.Meta.Config.VoIP_sampleRate;
         int bitRate = SPIXI.Meta.Config.VoIP_bitRate;
         int channels = SPIXI.Meta.Config.VoIP_channels;
 
-        private static SAudioPlayer _singletonInstance;
+        private static SAudioPlayer? _singletonInstance;
         public static SAudioPlayer Instance()
         {
             if (_singletonInstance == null)

@@ -216,7 +216,7 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.72" />
 		<PackageReference Include="Concentus" Version="1.1.7" />
-		<PackageReference Include="NAudio.Wma" Version="1.0.1" Condition="$(TargetFramework.Contains('-windows'))"></PackageReference>
+		<PackageReference Include="NAudio" Version="2.2.1" Condition="$(TargetFramework.Contains('-windows'))"></PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
 		<PackageReference Include="Open.Nat" Version="2.1.0" />

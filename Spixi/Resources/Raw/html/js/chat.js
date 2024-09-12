@@ -573,7 +573,58 @@ function addText(id, address, nick, avatar, text, time, className) {
 
     messagesEl.appendChild(bubbleEl);
 
+    adjustLastestBubbles();
+
     scrollToBottom();
+}
+
+// TODO: optimize and merge this function with addText
+function adjustLastestBubbles() {
+    var messagesEl = document.getElementById("messages");
+    var bubbles = messagesEl.querySelectorAll(".spixi-bubble");
+
+    if (bubbles.length < 2) {
+        return;
+    }
+
+    var currentBubble = bubbles[bubbles.length - 1];
+    var previousBubble = bubbles[bubbles.length - 2];
+
+    var isCurrentMyself = currentBubble.classList.contains('myself');
+    var isPreviousMyself = previousBubble.classList.contains('myself');
+
+    if (isCurrentMyself === isPreviousMyself) {
+        if (!isCurrentMyself) {
+            var currentNick = currentBubble.querySelector('.nick');
+            var previousNick = previousBubble.querySelector('.nick');
+
+            if (currentNick && previousNick) {
+                var currentAddress = currentNick.getAttribute('address');
+                var previousAddress = previousNick.getAttribute('address');
+
+                if (currentAddress && previousAddress && currentAddress === previousAddress) {
+                    var currentAvatar = currentBubble.querySelector('.avatar');
+                    if (currentAvatar) {
+                        currentAvatar.remove();
+                    }
+                    currentNick.textContent = '';
+                    previousBubble.style.marginBottom = "2px";
+                } else {
+                    previousBubble.style.marginBottom = "10px";
+                }
+            } else {
+                var currentAvatar = currentBubble.querySelector('.avatar');
+                if (currentAvatar) {
+                    currentAvatar.remove();
+                }
+                previousBubble.style.marginBottom = "2px";
+            }
+        } else {
+            previousBubble.style.marginBottom = "2px";
+        }
+    } else {
+        previousBubble.style.marginBottom = "10px";
+    }
 }
 
 function addMe(id, address, nick, avatar, text, time, sent, confirmed, read, paid) {
