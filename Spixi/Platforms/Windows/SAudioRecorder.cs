@@ -1,4 +1,5 @@
 ﻿using IXICore.Meta;
+using Microsoft.UI.Xaml.Controls;
 using NAudio.Wave;
 using SPIXI.VoIP;
 using System;
@@ -56,14 +57,25 @@ namespace Spixi
             }
 
             initEncoder(codec);
-            initRecorder();
+            if(!initRecorder())
+            {
+                // TODO show notification
+                stop();
+                return;
+            }
 
             recordThread = new Thread(recordLoop);
             recordThread.Start();
         }
 
-        private void initRecorder()
+        private bool initRecorder()
         {
+            if (WaveIn.DeviceCount < 1)
+            {
+                Logging.error("No input devices found.");
+                return false;
+            }
+
             audioRecorder = new WaveIn(WaveCallbackInfo.FunctionCallback());
             audioRecorder.WaveFormat = new WaveFormat(sampleRate, bitRate, channels);
             audioRecorder.DataAvailable += onDataAvailable;
@@ -72,6 +84,17 @@ namespace Spixi
             audioRecorder.NumberOfBuffers = 4;
             audioRecorder.DeviceNumber = 0;
             audioRecorder.StartRecording();
+
+            return true;
+        }
+
+        private void listInputDevices()
+        {
+            for (int n = 0; n < WaveIn.DeviceCount; n++)
+            {
+                var deviceInfo = WaveIn.GetCapabilities(n);
+                Console.WriteLine($"{n}: {deviceInfo.ProductName}, Channels: {deviceInfo.Channels}");
+            }
         }
 
         private void onDataAvailable(object obj, WaveInEventArgs wave_event)
