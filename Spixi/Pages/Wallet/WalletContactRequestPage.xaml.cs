@@ -115,15 +115,31 @@ namespace SPIXI
 
         private void onSend()
         {
+            IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+            IxiNumber _amount = amount;
+
+            if (_amount < (long)0)
+            {
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-amount-title"), SpixiLocalization._SL("wallet-error-amount-text"), SpixiLocalization._SL("global-dialog-ok"));
+                return;
+            }
+
+            if (_amount + fee > Node.balance.balance)
+            {
+                string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, Node.balance.balance);
+                displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
+                return;
+            }
+
+
             string msg_id = Crypto.hashToString(requestMsg.id);
 
-            // send tx details to the request
+            // Send tx details to the request
             if (!requestMsg.message.StartsWith(":"))
             {
                 // Create an ixian transaction and send it to the dlt network
                 Address to = friend.walletAddress;
-
-                IxiNumber fee = ConsensusConfig.forceTransactionPrice;
+                
                 Address from = IxianHandler.getWalletStorage().getPrimaryAddress();
                 Address pubKey = new Address(IxianHandler.getWalletStorage().getPrimaryPublicKey());
 

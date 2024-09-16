@@ -395,6 +395,11 @@ namespace SPIXI
             Navigation.PushAsync(new ContactDetails(friend, true), Config.defaultXamarinAnimations);
         }
 
+        public void onConfirmPaymentRequest(FriendMessage msg, Friend friend, string amount, string date_text)
+        {
+            Navigation.PushAsync(new WalletContactRequestPage(msg, friend, amount, date_text), Config.defaultXamarinAnimations);
+        }
+
         public async void quickScan()
         {
             var scanPage = new ScanPage();

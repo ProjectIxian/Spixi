@@ -1107,7 +1107,7 @@ namespace SPIXI
 
             if (friend.chat_page != null)
             {
-                byte[] b_tx_id = Transaction.txIdLegacyToV8(tx_id);
+                byte[]? b_tx_id = !string.IsNullOrEmpty(tx_id) ? Transaction.txIdLegacyToV8(tx_id) : null;
                 friend.chat_page.updateRequestFundsStatus(msg_id, b_tx_id, status);
             }
         }
