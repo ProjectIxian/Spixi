@@ -99,9 +99,7 @@ namespace SPIXI.Storage
             if(writeToFile)
                 Node.localStorage.writeTransactionCacheFile();
 
-            lastChange++;
-            if (lastChange > 100000)
-                lastChange = 0;
+            updateCacheChangeStatus();
 
             return true;
         }
@@ -148,9 +146,7 @@ namespace SPIXI.Storage
             if (writeToFile)
                 Node.localStorage.writeTransactionCacheFile();
 
-            lastChange++;
-            if (lastChange > 100000)
-                lastChange = 0;
+            updateCacheChangeStatus();
 
             return true;
         }
@@ -174,6 +170,12 @@ namespace SPIXI.Storage
                 unconfirmedTransactions.Clear();
             }
 
+            updateCacheChangeStatus();
+        }
+
+        // Updates the last change status of the Transaction Cache
+        public static void updateCacheChangeStatus()
+        {
             lastChange++;
             if (lastChange > 100000)
                 lastChange = 0;
