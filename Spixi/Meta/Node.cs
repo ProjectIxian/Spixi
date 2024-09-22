@@ -44,6 +44,7 @@ namespace SPIXI.Meta
         public static TransactionInclusion tiv = null;
 
         public static CustomAppManager customAppManager = null;
+        public static CustomAppStorage customAppStorage = null;
 
         public static bool generatedNewWallet = false;
 
@@ -87,6 +88,7 @@ namespace SPIXI.Meta
             localStorage = new SPIXI.Storage.LocalStorage(Config.spixiUserFolder);
 
             customAppManager = new CustomAppManager(Config.spixiUserFolder);
+            customAppStorage = new CustomAppStorage(Config.spixiUserFolder);
 
             FriendList.init(Config.spixiUserFolder);
 
@@ -516,7 +518,7 @@ namespace SPIXI.Meta
             return BlockHeaderStorage.getBlockHeader(blockNum);
         }
 
-        public override IxiNumber getMinSignerPowDifficulty(ulong blockNum)
+        public override IxiNumber getMinSignerPowDifficulty(ulong blockNum, long curBlockTimestamp)
         {
             // TODO TODO implement this properly
             return ConsensusConfig.minBlockSignerPowDifficulty;
@@ -544,15 +546,6 @@ namespace SPIXI.Meta
             lastPriceUpdate = Clock.getTimestamp();
         }
 
-        public override byte[] calculateRegNameChecksumFromUpdatedDataRecords(byte[] name, List<RegisteredNameDataRecord> dataRecords, ulong sequence, Address nextPkHash)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override byte[] calculateRegNameChecksumForRecovery(byte[] name, Address recoveryHash, ulong sequence, Address nextPkHash)
-        {
-            throw new NotImplementedException();
-        }
         public override RegisteredNameRecord getRegName(byte[] name, bool useAbsoluteId = true)
         {
             throw new NotImplementedException();
