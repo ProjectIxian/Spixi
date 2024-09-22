@@ -1045,8 +1045,9 @@ namespace SPIXI
             {
                 Logging.error("Exception occurred in HomePage.UpdateScreen: " + e);
             }
-            string balance = Utils.amountToHumanFormatString(Node.balance.balance);
-            string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * Node.balance.balance);
+            IxiNumber availableBalance = Node.getAvailableBalance();
+            string balance = Utils.amountToHumanFormatString(availableBalance);
+            string fiatBalance = Utils.amountToHumanFormatString(Node.fiatPrice * availableBalance);
             Utils.sendUiCommand(this, "setBalance", balance, fiatBalance, Node.localStorage.nickname);
 
             // Check if we should reload certain elements

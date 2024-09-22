@@ -458,6 +458,15 @@ namespace SPIXI.Meta
             return 0;
         }
 
+        // Returns the current wallet's usable balance
+        public static IxiNumber getAvailableBalance()
+        {
+            IxiNumber currentBalance = Node.balance.balance;
+            currentBalance -= TransactionCache.getPendingSentTransactionsAmount();
+
+            return currentBalance;
+        }
+
         public override void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)
         {
             ProtocolMessage.parseProtocolMessage(code, data, endpoint);

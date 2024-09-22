@@ -124,9 +124,10 @@ namespace SPIXI
                 return;
             }
 
-            if (_amount + fee > Node.balance.balance)
+            IxiNumber availableBalance = Node.getAvailableBalance();
+            if (_amount + fee > availableBalance)
             {
-                string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, Node.balance.balance);
+                string alert_body = String.Format(SpixiLocalization._SL("wallet-error-balance-text"), _amount + fee, availableBalance);
                 displaySpixiAlert(SpixiLocalization._SL("wallet-error-balance-title"), alert_body, SpixiLocalization._SL("global-dialog-ok"));
                 return;
             }
