@@ -404,7 +404,7 @@ namespace SPIXI
         {
             var scanPage = new ScanPage();
             scanPage.scanSucceeded += HandleScanSucceeded;
-            await Navigation.PushModalAsync(scanPage);
+            await Navigation.PushAsync(scanPage, Config.defaultXamarinAnimations);
         }
         private void HandleScanSucceeded(object sender, SPIXI.EventArgs<string> e)
         {

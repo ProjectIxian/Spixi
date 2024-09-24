@@ -26,7 +26,6 @@ public partial class ScanPage : SpixiContentPage
 
     private void onLoad()
     {
-        //Utils.sendUiCommand(webView, "setAddress", wallet_to_add);
     }
 
     private void onNavigating(object sender, WebNavigatingEventArgs e)
@@ -45,8 +44,7 @@ public partial class ScanPage : SpixiContentPage
         }
         else if (current_url.Equals("ixian:back", StringComparison.Ordinal))
         {
-            Navigation.PopModalAsync(Config.defaultXamarinAnimations);
-            GC.Collect();
+            OnBackButtonPressed();
         }
         else if (current_url.Equals("ixian:error", StringComparison.Ordinal))
         {
@@ -86,14 +84,14 @@ public partial class ScanPage : SpixiContentPage
         {
             allowScanning = false;
             scanSucceeded(this, new SPIXI.EventArgs<string>(wal));
-            Navigation.PopModalAsync(Config.defaultXamarinAnimations);
+            OnBackButtonPressed();
         }
     }
 
     protected override bool OnBackButtonPressed()
     {
         Navigation.PopAsync(Config.defaultXamarinAnimations);
-
+        GC.Collect();
         return true;
     }
 

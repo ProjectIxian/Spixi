@@ -4,13 +4,9 @@ using Spixi;
 using SPIXI.Interfaces;
 using SPIXI.Lang;
 using SPIXI.Meta;
-using System;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
 using System.Web;
-using IFilePicker = SPIXI.Interfaces.IFilePicker;
 
 namespace SPIXI
 {
@@ -168,6 +164,8 @@ namespace SPIXI
                 }
                 Directory.Delete(Path.Combine(Config.spixiUserFolder, "Acc"), true);
                 Directory.Move(Path.Combine(tmpDirectory, "Acc"), Path.Combine(Config.spixiUserFolder, "Acc"));
+//                Directory.Delete(Path.Combine(Config.spixiUserFolder, "Chats"), true);
+//                Directory.Move(Path.Combine(tmpDirectory, "Chats"), Path.Combine(Config.spixiUserFolder, "Chats"));
                 if (File.Exists(Path.Combine(tmpDirectory, "account.ixi")))
                 {
                     File.Move(Path.Combine(tmpDirectory, "account.ixi"), Path.Combine(Config.spixiUserFolder, "account.ixi"));
