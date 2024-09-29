@@ -64,7 +64,8 @@
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
 		<EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
 		<RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
-		
+		<AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
+		<TargetSdkVersion>34</TargetSdkVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
@@ -78,9 +79,9 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|x64'">
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
-	  <CodesignKey>iPhone Distribution</CodesignKey>
+	
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net8.0-ios' and '$(IsPublish)' == 'true'">
+		<CodesignKey>iPhone Distribution</CodesignKey>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
@@ -358,7 +359,7 @@
 	<Import Project="..\..\Ixian-Core\IXICore.projitems" Label="Shared" />
 
 	<!-- iOS Push Service-->
-	<ItemGroup Condition="$(TargetFramework.Contains('-ios')) == true">
+	<ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
 		<ProjectReference Include="../Spixi-PushService/Spixi-PushService.csproj">
 			<IsAppExtension>true</IsAppExtension>
 			<IsWatchApp>false</IsWatchApp>
