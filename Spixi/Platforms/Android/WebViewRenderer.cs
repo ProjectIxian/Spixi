@@ -155,7 +155,12 @@ public class SpixiWebview(Context context) : AWebView(context), InputConnectionC
     public override IInputConnection OnCreateInputConnection(EditorInfo? outAttrs)
     {
         var inputConnection = base.OnCreateInputConnection(outAttrs);
-        outAttrs.ImeOptions = outAttrs.ImeOptions | AInputMethods.ImeFlags.NoPersonalizedLearning;
+        
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+        {
+            outAttrs.ImeOptions |= AInputMethods.ImeFlags.NoPersonalizedLearning;
+        }
+
         if (inputConnection != null)
         {
             EditorInfoCompat.SetContentMimeTypes(outAttrs, new string[] { "image/gif" });
@@ -303,7 +308,11 @@ public class SpixiWebviewRenderer2 : ViewRenderer<Microsoft.Maui.Controls.WebVie
             webView.Settings.AllowFileAccessFromFileURLs = true;
             webView.Settings.MediaPlaybackRequiresUserGesture = false;
 
-            webView.Settings.SetAppCacheEnabled(false);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+            {
+                webView.Settings.SetAppCacheEnabled(false);
+            }
+
             webView.Settings.CacheMode = CacheModes.NoCache;
             webView.Settings.DatabaseEnabled = false;
             webView.Settings.DomStorageEnabled = false;
