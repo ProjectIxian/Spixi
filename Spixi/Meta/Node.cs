@@ -532,7 +532,7 @@ namespace SPIXI.Meta
             return BlockHeaderStorage.getBlockHeader(blockNum);
         }
 
-        public override IxiNumber getMinSignerPowDifficulty(ulong blockNum)
+        public override IxiNumber getMinSignerPowDifficulty(ulong blockNum, long curBlockTimestamp)
         {
             // TODO TODO implement this properly
             return ConsensusConfig.minBlockSignerPowDifficulty;
@@ -560,15 +560,6 @@ namespace SPIXI.Meta
             lastPriceUpdate = Clock.getTimestamp();
         }
 
-        public override byte[] calculateRegNameChecksumFromUpdatedDataRecords(byte[] name, List<RegisteredNameDataRecord> dataRecords, ulong sequence, Address nextPkHash)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override byte[] calculateRegNameChecksumForRecovery(byte[] name, Address recoveryHash, ulong sequence, Address nextPkHash)
-        {
-            throw new NotImplementedException();
-        }
         public override RegisteredNameRecord getRegName(byte[] name, bool useAbsoluteId = true)
         {
             throw new NotImplementedException();
