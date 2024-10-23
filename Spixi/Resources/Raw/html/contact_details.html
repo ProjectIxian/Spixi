@@ -190,6 +190,8 @@
 
         function setAvatar(avatarPath) {
             avatarPath = avatarPath.replace(/&#92;/g, '/');
+            avatarPath = avatarPath.replace(/\\/g, '/');
+
             var avatarEl = document.getElementById("avatar");
             avatarEl.style.backgroundImage = "url('" + avatarPath + "')";
 

@@ -353,9 +353,16 @@ namespace SPIXI.Meta
 
         static public void setNetworkBlock(ulong block_height, byte[] block_checksum, int block_version)
         {
+            ulong _oldNetworkBlockHeight = networkBlockHeight;
             networkBlockHeight = block_height;
             networkBlockChecksum = block_checksum;
             networkBlockVersion = block_version;
+
+            // If there is a considerable change in blockheight, update the transaction lists
+            if (_oldNetworkBlockHeight + Config.txConfirmationBlocks < networkBlockHeight)
+            {
+                TransactionCache.updateCacheChangeStatus();
+            }
         }
 
         public override void receivedTransactionInclusionVerificationResponse(byte[] txid, bool verified)
@@ -451,6 +458,15 @@ namespace SPIXI.Meta
                 return balance.balance;
             }
             return 0;
+        }
+
+        // Returns the current wallet's usable balance
+        public static IxiNumber getAvailableBalance()
+        {
+            IxiNumber currentBalance = Node.balance.balance;
+            currentBalance -= TransactionCache.getPendingSentTransactionsAmount();
+
+            return currentBalance;
         }
 
         public override void parseProtocolMessage(ProtocolMessageCode code, byte[] data, RemoteEndpoint endpoint)

@@ -1,32 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Media;
-using Android.Net.Wifi;
 using Android.OS;
 using IXICore.Meta;
-using Microsoft.Extensions.Logging.Abstractions;
 using SPIXI.Interfaces;
 
 namespace Spixi
 {
     public class SPlatformUtils
     {
-        static MediaPlayer ringtone = null;
-        static ToneGenerator toneGenerator = null;
+        static MediaPlayer? ringtone = null;
+        static MediaPlayer? dialtonePlayer = null;
+
 
         public static System.IO.Stream getAsset(string path)
         {
-            //return MainActivity.Instance.Assets.Open(path);
-            /*#if WINDOWS
-                        var stream = await Microsoft.Maui.Essentials.FileSystem.OpenAppPackageFileAsync("Assets/" + filePath);
-            #else
-                        var stream = await Microsoft.Maui.Essentials.FileSystem.OpenAppPackageFileAsync(filePath);
-            #endif*/
             Task<System.IO.Stream> task = Task.Run<System.IO.Stream>(async () => await FileSystem.Current.OpenAppPackageFileAsync(path));
             return task.Result;
         }
@@ -62,38 +50,32 @@ namespace Spixi
             {
                 bool ring = true;
 
-                if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.M)
+                NotificationManager nm = (NotificationManager)MainActivity.Instance.GetSystemService(Context.NotificationService)!;
+                InterruptionFilter int_filter = nm.CurrentInterruptionFilter;
+                if (int_filter != InterruptionFilter.Priority && int_filter != InterruptionFilter.All)
                 {
-                    NotificationManager nm = (NotificationManager)MainActivity.Instance.GetSystemService(Context.NotificationService);
-                    InterruptionFilter int_filter = nm.CurrentInterruptionFilter;
-                    if (int_filter != InterruptionFilter.Priority && int_filter != InterruptionFilter.All)
-                    {
-                        ring = false;
-                    }
+                   ring = false;
                 }
+                
 
-                AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
+                AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService)!;
                 if (am.RingerMode != RingerMode.Normal)
                 {
                     ring = false;
                 }
 
                 MainActivity.Instance.VolumeControlStream = Android.Media.Stream.Ring;
+
                 if (ring)
                 {
-                    Android.Net.Uri rt_url = RingtoneManager.GetDefaultUri(RingtoneType.Ringtone);
-                    AudioAttributes aa = new AudioAttributes.Builder()
-                                                            .SetUsage(AudioUsageKind.NotificationRingtone)
-                                                            .Build();
-
-                    ringtone = MediaPlayer.Create(MainActivity.Instance, rt_url, null, aa, 0);
+                    ringtone = playSoundFromAssets("sounds/default_ringtone.mp3");
                     ringtone.Looping = true;
                     ringtone.Start();
                 }
             }
             catch (Exception e)
             {
-                Logging.error("Exception occured in startRinging: " + e);
+                Logging.error("Exception occurred in startRinging: " + e);
                 ringtone = null;
             }
         }
@@ -105,10 +87,23 @@ namespace Spixi
                 return;
             }
 
-            ringtone.Stop();
-            ringtone.Dispose();
-            ringtone = null;
-            MainActivity.Instance.VolumeControlStream = Android.Media.Stream.NotificationDefault;
+            try
+            {
+                if (ringtone.IsPlaying)
+                {
+                    ringtone.Stop();
+                }
+                ringtone.Release();
+            }
+            catch (Exception e)
+            {
+                Logging.error("Exception occurred while stopping the ringtone: " + e);
+            }
+            finally
+            {
+                ringtone = null;
+                MainActivity.Instance.VolumeControlStream = Android.Media.Stream.NotificationDefault;
+            }
         }
 
         public static void startDialtone(DialtoneType type)
@@ -116,44 +111,61 @@ namespace Spixi
             try
             {
                 stopDialtone();
-                Tone tone_type;
-                int duration = -1;
+                string toneFile = string.Empty;
+                bool shouldLoop = false;
+
                 switch (type)
                 {
                     case DialtoneType.busy:
-                        tone_type = Tone.SupBusy;
-                        duration = 5000;
+                        toneFile = "sounds/busy_tone.mp3";
                         break;
                     case DialtoneType.dialing:
-                        tone_type = Tone.SupRingtone;
+                        toneFile = "sounds/dialing_tone.mp3";
+                        shouldLoop = true;
                         break;
                     case DialtoneType.error:
-                        tone_type = Tone.SupError;
-                        duration = 5000;
+                        toneFile = "sounds/error_tone.mp3";
                         break;
                     default:
                         return;
                 }
-                AudioManager am = (AudioManager)MainActivity.Instance.GetSystemService(Context.AudioService);
-                toneGenerator = new ToneGenerator(Android.Media.Stream.VoiceCall, am.GetStreamVolume(Android.Media.Stream.VoiceCall) * 50 / am.GetStreamMaxVolume(Android.Media.Stream.VoiceCall));
-                toneGenerator.StartTone(tone_type, duration);
+
+                dialtonePlayer = playSoundFromAssets(toneFile);
+                dialtonePlayer.Looping = shouldLoop;
+                dialtonePlayer.Start();
             }
             catch (Exception e)
             {
-                Logging.error("Exception occured in startDialtone: " + e);
-                toneGenerator = null;
+                Logging.error("Exception occurred in startDialtone: " + e);
+                dialtonePlayer = null;
             }
         }
 
         public static void stopDialtone()
         {
-            if (toneGenerator != null)
+            if (dialtonePlayer != null)
             {
-                toneGenerator.StopTone();
-                toneGenerator.Release();
-                toneGenerator.Dispose();
-                toneGenerator = null;
+                dialtonePlayer.Stop();
+                dialtonePlayer.Release();
+                dialtonePlayer = null;
             }
+        }
+
+        private static MediaPlayer playSoundFromAssets(string filePath)
+        {
+            MediaPlayer player = new MediaPlayer();
+            try
+            {
+                var assetDescriptor = MainActivity.Instance.Assets!.OpenFd(filePath);
+                player.SetDataSource(assetDescriptor.FileDescriptor, assetDescriptor.StartOffset, assetDescriptor.Length);
+                assetDescriptor.Close();
+                player.Prepare();
+            }
+            catch (Exception e)
+            {
+                Logging.error("Error playing sound: " + e);
+            }
+            return player;
         }
     }
 

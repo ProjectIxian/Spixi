@@ -45,6 +45,27 @@ namespace SPIXI.Storage
             return null;
         }
 
+        // Returns the amount of funds in pending state for the current blockheight
+        public static IxiNumber getPendingSentTransactionsAmount()
+        {
+            IxiNumber pendingAmount = 0; 
+            lock (unconfirmedTransactions)
+            {
+                foreach (StorageTransaction tx in unconfirmedTransactions)
+                {
+                    if (tx.transaction.blockHeight >= Node.balance.blockHeight)
+                    {
+                        Address addr = tx.transaction.pubKey;
+                        if (addr.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
+                        {
+                            pendingAmount += tx.transaction.amount;
+                        }
+                    }
+                }
+            }
+            return pendingAmount;
+        }
+
         // Add a storage transaction to local storage
         public static bool addTransaction(StorageTransaction t, bool writeToFile = true)
         {
@@ -99,9 +120,7 @@ namespace SPIXI.Storage
             if(writeToFile)
                 Node.localStorage.writeTransactionCacheFile();
 
-            lastChange++;
-            if (lastChange > 100000)
-                lastChange = 0;
+            updateCacheChangeStatus();
 
             return true;
         }
@@ -148,9 +167,7 @@ namespace SPIXI.Storage
             if (writeToFile)
                 Node.localStorage.writeTransactionCacheFile();
 
-            lastChange++;
-            if (lastChange > 100000)
-                lastChange = 0;
+            updateCacheChangeStatus();
 
             return true;
         }
@@ -174,6 +191,12 @@ namespace SPIXI.Storage
                 unconfirmedTransactions.Clear();
             }
 
+            updateCacheChangeStatus();
+        }
+
+        // Updates the last change status of the Transaction Cache
+        public static void updateCacheChangeStatus()
+        {
             lastChange++;
             if (lastChange > 100000)
                 lastChange = 0;

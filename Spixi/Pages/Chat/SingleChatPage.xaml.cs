@@ -722,6 +722,13 @@ namespace SPIXI
             // TODO: extract the date from the corresponding message
             DateTime dt = DateTime.Now;
             string date_text = String.Format("{0:t}", dt);
+
+            if (homePage != null)
+            {
+                homePage.onConfirmPaymentRequest(msg, friend, amount, date_text);
+                return;
+            }
+
             Navigation.PushAsync(new WalletContactRequestPage(msg, friend, amount, date_text), Config.defaultXamarinAnimations);
         }
 
@@ -1324,7 +1331,7 @@ namespace SPIXI
             Utils.sendUiCommand(this, "updateTransactionStatus", txid, status, status_icon);
         }
 
-        public void updateRequestFundsStatus(byte[] msg_id, byte[] txid, string status)
+        public void updateRequestFundsStatus(byte[] msg_id, byte[]? txid, string status)
         {
             string status_icon = "fa-clock";
             bool enableView = true;

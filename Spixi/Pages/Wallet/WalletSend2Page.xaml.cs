@@ -97,7 +97,7 @@ namespace SPIXI
             Transaction tx = new Transaction((int)Transaction.Type.Normal, fee, tx_list, from, pubKey, IxianHandler.getHighestKnownNetworkBlockHeight());
 
             Utils.sendUiCommand(this, "setRecipient", toAddress, toAddress, "img/spixiavatar.png");
-            Utils.sendUiCommand(this, "setBalance", Node.balance.balance.ToString(), Node.fiatPrice.ToString());
+            Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString(), Node.fiatPrice.ToString());
             Utils.sendUiCommand(this, "setFees", tx.fee.ToString());
         }
 
@@ -129,10 +129,10 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.balance.balance > ConsensusConfig.forceTransactionPrice * 2)
+                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 2)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(this, "setMaxAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(this, "setMaxAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
                 }
             }
             else

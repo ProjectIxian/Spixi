@@ -31,6 +31,11 @@
     <ProvisioningType>manual</ProvisioningType>
   </PropertyGroup>
 
+  <!-- strip exited with code 139 workaround - https://github.com/xamarin/xamarin-macios/issues/19157 -->
+  <PropertyGroup>
+    <MtouchNoSymbolStrip Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">True</MtouchNoSymbolStrip>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="OneSignalSDK.DotNet" Version="5.2.1" />
   </ItemGroup>

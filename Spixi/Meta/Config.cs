@@ -1,5 +1,6 @@
 ﻿using IXICore;
 using IXICore.Meta;
+using System.IO;
 
 namespace SPIXI.Meta
 {
@@ -31,7 +32,7 @@ namespace SPIXI.Meta
         public static readonly int packetDataSize = 102400; // 100 Kb per packet for file transfers
         public static readonly long packetRequestTimeout = 60; // Time in seconds to re-request packets
 
-        public static readonly string version = "spixi-0.9.2dev"; // Spixi version
+        public static readonly string version = "spixi-0.9.2"; // Spixi version
 
         public static readonly string checkVersionUrl = "https://www.ixian.io/spixi-update.txt";
         public static readonly int checkVersionSeconds = 1 * 60 * 60; // 1 hour

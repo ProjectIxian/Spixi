@@ -41,7 +41,7 @@ namespace SPIXI
 
         private void onLoad()
         {
-            Utils.sendUiCommand(this, "setBalance", Node.balance.balance.ToString());
+            Utils.sendUiCommand(this, "setBalance", Node.getAvailableBalance().ToString());
 
             // If we have a pre-set recipient, fill out the recipient wallet address and nickname
             if (recipient != null)
@@ -165,10 +165,10 @@ namespace SPIXI
             }
             else if (current_url.Contains("ixian:getMaxAmount"))
             {
-                if (Node.balance.balance > ConsensusConfig.forceTransactionPrice * 2)
+                if (Node.getAvailableBalance() > ConsensusConfig.forceTransactionPrice * 2)
                 {
                     // TODO needs to be improved and pubKey length needs to be taken into account
-                    Utils.sendUiCommand(this, "setAmount", (Node.balance.balance - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
+                    Utils.sendUiCommand(this, "setAmount", (Node.getAvailableBalance() - (ConsensusConfig.forceTransactionPrice * 2)).ToString());
                 }
             }
             else if (current_url.Contains("ixian:addrecipient"))
@@ -211,7 +211,7 @@ namespace SPIXI
         {
             var scanPage = new ScanPage();
             scanPage.scanSucceeded += HandleScanSucceeded;
-            await Navigation.PushModalAsync(scanPage);
+            await Navigation.PushAsync(scanPage, Config.defaultXamarinAnimations);
         }
         public void processQRResult(string result)
         {
