@@ -192,37 +192,6 @@ namespace SPIXI.Network
                         }
                         break;
 
-                    case ProtocolMessageCode.getPresence:
-                        {
-                            using (MemoryStream m = new MemoryStream(data))
-                            {
-                                using (BinaryReader reader = new BinaryReader(m))
-                                {
-                                    int walletLen = reader.ReadInt32();
-                                    Address wallet = new Address(reader.ReadBytes(walletLen));
-
-                                    Presence p = PresenceList.getPresenceByAddress(wallet);
-                                    if (p != null)
-                                    {
-                                        lock (p)
-                                        {
-                                            byte[][] presence_chunks = p.getByteChunks();
-                                            foreach (byte[] presence_chunk in presence_chunks)
-                                            {
-                                                endpoint.sendData(ProtocolMessageCode.updatePresence, presence_chunk, null);
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // TODO blacklisting point
-                                        Logging.warn(string.Format("Node has requested presence information about {0} that is not in our PL.", wallet.ToString()));
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
                     case ProtocolMessageCode.getPresence2:
                         {
                             using (MemoryStream m = new MemoryStream(data))
@@ -319,22 +288,6 @@ namespace SPIXI.Network
                                     }
                                 }
                             }
-                        }
-                        break;
-
-                    case ProtocolMessageCode.transactionData:
-                        {
-                            // TODO: check for errors/exceptions
-                            Transaction transaction = new Transaction(data, true);
-
-                            if (endpoint.presenceAddress.type == 'M' || endpoint.presenceAddress.type == 'H')
-                            {
-                                PendingTransactions.increaseReceivedCount(transaction.id, endpoint.presence.wallet);
-                            }
-
-                            TransactionCache.addUnconfirmedTransaction(transaction);
-
-                            Node.tiv.receivedNewTransaction(transaction);
                         }
                         break;
 
