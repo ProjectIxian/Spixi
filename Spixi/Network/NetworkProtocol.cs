@@ -223,40 +223,6 @@ namespace SPIXI.Network
                         }
                         break;
 
-                    case ProtocolMessageCode.balance:
-                        {
-                            using (MemoryStream m = new MemoryStream(data))
-                            {
-                                using (BinaryReader reader = new BinaryReader(m))
-                                {
-                                    int address_length = reader.ReadInt32();
-                                    Address address = new Address(reader.ReadBytes(address_length));
-
-                                    // Retrieve the latest balance
-                                    IxiNumber balance = reader.ReadString();
-
-                                    if (address.SequenceEqual(IxianHandler.getWalletStorage().getPrimaryAddress()))
-                                    {
-                                        // Retrieve the blockheight for the balance
-                                        ulong block_height = reader.ReadUInt64();
-
-                                        if (block_height > Node.balance.blockHeight && (Node.balance.balance != balance || Node.balance.blockHeight == 0))
-                                        {
-                                            byte[] block_checksum = reader.ReadBytes(reader.ReadInt32());
-
-                                            Node.balance.address = address;
-                                            Node.balance.balance = balance;
-                                            Node.balance.blockHeight = block_height;
-                                            Node.balance.blockChecksum = block_checksum;
-                                            Node.balance.verified = false;
-                                        }
-                                        Node.balance.lastUpdate = Clock.getTimestamp();
-                                    }
-                                }
-                            }
-                        }
-                        break;
-
                     case ProtocolMessageCode.balance2:
                         {
                             using (MemoryStream m = new MemoryStream(data))
