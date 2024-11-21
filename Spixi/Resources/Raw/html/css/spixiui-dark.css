@@ -6,7 +6,6 @@
 /* 
  * Content Sections:
  * 
- * Fonts
  * General
  * Placeholders
  * Toolbar
@@ -32,24 +31,9 @@
  * Animation
  */
 
-/* Fonts */
-@font-face {
-    font-family: 'roboto';
-    src: url('../fonts/Roboto-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'roboto';
-    src: url('../fonts/Roboto-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
-}
-
-
 /* General */
 body, html, * {
-    font-family: 'roboto', sans-serif;
+
 }
 
 a:hover {
