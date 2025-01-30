@@ -221,6 +221,13 @@ public partial class App : Application
                 {
                     Shutdown();
                 };
+
+                window.Resumed += (s, e) =>
+                {
+                    if (Config.enablePushNotifications)
+                        OfflinePushMessages.fetchPushMessages(true);
+                };
+
                 appWindow = window;
             }
         }

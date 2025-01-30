@@ -59,7 +59,7 @@ namespace SPIXI
             return false;
         }
 
-        public static bool fetchPushMessages(bool force = false)
+        public static bool fetchPushMessages(bool force = false, bool fireLocalNotification = false)
         {
             if(force == false && lastUpdate + cooldownPeriod > Clock.getTimestamp())
             {
@@ -128,7 +128,7 @@ namespace SPIXI
                                         f.setPublicKey(pk);
                                     }
                                 }
-                                StreamProcessor.receiveData(data, null);
+                                StreamProcessor.receiveData(data, null, fireLocalNotification);
                             }
                         }
                         catch (Exception e)

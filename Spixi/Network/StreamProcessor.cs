@@ -371,7 +371,7 @@ namespace SPIXI
         }*/
 
         // Called when receiving S2 data from clients
-        public static void receiveData(byte[] bytes, RemoteEndpoint endpoint)
+        public static void receiveData(byte[] bytes, RemoteEndpoint endpoint, bool fireLocalNotification = true)
         {
             if(running == false)
             {
@@ -528,7 +528,7 @@ namespace SPIXI
                             else
                             {*/
                             // Add the message to the friend list
-                            FriendMessage fm = FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp);
+                            FriendMessage fm = FriendList.addMessage(message.id, sender_address, spixi_message.channel, Encoding.UTF8.GetString(spixi_message.data), real_sender_address, message.timestamp, fireLocalNotification);
                             //}
                         }
                         break;

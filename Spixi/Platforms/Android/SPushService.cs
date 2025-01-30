@@ -109,14 +109,12 @@ namespace Spixi
         {
             e.PreventDefault();
 
-            if (App.isInForeground)
-                return;
-
-            if (OfflinePushMessages.fetchPushMessages(true))
+            if (OfflinePushMessages.fetchPushMessages(true, true))
             {
                 //OneSignal.Current.ClearAndroidOneSignalNotifications();
-                //return;
+                return;
             }
+
             e.Notification.display();
         }
 
