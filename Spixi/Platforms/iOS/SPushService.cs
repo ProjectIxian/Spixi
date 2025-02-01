@@ -2,6 +2,7 @@
 using IXICore.Meta;
 using OneSignalSDK.DotNet;
 using OneSignalSDK.DotNet.Core.Debug;
+using SPIXI;
 using UIKit;
 using UserNotifications;
 
@@ -9,6 +10,30 @@ namespace Spixi
 {
     public class SPushService
     {
+        public class NotificationDelegate : UNUserNotificationCenterDelegate
+        {
+            public override void DidReceiveNotificationResponse(UNUserNotificationCenter center, UNNotificationResponse response, Action completionHandler)
+            {
+                try
+                {
+                    if (response.Notification.Request.Content.UserInfo.ContainsKey((NSString)"fa"))
+                    {
+                        var fa = response.Notification.Request.Content.UserInfo[(NSString)"fa"];
+                        if (fa != null)
+                        {
+                            App.startingScreen = Convert.ToString(fa);
+                            HomePage.Instance().onChat(App.startingScreen, null);
+                            App.startingScreen = "";
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logging.error("Exception occured in DidReceiveNotificationResponse: {0}", ex);
+                }
+            }
+        }
+
         public static void initialize()
         {
             OneSignal.Debug.LogLevel = LogLevel.WARN;
@@ -17,6 +42,9 @@ namespace Spixi
             OneSignal.Initialize(SPIXI.Meta.Config.oneSignalAppId);
 
             OneSignal.Notifications.RequestPermissionAsync(true);
+
+            OneSignal.Notifications.Clicked += handleNotificationOpened;
+            OneSignal.Notifications.WillDisplay += handleNotificationReceived;
         }
 
         public static void setTag(string tag)
@@ -57,12 +85,17 @@ namespace Spixi
                     Title = title,
                     Body = message,
                     Badge = 1,
-                    Sound = UNNotificationSound.Default,
-                    UserInfo = new NSDictionary(nameof(data), data)
+                    Sound = UNNotificationSound.Default
                 };
 
-                var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(1, false);
-                var request = UNNotificationRequest.FromIdentifier(Guid.NewGuid().ToString(), content, trigger);
+                content.UserInfo = new NSMutableDictionary
+                {
+                    { (NSString) "fa", (NSString) data }
+                };
+
+                var trigger = UNTimeIntervalNotificationTrigger.CreateTrigger(0.25, false);
+                var request = UNNotificationRequest.FromIdentifier(data, content, trigger);
+                UNUserNotificationCenter.Current.Delegate = new NotificationDelegate();
 
                 UNUserNotificationCenter.Current.AddNotificationRequest(request, (err) =>
                 {
@@ -73,6 +106,44 @@ namespace Spixi
                     }
                 });
             });
+        }
+
+        static void handleNotificationReceived(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
+        {
+            try
+            {
+                e.PreventDefault();
+
+                if (OfflinePushMessages.fetchPushMessages(true, true))
+                {
+                    //OneSignal.Current.ClearAndroidOneSignalNotifications();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Exception occured in handleNotificationReceived: {0}", ex);
+            }
+            e.Notification.display();
+        }
+
+        static void handleNotificationOpened(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
+        {
+            try
+            {
+                if (e.Notification.AdditionalData.ContainsKey("fa"))
+                {
+                    var fa = e.Notification.AdditionalData["fa"];
+                    if (fa != null)
+                    {
+                        App.startingScreen = Convert.ToString(fa);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Exception occured in handleNotificationOpened: {0}", ex);
+            }
         }
     }
 }

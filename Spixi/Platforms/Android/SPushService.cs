@@ -6,7 +6,6 @@ using Android.OS;
 using IXICore.Meta;
 using SPIXI;
 using OneSignalSDK.DotNet;
-using OneSignalSDK.DotNet.Core;
 using OneSignalSDK.DotNet.Core.Debug;
 
 namespace Spixi
@@ -46,7 +45,7 @@ namespace Spixi
         public static void clearNotifications()
         {
             var notificationManager = NotificationManagerCompat.From(Android.App.Application.Context);
-            notificationManager.CancelAll();          
+            notificationManager.CancelAll();
         }
 
         public static void showLocalNotification(string title, string message, string data)
@@ -83,7 +82,6 @@ namespace Spixi
             manager.Notify(messageId, notification);
         }
 
-
         static void CreateNotificationChannel()
         {
             manager = (NotificationManager)Android.App.Application.Context.GetSystemService("notification");
@@ -107,36 +105,42 @@ namespace Spixi
 
         static void handleNotificationReceived(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationWillDisplayEventArgs e)
         {
-            e.PreventDefault();
-
-            if (OfflinePushMessages.fetchPushMessages(true, true))
+            try
             {
-                //OneSignal.Current.ClearAndroidOneSignalNotifications();
-                return;
-            }
+                e.PreventDefault();
 
+                if (OfflinePushMessages.fetchPushMessages(true, true))
+                {
+                    //OneSignal.Current.ClearAndroidOneSignalNotifications();
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logging.error("Exception occured in handleNotificationReceived: {0}", ex);
+            }
             e.Notification.display();
         }
 
         static void handleNotificationOpened(object sender, OneSignalSDK.DotNet.Core.Notifications.NotificationClickedEventArgs e)
         {
-            if(e.Notification.AdditionalData.ContainsKey("fa"))
+            try
             {
-                var fa = e.Notification.AdditionalData["fa"];
-                if (fa != null)
+                if (e.Notification.AdditionalData.ContainsKey("fa"))
                 {
-                    try
+                    var fa = e.Notification.AdditionalData["fa"];
+                    if (fa != null)
                     {
+
                         App.startingScreen = Convert.ToString(fa);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logging.error("Exception occured in handleNotificationOpened: {0}", ex);
+
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Logging.error("Exception occured in handleNotificationOpened: {0}", ex);
+            }
         }
-
     }
-
 }
