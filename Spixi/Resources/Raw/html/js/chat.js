@@ -689,9 +689,10 @@ function simpleMarkdownParse(text) {
 }
 
 function parseMessageText(text) {
+    let html;
     try {
         // First escape HTML to prevent injection
-        let html = escapeParameter(text);
+        html = escapeParameter(text);
         
         // Parse markdown formatting
         html = simpleMarkdownParse(html);
