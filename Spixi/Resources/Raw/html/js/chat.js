@@ -644,7 +644,9 @@ function simpleMarkdownParse(text) {
     });
     
     // Inline code (single backtick)
-    result = result.replace(/`([^`]+)`/g, '<code>' + escapeParameter('$1') + '</code>');
+    result = result.replace(/`([^`]+)`/g, function(match, code) {
+        return '<code>' + escapeParameter(code) + '</code>';
+    });
     
     // Strikethrough: ~~text~~
     result = result.replace(/~~(.+?)~~/g, '<del>$1</del>');
