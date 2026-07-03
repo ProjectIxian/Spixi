@@ -703,14 +703,6 @@ function simpleMarkdownParse(text) {
     
     return result;
 }
-    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-    
-    // Convert newlines to <br>
-    result = result.replace(/\n/g, '<br>');
-    
-    return result;
-}
 
 // Parse markdown tables
 function parseMarkdownTables(text) {
@@ -822,116 +814,6 @@ function buildTableHtml(rows, headerAlignments) {
     
     html += '</table></div>';
     return html;
-}
-
-// Simple markdown parser for common formatting (no external dependencies required) - OLD VERSION, REMOVED
-    
-    // Markdown Tables
-    const tableMatches = result.match(/^\|(.+)\|$/gm);
-    if (tableMatches && tableMatches.length >= 3) {
-        let tableHtml = '';
-        let inTable = false;
-        let tableRows = [];
-        
-        const lines = result.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            if (/^\|(.+)\|$/.test(line)) {
-                if (!inTable) {
-                    inTable = true;
-                    tableRows = [];
-                }
-                
-                // Check if this is a separator row (|---|---|)
-                const cells = line.match(/[^|]+/g).map(cell => cell.trim());
-                const isSeparator = cells.every(cell => /^[-:]+$/.test(cell));
-                
-                if (isSeparator && tableRows.length > 0) {
-                    // Build thead
-                    tableHtml += '<div class="markdown-table"><table><thead><tr>';
-                    for (const cell of cells.slice(0, tableRows[0].length)) {
-                        const align = /^-:/.test(cell) ? 'right' : /^:-/:^:-.-:/g.test(cell) ? 'center' : 'left';
-                        tableHtml += `<th style="text-align:${align}"></th>`;
-                    }
-                    tableHtml += '</tr></thead><tbody>';
-                } else if (!isSeparator) {
-                    tableRows.push(cells);
-                }
-            } else if (inTable && line.trim() === '') {
-                // End of table
-                inTable = false;
-            }
-        }
-    }
-    
-    // Parse tables (simplified approach)
-    const tableRegex = /(\|.+\|(\n\|.+(\|.+)*\n)?(\n\|-+[\s:|:-]+\|)(\n\|.+\|)*)/g;
-    result = result.replace(tableRegex, function(match) {
-        const rows = match.trim().split('\n');
-        if (rows.length < 3) return match; // Not a valid table
-        
-        let html = '<div class="markdown-table"><table>';
-        let isHeaderParsed = false;
-        
-        for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            if (/^\|-+[\s:|:-]+\|$/.test(row)) {
-                // Skip separator line, but we're now past header
-                isHeaderParsed = true;
-                continue;
-            }
-            
-            const cells = row.match(/[^|]+/g) || [];
-            const cellContents = cells.map(cell => cell.trim()).filter(c => c);
-            
-            if (cellContents.length === 0) continue;
-            
-            if (!isHeaderParsed) {
-                // Header row
-                html += '<thead><tr>';
-                for (const content of cellContents) {
-                    html += `<th>${content}</th>`;
-                }
-                html += '</tr></thead>'; 
-                isHeaderParsed = true; // Mark header as parsed for next iteration
-            } else {
-                // Body row  
-                if (!html.includes('<tbody>')) {
-                    html += '<tbody>';
-                }
-                html += '<tr>';
-                for (const content of cellContents) {
-                    html += `<td>${content}</td>`;
-                }
-                html += '</tr>';
-            }
-        }
-        
-        if (html.includes('<tbody>')) {
-            html += '</tbody>';
-        }
-        html += '</table></div>';
-        return html;
-    });
-    
-    // Horizontal rule: --- or ***
-    result = result.replace(/^---$/gm, '<hr>');
-    result = result.replace(/^\*\*\*$/gm, '<hr>');
-    
-    // Headers (simple - just # through ###)
-    result = result.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-    
-    // Restore code blocks
-    for (let i = 0; i < codeBlocks.length; i++) {
-        result = result.replace('%%CODE_BLOCK_' + i + '%%', codeBlocks[i]);
-    }
-    
-    // Convert remaining newlines to <br> (but not inside pre/code blocks)
-    result = result.replace(/\n/g, '<br>');
-    
-    return result;
 }
 
 function parseMessageText(text) {
