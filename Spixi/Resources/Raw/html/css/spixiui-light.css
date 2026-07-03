@@ -5514,3 +5514,128 @@ input.create-account-username[type="password"] {
     padding: 10px;
     font-size: 13px;
 }
+
+/* ======================================== */
+/* MARKDOWN SUPPORT IN CHAT BUBBLES (LIGHT) */
+/* ======================================== */
+
+.chat-message .markdown-content {
+    word-break: break-word;
+}
+
+.chat-message .markdown-content h1,
+.chat-message .markdown-content h2,
+.chat-message .markdown-content h3 {
+    margin: 8px 0 4px 0;
+    font-size: 1.1em;
+    color: #1a1a1a;
+}
+
+.chat-message .markdown-content h1 { font-size: 1.3em; }
+.chat-message .markdown-content h2 { font-size: 1.2em; }
+
+.chat-message .markdown-content p {
+    margin: 4px 0;
+}
+
+.chat-message .markdown-content code {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: #d94e3b;
+}
+
+.chat-message .markdown-content pre {
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 6px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.chat-message .markdown-content pre code {
+    background: none;
+    padding: 0;
+    color: #333;
+}
+
+.chat-message .markdown-content blockquote {
+    border-left: 3px solid #6AB2FB;
+    margin: 6px 0;
+    padding-left: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.chat-message .markdown-content ul,
+.chat-message .markdown-content ol {
+    margin: 4px 0;
+    padding-left: 20px;
+}
+
+.chat-message .markdown-content li {
+    margin: 2px 0;
+}
+
+.chat-message .markdown-content hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 8px 0;
+}
+
+.chat-message .markdown-content del {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.chat-message .markdown-content strong {
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.chat-message .markdown-content em {
+    font-style: italic;
+}
+
+/* Inline code in lists and quotes */
+.chat-message .markdown-content li code,
+.chat-message .markdown-content blockquote code {
+    background: #e8e8e8;
+}
+
+/* Markdown Tables */
+.markdown-table {
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.markdown-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+.markdown-table th,
+.markdown-table td {
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    text-align: left;
+    word-break: normal;
+    white-space: nowrap;
+}
+
+.markdown-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.markdown-table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.markdown-table tr:hover {
+    background: #f0f0f0;
+}

@@ -623,12 +623,215 @@ function onExternalLink(e, url) {
     return false;
 }
 
-function parseMessageText(text) {
-    try {
-        text = linkify(text);
-    } catch (e) {
+// Markdown configuration - customize as needed
+const MARKED_OPTIONS = {
+    breaks: true,           // Convert \n to <br>
+    gfm: true,              // GitHub Flavored Markdown
+    headerIds: false,       // Don't add IDs to headers (not needed in chat)
+    mangle: false           // Don't autodetect emails/handles
+};
+
+// Simple markdown parser for common formatting (no external dependencies required)
+function simpleMarkdownParse(text) {
+    // Extract and protect code blocks to prevent parsing inside them
+    const blocks = [];
+    let result = text;
+    
+    // Protect triple backtick code blocks
+    result = result.replace(/```([\s\S]*?)```/g, (m, c) => {
+        blocks.push('<pre><code>' + escapeParameter(c.trim()) + '</code></pre>');
+        return '\x00BLOCK_' + (blocks.length - 1) + '\x00';
+    });
+    
+    // Protect inline code
+    result = result.replace(/`([^`]+)`/g, (m, c) => {
+        blocks.push('<code>' + escapeParameter(c) + '</code>');
+        return '\x00BLOCK_' + (blocks.length - 1) + '\x00';
+    });
+    
+    // Parse markdown tables (before escaping)
+    result = parseMarkdownTables(result);
+    
+    // Escape HTML in non-protected parts
+    let tempResult = '';
+    let lastIndex = 0;
+    const blockRegex = /\x00BLOCK_(\d+)\x00/g;
+    let match;
+    while ((match = blockRegex.exec(result)) !== null) {
+        // Escape text before this block
+        tempResult += escapeParameter(result.substring(lastIndex, match.index));
+        // Add the protected block as-is
+        tempResult += blocks[parseInt(match[1])];
+        lastIndex = match.index + match[0].length;
     }
-    return text;
+    // Escape remaining text
+    tempResult += escapeParameter(result.substring(lastIndex));
+    result = tempResult;
+    
+    // Apply other markdown formatting
+    // Strikethrough: ~~text~~
+    result = result.replace(/~~(.+?)~~/g, '<del>$1</del>');
+    
+    // Bold: **text** or __text__
+    result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    result = result.replace(/__(.+?)__/g, '<strong>$1</strong>');
+    
+    // Italic: *text* or _word_
+    result = result.replace(/\*(\S.*?\S)\*/g, '<em>$1</em>');
+    result = result.replace(/(?<![a-zA-Z0-9])_(\w+)_(?![a-zA-Z0-9])/g, '<em>$1</em>');
+    
+    // Blockquotes: > text (already escaped as &gt;)
+    result = result.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+    
+    // Lists
+    result = result.replace(/^- (.+)$/gm, '<li>$1</li>');
+    result = result.replace(/(<\/li>\n?<li>)+/g, function(m) {
+        return '<ul>' + m + '</ul>';
+    });
+    
+    // Horizontal rule
+    result = result.replace(/^---$/gm, '<hr>');
+    result = result.replace(/^\*\*\*$/gm, '<hr>');
+    
+    // Headers
+    result = result.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    
+    // Convert newlines to <br>
+    result = result.replace(/\n/g, '<br>');
+    
+    return result;
+}
+
+// Parse markdown tables
+function parseMarkdownTables(text) {
+    const lines = text.split('\n');
+    let inTable = false;
+    let tableHtml = '';
+    let tableRows = [];
+    let output = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        if (/^\|(.+)\|$/.test(line)) {
+            // This is a table row
+            if (!inTable) {
+                inTable = true;
+                tableRows = [];
+            }
+            
+            const cells = line.match(/[^|]+/g).map(c => c.trim());
+            const isSeparator = cells.length > 0 && cells.every(cell => /^[-:]+$/.test(cell));
+            
+            if (isSeparator) {
+                // Separator row - build table header
+                if (tableRows.length > 0) {
+                    output.push(buildTableHtml(tableRows, cells));
+                }
+                tableRows = [];
+            } else {
+                tableRows.push(cells);
+            }
+        } else {
+            // Non-table row - flush any pending table
+            if (inTable && tableRows.length > 0) {
+                output.push(buildTableHtml(tableRows, null));
+                tableRows = [];
+                inTable = false;
+            }
+            output.push(line);
+        }
+    }
+    
+    // Flush any remaining table
+    if (inTable && tableRows.length > 0) {
+        output.push(buildTableHtml(tableRows, null));
+    }
+    
+    return output.join('\n');
+}
+
+function buildTableHtml(rows, headerAlignments) {
+    if (rows.length === 0) return '';
+    
+    let html = '<div class="markdown-table"><table>';
+    
+    // Build header row
+    if (rows.length > 0) {
+        const headerRow = rows[0];
+        html += '<thead><tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            let align = 'left';
+            if (headerAlignments && headerAlignments[j]) {
+                if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                else if (/^:/ .test(headerAlignments[j])) align = 'left';
+            }
+            html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+        }
+        html += '</tr></thead>';
+    }
+    
+    // Build body rows
+    if (rows.length > 1) {
+        html += '<tbody>';
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            html += '<tr>';
+            for (let j = 0; j < row.length; j++) {
+                html += '<td>' + row[j] + '</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody>';
+    } else if (headerAlignments && rows.length === 1) {
+        // Only header and separator, no body rows yet
+        const headerRow = rows[0];
+        html += '<tbody>';
+        html += '<tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            let align = 'left';
+            if (headerAlignments[j]) {
+                if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                else if (/^:/ .test(headerAlignments[j])) align = 'left';
+            }
+            html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+        }
+        html += '</tr>';
+        html += '</tbody>';
+    } else if (rows.length === 1) {
+        // Single row without separator
+        const headerRow = rows[0];
+        html += '<tbody><tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            html += '<td>' + headerRow[j] + '</td>';
+        }
+        html += '</tr></tbody>';
+    }
+    
+    html += '</table></div>';
+    return html;
+}
+
+function parseMessageText(text) {
+    let html;
+    try {
+        // First escape HTML to prevent injection
+        html = escapeParameter(text);
+        
+        // Parse markdown formatting
+        html = simpleMarkdownParse(html);
+        
+        // Then linkify URLs (handles plain URLs not converted by markdown)
+        html = linkify(html);
+    } catch (e) {
+        // Fallback to plain text with line breaks on error
+        html = escapeParameter(text).replace(/\n/g, "<br>");
+    }
+    return html;
 }
 
 let lastInsertedDate = null;

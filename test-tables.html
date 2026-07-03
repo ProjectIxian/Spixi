@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Markdown Table Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .markdown-table { overflow-x: auto; margin: 8px 0; }
+        .markdown-table table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+        .markdown-table th, .markdown-table td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+        .markdown-table th { background: #f5f5f5; font-weight: 600; }
+        .markdown-table tr:nth-child(even) { background: #fafafa; }
+    </style>
+</head>
+<body>
+    <h1>Markdown Table Parser Test</h1>
+    
+    <div id="output"></div>
+    
+    <script>
+        function escapeParameter(text) {
+            return text.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;')
+                      .replace(/'/g, '&#039;');
+        }
+
+        function parseMarkdownTables(text) {
+            const lines = text.split('\n');
+            let inTable = false;
+            let tableRows = [];
+            let output = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                
+                if (/^\|(.+)\|$/.test(line)) {
+                    if (!inTable) {
+                        inTable = true;
+                        tableRows = [];
+                    }
+                    
+                    const cells = line.match(/[^|]+/g).map(c => c.trim());
+                    const isSeparator = cells.length > 0 && cells.every(cell => /^[-:]+$/.test(cell));
+                    
+                    if (isSeparator) {
+                        if (tableRows.length > 0) {
+                            output.push(buildTableHtml(tableRows, cells));
+                        }
+                        tableRows = [];
+                    } else {
+                        tableRows.push(cells);
+                    }
+                } else {
+                    if (inTable && tableRows.length > 0) {
+                        output.push(buildTableHtml(tableRows, null));
+                        tableRows = [];
+                        inTable = false;
+                    }
+                    output.push(line);
+                }
+            }
+            
+            if (inTable && tableRows.length > 0) {
+                output.push(buildTableHtml(tableRows, null));
+            }
+            
+            return output.join('\n');
+        }
+
+        function buildTableHtml(rows, headerAlignments) {
+            if (rows.length === 0) return '';
+            
+            let html = '<div class="markdown-table"><table>';
+            
+            if (rows.length > 0) {
+                const headerRow = rows[0];
+                html += '<thead><tr>';
+                for (let j = 0; j < headerRow.length; j++) {
+                    let align = 'left';
+                    if (headerAlignments && headerAlignments[j]) {
+                        if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                        else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                        else if (/^:(?=.*-)/.test(headerAlignments[j])) align = 'left';
+                    }
+                    html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+                }
+                html += '</tr></thead>';
+            }
+            
+            if (rows.length > 1) {
+                html += '<tbody>';
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    html += '<tr>';
+                    for (let j = 0; j < row.length; j++) {
+                        html += '<td>' + row[j] + '</td>';
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody>';
+            } else if (headerAlignments && rows.length === 1) {
+                const headerRow = rows[0];
+                html += '<tbody>';
+                html += '<tr>';
+                for (let j = 0; j < headerRow.length; j++) {
+                    let align = 'left';
+                    if (headerAlignments[j]) {
+                        if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                        else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                        else if (/^:(?=.*-)/.test(headerAlignments[j])) align = 'left';
+                    }
+                    html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+                }
+                html += '</tr>';
+                html += '</tbody>';
+            } else if (rows.length === 1) {
+                const headerRow = rows[0];
+                html += '<tbody><tr>';
+                for (let j = 0; j < headerRow.length; j++) {
+                    html += '<td>' + headerRow[j] + '</td>';
+                }
+                html += '</tr></tbody>';
+            }
+            
+            html += '</table></div>';
+            return html;
+        }
+
+        // Test cases
+        const tests = [
+            `| Name | Age | City |
+|------|-----|------|
+| Alice | 30 | New York |
+| Bob | 25 | Los Angeles |`,
+            
+            `| Product | Price |
+|:---------|-------:|
+| Apple | $1.00 |
+| Banana | $0.50 |`
+        ];
+
+        tests.forEach((test, i) => {
+            const result = parseMarkdownTables(test);
+            document.getElementById('output').innerHTML += '<h2>Test ' + (i+1) + '</h2>';
+            document.getElementById('output').innerHTML += '<pre>' + escapeParameter(test) + '</pre>';
+            document.getElementById('output').innerHTML += '<hr><h3>Rendered:</h3>';
+            document.getElementById('output').innerHTML += result;
+            document.getElementById('output').innerHTML += '<br><br>';
+        });
+    </script>
+</body>
+</html>

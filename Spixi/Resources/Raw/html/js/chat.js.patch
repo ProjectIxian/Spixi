@@ -1,0 +1,92 @@
+--- a/Spixi/Resources/Raw/html/js/chat.js
++++ b/Spixi/Resources/Raw/html/js/chat.js
+@@ -536,12 +536,78 @@ function onExternalLink(e, url) {
+     e.stopPropagation();
+     return false;
+ }
+
++// Markdown configuration - customize as needed
++const MARKED_OPTIONS = {
++    breaks: true,           // Convert \n to <br>
++    gfm: true,              // GitHub Flavored Markdown
++    headerIds: false,       // Don't add IDs to headers (not needed in chat)
++    mangle: false           // Don't autodetect emails/handles
++};
++
++// Simple markdown parser for common formatting (no external dependencies required)
++function simpleMarkdownParse(text) {
++    // Escape HTML first to prevent injection
++    let result = text;
++    
++    // Code blocks (triple backticks) - protect from other parsing
++    const codeBlocks = [];
++    result = result.replace(/```([\s\S]*?)```/g, function(match, code) {
++        codeBlocks.push('<pre><code>' + escapeParameter(code.trim()) + '</code></pre>');
++        return '%%CODE_BLOCK_' + (codeBlocks.length - 1) + '%%';
++    });
++    
++    // Inline code (single backtick)
++    result = result.replace(/`([^`]+)`/g, '<code>' + escapeParameter('$1') + '</code>');
++    
++    // Strikethrough: ~~text~~
++    result = result.replace(/~~(.+?)~~/g, '<del>$1</del>');
++    
++    // Bold: **text** or __text__
++    result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
++    result = result.replace(/__(.+?)__/g, '<strong>$1</strong>');
++    
++    // Italic: *text* or _word_ (careful with underscores in words)
++    result = result.replace(/\*(\S.*?\S)\*/g, '<em>$1</em>');
++    result = result.replace(/(?<![a-zA-Z0-9])_(\w+)_(?![a-zA-Z0-9])/g, '<em>$1</em>');
++    
++    // Blockquotes: > text
++    result = result.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
++    
++    // Lists (simple - just bullet points)
++    result = result.replace(/^- (.+)$/gm, '<li>$1</li>');
++    result = result.replace(/(<\/li>\n?<li>)+/g, function(m) {
++        return '<ul>' + m + '</ul>';
++    });
++    
++    // Horizontal rule: --- or ***
++    result = result.replace(/^---$/gm, '<hr>');
++    result = result.replace(/^\*\*\*$/gm, '<hr>');
++    
++    // Headers (simple - just # through ###)
++    result = result.replace(/^### (.+)$/gm, '<h3>$1</h3>');
++    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
++    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
++    
++    // Restore code blocks
++    for (let i = 0; i < codeBlocks.length; i++) {
++        result = result.replace('%%CODE_BLOCK_' + i + '%%', codeBlocks[i]);
++    }
++    
++    // Convert remaining newlines to <br> (but not inside pre/code blocks)
++    // This is a simplification - for full accuracy, parse block-level elements properly
++    result = result.replace(/(?<!><\/pre>)\n/g, '<br>');
++    
++    return result;
++}
++
+ function parseMessageText(text) {
+     try {
+-        text = linkify(text);
++        // First escape HTML to prevent injection
++        let html = escapeParameter(text);
++        
++        // Parse markdown formatting
++        html = simpleMarkdownParse(html);
++        
++        // Then linkify URLs (handles plain URLs not converted by markdown)
++        html = linkify(html);
+     } catch (e) {
+-        console.error('Error parsing message text:', e);
++        // Fallback to plain text with line breaks on error
++        html = escapeParameter(text).replace(/\n/g, "<br>");
+     }
+-    return text;
++    return html;
+ }
+ 
+ let lastInsertedDate = null;
