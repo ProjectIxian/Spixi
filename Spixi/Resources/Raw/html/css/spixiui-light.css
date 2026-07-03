@@ -5604,3 +5604,38 @@ input.create-account-username[type="password"] {
 .chat-message .markdown-content blockquote code {
     background: #e8e8e8;
 }
+
+/* Markdown Tables */
+.markdown-table {
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.markdown-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+.markdown-table th,
+.markdown-table td {
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    text-align: left;
+    word-break: normal;
+    white-space: nowrap;
+}
+
+.markdown-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.markdown-table tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.markdown-table tr:hover {
+    background: #f0f0f0;
+}

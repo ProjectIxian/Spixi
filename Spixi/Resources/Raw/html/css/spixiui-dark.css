@@ -5627,3 +5627,38 @@ input.create-account-username[type="password"] {
 .chat-message .markdown-content blockquote code {
     background: var(--colors-surface-04);
 }
+
+/* Markdown Tables */
+.markdown-table {
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.markdown-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+.markdown-table th,
+.markdown-table td {
+    border: 1px solid var(--colors-outline-02);
+    padding: 6px 10px;
+    text-align: left;
+    word-break: normal;
+    white-space: nowrap;
+}
+
+.markdown-table th {
+    background: var(--colors-surface-05);
+    font-weight: 600;
+    color: var(--colors-text-01);
+}
+
+.markdown-table tr:nth-child(even) {
+    background: var(--colors-surface-02);
+}
+
+.markdown-table tr:hover {
+    background: var(--colors-surface-03);
+}

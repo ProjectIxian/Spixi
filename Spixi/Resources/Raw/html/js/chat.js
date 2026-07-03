@@ -633,21 +633,42 @@ const MARKED_OPTIONS = {
 
 // Simple markdown parser for common formatting (no external dependencies required)
 function simpleMarkdownParse(text) {
-    // Escape HTML first to prevent injection
+    // Extract and protect code blocks to prevent parsing inside them
+    const blocks = [];
     let result = text;
     
-    // Code blocks (triple backticks) - protect from other parsing
-    const codeBlocks = [];
-    result = result.replace(/```([\s\S]*?)```/g, function(match, code) {
-        codeBlocks.push('<pre><code>' + escapeParameter(code.trim()) + '</code></pre>');
-        return '%%CODE_BLOCK_' + (codeBlocks.length - 1) + '%%';
+    // Protect triple backtick code blocks
+    result = result.replace(/```([\s\S]*?)```/g, (m, c) => {
+        blocks.push('<pre><code>' + escapeParameter(c.trim()) + '</code></pre>');
+        return '\x00BLOCK_' + (blocks.length - 1) + '\x00';
     });
     
-    // Inline code (single backtick)
-    result = result.replace(/`([^`]+)`/g, function(match, code) {
-        return '<code>' + escapeParameter(code) + '</code>';
+    // Protect inline code
+    result = result.replace(/`([^`]+)`/g, (m, c) => {
+        blocks.push('<code>' + escapeParameter(c) + '</code>');
+        return '\x00BLOCK_' + (blocks.length - 1) + '\x00';
     });
     
+    // Parse markdown tables (before escaping)
+    result = parseMarkdownTables(result);
+    
+    // Escape HTML in non-protected parts
+    let tempResult = '';
+    let lastIndex = 0;
+    const blockRegex = /\x00BLOCK_(\d+)\x00/g;
+    let match;
+    while ((match = blockRegex.exec(result)) !== null) {
+        // Escape text before this block
+        tempResult += escapeParameter(result.substring(lastIndex, match.index));
+        // Add the protected block as-is
+        tempResult += blocks[parseInt(match[1])];
+        lastIndex = match.index + match[0].length;
+    }
+    // Escape remaining text
+    tempResult += escapeParameter(result.substring(lastIndex));
+    result = tempResult;
+    
+    // Apply other markdown formatting
     // Strikethrough: ~~text~~
     result = result.replace(/~~(.+?)~~/g, '<del>$1</del>');
     
@@ -655,17 +676,242 @@ function simpleMarkdownParse(text) {
     result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     result = result.replace(/__(.+?)__/g, '<strong>$1</strong>');
     
-    // Italic: *text* or _word_ (careful with underscores in words)
+    // Italic: *text* or _word_
     result = result.replace(/\*(\S.*?\S)\*/g, '<em>$1</em>');
     result = result.replace(/(?<![a-zA-Z0-9])_(\w+)_(?![a-zA-Z0-9])/g, '<em>$1</em>');
     
-    // Blockquotes: > text
+    // Blockquotes: > text (already escaped as &gt;)
     result = result.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
     
-    // Lists (simple - just bullet points)
+    // Lists
     result = result.replace(/^- (.+)$/gm, '<li>$1</li>');
     result = result.replace(/(<\/li>\n?<li>)+/g, function(m) {
         return '<ul>' + m + '</ul>';
+    });
+    
+    // Horizontal rule
+    result = result.replace(/^---$/gm, '<hr>');
+    result = result.replace(/^\*\*\*$/gm, '<hr>');
+    
+    // Headers
+    result = result.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    
+    // Convert newlines to <br>
+    result = result.replace(/\n/g, '<br>');
+    
+    return result;
+}
+    result = result.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    result = result.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+    
+    // Convert newlines to <br>
+    result = result.replace(/\n/g, '<br>');
+    
+    return result;
+}
+
+// Parse markdown tables
+function parseMarkdownTables(text) {
+    const lines = text.split('\n');
+    let inTable = false;
+    let tableHtml = '';
+    let tableRows = [];
+    let output = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        if (/^\|(.+)\|$/.test(line)) {
+            // This is a table row
+            if (!inTable) {
+                inTable = true;
+                tableRows = [];
+            }
+            
+            const cells = line.match(/[^|]+/g).map(c => c.trim());
+            const isSeparator = cells.length > 0 && cells.every(cell => /^[-:]+$/.test(cell));
+            
+            if (isSeparator) {
+                // Separator row - build table header
+                if (tableRows.length > 0) {
+                    output.push(buildTableHtml(tableRows, cells));
+                }
+                tableRows = [];
+            } else {
+                tableRows.push(cells);
+            }
+        } else {
+            // Non-table row - flush any pending table
+            if (inTable && tableRows.length > 0) {
+                output.push(buildTableHtml(tableRows, null));
+                tableRows = [];
+                inTable = false;
+            }
+            output.push(line);
+        }
+    }
+    
+    // Flush any remaining table
+    if (inTable && tableRows.length > 0) {
+        output.push(buildTableHtml(tableRows, null));
+    }
+    
+    return output.join('\n');
+}
+
+function buildTableHtml(rows, headerAlignments) {
+    if (rows.length === 0) return '';
+    
+    let html = '<div class="markdown-table"><table>';
+    
+    // Build header row
+    if (rows.length > 0) {
+        const headerRow = rows[0];
+        html += '<thead><tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            let align = 'left';
+            if (headerAlignments && headerAlignments[j]) {
+                if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                else if (/^:/ .test(headerAlignments[j])) align = 'left';
+            }
+            html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+        }
+        html += '</tr></thead>';
+    }
+    
+    // Build body rows
+    if (rows.length > 1) {
+        html += '<tbody>';
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            html += '<tr>';
+            for (let j = 0; j < row.length; j++) {
+                html += '<td>' + row[j] + '</td>';
+            }
+            html += '</tr>';
+        }
+        html += '</tbody>';
+    } else if (headerAlignments && rows.length === 1) {
+        // Only header and separator, no body rows yet
+        const headerRow = rows[0];
+        html += '<tbody>';
+        html += '<tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            let align = 'left';
+            if (headerAlignments[j]) {
+                if (/^:-:/.test(headerAlignments[j])) align = 'center';
+                else if (/^-:/.test(headerAlignments[j])) align = 'right';
+                else if (/^:/ .test(headerAlignments[j])) align = 'left';
+            }
+            html += '<th style="text-align:' + align + '">' + headerRow[j] + '</th>';
+        }
+        html += '</tr>';
+        html += '</tbody>';
+    } else if (rows.length === 1) {
+        // Single row without separator
+        const headerRow = rows[0];
+        html += '<tbody><tr>';
+        for (let j = 0; j < headerRow.length; j++) {
+            html += '<td>' + headerRow[j] + '</td>';
+        }
+        html += '</tr></tbody>';
+    }
+    
+    html += '</table></div>';
+    return html;
+}
+
+// Simple markdown parser for common formatting (no external dependencies required) - OLD VERSION, REMOVED
+    
+    // Markdown Tables
+    const tableMatches = result.match(/^\|(.+)\|$/gm);
+    if (tableMatches && tableMatches.length >= 3) {
+        let tableHtml = '';
+        let inTable = false;
+        let tableRows = [];
+        
+        const lines = result.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            if (/^\|(.+)\|$/.test(line)) {
+                if (!inTable) {
+                    inTable = true;
+                    tableRows = [];
+                }
+                
+                // Check if this is a separator row (|---|---|)
+                const cells = line.match(/[^|]+/g).map(cell => cell.trim());
+                const isSeparator = cells.every(cell => /^[-:]+$/.test(cell));
+                
+                if (isSeparator && tableRows.length > 0) {
+                    // Build thead
+                    tableHtml += '<div class="markdown-table"><table><thead><tr>';
+                    for (const cell of cells.slice(0, tableRows[0].length)) {
+                        const align = /^-:/.test(cell) ? 'right' : /^:-/:^:-.-:/g.test(cell) ? 'center' : 'left';
+                        tableHtml += `<th style="text-align:${align}"></th>`;
+                    }
+                    tableHtml += '</tr></thead><tbody>';
+                } else if (!isSeparator) {
+                    tableRows.push(cells);
+                }
+            } else if (inTable && line.trim() === '') {
+                // End of table
+                inTable = false;
+            }
+        }
+    }
+    
+    // Parse tables (simplified approach)
+    const tableRegex = /(\|.+\|(\n\|.+(\|.+)*\n)?(\n\|-+[\s:|:-]+\|)(\n\|.+\|)*)/g;
+    result = result.replace(tableRegex, function(match) {
+        const rows = match.trim().split('\n');
+        if (rows.length < 3) return match; // Not a valid table
+        
+        let html = '<div class="markdown-table"><table>';
+        let isHeaderParsed = false;
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            if (/^\|-+[\s:|:-]+\|$/.test(row)) {
+                // Skip separator line, but we're now past header
+                isHeaderParsed = true;
+                continue;
+            }
+            
+            const cells = row.match(/[^|]+/g) || [];
+            const cellContents = cells.map(cell => cell.trim()).filter(c => c);
+            
+            if (cellContents.length === 0) continue;
+            
+            if (!isHeaderParsed) {
+                // Header row
+                html += '<thead><tr>';
+                for (const content of cellContents) {
+                    html += `<th>${content}</th>`;
+                }
+                html += '</tr></thead>'; 
+                isHeaderParsed = true; // Mark header as parsed for next iteration
+            } else {
+                // Body row  
+                if (!html.includes('<tbody>')) {
+                    html += '<tbody>';
+                }
+                html += '<tr>';
+                for (const content of cellContents) {
+                    html += `<td>${content}</td>`;
+                }
+                html += '</tr>';
+            }
+        }
+        
+        if (html.includes('<tbody>')) {
+            html += '</tbody>';
+        }
+        html += '</table></div>';
+        return html;
     });
     
     // Horizontal rule: --- or ***
